@@ -766,7 +766,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         },
                     },
                     '0009.0f09.000d': {
-                        'ip_address': '19.19.19.4',
+                        'ip_address': '10.169.19.4',
                         'next_hop': 'Bundle-Ether1.19',
                         'label': 114012,
                         'ethernet_tag': 0,
@@ -1233,7 +1233,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                 'mac_address': {
                     '0000.25b1.33d3': {
                         'ip_address': '::',
-                        'next_hop': '67.70.219.101',
+                        'next_hop': '10.154.219.101',
                         'label': 100965,
                         'ethernet_tag': 0,
                         'multipaths_resolved': 'False',
@@ -1249,7 +1249,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'flush_requested': 0,
                         'flush_received': 0,
                         'multipaths_local_label': 0,
-                        'soo_nexthop': '67.70.219.101',
+                        'soo_nexthop': '10.154.219.101',
                         'bp_xcid': '0x0',
                         'mac_state': 'Remote (w/ SOO)',
                         'local_router_mac': '0000.0000.0000',
@@ -1342,7 +1342,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                     },
                     '0000.25b3.1127': {
                         'ip_address': '::',
-                        'next_hop': '67.70.219.150',
+                        'next_hop': '10.154.219.150',
                         'label': 114483,
                         'ethernet_tag': 0,
                         'multipaths_resolved': 'False',
@@ -1358,7 +1358,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'flush_requested': 0,
                         'flush_received': 0,
                         'multipaths_local_label': 0,
-                        'soo_nexthop': '67.70.219.150',
+                        'soo_nexthop': '10.154.219.150',
                         'bp_xcid': '0x0',
                         'mac_state': 'Remote (w/ SOO)',
                         'local_router_mac': '0000.0000.0000',
@@ -1411,7 +1411,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                     },
                     '4c96.14e6.f82e': {
                         'ip_address': '::',
-                        'next_hop': '67.70.219.101',
+                        'next_hop': '10.154.219.101',
                         'label': 100965,
                         'ethernet_tag': 0,
                         'multipaths_resolved': 'True',
@@ -1427,7 +1427,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'flush_requested': 0,
                         'flush_received': 0,
                         'multipaths_local_label': 100490,
-                        'soo_nexthop': '67.70.219.101',
+                        'soo_nexthop': '10.154.219.101',
                         'bp_xcid': '0x0',
                         'mac_state': 'Remote (w/ SOO)',
                         'local_router_mac': '0000.0000.0000',
@@ -1478,9 +1478,9 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                             },
                         },
                     },
-                    '100.14.100.1': {
+                    '10.246.100.1': {
                         'encap': '4c96.14e6.f82e',
-                        'ip_address': '67.70.219.101',
+                        'ip_address': '10.154.219.101',
                         'next_hop': '',
                         'label': 100965,
                         'ethernet_tag': 0,
@@ -1497,7 +1497,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'flush_requested': 0,
                         'flush_received': 0,
                         'multipaths_local_label': 100490,
-                        'soo_nexthop': '67.70.219.101',
+                        'soo_nexthop': '10.154.219.101',
                         'bp_xcid': '0x0',
                         'mac_state': 'Remote (w/ SOO)',
                         'local_router_mac': '0000.0000.0000',
@@ -1754,7 +1754,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Jul 23 11:30:27.968 L2RIB Download                00000000, 00000000 -  - 
             Aug 21 09:09:20.512 Ignore BGP update             00000000, 00000000 M  - 
         ----------------------------------------------------------------------------
-        19         0009.0f09.000d 19.19.19.4                               Bundle-Ether1.19                        114012  
+        19         0009.0f09.000d 10.169.19.4                               Bundle-Ether1.19                        114012  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -1842,7 +1842,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             May 25 18:09:23.456 MAC advertise rejected        00000011, 00000000 -  - 
             Jun 12 12:01:15.776 MAC advertise rejected        0000000b, 00000000 -  - 
         ----------------------------------------------------------------------------
-        2112       0000.25b1.33d3 ::                                       67.70.219.101                           100965  
+        2112       0000.25b1.33d3 ::                                       10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -1857,7 +1857,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         Flush Requested                         : 0
         Flush Received                          : 0
         Multi-paths Local Label                 : 0
-        SOO Nexthop                             : 67.70.219.101
+        SOO Nexthop                             : 10.154.219.101
         BP XCID                                 : 0x0
         MAC State                               : Remote (w/ SOO)
         Local Router MAC                        : 0000.0000.0000
@@ -1879,7 +1879,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040004 -  - 
             Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
         ----------------------------------------------------------------------------
-        2112       0000.25b3.1127 ::                                       67.70.219.150                           114483  
+        2112       0000.25b3.1127 ::                                       10.154.219.150                           114483  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -1894,7 +1894,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         Flush Requested                         : 0
         Flush Received                          : 0
         Multi-paths Local Label                 : 0
-        SOO Nexthop                             : 67.70.219.150
+        SOO Nexthop                             : 10.154.219.150
         BP XCID                                 : 0x0
         MAC State                               : Remote (w/ SOO)
         Local Router MAC                        : 0000.0000.0000
@@ -1911,7 +1911,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
             Oct  5 19:36:45.824 L2RIB Download                0001bf33, 01000000 -  - 
         ----------------------------------------------------------------------------
-        2112       4c96.14e6.f82e ::                                       67.70.219.101                           100965  
+        2112       4c96.14e6.f82e ::                                       10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : True
         Static                                  : No
@@ -1926,7 +1926,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         Flush Requested                         : 0
         Flush Received                          : 0
         Multi-paths Local Label                 : 100490
-        SOO Nexthop                             : 67.70.219.101
+        SOO Nexthop                             : 10.154.219.101
         BP XCID                                 : 0x0
         MAC State                               : Remote (w/ SOO)
         Local Router MAC                        : 0000.0000.0000
@@ -1943,7 +1943,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
             Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
         ----------------------------------------------------------------------------
-        2112       4c96.14e6.f82e 100.14.100.1                             67.70.219.101                           100965  
+        2112       4c96.14e6.f82e 10.246.100.1                             10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : True
         Static                                  : No
@@ -1958,7 +1958,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         Flush Requested                         : 0
         Flush Received                          : 0
         Multi-paths Local Label                 : 100490
-        SOO Nexthop                             : 67.70.219.101
+        SOO Nexthop                             : 10.154.219.101
         BP XCID                                 : 0x0
         MAC State                               : Remote (w/ SOO)
         Local Router MAC                        : 0000.0000.0000
