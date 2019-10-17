@@ -169,6 +169,7 @@
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
     * Updated ShowIpBgp for parsing of more varied output
+    * Updated ShowIpBgpNeighbors schema to support more varied output
 
 --------------------------------------------------------------------------------
                                 OSPF
@@ -507,12 +508,20 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatformHardware to support more varied output
+
+--------------------------------------------------------------------------------
                                 ACL
 --------------------------------------------------------------------------------
 * IOSXE
     * ShowAccessLists:
         * modified regex for both ipv4 and ipv6 to accommodate more outputs
         * added to handle standard ACL
+
+--------------------------------------------------------------------------------
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR

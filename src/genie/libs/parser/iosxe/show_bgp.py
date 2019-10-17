@@ -2536,9 +2536,9 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             },
                         Optional('bgp_session_transport'):
                             {'min_time_between_advertisement_runs': int,
-                            'address_tracking_status': str,
+                            Optional('address_tracking_status'): str,
                             Optional('rib_route_ip'): str,
-                            'tcp_path_mtu_discovery': str,
+                            Optional('tcp_path_mtu_discovery'): str,
                             'connection':
                                 {'established': int,
                                 'dropped': int,
