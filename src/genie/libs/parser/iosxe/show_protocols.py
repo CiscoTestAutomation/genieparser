@@ -23,9 +23,9 @@ class ShowIpProtocolsSchema(MetaParser):
     ''' Schema for "show ip protocols" '''
 
     schema = {
-        'protocols':
-            {Optional('rip'):
-                {'vrf': {
+        'protocols': {
+            Optional('rip'): {
+                'vrf': {
                     Any(): {
                         'address_family': {
                             Any(): {
@@ -34,8 +34,8 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'distance': int,
                                         'maximum_paths': int,
                                         Optional('output_delay'): int,
-                                        'send_version': Or(int,str),
-                                        'receive_version': Or(int,str),
+                                        'send_version': Or(int, str),
+                                        'receive_version': Or(int, str),
                                         Optional('automatic_network_summarization_in_effect'): bool,
                                         'outgoing_update_filterlist': {
                                             'outgoing_update_filterlist': str,
@@ -44,7 +44,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                                     'filter': str,
                                                     'per_user': bool,
                                                     'default': str,
-                                                },
+                                                }
                                             },
                                         },
                                         'incoming_update_filterlist': {
@@ -54,14 +54,14 @@ class ShowIpProtocolsSchema(MetaParser):
                                                     'filter': str,
                                                     'per_user': bool,
                                                     'default': str,
-                                                },
+                                                }
                                             },
                                         },
                                         Optional('incoming_route_metric'): {
                                             'added': str,
                                             'list': str,
                                         },
-                                        'network': list,
+                                        Optional('network'): list,
                                         Optional('default_redistribution_metric'): int,
                                         'redistribute': {
                                             Any(): {
@@ -72,7 +72,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                                 },
                                                 Optional('metric'): int,
                                                 Optional('route_policy'): int,
-                                            },
+                                            }
                                         },
                                         Optional('timers'): {
                                             'update_interval': int,
@@ -81,17 +81,17 @@ class ShowIpProtocolsSchema(MetaParser):
                                             'holddown_interval': int,
                                             'flush_interval': int,
                                         },
-                                        'interfaces': {
+                                        Optional('interfaces'): {
                                             Any(): {
                                                 Optional('neighbors'): {
                                                     Any(): {
-                                                        Optional('address'): str,
-                                                    },
+                                                        Optional('address'): str
+                                                    }
                                                 },
                                                 Optional('summary_address'): {
                                                     Any(): {
-                                                        Optional('metric'): str,
-                                                    },
+                                                        Optional('metric'): str
+                                                    }
                                                 },
                                                 Optional('filtered_per_user'): int,
                                                 Optional('default_set'): bool,
@@ -100,44 +100,57 @@ class ShowIpProtocolsSchema(MetaParser):
                                                 'receive_version': str,
                                                 'triggered_rip': str,
                                                 'key_chain': str,
-                                            },
+                                            }
                                         },
                                         Optional('neighbors'): {
                                             Any(): {
-                                                'last_update': str,
-                                                'distance': int,
-                                            },
+                                                'last_update': str, 
+                                                'distance': int
+                                            }
                                         },
-                                    },
-                                },
-                            },
-                        },
-                    },
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             },
-            Optional('eigrp'):
-                {'protocol_under_dev': bool},
-            Optional('ospf'):
-                {'vrf':
-                    {Any():
-                        {'address_family':
-                            {Any():
-                                {'instance':
-                                    {Any():
-                                        {'spf_control':
-                                            {'paths': int},
-                                        'preference':
-                                            {'single_value':
-                                                {'all': int},
-                                            Optional('multi_values'):
-                                                {'granularity':
-                                                    {'detail':
-                                                        {'intra_area': int,
-                                                        'inter_area': int},
-                                                    Optional('coarse'):
-                                                        {'internal': int}},
-                                                'external': int},
+            Optional('eigrp'): {
+                'protocol_under_dev': bool
+            },
+            Optional('ospf'): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'instance': {
+                                    Any(): {
+                                        'spf_control': {
+                                            'paths': int
+                                        },
+                                        Optional('network'): {
+                                            Any(): {
+                                                'netmask': str,
+                                                'area': str,
+                                            }
+                                        },
+                                        'preference': {
+                                            'single_value': {
+                                                'all': int
                                             },
+                                            Optional('multi_values'): {
+                                                'granularity': {
+                                                    'detail': {
+                                                        'intra_area': int,
+                                                        'inter_area': int,
+                                                    },
+                                                    Optional('coarse'): {
+                                                        'internal': int
+                                                    },
+                                                },
+                                                'external': int,
+                                            },
+                                        },
                                         'router_id': str,
                                         'outgoing_filter_list': str,
                                         'incoming_filter_list': str,
@@ -146,112 +159,119 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'total_normal_area': int,
                                         'total_nssa_area': int,
                                         Optional('passive_interfaces'): list,
-                                        Optional('routing_information_sources'):
-                                            {'gateway':
-                                                {Any():
-                                                    {'distance': int,
-                                                    'last_update': str},
-                                                },
-                                            },
-                                        Optional('areas'):
-                                            {Any():
-                                                {Optional('configured_interfaces'): list},
-                                            },
+                                        Optional('routing_information_sources'): {
+                                            'gateway': {
+                                                Any(): {
+                                                    'distance': int, 
+                                                    'last_update': str
+                                                }
+                                            }
                                         },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            Optional('application'):
-                {'outgoing_filter_list': str,
+                                        Optional('areas'): {
+                                            Any(): {
+                                                Optional('configured_interfaces'): list
+                                            }
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            Optional('application'): {
+                'outgoing_filter_list': str,
                 'incoming_filter_list': str,
                 'maximum_path': int,
-                'preference':
-                    {'single_value':
-                        {'all': int}},
+                'preference': {
+                    'single_value': {
+                        'all': int
+                    }
+                },
                 'update_frequency': int,
                 'invalid': int,
                 'holddown': int,
                 'flushed': int,
-                },
-            Optional('bgp'):
-                {'instance':
-                    {'default':
-                        {'bgp_id': int,
-                        'vrf':
-                            {'default':
-                                {'address_family':
-                                    {'ipv4':
-                                        {
+            },
+            Optional('bgp'): {
+                'instance': {
+                    'default': {
+                        'bgp_id': int,
+                        'vrf': {
+                            'default': {
+                                'address_family': {
+                                    'ipv4': {
                                         Optional('outgoing_filter_list'): str,
                                         Optional('incoming_filter_list'): str,
                                         'igp_sync': bool,
                                         'automatic_route_summarization': bool,
                                         Optional('maximum_path'): int,
-                                        Optional('preference'):
-                                            {'multi_values':
-                                                {'external': int,
+                                        Optional('preference'): {
+                                            'multi_values': {
+                                                'external': int,
                                                 'local': int,
                                                 'internal': int,
-                                                },
-                                            },
-                                        Optional('neighbor'):
-                                            {Any():
-                                                {'neighbor_id': str,
+                                            }
+                                        },
+                                        Optional('neighbors'): {
+                                            Any(): {
+                                                Optional('route_map'): str,
+                                            }
+                                        },
+                                        Optional('routing_information_sources'): {
+                                            Any(): {
+                                                'neighbor_id': str,
                                                 'distance': int,
                                                 'last_update': str,
-                                                },
-                                            },
+                                            }
+                                        },
                                         Optional('timers'): {
                                             'update_interval': int,
                                             'next_update': int,
                                         },
-                                        },
-                                    },
-                                },
-                            },
+                                    }
+                                }
+                            }
                         },
-                    },
-                },
-            Optional('isis'):
-                {'vrf':
-                    {Any():
-                        {'address_family':
-                            {Any():
-                                {'instance':
-                                    {Any():
-                                        {'outgoing_filter_list': str,
+                    }
+                }
+            },
+            Optional('isis'): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'instance': {
+                                    Any(): {
+                                        'outgoing_filter_list': str,
                                         'incoming_filter_list': str,
                                         Optional('redistributing'): str,
                                         Optional('address_summarization'): list,
                                         Optional('maximum_path'): int,
-                                        'preference':
-                                            {'single_value':
-                                                {'all': int},
-                                            },
+                                        'preference': {
+                                            'single_value': {
+                                                'all': int
+                                            }
+                                        },
                                         Optional('configured_interfaces'): list,
                                         Optional('passive_interfaces'): list,
-                                        Optional('routing_information_sources'):
-                                            {'gateway':
-                                                {Any():
-                                                    {'distance': int,
-                                                    'last_update': str,
-                                                    },
-                                                },
-                                            },
+                                        Optional('routing_information_sources'): {
+                                            'gateway': {
+                                                Any(): {
+                                                    'distance': int, 
+                                                    'last_update': str
+                                                }
+                                            }
                                         },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
         }
-
-
+    }
 
 # ==============================
 # Parser for 'show ip protocols'
@@ -260,16 +280,16 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
     ''' Parser for "show ip protocols" '''
 
-    cli_command = ['show ip protocols','show ip protocols vrf {vrf}']
+    cli_command = ['show ip protocols',
+                  'show ip protocols vrf {vrf}']
     exclude = ['last_update', ' network' , 'next_update']
 
-    def cli(self, vrf="" ,cmd="",output=None):
+    def cli(self, vrf="" ,cmd="", output=None):
         if output is None:
             if not cmd :
                 if vrf:
                     cmd = self.cli_command[1].format(vrf=vrf)
                 else:
-                    vrf = 'default'
                     cmd = self.cli_command[0]
             # get output from device
             out = self.device.execute(cmd)
@@ -302,21 +322,21 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # Routing Protocol is "isis banana"
         # Routing Protocol is "eigrp 1"
         p1 = re.compile(r"^Routing +Protocol +is"
-                         " +\"(?P<protocol>(ospf|bgp|isis|eigrp|application|rip))"
-                         "(?: *(?P<pid>(\S+)))?\"$")
+                        r" +\"(?P<protocol>(ospf|bgp|isis|eigrp|application|rip))"
+                        r"(?: *(?P<pid>(\S+)))?\"$")
 
         # Outgoing update filter list for all interfaces is not set
         # Incoming update filter list for all interfaces is not set
         p2 = re.compile(r"^(?P<dir>(Outgoing|Incoming)) +update +filter +list"
-                         " +for +all +interfaces +is +(?P<state>([a-zA-Z\s]+))$")
+                        r" +for +all +interfaces +is +(?P<state>([a-zA-Z\s]+))$")
 
         # Router ID 10.4.1.1
         p3 = re.compile(r"^Router +ID +(?P<router_id>(\S+))$")
 
         # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
         p4 = re.compile(r"^Number +of +areas +in +this +router +is"
-                         " +(?P<areas>(\d+)). +(?P<normal>(\d+)) +normal"
-                         " +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+)) +nssa$")
+                        r" +(?P<areas>(\d+)). +(?P<normal>(\d+)) +normal"
+                        r" +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+)) +nssa$")
 
         # Maximum path: 4
         p5 = re.compile(r"^Maximum +path: +(?P<max>(\d+))$")
@@ -326,8 +346,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
         # Routing on Interfaces Configured Explicitly (Area 0):
         p6_2 = re.compile(r"^Routing +on +Interfaces +Configured +Explicitly"
-                         " +\(Area +(?P<area>[\d\.]+)\)\:$")
-
+                          r" +\(Area +(?P<area>[\d\.]+)\)\:$")
 
         # Routing Information Sources:
         p6_3 = re.compile(r"^Routing +Information +Sources:$")
@@ -342,8 +361,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # GigabitEthernet2
         # GigabitEthernet1
         # TenGigabitEthernet0/0/26
-        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*))$")
-
+        # Serial0
+        # VoIP-Null0
+        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*))$")
 
         # Gateway         Distance      Last Update
         # 10.36.3.3            110      07:33:00
@@ -383,9 +403,14 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # Redistributing: isis banana
         p16 = re.compile(r"^Redistributing: +(?P<redistributing>([a-zA-Z\_\s]+))$")
 
+        # 10.0.0.84 0.0.0.3 area 11
+        # 10.0.0.88 0.0.0.3 area 11
+        # 192.168.0.10 0.0.0.0 area 11
+        p17 = re.compile(r'(?P<address>[\d\.]+)\s+(?P<mask>[\d\.]+)\s+area\s+(?P<area>[\d\.]+)')
 
         passive_interface_flag = False
         routing_network_flag = False
+        neighbors_flag = False
 
         # Routing Protocol is "rip"
         p100 = re.compile(r'^\s*Routing Protocol +is +\"(?P<protocol>[\w]+)\"$')
@@ -430,8 +455,11 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # Neighbor(s):
         p110 = re.compile(r'^\s*Neighbor\(s\):$')
 
-        #   10.1.2.2
-        p111 = re.compile(r'^\s*(?P<neighbor>[\d\.]+)$')
+        # 172.16.121.101                                        ACCEPT_SCI_RICHEMONT
+        # 192.168.1.176                                         INTERNET_EDGE_IN
+        # 192.168.1.177                                         INTERNET_EDGE_IN
+        # 192.168.0.9
+        p111 = re.compile(r'(?P<neighbor>[\d\.]+)\s*(?P<route_map>[\w]+)?')
 
         # Default version control: send version 2, receive version 2
         p112 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
@@ -494,7 +522,6 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             # Routing Protocol is "bgp 100"
             # Routing Protocol is "isis banana"
             # Routing Protocol is "eigrp 1"
-
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -979,7 +1006,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                             gateway_dict['distance'] = distance
                             gateway_dict['last_update'] = last_update
                         elif protocol == 'bgp':
-                            gateway_dict = bgp_dict.setdefault('neighbor', {}). \
+                            gateway_dict = bgp_dict.setdefault('routing_information_sources', {}). \
                                 setdefault(gateway, {})
                             gateway_dict['neighbor_id'] = gateway
                             gateway_dict['distance'] = distance
@@ -1086,6 +1113,49 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                 if m:
                     if protocol == 'isis':
                         isis_dict['redistributing'] = m.groupdict()['redistributing']
+                    continue
+
+                # 10.0.0.84 0.0.0.3 area 11
+                # 10.0.0.88 0.0.0.3 area 11
+                # 192.168.0.10 0.0.0.0 area 11
+                m = p17.match(line)
+                if m:
+                    group = m.groupdict()
+                    address = group['address']
+                    mask = group['mask']
+                    area = group['area']
+                    ospf_network_dict = ospf_dict\
+                        .setdefault('network', {})\
+                        .setdefault(address, {})
+                    ospf_network_dict['netmask'] = mask
+                    ospf_network_dict['area'] = area
+
+                    continue
+
+                # Neighbor(s):
+                m = p110.match(line)
+                if m:
+                    neighbors_flag = True
+
+                    continue
+
+                
+                # 172.16.121.101                                        ACCEPT_SCI_RICHEMONT
+                # 192.168.1.176                                         INTERNET_EDGE_IN
+                # 192.168.1.177                                         INTERNET_EDGE_IN
+                # 192.168.0.9
+                m = p111.match(line)
+                if m:
+                    if neighbors_flag:
+                        group = m.groupdict()
+                        neighbor = group['neighbor']
+                        route_map = group['route_map']
+                        if protocol == 'bgp':
+                            bgp_neighbor_dict = bgp_dict\
+                                .setdefault('neighbors', {})\
+                                .setdefault(neighbor, {})
+                            if route_map:
+                                bgp_neighbor_dict['route_map'] = route_map
                     continue
 
         return ret_dict
