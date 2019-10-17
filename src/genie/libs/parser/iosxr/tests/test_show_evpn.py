@@ -1659,7 +1659,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
     }
 
     golden_output3 = {'execute.return_value': '''
-        +++ dis9-rohan: executing command 'show evpn evi mac private' +++
+        +++ genie-Router: executing command 'show evpn evi mac private' +++
         show evpn evi mac private
 
         Mon Oct 14 17:57:12.677 EDT
@@ -2011,7 +2011,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             May  1 09:05:20.896 Replay EVI to BGP             00000000, 00000000 -  - 
             May  1 09:05:20.896 MAC advertise rejected        00000000, 00000000 -  - 
         ----------------------------------------------------------------------------
-        RP/0/RSP0/CPU0:dis9-rohan#
+        RP/0/RSP0/CPU0:genie-Router#
 
     '''}
     
