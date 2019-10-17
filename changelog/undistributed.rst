@@ -191,6 +191,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
         * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
@@ -409,6 +410,11 @@
         * show l2route evpn mac all
     * Updated ShowL2routeEvpnMacIpAll for:
         * show l2route evpn mac-ip all
+    * Updated ShowRplPrefixSet regex for:
+        * show rpl prefix-set
+        * show rpl prefix-set <name>
+    * Updated ShowRplRoutePolicy regex for:
+        * show rpl route-policy
 
 --------------------------------------------------------------------------------
                                 X-Connect
