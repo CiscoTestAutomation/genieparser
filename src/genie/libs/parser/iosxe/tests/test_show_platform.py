@@ -495,7 +495,7 @@ class test_show_version(unittest.TestCase):
             'processor_type': '2RU',
             'rom': 'IOS-XE ROMMON',
             'rtr_type': 'ISR4451-X/K9',
-            'system_image': 'bootflash:isr4400-universalk9.16.06.05.SPA.bin',
+            'system_image': 'bootflash:isr4400-universalk10.115.6.5.SPA.bin',
             'system_restarted_at': '07:19:15 UTC Fri Feb 1 2019',
             'uptime': '2 days, 3 hours, 18 minutes',
             'uptime_this_cp': '2 days, 3 hours, 19 minutes',
@@ -529,7 +529,7 @@ class test_show_version(unittest.TestCase):
         Uptime for this control processor is 2 days, 3 hours, 19 minutes
         System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
         System restarted at 07:19:15 UTC Fri Feb 1 2019
-        System image file is "bootflash:isr4400-universalk9.16.06.05.SPA.bin"
+        System image file is "bootflash:isr4400-universalk10.115.6.5.SPA.bin"
         Last reload reason: Reload Command
 
 
@@ -1215,7 +1215,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         },
         'slot': {
             'slot 6': {
-                'boot': 'bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
+                'boot': 'bootflash:asr1002x-universalk10.144.1.1.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
                 'config_register': '0x1000',
                 'curr_sw_state': 'ACTIVE',
                 'image_ver': 'Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)',
@@ -1249,7 +1249,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
     Technical Support: http://www.cisco.com/techsupport
     Copyright (c) 1986-2018 by Cisco Systems, Inc.
     Compiled Mon 26-Feb-18 10:00 by mcpre
-                              BOOT = bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
+                              BOOT = bootflash:asr1002x-universalk10.144.1.1.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
             Configuration register = 0x1000
 
     Peer (slot: 7) information is not available because it is in 'DISABLED' state
@@ -15549,7 +15549,7 @@ class test_show_platform_hardware(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show platform hardware qfp active infrastructure bqs queue output default interface TenGigabitEthernet0/0/0
         Load for five secs: 91%/1%; one minute: 83%; five minutes: 65%
-        Time source is NTP, 18:30:46.284 JST Wed Oct 16 2019
+        Time source is NTP, 18:30:46.284 EST Wed Oct 16 2019
         
         Interface: TenGigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
         Queue specifics:

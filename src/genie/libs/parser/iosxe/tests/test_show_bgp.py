@@ -15678,7 +15678,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
             'default': {
                 'neighbor': {
                     '192.168.10.254': {
-                        'remote_as': 9996,
+                        'remote_as': 65109,
                         'link': 'external',
                         'shutdown': False,
                         'bgp_version': 4,
@@ -15764,7 +15764,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
     }
     golden_output5 = {'execute.return_value': '''
         show ip bgp neighbors 192.168.10.254
-        BGP neighbor is 192.168.10.254,  remote AS 9996, external link
+        BGP neighbor is 192.168.10.254,  remote AS 65109, external link
         BGP version 4, remote router ID 0.0.0.0
         BGP state = Idle
         Last read 00:00:00, last write 00:00:00, hold time is 180, keepalive interval is 60 seconds
