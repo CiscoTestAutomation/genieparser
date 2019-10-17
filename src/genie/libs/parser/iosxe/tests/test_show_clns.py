@@ -6,22 +6,21 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparset
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.iosxe.show_clns import ShowClnsInterface,\
-                                              ShowClnsProtocol,\
-                                              ShowClnsNeighborsDetail,\
-                                              ShowClnsIsNeighborsDetail,\
-                                              ShowClnsTraffic
+from genie.libs.parser.iosxe.show_clns import (ShowClnsTraffic,
+                                               ShowClnsProtocol,
+                                               ShowClnsInterface,
+                                               ShowClnsNeighborsDetail,
+                                               ShowClnsIsNeighborsDetail,)
 
 # =========================================================
 # Unit test for 'show clns interface'
 #               'show show clns interface <inteface>'
 # =========================================================
 class TestShowIpInterface(unittest.TestCase):
-    device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -96,45 +95,431 @@ class TestShowIpInterface(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
-    R2#show clns interface
-    GigabitEthernet1 is up, line protocol is up
-      CLNS protocol processing disabled
-    GigabitEthernet2 is up, line protocol is up
-      Checksums enabled, MTU 1497, Encapsulation SAP
-      ERPDUs enabled, min. interval 10 msec.
-      CLNS fast switching enabled
-      CLNS SSE switching disabled
-      DEC compatibility mode OFF for this interface
-      Next ESH/ISH in 20 seconds
-      Routing Protocol: IS-IS (test)
-        Circuit Type: level-1-2
-        Interface number 0x1, local circuit ID 0x1
-        Neighbor Extended Local Circuit ID: 0x0
-        Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
-        DR ID: R2.01
-        Level-1 IPv6 Metric: 10
-        Number of active level-1 adjacencies: 1
-        Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
-        DR ID: 0000.0000.0000.00
-        Level-2 IPv6 Metric: 10
-        Number of active level-2 adjacencies: 0
-        Next IS-IS LAN Level-1 Hello in 1 seconds
-        Next IS-IS LAN Level-2 Hello in 645 milliseconds
+        R2#show clns interface
+        GigabitEthernet1 is up, line protocol is up
+          CLNS protocol processing disabled
+        GigabitEthernet2 is up, line protocol is up
+          Checksums enabled, MTU 1497, Encapsulation SAP
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching enabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 20 seconds
+          Routing Protocol: IS-IS (test)
+            Circuit Type: level-1-2
+            Interface number 0x1, local circuit ID 0x1
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: R2.01
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 1
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: 0000.0000.0000.00
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS LAN Level-1 Hello in 1 seconds
+            Next IS-IS LAN Level-2 Hello in 645 milliseconds
     '''}
 
+    golden_parsed_output_2 = {
+        "interfaces": {
+            "GigabitEthernet1": {
+                "line_protocol": "up",
+                "status": "up",
+                "clns_protocol_processing": False,
+            },
+            "GigabitEthernet2": {
+                "line_protocol": "up",
+                "status": "up",
+                "checksum_enabled": True,
+                "mtu": 1497,
+                "encapsulation": "SAP",
+                "erpdus_enabled": True,
+                "min_interval_msec": 10,
+                "clns_fast_switching": True,
+                "clns_sse_switching": False,
+                "dec_compatibility_mode": "OFF",
+                "next_esh_ish_in": 55,
+                "routing_protocol": {
+                    "IS-IS": {
+                        "process_id": {
+                            "test": {
+                                "level_type": "level-1-2",
+                                "interface_number": "0x1",
+                                "local_circuit_id": "0x1",
+                                "neighbor_extended_local_circuit_id": "0x0",
+                                "level-1": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.01",
+                                    "dr_id": "R2.01",
+                                    "ipv6_metric": 10,
+                                },
+                                "priority": {
+                                    "level-1": {
+                                        "priority": 64},
+                                    "level-2": {
+                                        "priority": 64},
+                                },
+                                "adjacencies": {
+                                    "level-1": {
+                                        "number_of_active_adjancies": 1},
+                                    "level-2": {
+                                        "number_of_active_adjancies": 0},
+                                },
+                                "level-2": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.01",
+                                    "dr_id": "0000.0000.0000.00",
+                                    "ipv6_metric": 10,
+                                },
+                                "hello_interval": {
+                                    "level-1": {
+                                        "next_is_is_lan_hello_in_ms": 432},
+                                    "level-2": {
+                                        "next_is_is_lan_hello_in": 4},
+                                },
+                            }
+                        }
+                    }
+                },
+            },
+            "GigabitEthernet3": {
+                "line_protocol": "up",
+                "status": "up",
+                "checksum_enabled": True,
+                "mtu": 1497,
+                "encapsulation": "SAP",
+                "erpdus_enabled": True,
+                "min_interval_msec": 10,
+                "clns_fast_switching": True,
+                "clns_sse_switching": False,
+                "dec_compatibility_mode": "OFF",
+                "next_esh_ish_in": 15,
+                "routing_protocol": {
+                    "IS-IS": {
+                        "process_id": {
+                            "test": {
+                                "level_type": "level-1-2",
+                                "interface_number": "0x2",
+                                "local_circuit_id": "0x2",
+                                "neighbor_extended_local_circuit_id": "0x0",
+                                "level-1": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.02",
+                                    "dr_id": "0000.0000.0000.00",
+                                    "ipv6_metric": 10,
+                                },
+                                "priority": {
+                                    "level-1": {
+                                        "priority": 64},
+                                    "level-2": {
+                                        "priority": 64},
+                                },
+                                "adjacencies": {
+                                    "level-1": {
+                                        "number_of_active_adjancies": 0},
+                                    "level-2": {
+                                        "number_of_active_adjancies": 0},
+                                },
+                                "level-2": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.02",
+                                    "dr_id": "0000.0000.0000.00",
+                                    "ipv6_metric": 10,
+                                },
+                                "hello_interval": {
+                                    "level-1": {
+                                        "next_is_is_lan_hello_in": 5},
+                                    "level-2": {
+                                        "next_is_is_lan_hello_in": 6},
+                                },
+                            }
+                        }
+                    }
+                },
+            },
+            "GigabitEthernet4": {
+                "line_protocol": "up",
+                "status": "up",
+                "checksum_enabled": True,
+                "mtu": 1497,
+                "encapsulation": "SAP",
+                "erpdus_enabled": True,
+                "min_interval_msec": 10,
+                "clns_fast_switching": True,
+                "clns_sse_switching": False,
+                "dec_compatibility_mode": "OFF",
+                "next_esh_ish_in": 32,
+                "routing_protocol": {
+                    "IS-IS": {
+                        "process_id": {
+                            "VRF1": {
+                                "level_type": "level-1-2",
+                                "interface_number": "0x1",
+                                "local_circuit_id": "0x1",
+                                "neighbor_extended_local_circuit_id": "0x0",
+                                "level-1": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.01",
+                                    "dr_id": "0000.0000.0000.00",
+                                    "ipv6_metric": 10,
+                                },
+                                "priority": {
+                                    "level-1": {
+                                        "priority": 64},
+                                    "level-2": {
+                                        "priority": 64},
+                                },
+                                "adjacencies": {
+                                    "level-1": {
+                                        "number_of_active_adjancies": 0},
+                                    "level-2": {
+                                        "number_of_active_adjancies": 0},
+                                },
+                                "level-2": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.01",
+                                    "dr_id": "0000.0000.0000.00",
+                                    "ipv6_metric": 10,
+                                },
+                                "hello_interval": {
+                                    "level-1": {
+                                        "next_is_is_lan_hello_in": 2},
+                                    "level-2": {
+                                        "next_is_is_lan_hello_in": 7},
+                                },
+                            }
+                        }
+                    }
+                },
+            },
+            "Loopback0": {
+                "line_protocol": "up",
+                "status": "up",
+                "checksum_enabled": True,
+                "mtu": 1514,
+                "encapsulation": "LOOPBACK",
+                "erpdus_enabled": True,
+                "min_interval_msec": 10,
+                "clns_fast_switching": False,
+                "clns_sse_switching": False,
+                "dec_compatibility_mode": "OFF",
+                "next_esh_ish_in": 36,
+                "routing_protocol": {
+                    "IS-IS": {
+                        "process_id": {
+                            "test": {
+                                "level_type": "level-1-2",
+                                "interface_number": "0x0",
+                                "local_circuit_id": "0x7",
+                                "neighbor_extended_local_circuit_id": "0x0",
+                                "level-1": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.07",
+                                    "ipv6_metric": 10,
+                                },
+                                "priority": {
+                                    "level-1": {
+                                        "priority": 64},
+                                    "level-2": {
+                                        "priority": 64},
+                                },
+                                "adjacencies": {
+                                    "level-1": {
+                                        "number_of_active_adjancies": 0},
+                                    "level-2": {
+                                        "number_of_active_adjancies": 0},
+                                },
+                                "level-2": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.07",
+                                    "ipv6_metric": 10,
+                                },
+                                "hello_interval": {
+                                    "next_is_is_hello_in": 0},
+                                "if_state": "Down",
+                            }
+                        }
+                    }
+                },
+            },
+            "Loopback1": {
+                "line_protocol": "up",
+                "status": "up",
+                "checksum_enabled": True,
+                "mtu": 1514,
+                "encapsulation": "LOOPBACK",
+                "erpdus_enabled": True,
+                "min_interval_msec": 10,
+                "clns_fast_switching": False,
+                "clns_sse_switching": False,
+                "dec_compatibility_mode": "OFF",
+                "next_esh_ish_in": 49,
+                "routing_protocol": {
+                    "IS-IS": {
+                        "process_id": {
+                            "VRF1": {
+                                "level_type": "level-1-2",
+                                "interface_number": "0x0",
+                                "local_circuit_id": "0x8",
+                                "neighbor_extended_local_circuit_id": "0x0",
+                                "level-1": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.08",
+                                    "ipv6_metric": 10,
+                                },
+                                "priority": {
+                                    "level-1": {
+                                        "priority": 64},
+                                    "level-2": {
+                                        "priority": 64},
+                                },
+                                "adjacencies": {
+                                    "level-1": {
+                                        "number_of_active_adjancies": 0},
+                                    "level-2": {
+                                        "number_of_active_adjancies": 0},
+                                },
+                                "level-2": {
+                                    "metric": 10,
+                                    "circuit_id": "R2.08",
+                                    "ipv6_metric": 10,
+                                },
+                                "hello_interval": {
+                                    "next_is_is_hello_in": 0},
+                                "if_state": "Down",
+                            }
+                        }
+                    }
+                },
+            },
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show clns interface
+        GigabitEthernet1 is up, line protocol is up
+          CLNS protocol processing disabled
+        GigabitEthernet2 is up, line protocol is up
+          Checksums enabled, MTU 1497, Encapsulation SAP
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching enabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 55 seconds
+          Routing Protocol: IS-IS (test)
+            Circuit Type: level-1-2
+            Interface number 0x1, local circuit ID 0x1
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: R2.01
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 1
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: 0000.0000.0000.00
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS LAN Level-1 Hello in 432 milliseconds
+            Next IS-IS LAN Level-2 Hello in 4 seconds
+        GigabitEthernet3 is up, line protocol is up
+          Checksums enabled, MTU 1497, Encapsulation SAP
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching enabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 15 seconds
+          Routing Protocol: IS-IS (test)
+            Circuit Type: level-1-2
+            Interface number 0x2, local circuit ID 0x2
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.02
+            DR ID: 0000.0000.0000.00
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 0
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.02
+            DR ID: 0000.0000.0000.00
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS LAN Level-1 Hello in 5 seconds
+            Next IS-IS LAN Level-2 Hello in 6 seconds
+        GigabitEthernet4 is up, line protocol is up
+          Checksums enabled, MTU 1497, Encapsulation SAP
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching enabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 32 seconds
+          Routing Protocol: IS-IS (VRF1)
+            Circuit Type: level-1-2
+            Interface number 0x1, local circuit ID 0x1
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: 0000.0000.0000.00
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 0
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
+            DR ID: 0000.0000.0000.00
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS LAN Level-1 Hello in 2 seconds
+            Next IS-IS LAN Level-2 Hello in 7 seconds
+        Loopback0 is up, line protocol is up
+          Checksums enabled, MTU 1514, Encapsulation LOOPBACK
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching disabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 36 seconds
+          Routing Protocol: IS-IS (test)
+            Circuit Type: level-1-2
+            Interface number 0x0, local circuit ID 0x7
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.07
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 0
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.07
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS Hello in 0 seconds
+            if state DOWN
+        Loopback1 is up, line protocol is up
+          Checksums enabled, MTU 1514, Encapsulation LOOPBACK
+          ERPDUs enabled, min. interval 10 msec.
+          CLNS fast switching disabled
+          CLNS SSE switching disabled
+          DEC compatibility mode OFF for this interface
+          Next ESH/ISH in 49 seconds
+          Routing Protocol: IS-IS (VRF1)
+            Circuit Type: level-1-2
+            Interface number 0x0, local circuit ID 0x8
+            Neighbor Extended Local Circuit ID: 0x0
+            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.08
+            Level-1 IPv6 Metric: 10
+            Number of active level-1 adjacencies: 0
+            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.08
+            Level-2 IPv6 Metric: 10
+            Number of active level-2 adjacencies: 0
+            Next IS-IS Hello in 0 seconds
+            if state DOWN
+    '''}
 
     def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        obj = ShowClnsInterface(device=self.device1)
+        device = Mock(**self.empty_output)
+        obj = ShowClnsInterface(device=device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden_clns_interface(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowClnsInterface(device=self.device)
+    def test_golden_clns_interface_1(self):
+        device = Mock(**self.golden_output)
+        obj = ShowClnsInterface(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_clns_interface_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowClnsInterface(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # =========================================================
