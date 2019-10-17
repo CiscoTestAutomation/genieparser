@@ -61,7 +61,8 @@ class ShowRplRoutePolicySchema(MetaParser):
                              Optional('set_ospf_metric'): str,
                              Optional('set_tag'): str,
                              Optional('set_weight'): str,
-                             Optional('actions'): str
+                             Optional('actions'): str,
+                             Optional('set_spf_priority'): str,
                             }
                         }
                     },
@@ -438,6 +439,14 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 ['set_tag'] = str(m.groupdict()['set_tag'])
                 continue
 
+            # set spf-priority medium
+            p20 = re.compile(r'^\s*set +spf-priority +(?P<spf_priority>[a-z]+)$')
+            m = p20.match(line)
+            if m:
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_spf_priority'] = str(m.groupdict()['spf_priority'])
+                continue
+
             #pass|done|drop
             p18 = re.compile(r'^\s*(?P<actions>(pass|done|drop))$')
             m = p18.match(line)
@@ -514,6 +523,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_level_eq'] = match_level_eq
 
+                    # if (destination in PE-LOOPBACKS) then
+                    # elseif destination in (0.0.0.0/0 eq 32) then
                     if 'destination in' in m.groupdict()[cond]:
                         match = re.search('destination in (?P<match_prefix_list>[0-9a-zA-Z-_]+)', m.groupdict()[cond])
                         if match:

@@ -256,6 +256,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
             'statements': {
                 10: {
                     'actions': {
+                        'set_spf_priority': 'high',
                     },
                     'conditions': {
                         'match_prefix_list': 'Test-test_test0',
@@ -263,6 +264,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                 },
                 20: {
                     'actions': {
+                        'set_spf_priority': 'medium',
                     },
                     'conditions': {
                         'match_prefix_list': '(0.0.0.0/0 eq 32)',
