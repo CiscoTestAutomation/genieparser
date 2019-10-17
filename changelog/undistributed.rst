@@ -158,6 +158,7 @@
         * show bgp instance {instance} sessions
     * Updated ShowBgpL2vpnEvpn to parse more varied output
     * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
