@@ -12,6 +12,7 @@ IOSXR parsers for the following show commands:
     * show isis interface
     * show isis statistics
     * show isis spf-log detail
+    * show isis database detail 
     * show isis instance {instance} hostname
 """
 
@@ -377,7 +378,7 @@ class ShowIsisSchema(MetaParser):
                                                 Optional('generate_style'): str,
                                                 Optional('accept_style'): str,
                                                 'metric': int,
-                                                'ispf_status': str,
+                                                Optional('ispf_status'): str,
                                             }
                                         },
                                         Optional('redistributing'): list,
@@ -902,7 +903,6 @@ class ShowIsisStatisticsSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                
                 'psnp_cache': {
                     'hits': int,
                     'tries': int,
@@ -987,7 +987,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                 },
                 'interface': {
                     Any(): {
-                        'level': {
+                        Optional('level'): {
                             Any(): {
                                 Optional('lsps_sourced'): {
                                     'sent': int,
@@ -2852,6 +2852,626 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 all_iss = group['all_iss']
                 layer_dict['all_level_1_iss'] = all_iss
                 layer_dict['all_level_2_iss'] = all_iss
+
+                continue
+
+        return parsed_output
+
+
+class ShowIsisDatabaseDetailSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis database detail
+    '''
+
+    schema = {
+        'instance': {
+            Any(): {
+                'level': {
+                    Any(): {
+                        'lspid': {
+                            Any(): {
+                                'lsp': {
+                                    'seq_num': str,
+                                    Optional('local_router'): bool,
+                                    'checksum': str,
+                                    'holdtime': int,
+                                    Optional('received'): int,
+                                    'attach_bit': int,
+                                    'p_bit': int,
+                                    'overload_bit': int,
+                                },
+                                Optional('router_id'): str,
+                                Optional('area_address'): str,
+                                Optional('nlpid'): list,
+                                Optional('ip_address'): str,
+                                Optional('ipv6_address'): str,
+                                Optional('hostname'): str,
+                                Optional('topology'): list,
+                                Optional('extended_ipv4_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        'prefix_length': str,
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('ip_interarea'): {
+                                    Any(): {
+                                        'address_family': {
+                                            Any(): {
+                                                'metric': int,
+                                            }
+                                        }
+                                    }
+                                },
+                                Optional('mt_is_neighbor'): {
+                                    Any(): {
+                                        'mt_id': str,
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('is_neighbor'): {
+                                    Any(): {
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('ip_neighbor'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        'prefix_length': str,
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('es_neighbor'): {
+                                    Any(): {
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('extended_is_neighbor'): {
+                                    Any(): {
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('mt_ipv4_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('ipv4_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('mt_ipv6_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('ipv6_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('mt_entries'): {
+                                    Any(): {
+                                        Optional('attach_bit'): int,
+                                        Optional('p_bit'): int,
+                                        Optional('overload_bit'): int,
+                                    }
+                                }
+                            }
+                        },
+                        Optional('total_lsp_count'): int,
+                        Optional('local_lsp_count'): int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
+    ''' Parser for commands:
+       * show isis database detail 
+    '''
+
+    cli_command = 'show isis database detail'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS test (Level-1) Link State Database
+        # IS-IS test (Level-2) Link State Database
+        # IS-IS Level-1 Link State Database
+        r1 = re.compile(r'IS\-IS\s+(?P<instance>\S+)?\s*\(*Level\-'
+                        r'(?P<level>\d+)\)*\s+Link\s+State\s+Database')
+
+        # LSPID                 LSP Seq Num   LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        # R3.00-00            * 0x0000000d    0x0476        578  /*            1/0/0
+        # R3.03-00              0x00000007    0x8145        988  /*            0/0/0
+        # router-5.00-00        0x00000005 0x807997c        457                0/0/0
+        # 0000.0C00.0C35.00-00  0x0000000C    0x5696        325                0/0/0
+        # 0000.0C00.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
+        r2 = re.compile(r'(?P<lspid>[\w\-\.]+)\s*(?P<local_router>\**)\s+(?P<lsp_seq_num>\S+)\s+(?P<lsp_checksum>\S+)\s+(?P<lsp_holdtime>\d+|\*)\s+(/*(?P<lsp_rcvd>\d*|\*)?)\s+(?P<attach_bit>\d+)/(?P<p_bit>\d+)/(?P<overload_bit>\d+)')
+
+        # Area Address:   49.0002
+        r3 = re.compile(r'Area\s+Address\s*:\s*(?P<area_address>\S+)')
+
+        # NLPID: 0xcc
+        # NLPID: 0xCC 0x8E
+        r4 = re.compile(r'NLPID\s*:\s*(?P<nlpid>[\w\s]+)')
+
+        # IP Address:     3.3.3.3
+        r5 = re.compile(r'IP\s*Address\s*:\s*(?P<ip_address>\S+)')
+
+        # Metric: 10         IP-Extended 3.3.3.0/24
+        # Metric: 10         IP-Extended 10.2.3.0/24
+        r6 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\s+'
+                        r'(?P<ip_address>[\d\.\/]+)')
+
+        # Hostname:       R3
+        r7 = re.compile(r'Hostname\s*:\s+(?P<hostname>\S+)')
+
+        # IPv6 Address:   2001:db8:3:3:3::3
+        r8 = re.compile(r'IPv6\s+Address\s*:\s*(?P<ipv6_address>\S+)')
+
+        # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
+        # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
+        r9 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
+                        r'\w+\)\s*(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)')
+        
+        # Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
+        # Metric: 10         IPv6 2001:2:2:2::2/128
+        r9_2 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+(?P<ip_version>'
+                          r'IPv(4|6))\s+(\(MT-IPv6\))?\s*(?P<ip_address>'
+                          r'[\w\:\/]+)')
+
+        # MT:             Standard (IPv4 Unicast)
+        # MT:             Standard (IPv6 Unicast)
+        r10 = re.compile(r'MT\s*:\s*(?P<mt>\w+\s+\(IPv(4|6)\s*\w+\))\s*'
+                         r'(:?(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
+                         r'(?P<overload_bit>\d+))?')
+
+        # MT:             IPv6 Unicast                                 1/0/0
+        # MT:             IPv4 Unicast                                 0/0/0
+        r11 = re.compile(r'MT\s*:\s*(?P<mt>IPv(4|6)\s+\w+)\s+'
+                         r'(?P<attach_bit>\d+)/(?P<p_bit>\d+)/'
+                         r'(?P<overload_bit>\d+)')
+
+        # Metric: 10         IS-Extended R3.03
+        # Metric: 10         IS-Extended R5.01
+        r12 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\-Extended\s+'
+                         r'(?P<is_extended>\S+)')
+
+        # Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
+        # Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+        r13 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+'
+                         r'(?P<mt_id>[\w\(\)\s]+)\s+IS-Extended\s+'
+                         r'(?P<is_extended>\S+)')
+
+        # Router ID:      6.6.6.6
+        # Router ID:      7.7.7.7
+        r14 = re.compile(r'Router\s+ID\s*:\s*(?P<router_id>\S+)')
+
+        # Metric: 40         IP-Extended-Interarea 10.7.8.0/24
+        r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\-'
+                          'Interarea\s+(?P<ip_interarea>\S+)')
+
+        # Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
+        r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s+\('
+                         r'(?P<address_family>.+)\)\s+IPv6-Interarea\s+'
+                         r'(?P<ipv6_interarea>\S+)')
+
+        # Total Level-1 LSP count: 11     Local Level-1 LSP count: 1
+        # Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
+        r17 = re.compile(r'Total\s+Level\-(?P<total_level>\d+)\s+LSP\s+count\s*:'
+                         r'\s*(?P<total_lsp_count>\d+)\s+Local\s*Level-'
+                         r'(?P<local_level>\d+)\s+LSP\s+count\s*:\s*'
+                         r'(?P<local_lsp_count>\d+)')
+
+        # Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)
+        r17_2 = re.compile(r'Total\s*LSP\s+count\s*:\s*(?P<total_lsp_count>\d+)'
+                           r'\s*\(L1\s*:\s*(?P<total_l1>\d+)\s*,\s*L2\s*'
+                           r'(?P<total_l2>\d+)\s*,\s*local\s*L1\s*:\s*'
+                           r'(?P<local_l1>\d+),\s*local\s*L2\s*'
+                           r'(?P<local_l2>\d+)\)')
+
+        # Metric: 10   IS 0000.0C00.62E6.03 
+        r18 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\s+'
+                         r'(?P<is_neighbor>[\w\.\-]+)')
+
+        # Metric: 0    ES 0000.0C00.0C35
+        r19 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+ES\s+'
+                         r'(?P<es_neighbor>[\w\.]+)')
+
+        # Topology: IPv4 (0x0) IPv6 (0x2)
+        # Topology: IPv4 (0x0)
+        # Topology: IPv6 (0x0)
+        r20 = re.compile(r'Topology\s*:\s*(?P<topology_1>IPv(4|6)\s+\(0x0\))'
+                         r'\s*(?P<topology_2>IPv(4|6)\s+\(0x2\))?')
+
+        # Metric: 10    IS (MT-IPv6) cisco.03
+        r21 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s*IS\s+\(MT-IPv(4|6)\)'
+                         r'\s+(?P<is_neighbor>[\w\.]+)')
+
+        # Metric: 0          IP 172.3.55.0/24
+        r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
+                         r'(?P<ip_address>[\d\.\/]+)')
+
+        parsed_output = {}
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS test (Level-1) Link State Database
+            # IS-IS test (Level-2) Link State Database
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                instance = group['instance']
+                instance = instance if instance else ''
+                level_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})\
+                    .setdefault('level', {})\
+                    .setdefault(level, {})
+
+                continue
+
+            # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+            # R3.00-00            * 0x0000000d   0x0476        578  /*            1/0/0
+            # R3.03-00              0x00000007   0x8145        988  /*            0/0/0
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                lspid = group['lspid']
+                local_router = group['local_router']
+                lsp_seq_num = group['lsp_seq_num']
+                lsp_checksum = group['lsp_checksum']
+                lsp_holdtime = group['lsp_holdtime']
+                lsp_rcvd = group['lsp_rcvd']
+                attach_bit = int(group['attach_bit'])
+                p_bit = int(group['p_bit'])
+                overload_bit = int(group['overload_bit'])
+                lspid_dict = level_dict\
+                    .setdefault('lspid', {})\
+                    .setdefault(lspid, {})
+
+                lsp_dict = lspid_dict.setdefault('lsp', {})
+                lsp_dict['seq_num'] = lsp_seq_num
+                lsp_dict['checksum'] = lsp_checksum
+                lsp_dict['local_router'] = bool(local_router)
+                lsp_dict['holdtime'] = int(lsp_holdtime)
+                if lsp_rcvd and '*' not in lsp_rcvd:
+                    lsp_dict['received'] = int(lsp_rcvd)
+                lsp_dict['attach_bit'] = attach_bit
+                lsp_dict['p_bit'] = p_bit
+                lsp_dict['overload_bit'] = overload_bit
+
+                continue
+
+            # Area Address:   49.0002
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                area_address = group['area_address']
+                lspid_dict['area_address'] = area_address
+                continue
+
+            # NLPID: 0xcc
+            # NLPID: 0xCC 0x8E
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                parsed_nlpid = group['nlpid'].split()
+                for nlpid in parsed_nlpid:
+                    nlpid_list = lspid_dict.get('nlpid', [])
+                    nlpid_list.append(nlpid)
+                lspid_dict['nlpid'] = nlpid_list
+
+                continue
+
+            # IP Address:     3.3.3.3
+            result = r5.match(line)
+            if result:
+                group = result.groupdict()
+                ip_address = group['ip_address']
+                lspid_dict['ip_address'] = ip_address
+
+                continue
+
+            # Metric: 10         IP-Extended 3.3.3.0/24
+            # Metric: 10         IP-Extended 10.2.3.0/24
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                ip_address = group['ip_address']
+                ip_extended_dict = lspid_dict\
+                    .setdefault('extended_ipv4_reachability', {})\
+                    .setdefault(ip_address, {})
+                ip_len_list = ip_address.split('/')
+                ip_extended_dict['ip_prefix'] = ip_len_list[0]
+                if len(ip_len_list) > 1:
+                    ip_extended_dict['prefix_length'] = ip_len_list[1]
+                ip_extended_dict['metric'] = metric
+
+                continue
+
+            # Hostname:       R3
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                hostname = group['hostname']
+                lspid_dict['hostname'] = hostname
+
+                continue
+
+            # IPv6 Address:   2001:db8:3:3:3::3
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                ipv6_address = group['ipv6_address']
+                lspid_dict['ipv6_address'] = ipv6_address
+
+                continue
+
+            # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
+            # Metric: 10         MT (IPv4 Unicast) IPv4 192.168.1.1/12
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                ip_address = group['ip_address']
+                ip_version = group['ip_version'].lower()
+                mt_dict = lspid_dict\
+                    .setdefault('mt_{ip_version}_reachability'\
+                        .format(ip_version=ip_version), {})\
+                    .setdefault(ip_address, {})
+                ip_prefix_list = ip_address.split('/')
+                mt_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    mt_dict['prefix_length'] = ip_prefix_list[1]
+                mt_dict['metric'] = metric
+
+                continue
+
+            # Metric: 10         IPv6 2001:2:2:2::2/128
+            # Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
+            result = r9_2.match(line)
+            if result:
+                group = result.groupdict()
+                metric = group['metric']
+                ip_address = group['ip_address']
+                ip_version = group['ip_version'].lower()
+                mt_dict = lspid_dict\
+                    .setdefault('{ip_version}_reachability'\
+                        .format(ip_version=ip_version), {})\
+                    .setdefault(ip_address, {})
+                ip_prefix_list = ip_address.split('/')
+                mt_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    mt_dict['prefix_length'] = ip_prefix_list[1]
+                mt_dict['metric'] = metric
+
+                continue
+
+            # MT:             Standard (IPv4 Unicast)
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                mt_entry = group['mt']
+                attach_bit = group['attach_bit']
+                p_bit = group['p_bit']
+                overload_bit = group['overload_bit']
+                topology_dict = lspid_dict\
+                    .setdefault('mt_entries', {})\
+                    .setdefault(mt_entry, {})
+                if attach_bit:
+                    topology_dict['attach_bit'] = int(attach_bit)
+                if p_bit:
+                    topology_dict['p_bit'] = int(p_bit)
+                if overload_bit:
+                    topology_dict['overload_bit'] = int(overload_bit)
+
+                continue
+
+            # MT:    IPv6 Unicast                1/0/0
+            # MT:    IPv6 Unicast                0/0/0
+            result = r11.match(line)
+            if result:
+                group = result.groupdict()
+                mt_entry = group['mt']
+                attach_bit = group['attach_bit']
+                p_bit = group['p_bit']
+                overload_bit = group['overload_bit']
+                topology_dict = lspid_dict\
+                    .setdefault('mt_entries', {})\
+                    .setdefault(mt_entry, {})                
+                if attach_bit:
+                    topology_dict['attach_bit'] = int(attach_bit)
+                if p_bit:
+                    topology_dict['p_bit'] = int(p_bit)
+                if overload_bit:
+                    topology_dict['overload_bit'] = int(overload_bit)
+
+                continue
+
+            # Metric: 10         IS-Extended R3.03
+            # Metric: 10         IS-Extended R5.01
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                is_extended = group['is_extended']
+                is_extended_dict =  lspid_dict\
+                    .setdefault('extended_is_neighbor', {})\
+                    .setdefault(is_extended, {})
+                is_extended_dict['metric'] = metric
+
+                continue
+
+            # Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
+            # Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                mt_id = group['mt_id']
+                is_extended = group['is_extended']
+                is_extended_dict =  lspid_dict\
+                    .setdefault('mt_is_neighbor', {})\
+                    .setdefault(is_extended, {})
+                is_extended_dict['metric'] = metric
+                is_extended_dict['mt_id'] = mt_id
+
+                continue
+
+            # Router ID:      6.6.6.6
+            # Router ID:      7.7.7.7
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                router_id = group['router_id']
+                lspid_dict['router_id'] = router_id
+                continue
+
+            # Metric: 40         IP-Extended-Interarea 10.7.8.0/24
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                ip_extended_interarea = group['ip_interarea']
+                ip_interarea_dict = lspid_dict\
+                    .setdefault('ip_interarea', {})\
+                    .setdefault(ip_extended_interarea, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault('ipv4 unicast', {})
+                ip_interarea_dict['metric'] = metric
+
+                continue
+
+            # Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                address_family = group['address_family']
+                metric = int(group['metric'])
+                ipv6_interarea = group['ipv6_interarea']
+                ip_interarea_dict = lspid_dict\
+                    .setdefault('ip_interarea', {})\
+                    .setdefault(ip_extended_interarea, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})
+                ip_interarea_dict['metric'] = metric
+
+                continue
+
+            # Total Level-1 LSP count: 11     Local Level-1 LSP count: 1
+            # Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
+            result = r17.match(line)
+            if result:
+                group = result.groupdict()
+                total_lsp_count = int(group['total_lsp_count'])
+                local_lsp_count = int(group['local_lsp_count'])
+                level_dict['total_lsp_count'] = total_lsp_count
+                level_dict['local_lsp_count'] = local_lsp_count
+                
+                continue
+
+            # Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)
+            result = r17_2.match(line)
+            if result:
+                group = result.groupdict()
+                total_lsp_count = int(group['total_lsp_count'])
+                local_l1 = int(group['local_l1'])
+                local_l2 = int(group['local_l2'])
+                local_lsp_count = sum((local_l1, local_l2))
+
+                level_dict['total_lsp_count'] = total_lsp_count
+                level_dict['local_lsp_count'] = local_lsp_count
+
+                continue
+
+            # Metric: 10   IS 0000.0C00.62E6.03 
+            result = r18.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                is_neighbor = group['is_neighbor']
+                is_neighbor_dict = lspid_dict\
+                    .setdefault('is_neighbor', {})\
+                    .setdefault(is_neighbor, {})
+                is_neighbor_dict['metric'] = metric
+
+                continue
+            
+            # Metric: 0    ES 0000.0C00.0C35
+            result = r19.match(line)
+            if result:        
+                group = result.groupdict()
+                metric = int(group['metric'])
+                es_neighbor = group['es_neighbor']
+                es_neighbor_dict = lspid_dict\
+                    .setdefault('es_neighbor', {})\
+                    .setdefault(es_neighbor, {})
+                es_neighbor_dict['metric'] = metric
+
+                continue
+
+            # Topology: IPv4 (0x0) IPv6 (0x2)
+            # Topology: IPv4 (0x0)
+            # Topology: IPv6 (0x0)
+            result = r20.match(line)
+            if result:
+                group = result.groupdict()
+                topology_1 = group['topology_1']
+                topology_2 = group['topology_2']
+                topology_list = lspid_dict\
+                    .setdefault('topology', [])
+                topology_list.append(topology_1)
+                if topology_2:
+                    topology_list.append(topology_2)
+
+                continue
+
+            # Metric: 10    IS (MT-IPv6) cisco.03
+            result = r21.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                is_neighbor = group['is_neighbor']
+                is_neighbor_dict = lspid_dict\
+                    .setdefault('is_neighbor', {})\
+                    .setdefault(is_neighbor, {})
+                is_neighbor_dict['metric'] = metric
+
+                continue
+
+            # Metric: 0          IP 172.3.55.0/24
+            result = r22.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                ip_address = group['ip_address']
+                ip_prefix_list = ip_address.split('/')
+                ip_dict = lspid_dict\
+                    .setdefault('ip_neighbor', {})\
+                    .setdefault(ip_address, {})
+                ip_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    ip_dict['prefix_length'] = ip_prefix_list[1]
+                ip_dict['metric'] = metric
 
                 continue
 

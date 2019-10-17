@@ -1,7 +1,6 @@
 # Python
 import unittest
 from unittest.mock import Mock
-
 # Ats
 from ats.topology import Device
 
@@ -15,7 +14,6 @@ from genie.libs.parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIp
 # =====================================
 #  Unit test for 'show routing vrf all'
 # =====================================
-
 class test_show_routing_vrf_all(unittest.TestCase):
 
     '''Unit test for show routing vrf all'''
@@ -223,7 +221,6 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         {'uptime': '18:47:42',
                                                         'preference': '1',
                                                         'metric': '0'}}}}}}}}}}}}}
-
     golden_output = {'execute.return_value': '''
         IP Route Table for VRF "default"
         '*' denotes best ucast next-hop
@@ -265,7 +262,8 @@ class test_show_routing_vrf_all(unittest.TestCase):
             *via 10.3.4.3, Eth2/1, [110/81], 00:18:35, ospf-1, intra (mpls)
         10.16.2.2/32, ubest/mbest: 1/0
             *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)
-        '''}
+    '''}
+
     golden_parsed_output_custom={
         'vrf':
             {'VRF1':
@@ -428,9 +426,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                                     'preference': '0',
                                                                     'metric': '0',
                                                                     'interface':
-                                                                        'Loopback1'}}}}}}}}}}},
-    }
-    }
+                                                                        'Loopback1'}}}}}}}}}}}}}
     golden_output_custom = {'execute.return_value': '''
         IP Route Table for VRF "VRF1"
         '*' denotes best ucast next-hop
@@ -456,6 +452,135 @@ class test_show_routing_vrf_all(unittest.TestCase):
             *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)
            '''}
 
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4 unicast': {
+                        'ip': {
+                            '3.3.3.3/32': {
+                                'ubest_num': '2',
+                                'mbest_num': '0',
+                                'attach': 'attached',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '3.3.3.3': {
+                                                'protocol': {
+                                                    'local': {
+                                                        'interface': 'Loopback0',
+                                                        'preference': '0',
+                                                        'metric': '0',
+                                                        'uptime': '1w4d',
+                                                    },
+                                                    'direct': {
+                                                        'interface': 'Loopback0',
+                                                        'preference': '0',
+                                                        'metric': '0',
+                                                        'uptime': '1w4d',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''
+        show routing 3.3.3.3
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        3.3.3.3/32, ubest/mbest: 2/0, attached
+            *via 3.3.3.3, Lo0, [0/0], 1w4d, local
+            *via 3.3.3.3, Lo0, [0/0], 1w4d, direct
+    '''}
+
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4 unicast': {
+                        'ip': {
+                            '1.1.1.1/32': {
+                                'ubest_num': '1',
+                                'mbest_num': '0',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '10.13.90.1': {
+                                                'protocol': {
+                                                    'eigrp': {
+                                                        'interface': 'Ethernet1/2.90',
+                                                        'preference': '90',
+                                                        'metric': '2848',
+                                                        'uptime': '1w5d',
+                                                        'protocol_id': 'test',
+                                                        'attribute': 'internal',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'routes': {
+                                    'nexthop': {
+                                        '1.1.1.1': {
+                                            'protocol': {
+                                                'bgp': {
+                                                    'preference': '200',
+                                                    'metric': '0',
+                                                    'uptime': '1w5d',
+                                                    'protocol_id': '65000',
+                                                    'attribute': 'internal',
+                                                    'tag': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.13.110.1': {
+                                            'protocol': {
+                                                'ospf': {
+                                                    'interface': 'Ethernet1/2.110',
+                                                    'preference': '110',
+                                                    'metric': '41',
+                                                    'uptime': '1w5d',
+                                                    'protocol_id': '1',
+                                                    'attribute': 'intra',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'bgp_distance_internal_as': 200,
+                    },
+                },
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        show routing 1.1.1.1
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        1.1.1.1/32, ubest/mbest: 1/0
+            *via 10.13.90.1, Eth1/2.90, [90/2848], 1w5d, eigrp-test, internal
+            via 1.1.1.1, [200/0], 1w5d, bgp-65000, internal, tag 65000 (hidden)
+            via 10.13.110.1, Eth1/2.110, [110/41], 1w5d, ospf-1, intra
+    '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -476,10 +601,24 @@ class test_show_routing_vrf_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
 
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        bgp_obj = ShowRoutingVrfAll(device=self.device)
+        parsed_output = bgp_obj.parse(ip='3.3.3.3')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        bgp_obj = ShowRoutingVrfAll(device=self.device)
+        parsed_output = bgp_obj.parse(ip='1.1.1.1')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+
 # ===========================================
 #  Unit test for 'show routing ipv6  vrf all'
 # ===========================================
-
 class test_show_routing_ipv6_vrf_all(unittest.TestCase):
 
     '''Unit test for show routing ipv6  vrf all'''
@@ -974,6 +1113,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 # ===========================================
 #  Unit test for 'show routing'
 # ===========================================
@@ -1066,6 +1206,7 @@ class test_show_routing(unittest.TestCase):
         bgp_obj = ShowRouting(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
+
 
 # ============================================
 # Unit tests for:
@@ -1896,6 +2037,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
+
 # ============================================
 # unit test for 'show ipv6 route'
 # =============================================
@@ -1947,8 +2089,7 @@ class test_show_ipv6_route(unittest.TestCase):
     '**' denotes best mcast next-hop
     '[x/y]' denotes [preference/metric]
 
-    '''
-}
+    '''}
     golden_parsed_output_1 = {
         'vrf':{
             'default':{
@@ -2181,56 +2322,56 @@ class test_show_ipv6_route(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''
     R3_nx# show ipv6 route vrf all
-IPv6 Routing Table for VRF "default"
-'*' denotes best ucast next-hop
-'**' denotes best mcast next-hop
-'[x/y]' denotes [preference/metric]
+    IPv6 Routing Table for VRF "default"
+    '*' denotes best ucast next-hop
+    '**' denotes best mcast next-hop
+    '[x/y]' denotes [preference/metric]
 
-2001:1:1:1::1/128, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/2848], 03:55:29, eigrp-test, internal
-2001:2:2:2::2/128, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
-2001:3:3:3::3/128, ubest/mbest: 2/0, attached
-    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct, 
-    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, local
-2001:10:12:90::/64, ubest/mbest: 2/0
-    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/3072], 03:51:46, eigrp-test, internal
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:55:29, eigrp-test, internal
-2001:10:12:120::/64, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:39:27, eigrp-test, internal
-2001:10:13:90::/64, ubest/mbest: 1/0, attached
-    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct, 
-2001:10:13:90::3/128, ubest/mbest: 1/0, attached
-    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, local
-2001:10:23:120::/64, ubest/mbest: 1/0, attached
-    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct, 
-2001:10:23:120::3/128, ubest/mbest: 1/0, attached
-    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, local
+    2001:1:1:1::1/128, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/2848], 03:55:29, eigrp-test, internal
+    2001:2:2:2::2/128, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
+    2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+        *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct, 
+        *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, local
+    2001:10:12:90::/64, ubest/mbest: 2/0
+        *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/3072], 03:51:46, eigrp-test, internal
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:55:29, eigrp-test, internal
+    2001:10:12:120::/64, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:39:27, eigrp-test, internal
+    2001:10:13:90::/64, ubest/mbest: 1/0, attached
+        *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct, 
+    2001:10:13:90::3/128, ubest/mbest: 1/0, attached
+        *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, local
+    2001:10:23:120::/64, ubest/mbest: 1/0, attached
+        *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct, 
+    2001:10:23:120::3/128, ubest/mbest: 1/0, attached
+        *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, local
 
-    IPv6 Routing Table for VRF "VRF1"
-'*' denotes best ucast next-hop
-'**' denotes best mcast next-hop
-'[x/y]' denotes [preference/metric]
+        IPv6 Routing Table for VRF "VRF1"
+    '*' denotes best ucast next-hop
+    '**' denotes best mcast next-hop
+    '[x/y]' denotes [preference/metric]
 
-2001:1:1:1::1/128, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/2848], 03:55:29, eigrp-test, internal
-2001:2:2:2::2/128, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
-2001:3:3:3::3/128, ubest/mbest: 2/0, attached
-    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct, 
-    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, local
-2001:10:12:90::/64, ubest/mbest: 2/0
-    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/3072], 03:51:47, eigrp-test, internal
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:55:29, eigrp-test, internal
-2001:10:12:120::/64, ubest/mbest: 1/0
-    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:25:35, eigrp-test, internal
-2001:10:13:90::/64, ubest/mbest: 1/0, attached
-    *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct, 
-2001:10:13:110::3/128, ubest/mbest: 1/0, attached
-    *via 2001:10:13:110::3, Eth1/2.410, [0/0], 03:55:43, local
-2001:10:13:115::/64, ubest/mbest: 1/0, attached
-    *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct, 
-2001:10:13:120::3/128, ubest/mbest: 1/0, attached
+    2001:1:1:1::1/128, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/2848], 03:55:29, eigrp-test, internal
+    2001:2:2:2::2/128, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
+    2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+        *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct, 
+        *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, local
+    2001:10:12:90::/64, ubest/mbest: 2/0
+        *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/3072], 03:51:47, eigrp-test, internal
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:55:29, eigrp-test, internal
+    2001:10:12:120::/64, ubest/mbest: 1/0
+        *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:25:35, eigrp-test, internal
+    2001:10:13:90::/64, ubest/mbest: 1/0, attached
+        *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct, 
+    2001:10:13:110::3/128, ubest/mbest: 1/0, attached
+        *via 2001:10:13:110::3, Eth1/2.410, [0/0], 03:55:43, local
+    2001:10:13:115::/64, ubest/mbest: 1/0, attached
+        *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct, 
+    2001:10:13:120::3/128, ubest/mbest: 1/0, attached
     '''}
 
     golden_parsed_output_2 = {
@@ -2715,7 +2856,6 @@ IPv6 Routing Table for VRF "default"
         obj = ShowIpv6Route(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
-
 
 
 if __name__ == '__main__':

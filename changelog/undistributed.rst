@@ -156,7 +156,8 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
-    * Update ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -167,6 +168,9 @@
 
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
+    * Updated ShowIpBgp for parsing of more varied output
+    * Updated ShowIpBgpNeighbors schema to support more varied output
+
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -275,6 +279,9 @@
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
         * Updated regex
+* NXOS
+    * Updated ShowRoutingVrfAll:
+        * To match non-best routes
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -505,12 +512,20 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatformHardware to support more varied output
+
+--------------------------------------------------------------------------------
                                 ACL
 --------------------------------------------------------------------------------
 * IOSXE
     * ShowAccessLists:
         * modified regex for both ipv4 and ipv6 to accommodate more outputs
         * added to handle standard ACL
+
+--------------------------------------------------------------------------------
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -546,15 +561,18 @@
         * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
+        * Updated schema with ispf_status optional key
     * Added ShowIsisStatistics for:
         * show isis statistics
+        * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisDatabaseDetail for command:
+        * show isis database detail
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
-
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
@@ -587,3 +605,10 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added Traceroute class
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Verified customer outputs
+    * Added field to schema advertised_by
