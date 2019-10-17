@@ -25,7 +25,9 @@ class ShowRplPrefixSetSchema(MetaParser):
                 "prefix_set_name": str,
                 "protocol": str,
                 "prefixes": {
-                    Any(): {"prefix": str, Optional("masklength_range"): str}
+                    Any(): {
+                        "prefix": str,
+                        Optional("masklength_range"): str}
                 },
             }
         }
