@@ -1436,7 +1436,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_limit_threshold': '75%',
                         'mac_port_down_flush': 'enabled',
                         'mac_secure': 'disabled',
-                        'mac_logging': 'disabled',
+                        'mac_secure_logging': 'disabled',
                         'split_horizon_group': 'none',
                         'dynamic_arp_inspection': 'disabled',
                         'dynamic_arp_logging': 'disabled',
@@ -1928,7 +1928,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_limit_threshold': '75%',
                         'mac_port_down_flush': 'enabled',
                         'mac_secure': 'disabled',
-                        'mac_logging': 'disabled',
+                        'mac_secure_logging': 'disabled',
                         'split_horizon_group': 'Access',
                         'dynamic_arp_inspection': 'disabled',
                         'dynamic_arp_logging': 'disabled',
@@ -1989,27 +1989,29 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                 'encap_type': 'Ethernet',
                                                 'control_word': 'enabled',
                                                 'sequencing': 'not set',
-                                                'lsp': 'Up',
-                                                'evpn': {
-                                                    'label': {
-                                                        'local': '100482',
-                                                        'remote': 'unknown',
-                                                    },
-                                                    'mtu': {
-                                                        'local': '1500',
-                                                        'remote': 'unknown',
-                                                    },
-                                                    'control_word': {
-                                                        'local': 'enabled',
-                                                        'remote': 'unknown',
-                                                    },
-                                                    'ac_id': {
-                                                        'local': '1',
-                                                        'remote': '1',
-                                                    },
-                                                    'evpn_type': {
-                                                        'local': 'Ethernet',
-                                                        'remote': 'unknown',
+                                                'lsp': {
+                                                    'state': 'Up',
+                                                    'evpn': {
+                                                        'label': {
+                                                            'local': '100482',
+                                                            'remote': 'unknown',
+                                                        },
+                                                        'mtu': {
+                                                            'local': '1500',
+                                                            'remote': 'unknown',
+                                                        },
+                                                        'control_word': {
+                                                            'local': 'enabled',
+                                                            'remote': 'unknown',
+                                                        },
+                                                        'ac_id': {
+                                                            'local': '1',
+                                                            'remote': '1',
+                                                        },
+                                                        'evpn_type': {
+                                                            'local': 'Ethernet',
+                                                            'remote': 'unknown',
+                                                        },
                                                     },
                                                 },
                                                 'create_time': '11/07/2019 13:01:43 (13w4d ago)',
@@ -2033,7 +2035,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                 'mac_limit_threshold': '75%',
                                                 'mac_port_down_flush': 'enabled',
                                                 'mac_secure': 'disabled',
-                                                'mac_logging': 'disabled',
+                                                'mac_secure_logging': 'disabled',
                                                 'split_horizon_group': 'none',
                                                 'dhcp_v4_snooping': 'disabled',
                                                 'dhcp_v4_snooping_profile': 'none',
@@ -2077,7 +2079,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_limit_threshold': '75%',
                         'mac_port_down_flush': 'enabled',
                         'mac_secure': 'disabled',
-                        'mac_logging': 'disabled',
+                        'mac_secure_logging': 'disabled',
                         'split_horizon_group': 'none',
                         'dynamic_arp_inspection': 'disabled',
                         'dynamic_arp_logging': 'disabled',

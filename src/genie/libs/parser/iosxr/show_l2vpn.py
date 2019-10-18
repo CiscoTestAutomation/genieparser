@@ -806,7 +806,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('mac_secure'): str,
                         Optional('mac_withdraw_relaying'): str,
                         Optional('mac_withdraw_for_access_pw'): str,
-                        Optional('mac_logging'): str,
+                        Optional('mac_secure_logging'): str,
                         Optional('dynamic_arp_inspection'): str,
                         Optional('dynamic_arp_logging'): str,
                         Optional('ip_source_logging'): str,
@@ -968,14 +968,16 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                 'encap_type': str,
                                                 'control_word': str,
                                                 'sequencing': str,
-                                                'lsp': str,
-                                                'evpn': {
-                                                    Any(): {
-                                                        'local': str,
-                                                        'remote': str,
-                                                        Optional('remote_type'): list,
-                                                        Optional('local_type'): list
-                                                    }
+                                                'lsp': {
+                                                    'state': str,
+                                                    'evpn': {
+                                                        Any(): {
+                                                            'local': str,
+                                                            'remote': str,
+                                                            Optional('remote_type'): list,
+                                                            Optional('local_type'): list
+                                                        }
+                                                    },
                                                 },
                                                 'create_time': str,
                                                 'last_time_status_changed': str,
@@ -996,7 +998,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                 Optional('mac_limit_action'): str,
                                                 Optional('mac_limit_notification'): str,
                                                 Optional('mac_limit_reached'): str,
-                                                Optional('mac_logging'): str,
+                                                Optional('mac_secure_logging'): str,
                                                 Optional('mac_secure'): str,
                                                 Optional('mac_port_down_flush'): str,
                                                 Optional('dhcp_v4_snooping'): str,
@@ -1005,7 +1007,6 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                 Optional('igmp_snooping_profile'): str,
                                                 Optional('mld_snooping_profile'): str,
                                                 Optional('mac_limit_threshold'): str,
-                                                Optional('static_mac_address'): list,
                                                 Optional('static_mac_address'): list,
                                                 Optional('statistics'): {
                                                     'packet_totals': {
@@ -1284,7 +1285,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p50 = re.compile(r'^MAC +port +down +flush: +(?P<mac_port_down_flush>\S+)$')
 
         #  MAC Secure: disabled, Logging: disabled
-        p51 = re.compile(r'^MAC +Secure: +(?P<mac_secure>\w+), +Logging: +(?P<mac_logging>\w+)$')
+        p51 = re.compile(r'^MAC +Secure: +(?P<mac_secure>\w+), +Logging: +(?P<mac_secure_logging>\w+)$')
 
         # Split Horizon Group: none
         p52 = re.compile(r'^Split +Horizon +Group: +(?P<split_horizon_group>\S+)$')
@@ -1802,6 +1803,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                     setdefault('pw_id', {}). \
                     setdefault(pw_id, {})
                 pw_id_dict.update({'state': state})
+                label_dict = pw_id_dict
                 continue
 
             # PW class mpls, XC ID 0xff000001
@@ -2009,13 +2011,13 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 mac_secure = group['mac_secure']
-                mac_logging = group['mac_logging']
+                mac_secure_logging = group['mac_secure_logging']
                 if dict_type == 'pw' or dict_type == 'access_pw':
                     pw_id_dict.update({'mac_secure': mac_secure})
-                    pw_id_dict.update({'mac_logging': mac_logging})
+                    pw_id_dict.update({'mac_secure_logging': mac_secure_logging})
                 else:
                     bridge_domain_dict.update({'mac_secure': mac_secure})
-                    bridge_domain_dict.update({'mac_logging': mac_logging})
+                    bridge_domain_dict.update({'mac_secure_logging': mac_secure_logging})
                 continue
 
             # Split Horizon Group: none
@@ -2258,6 +2260,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                     setdefault(pw_id, {})
                 pw_id_dict.update({'ac_id': ac_id})
                 pw_id_dict.update({'state': state})
+                label_dict = pw_id_dict
                 continue
             
             # Source address 10.154.219.85
@@ -2273,7 +2276,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 lsp = group['lsp']
-                pw_id_dict.update({'lsp': lsp})
+                label_dict = pw_id_dict.setdefault('lsp', {})
+                label_dict.update({'state': lsp})
                 continue
 
             # Forward-class: 0
@@ -2318,18 +2322,18 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 remote = group['remote']
                 if mpls == 'interface':
                     if interface_found:
-                        interface_dict = pw_id_dict.setdefault(type_found, {}). \
+                        interface_dict = label_dict.setdefault(type_found, {}). \
                             setdefault('monitor_interface', {})
                         interface_dict.update({'local': local})
                         interface_dict.update({'remote': remote})
                     else:
                         interface_found = True
-                        mpls_dict = pw_id_dict.setdefault(type_found, {}). \
+                        mpls_dict = label_dict.setdefault(type_found, {}). \
                             setdefault(mpls, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
                 else:
-                    mpls_dict = pw_id_dict.setdefault(type_found, {}). \
+                    mpls_dict = label_dict.setdefault(type_found, {}). \
                         setdefault(mpls, {})
                     mpls_dict.update({'local': local})
                     mpls_dict.update({'remote': remote})

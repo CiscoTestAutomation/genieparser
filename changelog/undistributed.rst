@@ -16,10 +16,17 @@
                                 CLNS
 --------------------------------------------------------------------------------
 * IOSXE
+    * Updated ShowClnsProtocol tu support outputs without:
+        * Interfaces
+        * Manual area address
+        * Routing for area address
+    * Updated ShowClnsInterface to support more outputs        
     * Changed "type" type from string to integer on the following commands
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Saving as empty instance when instance not present in output on:
+        * show clns protocol    
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -169,6 +176,7 @@
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
     * Updated ShowIpBgp for parsing of more varied output
+    * Updated ShowIpBgpNeighbors schema to support more varied output
 
 --------------------------------------------------------------------------------
                                 OSPF
@@ -194,6 +202,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
         * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
@@ -415,6 +424,9 @@
         * show l2route evpn mac all
     * Updated ShowL2routeEvpnMacIpAll for:
         * show l2route evpn mac-ip all
+    * Updated ShowRplPrefixSet regex for:
+        * show rpl prefix-set
+        * show rpl prefix-set <name>
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -499,6 +511,7 @@
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
     * Updated ShowL2vpnBridgeDomain to support more outputs
+    * Updated ShowL2vpnBridgeDomainDetail to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -507,12 +520,20 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatformHardware to support more varied output
+
+--------------------------------------------------------------------------------
                                 ACL
 --------------------------------------------------------------------------------
 * IOSXE
     * ShowAccessLists:
         * modified regex for both ipv4 and ipv6 to accommodate more outputs
         * added to handle standard ACL
+
+--------------------------------------------------------------------------------
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -554,11 +575,12 @@
         * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisDatabaseDetail for command:
+        * show isis database detail
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
-
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
@@ -591,3 +613,10 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added Traceroute class
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Verified customer outputs
+    * Added field to schema advertised_by
