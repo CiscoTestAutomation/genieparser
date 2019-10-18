@@ -4250,8 +4250,10 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def cli(self, neighbor, address_family='', output=None):
 
+        # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+        # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
         p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                        '(, +vrf +(?P<vrf>[0-9A-Za-z]+))?, +remote AS '
+                        '(, +vrf +(?P<vrf>[\S]+))?, +remote AS '
                         '+(?P<remote_as_id>[0-9]+), '
                         '+(?P<internal_external_link>[a-z\s]+)$')
 
