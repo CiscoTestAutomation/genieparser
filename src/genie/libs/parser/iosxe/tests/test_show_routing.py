@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import Mock
-
 # ATS
 from ats.topology import Device
 
@@ -1464,6 +1463,46 @@ class TestShowIpRouteWord(unittest.TestCase):
         'total_prefixes': 1
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        GENIE#show ip route 192.25.70.10
+        Routing entry for 192.25.70.0/25
+        Known via "static", distance 1, metric 0
+        Tag 113
+        Redistributing via eigrp 10
+        Advertised by eigrp 10 route-map GENIE_INTO_EIGRP
+        Routing Descriptor Blocks:
+        * 10.1.11.9
+            Route metric is 0, traffic share count is 1
+            Route tag 113
+    '''
+    }
+
+    golden_parsed_output_5 = {
+        'entry': {
+            '192.25.70.0/25': {
+                'distance': '1',
+                'advertised_by': 'eigrp 10 route-map GENIE_INTO_EIGRP',
+                'ip': '192.25.70.0',
+                'known_via': 'static',
+                'mask': '25',
+                'metric': '0',
+                'paths': {
+                    1: {
+                        'merge_labels': False,
+                        'metric': '0',
+                        'nexthop': '10.1.11.9',
+                        'prefer_non_rib_labels': False,
+                        'route_tag': '113',
+                        'share_count': '1'
+                    }
+                },
+                'redist_via': 'eigrp',
+                'redist_via_tag': '10'
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1484,7 +1523,7 @@ class TestShowIpRouteWord(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
-    def test_golden2(self):
+    def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpRouteWord(device=self.device)
@@ -1505,6 +1544,13 @@ class TestShowIpRouteWord(unittest.TestCase):
         parsed_output = obj.parse(route='0.0.0.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.25.70.10')
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+        
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
@@ -1895,6 +1941,39 @@ class TestShowIpCef(unittest.TestCase):
         no route
     '''}
 
+    golden_parsed_output_8 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '10.169.196.241/32': {
+                                'nexthop': {
+                                    '10.0.0.10': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet3': {
+                                                'local_label': 16022,
+                                                'outgoing_label': ['16022'],
+                                                'outgoing_label_backup': '16002',
+                                                'outgoing_label_info': 'elc',
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+        show ip cef 10.169.196.241
+        10.169.196.241/32
+            nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1949,6 +2028,13 @@ class TestShowIpCef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 
 ###################################################

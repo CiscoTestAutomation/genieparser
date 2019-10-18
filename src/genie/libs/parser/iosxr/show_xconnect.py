@@ -307,10 +307,13 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'encapsulation': str,
                                             Optional('auto_discovered'): str,
                                             'protocol': str,
+                                            Optional('source_address'): str,
+                                            Optional('lsp'): str,
                                             Optional('type'): str,
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
                                             Optional('backup_disable_delay'): int,
+                                            Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'mpls': {
                                                 Any(): {
@@ -483,7 +486,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p8 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +'
             '(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
         
-        # EVPN: neighbor 67.70.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
+        # EVPN: neighbor 10.154.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
         p8_1 = re.compile(r'^EVPN: +neighbor +(?P<neighbor>\S+), +PW +ID: +'
             '(?P<pw_id>[\S ]+), +ac-id +(?P<ac_id>\d+), +state +is +(?P<state>[\S ]+)$')
         
@@ -503,6 +506,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Sequencing not set
         p13 = re.compile(r'^Sequencing +(?P<sequencing>[\S ]+)$')
+
+        # PW Status TLV in use
+        p13_1 = re.compile(r'^PW +Status +TLV +(?P<status_tlv>[\S ]+)$')
 
         # MPLS         Local                          Remote
         # EVPN         Local                          Remote
@@ -563,7 +569,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p30 = re.compile(r'^Auto +Discovery: +(?P<auto_discovery>\S+), +state +is +'
             '(?P<state>\S+) +\((?P<event_name>[\S ]+)\)$')
 
-        # Route Distinguisher: (auto) 3.3.3.3:32770
+        # Route Distinguisher: (auto) 10.36.3.3:32770
         p31 = re.compile(r'^Route +Distinguisher: +(?P<route_distinguisher>[\S ]+)$')
 
         # Import Route Targets:
@@ -572,7 +578,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Export Route Targets:
         p33 = re.compile(r'^Export +Route +Targets:$')
 
-        # 2.2.2.2:100
+        # 10.16.2.2:100
         p34 = re.compile(r'^(?P<route_target>[\d\.:]+)$')
 
         # Signaling protocol:BGP
@@ -598,7 +604,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Encapsulation MPLS
         p41 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+)$')
 
-        # Source address 67.70.219.88
+        # Source address 10.154.219.88
         p42 = re.compile(r'^Source +address +(?P<source_address>\S+)$')
 
         # Encap type Ethernet, control word enabled
@@ -809,7 +815,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'state': state})
                 continue
 
-            # EVPN: neighbor 67.70.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
+            # EVPN: neighbor 10.154.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
             m = p8_1.match(line)
             if m:
                 group = m.groupdict()
@@ -874,6 +880,14 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 sequencing = group['sequencing']
                 current_dict.update({'sequencing': sequencing})
+                continue
+
+            # PW Status TLV in use
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                status_tlv = group['status_tlv']
+                current_dict.update({'status_tlv': sequencing})
                 continue
 
             # MPLS         Local                          Remote
@@ -989,7 +1003,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 auto_discovery_dict.update({'event_name': event_name})
                 continue
 
-            # Route Distinguisher: (auto) 3.3.3.3:32770
+            # Route Distinguisher: (auto) 10.36.3.3:32770
             # p31 = re.compile(r'^Route +Distinguisher: +(?P<route_distinguisher>[\S ]+)$')
             m = p31.match(line)
             if m:
@@ -1010,7 +1024,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 route_target_list = mp2mp_dict.setdefault('export_route_targets', [])
                 continue
 
-            # 2.2.2.2:100
+            # 10.16.2.2:100
             m = p34.match(line)
             if m:
                 group = m.groupdict()
@@ -1049,7 +1063,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'encapsulation': group['encapsulation']})
                 continue
 
-            # Source address 67.70.219.88
+            # Source address 10.154.219.88
             m = p42.match(line)
             if m:
                 group = m.groupdict()
@@ -1197,6 +1211,9 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
         # SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
         p1_1 = re.compile(r'^SB = Standby, SR = Standby Ready, \(PP\) = Partially Programmed$')
 
+        # BL-PE-BG   G1-1-1-23-311
+        p1_2 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+)$')
+
         #               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
         p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
                         '+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
@@ -1241,9 +1258,18 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         .setdefault(str(group['group']), {})
                     flag_group = True
                     continue
-
             m = p1_1.match(line)
             if m:
+                continue
+            
+            # BL-PE-BG   G1-1-1-23-311
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}). \
+                    setdefault(group['group'], {})
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
                 continue
 
             m2 = p2.match(line)

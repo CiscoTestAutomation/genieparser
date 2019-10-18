@@ -2291,7 +2291,7 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
                                                 'enable': True,
                                                 'link_fragments': 
                                                     {1: 
-                                                        {'affinity_bit': 0,
+                                                        {'affinity_bit': '0',
                                                         'extended_admin_groups': 
                                                             {0: {'value': 0},
                                                             1: {'value': 0},
@@ -2337,7 +2337,7 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
                                                                 {'priority': 7,
                                                                 'unreserved_bandwidth': 93750000}}},
                                                     2: 
-                                                        {'affinity_bit': 0,
+                                                        {'affinity_bit': '0',
                                                         'extended_admin_groups': 
                                                             {0: {'value': 0},
                                                             1: {'value': 0},
@@ -2453,12 +2453,193 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
       Area 1 MPLS TE not initialized
         '''}
 
+    device_output = {'execute.return_value': '''
+                  OSPF Router with ID (67.70.219.96) (Process ID 64577)
+
+    Area 0 has 9 MPLS TE links. Area instance is 13.
+      Link is associated with fragment 1. Link instance is 13
+        Link connected to Point-to-Point network
+        Link ID : 67.70.219.75
+        Interface Address : 172.16.1.216
+        Neighbor Address : 172.16.1.217
+        Admin Metric : TE: 65535
+        (all bandwidths in bytes/sec)
+        Maximum bandwidth : 1250000000
+        Maximum global pool reservable bandwidth : 2985974784
+        Maximum sub pool reservable bandwidth    : 1492987392
+        Number of Priority : 8
+        Global pool unreserved BW 
+        Priority 0 :           2985974784  Priority 1 :           2985974784
+        Priority 2 :           2985974784  Priority 3 :           2985974784
+        Priority 4 :           2985974784  Priority 5 :           2985974784
+        Priority 6 :           2985974784  Priority 7 :           2985974784
+        Sub pool unreserved BW 
+        Priority 0 :           1492987392  Priority 1 :           1492987392
+        Priority 2 :           1492987392  Priority 3 :           1492987392
+        Priority 4 :           1492987392  Priority 5 :           1492987392
+        Priority 6 :           1492987392  Priority 7 :           1492987392
+        Out Interface ID : 40
+        Affinity Bit : 0x100000
+        Extended Admin Group : 8
+         EAG[0]: 0x100000
+         EAG[1]: 0
+         EAG[2]: 0
+         EAG[3]: 0
+         EAG[4]: 0
+         EAG[5]: 0
+         EAG[6]: 0
+         EAG[7]: 0
+
+      '''}
+
+    device_parsed_output = {
+     'vrf': {
+      'default': {
+       'address_family': {
+        'ipv4': {
+         'instance': {
+          '64577': {
+           'areas': {
+            '0.0.0.0': {
+             'mpls': {
+              'te': {
+               'area_instance': 13,
+               'enable': True,
+               'link_fragments': {
+                1: {
+                 'affinity_bit': '0x100000',
+                 'extended_admin_groups': {
+                  1: {
+                   'value': 0,
+                  },
+                  2: {
+                   'value': 0,
+                  },
+                  3: {
+                   'value': 0,
+                  },
+                  4: {
+                   'value': 0,
+                  },
+                  5: {
+                   'value': 0,
+                  },
+                  6: {
+                   'value': 0,
+                  },
+                  7: {
+                   'value': 0,
+                  },
+                 },
+                 'interface_address': '172.16.1.216',
+                 'link_id': '67.70.219.75',
+                 'link_instance': 13,
+                 'maximum_bandwidth': 1250000000,
+                 'maximum_reservable_bandwidth': 2985974784,
+                 'network_type': 'point-to-point',
+                 'out_interface_id': 40,
+                 'te_admin_metric': 65535,
+                 'total_extended_admin_group': 8,
+                 'total_priority': 8,
+                 'unreserved_bandwidths': {
+                  '0 1492987392': {
+                   'priority': 0,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '0 2985974784': {
+                   'priority': 0,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '1 1492987392': {
+                   'priority': 1,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '1 2985974784': {
+                   'priority': 1,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '2 1492987392': {
+                   'priority': 2,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '2 2985974784': {
+                   'priority': 2,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '3 1492987392': {
+                   'priority': 3,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '3 2985974784': {
+                   'priority': 3,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '4 1492987392': {
+                   'priority': 4,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '4 2985974784': {
+                   'priority': 4,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '5 1492987392': {
+                   'priority': 5,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '5 2985974784': {
+                   'priority': 5,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '6 1492987392': {
+                   'priority': 6,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '6 2985974784': {
+                   'priority': 6,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                  '7 1492987392': {
+                   'priority': 7,
+                   'unreserved_bandwidth': 1492987392,
+                  },
+                  '7 2985974784': {
+                   'priority': 7,
+                   'unreserved_bandwidth': 2985974784,
+                  },
+                 },
+                },
+               },
+               'total_links': 9,
+              },
+             },
+            },
+           },
+           'mpls': {
+            'te': {
+             'router_id': '67.70.219.96',
+            },
+           },
+          },
+         },
+        },
+       },
+      },
+     },
+    }
+
     def test_show_ospf_mpls_traffic_eng_link_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfMplsTrafficEngLink(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_mpls_traffic_eng_link_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowOspfMplsTrafficEngLink(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.device_parsed_output)
 
     def test_show_ospf_mpls_traffic_eng_link_empty(self):
         self.maxDiff = None
@@ -4388,526 +4569,718 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf': 
-            {'VRF1': {'address_family': {'ipv4': {'instance': {'1': {}}}}},
-        'default': 
-            {'address_family': 
-                {'ipv4': 
-                    {'instance': 
-                        {'1': 
-                            {'areas': 
-                                {'0.0.0.0': 
-                                    {'database': 
-                                        {'lsa_types': 
-                                            {10: 
-                                                {'lsa_type': 10,
-                                                'lsas': 
-                                                    {'10.1.0.0 10.4.1.1': 
-                                                        {'adv_router': '10.4.1.1',
-                                                        'lsa_id': '10.1.0.0',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': {}},
-                                                            'header': 
-                                                                {'adv_router': '10.4.1.1',
-                                                                'age': 1427,
-                                                                'checksum': '0x56d2',
-                                                                'length': 28,
-                                                                'lsa_id': '10.1.0.0',
-                                                                'mpls_te_router_id': '10.4.1.1',
-                                                                'opaque_id': 0,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}},
-                                                    '10.1.0.0 10.16.2.2': 
-                                                        {'adv_router': '10.16.2.2',
-                                                        'lsa_id': '10.1.0.0',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': {}},
-                                                            'header': 
-                                                                {'adv_router': '10.16.2.2',
-                                                                'age': 653,
-                                                                'checksum': '0x1c22',
-                                                                'length': 28,
-                                                                'lsa_id': '10.1.0.0',
-                                                                'mpls_te_router_id': '10.16.2.2',
-                                                                'opaque_id': 0,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'No '
-                                                                'DC',
-                                                                'seq_num': '80000003',
-                                                                'type': 10}}},
-                                                    '10.1.0.0 10.36.3.3': 
-                                                        {'adv_router': '10.36.3.3',
-                                                        'lsa_id': '10.1.0.0',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': {}},
-                                                            'header': 
-                                                                {'adv_router': '10.36.3.3',
-                                                                'age': 1175,
-                                                                'checksum': '0x5eba',
-                                                                'length': 28,
-                                                                'lsa_id': '10.1.0.0',
-                                                                'mpls_te_router_id': '10.36.3.3',
-                                                                'opaque_id': 0,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}},
-                                                    '10.1.0.1 10.4.1.1': 
-                                                        {'adv_router': '10.4.1.1',
-                                                        'lsa_id': '10.1.0.1',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'igp_metric': 1,
-                                                                            'link_id': '10.1.4.4',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.1.4.1': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.4.1.1',
-                                                                'age': 1427,
-                                                                'checksum': '0x6586',
-                                                                'length': 124,
-                                                                'lsa_id': '10.1.0.1',
-                                                                'opaque_id': 1,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}},
-                                                    '10.1.0.2 10.4.1.1': 
-                                                        {'adv_router': '10.4.1.1',
-                                                        'lsa_id': '10.1.0.2',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'igp_metric': 1,
-                                                                            'link_id': '10.1.2.1',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.1.2.1': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.4.1.1',
-                                                                'age': 1427,
-                                                                'checksum': '0xb43d',
-                                                                'length': 124,
-                                                                'lsa_id': '10.1.0.2',
-                                                                'opaque_id': 2,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}},
-                                                    '10.1.0.37 10.16.2.2': 
-                                                        {'adv_router': '10.16.2.2',
-                                                        'lsa_id': '10.1.0.37',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'link_id': '10.2.3.3',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.2.3.2': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.16.2.2',
-                                                                'age': 242,
-                                                                'checksum': '0xe492',
-                                                                'length': 116,
-                                                                'lsa_id': '10.1.0.37',
-                                                                'opaque_id': 37,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'No '
-                                                                'DC',
-                                                                'seq_num': '80000004',
-                                                                'type': 10}}},
-                                                    '10.1.0.38 10.16.2.2': 
-                                                        {'adv_router': '10.16.2.2',
-                                                        'lsa_id': '10.1.0.38',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'link_id': '10.2.4.4',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.2.4.2': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.16.2.2',
-                                                                'age': 233,
-                                                                'checksum': '0x2350',
-                                                                'length': 116,
-                                                                'lsa_id': '10.1.0.38',
-                                                                'opaque_id': 38,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'No '
-                                                                'DC',
-                                                                'seq_num': '80000004',
-                                                                'type': 10}}},
-                                                    '10.1.0.39 10.16.2.2': 
-                                                        {'adv_router': '10.16.2.2',
-                                                        'lsa_id': '10.1.0.39',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'link_id': '10.1.2.1',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.1.2.2': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.16.2.2',
-                                                                'age': 232,
-                                                                'checksum': '0x4239',
-                                                                'length': 116,
-                                                                'lsa_id': '10.1.0.39',
-                                                                'opaque_id': 39,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'No '
-                                                                'DC',
-                                                                'seq_num': '80000004',
-                                                                'type': 10}}},
-                                                    '10.1.0.4 10.36.3.3': 
-                                                        {'adv_router': '10.36.3.3',
-                                                        'lsa_id': '10.1.0.4',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'extended_admin_group': 
-                                                                                {'groups': 
-                                                                                    {0: {'value': 0},
-                                                                                    1: {'value': 0},
-                                                                                    2: {'value': 0},
-                                                                                    3: {'value': 0},
-                                                                                    4: {'value': 0},
-                                                                                    5: {'value': 0},
-                                                                                    6: {'value': 0},
-                                                                                    7: {'value': 0}},
-                                                                                'length': 8},
-                                                                            'igp_metric': 1,
-                                                                            'link_id': '10.3.4.4',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.3.4.3': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.36.3.3',
-                                                                'age': 1175,
-                                                                'checksum': '0x915d',
-                                                                'length': 160,
-                                                                'lsa_id': '10.1.0.4',
-                                                                'opaque_id': 4,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}},
-                                                    '10.1.0.6 10.36.3.3': 
-                                                        {'adv_router': '10.36.3.3',
-                                                        'lsa_id': '10.1.0.6',
-                                                        'ospfv2': 
-                                                            {'body': 
-                                                                {'opaque': 
-                                                                    {'link_tlvs': 
-                                                                        {1: 
-                                                                            {'admin_group': '0',
-                                                                            'extended_admin_group': 
-                                                                                {'groups': 
-                                                                                    {0: {'value': 0},
-                                                                                    1: {'value': 0},
-                                                                                    2: {'value': 0},
-                                                                                    3: {'value': 0},
-                                                                                    4: {'value': 0},
-                                                                                    5: {'value': 0},
-                                                                                    6: {'value': 0},
-                                                                                    7: {'value': 0}},
-                                                                                'length': 8},
-                                                                            'igp_metric': 1,
-                                                                            'link_id': '10.2.3.3',
-                                                                            'link_name': 'broadcast network',
-                                                                            'link_type': 2,
-                                                                            'local_if_ipv4_addrs': 
-                                                                                {'10.2.3.3': {}},
-                                                                            'max_bandwidth': 125000000,
-                                                                            'max_reservable_bandwidth': 93750000,
-                                                                            'remote_if_ipv4_addrs': 
-                                                                                {'0.0.0.0': {}},
-                                                                            'te_metric': 1,
-                                                                            'total_priority': 8,
-                                                                            'unreserved_bandwidths': 
-                                                                                {'0 93750000': 
-                                                                                    {'priority': 0,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': 
-                                                                                    {'priority': 1,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': 
-                                                                                    {'priority': 2,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': 
-                                                                                    {'priority': 3,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': 
-                                                                                    {'priority': 4,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': 
-                                                                                    {'priority': 5,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': 
-                                                                                    {'priority': 6,
-                                                                                    'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': 
-                                                                                    {'priority': 7,
-                                                                                    'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': 
-                                                                {'adv_router': '10.36.3.3',
-                                                                'age': 1175,
-                                                                'checksum': '0x5ec',
-                                                                'length': 160,
-                                                                'lsa_id': '10.1.0.6',
-                                                                'opaque_id': 6,
-                                                                'opaque_type': 1,
-                                                                'option': 'None',
-                                                                'option_desc': 'No '
-                                                                'TOS-capability, '
-                                                                'DC',
-                                                                'seq_num': '80000002',
-                                                                'type': 10}}}}}}}}}}}}}}}}
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '1': {
+                                'areas': {
+                                    '0.0.0.0': {
+                                        'database': {
+                                            'lsa_types': {
+                                                10: {
+                                                    'lsa_type': 10,
+                                                    'lsas': {
+                                                        '10.1.0.0 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.0',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1427,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.0',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0x56d2',
+                                                                    'length': 28,
+                                                                    'mpls_te_router_id': '10.4.1.1',
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'num_of_links': 0,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.0 10.16.2.2': {
+                                                            'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.1.0.0',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 653,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.0',
+                                                                    'adv_router': '10.16.2.2',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '80000003',
+                                                                    'checksum': '0x1c22',
+                                                                    'length': 28,
+                                                                    'mpls_te_router_id': '10.16.2.2',
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'num_of_links': 0,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.0 10.36.3.3': {
+                                                            'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.1.0.0',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1175,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.0',
+                                                                    'adv_router': '10.36.3.3',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0x5eba',
+                                                                    'length': 28,
+                                                                    'mpls_te_router_id': '10.36.3.3',
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'num_of_links': 0,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.1 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.1',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1427,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.1',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 1,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0x6586',
+                                                                    'length': 124,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.1.4.4',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.1.4.1': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                                'igp_metric': 1,
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.2 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.2',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1427,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.2',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 2,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0xb43d',
+                                                                    'length': 124,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.1.2.1',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.1.2.1': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                                'igp_metric': 1,
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.4 10.36.3.3': {
+                                                            'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.1.0.4',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1175,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.4',
+                                                                    'adv_router': '10.36.3.3',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 4,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0x915d',
+                                                                    'length': 160,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.3.4.4',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.3.4.3': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                                'igp_metric': 1,
+                                                                                'extended_admin_group': {
+                                                                                    'length': 8,
+                                                                                    'groups': {
+                                                                                        0: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        1: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        2: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        3: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        4: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        5: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        6: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        7: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.6 10.36.3.3': {
+                                                            'adv_router': '10.36.3.3',
+                                                            'lsa_id': '10.1.0.6',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1175,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.6',
+                                                                    'adv_router': '10.36.3.3',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 6,
+                                                                    'seq_num': '80000002',
+                                                                    'checksum': '0x5ec',
+                                                                    'length': 160,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.2.3.3',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.2.3.3': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                                'igp_metric': 1,
+                                                                                'extended_admin_group': {
+                                                                                    'length': 8,
+                                                                                    'groups': {
+                                                                                        0: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        1: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        2: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        3: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        4: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        5: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        6: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                        7: {
+                                                                                            'value': 0,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.37 10.16.2.2': {
+                                                            'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.1.0.37',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 242,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.37',
+                                                                    'adv_router': '10.16.2.2',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 37,
+                                                                    'seq_num': '80000004',
+                                                                    'checksum': '0xe492',
+                                                                    'length': 116,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.2.3.3',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.2.3.2': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.38 10.16.2.2': {
+                                                            'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.1.0.38',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 233,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.38',
+                                                                    'adv_router': '10.16.2.2',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 38,
+                                                                    'seq_num': '80000004',
+                                                                    'checksum': '0x2350',
+                                                                    'length': 116,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.2.4.4',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.2.4.2': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.39 10.16.2.2': {
+                                                            'adv_router': '10.16.2.2',
+                                                            'lsa_id': '10.1.0.39',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 232,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, No DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.39',
+                                                                    'adv_router': '10.16.2.2',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 39,
+                                                                    'seq_num': '80000004',
+                                                                    'checksum': '0x4239',
+                                                                    'length': 116,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 2,
+                                                                                'link_name': 'broadcast network',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    'remote_if_ipv4_addr': '0.0.0.0',
+                                                                                },
+                                                                                'link_id': '10.1.2.1',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.1.2.2': {
+                                                                                    },
+                                                                                },
+                                                                                'te_metric': 1,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 93750000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '1 93750000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '2 93750000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '3 93750000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '4 93750000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '5 93750000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '6 93750000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                    '7 93750000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'VRF1': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '1': {
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database opaque-area 
@@ -5190,6 +5563,482 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    golden_parsed_output2= {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '64577': {
+                                'areas': {
+                                    '0.0.0.0': {
+                                        'database': {
+                                            'lsa_types': {
+                                                10: {
+                                                    'lsa_type': 10,
+                                                    'lsas': {
+                                                        '10.16.0.0 10.154.219.84': {
+                                                            'adv_router': '10.154.219.84',
+                                                            'lsa_id': '10.16.0.0',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 65,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.16.0.0',
+                                                                    'adv_router': '10.154.219.84',
+                                                                    'opaque_type': 4,
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '80004c15',
+                                                                    'checksum': '0xadfd',
+                                                                    'length': 76,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'router_capabilities_tlv': {
+                                                                            1: {
+                                                                                'length': 4,
+                                                                                'information_capabilities': {
+                                                                                    'graceful_restart_helper': True,
+                                                                                    'stub_router': True,
+                                                                                    'capability_bits': '0x60000000',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        'sr_algorithm_tlv': {
+                                                                            1: {
+                                                                                'length': 2,
+                                                                                'algorithm': {
+                                                                                    '0': True,
+                                                                                    '1': True,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        'sid_range_tlvs': {
+                                                                            1: {
+                                                                                'length': 12,
+                                                                                'tlv_type': 'Segment Routing Range',
+                                                                                'range_size': 65535,
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'length': 3,
+                                                                                        'type': 'SID',
+                                                                                        'label': 16000,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        'node_msd_tlvs': {
+                                                                            1: {
+                                                                                'length': 2,
+                                                                                'node_type': 1,
+                                                                                'value': 10,
+                                                                            },
+                                                                        },
+                                                                        'local_block_tlvs': {
+                                                                            1: {
+                                                                                'length': 12,
+                                                                                'range_size': 1000,
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'length': 3,
+                                                                                        'type': 'SID',
+                                                                                        'label': 15000,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.49.0.1 10.154.219.84': {
+                                                            'adv_router': '10.154.219.84',
+                                                            'lsa_id': '10.49.0.1',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 65,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.49.0.1',
+                                                                    'adv_router': '10.154.219.84',
+                                                                    'opaque_type': 7,
+                                                                    'opaque_id': 1,
+                                                                    'seq_num': '800009be',
+                                                                    'checksum': '0xf6d0',
+                                                                    'length': 48,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_prefix_tlvs': {
+                                                                            1: {
+                                                                                'length': 24,
+                                                                                'af': 0,
+                                                                                'prefix': '10.246.254.0/32',
+                                                                                'range_size': 256,
+                                                                                'flags': '0x0',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'length': 8,
+                                                                                        'type': 'SID',
+                                                                                        'flags': '0x60',
+                                                                                        'mt_id': '0',
+                                                                                        'algo': 0,
+                                                                                        'sid': 1028,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.64.0.78 10.154.219.85': {
+                                                            'adv_router': '10.154.219.85',
+                                                            'lsa_id': '10.64.0.78',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1057,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.64.0.78',
+                                                                    'adv_router': '10.154.219.85',
+                                                                    'opaque_type': 8,
+                                                                    'opaque_id': 78,
+                                                                    'seq_num': '800004bf',
+                                                                    'checksum': '0x9a5b',
+                                                                    'length': 100,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_link_tlvs': {
+                                                                            1: {
+                                                                                'length': 76,
+                                                                                'link_type': 1,
+                                                                                'link_id': '10.154.219.57',
+                                                                                'link_data': '172.16.0.91',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'length': 7,
+                                                                                        'type': 'Adj',
+                                                                                        'flags': '0x60',
+                                                                                        'mt_id': '0',
+                                                                                        'weight': 0,
+                                                                                        'label': 100479,
+                                                                                    },
+                                                                                    2: {
+                                                                                        'length': 8,
+                                                                                        'type': 'Local-ID Remote-ID',
+                                                                                        'local_interface_id': 78,
+                                                                                        'remote_interface_id': 76,
+                                                                                    },
+                                                                                    3: {
+                                                                                        'length': 4,
+                                                                                        'type': 'Remote If Address',
+                                                                                        'neighbor_address': '172.16.0.90',
+                                                                                    },
+                                                                                    4: {
+                                                                                        'length': 2,
+                                                                                        'type': 'Link MSD',
+                                                                                        'node_type': 1,
+                                                                                        'value': 10,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.0.3 10.154.219.51': {
+                                                            'adv_router': '10.154.219.51',
+                                                            'lsa_id': '10.1.0.3',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 586,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.3',
+                                                                    'adv_router': '10.154.219.51',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 3,
+                                                                    'seq_num': '80004036',
+                                                                    'checksum': '0xe06c',
+                                                                    'length': 136,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 1,
+                                                                                'link_name': 'point-to-point network',
+                                                                                'link_id': '10.154.219.106',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '172.16.1.153': {
+                                                                                    },
+                                                                                },
+                                                                                'neighbor_address': '172.16.1.152',
+                                                                                'te_metric': 10000,
+                                                                                'max_bandwidth': 750000000,
+                                                                                'max_reservable_bandwidth': 750000000,
+                                                                                'total_priority': 8,
+                                                                                'unreserved_bandwidths': {
+                                                                                    '0 750000000': {
+                                                                                        'priority': 0,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '1 750000000': {
+                                                                                        'priority': 1,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '2 750000000': {
+                                                                                        'priority': 2,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '3 750000000': {
+                                                                                        'priority': 3,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '4 750000000': {
+                                                                                        'priority': 4,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '5 750000000': {
+                                                                                        'priority': 5,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '6 750000000': {
+                                                                                        'priority': 6,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                    '7 750000000': {
+                                                                                        'priority': 7,
+                                                                                        'unreserved_bandwidth': 750000000,
+                                                                                    },
+                                                                                },
+                                                                                'admin_group': '0',
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        '10.1.17.240 10.154.219.85': {
+                                                            'adv_router': '10.154.219.85',
+                                                            'lsa_id': '10.1.17.240',
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'age': 1057,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.17.240',
+                                                                    'adv_router': '10.154.219.85',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 4592,
+                                                                    'seq_num': '800004c1',
+                                                                    'checksum': '0x827c',
+                                                                    'length': 80,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 1,
+                                                                                'link_name': 'point-to-point network',
+                                                                                'link_id': '10.154.219.58',
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '172.16.0.99': {
+                                                                                    },
+                                                                                },
+                                                                                'neighbor_address': '172.16.0.98',
+                                                                                'te_metric': 1000,
+                                                                                'max_bandwidth': 1250000000,
+                                                                                'igp_metric': 1000,
+                                                                            },
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        show ospf vrf all-inclusive database opaque-area
+
+        Wed Oct  9 14:37:02.679 EDT
+
+                OSPF Router with ID (10.154.219.84) (Process ID 64577)
+
+        Type-10 Opaque Link Area Link States (Area 0)
+
+        LS age: 65
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.16.0.0
+        Opaque Type: 4
+        Opaque ID: 0
+        Advertising Router: 10.154.219.84
+        LS Seq Number: 80004c15
+        Checksum: 0xadfd
+        Length: 76
+
+            Router Information TLV: Length: 4
+            Capabilities:
+            Graceful Restart Helper Capable
+            Stub Router Capable
+            All capability bits: 0x60000000
+
+            Segment Routing Algorithm TLV: Length: 2
+            Algorithm: 0
+            Algorithm: 1
+
+            Segment Routing Range TLV: Length: 12
+            Range Size: 65535
+
+                SID sub-TLV: Length 3
+                Label: 16000
+
+            Node MSD TLV: Length: 2
+                Type: 1, Value 10
+
+            Segment Routing Local Block TLV: Length: 12
+            Range Size: 1000
+
+                SID sub-TLV: Length 3
+                Label: 15000
+
+        LS age: 65
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.49.0.1
+        Opaque Type: 7
+        Opaque ID: 1
+        Advertising Router: 10.154.219.84
+        LS Seq Number: 800009be
+        Checksum: 0xf6d0
+        Length: 48
+
+            Extended Prefix Range TLV: Length: 24
+            AF        : 0
+            Prefix    : 10.246.254.0/32
+            Range Size: 256
+            Flags     : 0x0
+
+            SID sub-TLV: Length: 8
+                Flags     : 0x60
+                MTID      : 0
+                Algo      : 0
+                SID Index : 1028
+
+        LS age: 1057
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.64.0.78
+        Opaque Type: 8
+        Opaque ID: 78
+        Advertising Router: 10.154.219.85
+        LS Seq Number: 800004bf
+        Checksum: 0x9a5b
+        Length: 100
+
+          Extended Link TLV: Length: 76
+            Link-type : 1
+            Link ID   : 10.154.219.57
+            Link Data : 172.16.0.91
+
+            Adj sub-TLV: Length: 7
+                Flags     : 0x60
+                MTID      : 0
+                Weight    : 0
+                Label     : 100479
+
+            Local-ID Remote-ID sub-TLV: Length: 8
+                Local Interface ID: 78
+                Remote Interface ID: 76
+
+            Remote If Address sub-TLV: Length: 4
+                Neighbor Address: 172.16.0.90
+
+            Link MSD sub-TLV: Length: 2
+                Type: 1, Value 10
+
+        LS age: 586
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.0.3
+        Opaque Type: 1
+        Opaque ID: 3
+        Advertising Router: 10.154.219.51
+        LS Seq Number: 80004036
+        Checksum: 0xe06c
+        Length: 136
+
+            Link connected to Point-to-Point network
+            Link ID : 10.154.219.106
+            (all bandwidths in bytes/sec)
+            Interface Address : 172.16.1.153
+            Neighbor Address : 172.16.1.152
+            Admin Metric : 10000
+            Maximum bandwidth : 750000000
+            Maximum reservable bandwidth global: 750000000
+            Number of Priority : 8
+            Priority 0 :            750000000  Priority 1 :            750000000
+            Priority 2 :            750000000  Priority 3 :            750000000
+            Priority 4 :            750000000  Priority 5 :            750000000
+            Priority 6 :            750000000  Priority 7 :            750000000
+            Link Identifiers:
+                Local (Out) Id: 486  Remote (In) Id: 0
+            Affinity Bit : 0
+
+            Number of Links : 1
+
+        LS age: 1057
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.17.240
+        Opaque Type: 1
+        Opaque ID: 4592
+        Advertising Router: 10.154.219.85
+        LS Seq Number: 800004c1
+        Checksum: 0x827c
+        Length: 80
+
+            Link connected to Point-to-Point network
+            Link ID : 10.154.219.58
+            (all bandwidths in bytes/sec)
+            Interface Address : 172.16.0.99
+            Neighbor Address : 172.16.0.98
+            Admin Metric : 1000
+            Maximum bandwidth : 1250000000
+            IGP Metric : 1000
+
+            Number of Links : 1
+    '''}
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowOspfVrfAllInclusiveDatabaseOpaqueArea(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':
