@@ -13,9 +13,8 @@ from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisNeighbors
 
 
-class TestShowIsisHostname(unittest.TestCase):
-
-    device = Device(name='aDevice')
+class TestShowIsisHostname(unittest.TestCase):    
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -88,19 +87,36 @@ class TestShowIsisHostname(unittest.TestCase):
            '''
     }
 
+    golden_parsed_output_2 = {
+        'tag': {
+            'default': {}
+        }
+    }
+
+    # No hostnames at all
+    golden_output_2 = {'execute.return_value': '''
+        #show isis hostname        
+        Level  System ID      Dynamic Hostname  (default)
+    '''}
+
 
     def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIsisHostname(device=self.device)
+        device = Mock(**self.empty_output)
+        obj = ShowIsisHostname(device=device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowIsisHostname(device=self.device)
+    def test_golden_1(self):        
+        device = Mock(**self.golden_output)
+        obj = ShowIsisHostname(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):       
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisHostname(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 class TestShowIsisLspLog(unittest.TestCase):

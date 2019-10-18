@@ -15672,6 +15672,142 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output5 = {
+        'list_of_neighbors': ['192.168.10.254'],
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '192.168.10.254': {
+                        'remote_as': 65109,
+                        'link': 'external',
+                        'shutdown': False,
+                        'bgp_version': 4,
+                        'router_id': '0.0.0.0',
+                        'session_state': 'Idle',
+                        'bgp_negotiated_keepalive_timers': {
+                            'hold_time': 90,
+                            'keepalive_interval': 30,
+                            'min_holdtime': 15,
+                        },
+                        'bgp_neighbor_counters': {
+                            'messages': {
+                                'sent': {
+                                    'opens': 0,
+                                    'notifications': 0,
+                                    'updates': 0,
+                                    'keepalives': 0,
+                                    'route_refresh': 0,
+                                    'total': 0,
+                                },
+                                'received': {
+                                    'opens': 0,
+                                    'notifications': 0,
+                                    'updates': 0,
+                                    'keepalives': 0,
+                                    'route_refresh': 0,
+                                    'total': 0,
+                                },
+                                'in_queue_depth': 0,
+                                'out_queue_depth': 0,
+                            },
+                        },
+                        'bgp_session_transport': {
+                            'min_time_between_advertisement_runs': 30,
+                            'connection': {
+                                'established': 0,
+                                'dropped': 0,
+                                'last_reset': 'never',
+                            },
+                            'tcp_connection': False,
+                        },
+                        'address_family': {
+                            'ipv4 unicast': {
+                                'bgp_table_version': 1,
+                                'neighbor_version': '0/0',
+                                'output_queue_size': 0,
+                                'update_group_member': 0,
+                                'community_attribute_sent': True,
+                                'prefix_activity_counters': {
+                                    'sent': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 'n/a',
+                                        'used_as_multipath': 'n/a',
+                                    },
+                                    'received': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 0,
+                                        'used_as_multipath': 0,
+                                    },
+                                },
+                                'local_policy_denied_prefixes_counters': {
+                                    'outbound': {
+                                        'total': 0,
+                                    },
+                                    'inbound': {
+                                        'total': 0,
+                                    },
+                                },
+                                'max_nlri': 0,
+                                'min_nlri': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output5 = {'execute.return_value': '''
+        show ip bgp neighbors 192.168.10.254
+        BGP neighbor is 192.168.10.254,  remote AS 65109, external link
+        BGP version 4, remote router ID 0.0.0.0
+        BGP state = Idle
+        Last read 00:00:00, last write 00:00:00, hold time is 180, keepalive interval is 60 seconds
+        Configured hold time is 90, keepalive interval is 30 seconds
+        Minimum holdtime from neighbor is 15 seconds
+        Message statistics:
+            InQ depth is 0
+            OutQ depth is 0
+                                Sent       Rcvd
+            Opens:                  0          0
+            Notifications:          0          0
+            Updates:                0          0
+            Keepalives:             0          0
+            Route Refresh:          0          0
+            Total:                  0          0
+        Default minimum time between advertisement runs is 30 seconds
+
+        For address family: IPv4 Unicast
+        BGP table version 1, neighbor version 0/0
+        Output queue size: 0
+        0 update-group member
+        Community attribute sent to this neighbor
+        Scheduled for new neighbor index allocation
+                                        Sent       Rcvd
+        Prefix activity:               ----       ----
+          Prefixes Current:               0          0
+          Prefixes Total:                 0          0
+          Implicit Withdraw:              0          0
+          Explicit Withdraw:              0          0
+          Used as bestpath:             n/a          0
+          Used as multipath:            n/a          0
+
+                                        Outbound    Inbound
+        Local Policy Denied Prefixes:    --------    -------
+          Total:                                0          0
+        Number of NLRIs in the update sent: max 0, min 0
+
+        Connections established 0; dropped 0
+        Last reset never
+        External BGP neighbor not directly connected.
+        No active TCP connection
+    '''}
+
     def test_show_ip_bgp_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpNeighbors(device=self.device)
@@ -15705,6 +15841,13 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         obj = ShowIpBgpNeighbors(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', vrf='CE1test')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_ip_bgp_neighbors_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowIpBgpNeighbors(device=self.device)
+        parsed_output = obj.parse(neighbor='192.168.10.254')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # ===========================================

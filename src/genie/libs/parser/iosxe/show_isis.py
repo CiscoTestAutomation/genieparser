@@ -92,7 +92,7 @@ class ShowIsisHostnameSchema(MetaParser):
     schema = {
         'tag': {
             Any(): {
-                'hostname_db': {
+                Optional('hostname_db'): {
                     'hostname': {
                         Any(): {
                             'hostname': str,
@@ -120,10 +120,13 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         result_dict = {}
 
         #  Level  System ID      Dynamic Hostname  (VRF1)
-        p1 = re.compile(r'^Level +System +ID +Dynamic +Hostname +\((?P<tag>\w+)\)$')
+        p1 = re.compile(r'^Level +System +ID +Dynamic +Hostname +'
+                        r'\((?P<tag>\w+)\)$')
         #  2     7777.7777.7777 R7
         #      * 2222.2222.2222 R2
-        p2 = re.compile(r'^(?P<level>\d+)?(\s?(?P<star>\*))? +(?P<system_id>[\d\.]+) +(?P<dynamic_hostname>\w+)$')
+        #      * 2001:0db8:85a3:0000:0000:8a2e:0370:7334.
+        p2 = re.compile(r'^(?P<level>\d+)?(\s?(?P<star>\*))? +'
+                        r'(?P<system_id>[\d\.\:]+) +(?P<dynamic_hostname>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -132,10 +135,12 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                tag_dict = result_dict.setdefault('tag', {}).setdefault(group['tag'],{})
+                tag_dict = result_dict.setdefault('tag', {})\
+                    .setdefault(group['tag'],{})
                 continue
 
             #  2     7777.7777.7777 R7
+            #      * 2001:0db8:85a3:0000:0000:8a2e:0370:7334.
             m = p2.match(line)
             if m:
                 group = m.groupdict()
