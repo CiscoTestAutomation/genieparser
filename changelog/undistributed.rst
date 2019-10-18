@@ -25,8 +25,10 @@
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Made some keys optionals in schema for ShowClnsTraffic
     * Saving as empty instance when instance not present in output on:
-        * show clns protocol    
+        * show clns protocol
+    * Updates ShowIsisHostname to support outputs without hostnames
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -165,6 +167,7 @@
         * show bgp instance {instance} sessions
     * Updated ShowBgpL2vpnEvpn to parse more varied output
     * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -413,6 +416,9 @@
     * Optimization of ShowVersion moving regex compilation out of loop
 * IOSXE
     * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXR
+    * Updated ShowVersion :
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -429,6 +435,8 @@
     * Updated ShowRplPrefixSet regex for:
         * show rpl prefix-set
         * show rpl prefix-set <name>
+    * Updated ShowRplRoutePolicy regex for:
+        * show rpl route-policy
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -459,6 +467,7 @@
         - modified regex
         - added schema
         - added unittest
+        - updated schema, regex, and unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
@@ -479,6 +488,7 @@
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEviMacPrivate to support different outputs
 
 --------------------------------------------------------------------------------
                                 Route
@@ -513,6 +523,7 @@
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
     * Updated ShowL2vpnBridgeDomain to support more outputs
+    * Updated ShowL2vpnBridgeDomainDetail to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -526,6 +537,7 @@
 * IOSXE
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
+    * Update schema for AdminShowDiagChassis to support more varied output
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
@@ -587,6 +599,11 @@
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
+--------------------------------------------------------------------------------
+                                Protocols
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols tu sopport more outputs
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------

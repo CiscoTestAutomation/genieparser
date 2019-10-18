@@ -35,7 +35,7 @@ class test_show_version(unittest.TestCase):
         'operating_system': 'IOSXR',
         'processor': 'Intel 686 F6M14S4',
         'processor_memory_bytes': '6291456K',
-        'device_family': 'ASR9K',
+        'device_family': 'ASR9K Series',
         'rp_config_register': '0x1922',
         'software_version': '6.1.4.10I',
         'uptime': '5 hours, 14 minutes'}
@@ -75,7 +75,7 @@ class test_show_version(unittest.TestCase):
         'operating_system': 'IOSXR',
         'processor': 'Pentium Celeron Stepping 3',
         'processor_memory_bytes': '4193911K',
-        'device_family': 'IOS XRv',
+        'device_family': 'IOS XRv Series',
         'rp_config_register': '0x1',
         'software_version': '6.2.1.23I',
         'uptime': '5 days, 25 minutes'}
@@ -126,6 +126,58 @@ class test_show_version(unittest.TestCase):
         System uptime is 1 week, 1 day, 5 hours, 47 minutes
         '''}
 
+    device_output = {'execute.return_value': '''
+        Mon Oct 14 17:44:22.298 EDT
+        
+        Cisco IOS XR Software, Version 6.4.2[Default]
+        Copyright (c) 2019 by Cisco Systems, Inc.
+        
+        ROM: System Bootstrap, Version 2.12(20170128:070504) [CRS ROMMON],  
+        
+        
+        tcore3-rohan uptime is 4 days, 5 hours, 46 minutes
+        System image file is "disk0:hfr-os-mbi-6.4.2.CSCvm85739-1.0.0/0x100008/mbihfr-rp-x86e.vm"
+        
+        cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+        Intel 686 F6M14S4 processor at 2127Mhz, Revision 2.174
+        CRS 16 Slots Line Card Chassis for CRS-16/S-B
+        
+        2 Management Ethernet
+        54 TenGigE
+        59 DWDM controller(s)
+        54 WANPHY controller(s)
+        5 HundredGigE
+        5 GigabitEthernet
+        4 SONET/SDH
+        4 Packet over SONET/SDH
+        1019k bytes of non-volatile configuration memory.
+        16726M bytes of hard disk.
+        11881456k bytes of disk0: (Sector size 512 bytes).
+        11881456k bytes of disk1: (Sector size 512 bytes).
+        
+        Boot device on node 0/0/CPU0 is lcdisk0:
+        Package active on node 0/0/CPU0:
+        iosxr-mpls-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:iosxr-mpls-6.4.2.CSCvr26601-1.0.0
+            Built on Fri Oct  4 05:07:32 EDT 2019
+            By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie
+        
+        hfr-px-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:hfr-px-6.4.2.CSCvr26601-1.0.0
+            Built on Fri Oct  4 05:07:38 EDT 2019
+            By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie
+    '''}
+
+    device_parsed_output = {
+        'chassis_detail': 'CRS 16 Slots Line Card Chassis for CRS-16/S-B',
+        'device_family': 'CRS-16/S-B',
+        'image': 'disk0:hfr-os-mbi-6.4.2.CSCvm85739-1.0.0/0x100008/mbihfr-rp-x86e.vm',
+        'main_mem': 'cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.',
+        'operating_system': 'IOSXR',
+        'processor': 'Intel 686 F6M14S4',
+        'processor_memory_bytes': '12582912K',
+        'software_version': '6.4.2',
+        'uptime': '4 days, 5 hours, 46 minutes',
+    }
+
     def test_show_version_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -152,6 +204,13 @@ class test_show_version(unittest.TestCase):
         show_version_obj = ShowVersion(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_version_obj.parse()
+
+    def test(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        show_version_obj = ShowVersion(device=self.device)
+        parsed_output = show_version_obj.parse()
+        self.assertEqual(parsed_output,self.device_parsed_output)
 
 
 # ================================
@@ -1140,7 +1199,7 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         'clei': 'IPMUP00BRB',
         'desc': 'ASR 9006 4 Line Card Slot Chassis with V2 AC PEM',
         'device_family': 'ASR',
-        'device_series': 9006,
+        'device_series': '9006',
         'num_line_cards': 4,
         'pid': 'ASR-9006-AC-V2',
         'rack_num': 0,
@@ -1158,6 +1217,48 @@ class test_admin_show_diag_chassis(unittest.TestCase):
           CLEI:  IPMUP00BRB
           Top Assy. Number:   68-4235-02
         '''}
+    
+    golden_parsed_output2 = {
+        'rack_num': 0,
+        'device_family': 'Cisco',
+        'device_series': 'CRS Series',
+        'num_line_cards': 16,
+        'main': {
+            'board_type': '500060',
+            'part': '800-25021-05 rev B0',
+            'dev': '079239',
+            'serial_number': 'SAD0925050J',
+        },
+        'pca': '73-7648-08 rev B0',
+        'pid': 'CRS-MSC',
+        'vid': 'V02',
+        'clei': 'IPUCAC1BAA',
+        'eci': '132502',
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        admin show diag chassis
+
+        Mon Oct 14 17:45:40.649 EDT
+
+        Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+        MAIN:  board type 500060
+                800-25021-05 rev B0
+                dev 079239
+                S/N SAD0925050J
+        PCA:   73-7648-08 rev B0
+        PID:   CRS-MSC
+        VID:   V02
+        CLEI:  IPUCAC1BAA
+        ECI:   132502
+        RACK NUM: 0
+        '''}
+
+    def test_show_inventory_empty(self):
+        self.device = Mock(**self.empty_output)
+        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = diag_chassis_obj.parse()
 
     def test_admin_show_diag_chassis_golden1(self):
         self.maxDiff = None
@@ -1165,12 +1266,13 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
-
-    def test_show_inventory_empty(self):
-        self.device = Mock(**self.empty_output)
-        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = diag_chassis_obj.parse()
+    
+    def test_admin_show_diag_chassis_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
+        parsed_output1 = diag_chassis_obj1.parse()
+        self.assertEqual(parsed_output1,self.golden_parsed_output2)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       
