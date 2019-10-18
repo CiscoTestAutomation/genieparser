@@ -1,3 +1,5 @@
+#REMOVE
+import genie.gre
 
 # Python
 import unittest
@@ -8,31 +10,31 @@ import xml.etree.ElementTree as ET
 from ats.topology import Device
 from ats.topology import loader
 
-# Metaparser
+# Genie
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_bgp
-from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
-                                  ShowBgpInstanceAfGroupConfiguration,\
-                                  ShowBgpInstanceSessionGroupConfiguration,\
-                                  ShowBgpInstanceProcessDetail,\
-                                  ShowBgpInstanceNeighborsDetail,\
-                                  ShowBgpInstanceNeighborsAdvertisedRoutes,\
-                                  ShowBgpInstanceNeighborsReceivedRoutes,\
-                                  ShowBgpInstanceNeighborsRoutes,\
-                                  ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll, ShowBgpInstances,\
-                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
-                                  ShowBgpVrfDbVrfAll, \
-                                  ShowBgpL2vpnEvpnAdvertised, \
-                                  ShowBgpSessions, \
-                                  ShowBgpInstanceAllSessions
+from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
+                                              ShowBgpInstanceAfGroupConfiguration,
+                                              ShowBgpInstanceSessionGroupConfiguration,
+                                              ShowBgpInstanceProcessDetail,
+                                              ShowBgpInstanceNeighborsDetail,
+                                              ShowBgpInstanceNeighborsAdvertisedRoutes,
+                                              ShowBgpInstanceNeighborsReceivedRoutes,
+                                              ShowBgpInstanceNeighborsRoutes,
+                                              ShowBgpInstanceSummary,
+                                              ShowBgpInstanceAllAll,
+                                              ShowBgpInstances,
+                                              ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors,
+                                              ShowBgpVrfDbVrfAll,
+                                              ShowBgpL2vpnEvpnAdvertised,
+                                              ShowBgpSessions,
+                                              ShowBgpInstanceAllSessions)
 
 
 # ==================================
 # Unit test for 'show bgp instances'
 # ==================================
-
 class test_show_bgp_instances(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -101,7 +103,6 @@ class test_show_bgp_instances(unittest.TestCase):
 # ==========================================
 # Unit test for 'show placement program all'
 # ==========================================
-
 class test_show_placement_program_all(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -645,7 +646,6 @@ class test_show_placement_program_all(unittest.TestCase):
 # ======================================================================
 # Unit test for 'show bgp instance <WORD> af-group <WORD> configuration'
 # ======================================================================
-
 class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -721,7 +721,6 @@ class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
 # ===========================================================================
 # Unit test for 'show bgp instance <WORD> session-group <WORD> configuration'
 # ===========================================================================
-
 class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -866,7 +865,6 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all vrf all process detail'
 # ============================================================
-
 class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -2485,7 +2483,6 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all all all process detail'
 # ============================================================
-
 class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -3573,7 +3570,6 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'
 # ==============================================================
-
 class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -4077,7 +4073,6 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
 # ==============================================================
 # Unit test for 'show bgp instance all vrf all neighbors detail'
 # ==============================================================
-
 class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -5283,7 +5278,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
 # ================================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
 # ================================================================================
-
 class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         
     device = Device(name='aDevice')
@@ -5390,7 +5384,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
 # ================================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> advertised-routes'
 # ================================================================================
-
 class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.TestCase):
         
     device = Device(name='aDevice')
@@ -5505,7 +5498,6 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 # ==============================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> received routes'
 # ==============================================================================
-
 class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -5613,7 +5605,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
 # ==============================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> received routes'
 # ==============================================================================
-
 class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -5843,7 +5834,6 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
 # =====================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> routes'
 # =====================================================================
-
 class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     
     dev = Device(name='Device')
@@ -5950,7 +5940,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
 # =====================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> routes'
 # =====================================================================
-
 class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -6246,7 +6235,6 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
 # =====================================================
 # Unit test for 'show bgp instance all all all summary'
 # =====================================================
-
 class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -6394,7 +6382,6 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
 # =====================================================
 # Unit test for 'show bgp instance all vrf all summary'
 # =====================================================
-
 class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -6688,14 +6675,13 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
 # =============================================
 # Unit test for 'show bgp instance all all all'
 # =============================================
+class TestShowBgpInstanceAllAll(unittest.TestCase):
 
-class test_show_bgp_instance_all_all_all(unittest.TestCase):
-    
-    device = Device(name='aDevice')
-    device0 = Device(name='bDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+    golden_parsed_output1 = {
+        'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
                                                                                    'generic_scan_interval': '60',
                                                                                    'instance_number': '0',
                                                                                    'local_as': 100,
@@ -7043,9 +7029,8 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
                                                                                             'processed_paths': 50,
                                                                                             'processed_prefix': 40,
                                                                                             'route_distinguisher': '400:1'}}}}}}}
-                                                
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
     
         BGP instance 0: 'default'
         =========================
@@ -7133,30 +7118,31 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         '''}
     
     def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device1)
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpInstanceAllAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
+            parsed_output = obj.parse(vrf_type='all')
 
-    def test_golden_all(self):
-       self.device = Mock(**self.golden_output)
-       bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
-       parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
-       self.maxDiff = None
-       self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden1(self):
+        import re ; re.reset()
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type='all')
+        print(re.colour_output()) ; re.reset()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # =============================================
 # Unit test for 'show bgp instance all vrf all'
 # =============================================
-
 class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+    golden_parsed_output = {
+        'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
                                                                                 'bgp_vrf': 'vrf1',
                                                                                 'local_as': 100,
                                                                                 'non_stop_routing': True,
@@ -10164,7 +10150,6 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 # =============================================
 # Unit test for 'show bgp l2vpn evpn neighbors'
 # =============================================
-
 class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -11322,6 +11307,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
         obj = ShowBgpInstanceAllSessions(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
