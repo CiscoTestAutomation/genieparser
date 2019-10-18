@@ -343,9 +343,9 @@ class ShowClnsProtocolSchema(MetaParser):
                 'nsel': str,
                 'process_handle': str,
                 'is_type': str,
-                'manual_area_address': list,
-                'routing_for_area_address': list,
-                'interfaces': {
+                Optional('manual_area_address'): list,
+                Optional('routing_for_area_address'): list,
+                Optional('interfaces'): {
                     Any(): {
                         'topology': list,
                     },
