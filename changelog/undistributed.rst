@@ -430,6 +430,9 @@
     * Updated ShowRplPrefixSet regex for:
         * show rpl prefix-set
         * show rpl prefix-set <name>
+    * Updated ShowRplRoutePolicy regex for:
+        * show rpl route-policy
+
 
 --------------------------------------------------------------------------------
                                 X-Connect
