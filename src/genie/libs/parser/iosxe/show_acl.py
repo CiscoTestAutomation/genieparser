@@ -248,6 +248,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?.*$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
 
+
         # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
         # 20 permit 10.2.0.0
         # 20 deny   any
@@ -255,14 +256,19 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 30 deny   any
         # permit 172.20.10.10
         # permit 10.66.12.12
-
-        p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? ?(?P<actions_forwarding>permit|deny) +(?P<src>[\w\.]+|any)(?:, +wildcard +bits +(?P<wildcard_bits>any|[\w\.]+))?$')
+        # 10 permit 172.31.0.2 (1168716 matches)
+        # 10 permit 172.31.0.0, wildcard bits 0.0.255.255 (8353358 matches)
+        p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? '
+                                       r'?(?P<actions_forwarding>permit|deny) '
+                                       r'+(?P<src>[\w\.]+|any)(?:, +wildcard '
+                                       r'+bits +(?P<wildcard_bits>any|[\w\.]+))'
+                                       r'?(?: +\(\d+ +matches\))?$')
 
         # 10 permit ip host 10.3.3.3 host 10.5.5.34
         # 20 permit icmp any any
         # 30 permit ip host 10.34.2.2 host 10.2.54.2
         # 40 permit ip host 10.3.4.31 host 10.3.32.3 log
-        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www               (matches on l4, but missing l3)
+        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
         # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
         # 40 permit tcp any range ftp-data bgp any
         # 10 permit ip host 0.0.0.0 any

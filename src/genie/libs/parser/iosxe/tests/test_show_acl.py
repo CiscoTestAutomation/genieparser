@@ -1,5 +1,6 @@
 #!/bin/env python
 import unittest
+
 from unittest.mock import Mock
 from ats.topology import Device
 
@@ -1860,6 +1861,96 @@ IPv6 access list OutFilter_IPv6
         }
     }
 
+    golden_output_customer = {'execute.return_value': '''
+        Standard IP access list 43
+            10 permit 10.1.0.2 (1168716 matches)
+            20 permit 11.1.0.9
+            30 permit 12.28.10.0, wildcard bits 0.0.10.255
+            40 permit 13.1.0.0, wildcard bits 0.0.255.255 (8353358 matches)
+    '''
+    }
+
+    golden_parsed_output_customer = {
+        '43': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.1.0.2 0.0.0.0': {
+                                        'source_network': '10.1.0.2 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '10'
+                },
+                '20': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '11.1.0.9 0.0.0.0': {
+                                        'source_network': '11.1.0.9 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '20'
+                },
+                '30': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '12.28.10.0 0.0.10.255': {
+                                        'source_network': '12.28.10.0 0.0.10.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '30'
+                },
+                '40': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '13.1.0.0 0.0.255.255': {
+                                        'source_network': '13.1.0.0 0.0.255.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '40'
+                }
+            },
+            'name': '43',
+            'type': 'ipv4-acl-type'
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -1900,6 +1991,13 @@ IPv6 access list OutFilter_IPv6
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_customer)
+        obj = ShowIpAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='43')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer)
 
 if __name__ == '__main__':
     unittest.main()
