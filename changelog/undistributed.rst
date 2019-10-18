@@ -16,10 +16,13 @@
                                 CLNS
 --------------------------------------------------------------------------------
 * IOSXE
+    * Updated ShowClnsInterface to support more outputs        
     * Changed "type" type from string to integer on the following commands
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Saving as empty instance when instance not present in output on:
+        * show clns protocol
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -169,6 +172,7 @@
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
     * Updated ShowIpBgp for parsing of more varied output
+    * Updated ShowIpBgpNeighbors schema to support more varied output
 
 --------------------------------------------------------------------------------
                                 OSPF
@@ -194,6 +198,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
         * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
@@ -415,6 +420,9 @@
         * show l2route evpn mac all
     * Updated ShowL2routeEvpnMacIpAll for:
         * show l2route evpn mac-ip all
+    * Updated ShowRplPrefixSet regex for:
+        * show rpl prefix-set
+        * show rpl prefix-set <name>
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -507,12 +515,20 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatformHardware to support more varied output
+
+--------------------------------------------------------------------------------
                                 ACL
 --------------------------------------------------------------------------------
 * IOSXE
     * ShowAccessLists:
         * modified regex for both ipv4 and ipv6 to accommodate more outputs
         * added to handle standard ACL
+
+--------------------------------------------------------------------------------
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -592,3 +608,10 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added Traceroute class
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Verified customer outputs
+    * Added field to schema advertised_by
