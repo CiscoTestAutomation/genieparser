@@ -1008,12 +1008,12 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
                         ' +Lifetime: +(?P<lifetime>\d+), +Output +cngstn: +(?P<output_cngstn>\d+)$')
         #   No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
         p7 = re.compile(r'^No +Route: +(?P<no_route>\d+), +Discard +Route: +(?P<discard_route>\d+),'
-                        ' +Dst +Unreachable +(?P<dst_unreachable>\d+), +Encaps. +Failed: +(?P<encaps_failed>\d+)$')
+                        r' +Dst +Unreachable +(?P<dst_unreachable>\d+), +Encaps. +Failed: +(?P<encaps_failed>\d+)$')
         #   NLP Unknown: 0, Not an IS: 0
         p8 = re.compile(r'^NLP +Unknown: +(?P<nlp_unknown>\d+), +Not +an +IS: +(?P<not_an_is>\d+)$')
         # CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
         p9 = re.compile(r'^CLNS +Options: +Packets +(?P<packets>\d+), +total +(?P<total>\d+) ,'
-                        ' +bad +(?P<bad>\d+), +GQOS +(?P<gqos>\d+), +cngstn +exprncd +(?P<cngstn_exprncd>\d+)$')
+                        r' +bad +(?P<bad>\d+), +GQOS +(?P<gqos>\d+), +cngstn +exprncd +(?P<cngstn_exprncd>\d+)$')
         # CLNS Segments:  Segmented: 0, Failed: 0
         p10 = re.compile(r'^CLNS +Segments:  +Segmented: +(?P<segmented>\d+), +Failed: +(?P<failed>\d+)$')
         # CLNS Broadcasts: sent: 0, rcvd: 0
@@ -1024,11 +1024,11 @@ class ShowClnsTraffic(ShowClnsTrafficSchema):
         p13 = re.compile(r'^Sent +(?P<requests>\d+) +requests, +(?P<replied>\d+) +replies$')
         # ESIS(sent/rcvd): ESHs: 0/0, ISHs: 168/0, RDs: 0/0, QCF: 0/0
         p14 = re.compile(r'^ESIS\(sent\/rcvd\): +ESHs: +(?P<esh_sent>\d+)/(?P<esh_rcvd>\d+),'
-                         ' +ISHs: +(?P<ish_sent>\d+)/(?P<ish_rcvd>\d+),'
-                         ' +RDs: +(?P<rd_sent>\d+)/(?P<rd_rcvd>\d+), +QCF: +(?P<qcf_sent>\d+)/(?P<qcf_rcvd>\d+)$')
+                         r' +ISHs: +(?P<ish_sent>\d+)/(?P<ish_rcvd>\d+),'
+                         r' +RDs: +(?P<rd_sent>\d+)/(?P<rd_rcvd>\d+), +QCF: +(?P<qcf_sent>\d+)/(?P<qcf_rcvd>\d+)$')
         # Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
         p15 = re.compile(r'^Tunneling +\(sent\/rcvd\): +IP: +(?P<ip_sent>\d+)/(?P<ip_rcvd>\d+),'
-                         ' +IPv6: +(?P<ipv6_sent>\d+)/(?P<ipv6_rcvd>\d+)$')
+                         r' +IPv6: +(?P<ipv6_sent>\d+)/(?P<ipv6_rcvd>\d+)$')
         # Tunneling dropped (rcvd) IP/IPV6:  0
         p16 = re.compile(r'^Tunneling +dropped +\(rcvd\) +IP\/IPV6:  +(?P<tunneling_dropped>\d+)$')
         # ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
