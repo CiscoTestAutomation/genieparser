@@ -183,6 +183,8 @@
     * Updated ShowBgpSuperParser for parsing of more varied output
     * Updated ShowIpBgp for parsing of more varied output
     * Updated ShowIpBgpNeighbors schema to support more varied output
+    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser to parse more vrf value
+    
 
 --------------------------------------------------------------------------------
                                 OSPF
