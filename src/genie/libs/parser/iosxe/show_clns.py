@@ -960,15 +960,15 @@ class ShowClnsTrafficSchema(MetaParser):
                     },
                     'dr_election': {
                         'level-1': int,
-                        'level-2': int,
+                        Optional('level-2'): int,
                     },
                     'spf_calculation': {
                         'level-1': int,
-                        'level-2': int,
+                        Optional('level-2'): int,
                     },
                     'partial_route_calculation': {
                         'level-1': int,
-                        'level-2': int,
+                        Optional('level-2'): int,
                     },
                     'lsp_checksum_errors_received': int,
                     'update_process_queue_depth': str,
