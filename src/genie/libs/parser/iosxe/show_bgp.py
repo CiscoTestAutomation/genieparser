@@ -225,20 +225,20 @@ class ShowBgpSuperParser(ShowBgpSchema):
 
         # For address family: IPv4 Unicast
         p1 = re.compile(r'^\s*For +address +family:'
-                        ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
+                        r' +(?P<address_family>[\S\s]+)$')
 
         # BGP table version is 25, Local Router ID is 10.186.101.1
         p2 = re.compile(r'^\s*BGP +table +version +is'
-                        ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
-                        ' +ID +is +(?P<local_router_id>(\S+))$')
+                        r' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
+                        r' +ID +is +(?P<local_router_id>(\S+))$')
 
         #     Network          Next Hop            Metric LocPrf Weight Path
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?'
-                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
-                          '(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
+                          r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
         #     Network          Next Hop            Metric LocPrf Weight Path
         # * i                  10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
@@ -248,10 +248,10 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *m                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|m|r|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
-                          '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                          ' +(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +(?P<weight>\d+)'
-                          '(?P<termination>[\s\S]+)$')
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
+                          r'(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          r' +(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +(?P<weight>\d+)'
+                          r'(?P<termination>[\s\S]+)$')
 
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
@@ -260,26 +260,27 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *m 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         # *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         # *>  100:2051:VEID-2:Blk-1/136
+        # *>i10.1.1.0/24   0.0.0.0                   0    100      0 1234 60000 ?
         p4 = re.compile(r'^\s*(?P<status_codes>(?:s|x|S|d|h|m|r|\*|\>|\s)+)?'
-                         '(?P<path_type>(?:i|e|c|l|a|r|I))? +'
-                         '(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+) +'
-                         '(?P<next_hop>[a-zA-Z0-9\.\:]+) +'
-                         '(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +'
-                         '(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +'
-                         '(?P<weight>\d+)(?P<path>[0-9 \S\{\}]+)$')
+                        r'(?P<path_type>(?:i|e|c|l|a|r|I))? *'
+                        r'(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+) +'
+                        r'(?P<next_hop>[a-zA-Z0-9\.\:]+) +'
+                        r'(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +'
+                        r'(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +'
+                        r'(?P<weight>\d+)(?P<path>[0-9 \S\{\}]+)$')
 
         # AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
         p5 = re.compile(r'^\s*AF-Private +Import +to +Address-Family:'
-                        ' +(?P<af_private_import_to_address_family>[\s\S]+),'
-                        ' +Pfx +Count/Limit:'
-                        ' +(?P<pfx_count>[\d]+)\/+(?P<pfx_limit>[\d]+)$')
+                        r' +(?P<af_private_import_to_address_family>[\s\S]+),'
+                        r' +Pfx +Count/Limit:'
+                        r' +(?P<pfx_count>[\d]+)\/+(?P<pfx_limit>[\d]+)$')
 
         # Route Distinguisher: 200:1
         # Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
         p6 = re.compile(r'^\s*Route +Distinguisher *: '
-                        '+(?P<route_distinguisher>(\S+))'
-                        '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
-                        '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
+                        r'+(?P<route_distinguisher>(\S+))'
+                        r'( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
+                        r'( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
         for line in output.splitlines():
             line = line.rstrip()
@@ -2535,9 +2536,9 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             },
                         Optional('bgp_session_transport'):
                             {'min_time_between_advertisement_runs': int,
-                            'address_tracking_status': str,
+                            Optional('address_tracking_status'): str,
                             Optional('rib_route_ip'): str,
-                            'tcp_path_mtu_discovery': str,
+                            Optional('tcp_path_mtu_discovery'): str,
                             'connection':
                                 {'established': int,
                                 'dropped': int,

@@ -363,7 +363,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'remote_sequence_number': 0,
                         'local_encapsulation': 'N/A',
                         'remote_encapsulation': 'N/A',
-                        'esi_port_key': 0,
+                        'esi_port_key': '0',
                         'source': 'Local',
                         'flush_requested': 0,
                         'flush_received': 0,
@@ -389,7 +389,6 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             },
         },
     }
-
     golden_output1 = {'execute.return_value': '''
         show evpn evi mac private
         Tue Sep 17 20:08:26.843 UTC
@@ -439,6 +438,10 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'ip_address': '10.196.7.8',
                         'ethernet_segment': '0000.0000.0000.0000.0000',
                         'source': 'Local',
+                        'flush_count': 0,
+                        'bp_ifh': '0',
+                        'flush_seq_id': 0,
+                        'static': 'No',
                         'object': {
                             'EVPN MAC': {
                                 'base_info': {
@@ -553,7 +556,6 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             },
         },
     }
-
     golden_output2 = {'execute.return_value': '''
         sh evpn evi mac private
         Tue Jun 14 15:14:25.359 UTC
@@ -593,7 +595,1426 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         ----------------------------------------------------------------------------
 
         '''}
+    
+    golden_parsed_output3 = {
+        'vpn_id': {
+            19: {
+                'mac_address': {
+                    '0000.0000.0019': {
+                        'ip_address': '::',
+                        'next_hop': 'BVI19',
+                        'label': 114012,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'Yes',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'N/A',
+                        'esi_port_key': '0',
+                        'source': 'Local',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '::',
+                        'bp_xcid': '0x800001a1',
+                        'mac_state': 'Static',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0x40024100',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 16,
+                                'event_history': {
+                                    1: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    2: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    3: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000011',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    4: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    5: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    6: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    7: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000011',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    8: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    9: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    10: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    11: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000011',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    12: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    13: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    14: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    15: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000011',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    16: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '0009.0f09.000d': {
+                        'ip_address': '10.169.19.4',
+                        'next_hop': 'Bundle-Ether1.19',
+                        'label': 114012,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0100.acce.7700.cccc',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'N/A',
+                        'esi_port_key': 'bef5',
+                        'source': 'Local',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '::',
+                        'bp_xcid': '0xc0000002',
+                        'mac_state': 'Local',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0x8004100',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 16,
+                                'event_history': {
+                                    17: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '09206110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    18: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000006',
+                                        'flag_2': '00010006',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    19: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '09206110',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    20: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    21: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Got BGP update',
+                                        'flag_1': '01010001',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    22: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Modify',
+                                        'flag_1': '00000019',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    23: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '083c6110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    24: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00060001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    25: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '08bc6110',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    26: {
+                                        'time': 'Jul  2 16:06:33.728',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00000000',
+                                        'flag_2': '01000100',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    27: {
+                                        'time': 'Jul 23 11:30:27.968',
+                                        'event': 'Delete',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    28: {
+                                        'time': 'Jul 23 11:30:27.968',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '09206110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    29: {
+                                        'time': 'Jul 23 11:30:27.968',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000006',
+                                        'flag_2': '00010006',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    30: {
+                                        'time': 'Jul 23 11:30:27.968',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '09206110',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    31: {
+                                        'time': 'Jul 23 11:30:27.968',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    32: {
+                                        'time': 'Aug 21 09:09:20.512',
+                                        'event': 'Ignore BGP update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    33: {
+                                        'time': 'Oct  5 19:36:44.800',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '083c4110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    34: {
+                                        'time': 'Oct  5 19:36:44.800',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    35: {
+                                        'time': 'Oct  5 19:36:44.800',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '083c4110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    36: {
+                                        'time': 'Oct  5 19:36:44.800',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00060006',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    37: {
+                                        'time': 'Oct  5 19:36:44.800',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '083c4110',
+                                        'flag_2': '00000061',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    38: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'Delete',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    39: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '09204110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    40: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00010006',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    41: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'Got BGP update',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    42: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '09204110',
+                                        'flag_2': '00000061',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    43: {
+                                        'time': 'Oct  5 23:25:46.880',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    44: {
+                                        'time': 'Oct  5 23:25:47.904',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '08004100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    45: {
+                                        'time': 'Oct  5 23:25:47.904',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    46: {
+                                        'time': 'Oct  5 23:25:47.904',
+                                        'event': 'Advertise to BGP',
+                                        'flag_1': '08204110',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    47: {
+                                        'time': 'Oct  5 23:25:47.904',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    48: {
+                                        'time': 'Oct  5 23:25:47.904',
+                                        'event': 'Encode NLRI',
+                                        'flag_1': '08204110',
+                                        'flag_2': '00000061',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            1994: {
+                'mac_address': {
+                    '78ba.f96e.a1fe': {
+                        'ip_address': '::',
+                        'next_hop': 'BVI900',
+                        'label': 114416,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'Yes',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'N/A',
+                        'esi_port_key': '0',
+                        'source': 'Local',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '::',
+                        'bp_xcid': '0x800001a5',
+                        'mac_state': 'Static',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0x40024100',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 16,
+                                'event_history': {
+                                    49: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '0000000b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    50: {
+                                        'time': 'May  1 09:10:13.248',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    51: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    52: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    53: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '0000000b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    54: {
+                                        'time': 'May  8 14:32:40.192',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    55: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    56: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    57: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '0000000b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    58: {
+                                        'time': 'May 22 09:53:49.568',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    59: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'Got L2RIB update',
+                                        'flag_1': '40024100',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    60: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    61: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '0000000b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    62: {
+                                        'time': 'May 25 18:08:39.936',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000001',
+                                        'flag_2': '00020002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    63: {
+                                        'time': 'May 25 18:09:23.456',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000011',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    64: {
+                                        'time': 'Jun 12 12:01:15.776',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '0000000b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            2112: {
+                'mac_address': {
+                    '0000.25b1.33d3': {
+                        'ip_address': '::',
+                        'next_hop': '10.154.219.101',
+                        'label': 100965,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'MPLS',
+                        'esi_port_key': '0',
+                        'source': 'Remote',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '10.154.219.101',
+                        'bp_xcid': '0x0',
+                        'mac_state': 'Remote (w/ SOO)',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0xc0100',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 9,
+                                'event_history': {
+                                    65: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    66: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    67: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00040000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    68: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00018a65',
+                                        'flag_2': '01000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    69: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'Got BGP update',
+                                        'flag_1': '00010000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    70: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'Modify',
+                                        'flag_1': '00000040',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    71: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    72: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00040004',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    73: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '00018a65',
+                                        'flag_2': '01000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '0000.25b3.1127': {
+                        'ip_address': '::',
+                        'next_hop': '10.154.219.150',
+                        'label': 114483,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'MPLS',
+                        'esi_port_key': '0',
+                        'source': 'Remote',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '10.154.219.150',
+                        'bp_xcid': '0x0',
+                        'mac_state': 'Remote (w/ SOO)',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0xc0000',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 4,
+                                'event_history': {
+                                    74: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    75: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    76: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00040000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    77: {
+                                        'time': 'Oct  5 19:36:45.824',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '0001bf33',
+                                        'flag_2': '01000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '4c96.14e6.f82e': {
+                        'ip_address': '::',
+                        'next_hop': '10.154.219.101',
+                        'label': 100965,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'True',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0100.233e.65d6.5080.1600',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'MPLS',
+                        'esi_port_key': '0',
+                        'source': 'Remote',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 100490,
+                        'soo_nexthop': '10.154.219.101',
+                        'bp_xcid': '0x0',
+                        'mac_state': 'Remote (w/ SOO)',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0xc0000',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 4,
+                                'event_history': {
+                                    78: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    79: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    80: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00040000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    81: {
+                                        'time': 'Sep 24 07:09:27.424',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '0001888a',
+                                        'flag_2': '01010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '10.246.100.1': {
+                        'encap': '4c96.14e6.f82e',
+                        'ip_address': '10.154.219.101',
+                        'next_hop': '',
+                        'label': 100965,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'True',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0100.233e.65d6.5080.1600',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'MPLS',
+                        'esi_port_key': '0',
+                        'source': 'Remote',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 100490,
+                        'soo_nexthop': '10.154.219.101',
+                        'bp_xcid': '0x0',
+                        'mac_state': 'Remote (w/ SOO)',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0xc0000',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 4,
+                                'event_history': {
+                                    82: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    83: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000007',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    84: {
+                                        'time': 'Sep 24 07:09:11.040',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00040000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    85: {
+                                        'time': 'Sep 24 07:09:27.424',
+                                        'event': 'L2RIB Download',
+                                        'flag_1': '0001888a',
+                                        'flag_2': '01010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            65535: {
+                'mac_address': {
+                    '78ba.f96e.a1fd': {
+                        'ip_address': '::',
+                        'next_hop': 'Local',
+                        'label': 0,
+                        'ethernet_tag': 0,
+                        'multipaths_resolved': 'False',
+                        'static': 'No',
+                        'local_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'remote_ethernet_segment': '0000.0000.0000.0000.0000',
+                        'local_sequence_number': 0,
+                        'remote_sequence_number': 0,
+                        'local_encapsulation': 'N/A',
+                        'remote_encapsulation': 'N/A',
+                        'esi_port_key': '0',
+                        'source': 'Local',
+                        'flush_requested': 0,
+                        'flush_received': 0,
+                        'multipaths_local_label': 0,
+                        'soo_nexthop': '::',
+                        'bp_xcid': '0x0',
+                        'mac_state': 'Local',
+                        'local_router_mac': '0000.0000.0000',
+                        'l3_label': 0,
+                        'object': {
+                            'EVPN MAC': {
+                                'base_info': {
+                                    'version': '0xdbdb0008',
+                                    'flags': '0x4100',
+                                    'type': 8,
+                                    'reserved': 0,
+                                },
+                                'num_events': 8,
+                                'event_history': {
+                                    86: {
+                                        'time': 'May  1 09:00:02.944',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    87: {
+                                        'time': 'May  1 09:00:02.944',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    88: {
+                                        'time': 'May  1 09:00:02.944',
+                                        'event': 'FSM Event (event, state)',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    89: {
+                                        'time': 'May  1 09:00:02.944',
+                                        'event': 'Modify Redundant',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    90: {
+                                        'time': 'May  1 09:02:05.312',
+                                        'event': 'Replay EVI to BGP',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    91: {
+                                        'time': 'May  1 09:02:05.312',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    92: {
+                                        'time': 'May  1 09:05:20.896',
+                                        'event': 'Replay EVI to BGP',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    93: {
+                                        'time': 'May  1 09:05:20.896',
+                                        'event': 'MAC advertise rejected',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
+    golden_output3 = {'execute.return_value': '''
+        +++ genie-Router: executing command 'show evpn evi mac private' +++
+        show evpn evi mac private
+
+        Mon Oct 14 17:57:12.677 EDT
+
+        EVI        MAC address    IP address                               Nexthop                                 Label   
+        ---------- -------------- ---------------------------------------- --------------------------------------- --------
+        19         0000.0000.0019 ::                                       BVI19                                   114012  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : Yes
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : N/A
+        ESI Port Key                            : 0
+        Source                                  : Local
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : ::
+        BP XCID                                 : 0x800001a1
+        MAC State                               : Static
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0x40024100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 16]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            May  1 09:10:13.248 Got L2RIB update              40024000, 00000000 -  - 
+            May  1 09:10:13.248 Modify Redundant              00000000, 00000000 -  - 
+            May  1 09:10:13.248 MAC advertise rejected        00000011, 00000000 -  - 
+            May  1 09:10:13.248 FSM Event (event, state)      00000001, 00020002 -  - 
+            May  8 14:32:40.192 Got L2RIB update              40024100, 00000000 -  - 
+            May  8 14:32:40.192 Modify Redundant              00000000, 00000000 -  - 
+            May  8 14:32:40.192 MAC advertise rejected        00000011, 00000000 -  - 
+            May  8 14:32:40.192 FSM Event (event, state)      00000001, 00020002 -  - 
+            May 22 09:53:49.568 Got L2RIB update              40024100, 00000000 -  - 
+            May 22 09:53:49.568 Modify Redundant              00000000, 00000000 -  - 
+            May 22 09:53:49.568 MAC advertise rejected        00000011, 00000000 -  - 
+            May 22 09:53:49.568 FSM Event (event, state)      00000001, 00020002 -  - 
+            May 25 18:08:39.936 Got L2RIB update              40024100, 00000000 -  - 
+            May 25 18:08:39.936 Modify Redundant              00000000, 00000000 -  - 
+            May 25 18:08:39.936 MAC advertise rejected        00000011, 00000000 -  - 
+            May 25 18:08:39.936 FSM Event (event, state)      00000001, 00020002 -  - 
+        ----------------------------------------------------------------------------
+        19         0009.0f09.000d ::                                       Bundle-Ether1.19                        114012  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0100.acce.7700.cccc
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 7
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : N/A
+        ESI Port Key                            : bef5
+        Source                                  : Local
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : ::
+        BP XCID                                 : 0xc0000002
+        MAC State                               : Local
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0x8004100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 16]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Jul  2 16:06:33.728 Advertise to BGP              09206110, 00000000 -  - 
+            Jul  2 16:06:33.728 FSM Event (event, state)      00000006, 00010006 -  - 
+            Jul  2 16:06:33.728 Encode NLRI                   09206110, 00000000 M  - 
+            Jul  2 16:06:33.728 L2RIB Download                00000000, 00000000 -  - 
+            Jul  2 16:06:33.728 Got BGP update                01010001, 00000001 -  - 
+            Jul  2 16:06:33.728 Modify                        00000019, 00000000 -  - 
+            Jul  2 16:06:33.728 Advertise to BGP              083c6110, 00000000 -  - 
+            Jul  2 16:06:33.728 FSM Event (event, state)      00000003, 00060001 -  - 
+            Jul  2 16:06:33.728 Encode NLRI                   08bc6110, 00000000 M  - 
+            Jul  2 16:06:33.728 L2RIB Download                00000000, 01000100 -  - 
+            Jul 23 11:30:27.968 Delete                        00000001, 00000000 -  - 
+            Jul 23 11:30:27.968 Advertise to BGP              09206110, 00000000 -  - 
+            Jul 23 11:30:27.968 FSM Event (event, state)      00000006, 00010006 -  - 
+            Jul 23 11:30:27.968 Encode NLRI                   09206110, 00000000 M  - 
+            Jul 23 11:30:27.968 L2RIB Download                00000000, 00000000 -  - 
+            Aug 21 09:09:20.512 Ignore BGP update             00000000, 00000000 M  - 
+        ----------------------------------------------------------------------------
+        19         0009.0f09.000d 10.169.19.4                               Bundle-Ether1.19                        114012  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0100.acce.7700.cccc
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : N/A
+        ESI Port Key                            : bef5
+        Source                                  : Local
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : ::
+        BP XCID                                 : 0xc0000002
+        MAC State                               : Local
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0x8004100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 16]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Oct  5 19:36:44.800 Got L2RIB update              083c4110, 00000000 -  - 
+            Oct  5 19:36:44.800 Modify Redundant              00000000, 00000000 -  - 
+            Oct  5 19:36:44.800 Advertise to BGP              083c4110, 00000000 -  - 
+            Oct  5 19:36:44.800 FSM Event (event, state)      00000000, 00060006 -  - 
+            Oct  5 19:36:44.800 Encode NLRI                   083c4110, 00000061 M  - 
+            Oct  5 23:25:46.880 Delete                        00000001, 00000000 -  - 
+            Oct  5 23:25:46.880 Advertise to BGP              09204110, 00000000 -  - 
+            Oct  5 23:25:46.880 FSM Event (event, state)      00000007, 00010006 -  - 
+            Oct  5 23:25:46.880 Got BGP update                00000001, 00000000 -  - 
+            Oct  5 23:25:46.880 Encode NLRI                   09204110, 00000061 M  - 
+            Oct  5 23:25:46.880 L2RIB Download                00000000, 00000000 -  - 
+            Oct  5 23:25:47.904 Got L2RIB update              08004100, 00000000 -  - 
+            Oct  5 23:25:47.904 Modify Redundant              00000000, 00000000 -  - 
+            Oct  5 23:25:47.904 Advertise to BGP              08204110, 00000000 -  - 
+            Oct  5 23:25:47.904 FSM Event (event, state)      00000000, 00010001 -  - 
+            Oct  5 23:25:47.904 Encode NLRI                   08204110, 00000061 M  - 
+        ----------------------------------------------------------------------------
+        1994       78ba.f96e.a1fe ::                                       BVI900                                  114416  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : Yes
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : N/A
+        ESI Port Key                            : 0
+        Source                                  : Local
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : ::
+        BP XCID                                 : 0x800001a5
+        MAC State                               : Static
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0x40024100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 16]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            May  1 09:10:13.248 MAC advertise rejected        0000000b, 00000000 -  - 
+            May  1 09:10:13.248 FSM Event (event, state)      00000001, 00020002 -  - 
+            May  8 14:32:40.192 Got L2RIB update              40024100, 00000000 -  - 
+            May  8 14:32:40.192 Modify Redundant              00000000, 00000000 -  - 
+            May  8 14:32:40.192 MAC advertise rejected        0000000b, 00000000 -  - 
+            May  8 14:32:40.192 FSM Event (event, state)      00000001, 00020002 -  - 
+            May 22 09:53:49.568 Got L2RIB update              40024100, 00000000 -  - 
+            May 22 09:53:49.568 Modify Redundant              00000000, 00000000 -  - 
+            May 22 09:53:49.568 MAC advertise rejected        0000000b, 00000000 -  - 
+            May 22 09:53:49.568 FSM Event (event, state)      00000001, 00020002 -  - 
+            May 25 18:08:39.936 Got L2RIB update              40024100, 00000000 -  - 
+            May 25 18:08:39.936 Modify Redundant              00000000, 00000000 -  - 
+            May 25 18:08:39.936 MAC advertise rejected        0000000b, 00000000 -  - 
+            May 25 18:08:39.936 FSM Event (event, state)      00000001, 00020002 -  - 
+            May 25 18:09:23.456 MAC advertise rejected        00000011, 00000000 -  - 
+            Jun 12 12:01:15.776 MAC advertise rejected        0000000b, 00000000 -  - 
+        ----------------------------------------------------------------------------
+        2112       0000.25b1.33d3 ::                                       10.154.219.101                           100965  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : MPLS
+        ESI Port Key                            : 0
+        Source                                  : Remote
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : 10.154.219.101
+        BP XCID                                 : 0x0
+        MAC State                               : Remote (w/ SOO)
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0xc0100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 9]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Oct  5 19:36:45.824 Create                        00000000, 00000000 -  - 
+            Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+            Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
+            Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
+            Oct  5 19:36:45.824 Got BGP update                00010000, 00000001 -  - 
+            Oct  5 19:36:45.824 Modify                        00000040, 00000000 -  - 
+            Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+            Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040004 -  - 
+            Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
+        ----------------------------------------------------------------------------
+        2112       0000.25b3.1127 ::                                       10.154.219.150                           114483  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : MPLS
+        ESI Port Key                            : 0
+        Source                                  : Remote
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : 10.154.219.150
+        BP XCID                                 : 0x0
+        MAC State                               : Remote (w/ SOO)
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+        EVPN MAC event history  [Num events: 4]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Oct  5 19:36:45.824 Create                        00000000, 00000000 -  - 
+            Oct  5 19:36:45.824 MAC advertise rejected        00000007, 00000000 -  - 
+            Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
+            Oct  5 19:36:45.824 L2RIB Download                0001bf33, 01000000 -  - 
+        ----------------------------------------------------------------------------
+        2112       4c96.14e6.f82e ::                                       10.154.219.101                           100965  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : True
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0100.233e.65d6.5080.1600
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : MPLS
+        ESI Port Key                            : 0
+        Source                                  : Remote
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 100490
+        SOO Nexthop                             : 10.154.219.101
+        BP XCID                                 : 0x0
+        MAC State                               : Remote (w/ SOO)
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+        EVPN MAC event history  [Num events: 4]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Sep 24 07:09:11.040 Create                        00000000, 00000000 -  - 
+            Sep 24 07:09:11.040 MAC advertise rejected        00000007, 00000000 -  - 
+            Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
+            Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
+        ----------------------------------------------------------------------------
+        2112       4c96.14e6.f82e 10.246.100.1                             10.154.219.101                           100965  
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : True
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0100.233e.65d6.5080.1600
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : MPLS
+        ESI Port Key                            : 0
+        Source                                  : Remote
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 100490
+        SOO Nexthop                             : 10.154.219.101
+        BP XCID                                 : 0x0
+        MAC State                               : Remote (w/ SOO)
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0xc0000, type=8, reserved=0
+        EVPN MAC event history  [Num events: 4]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Sep 24 07:09:11.040 Create                        00000000, 00000000 -  - 
+            Sep 24 07:09:11.040 MAC advertise rejected        00000007, 00000000 -  - 
+            Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
+            Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
+        ----------------------------------------------------------------------------
+        65535      78ba.f96e.a1fd ::                                       Local                                   0       
+        Ethernet Tag                            : 0
+        Multi-paths Resolved                    : False
+        Static                                  : No
+        Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+        Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+        Local Sequence Number                   : 0
+        Remote Sequence Number                  : 0
+        Local Encapsulation                     : N/A
+        Remote Encapsulation                    : N/A
+        ESI Port Key                            : 0
+        Source                                  : Local
+        Flush Requested                         : 0
+        Flush Received                          : 0
+        Multi-paths Local Label                 : 0
+        SOO Nexthop                             : ::
+        BP XCID                                 : 0x0
+        MAC State                               : Local
+        Local Router MAC                        : 0000.0000.0000
+        L3 Label                                : 0
+
+        Object: EVPN MAC
+        Base info: version=0xdbdb0008, flags=0x4100, type=8, reserved=0
+        EVPN MAC event history  [Num events: 8]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            May  1 09:00:02.944 Create                        00000000, 00000000 -  - 
+            May  1 09:00:02.944 MAC advertise rejected        00000000, 00000000 -  - 
+            May  1 09:00:02.944 FSM Event (event, state)      00000000, 00010000 -  - 
+            May  1 09:00:02.944 Modify Redundant              00000000, 00000000 -  - 
+            May  1 09:02:05.312 Replay EVI to BGP             00000000, 00000000 -  - 
+            May  1 09:02:05.312 MAC advertise rejected        00000000, 00000000 -  - 
+            May  1 09:05:20.896 Replay EVI to BGP             00000000, 00000000 -  - 
+            May  1 09:05:20.896 MAC advertise rejected        00000000, 00000000 -  - 
+        ----------------------------------------------------------------------------
+        RP/0/RSP0/CPU0:genie-Router#
+
+    '''}
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEviMacPrivate(device=self.device)
@@ -613,6 +2034,13 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         obj = ShowEvpnEviMacPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowEvpnEviMacPrivate(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ================================================
 #  Unit test for 'show evpn internal-label detail'
@@ -1075,7 +2503,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             '0001.0000.aaab.0000.0003': {
                 'interface': {
                     'Bundle-Ether3': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'M',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1096,7 +2524,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -1122,7 +2550,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             '0001.0000.aaab.0000.0004': {
                 'interface': {
                     'Bundle-Ether4': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1143,7 +2571,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -1169,7 +2597,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             'N/A': {
                 'interface': {
                     'GigabitEthernet0/0/0/12': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1189,7 +2617,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'Single-active (AApS) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 1,
@@ -1237,7 +2665,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops            
         ------------------------ ---------------------------------- --------------------
-        0001.0000.aaab.0000.0003 BE3                                67.70.219.84
+        0001.0000.aaab.0000.0003 BE3                                10.154.219.84
         ES to BGP Gates   : M
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1254,7 +2682,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -1267,7 +2695,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Local SHG label   : 100564
         Remote SHG labels : 0
 
-        0001.0000.aaab.0000.0004 BE4                                67.70.219.84
+        0001.0000.aaab.0000.0004 BE4                                10.154.219.84
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1284,7 +2712,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -1297,7 +2725,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Local SHG label   : 100565
         Remote SHG labels : 0
 
-        N/A                      Gi0/0/0/12                         67.70.219.84
+        N/A                      Gi0/0/0/12                         10.154.219.84
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1313,7 +2741,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
         Configured     : Single-active (AApS) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 1

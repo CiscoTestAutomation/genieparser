@@ -1016,6 +1016,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 Optional('sr_incoming_label'): str,
                 Optional('tag_name'): str,
                 Optional('tag_type'): str,
+                Optional('advertised_by'): str,
                 Optional('update'): {
                     'from': str,
                     Optional('interface'): str,
@@ -1080,23 +1081,29 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
         # Routing entry for 192.168.154.0/24
-        p1 = re.compile(r'^Routing +entry +for +(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
+        p1 = re.compile(r'^Routing +entry +for +(?P<entry>(?P<ip>[\w\:\.]+)'
+                        r'\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
 
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- ]+))?,? *.*$')
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", '
+                        r'+distance +(?P<distance>\d+), +metric '
+                        r'+(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- '
+                        r']+))?,? *.*$')
 
         # Redistributing via rip
         # Redistributing via eigrp 1
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
-                         '(?P<redist_via_tag>\d+)?$')
+                        r'(?P<redist_via_tag>\d+)?$')
 
         # Last update from 192.168.151.2 on Vlan101, 2w3d ago
         # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
         # Last update from 10.101.146.10 2d07h ago
         # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
-        p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on +(?P<interface>[\w\.\/\-]+), )?(?P<age>[ \w\.\:]+) +ago$')
+        p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on '
+                        r'+(?P<interface>[\w\.\/\-]+), )?(?P<age>[ '
+                        r'\w\.\:]+) +ago$')
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, merge-labels
@@ -1104,21 +1111,21 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # * 10.101.146.10, from 10.101.146.10, 2d07h ago
         # * 10.255.207.129
         p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
-                         '(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
-                         '(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
+                        r'(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
+                        r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
        
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
-                         'traffic +share +count +is +(?P<share_count>\d+)$')
+                        r'traffic +share +count +is +(?P<share_count>\d+)$')
 
         # ipv6 specific
         p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
-                         'share +count +(?P<share_count>[\d\/]+)$')
+                        r'share +count +(?P<share_count>[\d\/]+)$')
 
         # FE80::EEBD:1DFF:FE09:56C2, Vlan202
         # FE80::EEBD:1DFF:FE09:56C2
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
-                         '( indirectly connected)?)?$')
+                        r'( indirectly connected)?)?$')
         
         # receive via Loopback4
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
@@ -1149,7 +1156,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # Route tag 65161
         p17 = re.compile(r'^Route +tag (?P<route_tag>\S+)$')
-        
+
+        # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
+        p18 = re.compile(r'^Advertised +by +(?P<advertised_by>[\S ]+)$')
+
         # initial variables
         ret_dict = {}
         index = 0
@@ -1183,7 +1193,6 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Tag 65161, type external
             m = p15.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 group = m.groupdict()
                 tag_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
                 tag_dict.update({'tag_name' : group['tag_name']})
@@ -1325,7 +1334,13 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {}).setdefault('repair_path', {})
                 path_dict.update({'repair_path': m.groupdict()['path']})
                 path_dict.update({'via': m.groupdict()['via']})
+                continue
 
+            # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
+            m18 = p18.match(line)
+            if m18:
+                entry_dict.update({'advertised_by' : m18.groupdict()['advertised_by']})
+                continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict

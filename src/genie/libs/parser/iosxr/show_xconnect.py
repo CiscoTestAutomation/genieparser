@@ -307,10 +307,13 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'encapsulation': str,
                                             Optional('auto_discovered'): str,
                                             'protocol': str,
+                                            Optional('source_address'): str,
+                                            Optional('lsp'): str,
                                             Optional('type'): str,
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
                                             Optional('backup_disable_delay'): int,
+                                            Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'mpls': {
                                                 Any(): {
@@ -503,6 +506,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         # Sequencing not set
         p13 = re.compile(r'^Sequencing +(?P<sequencing>[\S ]+)$')
+
+        # PW Status TLV in use
+        p13_1 = re.compile(r'^PW +Status +TLV +(?P<status_tlv>[\S ]+)$')
 
         # MPLS         Local                          Remote
         # EVPN         Local                          Remote
@@ -874,6 +880,14 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 sequencing = group['sequencing']
                 current_dict.update({'sequencing': sequencing})
+                continue
+
+            # PW Status TLV in use
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                status_tlv = group['status_tlv']
+                current_dict.update({'status_tlv': sequencing})
                 continue
 
             # MPLS         Local                          Remote

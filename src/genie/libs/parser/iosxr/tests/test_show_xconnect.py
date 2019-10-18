@@ -359,7 +359,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             'Bundle-Ether2.61': {
                                 'status': 'UR',
                                 'segment2': {
-                                    'EVPN 21314,31314,1.1.1.1': {
+                                    'EVPN 21314,31314,10.4.1.1': {
                                         'status': 'DN',
                                     },
                                 },
@@ -416,7 +416,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     Group      Name       ST   Description            ST       Description            ST    
     ------------------------   -----------------------------   -----------------------------
     genie_wqst       wsq_wqxt_ups2_cm2_21314
-                        UR   BE2.61                 UR       EVPN 21314,31314,1.1.1.1 
+                        UR   BE2.61                 UR       EVPN 21314,31314,10.4.1.1 
                                                                                     DN    
     ----------------------------------------------------------------------------------------
     genie_CM-QF-CF   G2-2-2-34-422

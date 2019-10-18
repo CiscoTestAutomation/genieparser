@@ -16,10 +16,19 @@
                                 CLNS
 --------------------------------------------------------------------------------
 * IOSXE
+    * Updated ShowClnsProtocol tu support outputs without:
+        * Interfaces
+        * Manual area address
+        * Routing for area address
+    * Updated ShowClnsInterface to support more outputs        
     * Changed "type" type from string to integer on the following commands
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Made some keys optionals in schema for ShowClnsTraffic
+    * Saving as empty instance when instance not present in output on:
+        * show clns protocol
+    * Updates ShowIsisHostname to support outputs without hostnames
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -156,7 +165,9 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
-    * Update ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -167,6 +178,9 @@
 
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
+    * Updated ShowIpBgp for parsing of more varied output
+    * Updated ShowIpBgpNeighbors schema to support more varied output
+
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -275,6 +289,9 @@
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
         * Updated regex
+* NXOS
+    * Updated ShowRoutingVrfAll:
+        * To match non-best routes
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -416,6 +433,7 @@
     * Updated ShowRplRoutePolicy regex for:
         * show rpl route-policy
 
+
 --------------------------------------------------------------------------------
                                 X-Connect
 --------------------------------------------------------------------------------
@@ -465,6 +483,7 @@
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEviMacPrivate to support different outputs
 
 --------------------------------------------------------------------------------
                                 Route
@@ -499,6 +518,7 @@
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
     * Updated ShowL2vpnBridgeDomain to support more outputs
+    * Updated ShowL2vpnBridgeDomainDetail to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -507,12 +527,22 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatformHardware to support more varied output
+* IOSXR
+    * Update ShowInventory to support optional key
+
+--------------------------------------------------------------------------------
                                 ACL
 --------------------------------------------------------------------------------
 * IOSXE
     * ShowAccessLists:
         * modified regex for both ipv4 and ipv6 to accommodate more outputs
         * added to handle standard ACL
+
+--------------------------------------------------------------------------------
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -548,18 +578,26 @@
         * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
+        * Updated schema with ispf_status optional key
     * Added ShowIsisStatistics for:
         * show isis statistics
+        * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisDatabaseDetail for command:
+        * show isis database detail
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
-
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
+--------------------------------------------------------------------------------
+                                Protocols
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols tu sopport more outputs
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -589,3 +627,10 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added Traceroute class
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Verified customer outputs
+    * Added field to schema advertised_by
