@@ -19,7 +19,7 @@ from genie.libs.parser.iosxe.show_clns import (ShowClnsTraffic,
 # Unit test for 'show clns interface'
 #               'show show clns interface <inteface>'
 # =========================================================
-class TestShowIpInterface(unittest.TestCase):
+class TestShowClnsInterface(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
 
