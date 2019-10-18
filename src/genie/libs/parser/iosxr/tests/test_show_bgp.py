@@ -10128,7 +10128,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
     }
 
     golden_output5 = {'execute.return_value': '''
-            +++ dis9-rohan: executing command 'show bgp l2vpn evpn' +++
+            +++ genie-Router: executing command 'show bgp l2vpn evpn' +++
         show bgp l2vpn evpn
 
         Mon Oct 14 17:56:56.014 EDT
@@ -13902,7 +13902,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                             0.0.0.0                                0 i
 
         Processed 1050 prefixes, 2088 paths
-        RP/0/RSP0/CPU0:dis9-rohan#
+        RP/0/RSP0/CPU0:genie-Router#
 
     '''}
 
