@@ -292,7 +292,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
 
         #   0x03000001 10.76.1.2                                16002
         #   0xffffffff (P) 10.16.2.2                              100001
-        p8 = re.compile(r'^(?P<value>(\S+))(?: +(?P<df_role>\(\w\)))? '
+        p8 = re.compile(r'^(?P<value>(\S+))(?: +(?P<df_role>\(\S+\)))? '
                         r'+(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         for line in out.splitlines():
@@ -332,11 +332,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 sub_dict['mp_resolved'] = True
                 if m.groupdict()['mp_info']:
                     mp_info = m.groupdict()['mp_info']
-                    if ') (' in mp_info:
-                        mp_info_comma = mp_info.replace(') (', ', ')
-                        sub_dict['mp_info'] = mp_info_comma
-                    else:
-                        sub_dict['mp_info'] = mp_info
+                    sub_dict['mp_info'] = re.sub(r'\) \(', ', ', mp_info)
                 continue
 
             # Multi-paths Internal label: 24002
