@@ -291,9 +291,9 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         p7 = re.compile(r'^Summary pathlist:$')
 
         #   0x03000001 10.76.1.2                                16002
-        p8 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+))'
-                         ' +(?P<label>(\d+))$')
-
+        #   0xffffffff (P) 10.16.2.2                              100001
+        p8 = re.compile(r'^(?P<value>(\S+))(?: +(?P<df_role>\(\w\)))? '
+                        r'+(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -319,18 +319,24 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                                        setdefault(int(group['vpn_id']), {})
                 sub_dict['vpn_id'] = int(group['vpn_id'])
                 sub_dict['encap'] = group['encap']
-                sub_dict['esi'] =  group['esi']
+                sub_dict['esi'] = group['esi']
                 sub_dict['eth_tag'] = int(group['eth_tag'])
                 sub_dict['label'] = int(group['mp_internal_label'])
                 continue
 
             # Multi-paths resolved: TRUE
             # Multi-paths resolved: TRUE (Remote single-active)
+            # Multi-paths resolved: TRUE (Remote all-active) (ECMP Disable)
             m = p3.match(line)
             if m:
                 sub_dict['mp_resolved'] = True
                 if m.groupdict()['mp_info']:
-                    sub_dict['mp_info'] = m.groupdict()['mp_info']
+                    mp_info = m.groupdict()['mp_info']
+                    if ') (' in mp_info:
+                        mp_info_comma = mp_info.replace(') (', ', ')
+                        sub_dict['mp_info'] = mp_info_comma
+                    else:
+                        sub_dict['mp_info'] = mp_info
                 continue
 
             # Multi-paths Internal label: 24002
@@ -381,6 +387,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                                               setdefault(group['nexthop'], {})
                 type_nh_dict['label'] = int(group['label'])
                 type_nh_dict['value'] = group['value']
+                if group['df_role']:
+                    type_nh_dict['df_role'] = group['df_role']
                 continue
 
         return parsed_dict
