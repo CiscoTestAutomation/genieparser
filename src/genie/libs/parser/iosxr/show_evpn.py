@@ -273,7 +273,6 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
 
         # Multi-paths Internal label: 24002
         p4 = re.compile(r'^Multi-paths +Internal +label: +(?P<internal>(\d+))$')
-
         # Pathlists:
         # MAC     10.70.20.20                              24212
         # EAD/ES  10.10.10.10                              0
@@ -405,6 +404,7 @@ class ShowEvpnEviMacSchema(MetaParser):
                         Optional('ethernet_tag'): int,
                         Optional('multipaths_resolved'): str,
                         Optional('multipaths_internal_label'): int,
+                        Optional('multipaths_local_label'): int,
                         Optional('local_static'): str,
                         Optional('remote_static'): str,
                         Optional('local_ethernet_segment'): str,
@@ -414,7 +414,7 @@ class ShowEvpnEviMacSchema(MetaParser):
                         Optional('remote_sequence_number'): int,
                         Optional('local_encapsulation'): str,
                         Optional('remote_encapsulation'): str,
-                        Optional('esi_port_key'): int,
+                        Optional('esi_port_key'): str,
                         Optional('source'): str,
                         Optional('flush_requested'): int,
                         Optional('flush_received'): int,
@@ -482,7 +482,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             out = output
 
         # 65535      N/A    0000.0000.0000 ::                                       Local                                   0
-        p1 = re.compile(r'^(?P<vpn_id>\d+) +(?P<encap>\S+) +(?P<mac_address>[\w\.]+) +'
+        p1 = re.compile(r'^(?P<vpn_id>\d+)( +(?P<encap>\S+))? +(?P<mac_address>[\w\.]+) +'
                 '(?P<ip_address>[\w:\.]+) +(?P<next_hop>[\S ]+) +(?P<label>\d+)$')
         
         # 001b.0100.0001 N/A                                     24014    7  
@@ -499,6 +499,9 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 
         # Multi-paths Internal label              : 0
         p4 = re.compile(r'^Multi-paths +Internal +label +: +(?P<multipaths_internal_label>\d+)$')
+
+        # Multi-paths Local Label
+        p4_1 = re.compile(r'^Multi-paths +Local +Label +: +(?P<multipaths_local_label>\d+)$')
 
         # Local Static                            : No
         p5 = re.compile(r'^Local +Static +: +(?P<local_static>\S+)$')
@@ -528,7 +531,8 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p12 = re.compile(r'^Remote +Encapsulation +: +(?P<remote_encapsulation>\S+)$')
 
         # ESI Port Key                            : 0
-        p13 = re.compile(r'^ESI +Port +Key +: +(?P<esi_port_key>\d+)$')
+        # ESI Port Key                            : bef5
+        p13 = re.compile(r'^ESI +Port +Key +: +(?P<esi_port_key>\w+)$')
 
         # Source                                  : Local
         p14 = re.compile(r'^Source +: +(?P<source>\S+)$')
@@ -546,7 +550,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p18 = re.compile(r'^BP +XCID +: +(?P<bp_xcid>\S+)$')
 
         # MAC State                               : Init
-        p19 = re.compile(r'^MAC +State +: +(?P<mac_state>\S+)$')
+        p19 = re.compile(r'^MAC +State +: +(?P<mac_state>[\S ]+)$')
 
         # MAC Producers                           : 0x0 (Best: 0x0)
         p20 = re.compile(r'^MAC +Producers +: +(?P<mac_producers>[\S ]+)$')
@@ -570,8 +574,9 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
         # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
         # Aug 15 22:10:12.736  Create                       00000000 00000001 -  -
-        p26 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\d+)'
-                ',? +(?P<flag_2>\d+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
+        # Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  -
+        p26 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\w+)'
+                ',? +(?P<flag_2>\w+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
 
         # Flush Count  : 0
         p27 = re.compile(r'^Flush +Count *: +(?P<flush_count>\d+)$')
@@ -583,7 +588,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p29 = re.compile(r'^Flush +Seq +ID +: +(?P<flush_seq_id>\d+)$')
 
         # Static: No
-        p30 = re.compile(r'^Static: +(?P<static>\S+)$')
+        p30 = re.compile(r'^Static *: +(?P<static>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -603,7 +608,8 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                     setdefault(vpn_id, {}). \
                     setdefault('mac_address', {}). \
                     setdefault(mac_address, {})
-                vpn_id_dict.update({'encap': encap}) 
+                if encap:
+                    vpn_id_dict.update({'encap': encap}) 
                 vpn_id_dict.update({'ip_address': ip_address})
                 vpn_id_dict.update({'next_hop': next_hop}) 
                 vpn_id_dict.update({'label': label}) 
@@ -655,6 +661,13 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
             
+            # Multi-paths Local Label                 : 0
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
             # Local Static                            : No
             m = p5.match(line)
             if m:
@@ -719,10 +732,11 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 continue
 
             # ESI Port Key                            : 0
+            # ESI Port Key                            : bef5
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
 
             # Source                                  : Local
@@ -836,24 +850,28 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             # Flush Count  : 0
             m = p27.match(line)
             if m:
-                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                group = m.groupdict()
+                vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
             
             # # BP IFH: 0
             m = p28.match(line)
             if m:
+                group = m.groupdict()
                 vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
             
             # Flush Seq ID : 0
             m = p29.match(line)
             if m:
-                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                group = m.groupdict()
+                vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
             
             # Static: No
             m = p30.match(line)
             if m:
+                group = m.groupdict()
                 vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
             

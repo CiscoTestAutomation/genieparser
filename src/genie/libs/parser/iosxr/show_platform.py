@@ -718,7 +718,7 @@ class ShowInventorySchema(MetaParser):
                 {'descr': str,
                  'pid': str,
                  'vid': str,
-                 'sn': str,
+                 Optional('sn'): str,
                 },
             },
         }
@@ -743,13 +743,14 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
         # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
         p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
-                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
+                         r' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
-                         ' +VID: +(?P<vid>[\S\s]*),'
-                         ' +SN: +(?P<sn>[\S\s]*)$')
+        # PID: N/A, VID: N/A, SN: 
+        p2 = re.compile(r'^PID: *(?P<pid>[\S\s]*),'
+                         r' +VID: *(?P<vid>[\S\s]*),'
+                         r' SN: *(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -780,7 +781,6 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['module_name'][module_name]['sn'] = \
                     str(m.groupdict()['sn']).strip()
                 continue
-
         return inventory_dict
             
 # ====================================
@@ -805,8 +805,8 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('top_assy_num'): str,
         Optional('main'): {
             'board_type': str,
-            'revision': str,
-            'device_identifier': str,
+            'part': str,
+            'dev': str,
             'serial_number': str,
         }
     }
@@ -925,7 +925,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # MAIN: board type 500060
-            p11 = re.compile(r'^\s*MAIN: +(?P<board_type>[\S ]+)$')
+            p11 = re.compile(r'^\s*MAIN: +board +type +(?P<board_type>[\S ]+)$')
             m = p11.match(line)
             if m:
                 main_dict = admin_show_diag_dict.setdefault('main', {})
@@ -938,15 +938,16 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             m = p12.match(line)
             if m:
                 main_dict = admin_show_diag_dict.setdefault('main', {})
-                main_dict['revision'] = line.strip()
+                main_dict['part'] = line.strip()
                 continue
 
             # dev 080366, 080181
-            p13 = re.compile(r'\s*dev +\S+$')
+            p13 = re.compile(r'\s*dev +(?P<dev>[\S ]+)')
             m = p13.match(line)
             if m:
+                dev = m.groupdict()['dev']
                 main_dict = admin_show_diag_dict.setdefault('main', {})
-                main_dict['device_identifier'] = line.strip()
+                main_dict['dev'] = dev
                 continue
 
             # S/N SAD093507J8
