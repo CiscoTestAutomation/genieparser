@@ -16,6 +16,10 @@
                                 CLNS
 --------------------------------------------------------------------------------
 * IOSXE
+    * Updated ShowClnsProtocol tu support outputs without:
+        * Interfaces
+        * Manual area address
+        * Routing for area address
     * Updated ShowClnsInterface to support more outputs        
     * Changed "type" type from string to integer on the following commands
         * 'show clns is-neighbors detail'
