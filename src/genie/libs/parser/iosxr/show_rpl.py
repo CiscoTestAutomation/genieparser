@@ -459,7 +459,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # if med eq 100 and local-preference eq 100 and ospf-area is 0 then
             # m.groupdict()[cond] == None - set to none if there is no parsed condition
-            p19 = re.compile(r'^\s*(if|elseif|else) *(?P<condition1>\S+ \S+ \S+ )'
+            p19 = re.compile(r'^\s*(if|elseif|else) *(?P<condition1>\S+ \S+ \S+)'
                               '( *and)?(?: *(?P<condition2>\S+ \S+ \S+))?( *and)?'
                               '(?: *(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
                               ' *(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
