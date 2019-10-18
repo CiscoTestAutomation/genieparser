@@ -21,7 +21,7 @@
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
-    * Made some keys optionals in schema for ShowClnsTraffic:
+    * Made some keys optionals in schema for ShowClnsTraffic
     * Saving as empty instance when instance not present in output on:
         * show clns protocol
 --------------------------------------------------------------------------------
