@@ -125,7 +125,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         #  2     7777.7777.7777 R7
         #      * 2222.2222.2222 R2
         p2 = re.compile(r'^(?P<level>\d+)?(\s?(?P<star>\*))? +'
-                        r'(?P<system_id>[\d\.]+) +(?P<dynamic_hostname>\w+)$')
+                        r'(?P<system_id>[\d\.\:]+) +(?P<dynamic_hostname>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
