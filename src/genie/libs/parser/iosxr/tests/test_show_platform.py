@@ -1140,7 +1140,7 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         'clei': 'IPMUP00BRB',
         'desc': 'ASR 9006 4 Line Card Slot Chassis with V2 AC PEM',
         'device_family': 'ASR',
-        'device_series': 9006,
+        'device_series': '9006',
         'num_line_cards': 4,
         'pid': 'ASR-9006-AC-V2',
         'rack_num': 0,
@@ -1158,6 +1158,48 @@ class test_admin_show_diag_chassis(unittest.TestCase):
           CLEI:  IPMUP00BRB
           Top Assy. Number:   68-4235-02
         '''}
+    
+    golden_parsed_output2 = {
+        'rack_num': 0,
+        'device_family': 'Cisco',
+        'device_series': 'CRS Series',
+        'num_line_cards': 16,
+        'main': {
+            'board_type': '500060',
+            'part': '800-25021-05 rev B0',
+            'dev': '079239',
+            'serial_number': 'SAD0925050J',
+        },
+        'pca': '73-7648-08 rev B0',
+        'pid': 'CRS-MSC',
+        'vid': 'V02',
+        'clei': 'IPUCAC1BAA',
+        'eci': '132502',
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        admin show diag chassis
+
+        Mon Oct 14 17:45:40.649 EDT
+
+        Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+        MAIN:  board type 500060
+                800-25021-05 rev B0
+                dev 079239
+                S/N SAD0925050J
+        PCA:   73-7648-08 rev B0
+        PID:   CRS-MSC
+        VID:   V02
+        CLEI:  IPUCAC1BAA
+        ECI:   132502
+        RACK NUM: 0
+        '''}
+
+    def test_show_inventory_empty(self):
+        self.device = Mock(**self.empty_output)
+        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = diag_chassis_obj.parse()
 
     def test_admin_show_diag_chassis_golden1(self):
         self.maxDiff = None
@@ -1165,12 +1207,13 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
-
-    def test_show_inventory_empty(self):
-        self.device = Mock(**self.empty_output)
-        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = diag_chassis_obj.parse()
+    
+    def test_admin_show_diag_chassis_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
+        parsed_output1 = diag_chassis_obj1.parse()
+        self.assertEqual(parsed_output1,self.golden_parsed_output2)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       

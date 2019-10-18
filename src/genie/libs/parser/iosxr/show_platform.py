@@ -791,17 +791,25 @@ class AdminShowDiagChassisSchema(MetaParser):
     """Schema for admin show diag chassis"""
     schema = {
         'device_family': str,
-        'device_series': int,
-        'num_line_cards': int,
-        'chassis_feature': str,
+        'device_series': str,
+        Optional('num_line_cards'): int,
+        Optional('chassis_feature'): str,
         'rack_num': int,
-        'sn': str,
+        Optional('sn'): str,
         'pid': str,
         'vid': str,
-        'desc': str,
+        Optional('desc'): str,
         'clei': str,
-        'top_assy_num': str,
+        Optional('eci'): str,
+        Optional('pca'): str,
+        Optional('top_assy_num'): str,
+        Optional('main'): {
+            'board_type': str,
+            'part': str,
+            'dev': str,
+            'serial_number': str,
         }
+    }
 
 class AdminShowDiagChassis(AdminShowDiagChassisSchema):
     """Parser for admin show diag chassis"""
@@ -820,12 +828,13 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             line = line.rstrip()
 
             # Rack 0 - ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p1 = re.compile(r'\s*Rack +(?P<rack_num>[0-9]+)'
-                            ' +\- +(?P<device_family>[a-zA-Z]+)'
-                            ' +(?P<device_series>[0-9]+)'
-                            ' +(?P<num_line_cards>[0-9]+)'
-                            ' +Line +Card +Slot +Chassis +with'
-                            ' +(?P<chassis_feature>[a-zA-Z0-9\s]+)$')
+            # Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+            p1 = re.compile(r'\s*Rack +(?P<rack_num>\d+) +- +'
+                '(?P<device_family>\S+) +(?P<device_series>[\S ]+) +'
+                '(?P<num_line_cards>\d+) +((Line +Card +Slot +'
+                'Chassis +with *)|Slots +Line +Card +Chassis *)'
+                '(?P<chassis_feature>[\S ]+)?$')
+
             m = p1.match(line)
             if m:
                 admin_show_diag_dict['rack_num'] = \
@@ -833,11 +842,12 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['device_family'] = \
                     str(m.groupdict()['device_family'])
                 admin_show_diag_dict['device_series'] = \
-                    int(m.groupdict()['device_series'])
+                    m.groupdict()['device_series']
                 admin_show_diag_dict['num_line_cards'] = \
                     int(m.groupdict()['num_line_cards'])
-                admin_show_diag_dict['chassis_feature'] = \
-                    str(m.groupdict()['chassis_feature'])
+                if m.groupdict()['chassis_feature']:
+                    admin_show_diag_dict['chassis_feature'] = \
+                        str(m.groupdict()['chassis_feature'])
                 continue
 
             # RACK NUM: 0
@@ -896,6 +906,57 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             if m:
                 admin_show_diag_dict['top_assy_num'] = \
                     str(m.groupdict()['top_assy_num'])
+                continue
+            
+            # PCA:   73-7806-01 rev B0
+            p9 = re.compile(r'^\s*PCA: +(?P<pca>[\S ]+)$')
+            m = p9.match(line)
+            if m:
+                admin_show_diag_dict['pca'] = \
+                    str(m.groupdict()['pca'])
+                continue
+
+            # ECI:   459651
+            p10 = re.compile(r'^\s*ECI: +(?P<eci>[\S ]+)$')
+            m = p10.match(line)
+            if m:
+                admin_show_diag_dict['eci'] = \
+                    str(m.groupdict()['eci'])
+                continue
+
+            # MAIN: board type 500060
+            p11 = re.compile(r'^\s*MAIN: +board +type +(?P<board_type>[\S ]+)$')
+            m = p11.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['board_type'] = \
+                    str(m.groupdict()['board_type'])
+                continue
+
+            # 800-25021-05 rev B0
+            p12 = re.compile(r'^\s*\S+ +rev +\S+')
+            m = p12.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['part'] = line.strip()
+                continue
+
+            # dev 080366, 080181
+            p13 = re.compile(r'\s*dev +(?P<dev>[\S ]+)')
+            m = p13.match(line)
+            if m:
+                dev = m.groupdict()['dev']
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['dev'] = dev
+                continue
+
+            # S/N SAD093507J8
+            p14 = re.compile(r'\s*S\/N +(?P<serial_number>\S+)$')
+            m = p14.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['serial_number'] = \
+                    str(m.groupdict()['serial_number'])
                 continue
 
         return admin_show_diag_dict
