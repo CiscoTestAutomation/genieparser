@@ -8,16 +8,18 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxr show_isis
 from genie.libs.parser.iosxr.show_isis import (
     ShowIsis,
-    ShowIsisSpfLog,
     ShowIsisLspLog,
-    ShowIsisHostname,
+    ShowIsisSpfLog,
     ShowIsisProtocol,
-    ShowIsisNeighbors,
+    ShowIsisHostname,
+    ShowIsisInterface,
     ShowIsisAdjacency, 
+    ShowIsisNeighbors,
     ShowIsisStatistics,
+    ShowIsisSpfLogDetail,
+    ShowIsisDatabaseDetail,
     ShowIsisSegmentRoutingLabelTable,
 )
-
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
@@ -890,6 +892,149 @@ class TestShowIsisSpfLog(unittest.TestCase):
         obj = ShowIsisSpfLog(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_2)
+
+class TestShowIsisSpfLogDetail(unittest.TestCase):
+    ''' Unit tests for commands/parsers
+        * show isis spf-log detail/ShowIsisSpfLogDetail
+    '''
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output_1 = {
+        "instance": {
+            "isp": {
+                "address_family": {
+                    "IPv4 Unicast": {
+                        "spf_log": {
+                            1: {
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "level": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "12a5.00-00",
+                                "triggers": "NEWLSP0",
+                                "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
+                                "delay_ms": 51, 
+                                "delay_info": "since first trigger",
+                                "spt_calculation": {
+                                    "cpu_time_ms": 0, 
+                                    "real_time_ms": 0},
+                                "prefix_update": {
+                                    "cpu_time_ms": 1, 
+                                    "real_time_ms": 1},
+                                "new_lsp_arrivals": 0,
+                                "next_wait_interval_ms": 200,
+                                "results": {
+                                    "nodes": {
+                                        "reach": 1, 
+                                        "unreach": 0, 
+                                        "total": 1},
+                                    "prefixes": {
+                                        "items": {
+                                            "critical_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "high_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "medium_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "low_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "all_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                        },                                        
+                                        "routes": {
+                                            "critical_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "high_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "medium_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "low_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "all_priority": {
+                                                "reach": 0, 
+                                                "total": 0
+                                            },
+                                        }
+                                    },
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
+    golden_output_1 = {'execute.return_value': '''
+        # show isis spf-log detail
+          
+              ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP   Triggers
+            Mon Aug 16 2004
+          19:25:35.140  FSPF  1    1     1             12a5.00-00 NEWLSP0
+            Delay:              51ms (since first trigger)
+            SPT Calculation
+              CPU Time:         0ms
+              Real Time:        0ms
+            Prefix Updates
+              CPU Time:         1ms
+              Real Time:        1ms
+            New LSP Arrivals:    0
+            Next Wait Interval: 200ms
+                                        Results
+                                  Reach Unreach Total
+             Nodes:                   1       0     1
+             Prefixes (Items)
+               Critical Priority:     0       0     0
+               High Priority:         0       0     0 
+               Medium Priority        0       0     0 
+               Low Priority           0       0     0 
+          
+               All Priorities         0       0     0
+             Prefixes (Routes)
+               Critical Priority:     0       -     0
+               High Priority:         0       -     0
+               Medium Priority        0        -    0
+               Low Priority:          0        -    0
+          
+               All Priorities         0        -    0
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisSpfLogDetail(device=device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()        
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_1)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
@@ -2200,6 +2345,2563 @@ class TestShowIsisLspLog(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+
+class TestShowIsisInterface(unittest.TestCase):
+    ''' Unit test for commands:
+        * show isis interface -> ShowIsisInterface
+    ''' 
+
+    maxDiff = None 
+
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output_1 = {
+        "instance": {
+            "test": {
+                "interface": {
+                    "Loopback0": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "bandwidth": 0,
+                        "circuit_type": "level-1-2",
+                        "media_type": "Loop",
+                        "circuit_number": 0,
+                        "level": {
+                            1: {
+                                "adjacency_count": 0,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                            2: {
+                                "adjacency_count": 0,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up", 
+                            "mtu": 1500},
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "forwarding_address": ["0.0.0.0"],
+                                "global_prefix": ["10.36.3.0/24"],
+                            },
+                            "IPv6": {
+                                "state": "Enabled",
+                                "forwarding_address": ["::"],
+                                "global_prefix": ["2001:db8:3:3:3::3/128"],
+                            },
+                        },
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 10,
+                        },
+                    },
+                    "GigabitEthernet0/0/0/0": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "bandwidth": 1000000,
+                        "circuit_type": "level-1-2",
+                        "media_type": "LAN",
+                        "circuit_number": 7,
+                        "level": {
+                            1: {
+                                "adjacency_count": 0,
+                                "lan_id": "R3.07",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "none (no DIS elected)"},
+                                "next_lan_iih_sec": 5,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                            2: {
+                                "adjacency_count": 1,
+                                "lan_id": "R3.07",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "64"},
+                                "next_lan_iih_sec": 3,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 1497,
+                            "snpa": "fa16.3ee6.6bd7",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
+                            },
+                        },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "forwarding_address": ["10.2.3.3"],
+                                "global_prefix": ["10.2.3.0/24"],
+                            },
+                            "IPv6": {
+                                "state": "Enabled",
+                                "forwarding_address": ["fe80::f816:3eff:fee6:6bd7"],
+                                "global_prefix": ["2001:db8:10:2::/64"],
+                            },
+                        },
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
+                        },
+                    },
+                    "GigabitEthernet0/0/0/1": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "bandwidth": 1000000,
+                        "circuit_type": "level-1-2",
+                        "media_type": "LAN",
+                        "circuit_number": 5,
+                        "level": {
+                            1: {
+                                "adjacency_count": 1,
+                                "lan_id": "R3.05",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "64"},
+                                "next_lan_iih_sec": 2,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                            2: {
+                                "adjacency_count": 0,
+                                "lan_id": "R3.05",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "none (no DIS elected)"},
+                                "next_lan_iih_sec": 6,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 1497,
+                            "snpa": "fa16.3eb0.d50f",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
+                            },
+                        },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "forwarding_address": ["10.3.6.3"],
+                                "global_prefix": ["10.3.6.0/24"],
+                            },
+                            "IPv6": {
+                                "state": "Enabled",
+                                "forwarding_address": ["fe80::f816:3eff:feb0:d50f"],
+                                "global_prefix": ["2001:db8:10:3::/64"],
+                            },
+                        },
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
+                        },
+                    },
+                    "GigabitEthernet0/0/0/2": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "bandwidth": 1000000,
+                        "circuit_type": "level-1-2",
+                        "media_type": "LAN",
+                        "circuit_number": 3,
+                        "level": {
+                            1: {
+                                "adjacency_count": 1,
+                                "lan_id": "R3.03",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "64"},
+                                "next_lan_iih_sec": 1,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                            2: {
+                                "adjacency_count": 0,
+                                "lan_id": "R3.03",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "none (no DIS elected)"},
+                                "next_lan_iih_sec": 6,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 1497,
+                            "snpa": "fa16.3ead.2906",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
+                            },
+                        },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled",
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "forwarding_address": ["10.3.4.3"],
+                                "global_prefix": ["10.3.4.0/24"],
+                            },
+                            "IPv6": {
+                                "state": "Enabled",
+                                "forwarding_address": ["fe80::f816:3eff:fead:2906"],
+                                "global_prefix": ["None (No global addresses are configured)"],
+                            },
+                        },
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
+                        },
+                    },
+                    "GigabitEthernet0/0/0/3": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "bandwidth": 1000000,
+                        "circuit_type": "level-1-2",
+                        "media_type": "LAN",
+                        "circuit_number": 1,
+                        "level": {
+                            1: {
+                                "adjacency_count": 1,
+                                "lan_id": "R5.01",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "64"},
+                                "next_lan_iih_sec": 3,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                            2: {
+                                "adjacency_count": 1,
+                                "lan_id": "R5.01",
+                                "priority": {
+                                    "local": "64", 
+                                    "dis": "64"},
+                                "next_lan_iih_sec": 2,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            },
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 1497,
+                            "snpa": "fa16.3e1c.d826",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
+                            },
+                        },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10, 
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0, 
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled", 
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled", 
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "forwarding_address": ["10.3.5.3"],
+                                "global_prefix": ["10.3.5.0/24"],
+                            },
+                            "IPv6": {
+                                "state": "Enabled",
+                                "forwarding_address": ["fe80::f816:3eff:fe1c:d826"],
+                                "global_prefix": ["None (No global addresses are configured)"],
+                            },
+                        },
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
+                        },
+                    },
+                }
+            }
+        }
+    }
+
+
+    golden_parsed_output_1 = {'execute.return_value': '''
+        IS-IS test Interfaces
+        Loopback0                   Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                0
+
+          Circuit Type:             level-1-2
+          Media Type:               Loop
+          Circuit Number:           0
+
+          Level-1
+            Adjacency Count:        0
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1500
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 0.0.0.0
+            Global Prefix(es):      10.36.3.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): ::
+            Global Prefix(es):      2001:db8:3:3:3::3/128
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 10 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/0      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           7
+
+          Level-1
+            Adjacency Count:        0
+            LAN ID:                 R3.07
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        5 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        1
+            LAN ID:                 R3.07
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        3 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3ee6.6bd7
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.2.3.3
+            Global Prefix(es):      10.2.3.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fee6:6bd7
+            Global Prefix(es):      2001:db8:10:2::/64
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/1      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           5
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R3.05
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        2 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LAN ID:                 R3.05
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        6 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3eb0.d50f
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.6.3
+            Global Prefix(es):      10.3.6.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:feb0:d50f
+            Global Prefix(es):      2001:db8:10:3::/64
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/2      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           3
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R3.03
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        1 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LAN ID:                 R3.03
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        6 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3ead.2906
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.4.3
+            Global Prefix(es):      10.3.4.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fead:2906
+            Global Prefix(es):      None (No global addresses are configured)
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/3      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           1
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R5.01
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        3 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        1
+            LAN ID:                 R5.01
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        2 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3e1c.d826
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.5.3
+            Global Prefix(es):      10.3.5.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fe1c:d826
+            Global Prefix(es):      None (No global addresses are configured)
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowIsisInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_1)
+
+class TestShowIsisDatabaseDetail(unittest.TestCase):
+    ''' Unit tests for commands/parser:
+        * show isis database detail / ShowIsisDatabaseDetail
+    ''' 
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "instance": {
+            "test": {
+                "level": {
+                    1: {
+                        "lspid": {
+                            "R3.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000d",
+                                    "checksum": "0x0476",
+                                    "local_router": True,
+                                    "holdtime": 578,
+                                    "attach_bit": 1,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "ip_address": "10.36.3.3",
+                                "extended_ipv4_reachability": {
+                                    "10.36.3.0/24": {
+                                        "ip_prefix": "10.36.3.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "10.2.3.0/24": {
+                                        "ip_prefix": "10.2.3.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "hostname": "R3",
+                                "ipv6_address": "2001:db8:3:3:3::3",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:3:3:3::3/128": {
+                                        "ip_prefix": "2001:db8:3:3:3::3",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:2::/64": {
+                                        "ip_prefix": "2001:db8:10:2::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 1,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "extended_is_neighbor": {
+                                    "R3.03": {"metric": 10},
+                                    "R5.01": {"metric": 10},
+                                },
+                                "mt_is_neighbor": {
+                                    "R3.03": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R5.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                            },
+                            "R3.03-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000007",
+                                    "checksum": "0x8145",
+                                    "local_router": False,
+                                    "holdtime": 988,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R3.00": {
+                                        "metric": 0},
+                                    "R4.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R3.05-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x7981",
+                                    "local_router": False,
+                                    "holdtime": 600,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R3.00": {
+                                        "metric": 0},
+                                    "R6.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R4.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000c",
+                                    "checksum": "0x5c39",
+                                    "local_router": False,
+                                    "holdtime": 1115,
+                                    "received": 1200,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "extended_is_neighbor": {
+                                    "R3.03": {
+                                        "metric": 10},
+                                    "R4.01": {
+                                        "metric": 10},
+                                },
+                                "nlpid": ["0xcc", "0x8e"],
+                                "ip_address": "10.64.4.4",
+                                "extended_ipv4_reachability": {
+                                    "10.64.4.4/32": {
+                                        "ip_prefix": "10.64.4.4",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.3.4.0/24": {
+                                        "ip_prefix": "10.3.4.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "hostname": "R4",
+                                "mt_is_neighbor": {
+                                    "R3.03": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R4.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "ipv6_address": "2001:db8:4:4:4::4",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:4:4:4::4/128": {
+                                        "ip_prefix": "2001:db8:4:4:4::4",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:3::/64": {
+                                        "ip_prefix": "2001:db8:10:3::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                            },
+                            "R4.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0xf9a0",
+                                    "local_router": False,
+                                    "holdtime": 616,
+                                    "received": 1200,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R4.00": {
+                                        "metric": 0},
+                                    "R5.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000009",
+                                    "checksum": "0x09f9",
+                                    "local_router": False,
+                                    "holdtime": 980,
+                                    "received": 1199,
+                                    "attach_bit": 1,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 1,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "hostname": "R5",
+                                "extended_is_neighbor": {
+                                    "R5.01": {
+                                        "metric": 10},
+                                    "R4.01": {
+                                        "metric": 10},
+                                },
+                                "mt_is_neighbor": {
+                                    "R5.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R4.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "ip_address": "10.100.5.5",
+                                "extended_ipv4_reachability": {
+                                    "10.100.5.5/32": {
+                                        "ip_prefix": "10.100.5.5",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.3.5.0/24": {
+                                        "ip_prefix": "10.3.5.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "ipv6_address": "2001:db8:5:5:5::5",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:5:5:5::5/128": {
+                                        "ip_prefix": "2001:db8:5:5:5::5",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:3::/64": {
+                                        "ip_prefix": "2001:db8:10:3::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                            },
+                            "R5.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x4ac5",
+                                    "local_router": False,
+                                    "holdtime": 521,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R5.00": {
+                                        "metric": 0},
+                                    "R3.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R5.03-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x3c38",
+                                    "local_router": False,
+                                    "holdtime": 1023,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R5.00": {
+                                        "metric": 0},
+                                    "R7.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R6.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000008",
+                                    "checksum": "0x1869",
+                                    "local_router": False,
+                                    "holdtime": 923,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "router_id": "10.144.6.6",
+                                "ip_address": "10.144.6.6",
+                                "mt_entries": {
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                    "Standard (IPv4 Unicast)": {},
+                                },
+                                "hostname": "R6",
+                                "mt_is_neighbor": {
+                                    "R7.02": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R3.05": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "extended_is_neighbor": {
+                                    "R7.02": {
+                                        "metric": 40},
+                                    "R3.05": {
+                                        "metric": 40},
+                                },
+                                "extended_ipv4_reachability": {
+                                    "10.144.6.0/24": {
+                                        "ip_prefix": "10.144.6.0",
+                                        "prefix_length": "24",
+                                        "metric": 1,
+                                    },
+                                    "10.6.7.0/24": {
+                                        "ip_prefix": "10.6.7.0",
+                                        "prefix_length": "24",
+                                        "metric": 40,
+                                    },
+                                    "10.3.6.0/24": {
+                                        "ip_prefix": "10.3.6.0",
+                                        "prefix_length": "24",
+                                        "metric": 40,
+                                    },
+                                },
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:6:6:6::6/128": {
+                                        "ip_prefix": "2001:db8:6:6:6::6",
+                                        "prefix_length": "128",
+                                        "metric": 1,
+                                    },
+                                    "2001:db8:10:6::/64": {
+                                        "ip_prefix": "2001:db8:10:6::",
+                                        "prefix_length": "64",
+                                        "metric": 40,
+                                    },
+                                },
+                            },
+                            "R7.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000008",
+                                    "checksum": "0xaba8",
+                                    "local_router": False,
+                                    "holdtime": 965,
+                                    "received": 1198,
+                                    "attach_bit": 1,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "router_id": "10.196.7.7",
+                                "ip_address": "10.196.7.7",
+                                "mt_entries": {
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                    "Standard (IPv4 Unicast)": {},
+                                },
+                                "hostname": "R7",
+                                "mt_is_neighbor": {
+                                    "R7.02": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R5.03": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "extended_is_neighbor": {
+                                    "R7.02": {
+                                        "metric": 40},
+                                    "R5.03": {
+                                        "metric": 40},
+                                },
+                                "ip_interarea": {
+                                    "10.7.8.0/24": {
+                                        "address_family": {
+                                            "ipv4 unicast": {
+                                                "metric": 40},
+                                            "IPv6 Unicast": {
+                                                "metric": 40},
+                                        }
+                                    }
+                                },
+                                "extended_ipv4_reachability": {
+                                    "10.196.7.7/32": {
+                                        "ip_prefix": "10.196.7.7",
+                                        "prefix_length": "32",
+                                        "metric": 1,
+                                    },
+                                    "10.7.9.0/24": {
+                                        "ip_prefix": "10.7.9.0",
+                                        "prefix_length": "24",
+                                        "metric": 40,
+                                    },
+                                },
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:7:7:7::7/128": {
+                                        "ip_prefix": "2001:db8:7:7:7::7",
+                                        "prefix_length": "128",
+                                        "metric": 1,
+                                    }
+                                },
+                            },
+                            "R7.02-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000005",
+                                    "checksum": "0x8c3d",
+                                    "local_router": False,
+                                    "holdtime": 884,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R6.00": {"metric": 0},
+                                    "R7.00": {"metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 11,
+                        "local_lsp_count": 1,
+                    },
+                    2: {
+                        "lspid": {
+                            "R2.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000009",
+                                    "checksum": "0x5188",
+                                    "local_router": False,
+                                    "holdtime": 1082,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0001",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "hostname": "R2",
+                                "extended_is_neighbor": {
+                                    "R3.07": {
+                                        "metric": 10}},
+                                "mt_is_neighbor": {
+                                    "R3.07": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"}
+                                },
+                                "ip_address": "10.16.2.2",
+                                "extended_ipv4_reachability": {
+                                    "10.16.2.2/32": {
+                                        "ip_prefix": "10.16.2.2",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.1.2.0/24": {
+                                        "ip_prefix": "10.1.2.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "ipv6_address": "2001:db8:2:2:2::2",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:2:2:2::2/128": {
+                                        "ip_prefix": "2001:db8:2:2:2::2",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:1::/64": {
+                                        "ip_prefix": "2001:db8:10:1::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                            },
+                            "R3.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000011",
+                                    "checksum": "0x4c4c",
+                                    "local_router": True,
+                                    "holdtime": 979,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "extended_is_neighbor": {
+                                    "R3.07": {
+                                        "metric": 10},
+                                    "R5.01": {
+                                        "metric": 10},
+                                },
+                                "nlpid": ["0xcc", "0x8e"],
+                                "ip_address": "10.36.3.3",
+                                "extended_ipv4_reachability": {
+                                    "10.36.3.0/24": {
+                                        "ip_prefix": "10.36.3.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "10.2.3.0/24": {
+                                        "ip_prefix": "10.2.3.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "hostname": "R3",
+                                "mt_is_neighbor": {
+                                    "R3.07": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R5.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "ipv6_address": "2001:db8:3:3:3::3",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:3:3:3::3/128": {
+                                        "ip_prefix": "2001:db8:3:3:3::3",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:2::/64": {
+                                        "ip_prefix": "2001:db8:10:2::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                            },
+                            "R3.07-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000007",
+                                    "checksum": "0x652a",
+                                    "local_router": False,
+                                    "holdtime": 604,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R3.00": {
+                                        "metric": 0},
+                                    "R2.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000b",
+                                    "checksum": "0x93bc",
+                                    "local_router": False,
+                                    "holdtime": 903,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "hostname": "R5",
+                                "extended_is_neighbor": {
+                                    "R5.01": {
+                                        "metric": 10},
+                                    "R5.03": {
+                                        "metric": 10},
+                                },
+                                "mt_is_neighbor": {
+                                    "R5.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R5.03": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "ip_address": "10.100.5.5",
+                                "extended_ipv4_reachability": {
+                                    "10.100.5.5/32": {
+                                        "ip_prefix": "10.100.5.5",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.3.5.0/24": {
+                                        "ip_prefix": "10.3.5.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "ipv6_address": "2001:db8:5:5:5::5",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:5:5:5::5/128": {
+                                        "ip_prefix": "2001:db8:5:5:5::5",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:3::/64": {
+                                        "ip_prefix": "2001:db8:10:3::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                            },
+                            "R5.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x6236",
+                                    "local_router": False,
+                                    "holdtime": 426,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R5.00": {
+                                        "metric": 0},
+                                    "R3.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R5.03-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x54a8",
+                                    "local_router": False,
+                                    "holdtime": 965,
+                                    "received": 1199,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R5.00": {
+                                        "metric": 0},
+                                    "R7.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R7.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000009",
+                                    "checksum": "0x7d78",
+                                    "local_router": False,
+                                    "holdtime": 766,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0002",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "router_id": "10.196.7.7",
+                                "ip_address": "10.196.7.7",
+                                "mt_entries": {
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                    "Standard (IPv4 Unicast)": {},
+                                },
+                                "hostname": "R7",
+                                "mt_is_neighbor": {
+                                    "R9.01": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                    "R8.01": {
+                                        "metric": 40, 
+                                        "mt_id": "MT (IPv6 Unicast)"},
+                                },
+                                "extended_is_neighbor": {
+                                    "R9.01": {
+                                        "metric": 40},
+                                    "R8.01": {
+                                        "metric": 40},
+                                },
+                                "extended_ipv4_reachability": {
+                                    "10.6.7.0/24": {
+                                        "ip_prefix": "10.6.7.0",
+                                        "prefix_length": "24",
+                                        "metric": 40,
+                                    },
+                                    "10.196.7.7/32": {
+                                        "ip_prefix": "10.196.7.7",
+                                        "prefix_length": "32",
+                                        "metric": 1,
+                                    },
+                                },
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:10:6::/64": {
+                                        "ip_prefix": "2001:db8:10:6::",
+                                        "prefix_length": "64",
+                                        "metric": 40,
+                                    },
+                                    "2001:db8:7:7:7::7/128": {
+                                        "ip_prefix": "2001:db8:7:7:7::7",
+                                        "prefix_length": "128",
+                                        "metric": 1,
+                                    },
+                                },
+                            },
+                            "R8.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000005",
+                                    "checksum": "0x1309",
+                                    "local_router": False,
+                                    "holdtime": 453,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0003",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "hostname": "R8",
+                                "extended_is_neighbor": {
+                                    "R8.01": {
+                                        "metric": 10}},
+                                "mt_is_neighbor": {
+                                    "R8.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"}
+                                },
+                                "ip_address": "10.1.8.8",
+                                "extended_ipv4_reachability": {
+                                    "10.1.8.8/32": {
+                                        "ip_prefix": "10.1.8.8",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.7.8.0/24": {
+                                        "ip_prefix": "10.7.8.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "ipv6_address": "2001:db8:8:8:8::8",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:8:8:8::8/128": {
+                                        "ip_prefix": "2001:db8:8:8:8::8",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:7::/64": {
+                                        "ip_prefix": "2001:db8:10:7::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                            },
+                            "R8.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000004",
+                                    "checksum": "0x9503",
+                                    "local_router": False,
+                                    "holdtime": 1143,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R8.00": {
+                                        "metric": 0},
+                                    "R7.00": {
+                                        "metric": 0},
+                                },
+                            },
+                            "R9.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000006",
+                                    "checksum": "0xfd4e",
+                                    "local_router": False,
+                                    "holdtime": 800,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49.0004",
+                                "nlpid": ["0xcc", "0x8e"],
+                                "mt_entries": {
+                                    "Standard (IPv4 Unicast)": {},
+                                    "IPv6 Unicast": {
+                                        "attach_bit": 0,
+                                        "p_bit": 0,
+                                        "overload_bit": 0,
+                                    },
+                                },
+                                "hostname": "R9",
+                                "extended_is_neighbor": {
+                                    "R9.01": {
+                                        "metric": 10}},
+                                "mt_is_neighbor": {
+                                    "R9.01": {
+                                        "metric": 10, 
+                                        "mt_id": "MT (IPv6 Unicast)"}
+                                },
+                                "ip_address": "10.69.9.9",
+                                "extended_ipv4_reachability": {
+                                    "10.69.9.9/32": {
+                                        "ip_prefix": "10.69.9.9",
+                                        "prefix_length": "32",
+                                        "metric": 10,
+                                    },
+                                    "10.7.9.0/24": {
+                                        "ip_prefix": "10.7.9.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "10.9.10.0/24": {
+                                        "ip_prefix": "10.9.10.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "10.10.10.10/32": {
+                                        "ip_prefix": "10.10.10.10",
+                                        "prefix_length": "32",
+                                        "metric": 20,
+                                    },
+                                },
+                                "ipv6_address": "2001:db8:9:9:9::9",
+                                "mt_ipv6_reachability": {
+                                    "2001:db8:9:9:9::9/128": {
+                                        "ip_prefix": "2001:db8:9:9:9::9",
+                                        "prefix_length": "128",
+                                        "metric": 10,
+                                    },
+                                    "2001:db8:10:7::/64": {
+                                        "ip_prefix": "2001:db8:10:7::",
+                                        "prefix_length": "64",
+                                        "metric": 10,
+                                    },
+                                },
+                                "ipv6_reachability": {
+                                    "2001:2:2:2::2/128": {
+                                        "ip_prefix": "2001:2:2:2::2",
+                                        "prefix_length": "128",
+                                        "metric": "10",
+                                    }
+                                },
+                            },
+                            "R9.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000003",
+                                    "checksum": "0xfdce",
+                                    "local_router": False,
+                                    "holdtime": 706,
+                                    "received": 1198,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "extended_is_neighbor": {
+                                    "R9.00": {
+                                        "metric": 0},
+                                    "R7.00": {
+                                        "metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 11,
+                        "local_lsp_count": 1,
+                    },
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:R3#show isis database detail
+        Wed Jan 30 22:07:52.759 UTC
+
+        IS-IS test (Level-1) Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        R3.00-00            * 0x0000000d   0x0476        578  /*            1/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          IP Address:     10.36.3.3
+          Metric: 10         IP-Extended 10.36.3.0/24
+          Metric: 10         IP-Extended 10.2.3.0/24
+          Hostname:       R3
+          IPv6 Address:   2001:db8:3:3:3::3
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 1/0/0
+          Metric: 10         IS-Extended R3.03
+          Metric: 10         IS-Extended R5.01          
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+        R3.03-00              0x00000007   0x8145        988  /*            0/0/0
+          Metric: 0          IS-Extended R3.00
+          Metric: 0          IS-Extended R4.00
+        R3.05-00              0x00000004   0x7981        600  /*            0/0/0
+          Metric: 0          IS-Extended R3.00
+          Metric: 0          IS-Extended R6.00
+        R4.00-00              0x0000000c   0x5c39        1115 /1200         0/0/0
+          Area Address:   49.0002
+          Metric: 10         IS-Extended R3.03
+          Metric: 10         IS-Extended R4.01
+          NLPID:          0xcc
+          NLPID:          0x8e
+          IP Address:     10.64.4.4
+          Metric: 10         IP-Extended 10.64.4.4/32
+          Metric: 10         IP-Extended 10.3.4.0/24          
+          Hostname:       R4
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01
+          IPv6 Address:   2001:db8:4:4:4::4
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:4:4:4::4/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+        R4.01-00              0x00000004   0xf9a0        616  /1200         0/0/0
+          Metric: 0          IS-Extended R4.00
+          Metric: 0          IS-Extended R5.00
+        R5.00-00              0x00000009   0x09f9        980  /1199         1/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 1/0/0
+          Hostname:       R5
+          Metric: 10         IS-Extended R5.01
+          Metric: 10         IS-Extended R4.01          
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01          
+          IP Address:     10.100.5.5
+          Metric: 10         IP-Extended 10.100.5.5/32
+          Metric: 10         IP-Extended 10.3.5.0/24          
+          IPv6 Address:   2001:db8:5:5:5::5
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64
+        R5.01-00              0x00000004   0x4ac5        521  /1199         0/0/0
+          Metric: 0          IS-Extended R5.00
+          Metric: 0          IS-Extended R3.00
+        R5.03-00              0x00000004   0x3c38        1023 /1199         0/0/0
+          Metric: 0          IS-Extended R5.00
+          Metric: 0          IS-Extended R7.00
+        R6.00-00              0x00000008   0x1869        923  /1199         0/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          Router ID:      10.144.6.6
+          IP Address:     10.144.6.6
+          MT:             IPv6 Unicast                                 0/0/0
+          MT:             Standard (IPv4 Unicast)
+          Hostname:       R6
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R7.02
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R3.05
+          Metric: 40         IS-Extended R7.02
+          Metric: 40         IS-Extended R3.05
+          Metric: 1          IP-Extended 10.144.6.0/24
+          Metric: 40         IP-Extended 10.6.7.0/24
+          Metric: 40         IP-Extended 10.3.6.0/24
+          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:6:6:6::6/128
+          Metric: 40         MT (IPv6 Unicast) IPv6 2001:db8:10:6::/64
+        R7.00-00              0x00000008   0xaba8        965  /1198         1/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          Router ID:      10.196.7.7
+          IP Address:     10.196.7.7
+          MT:             IPv6 Unicast                                 0/0/0
+          MT:             Standard (IPv4 Unicast)
+          Hostname:       R7
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R7.02
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R5.03
+          Metric: 40         IS-Extended R7.02
+          Metric: 40         IS-Extended R5.03
+          Metric: 40         IP-Extended-Interarea 10.7.8.0/24
+          Metric: 1          IP-Extended 10.196.7.7/32
+          Metric: 40         IP-Extended 10.7.9.0/24          
+          Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
+          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
+        R7.02-00              0x00000005   0x8c3d        884  /1198         0/0/0
+          Metric: 0          IS-Extended R6.00
+          Metric: 0          IS-Extended R7.00
+
+         Total Level-1 LSP count: 11     Local Level-1 LSP count: 1
+
+        IS-IS test (Level-2) Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        R2.00-00              0x00000009   0x5188        1082 /1199         0/0/0
+          Area Address:   49.0001
+          NLPID:          0xcc
+          NLPID:          0x8e
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+          Hostname:       R2
+          Metric: 10         IS-Extended R3.07
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R3.07
+          IP Address:     10.16.2.2
+          Metric: 10         IP-Extended 10.16.2.2/32
+          Metric: 10         IP-Extended 10.1.2.0/24
+          IPv6 Address:   2001:db8:2:2:2::2
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:2:2:2::2/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:1::/64
+        R3.00-00            * 0x00000011   0x4c4c        979  /*            0/0/0
+          Area Address:   49.0002
+          Metric: 10         IS-Extended R3.07
+          Metric: 10         IS-Extended R5.01
+          NLPID:          0xcc
+          NLPID:          0x8e
+          IP Address:     10.36.3.3
+          Metric: 10         IP-Extended 10.36.3.0/24
+          Metric: 10         IP-Extended 10.2.3.0/24
+          Hostname:       R3
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R3.07
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+          IPv6 Address:   2001:db8:3:3:3::3
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+        R3.07-00              0x00000007   0x652a        604  /*            0/0/0
+          Metric: 0          IS-Extended R3.00
+          Metric: 0          IS-Extended R2.00
+        R5.00-00              0x0000000b   0x93bc        903  /1199         0/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+          Hostname:       R5
+          Metric: 10         IS-Extended R5.01
+          Metric: 10         IS-Extended R5.03
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R5.03
+          IP Address:     10.100.5.5
+          Metric: 10         IP-Extended 10.100.5.5/32
+          Metric: 10         IP-Extended 10.3.5.0/24          
+          IPv6 Address:   2001:db8:5:5:5::5
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64          
+        R5.01-00              0x00000004   0x6236        426  /1199         0/0/0
+          Metric: 0          IS-Extended R5.00
+          Metric: 0          IS-Extended R3.00
+        R5.03-00              0x00000004   0x54a8        965  /1199         0/0/0
+          Metric: 0          IS-Extended R5.00
+          Metric: 0          IS-Extended R7.00
+        R7.00-00              0x00000009   0x7d78        766  /1198         0/0/0
+          Area Address:   49.0002
+          NLPID:          0xcc
+          NLPID:          0x8e
+          Router ID:      10.196.7.7
+          IP Address:     10.196.7.7
+          MT:             IPv6 Unicast                                 0/0/0
+          MT:             Standard (IPv4 Unicast)
+          Hostname:       R7
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R9.01
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R8.01          
+          Metric: 40         IS-Extended R9.01
+          Metric: 40         IS-Extended R8.01          
+          Metric: 40         IP-Extended 10.6.7.0/24
+          Metric: 1          IP-Extended 10.196.7.7/32          
+          Metric: 40         MT (IPv6 Unicast) IPv6 2001:db8:10:6::/64
+          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
+        R8.00-00              0x00000005   0x1309        453  /1198         0/0/0
+          Area Address:   49.0003
+          NLPID:          0xcc
+          NLPID:          0x8e
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+          Hostname:       R8
+          Metric: 10         IS-Extended R8.01
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R8.01
+          IP Address:     10.1.8.8
+          Metric: 10         IP-Extended 10.1.8.8/32
+          Metric: 10         IP-Extended 10.7.8.0/24
+          IPv6 Address:   2001:db8:8:8:8::8
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:8:8:8::8/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:7::/64
+        R8.01-00              0x00000004   0x9503        1143 /1198         0/0/0
+          Metric: 0          IS-Extended R8.00
+          Metric: 0          IS-Extended R7.00
+        R9.00-00              0x00000006   0xfd4e        800  /1198         0/0/0
+          Area Address:   49.0004
+          NLPID:          0xcc
+          NLPID:          0x8e
+          MT:             Standard (IPv4 Unicast)
+          MT:             IPv6 Unicast                                 0/0/0
+          Hostname:       R9
+          Metric: 10         IS-Extended R9.01
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R9.01
+          IP Address:     10.69.9.9
+          Metric: 10         IP-Extended 10.69.9.9/32
+          Metric: 10         IP-Extended 10.7.9.0/24
+          Metric: 10         IP-Extended 10.9.10.0/24
+          Metric: 20         IP-Extended 10.10.10.10/32
+          IPv6 Address:   2001:db8:9:9:9::9
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:9:9:9::9/128
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:7::/64
+          Metric: 10         IPv6 2001:2:2:2::2/128
+        R9.01-00              0x00000003   0xfdce        706  /1198         0/0/0
+          Metric: 0          IS-Extended R9.00
+          Metric: 0          IS-Extended R7.00
+
+         Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
+    '''}
+
+    golden_parsed_output_2 = {
+        "instance": {
+            "isp": {
+                "level": {
+                    1: {
+                        "lspid": {
+                            "router-5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000003",
+                                    "checksum": "0x8074460",
+                                    "local_router": False,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-5",
+                                "ip_address": "172.16.186.5",
+                                "ip_neighbor": {
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 10},
+                                    "router-11.01": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000b",
+                                    "checksum": "0x8074460",
+                                    "local_router": True,
+                                    "holdtime": 1161,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-11",
+                                "ip_address": "172.16.196.11",
+                                "ip_neighbor": {
+                                    "172.16.76.0/24": {
+                                        "ip_prefix": "172.16.76.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.01": {
+                                        "metric": 10},
+                                    "router-5.00": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000001",
+                                    "checksum": "0x80770ec",
+                                    "local_router": True,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 0},
+                                    "router-5.00": {
+                                        "metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 3,
+                        "local_lsp_count": 2,
+                    },
+                    2: {
+                        "lspid": {
+                            "router-5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000005",
+                                    "checksum": "0x807997c",
+                                    "local_router": False,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-5",
+                                "ip_address": "172.16.166.5",
+                                "ip_neighbor": {
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.94.0/24": {
+                                        "ip_prefix": "172.16.94.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.21.0/24": {
+                                        "ip_prefix": "172.16.21.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 10},
+                                    "router-11.01": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000d",
+                                    "checksum": "0x807997c",
+                                    "local_router": True,
+                                    "holdtime": 1184,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-11",
+                                "ip_address": "172.28.111.111",
+                                "ip_neighbor": {
+                                    "172.16.21.0/24": {
+                                        "ip_prefix": "172.16.21.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.01": {
+                                        "metric": 10},
+                                    "router-5.00": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-gsr11.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000001",
+                                    "checksum": "0x80770ec",
+                                    "local_router": True,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 0},
+                                    "router-5.00": {
+                                        "metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 3,
+                        "local_lsp_count": 2,
+                    },
+                }
+            }
+        }
+    }
+
+    # asr9k
+    golden_output_2 = {'execute.return_value': '''
+        router# show isis database detail
+        IS-IS isp (Level-1) Link State Database
+            LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+            router-5.00-00     0x00000003   0x8074460        457             0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-5
+              IP Address:  172.16.186.5
+              Metric: 0          IP 172.16.115.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IS router-11.00
+              Metric: 10         IS router-11.01
+            router-11.00-00  * 0x0000000b   0x8074460        1161            0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-11
+              IP Address:  172.16.196.11
+              Metric: 0          IP 172.16.76.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IS router-11.01
+              Metric: 10         IS router-5.00
+            router-11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+              Metric: 0          IS router-11.00
+              Metric: 0          IS router-5.00
+             Total LSP count: 3 (L1: 3, L2 0, local L1: 2, local L2 0)
+            IS-IS isp (Level-2) Link State Database
+            LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+            router-5.00-00     0x00000005   0x807997c        457             0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-5
+              IP Address:  172.16.166.5
+              Metric: 0          IP 172.16.115.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.94.0/24
+              Metric: 10         IS router-11.00
+              Metric: 10         IS router-11.01
+              Metric: 10         IP 172.16.21.0/24
+            router-11.00-00  * 0x0000000d   0x807997c        1184            0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-11
+              IP Address:  172.28.111.111
+              Metric: 0          IP 172.16.21.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IS router-11.01
+              Metric: 10         IS router-5.00
+              Metric: 10         IP 172.16.115.0/24
+            router-gsr11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+              Metric: 0          IS router-11.00
+              Metric: 0          IS router-5.00
+             Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)
+    '''}
+
+    golden_parsed_output_3 = {
+        "instance": {
+            "": {
+                "level": {
+                    1: {
+                        "lspid": {
+                            "0000.0C00.0C35.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000C",
+                                    "checksum": "0x5696",
+                                    "local_router": False,
+                                    "holdtime": 325,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "39.0001",
+                                "is_neighbor": {
+                                    "0000.0C00.62E6.03": {
+                                        "metric": 10}},
+                                "es_neighbor": {
+                                    "0000.0C00.0C35": {
+                                        "metric": 0}},
+                            },
+                            "0000.0C00.40AF.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000009",
+                                    "checksum": "0x8452",
+                                    "local_router": True,
+                                    "holdtime": 608,
+                                    "attach_bit": 1,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "47.0004.004D.0001",
+                                "topology": ["IPv4 (0x0)", "IPv6 (0x2)"],
+                                "nlpid": ["0x8E"],
+                                "ip_address": "172.16.21.49",
+                                "is_neighbor": {
+                                    "0800.2B16.24EA.01": {
+                                        "metric": 10},
+                                    "0000.0C00.62E6.03": {
+                                        "metric": 10},
+                                    "cisco.03": {
+                                        "metric": 10},
+                                },
+                                "es_neighbor": {
+                                    "0000.0C00.40AF": {
+                                        "metric": 0}},
+                                "ipv6_address": "2001:0DB8::/32",
+                                "ipv6_reachability": {
+                                    "2001:0DB8::/64": {
+                                        "ip_prefix": "2001:0DB8::",
+                                        "prefix_length": "64",
+                                        "metric": "10",
+                                    }
+                                },
+                                "extended_is_neighbor": {
+                                    "cisco.03": {
+                                        "metric": 5},
+                                    "cisco1.03": {
+                                        "metric": 10},
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # ncs5k
+    golden_output_3 = {'execute.return_value': '''
+        IS-IS Level-1 Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+        0000.0C00.0C35.00-00  0x0000000C   0x5696        325           0/0/0
+          Area Address: 47.0004.004D.0001
+          Area Address: 39.0001
+          Metric: 10   IS 0000.0C00.62E6.03
+          Metric: 0    ES 0000.0C00.0C35
+        0000.0C00.40AF.00-00* 0x00000009   0x8452        608           1/0/0
+          Area Address: 47.0004.004D.0001
+          Topology: IPv4 (0x0) IPv6 (0x2)
+          NLPID: 0xCC 0x8E
+          IP Address: 172.16.21.49
+          Metric: 10   IS 0800.2B16.24EA.01
+          Metric: 10   IS 0000.0C00.62E6.03
+          Metric: 0    ES 0000.0C00.40AF
+          IPv6 Address: 2001:0DB8::/32
+          Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
+          Metric: 5    IS-Extended cisco.03
+          Metric: 10   IS-Extended cisco1.03
+          Metric: 10    IS (MT-IPv6) cisco.03
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_output_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_output_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()

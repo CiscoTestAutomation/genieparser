@@ -44,11 +44,14 @@ class ShowClnsInterfaceSchema(MetaParser):
                                 'interface_number': str,
                                 'local_circuit_id': str,
                                 Optional('neighbor_extended_local_circuit_id'): str,
+                                Optional('if_state'): str,
                                 'hello_interval': {
                                     Any(): {
                                         Optional('next_is_is_lan_hello_in'): int,
                                         Optional('next_is_is_lan_hello_in_ms'): int,
-                                    }
+                                    },
+                                    Optional('next_is_is_hello_in'): int,
+                                    Optional('next_is_is_hello_in_ms'): int,
                                 },
                                 Any(): {  # level-1 , level-2
                                     'metric': int,
@@ -99,40 +102,58 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
 
         # GigabitEthernet1 is up, line protocol is up
         # TokenRing 0 is administratively down, line protocol is down
-        p1 = re.compile(r'^(?P<interface>[\w]+[\d/.|\s]+) +is +(?P<status>[\w\s]+), +line +protocol +is +(?P<line_protocol>\w+)$')
+        p1 = re.compile(r'^(?P<interface>[\w]+[\d/.|\s]+) +is +'
+                        r'(?P<status>[\w\s]+), +line +protocol +is +'
+                        r'(?P<line_protocol>\w+)$')
         #   CLNS protocol processing disabled
         p2 = re.compile(r'^CLNS +protocol +processing +disabled$')
         #   Checksums enabled, MTU 1497, Encapsulation SAP
-        p3 = re.compile(r'^Checksums +(?P<checksum>\w+), +MTU +(?P<mtu>\d+), +Encapsulation +(?P<encapsulation>\w+)$')
+        p3 = re.compile(r'^Checksums +(?P<checksum>\w+), +MTU +(?P<mtu>\d+), '
+                        r'+Encapsulation +(?P<encapsulation>\w+)$')
         #   ERPDUs enabled, min. interval 10 msec.
-        p4 = re.compile(r'^ERPDUs +(?P<erpdus>\w+), +min. +interval +(?P<min_interval>\d+) +msec.$')
+        p4 = re.compile(r'^ERPDUs +(?P<erpdus>\w+), +min. +interval +'
+                        r'(?P<min_interval>\d+) +msec.$')
         #   CLNS fast switching enabled
         #   CLNS SSE switching disabled
-        p5 = re.compile(r'^CLNS +(?P<fast_sse>\w+) +switching +(?P<switching_status>\w+)$')
+        p5 = re.compile(r'^CLNS +(?P<fast_sse>\w+) +switching +'
+                        r'(?P<switching_status>\w+)$')
         #   DEC compatibility mode OFF for this interface
-        p6 = re.compile(r'^DEC +compatibility +mode +(?P<dec_compatibilty_mod>\w+) +for +this +interface$')
+        p6 = re.compile(r'^DEC +compatibility +mode +'
+                        r'(?P<dec_compatibilty_mod>\w+) +for +this +interface$')
         #   Next ESH/ISH in 20 seconds
         p7 = re.compile(r'^Next +ESH/ISH +in +(?P<next_esh_ish>\d+) +seconds$')
         #   Routing Protocol: IS-IS (test)
-        p8 = re.compile(r'^Routing +Protocol: +(?P<routing_protocol>[\S]+)( +\((?P<process_id>\w+)\))?$')
+        p8 = re.compile(r'^Routing +Protocol: +(?P<routing_protocol>[\S]+)'
+                        r'( +\((?P<process_id>\w+)\))?$')
         #     Circuit Type: level-1-2
         p9 = re.compile(r'^Circuit +Type: +(?P<circuit_type>\S+)$')
         #     Interface number 0x1, local circuit ID 0x1
-        p10 = re.compile(r'^Interface +number +(?P<interface_number>\w+), +local +circuit +ID +(?P<local_circuit>\w+)$')
+        p10 = re.compile(r'^Interface +number +(?P<interface_number>\w+), '
+                         r'+local +circuit +ID +(?P<local_circuit>\w+)$')
         #     Neighbor Extended Local Circuit ID: 0x0
-        p11 = re.compile(r'^Neighbor +Extended +Local +Circuit +ID: +(?P<neighbor_extended_local_circute_id>\w+)$')
+        p11 = re.compile(r'^Neighbor +Extended +Local +Circuit +ID: +'
+                         r'(?P<neighbor_extended_local_circute_id>\w+)$')
         #     Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
-        p12 = re.compile(r'^(?P<level>\S+) +Metric: +(?P<level_metric>\d+), +Priority: +(?P<priority>\d+), +Circuit +ID:'
-                         ' +(?P<circuit_id>\S+)$')
+        p12 = re.compile(r'^(?P<level>\S+) +Metric: +(?P<level_metric>\d+), '
+                         r'+Priority: +(?P<priority>\d+), +Circuit +ID:'
+                         r' +(?P<circuit_id>\S+)$')
         #     DR ID: R2.01
         p13 = re.compile(r'^DR +ID: +(?P<dr_id>\S+)$')
         #     Level-1 IPv6 Metric: 10
-        p14 = re.compile(r'^(?P<level>\S+) +IPv6 +Metric: +(?P<level_ipv6_metric>\d+)$')
+        p14 = re.compile(r'^(?P<level>\S+) +IPv6 +Metric: +'
+                         r'(?P<level_ipv6_metric>\d+)$')
         #     Number of active level-1 adjacencies: 1
-        p15 = re.compile(r'^Number +of +active +(?P<level>\S+) +adjacencies: +(?P<adjacencies>\d+)$')
+        p15 = re.compile(r'^Number +of +active +(?P<level>\S+) +adjacencies: '
+                         r'+(?P<adjacencies>\d+)$')
         #     Next IS-IS LAN Level-1 Hello in 1 seconds
-        p16 = re.compile(r'^Next +IS\-IS +LAN (?P<level>\S+) +Hello +in +(?P<level_hello>\d+) +(?P<milli>[\w\(\)]+)?seconds$')
         #     Next IS-IS LAN Level-2 Hello in 645 milliseconds
+        p16 = re.compile(r'^Next +IS\-IS +LAN (?P<level>\S+) +Hello +in +'
+                         r'(?P<level_hello>\d+) +(?P<milli>[\w\(\)]+)?seconds$')
+        # Next IS-IS Hello in 0 seconds
+        p17 = re.compile(r'Next\s+IS\-IS\s+Hello\s+in\s+(?P<hello>\d+)\s+'
+                         r'(?P<milli>[\w\(\)]+)?seconds')
+        # if state DOWN
+        p18 = re.compile(r'if\s+state\s+(?P<if_state>DOWN|UP)')       
 
         for line in out.splitlines():
             line = line.strip()
@@ -288,6 +309,26 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
                     next_dict.update({'next_is_is_lan_hello_in': int(group['level_hello'])})
                 continue
 
+            # Next IS-IS Hello in 0 seconds
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                hello = group['hello']
+                next_dict = isis_dict\
+                    .setdefault('hello_interval', {})
+                if group['milli']:
+                    if 'milli' in group['milli']:
+                        next_dict['next_is_is_hello_in_ms'] = int(hello)
+                else:
+                    next_dict['next_is_is_hello_in'] = int(hello)
+                continue
+
+            # if state DOWN
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                isis_dict['if_state'] = group['if_state'].title()
+                continue
 
         return result_dict
 
@@ -340,7 +381,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         redistribute = False
 
         # IS-IS Router: VRF1 (0x10001)
-        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>\w+) +\((?P<tag>\w+)\)$')
+        # IS-IS Router: <Null Tag> (0x10000)
+        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+) +\((?P<tag>\w+)\)$')
         # System Id: 2222.2222.2222.00  IS-Type: level-1-2
         p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
         # Manual area address(es):
@@ -361,7 +403,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # Distance for L2 CLNS routes: 110
         p10 = re.compile(r'^\s*Distance +for +L2 +CLNS +routes: +(?P<distance>\d+)$')
         # RRR level: none
-        p11 = re.compile(r'^\s*RRR +level: +(?P<rrr_level>\w+)$')
+        # RRR level: level-1
+        p11 = re.compile(r'^\s*RRR +level: +(?P<rrr_level>\S+)$')
         # Generate narrow metrics: none
         p12 = re.compile(r'^\s*Generate +narrow +metrics: +(?P<generate_narrow_metric>\S+)$')
         # Accept narrow metrics:   none
@@ -375,10 +418,14 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             line = line.rstrip()
 
             # IS-IS Router: VRF1 (0x10001)
+            # IS-IS Router: <Null Tag> (0x10000)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict = result_dict.setdefault('instance', {}).setdefault(group['tag_process'],{})
+                tag_process = group['tag_process']
+                if tag_process == '<Null Tag>':
+                    tag_process = ''
+                clns_dict = result_dict.setdefault('instance', {}).setdefault(tag_process, {})
                 clns_dict.update({'process_handle': group['tag']})
                 continue
 
@@ -460,6 +507,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
                 continue
 
             # RRR level: none
+            # RRR level: level-1
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -550,8 +598,11 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
         # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
-        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<snpa>[\w\.]+)'
-                        ' +(?P<state>\w+) +(?P<holdtime>\d+) +L(?P<type>\d+) +(?P<protocol>[\w\-]+)$')
+        # R2_xr           Gi2.115       fa16.3e21.73f6      Up     26        L1L2 M-ISIS
+        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) '
+                        r'+(?P<snpa>[\w\.]+) +(?P<state>\w+) +'
+                        r'(?P<holdtime>\d+) +(?P<level>[L\d]+) +'
+                        r'(?P<protocol>[\w\-]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  10.229.7.7*
@@ -573,25 +624,30 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict = result_dict.setdefault('tag', {}).setdefault(group['tag'], {})
+                clns_dict = result_dict.setdefault('tag', {})\
+                                       .setdefault(group['tag'], {})
                 continue
             # System Id       Interface     SNPA                State  Holdtime  Type Protocol
             # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                if 'tag' not in result_dict:
-                     clns_dict = result_dict.setdefault('tag', {}).setdefault("", {})
-                type_dict = clns_dict.setdefault('system_id', {}).\
-                                      setdefault(group['system_id'],{}).\
-                                      setdefault('type', {}).\
-                                      setdefault(int(group['type']), {})
+                type_1 = group['level']
 
+                if 'tag' not in result_dict:
+                    clns_dict = result_dict.setdefault('tag', {})\
+                                          .setdefault("", {})
+                type_dict = clns_dict.setdefault('system_id', {})\
+                                       .setdefault(group['system_id'],{})\
+                                       .setdefault('type', {})\
+                                       .setdefault(type_1, {})
                 type_dict.update({'holdtime': int(group['holdtime'])})
                 type_dict.update({'state': group['state'].lower()})
                 type_dict.update({'snpa': group['snpa']})
                 type_dict.update({'protocol': group['protocol']})
-                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common\
+                         .convert_intf_name(group['interface'])})
+
                 continue
 
             #   Area Address(es): 49.0002
@@ -599,6 +655,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'area_address': group['area_address'].split()})
+
                 continue
 
             #   IP Address(es):  10.229.7.7*
@@ -606,6 +663,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'ip_address': group['ip_address'].split()})
+
                 continue
 
             #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
@@ -613,6 +671,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'ipv6_address': group['ipv6_address'].split()})
+
                 continue
 
             #   Uptime: 00:23:58
@@ -620,6 +679,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'uptime': group['uptime']})
+
                 continue
 
             #   NSF capable
@@ -627,20 +687,24 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'nsf': group['nsf']})
+
                 continue
 
             #   Topology: IPv4, IPv6
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                type_dict.update({'topology': group['topology'].lower().replace(" ","").split(',')})
+                type_dict.update({'topology': group['topology'].lower()\
+                         .replace(" ","").split(',')})
+
                 continue
 
             #   Interface name: GigabitEthernet4
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common\
+                         .convert_intf_name(group['interface'])})
                 continue
         return result_dict
 
