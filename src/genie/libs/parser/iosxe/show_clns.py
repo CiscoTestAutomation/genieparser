@@ -340,7 +340,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         redistribute = False
 
         # IS-IS Router: VRF1 (0x10001)
-        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>\w+) +\((?P<tag>\w+)\)$')
+        # IS-IS Router: <Null Tag> (0x10000)
+        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+) +\((?P<tag>\w+)\)$')
         # System Id: 2222.2222.2222.00  IS-Type: level-1-2
         p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
         # Manual area address(es):
@@ -361,7 +362,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # Distance for L2 CLNS routes: 110
         p10 = re.compile(r'^\s*Distance +for +L2 +CLNS +routes: +(?P<distance>\d+)$')
         # RRR level: none
-        p11 = re.compile(r'^\s*RRR +level: +(?P<rrr_level>\w+)$')
+        # RRR level: level-1
+        p11 = re.compile(r'^\s*RRR +level: +(?P<rrr_level>\S+)$')
         # Generate narrow metrics: none
         p12 = re.compile(r'^\s*Generate +narrow +metrics: +(?P<generate_narrow_metric>\S+)$')
         # Accept narrow metrics:   none
@@ -375,10 +377,14 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             line = line.rstrip()
 
             # IS-IS Router: VRF1 (0x10001)
+            # IS-IS Router: <Null Tag> (0x10000)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict = result_dict.setdefault('instance', {}).setdefault(group['tag_process'],{})
+                tag_process = group['tag_process']
+                if tag_process == '<Null Tag>':
+                    tag_process = ''
+                clns_dict = result_dict.setdefault('instance', {}).setdefault(tag_process, {})
                 clns_dict.update({'process_handle': group['tag']})
                 continue
 
@@ -460,6 +466,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
                 continue
 
             # RRR level: none
+            # RRR level: level-1
             m = p11.match(line)
             if m:
                 group = m.groupdict()

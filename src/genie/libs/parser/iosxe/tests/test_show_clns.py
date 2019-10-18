@@ -141,7 +141,8 @@ class TestShowIpInterface(unittest.TestCase):
 # Unit test for 'show clns protocol'
 # =========================================================
 class TestShowClnsProtocol(unittest.TestCase):
-    device = Device(name='aDevice')
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -195,18 +196,73 @@ class TestShowClnsProtocol(unittest.TestCase):
       Accept wide metrics:     level-1-2
     '''}
 
+    golden_parsed_output_2 = {
+        "instance": {
+            "": {
+                "process_handle": "0x10000",
+                "is_type": "level-1",
+                "system_id": "0000.0000.0007",
+                "nsel": "00",
+                "manual_area_address": ["47.0002"],
+                "routing_for_area_address": ["47.0002"],
+                "interfaces": {
+                    "GigabitEthernet4": {"topology": ["ipv4", "ipv6"]},
+                    "GigabitEthernet3": {"topology": ["ipv4", "ipv6"]},
+                    "GigabitEthernet2": {"topology": ["ipv4", "ipv6"]},
+                    "Loopback0": {"topology": ["ipv4", "ipv6"]},
+                },
+                "redistribute": "static (on by default)",
+                "distance_for_l2_clns_routes": 110,
+                "rrr_level": "level-1",
+                "metrics": {
+                    "generate_narrow": "none",
+                    "accept_narrow": "none",
+                    "generate_wide": "level-1-2",
+                    "accept_wide": "level-1-2",
+                },
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        IS-IS Router: <Null Tag> (0x10000)
+          System Id: 0000.0000.0007.00  IS-Type: level-1
+          Manual area address(es):
+            47.0002
+          Routing for area address(es):
+            47.0002
+          Interfaces supported by IS-IS:
+            GigabitEthernet4 - IP - IPv6
+            GigabitEthernet3 - IP - IPv6
+            GigabitEthernet2 - IP - IPv6
+            Loopback0 - IP - IPv6
+          Redistribute:
+            static (on by default)
+          Distance for L2 CLNS routes: 110
+          RRR level: level-1
+          Generate narrow metrics: none
+          Accept narrow metrics:   none
+          Generate wide metrics:   level-1-2
+          Accept wide metrics:     level-1-2
+    '''}
+
     def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        obj = ShowClnsProtocol(device=self.device1)
+        device = Mock(**self.empty_output)
+        obj = ShowClnsProtocol(device=device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden_clns_protocol(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowClnsProtocol(device=self.device)
+    def test_golden_clns_protocol_1(self):
+        device = Mock(**self.golden_output)
+        obj = ShowClnsProtocol(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_clns_protocol_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowClnsProtocol(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # =========================================================
 # Unit test for 'show clns neighbors detail'
