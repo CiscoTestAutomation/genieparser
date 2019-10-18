@@ -5416,7 +5416,7 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
                             {Any(): 
                                 {'index': 
                                     {Any(): 
-                                        {'next_hop': str,
+                                        {Optional('next_hop'): str,
                                          Optional('status_codes'): str,
                                          Optional('path_type'): str,
                                          Optional('metric'): int,
@@ -5666,7 +5666,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                   .setdefault('index', {}).setdefault(index, {})
                 index_dict.update({'status_codes': status_codes})
                 index_dict.update({'path_type': path_type})
-                if 'next_hop' in m.groupdict():
+                if m.groupdict()['next_hop']:
                     index_dict.update({'next_hop': m.groupdict()['next_hop']})
                 if 'metric' in m.groupdict():
                     index_dict.update({'metric': int(m.groupdict()['metric'])})
@@ -5715,9 +5715,12 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 # Set keys
                 index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
                   .setdefault('index', {}).setdefault(index, {})
+                
                 index_dict.update({'next_hop': next_hop})
-                index_dict.update({'origin_codes': origin_codes})
-                index_dict.update({'status_codes': status_codes})
+                if origin_codes:
+                    index_dict.update({'origin_codes': origin_codes})
+                if status_codes:
+                    index_dict.update({'status_codes': status_codes})
                 if m.groupdict()['path_type']:
                     index_dict.update({'path_type': path_type})
 
@@ -6127,7 +6130,6 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict['processed_prefix'] = processed_prefix
                 af_dict['processed_paths'] = processed_paths
                 continue
-
         return parsed_dict
 
 # ===========================================

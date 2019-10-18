@@ -2013,6 +2013,388 @@ class test_show_ip_route(unittest.TestCase):
         }
     }
 
+    golden_parsed_output_4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.23.120.2',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/1.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.23.120.2, Eth1/1.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_5 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_6 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.23.120.2',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/1.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_6 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+            *via 10.23.120.2, Eth1/1.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_7 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '1.0.0.0/8': {
+                                'route': '1.0.0.0/8',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        1.0.0.0/8, ubest/mbest: 1/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_8 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_9 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.13.120.1',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.120',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.23.120.2',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/1.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_9 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
+            *via 10.23.120.2, Eth1/1.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
+    golden_parsed_output_10 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.12.120.0/24': {
+                                'route': '10.12.120.0/24',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 2,
+                                'route_preference': 120,
+                                'process_id': '1',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.23.120.2',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/1.120',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'rip',
+                                'source_protocol_status': 'rip',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_10 = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        10.12.120.0/24, ubest/mbest: 2/0
+            *via 10.23.120.2, Eth1/1.120, [120/2], 2w0d, rip-1, rip
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -2036,6 +2418,61 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
+
+    def test_show_ip_route_route_protocol_interface_vrf(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(route='10.12.120.0/24',
+                                  protocol='rip',
+                                  interface='e1/1.120',
+                                  vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
+    
+    def test_show_ip_route_route_protocol_interface(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(route='10.12.120.0/24',
+                                  protocol='rip',
+                                  interface='e1/2.120')
+        self.assertEqual(parsed_output,self.golden_parsed_output_5)
+    
+    def test_show_ip_route_route_protocol_vrf(self):
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(route='10.12.120.0/24',
+                                  protocol='rip',
+                                  vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output_6)
+    
+    def test_show_ip_route_protocol_interface_vrf(self):
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(protocol='rip',
+                                  interface='e1/2.120',
+                                  vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output_7)
+    
+    def test_show_ip_route_route_interface_vrf(self):
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(route='10.12.120.0/24',
+                                  interface='e1/2.120',
+                                  vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output_8)
+    
+    def test_show_ip_route_route_protocol(self):
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(route='10.12.120.0/24',
+                                  protocol='rip')
+        self.assertEqual(parsed_output,self.golden_parsed_output_9)
+    
+    def test_show_ip_route_protocol_interface(self):
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse(protocol='rip',
+                                  interface='e1/1.120')
+        self.assertEqual(parsed_output,self.golden_parsed_output_10)
 
 
 # ============================================

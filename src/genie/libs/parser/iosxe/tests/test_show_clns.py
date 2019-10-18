@@ -631,6 +631,89 @@ class TestShowClnsProtocol(unittest.TestCase):
           Accept wide metrics:     level-1-2
     '''}
 
+    golden_parsed_output_3 = {
+        "instance": {
+            "": {
+                "process_handle": "0x10000",
+                "is_type": "level-1",
+                "system_id": "0000.0000.0002",
+                "nsel": "00",
+                "manual_area_address": ["47.0002"],
+                "routing_for_area_address": ["47.0002"],
+                "interfaces": {
+                    "GigabitEthernet5": {"topology": ["ipv4", "ipv6"]},
+                    "GigabitEthernet3": {"topology": ["ipv4", "ipv6"]},
+                    "GigabitEthernet4": {"topology": ["ipv4", "ipv6"]},
+                    "Loopback0": {
+                        "topology": ["ipv4", "ipv6"]},
+                },
+                "redistribute": "static (on by default)",
+                "distance_for_l2_clns_routes": 110,
+                "rrr_level": "level-1",
+                "metrics": {
+                    "generate_narrow": "none",
+                    "accept_narrow": "none",
+                    "generate_wide": "level-1-2",
+                    "accept_wide": "level-1-2",
+                },
+            },
+            "default": {
+                "process_handle": "0x10001",
+                "is_type": "level-1-2",
+                "system_id": "0000.0000.0000",
+                "nsel": "00",
+                "redistribute": "static (on by default)",
+                "distance_for_l2_clns_routes": 110,
+                "rrr_level": "none",
+                "metrics": {
+                    "generate_narrow": "level-1-2",
+                    "accept_narrow": "level-1-2",
+                    "generate_wide": "none",
+                    "accept_wide": "none",
+                },
+            },
+        }
+    }
+
+
+    golden_output_3 = {'execute.return_value': '''
+        #show clns protocol
+
+        IS-IS Router: <Null Tag> (0x10000)
+          System Id: 0000.0000.0002.00  IS-Type: level-1
+          Manual area address(es):
+                47.0002
+          Routing for area address(es):
+                47.0002
+          Interfaces supported by IS-IS:
+                GigabitEthernet5 - IP - IPv6
+                GigabitEthernet3 - IP - IPv6
+                GigabitEthernet4 - IP - IPv6
+                Loopback0 - IP - IPv6
+          Redistribute:
+            static (on by default)
+          Distance for L2 CLNS routes: 110
+          RRR level: level-1
+          Generate narrow metrics: none
+          Accept narrow metrics:   none
+          Generate wide metrics:   level-1-2
+          Accept wide metrics:     level-1-2
+
+        IS-IS Router: default (0x10001)
+          System Id: 0000.0000.0000.00  IS-Type: level-1-2
+          Manual area address(es):
+          Routing for area address(es):
+          No interfaces in domain/area.
+          Redistribute:
+            static (on by default)
+          Distance for L2 CLNS routes: 110
+          RRR level: none
+          Generate narrow metrics: level-1-2
+          Accept narrow metrics:   level-1-2
+          Generate wide metrics:   none
+          Accept wide metrics:     none
+    '''}
+
     def test_empty(self):
         device = Mock(**self.empty_output)
         obj = ShowClnsProtocol(device=device)
@@ -648,6 +731,12 @@ class TestShowClnsProtocol(unittest.TestCase):
         obj = ShowClnsProtocol(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_clns_protocol_3(self):
+        device = Mock(**self.golden_output_3)
+        obj = ShowClnsProtocol(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 # =========================================================
 # Unit test for 'show clns neighbors detail'
@@ -950,7 +1039,7 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
 # Unit test for 'show clns traffic'
 # =========================================================
 class TestShowClnsTraffic(unittest.TestCase):
-    device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -1176,18 +1265,271 @@ class TestShowClnsTraffic(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output_2 = {
+        "clns": {
+            "last_clear": "never",
+            "input": 934369,
+            "output": 26509,
+            "dropped_protocol": 0,
+            "local": 0,
+            "forward": 0,
+            "discards": {
+                "hdr_syntax": 0,
+                "checksum": 0,
+                "lifetime": 0,
+                "output_cngstn": 0,
+                "no_route": 0,
+                "discard_route": 0,
+                "dst_unreachable": 0,
+                "encaps_failed": 0,
+                "nlp_unknown": 0,
+                "not_an_is": 0,
+            },
+            "options": {
+                "packets": 0, 
+                "total": 0, 
+                "bad": 0, 
+                "gqos": 0, 
+                "cngstn_exprncd": 0},
+            "segments": {
+                "segmented": 0, 
+                "failed": 0},
+            "broadcasts": {
+                "sent": 0, 
+                "rcvd": 0},
+        },
+        "echos": {
+            "rcvd": {
+                "requests": 0, 
+                "replied": 0},
+            "sent": {
+                "requests": 0, 
+                "replied": 0},
+        },
+        "packet_counters": {
+            "level": {
+                "level-all": {
+                    "esh": {
+                        "rcvd": 0, 
+                        "sent": 0},
+                    "ish": {
+                        "rcvd": 0, 
+                        "sent": 26509},
+                    "rd": {
+                        "sent": 0, 
+                        "rcvd": 0},
+                    "qcf": {
+                        "rcvd": 0, 
+                        "sent": 0},
+                }
+            }
+        },
+        "tunneling": {
+            "ip": {
+                "rcvd": 0, 
+                "sent": 0, 
+                "rcvd_dropped": 0},
+            "ipv6": {
+                "rcvd": 0, 
+                "sent": 0, 
+                "rcvd_dropped": 0},
+        },
+        "iso-igrp": {
+            "query": {
+                "rcvd": 0, 
+                "sent": 0},
+            "update": {
+                "rcvd": 0, 
+                "sent": 0},
+            "router_hello": {
+                "rcvd": 0, 
+                "sent": 0},
+            "syntax_errors": 0,
+        },
+        "tag": {
+            "null": {
+                "IS-IS": {
+                    "last_clear": "never",
+                    "hello": {
+                        "level-1": {
+                            "sent": 1093921, 
+                            "rcvd": 758008},
+                        "ptp": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                    },
+                    "lsp_sourced": {
+                        "level-1": {
+                            "new": 15, 
+                            "refresh": 5195}},
+                    "lsp_flooded": {
+                        "level-1": {
+                            "sent": 19736, 
+                            "rcvd": 26484}},
+                    "lsp_retransmissions": 0,
+                    "csnp": {
+                        "level-1": {
+                            "sent": 308588, 
+                            "rcvd": 149877}},
+                    "psnp": {
+                        "level-1": {
+                            "sent": 0, 
+                            "rcvd": 0}},
+                    "dr_election": {
+                        "level-1": 9},
+                    "spf_calculation": {
+                        "level-1": 1565},
+                    "partial_route_calculation": {
+                        "level-1": 4},
+                    "lsp_checksum_errors_received": 0,
+                    "update_process_queue_depth": "0/200",
+                    "update_process_packets_dropped": 0,
+                }
+            },
+            "default": {
+                "IS-IS": {
+                    "last_clear": "never",
+                    "hello": {
+                        "level-1": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                        "level-2": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                        "ptp": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                    },
+                    "lsp_sourced": {
+                        "level-1": {
+                            "new": 0, 
+                            "refresh": 0},
+                        "level-2": {
+                            "new": 0, 
+                            "refresh": 0},
+                    },
+                    "lsp_flooded": {
+                        "level-1": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                        "level-2": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                    },
+                    "lsp_retransmissions": 0,
+                    "csnp": {
+                        "level-1": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                        "level-2": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                    },
+                    "psnp": {
+                        "level-1": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                        "level-2": {
+                            "sent": 0, 
+                            "rcvd": 0},
+                    },
+                    "dr_election": {
+                        "level-1": 0, 
+                        "level-2": 0},
+                    "spf_calculation": {
+                        "level-1": 0, 
+                        "level-2": 0},
+                    "partial_route_calculation": {
+                        "level-1": 0, 
+                        "level-2": 0},
+                    "lsp_checksum_errors_received": 0,
+                    "update_process_queue_depth": "0/200",
+                    "update_process_packets_dropped": 0,
+                }
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        #show clns traffic
+        CLNS:  Time since last clear: never
+        CLNS & ESIS Output: 26509, Input: 934369
+        Dropped Protocol not enabled on interface: 0
+        CLNS Local: 0, Forward: 0
+        CLNS Discards:
+          Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
+          No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
+          NLP Unknown: 0, Not an IS: 0
+        CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
+        CLNS Segments:  Segmented: 0, Failed: 0
+        CLNS Broadcasts: sent: 0, rcvd: 0
+        Echos: Rcvd 0 requests, 0 replies
+              Sent 0 requests, 0 replies
+        ESIS(sent/rcvd): ESHs: 0/0, ISHs: 26509/0, RDs: 0/0, QCF: 0/0
+        Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
+        Tunneling dropped (rcvd) IP/IPV6:  0
+        ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
+        ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
+        ISO-IGRP Syntax Errors: 0
+
+        Tag null:
+        IS-IS: Time since last clear: never
+        IS-IS: Level-1 Hellos (sent/rcvd): 1093921/758008
+        IS-IS: PTP Hellos     (sent/rcvd): 0/0
+        IS-IS: Level-1 LSPs sourced (new/refresh): 15/5195
+        IS-IS: Level-1 LSPs flooded (sent/rcvd): 19736/26484
+        IS-IS: LSP Retransmissions: 0
+        IS-IS: Level-1 CSNPs (sent/rcvd): 308588/149877
+        IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+        IS-IS: Level-1 DR Elections: 9
+        IS-IS: Level-1 SPF Calculations: 1565
+        IS-IS: Level-1 Partial Route Calculations: 4
+        IS-IS: LSP checksum errors received: 0
+        IS-IS: Update process queue depth: 0/200
+        IS-IS: Update process packets dropped: 0
+
+        Tag default:
+        IS-IS: Time since last clear: never
+        IS-IS: Level-1 Hellos (sent/rcvd): 0/0
+        IS-IS: Level-2 Hellos (sent/rcvd): 0/0
+        IS-IS: PTP Hellos     (sent/rcvd): 0/0
+        IS-IS: Level-1 LSPs sourced (new/refresh): 0/0
+        IS-IS: Level-2 LSPs sourced (new/refresh): 0/0
+        IS-IS: Level-1 LSPs flooded (sent/rcvd): 0/0
+        IS-IS: Level-2 LSPs flooded (sent/rcvd): 0/0
+        IS-IS: LSP Retransmissions: 0
+        IS-IS: Level-1 CSNPs (sent/rcvd): 0/0
+        IS-IS: Level-2 CSNPs (sent/rcvd): 0/0
+        IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+        IS-IS: Level-2 PSNPs (sent/rcvd): 0/0
+        IS-IS: Level-1 DR Elections: 0
+        IS-IS: Level-2 DR Elections: 0
+        IS-IS: Level-1 SPF Calculations: 0
+        IS-IS: Level-2 SPF Calculations: 0
+        IS-IS: Level-1 Partial Route Calculations: 0
+        IS-IS: Level-2 Partial Route Calculations: 0
+        IS-IS: LSP checksum errors received: 0
+        IS-IS: Update process queue depth: 0/200
+        IS-IS: Update process packets dropped: 0
+    '''}
+
     def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        obj = ShowClnsTraffic(device=self.device1)
+        device = Mock(**self.empty_output)
+        obj = ShowClnsTraffic(device=device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden_clns_protocol(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowClnsTraffic(device=self.device)
+    def test_golden_clns_traffic_1(self):
+        device = Mock(**self.golden_output)
+        obj = ShowClnsTraffic(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_clns_traffic_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowClnsTraffic(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
