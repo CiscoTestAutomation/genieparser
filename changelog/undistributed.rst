@@ -290,8 +290,44 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+    * Updated ShowStaticTopologyDetail:
+        * Support more varied output
+* NXOS:
+    * Updated ShowIpRoute for:
+        * show ip route {route} {protocol} interface {interface} vrf {vrf}
+        * show ip route {route} {protocol} interface {interface}
+        * show ip route {protocol} interface {interface} vrf {vrf}
+        * show ip route {route} interface {interface} vrf {vrf}
+        * show ip route {route} {protocol}
+        * show ip route {protocol} interface {interface}
+        * show ip route {protocol} vrf {vrf}
+        * show ip route {route} interface {interface}
+        * show ip route {route} vrf {vrf}
+        * show ip route interface {interface} vrf {vrf}
+        * show ip route {protocol}
+        * show ip route {route}
+        * show ip route interface {interface}
+        * show ip route vrf {vrf}
+        * show ip route vrf all
+        * show ip route
+    * Updated ShowIpv6Route for:
+        * show ipv6 route {route} {protocol} interface {interface} vrf {vrf}
+        * show ipv6 route {route} {protocol} interface {interface}
+        * show ipv6 route {protocol} interface {interface} vrf {vrf}
+        * show ipv6 route {route} interface {interface} vrf {vrf}
+        * show ipv6 route {route} {protocol}
+        * show ipv6 route {protocol} interface {interface}
+        * show ipv6 route {protocol} vrf {vrf}
+        * show ipv6 route {route} interface {interface}
+        * show ipv6 route {route} vrf {vrf}
+        * show ipv6 route interface {interface} vrf {vrf}
+        * show ipv6 route {protocol}
+        * show ipv6 route {route}
+        * show ipv6 route interface {interface}
+        * show ipv6 route vrf {vrf}
+        * show ipv6 route vrf all
+        * show ipv6 route
         * Updated regex
-* NXOS
     * Updated ShowRoutingVrfAll:
         * To match non-best routes
 
