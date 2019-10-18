@@ -136,6 +136,66 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         end-set
     '''}
 
+    device_output = {'execute.return_value': '''
+        +++ genie-router: executing command 'show rpl prefix-set' +++
+        show rpl prefix-set
+        
+        Mon Oct  7 16:22:51.776 EDT
+        Listing for all Prefix Set objects
+        
+        prefix-set name1
+          192.168.131.0/24,
+        end-set
+        !
+        prefix-set name2
+          172.16.106.0/20 eq 32,
+          10.246.13.0/24 eq 32,
+        end-set
+        !
+        prefix-set name3
+          10.19.196.5
+        end-set
+        !
+    '''}
+    parsed_output = {
+        'prefix_set_name': {
+            'name1': {
+                'prefix_set_name': 'name1',
+                'prefixes': {
+                    '192.168.131.0/24 24..24': {
+                        'masklength_range': '24..24',
+                        'prefix': '192.168.131.0/24',
+                    },
+                },
+                'protocol': 'ipv4',
+            },
+            'name2': {
+                'prefix_set_name': 'name2',
+                'prefixes': {
+                    '10.246.13.0/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '10.246.13.0/24',
+                    },
+                    '172.16.106.0/20 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '172.16.106.0/20',
+                    },
+                },
+                'protocol': 'ipv4',
+            },
+            'name3': {
+                'prefix_set_name': 'name3',
+                'prefixes': {
+                    '10.19.196.5 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '10.19.196.5',
+                    },
+                },
+                'protocol': 'ipv4',
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRplPrefixSet(device=self.device)
@@ -153,6 +213,12 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         obj = ShowRplPrefixSet(device=self.device)
         parsed_output = obj.parse(name='test')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_2(self):
+        self.device = Mock(**self.device_output)
+        obj = ShowRplPrefixSet(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

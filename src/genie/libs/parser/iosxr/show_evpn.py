@@ -273,7 +273,6 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
 
         # Multi-paths Internal label: 24002
         p4 = re.compile(r'^Multi-paths +Internal +label: +(?P<internal>(\d+))$')
-        
         # Pathlists:
         # MAC     10.70.20.20                              24212
         # EAD/ES  10.10.10.10                              0
@@ -532,6 +531,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p12 = re.compile(r'^Remote +Encapsulation +: +(?P<remote_encapsulation>\S+)$')
 
         # ESI Port Key                            : 0
+        # ESI Port Key                            : bef5
         p13 = re.compile(r'^ESI +Port +Key +: +(?P<esi_port_key>\w+)$')
 
         # Source                                  : Local
@@ -732,6 +732,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 continue
 
             # ESI Port Key                            : 0
+            # ESI Port Key                            : bef5
             m = p13.match(line)
             if m:
                 group = m.groupdict()
