@@ -3268,6 +3268,72 @@ class test_show_ipv6_route(unittest.TestCase):
         No IP Route Table for VRF "VRF3"
     '''}
 
+    golden_parsed_output_4 = {
+        'vrf': {
+            'VRF1': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:1:1:1::1/128': {
+                                'route': '2001:1:1:1::1/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'metric': 0,
+                                'route_preference': 200,
+                                'process_id': '65000',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:feb2:c76f',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.390',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': 'fe80::f816:3eff:feb2:c76f',
+                                            'source_protocol': 'rip',
+                                            'source_protocol_status': 'rip',
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.420',
+                                        },
+                                        3: {
+                                            'index': 3,
+                                            'next_hop': 'fe80::f816:3eff:feb2:c76f',
+                                            'source_protocol': 'bgp',
+                                            'source_protocol_status': 'internal',
+                                            'updated': '2w0d',
+                                            'outgoing_interface': 'Ethernet1/2.390',
+                                        },
+                                    },
+                                },
+                                'source_protocol': 'bgp',
+                                'source_protocol_status': 'internal',
+                                'hidden': True,
+                                'tag': 65000,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        IPv6 Routing Table for VRF "VRF1"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+
+        2001:1:1:1::1/128, ubest/mbest: 1/0
+            *via fe80::f816:3eff:feb2:c76f, Eth1/2.390, [90/2848], 2w0d, eigrp-test, internal
+            via fe80::f816:3eff:feb2:c76f, Eth1/2.420, [120/2], 2w0d, rip-1, rip
+            via fe80::f816:3eff:feb2:c76f, Eth1/2.390, [200/0], 2w0d, bgp-65000, internal, tag 65000 (hidden)
+    '''}
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -3293,6 +3359,14 @@ class test_show_ipv6_route(unittest.TestCase):
         obj = ShowIpv6Route(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+    
+    def test_show_ipv6_route_3(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpv6Route(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1',
+                                  route='2001:2:2:2::2/128',
+                                  protocol='eigrp')
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()

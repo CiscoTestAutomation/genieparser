@@ -244,7 +244,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 snpa = m.groupdict()['snpa']
                 state = m.groupdict()['state']
                 holdtime = m.groupdict()['holdtime']
-                type = m.groupdict()['type']
+                type_ = m.groupdict()['type']
                 ietf_nsf = m.groupdict()['ietf_nsf']
 
                 interface_dict = vrf_dict.setdefault('interfaces', {}).setdefault(interface_name, {})
@@ -252,7 +252,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 system_dict['snpa'] = snpa
                 system_dict['state'] = state
                 system_dict['holdtime'] = holdtime
-                system_dict['type'] = type
+                system_dict['type'] = type_
                 system_dict['ietf_nsf'] = ietf_nsf
 
                 continue

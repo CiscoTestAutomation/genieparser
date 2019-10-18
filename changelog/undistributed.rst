@@ -207,6 +207,8 @@
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
         * update schema and add regex
         * to support more varied tlv blocks
+    * Updated ShowOspfMplsTrafficEngLink:
+        * updated schema and regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -450,6 +452,9 @@
     * Optimization of ShowVersion moving regex compilation out of loop
 * IOSXE
     * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXR
+    * Updated ShowVersion :
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -468,7 +473,6 @@
         * show rpl prefix-set <name>
     * Updated ShowRplRoutePolicy regex for:
         * show rpl route-policy
-
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -499,6 +503,7 @@
         - modified regex
         - added schema
         - added unittest
+        - updated schema, regex, and unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
