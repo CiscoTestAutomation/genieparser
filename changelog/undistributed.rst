@@ -27,7 +27,8 @@
         * ShowClnsIsNeighborsDetail
     * Made some keys optionals in schema for ShowClnsTraffic
     * Saving as empty instance when instance not present in output on:
-        * show clns protocol    
+        * show clns protocol
+    * Updates ShowIsisHostname to support outputs without hostnames
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
