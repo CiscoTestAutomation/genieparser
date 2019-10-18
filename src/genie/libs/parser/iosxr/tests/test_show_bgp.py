@@ -1,5 +1,3 @@
-#REMOVE
-import genie.gre
 
 # Python
 import unittest
@@ -6740,8 +6738,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                      'status_codes': '*>i',
                                                                                                                                      'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:2'},
-                                                                 'vpnv4 unicast RD 300:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'10.169.1.0/24': {'index': {1: {'locprf': '100',
+                                                                 'vpnv4 unicast RD 300:1': {'prefix': {'10.169.1.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
                                                                                                                                      'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
@@ -6764,8 +6761,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                      'status_codes': '*i',
                                                                                                                                      'weight': '0'}}}},
                                                                                             'route_distinguisher': '300:1'},
-                                                                 'vpnv4 unicast RD 400:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'10.9.2.0/24': {'index': {1: {'locprf': '100',
+                                                                 'vpnv4 unicast RD 400:1': {'prefix': {'10.9.2.0/24': {'index': {1: {'locprf': '100',
                                                                                                                                      'metric': '2219',
                                                                                                                                      'next_hop': '10.64.4.4',
                                                                                                                                      'origin_codes': 'e',
@@ -6935,8 +6931,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                         'status_codes': '*>i',
                                                                                                                                         'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:2'},
-                                                                 'vpnv6 unicast RD 300:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                 'vpnv6 unicast RD 300:1': {'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -6981,8 +6976,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                         'status_codes': '*i',
                                                                                                                                         'weight': '0'}}}},
                                                                                             'route_distinguisher': '300:1'},
-                                                                 'vpnv6 unicast RD 400:1': {'default_vrf': 'none',
-                                                                                            'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
+                                                                 'vpnv6 unicast RD 400:1': {'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7124,11 +7118,9 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
             parsed_output = obj.parse(vrf_type='all')
 
     def test_golden1(self):
-        import re ; re.reset()
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
-        print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
