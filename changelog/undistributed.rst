@@ -414,6 +414,9 @@
     * Optimization of ShowVersion moving regex compilation out of loop
 * IOSXE
     * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXR
+    * Updated ShowVersion :
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 Routing
