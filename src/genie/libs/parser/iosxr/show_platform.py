@@ -68,7 +68,7 @@ class ShowVersion(ShowVersionSchema):
         show_version_dict = {}
         
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
             
             # Cisco IOS XR Software, Version 6.3.1.15I
             # Cisco IOS XR Software, Version 6.1.4.10I[Default]
@@ -99,27 +99,28 @@ class ShowVersion(ShowVersionSchema):
 
             # cisco IOS-XRv 9000 () processor
             p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
-                               ' +\(\) +processor$')
+                            r' +\(\) +processor$')
             m = p4.match(line)
+
             if m:
                 show_version_dict['device_family'] = \
                     str(m.groupdict()['device_family'])
                 continue
 
             # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
-            p5 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\s]+)'
-                               ' +Series +\((?P<processor>[a-zA-Z0-9\s]+)\)'
-                               ' +processor +with'
-                               ' +(?P<processor_memory_bytes>[0-9A-Z]+) +bytes'
-                               ' +of +memory.$')
+            # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+            p5 = re.compile(r'^cisco +(?P<device_family>[a-zA-Z0-9\/\-\s]+)'
+                            r'(?:( +Series))? +\((?P<processor>[a-zA-Z0-9\s]+)\)'
+                            r' +processor +with +(?P<processor_memory_bytes>[0-9A-Z]+)'
+                            r' +bytes +of +memory.$')
             m = p5.match(line)
             if m:
                 show_version_dict['device_family'] = \
-                    str(m.groupdict()['device_family'])
-                show_version_dict['processor'] = str(m.groupdict()['processor'])
+                    m.groupdict()['device_family']
+                show_version_dict['processor'] = m.groupdict()['processor']
                 show_version_dict['processor_memory_bytes'] = \
-                    str(m.groupdict()['processor_memory_bytes'])
-                show_version_dict['main_mem'] = str(line).strip()
+                    m.groupdict()['processor_memory_bytes']
+                show_version_dict['main_mem'] = line
                 continue
 
             # Configuration register on node 0/RSP0/CPU0 is 0x1922

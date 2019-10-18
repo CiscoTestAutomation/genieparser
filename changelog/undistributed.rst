@@ -404,6 +404,9 @@
     * Optimization of ShowVersion moving regex compilation out of loop
 * IOSXE
     * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXR
+    * Updated ShowVersion :
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -450,6 +453,7 @@
         - modified regex
         - added schema
         - added unittest
+        - updated schema, regex, and unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
