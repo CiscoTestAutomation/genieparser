@@ -147,6 +147,9 @@
         - modified regex
         - added schema
         - added unittest
+    * Updated ShowBgpInstanceAllAll:
+        - modified regex
+        - added unittest
     * Updated ShowBgpL2vpnEvpnAdvertised:
         - modified regex
         - added schema
