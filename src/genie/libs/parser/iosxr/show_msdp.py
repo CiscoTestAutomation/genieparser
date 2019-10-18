@@ -98,12 +98,12 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
             out = output
 
         # MSDP Peer 202.202.33.3 (?), AS 4134
-        r1 = re.compile(r'\s*MSDP\sPeer\s*(?P<peer>\S+)\s*\(\?\)\,\s*'
+        r1 = re.compile(r'MSDP\sPeer\s*(?P<peer>\S+)\s*\(\?\)\,\s*'
                         r'AS\s*(?P<peer_as>\d+)')
 
         # Description: R1
         # Description:
-        r2 = re.compile(r'\s*Description\s*:\s*(?:(?P<description>\S+))?$')
+        r2 = re.compile(r'Description\s*:\s*(?:(?P<description>\S+))?$')
 
         # State: Inactive, Resets: 999, Connection Source: 202.202.11.1
         r3 = re.compile(
@@ -112,41 +112,41 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
             r'\s*Connection\s*Source:\s*(?P<connect_source_address>\S+)')
 
         # Uptime(Downtime): 00:00:09, SA messages received: 0
-        r4 = re.compile(r'\s*Uptime\(Downtime\):\s*(?P<elapsed_time>\S+)\,\s*'
+        r4 = re.compile(r'Uptime\(Downtime\):\s*(?P<elapsed_time>\S+)\,\s*'
                         r'SA messages received:\s*(?P<sa_message_in>\d+)')
 
         # TLV messages sent/received: 3/0
-        r5 = re.compile(r'\s*TLV messages\ssent\/received:\s*'
+        r5 = re.compile(r'TLV messages\ssent\/received:\s*'
                         r'(?P<tlv_message_sent>\d+)\/'
                         r'(?P<tlv_message_received>\d+)$')
 
         # Output messages discarded: 0
-        r6 = re.compile(r'\s*Output\smessages\sdiscarded:\s*'
+        r6 = re.compile(r'Output\smessages\sdiscarded:\s*'
                         r'(?P<output_message_discarded>\d+)')
 
         # Connection and counters cleared 00:01:25 ago
-        r7 = re.compile(r'\s*Connection\s*and\s*counters\s*cleared\s*'
+        r7 = re.compile(r'Connection\s*and\s*counters\s*cleared\s*'
                         r'(?P<conn_count_cleared>\S+)\s+ago$')
 
         # Input (S,G) filter: none
         # Input RP filter: none
-        r8 = re.compile(r'\s*Input\s*(?P<filter_in>\S+)\s*'
+        r8 = re.compile(r'Input\s*(?P<filter_in>\S+)\s*'
                         r'filter:\s*(?P<filter>\S+)$')
 
         # Output (S,G) filter: none
         # Output RP filter: none
-        r9 = re.compile(r'\s*Output\s*(?P<filter_out>\S+)\s*filter:'
+        r9 = re.compile(r'Output\s*(?P<filter_out>\S+)\s*filter:'
                         r'\s*(?P<filter>\S+)$')
 
         # Input filter: none
-        r10 = re.compile(r'\s*Input\s*filter:\s*(?P<input_filter>\S+)')
+        r10 = re.compile(r'Input\s*filter:\s*(?P<input_filter>\S+)')
 
         # Sending SA-Requests to peer: disabled
-        r11 = re.compile(r'\s*Sending\s*SA-Requests\s*to\s*peer:'
+        r11 = re.compile(r'Sending\s*SA-Requests\s*to\s*peer:'
                          r' +(?P<sa_request_to_peer>\S+)')
 
         # Password: None
-        r12 = re.compile(r'\s*Password:\s*'
+        r12 = re.compile(r'Password:\s*'
                          r'(?P<password>\S+)')
 
         # Peer ttl threshold: 2
@@ -171,7 +171,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
                          r' +(?P<oper_downs>\d+)')
 
         # NSR-Uptime(NSR-Downtime): 1d02h
-        r18 = re.compile(r'\s*NSR-Uptime\(NSR-Downtime\):'
+        r18 = re.compile(r'NSR-Uptime\(NSR-Downtime\):'
                          r' +(?P<up_down_time>\S+)')
 
         parsed_dict = {}
@@ -479,9 +479,9 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         # Table Count (Active/Total) : 2/2
         r1 = re.compile(r'^VRF\sID\s+:\s(?P<vrf_id>\S+)')
 
-        r2 = re.compile(r'\s*Table\sID\s+:\s(?P<table_id>\S+)')
+        r2 = re.compile(r'Table\sID\s+:\s(?P<table_id>\S+)')
 
-        r3 = re.compile(r'\s*Table\sCount\s*\(Active\/Total\)\s*:\s*'
+        r3 = re.compile(r'Table\sCount\s*\(Active\/Total\)\s*:\s*'
                         r'(?P<table_count_active>\d+)\/'
                         r'(?P<table_count_total>\d+)')
 
@@ -494,18 +494,18 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         # SA Filter Out       :
         # RP Filter In        :
         # RP Filter Out       :
-        r4 = re.compile(r'\s*TTL\s+:\s(?P<ttl>\d+)')
+        r4 = re.compile(r'TTL\s+:\s(?P<ttl>\d+)')
 
-        r5 = re.compile(r'\s*Maximum\s+SAs\s+:\s(?P<maximum_sa>\d+)')
+        r5 = re.compile(r'Maximum\s+SAs\s+:\s(?P<maximum_sa>\d+)')
 
-        r6 = re.compile(r'\s*Keepalive Period\s+:\s(?P<keepalive_period>\d+)')
+        r6 = re.compile(r'Keepalive Period\s+:\s(?P<keepalive_period>\d+)')
 
         r7 = re.compile(
             r'\s*Peer\s+Timeout\s+Period\s+:\s(?P<peer_timeout_period>\d+)')
 
-        r8 = re.compile(r'\s*Connect Source\s+:\s(?:(?P<connect_source>\S+))?')
+        r8 = re.compile(r'Connect Source\s+:\s(?:(?P<connect_source>\S+))?')
 
-        r9 = re.compile(r'\s*SA\s+Filter\s+In\s+:\s(?:(?P<sa_filter_in>\S+))?')
+        r9 = re.compile(r'SA\s+Filter\s+In\s+:\s(?:(?P<sa_filter_in>\S+))?')
 
         r10 = re.compile(
             r'\s*SA\s+Filter\s+Out\s+:\s(?:(?P<sa_filter_out>\S+))?')
@@ -531,7 +531,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         r15 = re.compile(
             r'\s*Default\sPeer\sAddress\s*:\s(?P<default_peer_address>\S+)')
 
-        r16 = re.compile(r'\s*SA\sHoldtime\s+:\s(?P<sa_holdtime>\d+)')
+        r16 = re.compile(r'SA\sHoldtime\s+:\s(?P<sa_holdtime>\d+)')
 
         r17 = re.compile(
             r'\s*Allow\sEncaps\sCount\s*:\s(?P<allow_encaps_count>\d+)')
@@ -559,21 +559,21 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         # With no changes      : 0
         # (*,G) routes         : 26
         # (S,G) routes         : 447
-        r23 = re.compile(r'\s*Total\supdates\s+:\s(?P<total_updates>\d+)')
+        r23 = re.compile(r'Total\supdates\s+:\s(?P<total_updates>\d+)')
         r24 = re.compile(
             r'\s*With\sno\schanges\s+:\s(?P<with_no_changes>\d+)\s*')
-        r25 = re.compile(r'\s*\(\*,G\)\sroutes\s+:\s(?P<g_routes>\d+)')
-        r26 = re.compile(r'\s*\(S,G\)\sroutes\s+:\s(?P<sg_routes>\d+)')
+        r25 = re.compile(r'\(\*,G\)\sroutes\s+:\s(?P<g_routes>\d+)')
+        r26 = re.compile(r'\(S,G\)\sroutes\s+:\s(?P<sg_routes>\d+)')
 
         # Invalid group        : 0
         # Invalid group length : 0
         # Invalid source       : 0
         # Auto-RP Address      : 2
-        r27 = re.compile(r'\s*Invalid\sgroup\s+:\s(?P<invalid_group>\d+)')
+        r27 = re.compile(r'Invalid\sgroup\s+:\s(?P<invalid_group>\d+)')
         r28 = re.compile(
             r'\s*Invalid\sgroup\slength\s+:\s(?P<invalid_group_length>\d+)')
-        r29 = re.compile(r'\s*Invalid\ssource\s+:\s(?P<invalid_source>\d+)')
-        r30 = re.compile(r'\s*Auto\-RP\sAddress\s+:\s(?P<auto_rp_address>\d+)')
+        r29 = re.compile(r'Invalid\ssource\s+:\s(?P<invalid_source>\d+)')
+        r30 = re.compile(r'Auto\-RP\sAddress\s+:\s(?P<auto_rp_address>\d+)')
 
         parsed_dict = {}
         for line in out.splitlines():
@@ -843,17 +843,20 @@ class ShowMsdpSummarySchema(MetaParser):
                 'maximum_external_sa_global': int,
                 'current_external_active_sa': int,
                 'peer_status': {
-                    'address': str,
-                    'as': int,
-                    'state': str,
-                    'uptime_downtime': str,
-                    'reset_count': int,
-                    'name': str,
-                    'active_sa_cnt': int,
-                    'cfg_max_ext_sas': int,
-                    'tlv': {
-                        'receive': int,
-                        'sent': int,
+                    'address': {
+                        Any(): {
+                            'as': int,
+                            'state': str,
+                            'uptime_downtime': str,
+                            'reset_count': int,
+                            'name': str,
+                            'active_sa_cnt': int,
+                            'cfg_max_ext_sas': int,
+                            'tlv': {
+                                'receive': int,
+                                'sent': int,
+                            }
+                        }
                     }
                 }
             }
@@ -882,24 +885,22 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
             out = output
 
         # Maximum External SA's Global : 20000
-        r1 = re.compile(r'\s*Maximum\sExternal\sSA\'s\sGlobal\s:\s(?P<maximum_external_sa_global>\d+)')
+        r1 = re.compile(r'Maximum\sExternal\sSA\'s\sGlobal\s:'
+                        r'\s(?P<maximum_external_sa_global>\d+)')
 
         # Current External Active SAs : 0
-        r2 = re.compile(r'\s*Current\sExternal\sActive\sSAs\s:\s(?P<current_external_active_sa>\d+)')
+        r2 = re.compile(r'Current\sExternal\sActive\sSAs'
+                        r'\s:\s(?P<current_external_active_sa>\d+)')
 
         # Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
         #                                       Downtime  Count Name    SA Cnt Ext.SAs recv/sent
-        # 4.4.4.4         200          Connect  20:35:48  0     R4       0      444      0/0
-        r3 = re.compile(r'\s*(?P<address>\S+)\s*'
-                        r'(?P<as>\d+)\s*'
-                        r'(?P<state>\S+)\s*'
-                        r'(?P<uptime_downtime>\S+)\s*'
-                        r'(?P<reset_count>\d+)\s*'
-                        r'(?P<name>\S+)\s*'
-                        r'(?P<active_sa_cnt>\d+)\s*'
-                        r'(?P<cfg_max_ext_sas>\d+)\s*'
-                        r'(?P<receive>\d+)\s*'
-                        r'(?P<sent>\d+)')
+        # 4.4.4.4         200          Connect  20:35:48  0     R4       0     444      0/0
+        # 11.11.11.11     0            Listen   18:14:53  0     ?        0      0       0/0
+        r3 = re.compile(r'(?P<address>\S+)\s*(?P<as>\d+)'
+                        r'\s*(?P<state>\S+)\s*(?P<uptime_downtime>\S+)'
+                        r'\s*(?P<reset_count>\d+)\s*(?P<name>\S+)'
+                        r'\s*(?P<active_sa_cnt>\d+)\s*(?P<cfg_max_ext_sas>\d+)'
+                        r'\s*(?P<receive>\d+)\/(?P<sent>\d+)')
 
         parsed_dict = {}
 
@@ -912,31 +913,41 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
                 group_dict = result.groupdict()
                 if not vrf:
                     vrf = 'default'
-                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
-                vrf_dict['maximum_external_sa_global'] = int(group_dict['maximum_external_sa_global'])
+                vrf_dict = parsed_dict.setdefault(
+                    'vrf', {}).setdefault(vrf, {})
+                vrf_dict['maximum_external_sa_global'] = int(
+                    group_dict['maximum_external_sa_global'])
                 continue
 
             # Current External Active SAs : 0
             result = r2.match(line)
             if result:
                 group_dict = result.groupdict()
-                vrf_dict['current_external_active_sa'] = int(group_dict['current_external_active_sa'])
+                vrf_dict['current_external_active_sa'] = int(
+                    group_dict['current_external_active_sa'])
                 continue
 
-            # 4.4.4.4         200          Connect  20:35:48  0     R4       0      444      0/0
+            # 4.4.4.4         200          Connect  20:35:48  0     R4      0      444      0/0
             result = r3.match(line)
             if result:
+                # import pdb
+                # pdb.set_trace()
                 group_dict = result.groupdict()
                 summary_dict = vrf_dict.setdefault('peer_status', {})
-                str_name_list = ['address', 'state', 'uptime_downtime',  'name']
-                int_name_list = ['as', 'reset_count','active_sa_cnt','cfg_max_ext_sas']
+                address_dict = summary_dict.setdefault('address', {}).setdefault(group_dict['address'], {})
+                str_name_list = ['state', 'uptime_downtime', 'name']
+                int_name_list = [
+                    'as',
+                    'reset_count',
+                    'active_sa_cnt',
+                    'cfg_max_ext_sas']
 
                 for i in str_name_list:
-                    summary_dict[i] = group_dict[i]
+                    address_dict[i] = group_dict[i]
                 for i in int_name_list:
-                    summary_dict[i] = int(group_dict[i])
+                    address_dict[i] = int(group_dict[i])
 
-                tlv_dict = summary_dict.setdefault('tlv', {})
+                tlv_dict = address_dict.setdefault('tlv', {})
                 tlv_dict['receive'] = int(group_dict['receive'])
                 tlv_dict['sent'] = int(group_dict['sent'])
                 continue

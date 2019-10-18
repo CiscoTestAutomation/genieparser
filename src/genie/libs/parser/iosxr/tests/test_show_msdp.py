@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary
 
 
-class test_show_msdp_peer(unittest.TestCase):
+class TestShowMsdpPeer(unittest.TestCase):
     """
         Commands:
         show msdp peer
@@ -194,7 +194,7 @@ class test_show_msdp_peer(unittest.TestCase):
         self.assertEqual(parsed_output, self.expected_output_2)
 
 
-class test_show_msdp_context(unittest.TestCase):
+class TestShowMsdpContext(unittest.TestCase):
     """
         Commands:
         show msdp context
@@ -380,14 +380,14 @@ class test_show_msdp_context(unittest.TestCase):
       Auto-RP Address      : 0
     '''}
 
-    def test_show_msdp_peer_empty(self):
+    def test_show_msdp_context_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowMsdpContext(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_msdp_peer_1(self):
+    def test_show_msdp_context_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
         obj = ShowMsdpContext(device=self.device)
@@ -395,7 +395,7 @@ class test_show_msdp_context(unittest.TestCase):
 
         self.assertEqual(parsed_output, self.expected_output_1)
 
-    def test_show_msdp_peer_2(self):
+    def test_show_msdp_context_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowMsdpContext(device=self.device)
@@ -404,7 +404,7 @@ class test_show_msdp_context(unittest.TestCase):
         self.assertEqual(parsed_output, self.expected_output_2)
 
 
-class test_show_msdp_summary(unittest.TestCase):
+class TestShowMsdpSummary(unittest.TestCase):
     """
         Commands:
         show msdp summary
@@ -416,21 +416,42 @@ class test_show_msdp_summary(unittest.TestCase):
 
     expected_output_1 = {
         'vrf': {
-            'default': {
+            'VRF1': {
                 'current_external_active_sa': 0,
                 'maximum_external_sa_global': 20000,
                 'peer_status': {
-                    'active_sa_cnt': 1,
-                    'address': '1.1.1.1',
-                    'as': 0,
-                    'cfg_max_ext_sas': 0,
-                    'name': 'R',
-                    'reset_count': 0,
-                    'state': 'Listen',
-                    'tlv': {
-                        'receive': 0,
-                        'sent': 0},
-                    'uptime_downtime': '18:25:02'}}}}
+                    'address': {
+                        '1.1.1.1': {
+                            'active_sa_cnt': 0,
+                            'as': 0,
+                            'cfg_max_ext_sas': 0,
+                            'name': 'R1',
+                            'reset_count': 0,
+                            'state': 'Listen',
+                            'tlv': {
+                                'receive': 0,
+                                'sent': 0,
+                            },
+                            'uptime_downtime': '18:25:02',
+                        },
+                        '11.11.11.11': {
+                            'active_sa_cnt': 0,
+                            'as': 0,
+                            'cfg_max_ext_sas': 0,
+                            'name': '?',
+                            'reset_count': 0,
+                            'state': 'Listen',
+                            'tlv': {
+                                'receive': 0,
+                                'sent': 0,
+                            },
+                            'uptime_downtime': '18:14:53',
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     device_output_1 = {'execute.return_value': '''
     Router# show msdp summary
@@ -447,56 +468,60 @@ class test_show_msdp_summary(unittest.TestCase):
 
     expected_output_2 = {
         'vrf': {
-            'VRF1': {
+            'default': {
                 'current_external_active_sa': 0,
                 'maximum_external_sa_global': 20000,
                 'peer_status': {
-                    'active_sa_cnt': 1,
-                    'address': '1.1.1.1',
-                    'as': 0,
-                    'cfg_max_ext_sas': 0,
-                    'name': 'R',
-                    'reset_count': 0,
-                    'state': 'Listen',
-                    'tlv': {
-                        'receive': 0,
-                        'sent': 0},
-                    'uptime_downtime': '18:25:02'}}}}
+                    'address': {
+                        '4.4.4.4': {
+                            'active_sa_cnt': 0,
+                            'as': 200,
+                            'cfg_max_ext_sas': 444,
+                            'name': 'R4',
+                            'reset_count': 0,
+                            'state': 'Connect',
+                            'tlv': {
+                                'receive': 0,
+                                'sent': 0,
+                            },
+                            'uptime_downtime': '20:35:48',
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     device_output_2 = {'execute.return_value': '''
-    Router# show msdp vrf VRF1 context
-
+        Fri Jun 16 15:47:02.865 UTC
+    Out of Resource Handling Enabled
     Maximum External SA's Global : 20000
     Current External Active SAs : 0
-
+    
     MSDP Peer Status Summary
      Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
                                            Downtime  Count Name    SA Cnt Ext.SAs recv/sent
-     1.1.1.1         0            Listen   18:25:02  0     R1       0      0        0/0
-     11.11.11.11     0            Listen   18:14:53  0     ?        0      0        0/0
+     4.4.4.4         200          Connect  20:35:48  0     R4       0      444      0/0
     '''}
-
-    def test_show_msdp_peer_empty(self):
+    def test_show_msdp_summary_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowMsdpSummary(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_msdp_peer_1(self):
+    def test_show_msdp_summary_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
         obj = ShowMsdpSummary(device=self.device)
-        parsed_output = obj.parse()
-
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.expected_output_1)
 
-    def test_show_msdp_peer_2(self):
+    def test_show_msdp_summary_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowMsdpSummary(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1')
-
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output_2)
 
 
