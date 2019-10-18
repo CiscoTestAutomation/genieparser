@@ -25,6 +25,7 @@
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Made some keys optionals in schema for ShowClnsTraffic
     * Saving as empty instance when instance not present in output on:
         * show clns protocol
     * Updates ShowIsisHostname to support outputs without hostnames
@@ -524,6 +525,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Update schema for ShowPlatformHardware to support more varied output
+* IOSXR
+    * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
                                 ACL
@@ -584,6 +587,11 @@
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
+--------------------------------------------------------------------------------
+                                Protocols
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols tu sopport more outputs
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
