@@ -66,14 +66,44 @@ class ShowVersion(ShowVersionSchema):
         
         # Init vars
         show_version_dict = {}
+
+        # regex patterns
+
+        # Cisco IOS XR Software, Version 6.3.1.15I
+        # Cisco IOS XR Software, Version 6.1.4.10I[Default]
+        p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
+                        ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?$')
+
+        # System uptime is 1 week, 1 day, 5 hours, 47 minutes
+        # PE1 uptime is 3 hours, 11 minutes
+        p2 = re.compile(r'\s*.* +uptime +is +(?P<uptime>[a-zA-Z0-9\s\,]+)$')
+
+        # System image file is "disk0:asr9k-os-mbi-6.1.4.10I/0x100305/mbiasr9k-rsp3.vm"
+        p3 = re.compile(r'\s*System +image +file +is'
+                        ' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
+
+        # cisco IOS-XRv 9000 () processor
+        p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
+                        r' +\(\) +processor$')
+
+        # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
+        # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+        p5 = re.compile(r'^cisco +(?P<device_family>[a-zA-Z0-9\/\-\s]+)'
+                        r'(?:( +Series))? +\((?P<processor>[a-zA-Z0-9\s]+)\)'
+                        r' +processor +with +(?P<processor_memory_bytes>[0-9A-Z]+)'
+                        r' +bytes +of +memory.$')
+
+        # Configuration register on node 0/RSP0/CPU0 is 0x1922
+        p6 = re.compile(r'\s*Configuration +register +on +node'
+                        ' +(?P<node>[A-Z0-9\/]+) +is'
+                        ' +(?P<config_register>[x0-9]+)$')
+
+        # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+        p7 = re.compile(r'\s*.*Chassis.*$')
         
         for line in out.splitlines():
-            line = line.rstrip()
-            
-            # Cisco IOS XR Software, Version 6.3.1.15I
-            # Cisco IOS XR Software, Version 6.1.4.10I[Default]
-            p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
-                             ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?$')
+            line = line.strip()
+
             m = p1.match(line)
             if m:
                 show_version_dict['operating_system'] = 'IOSXR'
@@ -81,51 +111,33 @@ class ShowVersion(ShowVersionSchema):
                     str(m.groupdict()['software_version'])
                 continue
 
-            # System uptime is 1 week, 1 day, 5 hours, 47 minutes
-            # PE1 uptime is 3 hours, 11 minutes
-            p2 = re.compile(r'\s*.* +uptime +is +(?P<uptime>[a-zA-Z0-9\s\,]+)$')
             m = p2.match(line)
             if m:
                 show_version_dict['uptime'] = str(m.groupdict()['uptime'])
                 continue
 
-            # System image file is "disk0:asr9k-os-mbi-6.1.4.10I/0x100305/mbiasr9k-rsp3.vm"
-            p3 = re.compile(r'\s*System +image +file +is'
-                             ' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
             m = p3.match(line)
             if m:
                 show_version_dict['image'] = str(m.groupdict()['image'])
                 continue
 
-            # cisco IOS-XRv 9000 () processor
-            p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
-                               ' +\(\) +processor$')
             m = p4.match(line)
+
             if m:
                 show_version_dict['device_family'] = \
                     str(m.groupdict()['device_family'])
                 continue
 
-            # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
-            p5 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\s]+)'
-                               ' +Series +\((?P<processor>[a-zA-Z0-9\s]+)\)'
-                               ' +processor +with'
-                               ' +(?P<processor_memory_bytes>[0-9A-Z]+) +bytes'
-                               ' +of +memory.$')
             m = p5.match(line)
             if m:
                 show_version_dict['device_family'] = \
-                    str(m.groupdict()['device_family'])
-                show_version_dict['processor'] = str(m.groupdict()['processor'])
+                    m.groupdict()['device_family']
+                show_version_dict['processor'] = m.groupdict()['processor']
                 show_version_dict['processor_memory_bytes'] = \
-                    str(m.groupdict()['processor_memory_bytes'])
-                show_version_dict['main_mem'] = str(line).strip()
+                    m.groupdict()['processor_memory_bytes']
+                show_version_dict['main_mem'] = line
                 continue
 
-            # Configuration register on node 0/RSP0/CPU0 is 0x1922
-            p6 = re.compile(r'\s*Configuration +register +on +node'
-                             ' +(?P<node>[A-Z0-9\/]+) +is'
-                             ' +(?P<config_register>[x0-9]+)$')
             m = p6.match(line)
             if m:
                 show_version_dict['config_register'] = \
@@ -136,8 +148,6 @@ class ShowVersion(ShowVersionSchema):
                         str(m.groupdict()['config_register'])
                 continue
 
-            # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p7 = re.compile(r'\s*.*Chassis.*$')
             m = p7.match(line)
             if m:
                 show_version_dict['chassis_detail'] = str(line.strip())
