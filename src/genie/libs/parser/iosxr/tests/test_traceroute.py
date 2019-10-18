@@ -26,13 +26,13 @@ class TestTraceroute(unittest.TestCase):
 
     golden_parsed_output1 = {
         'traceroute': {
-            '1.1.1.1': {
-                'address': '1.1.1.1',
+            '10.4.1.1': {
+                'address': '10.4.1.1',
                 'hops': {
                     '1': {
                         'paths': {
                             1: {
-                                'address': '1.1.1.2',
+                                'address': '10.4.1.2',
                                 'label_info': {
                                     'MPLS': {
                                         'exp': 0,
@@ -46,7 +46,7 @@ class TestTraceroute(unittest.TestCase):
                     '2': {
                         'paths': {
                             1: {
-                                'address': '1.2.1.3',
+                                'address': '10.9.1.3',
                                 'probe_msec': ['9',
                                                '*',
                                                '8']}
@@ -58,14 +58,14 @@ class TestTraceroute(unittest.TestCase):
     }
 
     golden_output1 = '''\
-        RP/0/RP0/CPU0:router#traceroute 1.1.1.1
+        RP/0/RP0/CPU0:router#traceroute 10.4.1.1
         Mon Sep 30 13:23:56.830 EDT
         
         Type escape sequence to abort.
-        Tracing the route to 1.1.1.1
+        Tracing the route to 10.4.1.1
         
-         1  1.1.1.2 [MPLS: Label 11111 Exp 0] 16 msec  4 msec  4 msec 
-         2  1.2.1.3 9 msec  *  8 msec 
+         1  10.4.1.2 [MPLS: Label 11111 Exp 0] 16 msec  4 msec  4 msec 
+         2  10.9.1.3 9 msec  *  8 msec 
         -> traceroute to 10.2.3.3 and check if label 11111(from above table) can be confirmed
            (=if traffic is passed based on SR labels)
         '''

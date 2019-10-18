@@ -588,13 +588,13 @@ class test_show_run_ntp(unittest.TestCase):
         'vrf': {
             'default': {
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'type': 'server'}
                 }
             },
             'management': {
                 'address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'type': 'server'}
                 }
             }
@@ -608,8 +608,8 @@ class test_show_run_ntp(unittest.TestCase):
 
         Thu Sep 26 18:20:16.484 EDT
         ntp
-         server 1.1.1.1
-         server vrf management 1.1.1.1
+         server 10.4.1.1
+         server vrf management 10.4.1.1
         !
     '''
     }
