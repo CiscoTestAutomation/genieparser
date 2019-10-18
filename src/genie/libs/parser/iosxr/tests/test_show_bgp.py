@@ -7110,30 +7110,490 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         Processed 40 prefixes, 50 paths
 
         '''}
-    
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpInstanceAllAll(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf_type='all')
 
-    def test_golden1(self):
-        self.device = Mock(**self.golden_output1)
-        obj = ShowBgpInstanceAllAll(device=self.device)
-        parsed_output = obj.parse(vrf_type='all')
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    golden_parsed_output2 = {
+        'instance': {'default': {'vrf': {'default': {'address_family': {'ipv4 unicast': {'bgp_table_version': 115811,
+                                                                                  'generic_scan_interval': '60',
+                                                                                  'instance_number': '0',
+                                                                                  'local_as': 64577,
+                                                                                  'non_stop_routing': True,
+                                                                                  'nsr_initial_init_ver_status': 'reached',
+                                                                                  'nsr_initial_initsync_version': '11',
+                                                                                  'nsr_issu_sync_group_versions': '0/0',
+                                                                                  'prefix': {'200.1.0.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.1.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.2.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.3.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.4.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.5.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.6.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.7.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.8.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}},
+                                                                                             '200.1.9.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                                                            'origin_codes': 'i',
+                                                                                                                            'status_codes': '*>i',
+                                                                                                                            'weight': '0'}}}},
+                                                                                  'processed_paths': 10,
+                                                                                  'processed_prefix': 10,
+                                                                                  'rd_version': 115811,
+                                                                                  'router_identifier': '172.16.2.90',
+                                                                                  'scan_interval': 60,
+                                                                                  'table_id': '0xe0000000',
+                                                                                  'table_state': 'active'},
+                                                                 'ipv6 unicast': {'instance_number': '0'},
+                                                                 'l2vpn evpn': {'bgp_table_version': 3230,
+                                                                                'generic_scan_interval': '60',
+                                                                                'instance_number': '0',
+                                                                                'local_as': 64577,
+                                                                                'non_stop_routing': True,
+                                                                                'nsr_initial_init_ver_status': 'reached',
+                                                                                'nsr_initial_initsync_version': '63',
+                                                                                'nsr_issu_sync_group_versions': '0/0',
+                                                                                'rd_version': 0,
+                                                                                'router_identifier': '172.16.2.90',
+                                                                                'scan_interval': 60,
+                                                                                'table_id': '0x0',
+                                                                                'table_state': 'active'},
+                                                                 'l2vpn evpn RD 172.16.2.88:1': {'prefix': {'[5][0][22][10.249.248.0]/80': {'index': {1: {'locprf': '100',
+                                                                                                                                                          'metric': '0',
+                                                                                                                                                          'next_hop': '172.16.2.88',
+                                                                                                                                                          'origin_codes': '?',
+                                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                                          'weight': '0'}}}},
+                                                                                                 'route_distinguisher': '172.16.2.88:1'},
+                                                                 'l2vpn evpn RD 172.16.2.88:1000': {'prefix': {'[2][0][48][0014.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                                                                                   'next_hop': '172.16.2.88',
+                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[2][0][48][0014.0100.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
+                                                                                                                                                                                   'next_hop': '172.16.2.88',
+                                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[3][0][32][172.16.2.88]/80': {'index': {1: {'metric': '100',
+                                                                                                                                                            'next_hop': '172.16.2.88',
+                                                                                                                                                            'origin_codes': 'i',
+                                                                                                                                                            'status_codes': '*>i',
+                                                                                                                                                            'weight': '0'}}}},
+                                                                                                    'route_distinguisher': '172.16.2.88:1000'},
+                                                                 'l2vpn evpn RD 172.16.2.89:1': {'prefix': {'[1][172.16.2.89:1][0001.0000.0102.0000.0011][4294967295]/184': {'index': {1: {'metric': '100',
+                                                                                                                                                                                           'next_hop': '172.16.2.89',
+                                                                                                                                                                                           'origin_codes': 'i',
+                                                                                                                                                                                           'status_codes': '*>i',
+                                                                                                                                                                                           'weight': '0'}}},
+                                                                                                            '[5][0][22][10.249.248.0]/80': {'index': {1: {'locprf': '100',
+                                                                                                                                                          'metric': '0',
+                                                                                                                                                          'next_hop': '172.16.2.89',
+                                                                                                                                                          'origin_codes': '?',
+                                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                                          'weight': '0'}}}},
+                                                                                                 'route_distinguisher': '172.16.2.89:1'},
+                                                                 'l2vpn evpn RD 172.16.2.89:1000': {'prefix': {'[1][0001.0000.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
+                                                                                                                                                                      'next_hop': '172.16.2.89',
+                                                                                                                                                                      'origin_codes': 'i',
+                                                                                                                                                                      'status_codes': '*>i',
+                                                                                                                                                                      'weight': '0'}}},
+                                                                                                               '[2][0][48][0013.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                                                                                   'next_hop': '172.16.2.89',
+                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[2][0][48][0013.0100.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
+                                                                                                                                                                                   'next_hop': '172.16.2.89',
+                                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[3][0][32][172.16.2.89]/80': {'index': {1: {'metric': '100',
+                                                                                                                                                            'next_hop': '172.16.2.89',
+                                                                                                                                                            'origin_codes': 'i',
+                                                                                                                                                            'status_codes': '*>i',
+                                                                                                                                                            'weight': '0'}}}},
+                                                                                                    'route_distinguisher': '172.16.2.89:1000'},
+                                                                 'l2vpn evpn RD 172.16.2.90:1000': {'default_vrf': 'evpn-multicast-btv',
+                                                                                                    'prefix': {'[1][0001.0000.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
+                                                                                                                                                                      'next_hop': '172.16.2.89',
+                                                                                                                                                                      'origin_codes': 'i',
+                                                                                                                                                                      'status_codes': '*>i',
+                                                                                                                                                                      'weight': '0'}}},
+                                                                                                               '[1][0001.0000.0102.0000.0011][4294967295]/120': {'index': {1: {'metric': '100',
+                                                                                                                                                                               'next_hop': '172.16.2.89',
+                                                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                                                               'weight': '0'}}},
+                                                                                                               '[2][0][48][0013.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                                                                                   'next_hop': '172.16.2.89',
+                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[2][0][48][0013.0100.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
+                                                                                                                                                                                   'next_hop': '172.16.2.89',
+                                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[2][0][48][0014.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                                                                                   'next_hop': '172.16.2.88',
+                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[2][0][48][0014.0100.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
+                                                                                                                                                                                   'next_hop': '172.16.2.88',
+                                                                                                                                                                                   'origin_codes': 'i',
+                                                                                                                                                                                   'status_codes': '*>i',
+                                                                                                                                                                                   'weight': '0'}}},
+                                                                                                               '[3][0][32][172.16.2.88]/80': {'index': {1: {'metric': '100',
+                                                                                                                                                            'next_hop': '172.16.2.88',
+                                                                                                                                                            'origin_codes': 'i',
+                                                                                                                                                            'status_codes': '*>i',
+                                                                                                                                                            'weight': '0'}}},
+                                                                                                               '[3][0][32][172.16.2.89]/80': {'index': {1: {'metric': '100',
+                                                                                                                                                            'next_hop': '172.16.2.89',
+                                                                                                                                                            'origin_codes': 'i',
+                                                                                                                                                            'status_codes': '*>i',
+                                                                                                                                                            'weight': '0'}}},
+                                                                                                               '[3][0][32][172.16.2.90]/80': {'index': {1: {'next_hop': '0.0.0.0',
+                                                                                                                                                            'origin_codes': 'i',
+                                                                                                                                                            'status_codes': '*>',
+                                                                                                                                                            'weight': '0'}}}},
+                                                                                                    'route_distinguisher': '172.16.2.90:1000'},
+                                                                 'l2vpn evpn RD 172.18.0.209:162': {'prefix': {'[5][0][24][10.120.1.0]/80': {'index': {1: {'locprf': '0',
+                                                                                                                                                           'metric': '100',
+                                                                                                                                                           'next_hop': '172.18.0.209',
+                                                                                                                                                           'origin_codes': 'i',
+                                                                                                                                                           'status_codes': '*i',
+                                                                                                                                                           'weight': '65505'},
+                                                                                                                                                       2: {'locprf': '100',
+                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'origin_codes': 'i',
+                                                                                                                                                           'path': '65505',
+                                                                                                                                                           'status_codes': '*>i',
+                                                                                                                                                           'weight': '0'}}},
+                                                                                                               '[5][0][30][10.120.0.4]/80': {'index': {1: {'locprf': '100',
+                                                                                                                                                           'metric': '0',
+                                                                                                                                                           'next_hop': '172.18.0.209',
+                                                                                                                                                           'origin_codes': '?',
+                                                                                                                                                           'status_codes': '*i',
+                                                                                                                                                           'weight': '0'},
+                                                                                                                                                       2: {'locprf': '0',
+                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'origin_codes': '?',
+                                                                                                                                                           'path': '0',
+                                                                                                                                                           'status_codes': '*>i',
+                                                                                                                                                           'weight': '100'}}},
+                                                                                                               '[5][0][32][10.0.120.1]/80': {'index': {1: {'locprf': '0',
+                                                                                                                                                           'metric': '100',
+                                                                                                                                                           'next_hop': '172.18.0.209',
+                                                                                                                                                           'origin_codes': 'i',
+                                                                                                                                                           'status_codes': '*i',
+                                                                                                                                                           'weight': '65505'},
+                                                                                                                                                       2: {'locprf': '100',
+                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'origin_codes': 'i',
+                                                                                                                                                           'path': '65505',
+                                                                                                                                                           'status_codes': '*>i',
+                                                                                                                                                           'weight': '0'}}}},
+                                                                                                    'route_distinguisher': '172.18.0.209:162'},
+                                                                 'l2vpn evpn RD 172.19.3.1:161': {'prefix': {'[5][0][24][10.120.1.0]/80': {'index': {1: {'locprf': '0',
+                                                                                                                                                         'metric': '100',
+                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'origin_codes': 'i',
+                                                                                                                                                         'status_codes': '*>i',
+                                                                                                                                                         'weight': '65505'}}},
+                                                                                                             '[5][0][30][10.120.0.0]/80': {'index': {1: {'locprf': '100',
+                                                                                                                                                         'metric': '0',
+                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'origin_codes': '?',
+                                                                                                                                                         'status_codes': '*>i',
+                                                                                                                                                         'weight': '0'}}},
+                                                                                                             '[5][0][32][10.0.120.1]/80': {'index': {1: {'locprf': '0',
+                                                                                                                                                         'metric': '100',
+                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'origin_codes': 'i',
+                                                                                                                                                         'status_codes': '*>i',
+                                                                                                                                                         'weight': '65505'}}}},
+                                                                                                  'processed_paths': 28,
+                                                                                                  'processed_prefix': 25,
+                                                                                                  'route_distinguisher': '172.19.3.1:161'},
+                                                                 'vpnv4 unicast': {'bgp_table_version': 397,
+                                                                                   'generic_scan_interval': '60',
+                                                                                   'instance_number': '0',
+                                                                                   'local_as': 64577,
+                                                                                   'non_stop_routing': True,
+                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                   'nsr_initial_initsync_version': '8',
+                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                   'rd_version': 0,
+                                                                                   'router_identifier': '172.16.2.90',
+                                                                                   'scan_interval': 60,
+                                                                                   'table_id': '0x0',
+                                                                                   'table_state': 'active'},
+                                                                 'vpnv4 unicast RD 172.16.2.90:1': {'default_vrf': 'btv-npvr-multicast-iaas',
+                                                                                                    'prefix': {'10.0.120.1/32': {'index': {1: {'locprf': '100',
+                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                               'path': '65505',
+                                                                                                                                               'status_codes': '*i',
+                                                                                                                                               'weight': '0'},
+                                                                                                                                           2: {'locprf': '100',
+                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                               'path': '65505',
+                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                               'weight': '0'}}},
+                                                                                                               '10.120.0.0/30': {'index': {1: {'locprf': '0',
+                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'origin_codes': '?',
+                                                                                                                                               'path': '0',
+                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                               'weight': '100'}}},
+                                                                                                               '10.120.0.4/30': {'index': {1: {'locprf': '0',
+                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'origin_codes': '?',
+                                                                                                                                               'path': '0',
+                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                               'weight': '100'}}},
+                                                                                                               '10.120.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                               'path': '65505',
+                                                                                                                                               'status_codes': '*i',
+                                                                                                                                               'weight': '0'},
+                                                                                                                                           2: {'locprf': '100',
+                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                               'path': '65505',
+                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                               'weight': '0'}}},
+                                                                                                               '10.249.248.0/22': {'index': {1: {'locprf': '0',
+                                                                                                                                                 'next_hop': '0.0.0.0',
+                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                 'status_codes': '*>',
+                                                                                                                                                 'weight': '32768'},
+                                                                                                                                             2: {'locprf': '0',
+                                                                                                                                                 'next_hop': '172.16.2.88',
+                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                 'path': '0',
+                                                                                                                                                 'status_codes': '*i',
+                                                                                                                                                 'weight': '100'},
+                                                                                                                                             3: {'locprf': '0',
+                                                                                                                                                 'next_hop': '172.16.2.89',
+                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                 'path': '0',
+                                                                                                                                                 'status_codes': '*i',
+                                                                                                                                                 'weight': '100'}}},
+                                                                                                               '10.249.248.10/32': {'index': {1: {'locprf': '100',
+                                                                                                                                                  'next_hop': '172.16.2.89',
+                                                                                                                                                  'origin_codes': 'i',
+                                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                                  'weight': '0'}}},
+                                                                                                               '10.249.249.10/32': {'index': {1: {'locprf': '100',
+                                                                                                                                                  'next_hop': '172.16.2.88',
+                                                                                                                                                  'origin_codes': 'i',
+                                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                                  'weight': '0'}}}},
+                                                                                                    'processed_paths': 11,
+                                                                                                    'processed_prefix': 7,
+                                                                                                    'route_distinguisher': '172.16.2.90:1'},
+                                                                 'vpnv6 unicast': {'instance_number': '0'}}}}}}}
+ 
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:nebuchadnezzar# show bgp instance all all all
+        show bgp instance all all all
+
+        Wed Oct  9 14:36:10.229 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: VPNv4 Unicast
+        -----------------------------
+
+        BGP router identifier 172.16.2.90, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 397
+        BGP NSR Initial initsync version 8 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+         Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 172.16.2.90:1 (default for vrf BTV-nPVR-MULTICAST-IAAS)
+        * i10.0.120.1/32      67.70.219.79                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        *>i10.120.0.0/30      67.70.219.79             0    100      0 ?
+        *>i10.120.0.4/30      67.70.219.86             0    100      0 ?
+        * i10.120.1.0/24      67.70.219.79                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        *> 10.249.248.0/22    0.0.0.0                  0         32768 ?
+        * i                   172.16.2.88              0    100      0 ?
+        * i                   172.16.2.89              0    100      0 ?
+        *>i10.249.248.10/32   172.16.2.89                   100      0 i
+        *>i10.249.249.10/32   172.16.2.88                   100      0 i
+
+        Processed 7 prefixes, 11 paths
+
+        Address Family: VPNv6 Unicast
+        -----------------------------
 
 
-# =============================================
-# Unit test for 'show bgp instance all vrf all'
-# =============================================
-class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
-    
-    device = Device(name='aDevice')
-    device0 = Device(name='bDevice')
-    empty_output = {'execute.return_value': ''}
-    
-    golden_parsed_output = {
+        Address Family: IPv4 Unicast
+        ----------------------------
+
+        BGP router identifier 172.16.2.90, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000000   RD version: 115811
+        BGP main routing table version 115811
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+         Network            Next Hop            Metric LocPrf Weight Path
+        *>i200.1.0.0/24       99.99.99.98                     0      0 i
+        *>i200.1.1.0/24       99.99.99.98                     0      0 i
+        *>i200.1.2.0/24       99.99.99.98                     0      0 i
+        *>i200.1.3.0/24       99.99.99.98                     0      0 i
+        *>i200.1.4.0/24       99.99.99.98                     0      0 i
+        *>i200.1.5.0/24       99.99.99.98                     0      0 i
+        *>i200.1.6.0/24       99.99.99.98                     0      0 i
+        *>i200.1.7.0/24       99.99.99.98                     0      0 i
+        *>i200.1.8.0/24       99.99.99.98                     0      0 i
+        *>i200.1.9.0/24       99.99.99.98                     0      0 i
+
+        Processed 10 prefixes, 10 paths
+
+        Address Family: IPv6 Unicast
+        ----------------------------
+
+
+        Address Family: L2VPN EVPN
+        --------------------------
+
+        BGP router identifier 172.16.2.90, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 3230
+        BGP NSR Initial initsync version 63 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+         Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 172.16.2.88:1
+        *>i[5][0][22][10.249.248.0]/80
+                            172.16.2.88              0    100      0 ?
+        Route Distinguisher: 172.16.2.88:1000
+        *>i[2][0][48][0014.0100.0001][0]/104
+                            172.16.2.88                   100      0 i
+        *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+                            172.16.2.88                   100      0 i
+        *>i[3][0][32][172.16.2.88]/80
+                            172.16.2.88                   100      0 i
+        Route Distinguisher: 172.16.2.89:1
+        *>i[1][172.16.2.89:1][0001.0000.0102.0000.0011][4294967295]/184
+                            172.16.2.89                   100      0 i
+        *>i[5][0][22][10.249.248.0]/80
+                            172.16.2.89              0    100      0 ?
+        Route Distinguisher: 172.16.2.89:1000
+        *>i[1][0001.0000.0102.0000.0011][0]/120
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0013.0100.0001][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0013.0100.0001][32][10.249.248.10]/136
+                            172.16.2.89                   100      0 i
+        *>i[3][0][32][172.16.2.89]/80
+                            172.16.2.89                   100      0 i
+        Route Distinguisher: 172.16.2.90:1000 (default for vrf EVPN-Multicast-BTV)
+        *>i[1][0001.0000.0102.0000.0011][0]/120
+                            172.16.2.89                   100      0 i
+        *>i[1][0001.0000.0102.0000.0011][4294967295]/120
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0013.0100.0001][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0013.0100.0001][32][10.249.248.10]/136
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0014.0100.0001][0]/104
+                            172.16.2.88                   100      0 i
+        *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+                            172.16.2.88                   100      0 i
+        *>i[3][0][32][172.16.2.88]/80
+                            172.16.2.88                   100      0 i
+        *>i[3][0][32][172.16.2.89]/80
+                            172.16.2.89                   100      0 i
+        *> [3][0][32][172.16.2.90]/80
+                            0.0.0.0                                0 i
+        Route Distinguisher: 172.18.0.209:162
+        * i[5][0][24][10.120.1.0]/80
+                            172.18.0.209                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        * i[5][0][30][10.120.0.4]/80
+                            172.18.0.209             0    100      0 ?
+        *>i                   67.70.219.86             0    100      0 ?
+        * i[5][0][32][10.0.120.1]/80
+                            172.18.0.209                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        Route Distinguisher: 172.19.3.1:161
+        *>i[5][0][24][10.120.1.0]/80
+                            67.70.219.79                  100      0 65505 i
+        *>i[5][0][30][10.120.0.0]/80
+                            67.70.219.79             0    100      0 ?
+        *>i[5][0][32][10.0.120.1]/80
+                            67.70.219.79                  100      0 65505 i
+
+        Processed 25 prefixes, 28 paths
+        '''}
+
+    golden_parsed_output3 = {
         'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
                                                                                 'bgp_vrf': 'vrf1',
                                                                                 'local_as': 100,
@@ -7489,8 +7949,7 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
                                                                                          'processed_prefix': 15,
                                                                                          'route_distinguisher': '200:2'}}}}}}}
 
-
-    golden_output = {'execute.return_value': '''
+    golden_output3 = {'execute.return_value': '''
         BGP instance 0: 'default'
         =========================
 
@@ -7567,7 +8026,28 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         Processed 15 prefixes, 15 paths
         '''}
 
-    golden_output2 = {'execute.return_value': '''
+    golden_parsed_output4 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'ipv6 labeled-unicast': {
+                                'instance_number': '0',
+                                'router_identifier': '192.168.87.47',
+                                'local_as': 123123,
+                                'generic_scan_interval': '60',
+                                'non_stop_routing': True,
+                                'table_state': 'active',
+                                'table_id': '0xe0800000',
+                                'rd_version': 41,
+                                'bgp_table_version': 41,
+                                'nsr_initial_initsync_version': '9',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'scan_interval': 60}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
         RP/0/RP0/CPU0:ML26#
         +++ ML26: executing command 'show bgp instance all all all' +++
         show bgp instance all all all
@@ -7587,56 +8067,178 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         BGP NSR Initial initsync version 9 (Reached)
         BGP NSR/ISSU Sync-Group versions 0/0
         BGP scan interval 60 secs
+        '''}
 
-    '''}
+    golden_parsed_output5 = {
+        'instance': {'default': {'vrf': {'BTV-nPVR-MULTICAST-IAAS': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 397,
+                                                                                                   'bgp_vrf': 'btv-npvr-multicast-iaas',
+                                                                                                   'local_as': 64577,
+                                                                                                   'non_stop_routing': True,
+                                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                                   'nsr_initial_initsync_version': '8',
+                                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                                   'rd_version': 397,
+                                                                                                   'router_identifier': '172.16.2.90',
+                                                                                                   'table_id': '0xe0000007',
+                                                                                                   'table_state': 'active',
+                                                                                                   'vrf_id': '0x60000007',
+                                                                                                   'vrf_state': 'active'},
+                                                                                 'vpnv4 unicast RD 172.16.2.90:1': {'default_vrf': 'btv-npvr-multicast-iaas',
+                                                                                                                    'prefix': {'10.0.120.1/32': {'index': {1: {'locprf': '100',
+                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                                               'path': '65505',
+                                                                                                                                                               'status_codes': '*i',
+                                                                                                                                                               'weight': '0'},
+                                                                                                                                                           2: {'locprf': '100',
+                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                                               'path': '65505',
+                                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                                               'weight': '0'}}},
+                                                                                                                               '10.120.0.0/30': {'index': {1: {'locprf': '0',
+                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'origin_codes': '?',
+                                                                                                                                                               'path': '0',
+                                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                                               'weight': '100'}}},
+                                                                                                                               '10.120.0.4/30': {'index': {1: {'locprf': '0',
+                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'origin_codes': '?',
+                                                                                                                                                               'path': '0',
+                                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                                               'weight': '100'}}},
+                                                                                                                               '10.120.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                                               'path': '65505',
+                                                                                                                                                               'status_codes': '*i',
+                                                                                                                                                               'weight': '0'},
+                                                                                                                                                           2: {'locprf': '100',
+                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'origin_codes': 'i',
+                                                                                                                                                               'path': '65505',
+                                                                                                                                                               'status_codes': '*>i',
+                                                                                                                                                               'weight': '0'}}},
+                                                                                                                               '10.249.248.0/22': {'index': {1: {'locprf': '0',
+                                                                                                                                                                 'next_hop': '0.0.0.0',
+                                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                                 'status_codes': '*>',
+                                                                                                                                                                 'weight': '32768'},
+                                                                                                                                                             2: {'locprf': '0',
+                                                                                                                                                                 'next_hop': '172.16.2.88',
+                                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                                 'path': '0',
+                                                                                                                                                                 'status_codes': '*i',
+                                                                                                                                                                 'weight': '100'},
+                                                                                                                                                             3: {'locprf': '0',
+                                                                                                                                                                 'next_hop': '172.16.2.89',
+                                                                                                                                                                 'origin_codes': '?',
+                                                                                                                                                                 'path': '0',
+                                                                                                                                                                 'status_codes': '*i',
+                                                                                                                                                                 'weight': '100'}}},
+                                                                                                                               '10.249.248.10/32': {'index': {1: {'locprf': '100',
+                                                                                                                                                                  'next_hop': '172.16.2.89',
+                                                                                                                                                                  'origin_codes': 'i',
+                                                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                                                  'weight': '0'}}},
+                                                                                                                               '10.249.249.10/32': {'index': {1: {'locprf': '100',
+                                                                                                                                                                  'next_hop': '172.16.2.88',
+                                                                                                                                                                  'origin_codes': 'i',
+                                                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                                                  'weight': '0'}}}},
+                                                                                                                    'processed_paths': 11,
+                                                                                                                    'processed_prefix': 7,
+                                                                                                                    'route_distinguisher': '172.16.2.90:1'}}},
+                                  'NOVI-TST': {'address_family': {'vpnv4 unicast': {}}}}}}}
 
-    golden_parsed_output2 = {
-        'instance': {
-            'default': {
-                'vrf': {
-                    'default': {
-                        'address_family': {
-                            'ipv6 labeled-unicast': {
-                                'instance_number': '0',
-                                'router_identifier': '192.168.87.47',
-                                'local_as': 123123,
-                                'generic_scan_interval': '60',
-                                'non_stop_routing': True,
-                                'table_state': 'active',
-                                'table_id': '0xe0800000',
-                                'rd_version': 41,
-                                'bgp_table_version': 41,
-                                'nsr_initial_initsync_version': '9',
-                                'nsr_initial_init_ver_status': 'reached',
-                                'nsr_issu_sync_group_versions': '0/0',
-                                'scan_interval': 60,
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    }
+    golden_output5 = {'execute.return_value': '''
 
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device1)
+        RP/0/RP0/CPU0:RP/0/RP0/CPU0:nebuchadnezzar# show bgp instance all vrf all
+        show bgp instance all vrf all
+
+        Wed Oct  9 14:36:11.332 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: NOVI-TST
+        -------------
+
+        VRF: BTV-nPVR-MULTICAST-IAAS
+        ----------------------------
+        BGP VRF BTV-nPVR-MULTICAST-IAAS, state: Active
+        BGP Route Distinguisher: 172.16.2.90:1
+        VRF ID: 0x60000007
+        BGP router identifier 172.16.2.90, local AS number 64577
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000007   RD version: 397
+        BGP main routing table version 397
+        BGP NSR Initial initsync version 8 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+         Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 172.16.2.90:1 (default for vrf BTV-nPVR-MULTICAST-IAAS)
+        * i10.0.120.1/32      67.70.219.79                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        *>i10.120.0.0/30      67.70.219.79             0    100      0 ?
+        *>i10.120.0.4/30      67.70.219.86             0    100      0 ?
+        * i10.120.1.0/24      67.70.219.79                  100      0 65505 i
+        *>i                   67.70.219.86                  100      0 65505 i
+        *> 10.249.248.0/22    0.0.0.0                  0         32768 ?
+        * i                   172.16.2.88              0    100      0 ?
+        * i                   172.16.2.89              0    100      0 ?
+        *>i10.249.248.10/32   172.16.2.89                   100      0 i
+        *>i10.249.249.10/32   172.16.2.88                   100      0 i
+
+        Processed 7 prefixes, 11 paths
+        '''}
+
+    def test_empty1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpInstanceAllAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
+            parsed_output = obj.parse(vrf_type='all')
 
-    def test_golden_vrf(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
-        parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-    
-    def test_golden_all(self):
-        self.maxDiff = None
+    def test_empty2(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf_type='vrf')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
         self.device = Mock(**self.golden_output2)
-        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
-        parsed_output = bgp_instance_all_all_obj.parse(instance='all')
-        self.assertEqual(parsed_output,self.golden_parsed_output2)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+    
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(instance='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_golden5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # =============================================

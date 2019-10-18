@@ -4861,27 +4861,39 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                          r' +secs$')
 
         # Route Distinguisher: 200:1 (default for vrf VRF1)
+        # Route Distinguisher: 172.16.2.90:1000 (default for vrf EVPN-Multicast-BTV)
+        # Route Distinguisher: 172.16.2.88:1000
         p15 = re.compile(r'^\s*Route +Distinguisher:'
-                         r' +(?P<route_distinguisher>[0-9\:]+)'
-                         r'(?: +\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
+                         r' +(?P<route_distinguisher>\S+)'
+                         r'(?: +\(default +for +vrf +(?P<default_vrf>\S+)\))?$')
 
         # *> 615:11:11:3::/64   2001:db8:20:1:5::5
+        # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                           r' +(?P<prefix>(?P<ip>[\w\:]+)/(?P<mask>\d+))'
-                           r' +(?P<next_hop>[\w\:]+)$')
+                           r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))'
+                           r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
                            r' +(?P<path>[0-9\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
 
+        # Network            Next Hop   Metric LocPrf Weight Path
+        # 172.16.2.88                        0    100      0 ?
+        # 172.16.2.88                             100      0 i
+        # 0.0.0.0                                          0 i
+        p16_3 = re.compile(r'^\s*(?P<next_hop>(\S+))(?: +(?P<metric>(\d+)))?'
+                           r'(?: +(?P<locprf>(\d+)))? +(?P<weight>(\d+))'
+                           r' +(?P<origin_codes>(\?|i|e))$')
+
         # *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
         # * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        # *>i200.1.0.0/24       99.99.99.98                                                    0       0 i
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>[\w\.\:]+) +(?P<number>[\d\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))?'
+                         r' +(?P<next_hop>\S+) +(?P<number>[\d\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         p17 = re.compile(r'(?P<path>[\d\s]+)'
@@ -5035,17 +5047,23 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # *> 615:11:11:3::/64   2001:db8:20:1:5::5
+            # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
             m = p16_1.match(line)
             if m:
                 group = m.groupdict()
                 prefix = group['prefix']
-                index = 1
+                if prefix:
+                    last_prefix = prefix
+                    index = 1
+                else:
+                    index += 1
                 # Set dict
-                pfx_dict = af_dict.setdefault('prefix', {}).setdefault(prefix, {}).\
+                pfx_dict = af_dict.setdefault('prefix', {}).setdefault(last_prefix, {}).\
                                    setdefault('index', {}).setdefault(index, {})
                 # Set keys
-                pfx_dict['next_hop'] = group['next_hop']
                 pfx_dict['status_codes'] = group['status_codes'].strip().replace(" ", "")
+                if group['next_hop']:
+                    pfx_dict['next_hop'] = group['next_hop']
                 continue
 
             # 2219             0 200 33299 51178 47751 {27016} e
@@ -5057,11 +5075,27 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 pfx_dict['path'] = group['path']
                 pfx_dict['origin_codes'] = group['origin_codes']
                 continue
-                    
+
+            # Network            Next Hop   Metric LocPrf Weight Path
+            # 172.16.2.88                        0    100      0 ?
+            # 172.16.2.88                             100      0 i
+            m = p16_3.match(line)
+            if m:
+                group = m.groupdict()
+                pfx_dict['next_hop'] = group['next_hop']
+                if group['metric']:
+                    pfx_dict['metric'] = group['metric']
+                if group['locprf']:
+                    pfx_dict['locprf'] = group['locprf']
+                pfx_dict['weight'] = group['weight']
+                pfx_dict['origin_codes'] = group['origin_codes']
+                continue
+
             # *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
             # * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *>i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+            # *>i200.1.0.0/24       99.99.99.98                                                    0       0 i
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -5085,6 +5119,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
                 m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\{\}\s]+)$').match(group_num)
                 m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>((\d+\s)|(\{\d+\}\s))+)$').match(group_num)
+                m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
                 if m1:
                     pfx_dict['metric'] = m1.groupdict()['metric']
                     pfx_dict['locprf'] = m1.groupdict()['locprf']
@@ -5101,6 +5136,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 elif m3:
                     pfx_dict['weight'] = m3.groupdict()['weight']
                     pfx_dict['path'] = m3.groupdict()['path'].strip()
+                elif m4:
+                    pfx_dict['locprf'] = m4.groupdict()['locprf']
+                    pfx_dict['weight'] = m4.groupdict()['weight']
                 continue
 
             # 
