@@ -743,14 +743,14 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
         # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
         p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
-                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
+                         r' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
         # PID: N/A, VID: N/A, SN: 
         p2 = re.compile(r'^PID: *(?P<pid>[\S\s]*),'
-                         ' +VID: *(?P<vid>[\S\s]*),'
-                         ' SN: *(?P<sn>[\S\s]*)$')
+                         r' +VID: *(?P<vid>[\S\s]*),'
+                         r' SN: *(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -781,11 +781,6 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['module_name'][module_name]['sn'] = \
                     str(m.groupdict()['sn']).strip()
                 continue
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(inventory_dict))
-        f = open("dict.txt","w")
-        f.write( str(format_output(inventory_dict)) )
-        f.close()
         return inventory_dict
             
 # ====================================

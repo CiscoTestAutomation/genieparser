@@ -678,7 +678,7 @@ class test_show_inventory(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-
+    maxDiff = None
     golden_parsed_output1 = {
         "module_name": {
           "module 0/RSP0/CPU0": {
@@ -795,107 +795,107 @@ class test_show_inventory(unittest.TestCase):
         '''}
 
     golden_output3 = {'execute.return_value': '''
-    show inventory
+        show inventory
 
-    Mon Oct 14 17:55:59.530 EDT
-    NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
-    PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFV5
+        Mon Oct 14 17:55:59.530 EDT
+        NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
+        PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFV5
 
-    NAME: "module 0/RSP1/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
-    PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFVR
+        NAME: "module 0/RSP1/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
+        PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFVR
 
-    NAME: "module 0/0/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
-    PID: A9K-MOD80-SE, VID: V08, SN: FOC1941N335
+        NAME: "module 0/0/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
+        PID: A9K-MOD80-SE, VID: V08, SN: FOC1941N335
 
-    NAME: "module 0/0/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
-    PID: A9K-MPA-20X1GE, VID: V03, SN: FOC1946N2X9
+        NAME: "module 0/0/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+        PID: A9K-MPA-20X1GE, VID: V03, SN: FOC1946N2X9
 
-    NAME: "GigabitEthernet0/0/0/1", DESCR: "Non-Cisco Methode Elec. SFP 1G Pluggable Optics Module"
-    PID: SP7041-M1-JN, VID: -, SN: 9420172         
+        NAME: "GigabitEthernet0/0/0/1", DESCR: "Non-Cisco Methode Elec. SFP 1G Pluggable Optics Module"
+        PID: SP7041-M1-JN, VID: -, SN: 9420172         
 
-    NAME: "GigabitEthernet0/0/0/2", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L257       
+        NAME: "GigabitEthernet0/0/0/2", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L257       
 
-    NAME: "module mau 0/0/0/4", DESCR: "GE T"
-    PID: N/A, VID: N/A, SN: MTC17180BJ4     
+        NAME: "module mau 0/0/0/4", DESCR: "GE T"
+        PID: N/A, VID: N/A, SN: MTC17180BJ4     
 
-    NAME: "GigabitEthernet0/0/0/8", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP-GE-T, VID: 1.0, SN: ECI80T012       
+        NAME: "GigabitEthernet0/0/0/8", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP-GE-T, VID: 1.0, SN: ECI80T012       
 
-    NAME: "GigabitEthernet0/0/0/19", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L003       
+        NAME: "GigabitEthernet0/0/0/19", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L003       
 
-    NAME: "module 0/0/1", DESCR: "ASR 9000 4-port 10GE Modular Port Adapter"
-    PID: A9K-MPA-4X10GE, VID: V05, SN: FOC1935NCBZ
+        NAME: "module 0/0/1", DESCR: "ASR 9000 4-port 10GE Modular Port Adapter"
+        PID: A9K-MPA-4X10GE, VID: V05, SN: FOC1935NCBZ
 
-    NAME: "module mau 0/0/1/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
-    PID: XFP-10GLR-OC192SR   , VID: V04 , SN: SPC191402P5     
+        NAME: "module mau 0/0/1/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+        PID: XFP-10GLR-OC192SR   , VID: V04 , SN: SPC191402P5     
 
-    NAME: "TenGigE0/0/1/2", DESCR: "Non-Cisco ECINETWORKS XFP 10G Pluggable Optics Module"
-    PID: EN-XFP10G-LR-CO, VID: N, SN: B31160520008    
+        NAME: "TenGigE0/0/1/2", DESCR: "Non-Cisco ECINETWORKS XFP 10G Pluggable Optics Module"
+        PID: EN-XFP10G-LR-CO, VID: N, SN: B31160520008    
 
-    NAME: "TenGigE0/0/1/3", DESCR: "Non-Cisco XFP 10G Pluggable Optics Module"
-    PID: N/A, VID: N/A, SN: 
+        NAME: "TenGigE0/0/1/3", DESCR: "Non-Cisco XFP 10G Pluggable Optics Module"
+        PID: N/A, VID: N/A, SN: 
 
-    NAME: "module 0/1/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
-    PID: A9K-MOD80-SE, VID: V11, SN: FOC2242P17S
+        NAME: "module 0/1/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
+        PID: A9K-MOD80-SE, VID: V11, SN: FOC2242P17S
 
-    NAME: "module 0/1/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
-    PID: A9K-MPA-20X1GE, VID: V06, SN: FOC2244NCSA
+        NAME: "module 0/1/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+        PID: A9K-MPA-20X1GE, VID: V06, SN: FOC2244NCSA
 
-    NAME: "module mau 0/1/0/2", DESCR: "1000BASE-SX SFP transceiver module, MMF, 850nm, DOM"
-    PID: GLC-SX-MMD          , VID: V01 , SN: AGJ1821REPB     
+        NAME: "module mau 0/1/0/2", DESCR: "1000BASE-SX SFP transceiver module, MMF, 850nm, DOM"
+        PID: GLC-SX-MMD          , VID: V01 , SN: AGJ1821REPB     
 
-    NAME: "GigabitEthernet0/1/0/12", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L252       
+        NAME: "GigabitEthernet0/1/0/12", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L252       
 
-    NAME: "module 0/2/CPU0", DESCR: "Cisco ASR 9000 Series SPA Interface Processor-700"
-    PID: A9K-SIP-700, VID: V02, SN: FOC1748N0B7
+        NAME: "module 0/2/CPU0", DESCR: "Cisco ASR 9000 Series SPA Interface Processor-700"
+        PID: A9K-SIP-700, VID: V02, SN: FOC1748N0B7
 
-    NAME: "module 0/2/0", DESCR: "3-port OC3c SFP Optics ATM Shared Port Adapter"
-    PID: SPA-3XOC3-ATM-V2, VID: V03, SN: JP614240083
+        NAME: "module 0/2/0", DESCR: "3-port OC3c SFP Optics ATM Shared Port Adapter"
+        PID: SPA-3XOC3-ATM-V2, VID: V03, SN: JP614240083
 
-    NAME: "module mau 0/2/0/2", DESCR: "OC3 SR-1/STM1 MM"
-    PID: SFP-OC3-MM          , VID: V01 , SN: OCP10310921     
+        NAME: "module mau 0/2/0/2", DESCR: "OC3 SR-1/STM1 MM"
+        PID: SFP-OC3-MM          , VID: V01 , SN: OCP10310921     
 
-    NAME: "module 0/4/CPU0", DESCR: "24X10G/1G  Service Edge Optimized LC"
-    PID: A9K-24X10GE-1G-SE, VID: V01, SN: FOC2237N3Y0
+        NAME: "module 0/4/CPU0", DESCR: "24X10G/1G  Service Edge Optimized LC"
+        PID: A9K-24X10GE-1G-SE, VID: V01, SN: FOC2237N3Y0
 
-    NAME: "module mau GigabitEthernet0/4/CPU0/0", DESCR: "Unknown or Unsupported SFP Module"
-    PID: GLC-T              , VID: V04, SN: MTC191108UW     
+        NAME: "module mau GigabitEthernet0/4/CPU0/0", DESCR: "Unknown or Unsupported SFP Module"
+        PID: GLC-T              , VID: V04, SN: MTC191108UW     
 
-    NAME: "module mau GigabitEthernet0/4/CPU0/1", DESCR: "Unknown pluggable optics"
-    PID: N/A, VID: N/A, SN: FNS13441EZE     
+        NAME: "module mau GigabitEthernet0/4/CPU0/1", DESCR: "Unknown pluggable optics"
+        PID: N/A, VID: N/A, SN: FNS13441EZE     
 
-    NAME: "GigabitEthernet0/4/0/5", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP1G-LX-CO, VID: 1., SN: ECI50L009       
+        NAME: "GigabitEthernet0/4/0/5", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1., SN: ECI50L009       
 
-    NAME: "GigabitEthernet0/4/0/6", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
-    PID: EN-SFP1G-SX-CO, VID: 1., SN: ECI32M012       
+        NAME: "GigabitEthernet0/4/0/6", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-SX-CO, VID: 1., SN: ECI32M012       
 
-    NAME: "TenGigE0/4/0/12", DESCR: "Non-Cisco LambdaGain SFP+ 10G Pluggable Optics Module"
-    PID: L04D-10GE-ER, VID: N/A, SN: FXLG021112310001
+        NAME: "TenGigE0/4/0/12", DESCR: "Non-Cisco LambdaGain SFP+ 10G Pluggable Optics Module"
+        PID: L04D-10GE-ER, VID: N/A, SN: FXLG021112310001
 
-    NAME: "TenGigE0/4/0/13", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
-    PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL037       
+        NAME: "TenGigE0/4/0/13", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
+        PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL037       
 
-    NAME: "module mau TenGigE0/4/CPU0/14", DESCR: "10GBASE-SR SFP+ Module for MMF"
-    PID: SFP-10G-SR         , VID: V03 , SN: JUR184402WK     
+        NAME: "module mau TenGigE0/4/CPU0/14", DESCR: "10GBASE-SR SFP+ Module for MMF"
+        PID: SFP-10G-SR         , VID: V03 , SN: JUR184402WK     
 
-    NAME: "module mau TenGigE0/4/CPU0/16", DESCR: "10GBASE-LR SFP+ Module for SMF"
-    PID: SFP-10G-LR         , VID: V02 , SN: FNS16201FK4     
+        NAME: "module mau TenGigE0/4/CPU0/16", DESCR: "10GBASE-LR SFP+ Module for SMF"
+        PID: SFP-10G-LR         , VID: V02 , SN: FNS16201FK4     
 
-    NAME: "TenGigE0/4/0/20", DESCR: "Non-Cisco FINISAR CORP. SFP+ 10G Pluggable Optics Module"
-    PID: FTLX1471D3BNL-J1, VID: A, SN: APG0MX8         
+        NAME: "TenGigE0/4/0/20", DESCR: "Non-Cisco FINISAR CORP. SFP+ 10G Pluggable Optics Module"
+        PID: FTLX1471D3BNL-J1, VID: A, SN: APG0MX8         
 
-    NAME: "module mau TenGigE0/4/CPU0/21", DESCR: "10GBASE-LR SFP+ Module for SMF"
-    PID: SFP-10G-LR         , VID: V02 , SN: ONT174402HM     
+        NAME: "module mau TenGigE0/4/CPU0/21", DESCR: "10GBASE-LR SFP+ Module for SMF"
+        PID: SFP-10G-LR         , VID: V02 , SN: ONT174402HM     
 
-    NAME: "TenGigE0/4/0/22", DESCR: "Non-Cisco SumitomoElectric SFP+ 10G Pluggable Optics Module"
-    PID: SPP5200LR-J6-M, VID: A, SN: 163627A01776    
+        NAME: "TenGigE0/4/0/22", DESCR: "Non-Cisco SumitomoElectric SFP+ 10G Pluggable Optics Module"
+        PID: SPP5200LR-J6-M, VID: A, SN: 163627A01776    
 
-    NAME: "TenGigE0/4/0/23", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
-    PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL233       
+        NAME: "TenGigE0/4/0/23", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
+        PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL233       
 
     '''}
 
@@ -1103,21 +1103,18 @@ class test_show_inventory(unittest.TestCase):
     }
 
     def test_show_inventory_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         invetory_obj1 = ShowInventory(device=self.device)
         parsed_output1 = invetory_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
 
     def test_show_inventory_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         invetory_obj2 = ShowInventory(device=self.device)
         parsed_output2 = invetory_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
     
     def test_show_inventory_golden3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         invetory_obj2 = ShowInventory(device=self.device)
         parsed_output2 = invetory_obj2.parse()
