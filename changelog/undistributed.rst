@@ -204,6 +204,8 @@
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
         * update schema and add regex
         * to support more varied tlv blocks
+    * Updated ShowOspfMplsTrafficEngLink:
+        * updated schema and regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
