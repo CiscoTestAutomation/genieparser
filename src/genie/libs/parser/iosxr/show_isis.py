@@ -3476,3 +3476,156 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 continue
 
         return parsed_output
+
+
+class ShowIsisPrivateAllSchema(MetaParser):
+    ''' Schema for commands:
+       * show isis private all 
+    '''
+
+    schema = {
+
+    }
+
+class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
+
+    cli_command = 'show isis private all'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
+        r'\++\s+IS\-IS\s+(?P<instance>\w+)\s+Global\s+Private\s+Data\s+\++' 
+
+        # list_linkage.next                               : 0x0
+        # list_linkage.previous                           : 0x44b2534
+        r'list_linkage\.(?P<field_name>\w+)\s+\:\s*(?P<value>\w+)'
+
+        # lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+        # lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+        # lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+        # lsp_arrivaltime_parameter.max_count           : 0
+        # lsp_arrivaltime_parameter.max_window_size_msec: 120001
+        r'^lsp_arrivaltime_parameter\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)\s*\:\s*(?P<value>\d+)'
+
+        # lsp_gen_interval.initial_wait_msecs           : 50
+        # lsp_gen_interval.secondary_wait_msecs         : 200
+        # lsp_gen_interval.maximum_wait_msecs           : 5000
+        r'^lsp_gen_interval\.*(?P<field_1>\w*)\s*\:\s*(?P<value>\d+)'
+
+        # auth_cfg_ctx.alg                              : None
+        # auth_cfg_ctx.failure_mode                     : Drop
+        # auth_cfg_ctx.password                         : 0xdecafbad
+        # auth_cfg_ctx.accept_password                  : 0xdecafbad
+        r'^auth_cfg_ctx\.*(?P<field_1>\w+)\s*\:\s*(?P<value>\w+)'
+
+        # upd_db.tree.node_free_fn                        : 0x42fd08a
+        # upd_db.tree.data_to_str_fn                      : 0x42fd094
+        # upd_db.tree_node_chunks.name                    : 0x448764c
+        # upd_db.tree_node_chunks.size                    : 28
+        # upd_db.tree_node_chunks.flags                   : 1297
+        # upd_db.tree_node_chunks.chunk                   : 0x1543146c
+        # upd_db.tree_node_chunks.num_allocated_elements  : 0        
+        r'upd_db\.(\w*)\.*(\w*)\.*(\w*)\.*(\w*)\s*\:\s*([\s\S]+)$'
+
+        # spf_interval.initial_wait_msecs             : 50
+        # spf_interval.secondary_wait_msecs           : 200
+        # spf_interval.maximum_wait_msecs             : 5000
+        r'^spf_interval\.*(\w+)\s*\:\s*(\d+)'
+
+        # idb_list.sll_head                               : 0x151942e0
+        # idb_list.sll_tail                               : 0x15193fd4
+        # idb_list.sll_count                              : 8
+        # idb_list.sll_maximum                            : 0
+        r'^idb_list\.*(\w+)\s*\:\s*(\w+)$'
+
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
+        r'^prefix_priority_acl\[(\w+)\]\s*\:\s*(\w+)'
+
+        # roca_event.timer.last_execution_time.tv_nsec  : 824108467
+        # roca_event.log                                : 0x15474024
+        # roca_event.class                              : <error>
+        r'^roca_event\.*(\w+)\.*(\w*)\.*(\w*)\s*\:\s*([\S]+)'
+
+        # stats.num_spfs                                : 5004
+        # stats.num_ispfs                               : 0
+        # stats.num_nhcs                                : 10
+        # stats.num_prcs                                : 1219
+        # stats.num_periodic_spfs                       : 3876
+        r'^stats\.*(\w*)\s*\:\s*(\d+)'
+
+        # trap_stats.isisSysStatManAddrDropFromAreas      : 0
+        # trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
+        # trap_stats.isisSysStatSeqNumSkips               : 1
+        # trap_stats.isisSysStatOwnLSPPurges              : 3
+        # trap_stats.isisSysStatIDFieldLenMismatches      : 0
+        # trap_stats.isisSysStatLSPErrors                 : 0
+
+        r'^trap_stats\.*(\w*)\s*\:\s*(\d+)'
+
+        # dec_db.name                                     : L2 Decision DB
+        # dec_db.tree.key_size                            : 8
+        # dec_db.tree.size                                : 82
+        # dec_db.tree.node_alloc_data                     : 0x15394290
+        # dec_db.tree.node_alloc_fn                       : 0x42fd024
+        # dec_db.tree.node_free_fn                        : 0x42fd
+        r'^dec_db\.*(\w*)\.*(\w*)\.*(\w*)\.*(\w*)\s*\:\s*([\S\s]+)'
+
+        # node_db.node_created_fn                         : 0x424fd84
+        # node_db.node_destroyed_fn                       : 0x424ffa6
+        # node_db.node_ltopo_created_fn                   : 0x42500b6
+        # node_db.node_ltopo_destroyed_fn                 : 0x42503ba
+        # node_db.node_topo_created_fn                    : 0x4250536
+        # node_db.node_topo_destroyed_fn                  : 0x42506b4
+        # node_db.callback_context                        : 0x15393bfc
+        # node_db.root_element                            : 0x151fb9bc
+        # node_db.num_nodes                               : 64
+        r'node_db\.*(\w*)\s*\:\s*(\w+)'
+
+        # [001] is_spf_prefix_priority_acl_names_set : FALSE
+        # [001] is_spf_prefix_priority_tags_set      : FALSE
+        r'\[(\d+)\]\s*is\S+\s*:\s*(FALSE|TRUE)'
+
+        # [000] spf_prefix_priority_acl_names        : 0x0
+        # [001] spf_prefix_priority_acl_names        : 0x0
+        # [002] spf_prefix_priority_acl_names        : 0x0
+        # [003] spf_prefix_priority_acl_names        : 0x0
+        # [000] spf_prefix_priority_tags             : 0
+        # [001] spf_prefix_priority_tags             : 0
+        # [002] spf_prefix_priority_tags             : 0
+        # [003] spf_prefix_priority_tags             : 0
+        r'\[(\d+)\]\s*spf\S+\s*:\s*(\S+)'
+
+        # te.tunnel_table                               : 0x153ab844
+        # te.info_from_te                               : 0x0
+        # te.pce_info_from_te                           : 0x0
+        # te.is_pce_ready                               : FALSE
+        r'^te\.*(\w*)\s*\:\s*(\w+)'
+
+        # firsthopchanged.classification                : 0
+        # firsthopchanged.is_sorted                     : TRUE
+        # firsthopchanged.array                         : 0x1540d4e0
+        # firsthopchanged.num_elements                  : 0
+        r'firsthopchanged\.*(\w*)\s*\:\s*(\w+)'
+
+        # unreached.classification                      : 0
+        # unreached.is_sorted                           : FALSE
+        # unreached.array                               : 0x1540d4b4
+        # unreached.num_elements                        : 0
+        r'unreached\.*(\w*)\s*\:\s*(\w+)'
+
+        # paths.classification                          : 0
+        # paths.is_sorted                               : FALSE
+        # paths.array                                   : 0x1540d45c
+        # paths.num_elements                            : 64
+        r'paths\.*(\w*)\s*\:\s*(\w+)'
+
+        # linkchanged.classification                    : 2
+        # linkchanged.is_sorted                         : TRUE
+        # linkchanged.array                             : 0x1540d66c
+        # linkchanged.num_elements                      : 0
+        r'linkchanged\.*(\w*)\s*\:\s*(\w+)'
