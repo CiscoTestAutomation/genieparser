@@ -207,7 +207,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
             # *via 10.55.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
             # via 10.13.110.1, Eth1/2.110, [110/41], 5d03h, ospf-1, intra
-            # via 1.1.1.1, [200/0], 5d03h, bgp-65000, internal, tag 65000 (hidden)
+            # via 10.4.1.1, [200/0], 5d03h, bgp-65000, internal, tag 65000 (hidden)
             # *via 10.13.90.1, Eth1/2.90, [90/3072], 1w5d, eigrp-test, internal
             p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)'
                             r'(%(?P<table>[\w\:]+))?, *'
@@ -573,7 +573,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
         # *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
-        # via 1.1.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
+        # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
         # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
         p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\w\:\.\%]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
@@ -654,7 +654,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
-            # via 1.1.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
+            # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
             m = p3.match(line)
             if m:

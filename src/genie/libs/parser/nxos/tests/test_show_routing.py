@@ -458,14 +458,14 @@ class test_show_routing_vrf_all(unittest.TestCase):
                 'address_family': {
                     'ipv4 unicast': {
                         'ip': {
-                            '3.3.3.3/32': {
+                            '10.36.3.3/32': {
                                 'ubest_num': '2',
                                 'mbest_num': '0',
                                 'attach': 'attached',
                                 'best_route': {
                                     'unicast': {
                                         'nexthop': {
-                                            '3.3.3.3': {
+                                            '10.36.3.3': {
                                                 'protocol': {
                                                     'local': {
                                                         'interface': 'Loopback0',
@@ -492,16 +492,16 @@ class test_show_routing_vrf_all(unittest.TestCase):
         },
     }
     golden_output1 = {'execute.return_value': '''
-        show routing 3.3.3.3
+        show routing 10.36.3.3
         IP Route Table for VRF "default"
         '*' denotes best ucast next-hop
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
         '%<string>' in via output denotes VRF <string>
 
-        3.3.3.3/32, ubest/mbest: 2/0, attached
-            *via 3.3.3.3, Lo0, [0/0], 1w4d, local
-            *via 3.3.3.3, Lo0, [0/0], 1w4d, direct
+        10.36.3.3/32, ubest/mbest: 2/0, attached
+            *via 10.36.3.3, Lo0, [0/0], 1w4d, local
+            *via 10.36.3.3, Lo0, [0/0], 1w4d, direct
     '''}
 
     golden_parsed_output2 = {
@@ -510,7 +510,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                 'address_family': {
                     'ipv4 unicast': {
                         'ip': {
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'ubest_num': '1',
                                 'mbest_num': '0',
                                 'best_route': {
@@ -533,7 +533,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                 },
                                 'routes': {
                                     'nexthop': {
-                                        '1.1.1.1': {
+                                        '10.4.1.1': {
                                             'protocol': {
                                                 'bgp': {
                                                     'preference': '200',
@@ -568,16 +568,16 @@ class test_show_routing_vrf_all(unittest.TestCase):
         },
     }
     golden_output2 = {'execute.return_value': '''
-        show routing 1.1.1.1
+        show routing 10.4.1.1
         IP Route Table for VRF "default"
         '*' denotes best ucast next-hop
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
         '%<string>' in via output denotes VRF <string>
 
-        1.1.1.1/32, ubest/mbest: 1/0
+        10.4.1.1/32, ubest/mbest: 1/0
             *via 10.13.90.1, Eth1/2.90, [90/2848], 1w5d, eigrp-test, internal
-            via 1.1.1.1, [200/0], 1w5d, bgp-65000, internal, tag 65000 (hidden)
+            via 10.4.1.1, [200/0], 1w5d, bgp-65000, internal, tag 65000 (hidden)
             via 10.13.110.1, Eth1/2.110, [110/41], 1w5d, ospf-1, intra
     '''}
 
@@ -605,14 +605,14 @@ class test_show_routing_vrf_all(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         bgp_obj = ShowRoutingVrfAll(device=self.device)
-        parsed_output = bgp_obj.parse(ip='3.3.3.3')
+        parsed_output = bgp_obj.parse(ip='10.36.3.3')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         bgp_obj = ShowRoutingVrfAll(device=self.device)
-        parsed_output = bgp_obj.parse(ip='1.1.1.1')
+        parsed_output = bgp_obj.parse(ip='10.4.1.1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
@@ -2173,8 +2173,8 @@ class test_show_ip_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '1.0.0.0/8': {
-                                'route': '1.0.0.0/8',
+                            '10.1.0.0/8': {
+                                'route': '10.1.0.0/8',
                                 'active': True,
                                 'ubest': 1,
                                 'mbest': 0,
@@ -2235,7 +2235,7 @@ class test_show_ip_route(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
         '%<string>' in via output denotes VRF <string>
 
-        1.0.0.0/8, ubest/mbest: 1/0
+        10.1.0.0/8, ubest/mbest: 1/0
             *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
         10.12.120.0/24, ubest/mbest: 2/0
             *via 10.13.120.1, Eth1/2.120, [120/2], 2w0d, rip-1, rip
