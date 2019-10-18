@@ -2,8 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-import genie.gre
-
 # ATS
 from ats.topology import Device
 
