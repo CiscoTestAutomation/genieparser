@@ -93,7 +93,7 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
 
         # Loopback0 is up, line protocol is up
         p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<enabled>[\w\s]+), '
-                         '+line +protocol +is +(?P<line_protocol>[\w\s]+)$') 
+                        r'+line +protocol +is +(?P<line_protocol>[\w\s]+)$') 
 
         # Internet address is 2.2.2.2/32
         p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[\d\.]+)'
