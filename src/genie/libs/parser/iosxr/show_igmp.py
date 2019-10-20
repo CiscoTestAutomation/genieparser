@@ -248,3 +248,179 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
                                 
         return result_dict
         
+#############################################################################
+# Parser For Show Igmp Summary 
+#############################################################################
+
+class ShowIgmpSummarySchema(MetaParser):
+    """Schema for show igmp groups detail"""
+    schema = {
+        Any():{
+            'Robustness_value': int,
+            'GroupxInterfaces': int,
+            'NoOfGroupsForVrf': int,
+            'Supported_Interfaces': int,
+            'Unsupported_Interfaces': int,
+            'Enabled_Interfaces': int,
+            'Disabled_Interfaces': int,
+            'MTE_tuple_count': int,
+            'Interface': {
+                Any(): {
+                    'Number_Groups': int,
+                    'Max_Groups': int,
+                },
+            }, 
+        }
+    }
+    
+class ShowIgmpSummary(ShowIgmpSummarySchema):
+    """Parser for show igmp summary"""
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    cli_command = ['show igmp summary', 'show igmp vrf {vrf} summary']
+    def cli(self, vrf='', output=None):
+        '''
+        parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        '''
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Robustness Value 2
+        p1 = re.compile(r'^Robustness +Value +(?P<Robustness_value>[\d]+)$') 
+
+        # No. of Group x Interfaces 25
+        p2 = re.compile(r'^No. +of +Group +x +Interfaces +(?P<GroupxInterfaces>[\d]+)$')
+        
+        # Maximum number of Groups for this VRF 50000
+        p3 = re.compile(r'^Maximum +number +of +Groups +for +this +VRF +(?P<NoOfGroupsForVrf>[\d]+)$')
+        
+        # Supported Interfaces   : 9
+        p4 = re.compile(r'^Supported +Interfaces +: +(?P<Supported_Interfaces>[\d]+)$')
+        
+        # Unsupported Interfaces : 0
+        p5 = re.compile(r'^Unsupported +Interfaces +: +(?P<Unsupported_Interfaces>[\d]+)$')
+        
+        # Enabled Interfaces     : 3
+        p6 = re.compile(r'^Enabled +Interfaces +: +(?P<Enabled_Interfaces>[\d]+)$')
+        
+        # Disabled Interfaces    : 6
+        p7 = re.compile(r'^Disabled +Interfaces +: +(?P<Disabled_Interfaces>[\d]+)$')
+        
+        # MTE tuple count        : 0
+        p8 = re.compile(r'^MTE +tuple +count +: +(?P<MTE_tuple_count>[\d]+)$')
+        
+        # Interface                       Number  Max #
+        #                                 Groups  Groups
+        # Loopback0                       6       25000
+        # GigabitEthernet0/0/0/0.90       1       25000
+        # GigabitEthernet0/0/0/1.90       1       25000
+        # GigabitEthernet0/0/0/0.110      6       25000
+        # GigabitEthernet0/0/0/0.115      4       25000
+        # GigabitEthernet0/0/0/0.120      1       25000
+        # GigabitEthernet0/0/0/1.110      5       25000
+        # GigabitEthernet0/0/0/1.115      0       25000
+        # GigabitEthernet0/0/0/1.120      1       25000
+        
+        p9 = re.compile(r'(?P<interface>(\S+)) +(?P<Number_Groups>(\d+)) +(?P<Max_Groups>(\d+))?$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Robustness Value 2
+            m = p1.match(line)
+            if m:
+                Robustness_value = m.groupdict()['Robustness_value']
+                igmp_dict = result_dict.setdefault('igmp', {})
+                igmp_dict['Robustness_value'] = int(Robustness_value)
+                continue
+                
+            # No. of Group x Interfaces 25
+            m = p2.match(line)
+            if m:
+                GroupxInterfaces = m.groupdict()['GroupxInterfaces']
+                igmp_dict['GroupxInterfaces'] = int(GroupxInterfaces)
+                continue
+                
+            # Maximum number of Groups for this VRF 50000
+            m = p3.match(line)
+            if m:
+                NoOfGroupsForVrf = m.groupdict()['NoOfGroupsForVrf']
+                igmp_dict['NoOfGroupsForVrf'] = int(NoOfGroupsForVrf)
+                continue
+               
+            # Supported Interfaces   : 9
+            m = p4.match(line)
+            if m:
+                Supported_Interfaces = m.groupdict()['Supported_Interfaces']
+                igmp_dict['Supported_Interfaces'] = int(Supported_Interfaces)
+                continue
+                
+            # Unsupported Interfaces : 0
+            m = p5.match(line)
+            if m:
+                Unsupported_Interfaces = m.groupdict()['Unsupported_Interfaces']
+                igmp_dict['Unsupported_Interfaces'] = int(Unsupported_Interfaces)
+                continue
+                
+            # Enabled Interfaces     : 3
+            m = p6.match(line)
+            if m:
+                Enabled_Interfaces = m.groupdict()['Enabled_Interfaces']
+                igmp_dict['Enabled_Interfaces'] = int(Enabled_Interfaces)
+                continue
+            
+            # Disabled Interfaces    : 6
+            m = p7.match(line)
+            if m:
+                Disabled_Interfaces = m.groupdict()['Disabled_Interfaces']
+                igmp_dict['Disabled_Interfaces'] = int(Disabled_Interfaces)
+                continue
+                
+            # MTE tuple count        : 0
+            m = p8.match(line)
+            if m:
+                MTE_tuple_count = m.groupdict()['MTE_tuple_count']
+                igmp_dict['MTE_tuple_count'] = int(MTE_tuple_count)
+                continue
+                
+            # Interface                       Number  Max #
+            #                                 Groups  Groups
+            # Loopback0                       6       25000
+            # GigabitEthernet0/0/0/0.90       1       25000
+            # GigabitEthernet0/0/0/1.90       1       25000
+            # GigabitEthernet0/0/0/0.110      6       25000
+            # GigabitEthernet0/0/0/0.115      4       25000
+            # GigabitEthernet0/0/0/0.120      1       25000
+            # GigabitEthernet0/0/0/1.110      5       25000
+            # GigabitEthernet0/0/0/1.115      0       25000
+            # GigabitEthernet0/0/0/1.120      1       25000
+            
+            m = p9.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                Number_Groups = m.groupdict()['Number_Groups']
+                Max_Groups = m.groupdict()['Max_Groups']
+                interface_dict = igmp_dict.setdefault('Interface', {}).setdefault(interface, {})
+                interface_dict.update({'Number_Groups': int(Number_Groups), 'Max_Groups': int(Max_Groups)})
+                continue
+             
+        return result_dict
+
+        

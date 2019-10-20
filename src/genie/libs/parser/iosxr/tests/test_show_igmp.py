@@ -8,7 +8,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_igmp import ShowIgmpInterface
+from genie.libs.parser.iosxr.show_igmp import ShowIgmpInterface, ShowIgmpSummary
 
 #############################################################################
 # unitest For Show IGMP Interface
@@ -314,6 +314,186 @@ class TestShowIgmpInterface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_interface_output1)
 
+#############################################################################
+# unitest For Show IGMP Summary
+#############################################################################
 
+class test_show_igmp_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'igmp': {
+            'Disabled_Interfaces': 6,
+            'Enabled_Interfaces': 3,
+            'GroupxInterfaces': 16,
+            'Interface': {
+                'Loopback0': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 6 
+                },
+                'GigabitEthernet0/0/0/0.90': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/1.90': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/0.110': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 6
+                },
+                'GigabitEthernet0/0/0/0.115': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 4
+                },
+                'GigabitEthernet0/0/0/0.120': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/1.110': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 5
+                },
+                'GigabitEthernet0/0/0/1.115': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 0
+                },
+                'GigabitEthernet0/0/0/1.120': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                }
+            },
+            'MTE_tuple_count': 0,
+            'NoOfGroupsForVrf': 50000,
+            'Robustness_value': 2,
+            'Supported_Interfaces': 9,
+            'Unsupported_Interfaces': 0,
+
+        }
+    }
+
+    golden_parsed_summary_output = {
+        'igmp': {
+            'Disabled_Interfaces': 6,
+            'Enabled_Interfaces': 3,
+            'GroupxInterfaces': 15,
+            'Interface': {
+                'Loopback300': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 4 
+                },
+                'GigabitEthernet0/0/0/0.390': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/0.410': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 7
+                },
+                'GigabitEthernet0/0/0/0.415': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 4
+                },
+                'GigabitEthernet0/0/0/0.420': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/1.390': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                },
+                'GigabitEthernet0/0/0/1.410': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 5
+                },
+                'GigabitEthernet0/0/0/1.415': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 0
+                },
+                'GigabitEthernet0/0/0/1.420': {
+                    'Max_Groups': 25000,
+                    'Number_Groups': 1
+                }
+            },
+            'MTE_tuple_count': 0,
+            'NoOfGroupsForVrf': 50000,
+            'Robustness_value': 2,
+            'Supported_Interfaces': 9,
+            'Unsupported_Interfaces': 0,
+        }
+    }
+
+
+    golden_output = {'execute.return_value': '''
+      Robustness Value 2
+      No. of Group x Interfaces 16
+      Maximum number of Groups for this VRF 50000
+      
+      Supported Interfaces   : 9
+      Unsupported Interfaces : 0
+      Enabled Interfaces     : 3
+      Disabled Interfaces    : 6
+      
+      MTE tuple count        : 0
+      
+      Interface                       Number  Max #
+                                      Groups  Groups
+      Loopback0                       6       25000
+      GigabitEthernet0/0/0/0.90       1       25000
+      GigabitEthernet0/0/0/1.90       1       25000
+      GigabitEthernet0/0/0/0.110      6       25000
+      GigabitEthernet0/0/0/0.115      4       25000
+      GigabitEthernet0/0/0/0.120      1       25000
+      GigabitEthernet0/0/0/1.110      5       25000
+      GigabitEthernet0/0/0/1.115      0       25000
+      GigabitEthernet0/0/0/1.120      1       25000
+    
+    '''}
+    golden_summary_output={'execute.return_value':'''
+      Robustness Value 2
+      No. of Group x Interfaces 15
+      Maximum number of Groups for this VRF 50000
+      
+      Supported Interfaces   : 9
+      Unsupported Interfaces : 0
+      Enabled Interfaces     : 3
+      Disabled Interfaces    : 6
+      
+      MTE tuple count        : 0
+      
+      Interface                       Number  Max #
+                                      Groups  Groups
+      Loopback300                     4       25000
+      GigabitEthernet0/0/0/0.390      1       25000
+      GigabitEthernet0/0/0/0.410      7       25000
+      GigabitEthernet0/0/0/0.415      4       25000
+      GigabitEthernet0/0/0/0.420      1       25000
+      GigabitEthernet0/0/0/1.390      1       25000
+      GigabitEthernet0/0/0/1.410      5       25000
+      GigabitEthernet0/0/0/1.415      0       25000
+      GigabitEthernet0/0/0/1.420      1       25000
+
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        summary_detail_obj = ShowIgmpSummary(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = summary_detail_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        summary_detail_obj = ShowIgmpSummary(device=self.device)
+        parsed_output = summary_detail_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_summary_output)
+        summary_detail_obj = ShowIgmpSummary(device=self.device)
+        parsed_output = summary_detail_obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_summary_output)
+        
 if __name__ == '__main__':
     unittest.main()
