@@ -1877,6 +1877,9 @@ IPv6 access list OutFilter_IPv6
                     'actions': {
                         'forwarding': 'permit'
                     },
+                    'statistics': {
+                        'matched_packets': 1168716
+                    },
                     'matches': {
                         'l3': {
                             'ipv4': {
@@ -1930,6 +1933,9 @@ IPv6 access list OutFilter_IPv6
                 '40': {
                     'actions': {
                         'forwarding': 'permit'
+                    },
+                    'statistics': {
+                        'matched_packets': 8353358
                     },
                     'matches': {
                         'l3': {
