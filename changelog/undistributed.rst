@@ -565,6 +565,7 @@
         * show l2vpn forwarding protection main-interface location {location}
     * Updated ShowL2vpnBridgeDomain to support more outputs
     * Updated ShowL2vpnBridgeDomainDetail to support more outputs
+    * Updated ShowL2vpnBridgeDomainDetail to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE

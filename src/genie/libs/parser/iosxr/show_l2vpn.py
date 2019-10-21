@@ -795,6 +795,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             'broadcast_multicast': str,
                             'unknown_unicast': str
                         },
+                        Optional('multicast_source'): str,
                         Optional('mac_aging_time'): int,
                         Optional('mac_aging_type'): str,
                         Optional('mac_limit'): int,
@@ -895,6 +896,9 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Optional('ip_source_guard_drop_counters'): {
                                         'packets': str,
                                         'bytes': str,
+                                    },
+                                    Optional('pd_system_data'): {
+                                        Any(): Any()
                                     }
                                 }
                             }
@@ -1378,6 +1382,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # Forward-class: 0
         p81 = re.compile(r'^Forward-class: +(?P<forward_class>\d+)$')
 
+        # Multicast Source: Not Set
+        p82 = re.compile(r'^Multicast +Source: +(?P<multicast_source>[\S ]+)$')
+        
+        # PD System Data: AF-LIF-IPv4: 0x00000000  AF-LIF-IPv6: 0x00000000
+        p83 = re.compile(r'^PD +System +Data: +(?P<key_1>\S+): +(?P<val_1>\S+) +(?P<key_2>\S+): +(?P<val_2>\S+)$')
+        
         for line in out.splitlines():
             original_line = line
             line = line.strip()
@@ -2286,6 +2296,27 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 group = m.groupdict()
                 forward_class = group['forward_class']
                 pw_id_dict.update({'forward_class': forward_class})
+                continue
+            
+            # Multicast Source: Not Set
+            m = p82.match(line)
+            if m:
+                group = m.groupdict()
+                multicast_source = group['multicast_source']
+                bridge_domain_dict.update({'multicast_source': multicast_source})
+                continue
+            
+            # PD System Data: AF-LIF-IPv4: 0x00000000  AF-LIF-IPv6: 0x00000000
+            m = p83.match(line)
+            if m:
+                group = m.groupdict()
+                key_1 = group['key_1']
+                val_1 = group['val_1']
+                key_2 = group['key_2']
+                val_2 = group['val_2']
+                pd_system_data = interface_dict.setdefault('pd_system_data', {})
+                pd_system_data.update({key_1: val_1})
+                pd_system_data.update({key_2: val_2})
                 continue
 
             #     (LSP ping verification)               
