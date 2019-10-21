@@ -176,8 +176,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 continue
 
             m = p2.match(line)
-            # import pdb
-            # pdb.set_trace()
+
             if m:
                 next_hop = ""
 
