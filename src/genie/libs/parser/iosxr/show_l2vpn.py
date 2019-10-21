@@ -864,6 +864,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Optional('mld_snooping_profile'): str,
                                     Optional('mac_limit_threshold'): str,
                                     Optional('static_mac_address'): list,
+                                    Optional('split_horizon_group'): str,
                                     Optional('statistics'): {
                                         'packet_totals': {
                                             'receive': int,
@@ -2037,6 +2038,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 split_horizon_group = group['split_horizon_group']
                 if dict_type == 'pw' or dict_type == 'access_pw':
                     pw_id_dict.update({'split_horizon_group': split_horizon_group})
+                elif dict_type == 'ac':
+                    interface_dict.update({'split_horizon_group': split_horizon_group})
                 else:
                     bridge_domain_dict.update({'split_horizon_group': split_horizon_group})
                 continue
@@ -2310,9 +2313,9 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p83.match(line)
             if m:
                 group = m.groupdict()
-                key_1 = group['key_1']
+                key_1 = group['key_1'].lower().replace('-','_')
                 val_1 = group['val_1']
-                key_2 = group['key_2']
+                key_2 = group['key_2'].lower().replace('-','_')
                 val_2 = group['val_2']
                 pd_system_data = interface_dict.setdefault('pd_system_data', {})
                 pd_system_data.update({key_1: val_1})

@@ -1464,6 +1464,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'xc_id': '0x8000000b',
                                     'interworking': 'none',
                                     'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
                                     'state': 'down (Segment-down)',
@@ -1487,6 +1488,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -1515,6 +1517,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -1592,7 +1595,6 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
         },
     }
-
     golden_output3 = {'execute.return_value': '''
         show l2vpn bridge-domain detail
 
@@ -1929,7 +1931,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_port_down_flush': 'enabled',
                         'mac_secure': 'disabled',
                         'mac_secure_logging': 'disabled',
-                        'split_horizon_group': 'Access',
+                        'split_horizon_group': 'none',
                         'dynamic_arp_inspection': 'disabled',
                         'dynamic_arp_logging': 'disabled',
                         'ip_source_guard': 'disabled',
@@ -1957,6 +1959,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
                                     'bvi_mac_address': ['00c1.6474.81ca'],
+                                    'split_horizon_group': 'Access',
                                 },
                             },
                         },
@@ -2108,6 +2111,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
                                     'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
                                     'state': 'down (Segment-down)',
@@ -2131,6 +2135,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -2159,6 +2164,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -2355,9 +2361,10 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
                                     'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
                                     'pd_system_data': {
-                                        'AF-LIF-IPv4': '0x00000000',
-                                        'AF-LIF-IPv6': '0x00000000',
+                                        'af_lif_ipv4': '0x00000000',
+                                        'af_lif_ipv6': '0x00000000',
                                     },
                                 },
                                 'Bundle-Ether11.100': {
@@ -2382,14 +2389,15 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'enabled',
                                     'igmp_snooping_profile': 'BTV-VSPP',
                                     'mld_snooping_profile': 'none',
                                     'pd_system_data': {
-                                        'AF-LIF-IPv4': '0x00013807',
-                                        'AF-LIF-IPv6': '0x0001381d',
+                                        'af_lif_ipv4': '0x00013807',
+                                        'af_lif_ipv6': '0x0001381d',
                                     },
                                 },
                             },
@@ -2432,7 +2440,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
         },
     }
-
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
