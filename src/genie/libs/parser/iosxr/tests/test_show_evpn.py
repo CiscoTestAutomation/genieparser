@@ -2274,6 +2274,46 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         },
     }
 
+    golden_output4 = {'execute.return_value': ''' 
+        +++ genie-Device: executing command 'show evpn internal-label detail' +++
+        show evpn internal-label detail
+
+        Mon Oct 22 10:43:37.980 EDT
+
+        VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label   
+        ---------- ------ --------------------------- ----------   --------
+        1000       MPLS   0001.0000.0102.0000.0011    0                    
+        Multi-paths resolved: FALSE (Remote all-active) (ECMP Disable)
+            Reason: No EAD/ES
+        Multi-paths Internal label: None
+            EAD/EVI     172.16.2.88                              100010         
+
+        RP/0/RP0/CPU0:genie-Device#
+
+    '''}
+
+    deivce_parsed_output4 = {
+        'vpn_id': {
+            1000: {
+                'vpn_id': 1000,
+                'encap': 'MPLS',
+                'esi': '0001.0000.0102.0000.0011',
+                'eth_tag': 0,
+                'mp_resolved': True,
+                'mp_info': 'Remote all-active, ECMP Disable',
+                'pathlists': {
+                    'ead_evi': {
+                        'nexthop': {
+                            '172.16.2.88': {
+                                'label': 100010,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
@@ -2303,6 +2343,12 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.deivce_parsed_output)
+    
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.deivce_parsed_output4)
 
 # ===================================================
 #  Unit test for 'show evpn ethernet-segment'
