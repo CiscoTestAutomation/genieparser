@@ -16,6 +16,7 @@ from genie.libs.parser.iosxr.show_isis import (
     ShowIsisAdjacency, 
     ShowIsisNeighbors,
     ShowIsisStatistics,
+    ShowIsisPrivateAll,
     ShowIsisSpfLogDetail,
     ShowIsisDatabaseDetail,
     ShowIsisSegmentRoutingLabelTable,
@@ -4902,6 +4903,773 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+class TestShowIsisPrivateAll(unittest.TestCase):
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {}
+
+    golden_output_1 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:bl1-tatooine#show isis private all
+        Tue Oct  8 17:36:24.107 EDT
+
+
+        +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
+
+        ISIS TEST private data:
+          cfg_refcount                                      : 57
+          isis_is_level                                     : level-2-only
+          ignore_cksum_errs                                 : TRUE
+          cfg_log_drops                                     : FALSE
+          nsf_cfg_purgetime                                 : 90
+          nsf2_t1_delay                                     : 1
+          nsf2_t1_max_num_exp                               : 10
+          nsf_cfg_interval                                  : 300
+          Address Family Table
+            IPv4
+              ref_count                                     : 1
+            IPv6
+              ref_count                                     : 0
+          Link Topology Table
+            Standard (IPv4 Unicast)
+              ref_count                                     : 1
+              index                                         : 0
+              is_running                                    : TRUE
+              list_linkage.next                             : 0x0
+              list_linkage.previous                         : 0x44b3f24
+          Topology Table
+            IPv4 Unicast
+              Configuration:
+                check_adjacencies                           : (not set)
+                attached_bit                                : (not set)
+                max_paths                                   : (not set)
+                is_mcast_intact_set                         : FALSE
+                mcast_intact                                : FALSE
+                is_igp_intact_set                           : FALSE
+                igp_intact                                  : FALSE
+                is_first_hop_source_set                     : FALSE
+                first_hop_source                            : FALSE
+              ref_count                                     : 23
+              index                                         : 0
+              ltopo_index                                   : 0
+              list_linkage.next                             : 0x0
+              list_linkage.previous                         : 0x44b51fc
+          Area Configuration Table
+            Cross Levels
+              is_lsp_gen_interval_set                       : TRUE
+              lsp_gen_interval.initial_wait_msecs           : 20
+              lsp_gen_interval.secondary_wait_msecs         : 100
+              lsp_gen_interval.maximum_wait_msecs           : 5000
+              is_lsp_arrivaltime_parameter_set              : FALSE
+              lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+              lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+              lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+              lsp_arrivaltime_parameter.max_count           : 0
+              lsp_arrivaltime_parameter.max_window_size_msec: 120001
+              is_lsp_checksum_interval_set                  : FALSE
+              lsp_checksum_interval_secs                    : 0
+              is_lsp_refresh_interval_set                   : TRUE
+              lsp_refresh_interval_secs                     : 35000
+              is_lsp_lifetime_set                           : TRUE
+              lsp_lifetime_secs                             : 65535
+              is_lsp_mtu_set                                : FALSE
+              lsp_mtu                                       : 0
+              is_auth_cfg_ctx_set                           : FALSE
+              auth_cfg_ctx.alg                              : None
+              auth_cfg_ctx.failure_mode                     : Drop
+              auth_cfg_ctx.password                         : 0xdecafbad
+              auth_cfg_ctx.accept_password                  : 0xdecafbad
+              is_snp_authentication_options_set             : FALSE
+              snp_authentication_options                    : 0
+              is_overload_set                               : FALSE
+              overload_mode                                 : -1
+              overload_on_startup_secs                      : 0
+              per_topo[IPv4 Unicast]                        :
+                is_metric_style_set                         : TRUE
+                generate_metric_mask                        : 2
+                accept_metric_mask                          : 2
+                summary_table                               : 0x15431f50
+                metric                                      : 100000
+                is_spf_interval_set                         : TRUE
+                spf_interval.initial_wait_msecs             : 50
+                spf_interval.secondary_wait_msecs           : 150
+                spf_interval.maximum_wait_msecs             : 5000
+                spf_periodic_interval_secs                  : (not set)
+                ispf_state                                  : (not set)
+                max_redist_prefixes                         : (not set)
+                  [000] is_spf_prefix_priority_acl_names_set : FALSE
+                  [000] spf_prefix_priority_acl_names        : 0x0
+                  [001] is_spf_prefix_priority_acl_names_set : TRUE
+                  [001] spf_prefix_priority_acl_names        : 0x154b92c4
+                  [002] is_spf_prefix_priority_acl_names_set : TRUE
+                  [002] spf_prefix_priority_acl_names        : 0x155a0e3c
+                  [003] is_spf_prefix_priority_acl_names_set : FALSE
+                  [003] spf_prefix_priority_acl_names        : 0x0
+                  [000] is_spf_prefix_priority_tags_set      : FALSE
+                  [000] spf_prefix_priority_tags             : 0
+                  [001] is_spf_prefix_priority_tags_set      : FALSE
+                  [001] spf_prefix_priority_tags             : 0
+                  [002] is_spf_prefix_priority_tags_set      : FALSE
+                  [002] spf_prefix_priority_tags             : 0
+                  [003] is_spf_prefix_priority_tags_set      : FALSE
+                  [003] spf_prefix_priority_tags             : 0
+            Level-1
+              is_lsp_gen_interval_set                       : FALSE
+              lsp_gen_interval.initial_wait_msecs           : 50
+              lsp_gen_interval.secondary_wait_msecs         : 200
+              lsp_gen_interval.maximum_wait_msecs           : 5000
+              is_lsp_arrivaltime_parameter_set              : FALSE
+              lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+              lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+              lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+              lsp_arrivaltime_parameter.max_count           : 0
+              lsp_arrivaltime_parameter.max_window_size_msec: 120001
+              is_lsp_checksum_interval_set                  : FALSE
+              lsp_checksum_interval_secs                    : 0
+              is_lsp_refresh_interval_set                   : FALSE
+              lsp_refresh_interval_secs                     : 0
+              is_lsp_lifetime_set                           : FALSE
+              lsp_lifetime_secs                             : 0
+              is_lsp_mtu_set                                : FALSE
+              lsp_mtu                                       : 0
+              is_auth_cfg_ctx_set                           : FALSE
+              auth_cfg_ctx.alg                              : None
+              auth_cfg_ctx.failure_mode                     : Drop
+              auth_cfg_ctx.password                         : 0xdecafbad
+              auth_cfg_ctx.accept_password                  : 0xdecafbad
+              is_snp_authentication_options_set             : FALSE
+              snp_authentication_options                    : 0
+              is_overload_set                               : FALSE
+              overload_mode                                 : 0
+              overload_on_startup_secs                      : 0
+              per_topo[IPv4 Unicast]                        :
+                is_metric_style_set                         : FALSE
+                generate_metric_mask                        : 0
+                accept_metric_mask                          : 0
+                summary_table                               : 0x15431fac
+                metric                                      : (not set)
+                is_spf_interval_set                         : FALSE
+                spf_interval.initial_wait_msecs             : 50
+                spf_interval.secondary_wait_msecs           : 200
+                spf_interval.maximum_wait_msecs             : 5000
+                spf_periodic_interval_secs                  : (not set)
+                ispf_state                                  : (not set)
+                max_redist_prefixes                         : (not set)
+                  [000] is_spf_prefix_priority_acl_names_set : FALSE
+                  [000] spf_prefix_priority_acl_names        : 0x0
+                  [001] is_spf_prefix_priority_acl_names_set : FALSE
+                  [001] spf_prefix_priority_acl_names        : 0x0
+                  [002] is_spf_prefix_priority_acl_names_set : FALSE
+                  [002] spf_prefix_priority_acl_names        : 0x0
+                  [003] is_spf_prefix_priority_acl_names_set : FALSE
+                  [003] spf_prefix_priority_acl_names        : 0x0
+                  [000] is_spf_prefix_priority_tags_set      : FALSE
+                  [000] spf_prefix_priority_tags             : 0
+                  [001] is_spf_prefix_priority_tags_set      : FALSE
+                  [001] spf_prefix_priority_tags             : 0
+                  [002] is_spf_prefix_priority_tags_set      : FALSE
+                  [002] spf_prefix_priority_tags             : 0
+                  [003] is_spf_prefix_priority_tags_set      : FALSE
+                  [003] spf_prefix_priority_tags             : 0
+            Level-2
+              is_lsp_gen_interval_set                       : FALSE
+              lsp_gen_interval.initial_wait_msecs           : 50
+              lsp_gen_interval.secondary_wait_msecs         : 200
+              lsp_gen_interval.maximum_wait_msecs           : 5000
+              is_lsp_arrivaltime_parameter_set              : FALSE
+              lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+              lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+              lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+              lsp_arrivaltime_parameter.max_count           : 0
+              lsp_arrivaltime_parameter.max_window_size_msec: 120001
+              is_lsp_checksum_interval_set                  : FALSE
+              lsp_checksum_interval_secs                    : 0
+              is_lsp_refresh_interval_set                   : FALSE
+              lsp_refresh_interval_secs                     : 0
+              is_lsp_lifetime_set                           : FALSE
+              lsp_lifetime_secs                             : 0
+              is_lsp_mtu_set                                : FALSE
+              lsp_mtu                                       : 0
+              is_auth_cfg_ctx_set                           : FALSE
+              auth_cfg_ctx.alg                              : None
+              auth_cfg_ctx.failure_mode                     : Drop
+              auth_cfg_ctx.password                         : 0xdecafbad
+              auth_cfg_ctx.accept_password                  : 0xdecafbad
+              is_snp_authentication_options_set             : FALSE
+              snp_authentication_options                    : 0
+              is_overload_set                               : FALSE
+              overload_mode                                 : 0
+              overload_on_startup_secs                      : 0
+              per_topo[IPv4 Unicast]                        :
+                is_metric_style_set                         : FALSE
+                generate_metric_mask                        : 0
+                accept_metric_mask                          : 0
+                summary_table                               : 0x1539cef4
+                metric                                      : (not set)
+                is_spf_interval_set                         : FALSE
+                spf_interval.initial_wait_msecs             : 50
+                spf_interval.secondary_wait_msecs           : 200
+                spf_interval.maximum_wait_msecs             : 5000
+                spf_periodic_interval_secs                  : (not set)
+                ispf_state                                  : (not set)
+                max_redist_prefixes                         : (not set)
+                  [000] is_spf_prefix_priority_acl_names_set : FALSE
+                  [000] spf_prefix_priority_acl_names        : 0x0
+                  [001] is_spf_prefix_priority_acl_names_set : FALSE
+                  [001] spf_prefix_priority_acl_names        : 0x0
+                  [002] is_spf_prefix_priority_acl_names_set : FALSE
+                  [002] spf_prefix_priority_acl_names        : 0x0
+                  [003] is_spf_prefix_priority_acl_names_set : FALSE
+                  [003] spf_prefix_priority_acl_names        : 0x0
+                  [000] is_spf_prefix_priority_tags_set      : FALSE
+                  [000] spf_prefix_priority_tags             : 0
+                  [001] is_spf_prefix_priority_tags_set      : FALSE
+                  [001] spf_prefix_priority_tags             : 0
+                  [002] is_spf_prefix_priority_tags_set      : FALSE
+                  [002] spf_prefix_priority_tags             : 0
+                  [003] is_spf_prefix_priority_tags_set      : FALSE
+                  [003] spf_prefix_priority_tags             : 0
+          Area Table
+          Level-2
+            index                                           : 1
+            idb_list.sll_head                               : 0x151942e0
+            idb_list.sll_tail                               : 0x15193fd4
+            idb_list.sll_count                              : 8
+            idb_list.sll_maximum                            : 0
+            list_linkage.next                               : 0x0
+            list_linkage.previous                           : 0x44b2534
+            adj_db                                          : 0x1540cee4
+            adj_log                                         : 0x1539b844
+            uni_db_log                                      : 0x15411024
+            upd_db.lock.rwlock.__active                     : 0
+            upd_db.lock.rwlock.__spare                      : 0x0
+            upd_db.lock.rwlock.__blockedwriters             : 0
+            upd_db.lock.rwlock.__blockedreaders             : 0
+            upd_db.lock.rwlock.__heavy                      : 0
+            upd_db.lock.rwlock.__lock.__count               : -2147483648
+            upd_db.lock.rwlock.__lock.__owner               : 0
+            upd_db.lock.rwlock.__owner                      : 4294967294
+            upd_db.lock.description                         : 0x15393cf0
+            upd_db.tree.root                                : 0x0
+            upd_db.tree.key_size                            : 8
+            upd_db.tree.size                                : 0
+            upd_db.tree.node_alloc_data                     : 0x15393cd0
+            upd_db.tree.node_alloc_fn                       : 0x42fd024
+            upd_db.tree.node_free_fn                        : 0x42fd08a
+            upd_db.tree.data_to_str_fn                      : 0x42fd094
+            upd_db.tree_node_chunks.name                    : 0x448764c
+            upd_db.tree_node_chunks.size                    : 28
+            upd_db.tree_node_chunks.flags                   : 1297
+            upd_db.tree_node_chunks.chunk                   : 0x1543146c
+            upd_db.tree_node_chunks.num_allocated_elements  : 0
+            upd_db.area                                     : 0x15393bfc
+            upd_db.log                                      : 0x15432024
+            upd_db.name                                     : L2 Update DB
+            nsf_ietf_csnp_rcvd                              : FALSE
+            overload_bit_on_startup_timer                   : 0x15017530
+            overload_bit_trigger_expired                    : TRUE
+            overload_bit_forced_reasons                     :
+            upd_periodic_timer                              : 0x150174d0
+            checksum_ptimer.tv_sec                          : 3657420
+            checksum_ptimer.tv_nsec                         : 458761224
+            dec_db.lock.rwlock.__active                     : 0
+            dec_db.lock.rwlock.__spare                      : 0x0
+            dec_db.lock.rwlock.__blockedwriters             : 0
+            dec_db.lock.rwlock.__blockedreaders             : 0
+            dec_db.lock.rwlock.__heavy                      : 0
+            dec_db.lock.rwlock.__lock.__count               : -2147483648
+            dec_db.lock.rwlock.__lock.__owner               : 0
+            dec_db.lock.rwlock.__owner                      : 4294967294
+            dec_db.lock.description                         : 0x153942b0
+            dec_db.tree.root                                : 0x1539f9d4
+            dec_db.tree.key_size                            : 8
+            dec_db.tree.size                                : 82
+            dec_db.tree.node_alloc_data                     : 0x15394290
+            dec_db.tree.node_alloc_fn                       : 0x42fd024
+            dec_db.tree.node_free_fn                        : 0x42fd08a
+            dec_db.tree.data_to_str_fn                      : 0x42fd094
+            dec_db.tree_node_chunks.name                    : 0x448764c
+            dec_db.tree_node_chunks.size                    : 28
+            dec_db.tree_node_chunks.flags                   : 1297
+            dec_db.tree_node_chunks.chunk                   : 0x1539f844
+            dec_db.tree_node_chunks.num_allocated_elements  : 82
+            dec_db.area                                     : 0x15393bfc
+            dec_db.log                                      : 0x15453024
+            dec_db.name                                     : L2 Decision DB
+            node_db.node_created_fn                         : 0x424fd84
+            node_db.node_destroyed_fn                       : 0x424ffa6
+            node_db.node_ltopo_created_fn                   : 0x42500b6
+            node_db.node_ltopo_destroyed_fn                 : 0x42503ba
+            node_db.node_topo_created_fn                    : 0x4250536
+            node_db.node_topo_destroyed_fn                  : 0x42506b4
+            node_db.callback_context                        : 0x15393bfc
+            node_db.root_element                            : 0x151fb9bc
+            node_db.num_nodes                               : 64
+            stats.ta_lsp_build                              : 850
+            stats.ta_lsp_refresh                            : 219
+            trap_stats.isisSysStatCorrLSPs                  : 0
+            trap_stats.isisSysStatAuthTypeFails             : 0
+            trap_stats.isisSysStatAuthFails                 : 0
+            trap_stats.isisSysStatLSPDbaseOloads            : 4
+            trap_stats.isisSysStatManAddrDropFromAreas      : 0
+            trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
+            trap_stats.isisSysStatSeqNumSkips               : 1
+            trap_stats.isisSysStatOwnLSPPurges              : 3
+            trap_stats.isisSysStatIDFieldLenMismatches      : 0
+            trap_stats.isisSysStatLSPErrors                 : 0
+            per_ltopo[Standard (IPv4 Unicast)]              :
+              area                                          : 0x15393bfc
+              ltopo_index                                   : Standard (IPv4 Unicast)
+              roca_event.mutex.mutex.__count                : -2147483648
+              roca_event.mutex.mutex.__owner                : 0
+              roca_event.mutex.description                  : 0x1500ee28
+              roca_event.timer.timer                        : 0x150179bc
+              roca_event.timer.num_execution_events         : 1
+              roca_event.timer.is_pending                   : FALSE
+              roca_event.timer.is_executing                 : FALSE
+              roca_event.timer.postponed_schedule_time.tv_sec: 0
+              roca_event.timer.postponed_schedule_time.tv_nsec: 0
+              roca_event.timer.last_execution_time.tv_sec   : 3657197
+              roca_event.timer.last_execution_time.tv_nsec  : 824108467
+              roca_event.log                                : 0x15474024
+              roca_event.class                              : <error>
+              spf_periodic_timer                            : 0x1501798c
+              paths.classification                          : 0
+              paths.is_sorted                               : FALSE
+              paths.array                                   : 0x1540d45c
+              paths.num_elements                            : 64
+              unreached.classification                      : 0
+              unreached.is_sorted                           : FALSE
+              unreached.array                               : 0x1540d4b4
+              unreached.num_elements                        : 0
+              firsthopchanged.classification                : 0
+              firsthopchanged.is_sorted                     : TRUE
+              firsthopchanged.array                         : 0x1540d4e0
+              firsthopchanged.num_elements                  : 0
+              linkchanged.classification                    : 2
+              linkchanged.is_sorted                         : TRUE
+              linkchanged.array                             : 0x1540d66c
+              linkchanged.num_elements                      : 0
+              reachable_area_addresses                      : 0x1540d430
+              stats.num_spfs                                : 5004
+              stats.num_ispfs                               : 0
+              stats.num_nhcs                                : 10
+              stats.num_prcs                                : 1219
+              stats.num_periodic_spfs                       : 3876
+            per_topo[IPv4 Unicast]                          :
+              area                                          : 0x15393bfc
+              topo_index                                    : IPv4 Unicast
+              te.link_holddown_timer                        : 0x150181cc
+              te.purge_link_info_timer                      : 0x1501819c
+              te.log                                        : 0x153a8d24
+              te.tunnel_table                               : 0x153ab844
+              te.info_from_te                               : 0x0
+              te.pce_info_from_te                           : 0x0
+              te.is_pce_ready                               : FALSE
+              overloaded_count                              : 0
+              overload_bit_trigger_running                  : FALSE
+              bgp_converged_notify_h                        : 0x0
+              added_first_hops                              : 0x0
+              deleted_first_hops                            : 0x0
+              postponed_added_first_hops                    : 0x0
+              postponed_deleted_first_hops                  : 0x0
+              prefixeschanged                               : 0x0
+              nodechanged                                   : 0x0
+              prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+              prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
+              prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
+              prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
+              num_redist_prefixes                           : 166
+              max_redist_prefixes_exceeded                  : FALSE
+              max_redist_prefixes_alarm_on                  : FALSE
+              has_prefix_policy_changed                     : FALSE
+            per_af[IPv4]                                    :
+              router_id                                     : 0x15192388
+            per_af[IPv6]                                    :
+              router_id                                     : 0x0
+
+        ++++++++++++++++++++++ IS-IS BELL Interface Private Data ++++++++++++++++++++++
+
+        Interface TenGigE0/0/1/2
+          im_handle                                         : 0x140
+          name                                              : TenGigE0_0_1_2
+          ref_count                                         : 4
+          index                                             : 3
+          snmp_index                                        : 20
+          chkpt.objid                                       : 0x0
+          cfg.refcount                                      : 7
+          cfg.is_p2p                                        : TRUE
+          cfg.enabled_mode                                  : Active
+          cfg.circuit_type                                  : level-1-2
+          cfg.ipv4_bfd_enabled                              : TRUE
+          cfg.ipv6_bfd_enabled                              : FALSE
+          cfg.bfd_interval                                  : 250
+          cfg.bfd_multiplier                                : 3
+          cfg.topos                                         : IPv4 Unicast
+          per_topo[IPv4 Unicast]                            :
+            refcount                                        : 2
+          cfg.cross_levels                                  :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : 10
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          cfg.per_level[Level-1]                            :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : (not set)
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          cfg.per_level[Level-2]                            :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : (not set)
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          topos_enabled_passive                             :
+          topos_enabled_active                              : IPv4 Unicast
+          per_area[Level-2]                                 :
+            area_linkage                                    : 0x15194070
+            idb                                             : 0x15191a04
+            area                                            : 0x15393bfc
+            adj_filter                                      : 0x0
+            csnp_control.timer                              : 0x15768174
+            csnp_control.next_lsp_id                        : 0000.0000.0000.00-00
+            csnp_control.building_packets                   : FALSE
+            psnp_timer                                      : 0x15768114
+            nsf_ietf.full_csnp_set_rcvd                     : FALSE
+            nsf_ietf.csnp_set_rcvd.list_head                : 0x0
+            nsf_ietf.csnp_set_rcvd.list_size                : 0
+            adj_up_count                                    : 1
+            lan_adj_up_count                                : 1
+            adj_list                                        : 0x15795168
+            per_ltopo[Standard (IPv4 Unicast)]              :
+              num_requested_adjs                            : 1
+              num_adjs                                      : 1
+            tmrs_active                                     : TRUE
+            adj_filter_match_all                            : FALSE
+            lsp_count.in                                    : 101725
+            lsp_count.out                                   : 176736
+            csnp_count.in                                   : 4
+            csnp_count.out                                  : 4
+            psnp_count.in                                   : 168148
+            psnp_count.out                                  : 98923
+            lsp_flooding_dup_count                          : 1
+            lsp_drop_count                                  : 0
+          media                                             : 0x440cbe0
+            caps_id                                         : 30
+            media_class                                     : LAN
+            encaps_overhead                                 : 3
+          media_specific.p2p.hello_timer                    : 0x150170a4
+          media_specific.p2p.last_hello.tv_sec              : 3657266
+          media_specific.p2p.last_hello.tv_nsec             : 751560953
+          media_specific.p2p.recent_hello_send_count        : 1
+          media_specific.p2p.adj_state                      : 0
+          media_specific.p2p.do_ietf_3way                   : TRUE
+          media_specific.p2p.received_ietf_3way             : TRUE
+          media_specific.p2p.neighbor_extended_circuit_number: 89
+          media_specific.p2p.neighbor_system_id             : 0670.7021.9088
+          media_specific.p2p.mib_counters.isisCircuitType   : 0
+          media_specific.p2p.mib_counters.isisCircAdjChanges: 8
+          media_specific.p2p.mib_counters.isisCircNumAdj    : 0
+          media_specific.p2p.mib_counters.isisCircInitFails : 0
+          media_specific.p2p.mib_counters.isisCircRejAdjs   : 0
+          media_specific.p2p.mib_counters.isisCircIDFieldLenMismatches: 0
+          media_specific.p2p.mib_counters.isisCircMaxAreaAddrMismatches: 0
+          media_specific.p2p.mib_counters.isisCircAuthTypeFails: 0
+          media_specific.p2p.mib_counters.isisCircAuthFails : 0
+          media_specific.p2p.mib_counters.isisCircLANDesISChanges: 0
+          media_specific.p2p.mib_counters.isisCircIndex     : 0
+          media_specific.p2p.init_csnp_wait.tv_sec          : 0
+          media_specific.p2p.init_csnp_wait.tv_nsec         : 0
+          media_specific.p2p.lsp_rexmit_queue.sll_head      : 0x0
+          media_specific.p2p.lsp_rexmit_queue.sll_tail      : 0x0
+          media_specific.p2p.lsp_rexmit_queue.sll_count     : 0
+          media_specific.p2p.lsp_rexmit_queue.sll_maximum   : 0
+          media_specific.p2p.lsp_rexmit_timer               : 0x157111dc
+          media_specific.p2p.nsf_ietf
+            t1_timer                                        : 0x156bad18
+            num_t1_expiries                                 : 0
+            first_t1_expiry_seen                            : FALSE
+            rr_sent                                         : FALSE
+            ra_rcvd                                         : FALSE
+            all_ra_seen                                     : FALSE
+            ra_required_nbr_count                           : 0
+            RA-expected neighbor list:
+          media_specific.p2p.stats.iih_count.in             : 417834
+          media_specific.p2p.stats.iih_count.out            : 417686
+          media_specific.p2p.stats.iih_nomem                : 0
+          media_specific.p2p.stats.lsp_retransmits          : 101
+          media_specific.p2p.p2p_over_lan
+            mcast_state.is_mcast_group_member               : TRUE
+            mcast_state.mcast_join_reason                   : 2
+            snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
+            snpa_info.snpa                                  : 00c1.641b.33d6
+            snpa_info.is_snpa_ok                            : TRUE
+          clns.im_node.exist_registered                     : TRUE
+          clns.im_node.node_exists                          : TRUE
+          clns.im_node.state_registered                     : TRUE
+          clns.im_node.node_up                              : TRUE
+          clns.mtu                                          : 9199
+          per_af[IPv4]
+            im_node.exist_registered                        : TRUE
+            im_node.node_exists                             : TRUE
+            im_node.state_registered                        : TRUE
+            im_node.node_up                                 : TRUE
+            local_address                                   : 0.0.0.0
+            is_nexthop_addr_registered                      : TRUE
+            is_global_prefix_registered                     : FALSE
+            is_running_passive                              : FALSE
+          ltopos_ready_active                               : Standard (IPv4 Unicast)
+          nsf_waiting_for_running                           : FALSE
+          nsf_ietf_waiting_for_sent_rr                      : FALSE
+          is_media_ready                                    : TRUE
+          im_base_caps_exist_registered                     : TRUE
+          tmrs_active                                       : TRUE
+          lsp_pacing_timer                                  : 0x157681a4
+          lsp_sent_last_id                                  : 0000.0000.0000.00-00
+          lsp_sent_last_area                                : 1
+          lsp_send_b2b_limit                                : 10
+          lsp_send_b2b_limit_window_end.tv_sec              : 3657183
+          lsp_send_b2b_limit_window_end.tv_nsec             : 399366747
+          mesh_group                                        : 0x0
+          lsp_send_requested                                : FALSE
+          lsp_send_in_progress                              : FALSE
+          mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
+          mpls_ldp_sync.ldp_sync_info                       : FALSE
+          mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
+          mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
+          mpls_ldpv6_sync.ldp_sync_info                     : FALSE
+          mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
+          stats.ish_recv_count                              : 0
+          stats.esh_recv_count                              : 0
+          stats.unk_recv_count                              : 0
+          pri_label_stack_limit                             : 1
+          bkp_label_stack_limit                             : 3
+          srte_label_stack_limit                            : 10
+          srat_label_stack_limit                            : 10
+          bandwidth                                         : 10000000
+          is_pme_delay_loss_set                             : FALSE
+          pme_avg_delay                                     : (not set)
+          pme_min_delay                                     : (not set)
+          pme_max_delay                                     : (not set)
+          pme_delay_var                                     : (not set)
+          pme_loss                                          : (not set)
+          pme_total_bw                                      : (not set)
+          pme_rsvp_te_bw                                    : (not set)
+          rsvp_max_res_bw                                   : 0 kbits/sec
+          rsvp_unres_prio_7                                 : 0 kbits/sec
+        Interface Loopback0
+          im_handle                                         : 0x8000160
+          name                                              : Loopback0
+          ref_count                                         : 3
+          index                                             : 0
+          snmp_index                                        : 46
+          chkpt.objid                                       : 0x0
+          cfg.refcount                                      : 4
+          cfg.is_p2p                                        : FALSE
+          cfg.enabled_mode                                  : Passive
+          cfg.circuit_type                                  : level-1-2
+          cfg.ipv4_bfd_enabled                              : FALSE
+          cfg.ipv6_bfd_enabled                              : FALSE
+          cfg.bfd_interval                                  : 150
+          cfg.bfd_multiplier                                : 3
+          cfg.topos                                         : IPv4 Unicast
+          per_topo[IPv4 Unicast]                            :
+            refcount                                        : 2
+          cfg.cross_levels                                  :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : (not set)
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          cfg.per_level[Level-1]                            :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : (not set)
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          cfg.per_level[Level-2]                            :
+            per_topo[IPv4 Unicast]                          :
+              metric                                        : (not set)
+              weight                                        : (not set)
+              ldp_sync_cfg                                  : (not set)
+              admin_tag                                     : (not set)
+              frr_type                                      : (not set)
+              is_lkgp_set                                   : 0
+            is_auth_cfg_ctx_set                             : FALSE
+            auth_cfg_ctx.alg                                : None
+            auth_cfg_ctx.failure_mode                       : Drop
+            auth_cfg_ctx.password                           : 0x0
+            auth_cfg_ctx.accept_password                    : 0x0
+            hello_interval_msecs                            : (not set)
+            hello_multiplier                                : (not set)
+            csnp_interval_secs                              : (not set)
+            lsp_pacing_interval_msecs                       : (not set)
+            lsp_fast_flood_threshold                        : (not set)
+            lsp_rexmit_interval_secs                        : (not set)
+            min_lsp_rexmit_interval_msecs                   : (not set)
+            dr_priority                                     : (not set)
+            is_hello_padding_set                            : FALSE
+            hello_padding                                   : Never
+          topos_enabled_passive                             : IPv4 Unicast
+          topos_enabled_active                              :
+          media                                             : 0x440cc90
+          clns.im_node.exist_registered                     : FALSE
+          clns.im_node.node_exists                          : FALSE
+          clns.im_node.state_registered                     : FALSE
+          clns.im_node.node_up                              : FALSE
+          clns.mtu                                          : 0
+          per_af[IPv4]
+            im_node.exist_registered                        : TRUE
+            im_node.node_exists                             : TRUE
+            im_node.state_registered                        : TRUE
+            im_node.node_up                                 : TRUE
+            local_address                                   : 0.0.0.0
+            is_nexthop_addr_registered                      : FALSE
+            is_global_prefix_registered                     : TRUE
+            is_running_passive                              : TRUE
+          ltopos_ready_active                               :
+          nsf_waiting_for_running                           : FALSE
+          nsf_ietf_waiting_for_sent_rr                      : FALSE
+          is_media_ready                                    : FALSE
+          im_base_caps_exist_registered                     : TRUE
+          tmrs_active                                       : FALSE
+          lsp_pacing_timer                                  : 0x0
+          lsp_sent_last_id                                  : 0000.0000.0000.00-00
+          lsp_sent_last_area                                : 0
+          lsp_send_b2b_limit                                : 0
+          lsp_send_b2b_limit_window_end.tv_sec              : 0
+          lsp_send_b2b_limit_window_end.tv_nsec             : 0
+          mesh_group                                        : 0x0
+          lsp_send_requested                                : FALSE
+          lsp_send_in_progress                              : FALSE
+          mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
+          mpls_ldp_sync.ldp_sync_info                       : FALSE
+          mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
+          mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
+          mpls_ldpv6_sync.ldp_sync_info                     : FALSE
+          mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
+          stats.ish_recv_count                              : 0
+          stats.esh_recv_count                              : 0
+          stats.unk_recv_count                              : 0
+          pri_label_stack_limit                             : (not set)
+          bkp_label_stack_limit                             : (not set)
+          srte_label_stack_limit                            : (not set)
+          srat_label_stack_limit                            : (not set)
+          bandwidth                                         : (not set)
+          is_pme_delay_loss_set                             : FALSE
+          pme_avg_delay                                     : (not set)
+          pme_min_delay                                     : (not set)
+          pme_max_delay                                     : (not set)
+          pme_delay_var                                     : (not set)
+          pme_loss                                          : (not set)
+          pme_total_bw                                      : (not set)
+          pme_rsvp_te_bw                                    : (not set)
+          rsvp_max_res_bw                                   : 0 kbits/sec
+          rsvp_unres_prio_7                                 : 0 kbits/sec
+
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisPrivateAll(device=device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisPrivateAll(device=device)
+        parsed_output = obj.parse()        
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
