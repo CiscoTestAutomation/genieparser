@@ -297,6 +297,7 @@
         * Optimized parser moving regex compilation out of for loop
     * Updated ShowStaticTopologyDetail:
         * Support more varied output
+        * Update regex
 * NXOS:
     * Updated ShowIpRoute for:
         * show ip route {route} {protocol} interface {interface} vrf {vrf}
