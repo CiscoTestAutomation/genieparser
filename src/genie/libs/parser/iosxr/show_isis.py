@@ -3840,10 +3840,12 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'lsp_send_in_progress': bool,
                         Optional('topos_enabled_passive'): str,
                         'topos_enabled_active': str,
-                        'pri_label_stack_limit': int,
-                        'bkp_label_stack_limit': int,
-                        'srte_label_stack_limit': int,
-                        'srat_label_stack_limit': int,
+                        'stack_limit': {
+                            'pri_label': int,
+                            'bkp_label': int,
+                            'srte_label': int,
+                            'srat_label': int,
+                        },                        
                         'bandwidth': int,
                         'is_pme_delay_loss_set': bool,
                         'pme':{
@@ -4075,7 +4077,17 @@ class ShowIsisPrivateAllSchema(MetaParser):
         },
     }
 
-class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
+class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):    
+    ''' Parser for commands:
+       * show isis private all 
+    '''
+
+    def get_boolean_value(self, item):
+        if item == 'TRUE':
+            return True
+        elif item == 'FALSE':
+            return False
+
 
     cli_command = 'show isis private all'
 
@@ -4083,6 +4095,366 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         if not output:
             output = self.device.execute(self.cli_command)
 
+        # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
+        r1 = re.compile(r'\++\s+IS\-IS\s+(?P<instance>\w+)\s+Global'
+                        r'\s+Private\s+Data\s+\++')
+
+        # list_linkage.next                               : 0x0
+        # list_linkage.previous                           : 0x44b2534
+        r2 = re.compile(r'list_linkage\.(?P<field>\w+)\s+\:\s*(?P<value>\w+)')
+
+        # lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+        # lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+        # lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+        # lsp_arrivaltime_parameter.max_count           : 0
+        # lsp_arrivaltime_parameter.max_window_size_msec: 120001
+        r3 = re.compile(r'^lsp_arrivaltime_parameter\.*(?P<field_1>\w+)\.*'
+                        r'(?P<field_2>\w*)\s*\:\s*(?P<value>\d+)')
+
+        # lsp_gen_interval.initial_wait_msecs           : 50
+        # lsp_gen_interval.secondary_wait_msecs         : 200
+        # lsp_gen_interval.maximum_wait_msecs           : 5000
+        r4 = re.compile(r'^lsp_gen_interval\.*(?P<field_1>\w*)\s*\:'
+                        r'\s*(?P<value>\d+)')
+
+        # auth_cfg_ctx.alg                              : None
+        # auth_cfg_ctx.failure_mode                     : Drop
+        # auth_cfg_ctx.password                         : 0xdecafbad
+        # auth_cfg_ctx.accept_password                  : 0xdecafbad
+        r5 = re.compile(r'^auth_cfg_ctx\.*(?P<field_1>\w+)\s*\:\s*'
+                        r'(?P<value>\w+)')
+
+        # upd_db.tree.node_free_fn                        : 0x42fd08a
+        # upd_db.tree.data_to_str_fn                      : 0x42fd094
+        # upd_db.tree_node_chunks.name                    : 0x448764c
+        # upd_db.tree_node_chunks.size                    : 28
+        # upd_db.tree_node_chunks.flags                   : 1297
+        # upd_db.tree_node_chunks.chunk                   : 0x1543146c
+        # upd_db.tree_node_chunks.num_allocated_elements  : 0        
+        r6 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                        r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:'
+                        r'\s*(?P<value>[\s\S]+)$')
+
+        # spf_interval.initial_wait_msecs             : 50
+        # spf_interval.secondary_wait_msecs           : 200
+        # spf_interval.maximum_wait_msecs             : 5000
+        r7 = re.compile(r'^spf_interval\.*(?P<field>\w+)\s*\:\s*(?P<value>\d+)')
+
+        # idb_list.sll_head                               : 0x151942e0
+        # idb_list.sll_tail                               : 0x15193fd4
+        # idb_list.sll_count                              : 8
+        # idb_list.sll_maximum                            : 0
+        r8 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\w+)$')
+
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
+        r9 = re.compile(r'^prefix_priority_acl\[(?P<priority>\w+)\]\s*\:\s*'
+                        r'(?P<value>\w+)')
+
+        # roca_event.timer.last_execution_time.tv_nsec  : 824108467
+        # roca_event.log                                : 0x15474024
+        # roca_event.class                              : <error>
+        r10 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)\.*'
+                         r'(?P<field_3>\w*)\s*\:\s*(?P<value>\S+)')
+
+        # stats.num_spfs                                : 5004
+        # stats.num_ispfs                               : 0
+        # stats.num_nhcs                                : 10
+        # stats.num_prcs                                : 1219
+        # stats.num_periodic_spfs                       : 3876
+        r11 = re.compile(r'^stats\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)')
+
+        # trap_stats.isisSysStatManAddrDropFromAreas      : 0
+        # trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
+        # trap_stats.isisSysStatSeqNumSkips               : 1
+        # trap_stats.isisSysStatOwnLSPPurges              : 3
+        # trap_stats.isisSysStatIDFieldLenMismatches      : 0
+        # trap_stats.isisSysStatLSPErrors                 : 0
+        r12 = re.compile(r'^trap_stats\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)')
+
+        # dec_db.name                                     : L2 Decision DB
+        # dec_db.tree.key_size                            : 8
+        # dec_db.tree.size                                : 82
+        # dec_db.tree.node_alloc_data                     : 0x15394290
+        # dec_db.tree.node_alloc_fn                       : 0x42fd024
+        # dec_db.tree.node_free_fn                        : 0x42fd
+        r13 = re.compile(r'^dec_db\.*(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                         r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
+                         r'(?P<value>[\S\s]+)')
+
+        # node_db.node_created_fn                         : 0x424fd84
+        # node_db.node_destroyed_fn                       : 0x424ffa6
+        # node_db.node_ltopo_created_fn                   : 0x42500b6
+        # node_db.node_ltopo_destroyed_fn                 : 0x42503ba
+        # node_db.node_topo_created_fn                    : 0x4250536
+        # node_db.node_topo_destroyed_fn                  : 0x42506b4
+        # node_db.callback_context                        : 0x15393bfc
+        # node_db.root_element                            : 0x151fb9bc
+        # node_db.num_nodes                               : 64
+        r14 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # [001] is_spf_prefix_priority_acl_names_set : FALSE
+        # [001] is_spf_prefix_priority_tags_set      : FALSE
+        r15 = re.compike(r'\[(?P<index>\d+)\]\s*(?P<field>is\S+)\s*:\s*'
+                         r'(?P<value>FALSE|TRUE)')
+
+        # [000] spf_prefix_priority_acl_names        : 0x0
+        # [001] spf_prefix_priority_acl_names        : 0x0
+        # [002] spf_prefix_priority_acl_names        : 0x0
+        # [003] spf_prefix_priority_acl_names        : 0x0
+        # [000] spf_prefix_priority_tags             : 0
+        # [001] spf_prefix_priority_tags             : 0
+        # [002] spf_prefix_priority_tags             : 0
+        # [003] spf_prefix_priority_tags             : 0
+        r16 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:'
+                         r'\s*(?P<value>\S+)')
+
+        # te.tunnel_table                               : 0x153ab844
+        # te.info_from_te                               : 0x0
+        # te.pce_info_from_te                           : 0x0
+        # te.is_pce_ready                               : FALSE
+        r17 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # firsthopchanged.classification                : 0
+        # firsthopchanged.is_sorted                     : TRUE
+        # firsthopchanged.array                         : 0x1540d4e0
+        # firsthopchanged.num_elements                  : 0
+        r18 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>\w+)')
+
+        # unreached.classification                      : 0
+        # unreached.is_sorted                           : FALSE
+        # unreached.array                               : 0x1540d4b4
+        # unreached.num_elements                        : 0
+        r19 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # paths.classification                          : 0
+        # paths.is_sorted                               : FALSE
+        # paths.array                                   : 0x1540d45c
+        # paths.num_elements                            : 64
+        r20 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # linkchanged.classification                    : 2
+        # linkchanged.is_sorted                         : TRUE
+        # linkchanged.array                             : 0x1540d66c
+        # linkchanged.num_elements                      : 0
+        r21 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # checksum_ptimer.tv_sec                          : 3657420
+        # checksum_ptimer.tv_nsec                         : 458761224
+        r22 = re.compile(r'^checksum_ptimer\.(?P<field>\w+)\s*\:\s*'
+                         r'(?P<value>\d+)')
+
+        # is_lsp_gen_interval_set                       : FALSE
+        # is_lsp_arrivaltime_parameter_set              : FALSE
+        # is_lsp_checksum_interval_set                  : FALSE
+        r23 = re.compile(r'^is_lsp_(?P<field>\S+)\s*\:\s(?P<value>TRUE|FALSE)')
+
+        # lsp_checksum_interval_secs                    : 0
+        # lsp_refresh_interval_secs                     : 35000
+        # lsp_lifetime_secs                             : 65535
+        # lsp_mtu                                       : 0
+        # lsp_count.in                                    : 101725
+        # lsp_count.out                                   : 176736
+        # lsp_pacing_interval_msecs                       : (not set)
+        # lsp_fast_flood_threshold                        : (not set)
+        # lsp_rexmit_interval_secs                        : (not set)
+        r24 = re.compile(r'^lsp_(?P<field_1>\w+)\.*(?P<field_2>\w*)\s*\:\s*'
+                         r'(?P<value>[\w\.\-\(\)\s]+)$')
+
+        # per_topo[IPv4 Unicast]                        :
+        r25 = re.compile(r'per_topo\[(?P<topology>[\w\s]+)\]\s*:$')
+
+        # per_ltopo[Standard (IPv4 Unicast)]              :
+        r26 = re.compile(r'^per_ltopo\[(?P<topology>[\w\s\(\)]+)\]\s*:$')
+
+        # IPv4
+        # IPv6
+        r27 = re.compile(r'^IPv(4|6)$')
+
+        # overload_bit_on_startup_timer                   : 0x15017530
+        # overload_bit_trigger_expired                    : TRUE
+        # overload_bit_forced_reasons                     :
+        r28 = re.compile(r'^overload_(?P<field>\w+)\s*:\s*(?P<value>\S*)')
+
+        # postponed_added_first_hops                    : 0x0
+        # postponed_deleted_first_hops                  : 0x0
+        r29 = re.compile(r'postponed_(?P<field>\w+)\s*\:\s*(?P<value>\w+)')
+
+        # max_redist_prefixes_exceeded                  : FALSE
+        # max_redist_prefixes_alarm_on                  : FALSE
+        r30 = re.compile(r'max_redist_(?P<field>\w+)\s*\:\s*'
+                         r'(?P<value>FALSE|TRUE)')
+
+        # per_af[IPv6]                                    :
+        # per_af[IPv4]                                    :
+        r31 = re.compile(r'^per_af\[(?P<address_family>IPv(4|6))\]\s*\:*$')
+
+        # Level-1
+        # Level-2
+        r32 = re.compile(r'^Level\-(?P<level>\d+)$')
+
+        # adj_db                                          : 0x1540cee4
+        # adj_log                                         : 0x1539b844
+        r33 = re.compile(r'^adj_(?P<field>\w+)\s*\:\s*(?P<value>\S+)$')
+
+        # cfg.refcount                                      : 7
+        # cfg.is_p2p                                        : TRUE
+        # cfg.enabled_mode                                  : Active
+        # cfg.circuit_type                                  : level-1-2
+        # cfg.ipv4_bfd_enabled                              : TRUE
+        # cfg.ipv6_bfd_enabled                              : FALSE
+        # cfg.bfd_interval                                  : 250
+        # cfg.bfd_multiplier                                : 3
+        # cfg.topos                                         : IPv4 Unicast
+        # cfg.cross_levels                                  :
+        r34 = re.compile(r'^cfg\.*(?P<field>\S+)\s*\:\s*(?P<value>[\w\-\s]+)$')
+
+        # cfg.per_level[Level-1]                            :
+        # cfg.per_level[Level-2]                            :
+        r35 = re.compile(r'cfg\.per_level\[Level-(?P<level>\d+)\]\s*:')
+
+        # media_specific.p2p.do_ietf_3way                   : TRUE
+        # media_specific.p2p.received_ietf_3way             : TRUE
+        # media_specific.p2p.neighbor_extended_circuit_number: 89
+        # media_specific.p2p.neighbor_system_id             : 0670.7021.9088
+        # media_specific.p2p.nsf_ietf
+        r36 = re.compile(r'^media_specific\.*(?P<field_1>\w*)\.'
+                         r'(?P<field_2>\w*)\.*(?P<field_3>\w*)\.*'
+                         r'(?P<field_4>\w*)\s*\:*\s*(?P<value>[\w\.]*)')
+
+        # clns.im_node.state_registered                     : TRUE
+        # clns.im_node.node_up                              : TRUE
+        # clns.mtu                                          : 9199
+        r37 = re.compile(r'^clns\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
+                         r'\s*\:\s*(?P<value>\w+)')
+
+        # mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
+        # mpls_ldp_sync.ldp_sync_info                       : FALSE
+        # mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
+        r38 = re.compile(r'mpls_ldp_sync\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>\w+)')
+
+        # mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
+        # mpls_ldpv6_sync.ldp_sync_info                     : FALSE
+        # mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
+        r39 = re.compile(r'^mpls_ldpv6_sync\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>\w+)')
+
+        # per_area[Level-2]                                 :
+        r40 = re.compile(r'per_area\[Level-(?P<level>\d+)\]\s*:')
+
+        # nsf_ietf.full_csnp_set_rcvd                     : FALSE
+        # nsf_ietf.csnp_set_rcvd.list_head                : 0x0
+        # nsf_ietf.csnp_set_rcvd.list_size                : 0
+        r41 = re.compile(r'^nsf_ietf\.*(?P<field_1>\w*)\.*'
+                         r'(?P<field_2>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # im_node.exist_registered                        : TRUE
+        # im_node.node_exists                             : TRUE
+        # im_node.state_registered                        : TRUE
+        # im_node.node_up                                 : TRUE
+        r42 = re.compile(r'^im_node\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>TRUE|FALSE)')
+
+        # snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
+        # snpa_info.snpa                                  : 00c1.641b.33d6
+        # snpa_info.is_snpa_ok                            : TRUE
+        r43 = re.compile(r'^snpa_info\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>[\w\.]+)')
+
+        # csnp_control.timer                              : 0x15768174
+        # csnp_control.next_lsp_id                        : 0000.0000.0000.00-00
+        # csnp_control.building_packets                   : FALSE
+        r44 = re.compile(r'^csnp_control\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>[\w\.\-]+)')
+
+        # pri_label_stack_limit                             : 1
+        # bkp_label_stack_limit                             : 3
+        # srte_label_stack_limit                            : 10
+        # srat_label_stack_limit                            : 10
+        r45 = re.compile(r'^(?P<field>\w+)_stack_limit\s*\:\s*(?P<value>\d+)$')
+        
+        # hello_interval_msecs                            : (not set)
+        # hello_multiplier                                : (not set)
+        r46 = re.compile(r'^hello_(?P<field>\w+)\s*\:\s*'
+                         r'(?P<value>[\w\s\(\)]+)$')
+
+        # pme_avg_delay                                     : (not set)
+        # pme_min_delay                                     : (not set)
+        # pme_max_delay                                     : (not set)
+        # pme_delay_var                                     : (not set)
+        # pme_loss                                          : (not set)
+        # pme_total_bw                                      : (not set)
+        # pme_rsvp_te_bw                                    : (not set)
+        r47 = re.compile(r'^pme_(?P<field>\w+)\s*\:\s*(?P<value>[\w\s\(\)]+)$')
+
+        # mcast_state.is_mcast_group_member               : TRUE
+        # mcast_state.mcast_join_reason                   : 2
+        r48 = re.compile(r'mcast_state\.(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # csnp_count.in                                   : 4
+        # csnp_count.out                                  : 4
+        # psnp_count.in                                   : 168148
+        # psnp_count.out                                  : 98923
+        r49 = re.compile(r'(?P<field_1>(p|c)snp)_count\.(?P<field_2>\w+)'
+                         r'\s*\:\s*(?P<value>\d+)')
+
+        # rsvp_max_res_bw                                   : 0 kbits/sec
+        # rsvp_unres_prio_7                                 : 0 kbits/sec
+        r50 = re.compile(r'^rsvp_(?P<field>\w+)\s*\:\s*(?P<value>[\w\s\/]+)$')
+
+        # chkpt.objid                      : 0x0
+        r51 = re.compile(r'chkpt\.objid\s*\:\s*(?P<value>\w+)')
+
+        # RA-expected neighbor list:
+        r52 = re.compile(r'RA\-expected\s*neighbor\s*list\s*:')
+
+        # local_address                                   : 0.0.0.0    
+        r53 = re.compile(r'local_address\s*:\s*(?P<local_address>[\d\.]+)')
+
+        # Interface TenGigE0/0/1/2
+        r54 = re.compile(r'^Interface\s+(?P<interface>\w+[\d\/]+)')
+
+        # Address Family Table
+        r55 = re.compile(r'^Address\s+Family\s+Table$')
+
+        # Configuration:
+        r56 = re.compile(r'^Configuration\s*\:$')
+
+        # Standard (IPv4 Unicast)
+        r57 = re.compile(r'^(Standard \(IPv4 Unicast\))$')
+        
+        # IPv4 Unicast
+        r58 = re.compile(r'^IPv(4|6)\s*Unicast$')
+        
+        # Topology Table
+        r59 = re.compile(r'^Topology\s*Table$')
+
+        # Cross Levels
+        r60 = re.compile(r'^Cross\s+Levels$')
+
+        # Area Table
+        r61 = re.compile(r'^Area\s+Table$')
+
+        # Link Topology Table
+        r62 = re.compile(r'Link\s+Topology\s+Table')
+
+        # Area Configuration Table
+        r63 = re.compile(r'^Area\s+Configuration\s+Table$')
+
+        # check_adjacencies                           : (not set)
+        # attached_bit                                : (not set)
+        # max_paths                                   : (not set)
+        # is_mcast_intact_set                         : FALSE
+        r64 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>[\w\(\)\s]+)$')
+
         parsed_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
 
         return parsed_dict
