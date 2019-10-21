@@ -18,13 +18,14 @@ to add the following to their setup() invocation:
 
 """
 
+import sys
 import pkg_resources
 from .common import parser_data
 
 ENTRY_POINT_NAME = 'genie.libs.parser'
 
 
-def add_parser(mod, parser, os_name):
+def add_parser(parser, os_name):
     """
     Dynamically add the parser class found in module `mod` for the given
     network OS name `os_name`
@@ -36,15 +37,13 @@ def add_parser(mod, parser, os_name):
 
     Parameters
     ----------
-    mod : module
-        The module where the parser is located
-
     parser : class
         The parser class that implements a MetaParser
 
     os_name : str
         The NOS name for which the parser is supported, for example "nxos"
     """
+    mod = sys.modules[parser.__module__]
     package = mod.__package__
 
     for cmd in parser.cli_command:
