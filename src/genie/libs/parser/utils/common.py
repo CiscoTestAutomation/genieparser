@@ -35,6 +35,41 @@ def _load_parser_json():
 # Parser within Genie
 parser_data = _load_parser_json()
 
+
+def add_parser(mod, parser, os_name):
+    """
+    Dynamically add the parser class found in module `mod` for the given
+    network OS name `os_name`
+
+    Notes
+    -----
+    The parser class is presumed to have a class attribute `cli_command` which
+    is a list of command to add into the genie parser framework.
+
+    Parameters
+    ----------
+    mod : module
+        The module where the parser is located
+
+    parser : class
+        The parser class that implements a MetaParser
+
+    os_name : str
+        The NOS name for which the parser is supported, for example "nxos"
+    """
+    package = mod.__package__
+
+    for cmd in parser.cli_command:
+        if cmd not in parser_data:
+            parser_data[cmd] = {}
+
+        parser_data[cmd][os_name] = {
+            'module_name': mod.__name__.rsplit('.', 1)[-1],
+            'package': package,
+            'class': parser.__name__
+        }
+
+
 def get_parser_commands(device, data=parser_data):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
