@@ -450,7 +450,8 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             ', +state +is +(?P<state>\S+)$')
 
         # AC: GigabitEthernet0/4/0/1, state is up
-        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>\S+)$')
+        # AC: GigabitEthernet0/4/0/1, state is down (Admin)
+        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>[\S ]+)$')
 
         # Type Ethernet
         p4 = re.compile(r'^Type +(?P<type>\S+)$')
@@ -688,6 +689,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # AC: GigabitEthernet0/4/0/1, state is up 
+            # AC: GigabitEthernet0/4/0/1, state is down (Admin)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1094,56 +1096,59 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # VCCV CV type 0x2                            0x0
             m = p15.match(line)
             if m:
-                mpls_items = list(mpls_pairs.items())
+                try:
+                    mpls_items = list(mpls_pairs.items())
 
-                # Last index of MPLS label section
-                mpls_end_index = mpls_items[0][1]
+                    # Last index of MPLS label section
+                    mpls_end_index = mpls_items[0][1]
 
-                # Start and end index of Local section
-                local_start_index = mpls_items[1][0]
-                local_end_index = mpls_items[1][1]
-                
-                # Start and end index of Remote section
-                remote_start_index = mpls_items[2][0]
-                remote_end_index = mpls_items[2][1]
+                    # Start and end index of Local section
+                    local_start_index = mpls_items[1][0]
+                    local_end_index = mpls_items[1][1]
+                    
+                    # Start and end index of Remote section
+                    remote_start_index = mpls_items[2][0]
+                    remote_end_index = mpls_items[2][1]
 
-                mpls_value = original_line[:mpls_end_index]
-                mpls_value = (original_line[:mpls_end_index].strip().
-                                replace('-', '_').
-                                replace(' ', '_').
-                                lower())
-                
-                local_value = (original_line[local_start_index:local_end_index])
-                local_value = local_value.replace('(',''). \
+                    mpls_value = original_line[:mpls_end_index]
+                    mpls_value = (original_line[:mpls_end_index].strip().
+                                    replace('-', '_').
+                                    replace(' ', '_').
+                                    lower())
+                    
+                    local_value = (original_line[local_start_index:local_end_index])
+                    local_value = local_value.replace('(',''). \
+                                        replace(')', ''). \
+                                        strip()
+
+                    remote_value = (original_line[remote_start_index:remote_end_index])
+                    remote_value = remote_value.replace('(',''). \
                                     replace(')', ''). \
                                     strip()
-
-                remote_value = (original_line[remote_start_index:remote_end_index])
-                remote_value = remote_value.replace('(',''). \
-                                replace(')', ''). \
-                                strip()
-                # Any thing between () brackets will be added to Local or Remote based on position
-                if ')' not in line:
-                    if mpls_value == 'interface':
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                                setdefault('monitor_interface' if interface_found else mpls_value, {})
-                        if not interface_found:
-                            interface_found = True
+                    # Any thing between () brackets will be added to Local or Remote based on position
+                    if ')' not in line:
+                        if mpls_value == 'interface':
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                    setdefault('monitor_interface' if interface_found else mpls_value, {})
+                            if not interface_found:
+                                interface_found = True
+                        else:
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                setdefault(mpls_value, {})
+                        mpls_dict.update({'local': local_value})
+                        mpls_dict.update({'remote': remote_value})
                     else:
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                            setdefault(mpls_value, {})
-                    mpls_dict.update({'local': local_value})
-                    mpls_dict.update({'remote': remote_value})
-                else:
-                    local_type = mpls_dict.get('local_type', [])
-                    remote_type = mpls_dict.get('remote_type', [])
-                    if local_value:
-                        local_type.append(local_value)
-                    if remote_value:
-                        remote_type.append(remote_value)
-                    mpls_dict.update({'local_type': local_type})
-                    mpls_dict.update({'remote_type': remote_type})
-                continue
+                        local_type = mpls_dict.get('local_type', [])
+                        remote_type = mpls_dict.get('remote_type', [])
+                        if local_value:
+                            local_type.append(local_value)
+                        if remote_value:
+                            remote_type.append(remote_value)
+                        mpls_dict.update({'local_type': local_type})
+                        mpls_dict.update({'remote_type': remote_type})
+                    continue
+                except Exception:
+                    print(line)
         return ret_dict
 
 # ===========================================================

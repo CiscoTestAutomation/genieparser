@@ -897,76 +897,443 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         },
     }
     golden_output2 = {'execute.return_value': '''
-    show l2vpn xconnect detail
+        show l2vpn xconnect detail
 
-    Fri Oct  4 15:37:35.184 EDT
+        Fri Oct  4 15:37:35.184 EDT
 
-    Group qf2-to-tqjof2, XC genie_bo3_vqt53_422, state is up; Interworking none
-    AC: TenGigE1/1/1/4/2.311, state is up
-        Type VLAN; Num Ranges: 1
-        Rewrite Tags: []
-        VLAN ranges: [311, 311]
-        MTU 2611; XC ID 1x3; interworking none
-        Statistics:
-        packets: received 4, sent 0
-        bytes: received 291, sent 0
-        drops: illegal VLAN 0, illegal length 0
-    EVPN: neighbor 78.81.320.94, PW ID: evi 21311, ac-id 41311, state is up ( established )
-        XC ID 1xd1111112
-        Encapsulation MPLS
-        Source address 78.81.320.99
-        Encap type Ethernet, control word enabled
-        Sequencing not set
-        LSP : Up
+        Group qf2-to-tqjof2, XC genie_bo3_vqt53_422, state is up; Interworking none
+        AC: TenGigE1/1/1/4/2.311, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [311, 311]
+            MTU 2611; XC ID 1x3; interworking none
+            Statistics:
+            packets: received 4, sent 0
+            bytes: received 291, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 78.81.320.94, PW ID: evi 21311, ac-id 41311, state is up ( established )
+            XC ID 1xd1111112
+            Encapsulation MPLS
+            Source address 78.81.320.99
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
 
-        EVPN         Local                          Remote                        
-        ------------ ------------------------------ -----------------------------
-        Label        211124                         211121                        
-        MTU          2611                           unknown                       
-        Control word enabled                        enabled                       
-        AC ID        31311                          41311                         
-        EVPN type    Ethernet                       Ethernet                      
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        211124                         211121                        
+            MTU          2611                           unknown                       
+            Control word enabled                        enabled                       
+            AC ID        31311                          41311                         
+            EVPN type    Ethernet                       Ethernet                      
 
-        ------------ ------------------------------ -----------------------------
-        Create time: 25/10/2019 14:17:28 (2x1e ago)
-        Last time status changed: 25/10/2019 15:13:33 (2x1e ago)
-        Statistics:
-        packets: received 0, sent 4
-        bytes: received 0, sent 291
+            ------------ ------------------------------ -----------------------------
+            Create time: 25/10/2019 14:17:28 (2x1e ago)
+            Last time status changed: 25/10/2019 15:13:33 (2x1e ago)
+            Statistics:
+            packets: received 0, sent 4
+            bytes: received 0, sent 291
 
-    Group qfw-to-tqjof2, XC xstu_bo3_vqt2_211, state is up; Interworking none
-    AC: TenGigE1/1/1/4/2.211, state is up
-        Type VLAN; Num Ranges: 1
-        Rewrite Tags: []
-        VLAN ranges: [211, 211]
-        MTU 2611; XC ID 1x2; interworking none
-        Statistics:
-        packets: received 4, sent 0
-        bytes: received 291, sent 0
-        drops: illegal VLAN 0, illegal length 0
-    EVPN: neighbor 78.81.321.93, PW ID: evi 21211, ac-id 41211, state is up ( established )
-        XC ID 1xd111113
-        Encapsulation MPLS
-        Source address 78.81.321.99
-        Encap type Ethernet, control word enabled
-        Sequencing not set
-        LSP : Up
+        Group qfw-to-tqjof2, XC xstu_bo3_vqt2_211, state is up; Interworking none
+        AC: TenGigE1/1/1/4/2.211, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [211, 211]
+            MTU 2611; XC ID 1x2; interworking none
+            Statistics:
+            packets: received 4, sent 0
+            bytes: received 291, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 78.81.321.93, PW ID: evi 21211, ac-id 41211, state is up ( established )
+            XC ID 1xd111113
+            Encapsulation MPLS
+            Source address 78.81.321.99
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
 
-        EVPN         Local                          Remote                        
-        ------------ ------------------------------ -----------------------------
-        Label        211123                         211111                        
-        MTU          2611                           unknown                       
-        Control word enabled                        enabled                       
-        AC ID        31211                          31211                         
-        EVPN type    Ethernet                       Ethernet                      
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        211123                         211111                        
+            MTU          2611                           unknown                       
+            Control word enabled                        enabled                       
+            AC ID        31211                          31211                         
+            EVPN type    Ethernet                       Ethernet                      
 
-        ------------ ------------------------------ -----------------------------
-        Create time: 25/10/2019 15:10:17 (2x1e ago)
-        Last time status changed: 25/10/2019 15:15:33 (2x1e ago)
-        Statistics:
-        packets: received 0, sent 4
-        bytes: received 0, sent 291
+            ------------ ------------------------------ -----------------------------
+            Create time: 25/10/2019 15:10:17 (2x1e ago)
+            Last time status changed: 25/10/2019 15:15:33 (2x1e ago)
+            Statistics:
+            packets: received 0, sent 4
+            bytes: received 0, sent 291
         '''}
+
+    golden_parsed_output3 = {
+        'group': {
+            'vpws': {
+                'xc': {
+                    'vrp_vpws_tor1_bl1_10293': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/0/0/0.59': {
+                                'state': 'down (Admin)',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['59', '59'],
+                                'mtu': 9202,
+                                'xc_id': '0x1',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '0.0.0.0': {
+                                    'id': {
+                                        'evi 10293': {
+                                            'state': 'down ( provisioned )',
+                                            'ac_id': 30293,
+                                            'xc_id': '0xc0000001',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '172.16.2.88',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100013',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '9202',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '20293',
+                                                    'remote': '30293',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '19/09/2019 10:23:31 (4w4d ago)',
+                                            'last_time_status_changed': '19/09/2019 10:24:27 (4w4d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'evpn_vpws': {
+                'xc': {
+                    'e2000_5-6': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'Bundle-Ether10.738': {
+                                'state': 'down',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['738', '738'],
+                                'mtu': 9182,
+                                'xc_id': '0xa0000005',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '0.0.0.0': {
+                                    'id': {
+                                        'evi 2000': {
+                                            'state': 'down ( provisioned )',
+                                            'ac_id': 5,
+                                            'xc_id': '0xc0000002',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '172.16.2.88',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100011',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '9182',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '6',
+                                                    'remote': '5',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '19/09/2019 10:23:31 (4w4d ago)',
+                                            'last_time_status_changed': '19/09/2019 10:23:52 (4w4d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'e2078_7-8': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'Bundle-Ether10.739': {
+                                'state': 'down',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['739', '739'],
+                                'mtu': 9178,
+                                'xc_id': '0xa0000006',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '0.0.0.0': {
+                                    'id': {
+                                        'evi 2078': {
+                                            'state': 'down ( provisioned )',
+                                            'ac_id': 7,
+                                            'xc_id': '0xc0000003',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '172.16.2.88',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100012',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '9178',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '8',
+                                                    'remote': '7',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '19/09/2019 10:23:31 (4w4d ago)',
+                                            'last_time_status_changed': '19/09/2019 10:23:52 (4w4d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output3 = {'execute.return_value': '''
+        show l2vpn xconnect detail
+
+        Mon Oct 21 10:43:06.231 EDT
+
+        Group vpws, XC vrp_vpws_tor1_bl1_10293, state is down; Interworking none
+        AC: TenGigE0/0/0/0.59, state is down (Admin)
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [59, 59]
+            MTU 9202; XC ID 0x1; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 0.0.0.0, PW ID: evi 10293, ac-id 30293, state is down ( provisioned )
+            XC ID 0xc0000001
+            Encapsulation MPLS
+            Source address 172.16.2.88
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
+
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100013                         unknown                       
+            MTU          9202                           unknown                       
+            Control word enabled                        unknown                       
+            AC ID        20293                          30293                         
+            EVPN type    Ethernet                       unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 19/09/2019 10:23:31 (4w4d ago)
+            Last time status changed: 19/09/2019 10:24:27 (4w4d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group evpn_vpws, XC e2000_5-6, state is down; Interworking none
+        AC: Bundle-Ether10.738, state is down
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [738, 738]
+            MTU 9182; XC ID 0xa0000005; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 0.0.0.0, PW ID: evi 2000, ac-id 5, state is down ( provisioned )
+            XC ID 0xc0000002
+            Encapsulation MPLS
+            Source address 172.16.2.88
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
+
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100011                         unknown                       
+            MTU          9182                           unknown                       
+            Control word enabled                        unknown                       
+            AC ID        6                              5                             
+            EVPN type    Ethernet                       unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 19/09/2019 10:23:31 (4w4d ago)
+            Last time status changed: 19/09/2019 10:23:52 (4w4d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group evpn_vpws, XC e2078_7-8, state is down; Interworking none
+        AC: Bundle-Ether10.739, state is down
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [739, 739]
+            MTU 9178; XC ID 0xa0000006; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 0.0.0.0, PW ID: evi 2078, ac-id 7, state is down ( provisioned )
+            XC ID 0xc0000003
+            Encapsulation MPLS
+            Source address 172.16.2.88
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
+
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100012                         unknown                       
+            MTU          9178                           unknown                       
+            Control word enabled                        unknown                       
+            AC ID        8                              7                             
+            EVPN type    Ethernet                       unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 19/09/2019 10:23:31 (4w4d ago)
+            Last time status changed: 19/09/2019 10:23:52 (4w4d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -987,6 +1354,13 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect summary'
