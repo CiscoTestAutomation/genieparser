@@ -2286,7 +2286,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         Multi-paths resolved: FALSE (Remote all-active) (ECMP Disable)
             Reason: No EAD/ES
         Multi-paths Internal label: None
-            EAD/EVI     172.16.2.88                              100010         
+            EAD/EVI     78.10.2.88                              100010         
 
         RP/0/RP0/CPU0:genie-Device#
 
@@ -2304,7 +2304,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'pathlists': {
                     'ead_evi': {
                         'nexthop': {
-                            '172.16.2.88': {
+                            '78.10.2.88': {
                                 'label': 100010,
                             },
                         },
