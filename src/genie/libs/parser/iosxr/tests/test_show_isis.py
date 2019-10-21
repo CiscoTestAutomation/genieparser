@@ -5291,7 +5291,7 @@ class TestShowIsisPrivateAll(unittest.TestCase):
             per_af[IPv6]                                    :
               router_id                                     : 0x0
 
-        ++++++++++++++++++++++ IS-IS BELL Interface Private Data ++++++++++++++++++++++
+        ++++++++++++++++++++++ IS-IS TEST Interface Private Data ++++++++++++++++++++++
 
         Interface TenGigE0/0/1/2
           im_handle                                         : 0x140
