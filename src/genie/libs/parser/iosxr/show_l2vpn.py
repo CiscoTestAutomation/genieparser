@@ -431,8 +431,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
-            out = output
-        
+            out = output        
         ret_dict = {}
         
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
@@ -463,7 +462,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             'MAC +addresses: +(?P<bvi_mac_address>\d+)$')
 
         # VFI 1
-        p6 = re.compile(r'^VFI +(?P<vfi>\d+)$')
+        # VFI vfi60 (up)
+        p6 = re.compile(r'^VFI +(?P<vfi>[\S ]+)$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
         p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>\d+), +state: +'
@@ -589,10 +589,11 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 continue
 
             # VFI 1
+            # VFI vfi60 (up)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                vfi = int(group['vfi'])
+                vfi = group['vfi']
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
                     setdefault(vfi, {})
                 continue
