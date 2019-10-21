@@ -260,6 +260,10 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                                     'state': 'up',
                                     'bvi_mac_address': 2,
                                 },
+                                'GigabitEthernet0/4/0/1.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                },
                             },
                         },
                         'vfi': {
@@ -8900,6 +8904,10 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                                 'BV60': {
                                     'state': 'up',
                                     'bvi_mac_address': 1,
+                                },
+                                'GigabitEthernet0/4/0/1.60': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
                                 },
                             },
                         },
