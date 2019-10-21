@@ -1780,16 +1780,19 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
         # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
         r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
-                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
-                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+                r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                r'(\s+(?P<first_trigger_lsp>[\w\-\.]+))?\s+(?P<triggers>\w+)')
 
         # Delay:              51ms (since first trigger)
         r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
                         r'\((?P<delay_info>[\w\s]+)\)')
 
         # SPT Calculation
-        r4 = re.compile(r'SPT\s+Calculation')
+        r4 = re.compile(r'SPT\s+Calculation$')
 
+        # SPT Calculation:         5     5
+        r4_1 = re.compile(r'^SPT +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+        
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
 
@@ -1872,11 +1875,12 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spf_log_dict['level'] = level
                 spf_log_dict['total_nodes'] = nodes
                 spf_log_dict['trigger_count'] = trigger_count
-                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                if first_trigger_lsp:
+                    spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
                 spf_log_dict['triggers'] = triggers
                 spf_log_dict['start_timestamp'] = "{} {}"\
                     .format(timestamp_date, timestamp).strip()
-
+                
                 continue
 
             # Delay:              51ms (since first trigger)
@@ -1896,6 +1900,18 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('spt_calculation', {})
 
+                continue
+
+            # SPT Calculation:         5     5
+            result = r4_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # Prefix Updates
