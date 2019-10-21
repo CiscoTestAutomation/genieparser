@@ -987,7 +987,6 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         }
     }
     
-
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
           
@@ -1024,6 +1023,2886 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                All Priorities         0        -    0
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    show isis spf-log detail
+
+        Mon Oct 21 10:41:33.540 EDT
+
+        IS-IS BELL Level 2 IPv4 Unicast Route Calculation Log
+                            Time Total Trig.
+        Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        ------------ ----- ----- ----- ----- -------------------- -----------------------
+        --- Sun Oct 20 2019 ---
+        15:53:18.505 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:08:18.055  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:08:18.555 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:23:18.105  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:23:18.606 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:38:18.156  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:38:18.656 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:53:18.207  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:53:18.707 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        17:08:18.257  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        17:08:18.758 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        17:23:18.308  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        17:23:18.808 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        17:38:18.358  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        17:38:18.859 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        17:53:18.409  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        17:53:18.909 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        18:08:18.459  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        18:08:18.960 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        18:23:18.510  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        18:23:19.010 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        18:38:18.560  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        18:38:19.061 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        18:53:18.611  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        18:53:19.111 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        19:08:18.662  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        19:08:19.162 PPFRR     8    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         8     8
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        8     8
+        19:23:18.712  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899542ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        19:23:19.212 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        19:38:18.763  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        19:38:19.263 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        19:53:18.813  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        19:53:19.314 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        20:08:18.864  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        20:08:19.364 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        20:23:18.914  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        20:23:19.415 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        20:38:18.965  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        20:38:19.465 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        20:53:19.015  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        20:53:19.516 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        21:08:19.066  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        21:08:19.566 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        21:23:19.117  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        21:23:19.617 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        21:38:19.167  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        21:38:19.668 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        21:53:19.218  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        21:53:19.718 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        22:08:19.269  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        22:08:19.769 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        22:23:19.319  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        22:23:19.820 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        22:38:19.370  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        22:38:19.870 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        22:53:19.420  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        22:53:19.921 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        23:08:19.471  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        23:08:19.971 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        23:23:19.521  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        23:23:20.022 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        23:38:19.572  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        23:38:20.072 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        23:53:19.622  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        23:53:20.123 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        --- Mon Oct 21 2019 ---
+        00:08:19.673  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        00:08:20.173 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        00:23:19.723  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        00:23:20.224 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        00:38:19.774  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        00:38:20.274 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        00:53:19.824  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        00:53:20.325 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        01:08:19.875  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        01:08:20.375 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        01:23:19.926  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        01:23:20.426 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        01:38:19.976  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        01:38:20.477 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        01:53:20.027  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        01:53:20.527 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        02:08:20.077  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        02:08:20.578 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        02:23:20.128  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        02:23:20.628 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        02:38:20.178  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        02:38:20.679 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        02:53:20.229  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        02:53:20.729 PPFRR     8    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         8     8
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        8     8
+        03:08:20.280  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899543ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:08:20.780 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:20:09.124   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                708339ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:20:09.625 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:23:20.330  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                190700ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:23:20.831 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:25:13.940   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                113104ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:25:14.440 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:38:20.381  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                785936ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:38:20.881 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:40:01.605   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                100719ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:40:02.106 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:45:25.032   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                322921ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:45:25.533 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:47:51.298   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 51ms (since first trigger)
+                                145760ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:47:51.798 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:48:08.164   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                16361ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:48:08.665 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:50:10.750   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                122080ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.202/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:50:11.251 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:50:27.071   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 51ms (since first trigger)
+                                15815ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.200/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:50:27.571 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        03:53:20.431  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                172855ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        03:53:20.932 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        04:08:20.482  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        04:08:20.982 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        04:23:20.532  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        04:23:21.033 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        04:38:20.583  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        04:38:21.083 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        04:53:20.633  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        04:53:21.134 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        05:08:20.684  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        05:08:21.184 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        05:23:20.734  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        05:23:21.235 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        05:38:20.785  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        05:38:21.285 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        05:53:20.836  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        05:53:21.336 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        06:08:20.886  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        06:08:21.386 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        06:23:20.936  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        06:23:21.437 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        06:38:20.987  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        06:38:21.487 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        06:53:21.037  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        06:53:21.538 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        07:08:21.088  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        07:08:21.588 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        07:23:21.139  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                899546ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        07:23:21.639 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        07:38:21.189  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        07:38:21.690 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        07:53:21.240  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        07:53:21.740 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:08:21.290  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:08:21.791 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:23:21.341  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:23:21.841 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:38:21.391  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:38:21.892 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:48:00.286   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                578389ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.194/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:48:00.786 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:52:52.538   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                291747ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.192/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:52:53.039 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:53:21.442  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                28398ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:53:21.942 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:56:24.334   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 51ms (since first trigger)
+                                182387ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.192/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:56:24.834 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        08:56:42.103   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                17264ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.194/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        08:56:42.603 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:08:21.492  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                698884ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:08:21.993 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:18:51.480   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                629482ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:18:51.981 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:23:21.543  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                269557ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:23:22.043 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:23:59.819   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                37771ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:24:00.320 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:38:21.593  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                861268ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:38:22.094 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:38:34.201   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                12102ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:38:34.702 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:43:37.285   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                302578ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:43:37.785 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:49:42.307   PRC     0    71     1 tor-12.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                364517ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.214/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:49:42.808 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:53:21.644  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                218831ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:53:22.144 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:56:38.764   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                196615ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.198/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:56:39.264 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:57:58.578  FSPF     7    71     2      bl1-naboo.00-00 LINKBAD
+        Delay:                 50ms (since first trigger)
+                                79309ms (since end of last calculation)
+        Trigger Link:          tor-20.tenlab-cloud.00
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           2 (0 critical, 0 high, 1 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            7     0
+                                ----- -----
+            Full Calculation:        7     0
+        09:57:59.085 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:59:17.500  FSPF     0    71     1 tor-20.tenlab-cloud.00-00 LINKBAD
+        Delay:                 51ms (since first trigger)
+                                78410ms (since end of last calculation)
+        Trigger Link:          bl1-naboo.00
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:59:18.000 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:59:18.466  FSPF     0    71     1      bl1-naboo.00-00 LINKGOOD
+        Delay:                 50ms (since first trigger)
+                                461ms (since end of last calculation)
+        Trigger Link:          tor-20.tenlab-cloud.00
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    300ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:59:18.859  FSPF     0    71     1      bl2-naboo.00-00 LINKGOOD
+        Delay:                 50ms (since first trigger)
+                                393ms (since end of last calculation)
+        Trigger Link:          tor-20.tenlab-cloud.00
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    600ms
+        RIB Batches:           2 (0 critical, 0 high, 1 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:59:19.360 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        09:59:20.317  FSPF     0    71     1 tor-20.tenlab-cloud.00-00 LINKGOOD
+        Delay:                 50ms (since first trigger)
+                                952ms (since end of last calculation)
+        Trigger Link:          bl1-naboo.00
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    1200ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        09:59:20.818 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:01:31.598   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                130775ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.196/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:01:32.099 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:11:42.824   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                610720ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.204/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:11:43.325 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:14:20.368  FSPF     0    71     1                      PERIODIC
+        Delay:                 51ms (since first trigger)
+                                157038ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:14:20.868 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:16:59.587   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXGOOD
+        Delay:                 50ms (since first trigger)
+                                158714ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.206/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:17:00.088 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:17:33.248   PRC     0    71     1 tor-12.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                33155ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.194/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:17:33.748 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:19:13.194   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                99441ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.200/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:19:13.694 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:19:30.876   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 51ms (since first trigger)
+                                17177ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.202/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:19:31.376 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:22:11.124   PRC     0    71     1 tor-8.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                159743ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.206/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:22:11.625 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:22:27.867   PRC     0    71     1 tor-7.tenlab-cloud.00-00 PREFIXBAD
+        Delay:                 50ms (since first trigger)
+                                16237ms (since end of last calculation)
+        Trigger Prefix:        10.55.93.204/31
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           1 (0 critical, 0 high, 0 medium, 1 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:22:28.367 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        10:29:20.418  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                412046ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        10:29:20.919 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                501ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+    '''}
+
+    parsed_output_2 = {}
+    
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLogDetail(device=device)
@@ -1035,6 +3914,12 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
