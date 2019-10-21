@@ -96,7 +96,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'g1': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-CUW': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -146,7 +146,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn bridge-domain
 
-        Bridge group: g1, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: g1, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
           Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
           Filter MAC addresses: 0
           ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
@@ -162,7 +162,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-CUW': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -223,7 +223,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
 
         Mon Oct  7 16:18:58.402 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
         Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         Filter MAC addresses: 0
         ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
@@ -1411,7 +1411,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-CUW': {
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
@@ -1600,7 +1600,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
 
         Mon Oct  7 16:18:59.168 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -1798,7 +1798,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             Storm Control: bridge-domain policer
         List of VFIs:
         List of Access VFIs:
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 1, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 1, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -2057,7 +2057,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-CUW': {
                         'state': 'up',
                         'id': 1,
                         'shg_id': 0,
@@ -2217,7 +2217,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
 
         Mon Oct 21 10:42:15.158 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -2239,7 +2239,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         DHCPv4 Snooping: disabled
         DHCPv4 Snooping profile: none
         IGMP Snooping: enabled
-        IGMP Snooping profile: BTV-VSPP
+        IGMP Snooping profile: CUW-WTQQ
         MLD Snooping profile: none
         Storm Control: disabled
         Bridge MTU: 1500
@@ -2289,7 +2289,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             DHCPv4 Snooping: disabled
             DHCPv4 Snooping profile: none
             IGMP Snooping: enabled
-            IGMP Snooping profile: BTV-VSPP
+            IGMP Snooping profile: CUW-WTQQ
             MLD Snooping profile: none
             Storm Control: bridge-domain policer
             Static MAC addresses:
@@ -2306,7 +2306,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         'bridge_group': {
             'EVPN-Multicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-CUW': {
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
@@ -2340,7 +2340,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'dhcp_v4_snooping': 'disabled',
                         'dhcp_v4_snooping_profile': 'none',
                         'igmp_snooping': 'enabled',
-                        'igmp_snooping_profile': 'BTV-VSPP',
+                        'igmp_snooping_profile': 'CUW-WTQQ',
                         'mld_snooping_profile': 'none',
                         'storm_control': 'bridge-domain policer',
                         'bridge_mtu': '1500',
@@ -2393,7 +2393,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'enabled',
-                                    'igmp_snooping_profile': 'BTV-VSPP',
+                                    'igmp_snooping_profile': 'CUW-WTQQ',
                                     'mld_snooping_profile': 'none',
                                     'pd_system_data': {
                                         'af_lif_ipv4': '0x00013807',
@@ -2440,7 +2440,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
         },
     }
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
