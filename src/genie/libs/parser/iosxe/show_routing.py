@@ -23,25 +23,21 @@ class ShowIpRouteDistributor(MetaParser):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
-    def cli(self, vrf='', route='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
-        if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
-                elif protocol:
-                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                if route:
-                    cmd = self.cli_command[4].format(route=route)
-                elif protocol:
-                    cmd = self.cli_command[5].format(protocol=protocol)
-                else:
-                    cmd = self.cli_command[3]
+    def cli(self, vrf=None, route=None, protocol=None, output=None):
 
+        if output is None:
+            if vrf and protocol:
+                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
+            elif vrf and route:
+                cmd = self.cli_command[1].format(vrf=vrf, route=route)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.cli_command[5].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[4].format(route=route)
+            else:
+                cmd = self.cli_command[3]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -183,26 +179,26 @@ class ShowIpRoute(ShowIpRouteSchema):
     exclude = ['updated']
     IP_VER='ipv4'
 
-    def cli(self, vrf="", protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, output=None):
+
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[3].format(protocol=protocol)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
 
         af = self.IP_VER
         route = ""
+        if not vrf:
+            vrf = 'default'
+
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
         source_protocol_dict['odr'] = ['o']
@@ -1059,23 +1055,23 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                    'show ip route', 'show ip route {route}']
     IP_VER = 'ip'
 
-    def cli(self, route='', vrf='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, route=None, vrf=None, output=None):
+
         if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.command[1].format(vrf=vrf, route=route)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf, route=route)
+            elif route:
+                cmd = self.command[3].format(route=route)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
             else:
-                if route:
-                    cmd = self.command[3].format(route=route)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2].format()
             out = self.device.execute(cmd)
         else:
             out = output
+
+        if not vrf:
+            vrf = 'default'
 
         # initial regexp pattern
         # Routing entry for 10.151.0.0/24, 1 known subnets
