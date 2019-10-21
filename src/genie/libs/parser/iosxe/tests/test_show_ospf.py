@@ -1296,7 +1296,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                     '0.0.0.8': {
                                         'interfaces': {
                                             'GigabitEthernet2': {
-                                                'router_id': '1.1.1.1',
+                                                'router_id': '10.4.1.1',
                                                 'interface_type': 'point-to-point',
                                                 'cost': 1,
                                                 'demand_circuit': False,
@@ -1757,7 +1757,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
             GigabitEthernet2 is up, line protocol is up 
                 Internet Address 10.0.0.6/30, Interface ID 8, Area 8
                 Attached via Network Statement
-                Process ID 8888, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+                Process ID 8888, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
                 Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                         0           1         no          no            Base
                 Transmit Delay is 1 sec, State POINT_TO_POINT
@@ -1776,7 +1776,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                 Last flood scan length is 1, maximum is 14
                 Last flood scan time is 1 msec, maximum is 8 msec
                 Neighbor Count is 1, Adjacent neighbor count is 1 
-                    Adjacent with neighbor 11.11.11.11
+                    Adjacent with neighbor 10.229.11.11
                 Suppress hello for 0 neighbor(s)
                 TEAPP:
                     Topology Id:0x0
@@ -1790,7 +1790,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         raw2='''\
          PE1#show running-config | section router ospf 8888 
             router ospf 8888
-            router-id 1.1.1.1
+            router-id 10.4.1.1
             segment-routing area 8 mpls
             segment-routing mpls
             network 0.0.0.0 255.255.255.255 area 8
