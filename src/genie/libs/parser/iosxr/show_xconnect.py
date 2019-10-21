@@ -450,7 +450,8 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             ', +state +is +(?P<state>\S+)$')
 
         # AC: GigabitEthernet0/4/0/1, state is up
-        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>\S+)$')
+        # AC: GigabitEthernet0/4/0/1, state is down (Admin)
+        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>[\S ]+)$')
 
         # Type Ethernet
         p4 = re.compile(r'^Type +(?P<type>\S+)$')
