@@ -531,6 +531,7 @@
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEviMacPrivate to support different outputs
+    * Update ShowEvpnInternalLabelDetail to support optional label key
 
 --------------------------------------------------------------------------------
                                 Route
@@ -682,3 +683,10 @@
 * IOSXE
     * Verified customer outputs
     * Added field to schema advertised_by
+
+--------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists
+        * Updated regex to capture more outputs
