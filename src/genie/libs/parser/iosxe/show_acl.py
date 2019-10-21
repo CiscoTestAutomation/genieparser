@@ -266,7 +266,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                                        r'?(?P<actions_forwarding>permit|deny) '
                                        r'+(?P<src>\S+|any)(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
-                                       r'?(?: +\((?P<statistics>\d+) +matches\))?$')
+                                       r'?(?: +\((?P<matched_packets>\d+)+ matches\))?$')
 
         # 10 permit ip host 10.3.3.3 host 10.5.5.34
         # 20 permit icmp any any
@@ -394,9 +394,10 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l3_dict.setdefault('source_network', {}).setdefault(
                     source_ipv4_network, {}).setdefault('source_network', source_ipv4_network)
 
-                if group['statistics']:
+                if group['matched_packets']:
                     stats_dict = seq_dict.setdefault('statistics', {})
-                    stats_dict.update({'matched_packets': int(group['statistics'])})
+                    stats_dict.update(
+                        {'matched_packets': int(group['matched_packets'])})
 
                 continue
 
