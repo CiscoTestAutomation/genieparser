@@ -441,8 +441,10 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
-        p2 = re.compile(r'^Aging: +(?P<mac_aging_time>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), '
-            '+Action: +(?P<mac_limit_action>\w+), +Notification: +(?P<mac_limit_notification>\w+)$')
+        # Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
+        p2 = re.compile(r'^Aging: +(?P<mac_aging_time>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), +'
+                r'Action: +(?P<mac_limit_action>[\S ]+), +Notification: +'
+                r'(?P<mac_limit_notification>[\S ]+)$')
 
         # Filter MAC addresses: 0
         p3 = re.compile(r'^Filter +MAC +addresses: +(?P<filter_mac_address>\d+)$')
