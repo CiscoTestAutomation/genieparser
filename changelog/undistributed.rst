@@ -297,6 +297,7 @@
         * Optimized parser moving regex compilation out of for loop
     * Updated ShowStaticTopologyDetail:
         * Support more varied output
+        * Update regex
 * NXOS:
     * Updated ShowIpRoute for:
         * show ip route {route} {protocol} interface {interface} vrf {vrf}
@@ -580,6 +581,7 @@
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
     * Update schema for AdminShowDiagChassis to support more varied output
+    * Update schema for AdminShowDiagChassis
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------

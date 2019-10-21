@@ -1254,6 +1254,38 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         RACK NUM: 0
         '''}
 
+    device_output = {'execute.return_value': '''
+        admin show diag chassis
+
+        Mon Oct 21 10:54:18.093 EDT
+        
+        Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
+          MAIN:  board type 0001ee
+                 800-35128-03 rev B1
+                 dev N/A
+                 S/N FXS1752Q3AU
+          PCA:   73-13062-02 rev A0
+          PID:   CRS-16-LCC-B
+          VID:   V03
+          CLEI:  IPMS110DRC
+          ECI:   465887
+          RACK NUM: 0
+        '''}
+
+    device_parsed_output = {
+        'clei': 'IPMS110DRC',
+        'eci': '465887',
+        'main': {
+            'board_type': '0001ee',
+            'dev': 'N/A',
+            'part': '800-35128-03 rev B1',
+            'serial_number': 'FXS1752Q3AU',
+        },
+        'pca': '73-13062-02 rev A0',
+        'pid': 'CRS-16-LCC-B',
+        'rack_num': 0,
+        'vid': 'V03',
+    }
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
         diag_chassis_obj = AdminShowDiagChassis(device=self.device)
@@ -1273,6 +1305,14 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output2)
+
+
+    def test_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
+        parsed_output = diag_chassis_obj1.parse()
+        self.assertEqual(parsed_output, self.device_parsed_output)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       

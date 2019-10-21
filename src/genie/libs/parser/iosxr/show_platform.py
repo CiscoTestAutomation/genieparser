@@ -800,8 +800,8 @@ class ShowInventory(ShowInventorySchema):
 class AdminShowDiagChassisSchema(MetaParser):
     """Schema for admin show diag chassis"""
     schema = {
-        'device_family': str,
-        'device_series': str,
+        Optional('device_family'): str,
+        Optional('device_series'): str,
         Optional('num_line_cards'): int,
         Optional('chassis_feature'): str,
         'rack_num': int,
