@@ -681,3 +681,10 @@
 * IOSXE
     * Verified customer outputs
     * Added field to schema advertised_by
+
+--------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists
+        * Updated regex to capture more outputs
