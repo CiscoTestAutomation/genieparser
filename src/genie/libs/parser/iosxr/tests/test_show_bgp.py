@@ -7120,53 +7120,53 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                   'nsr_initial_init_ver_status': 'reached',
                                                                                   'nsr_initial_initsync_version': '11',
                                                                                   'nsr_issu_sync_group_versions': '0/0',
-                                                                                  'prefix': {'200.1.0.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                  'prefix': {'192.168.111.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.1.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.4.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.2.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.154.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.3.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.51.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.4.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.205.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.5.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.106.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.6.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.9.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.7.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.169.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.8.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.76.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}},
-                                                                                             '200.1.9.0/24': {'index': {1: {'locprf': '0',
-                                                                                                                            'next_hop': '99.99.99.98',
+                                                                                             '192.168.240.0/24': {'index': {1: {'locprf': '0',
+                                                                                                                            'next_hop': '10.189.99.98',
                                                                                                                             'origin_codes': 'i',
                                                                                                                             'status_codes': '*>i',
                                                                                                                             'weight': '0'}}}},
@@ -7300,7 +7300,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                            'status_codes': '*i',
                                                                                                                                                            'weight': '65505'},
                                                                                                                                                        2: {'locprf': '100',
-                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'next_hop': '10.154.219.86',
                                                                                                                                                            'origin_codes': 'i',
                                                                                                                                                            'path': '65505',
                                                                                                                                                            'status_codes': '*>i',
@@ -7312,7 +7312,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                            'status_codes': '*i',
                                                                                                                                                            'weight': '0'},
                                                                                                                                                        2: {'locprf': '0',
-                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'next_hop': '10.154.219.86',
                                                                                                                                                            'origin_codes': '?',
                                                                                                                                                            'path': '0',
                                                                                                                                                            'status_codes': '*>i',
@@ -7324,7 +7324,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                            'status_codes': '*i',
                                                                                                                                                            'weight': '65505'},
                                                                                                                                                        2: {'locprf': '100',
-                                                                                                                                                           'next_hop': '67.70.219.86',
+                                                                                                                                                           'next_hop': '10.154.219.86',
                                                                                                                                                            'origin_codes': 'i',
                                                                                                                                                            'path': '65505',
                                                                                                                                                            'status_codes': '*>i',
@@ -7332,19 +7332,19 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                     'route_distinguisher': '172.18.0.209:162'},
                                                                  'l2vpn evpn RD 172.19.3.1:161': {'prefix': {'[5][0][24][10.120.1.0]/80': {'index': {1: {'locprf': '0',
                                                                                                                                                          'metric': '100',
-                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'next_hop': '10.154.219.79',
                                                                                                                                                          'origin_codes': 'i',
                                                                                                                                                          'status_codes': '*>i',
                                                                                                                                                          'weight': '65505'}}},
                                                                                                              '[5][0][30][10.120.0.0]/80': {'index': {1: {'locprf': '100',
                                                                                                                                                          'metric': '0',
-                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'next_hop': '10.154.219.79',
                                                                                                                                                          'origin_codes': '?',
                                                                                                                                                          'status_codes': '*>i',
                                                                                                                                                          'weight': '0'}}},
                                                                                                              '[5][0][32][10.0.120.1]/80': {'index': {1: {'locprf': '0',
                                                                                                                                                          'metric': '100',
-                                                                                                                                                         'next_hop': '67.70.219.79',
+                                                                                                                                                         'next_hop': '10.154.219.79',
                                                                                                                                                          'origin_codes': 'i',
                                                                                                                                                          'status_codes': '*>i',
                                                                                                                                                          'weight': '65505'}}}},
@@ -7366,37 +7366,37 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                    'table_state': 'active'},
                                                                  'vpnv4 unicast RD 172.16.2.90:1': {'default_vrf': 'btv-npvr-multicast-iaas',
                                                                                                     'prefix': {'10.0.120.1/32': {'index': {1: {'locprf': '100',
-                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                'path': '65505',
                                                                                                                                                'status_codes': '*i',
                                                                                                                                                'weight': '0'},
                                                                                                                                            2: {'locprf': '100',
-                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                'path': '65505',
                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                'weight': '0'}}},
                                                                                                                '10.120.0.0/30': {'index': {1: {'locprf': '0',
-                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                'origin_codes': '?',
                                                                                                                                                'path': '0',
                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                'weight': '100'}}},
                                                                                                                '10.120.0.4/30': {'index': {1: {'locprf': '0',
-                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                'origin_codes': '?',
                                                                                                                                                'path': '0',
                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                'weight': '100'}}},
                                                                                                                '10.120.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                'path': '65505',
                                                                                                                                                'status_codes': '*i',
                                                                                                                                                'weight': '0'},
                                                                                                                                            2: {'locprf': '100',
-                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                'path': '65505',
                                                                                                                                                'status_codes': '*>i',
@@ -7460,12 +7460,12 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
          Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 172.16.2.90:1 (default for vrf BTV-nPVR-MULTICAST-IAAS)
-        * i10.0.120.1/32      67.70.219.79                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
-        *>i10.120.0.0/30      67.70.219.79             0    100      0 ?
-        *>i10.120.0.4/30      67.70.219.86             0    100      0 ?
-        * i10.120.1.0/24      67.70.219.79                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        * i10.0.120.1/32      10.154.219.79                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
+        *>i10.120.0.0/30      10.154.219.79             0    100      0 ?
+        *>i10.120.0.4/30      10.154.219.86             0    100      0 ?
+        * i10.120.1.0/24      10.154.219.79                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         *> 10.249.248.0/22    0.0.0.0                  0         32768 ?
         * i                   172.16.2.88              0    100      0 ?
         * i                   172.16.2.89              0    100      0 ?
@@ -7495,16 +7495,16 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                     i - internal, r RIB-failure, S stale, N Nexthop-discard
         Origin codes: i - IGP, e - EGP, ? - incomplete
          Network            Next Hop            Metric LocPrf Weight Path
-        *>i200.1.0.0/24       99.99.99.98                     0      0 i
-        *>i200.1.1.0/24       99.99.99.98                     0      0 i
-        *>i200.1.2.0/24       99.99.99.98                     0      0 i
-        *>i200.1.3.0/24       99.99.99.98                     0      0 i
-        *>i200.1.4.0/24       99.99.99.98                     0      0 i
-        *>i200.1.5.0/24       99.99.99.98                     0      0 i
-        *>i200.1.6.0/24       99.99.99.98                     0      0 i
-        *>i200.1.7.0/24       99.99.99.98                     0      0 i
-        *>i200.1.8.0/24       99.99.99.98                     0      0 i
-        *>i200.1.9.0/24       99.99.99.98                     0      0 i
+        *>i192.168.111.0/24       10.189.99.98                     0      0 i
+        *>i192.168.4.0/24       10.189.99.98                     0      0 i
+        *>i192.168.154.0/24       10.189.99.98                     0      0 i
+        *>i192.168.51.0/24       10.189.99.98                     0      0 i
+        *>i192.168.205.0/24       10.189.99.98                     0      0 i
+        *>i192.168.106.0/24       10.189.99.98                     0      0 i
+        *>i192.168.9.0/24       10.189.99.98                     0      0 i
+        *>i192.168.169.0/24       10.189.99.98                     0      0 i
+        *>i192.168.76.0/24       10.189.99.98                     0      0 i
+        *>i192.168.240.0/24       10.189.99.98                     0      0 i
 
         Processed 10 prefixes, 10 paths
 
@@ -7575,20 +7575,20 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         Route Distinguisher: 172.18.0.209:162
         * i[5][0][24][10.120.1.0]/80
                             172.18.0.209                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         * i[5][0][30][10.120.0.4]/80
                             172.18.0.209             0    100      0 ?
-        *>i                   67.70.219.86             0    100      0 ?
+        *>i                   10.154.219.86             0    100      0 ?
         * i[5][0][32][10.0.120.1]/80
                             172.18.0.209                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         Route Distinguisher: 172.19.3.1:161
         *>i[5][0][24][10.120.1.0]/80
-                            67.70.219.79                  100      0 65505 i
+                            10.154.219.79                  100      0 65505 i
         *>i[5][0][30][10.120.0.0]/80
-                            67.70.219.79             0    100      0 ?
+                            10.154.219.79             0    100      0 ?
         *>i[5][0][32][10.0.120.1]/80
-                            67.70.219.79                  100      0 65505 i
+                            10.154.219.79                  100      0 65505 i
 
         Processed 25 prefixes, 28 paths
         '''}
@@ -8085,37 +8085,37 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                    'vrf_state': 'active'},
                                                                                  'vpnv4 unicast RD 172.16.2.90:1': {'default_vrf': 'btv-npvr-multicast-iaas',
                                                                                                                     'prefix': {'10.0.120.1/32': {'index': {1: {'locprf': '100',
-                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                                'path': '65505',
                                                                                                                                                                'status_codes': '*i',
                                                                                                                                                                'weight': '0'},
                                                                                                                                                            2: {'locprf': '100',
-                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                                'path': '65505',
                                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                                'weight': '0'}}},
                                                                                                                                '10.120.0.0/30': {'index': {1: {'locprf': '0',
-                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                                'origin_codes': '?',
                                                                                                                                                                'path': '0',
                                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                                'weight': '100'}}},
                                                                                                                                '10.120.0.4/30': {'index': {1: {'locprf': '0',
-                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                                'origin_codes': '?',
                                                                                                                                                                'path': '0',
                                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                                'weight': '100'}}},
                                                                                                                                '10.120.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                               'next_hop': '67.70.219.79',
+                                                                                                                                                               'next_hop': '10.154.219.79',
                                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                                'path': '65505',
                                                                                                                                                                'status_codes': '*i',
                                                                                                                                                                'weight': '0'},
                                                                                                                                                            2: {'locprf': '100',
-                                                                                                                                                               'next_hop': '67.70.219.86',
+                                                                                                                                                               'next_hop': '10.154.219.86',
                                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                                'path': '65505',
                                                                                                                                                                'status_codes': '*>i',
@@ -8183,12 +8183,12 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
          Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 172.16.2.90:1 (default for vrf BTV-nPVR-MULTICAST-IAAS)
-        * i10.0.120.1/32      67.70.219.79                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
-        *>i10.120.0.0/30      67.70.219.79             0    100      0 ?
-        *>i10.120.0.4/30      67.70.219.86             0    100      0 ?
-        * i10.120.1.0/24      67.70.219.79                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        * i10.0.120.1/32      10.154.219.79                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
+        *>i10.120.0.0/30      10.154.219.79             0    100      0 ?
+        *>i10.120.0.4/30      10.154.219.86             0    100      0 ?
+        * i10.120.1.0/24      10.154.219.79                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         *> 10.249.248.0/22    0.0.0.0                  0         32768 ?
         * i                   172.16.2.88              0    100      0 ?
         * i                   172.16.2.89              0    100      0 ?

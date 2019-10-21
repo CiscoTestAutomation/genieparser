@@ -3050,7 +3050,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         #   AF        : 0
         p52 = re.compile(r'^AF *: +(?P<af>\d+)$')
 
-        #   Prefix    : 64.230.254.0/32
+        #   Prefix    : 10.246.254.0/32
         p53 = re.compile(r'^Prefix *: +(?P<prefix>\S+)$')
 
         #   Flags     : 0x0
@@ -3758,7 +3758,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 tlv_dict['af'] = int(m.groupdict()['af'])
                 continue
 
-            #   Prefix    : 64.230.254.0/32
+            #   Prefix    : 10.246.254.0/32
             m = p53.match(line)
             if m:
                 tlv_dict['prefix'] = m.groupdict()['prefix']

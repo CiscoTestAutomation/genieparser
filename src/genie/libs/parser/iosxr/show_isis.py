@@ -2352,7 +2352,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r29 = re.compile(r'Forwarding\s+Address\(es\)\s*:\s*'
                          r'(?P<forwarding_address>\S+)')
 
-        # Global Prefix(es):      3.3.3.0/24
+        # Global Prefix(es):      10.36.3.0/24
         # Global Prefix(es):      2001:db8:3:3:3::3/128
         # Global Prefix(es):      None (No global addresses are configured)
         r30 = re.compile(r'Global\s+Prefix\(es\)\s*:\s*(?P<global_prefix>.+)')
@@ -2740,7 +2740,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 address_family_dict['forwarding_address'] = forwarding_address_list
                 continue
 
-            # Global Prefix(es):      3.3.3.0/24
+            # Global Prefix(es):      10.36.3.0/24
             # Global Prefix(es):      2001:db8:3:3:3::3/128
             result = r30.match(line)
             if result:
@@ -3009,10 +3009,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # NLPID: 0xCC 0x8E
         r4 = re.compile(r'NLPID\s*:\s*(?P<nlpid>[\w\s]+)')
 
-        # IP Address:     3.3.3.3
+        # IP Address:     10.36.3.3
         r5 = re.compile(r'IP\s*Address\s*:\s*(?P<ip_address>\S+)')
 
-        # Metric: 10         IP-Extended 3.3.3.0/24
+        # Metric: 10         IP-Extended 10.36.3.0/24
         # Metric: 10         IP-Extended 10.2.3.0/24
         r6 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\s+'
                         r'(?P<ip_address>[\d\.\/]+)')
@@ -3057,8 +3057,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                          r'(?P<mt_id>[\w\(\)\s]+)\s+IS-Extended\s+'
                          r'(?P<is_extended>\S+)')
 
-        # Router ID:      6.6.6.6
-        # Router ID:      7.7.7.7
+        # Router ID:      10.144.6.6
+        # Router ID:      10.196.7.7
         r14 = re.compile(r'Router\s+ID\s*:\s*(?P<router_id>\S+)')
 
         # Metric: 40         IP-Extended-Interarea 10.7.8.0/24
@@ -3102,7 +3102,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         r21 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s*IS\s+\(MT-IPv(4|6)\)'
                          r'\s+(?P<is_neighbor>[\w\.]+)')
 
-        # Metric: 0          IP 172.3.55.0/24
+        # Metric: 0          IP 172.16.115.0/24
         r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
                          r'(?P<ip_address>[\d\.\/]+)')
 
@@ -3181,7 +3181,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # IP Address:     3.3.3.3
+            # IP Address:     10.36.3.3
             result = r5.match(line)
             if result:
                 group = result.groupdict()
@@ -3190,7 +3190,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # Metric: 10         IP-Extended 3.3.3.0/24
+            # Metric: 10         IP-Extended 10.36.3.0/24
             # Metric: 10         IP-Extended 10.2.3.0/24
             result = r6.match(line)
             if result:
@@ -3337,8 +3337,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # Router ID:      6.6.6.6
-            # Router ID:      7.7.7.7
+            # Router ID:      10.144.6.6
+            # Router ID:      10.196.7.7
             result = r14.match(line)
             if result:
                 group = result.groupdict()
@@ -3458,7 +3458,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # Metric: 0          IP 172.3.55.0/24
+            # Metric: 0          IP 172.16.115.0/24
             result = r22.match(line)
             if result:
                 group = result.groupdict()
