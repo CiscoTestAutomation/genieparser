@@ -181,7 +181,7 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
                 'encap': str,
                 'esi': str,
                 'eth_tag': int,
-                'label': int,
+                Optional('label'): int,
                 Optional('mp_resolved'): bool,
                 Optional('mp_info'): str,
                 Optional('mp_internal_label'): int,
@@ -258,13 +258,14 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         # 5     0012.1200.0000.0000.0002                0        24114
         # 100   0100.0000.acce.5500.0100                0        24005
         p1 = re.compile(r'^(?P<evi>(\d+)) +(?P<esi>([a-z0-9\.]+))'
-                         ' +(?P<eth_tag>(\d+)) +(?P<label>(\d+))$')
+                         ' +(?P<eth_tag>(\d+))( +(?P<label>(\d+)))?$')
 
         # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
         # 16003      VXLAN  0001.0407.0405.0607.0811    0          24004
+        # 1000       MPLS   0001.0000.0102.0000.0011    0
         p2 = re.compile(r'^(?P<vpn_id>(\d+)) +(?P<encap>([a-zA-Z]+))'
                          ' +(?P<esi>([a-z0-9\.]+)) +(?P<eth_tag>(\d+))'
-                         ' +(?P<mp_internal_label>(\d+))$')
+                         '( +(?P<mp_internal_label>(\d+)))?$')
 
         # Multi-paths resolved: TRUE
         # Multi-paths resolved: TRUE (Remote single-active)
@@ -306,7 +307,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 sub_dict['evi'] = int(group['evi'])
                 sub_dict['esi'] = group['esi']
                 sub_dict['eth_tag'] = int(group['eth_tag'])
-                sub_dict['label'] = int(group['label'])
+                if group['label']:
+                    sub_dict['label'] = int(group['label'])
                 continue
 
             # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
@@ -320,7 +322,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 sub_dict['encap'] = group['encap']
                 sub_dict['esi'] = group['esi']
                 sub_dict['eth_tag'] = int(group['eth_tag'])
-                sub_dict['label'] = int(group['mp_internal_label'])
+                if group['mp_internal_label']:
+                    sub_dict['label'] = int(group['mp_internal_label'])
                 continue
 
             # Multi-paths resolved: TRUE
