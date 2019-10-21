@@ -96,7 +96,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'g1': {
                 'bridge_domain': {
-                    'EVPN-Multicast-CUW': {
+                    'EVPN-Multicast-Genie': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -146,7 +146,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn bridge-domain
 
-        Bridge group: g1, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: g1, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
           Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
           Filter MAC addresses: 0
           ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
@@ -162,7 +162,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-CUW': {
+                    'EVPN-Multicast-Genie': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -223,7 +223,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
 
         Mon Oct  7 16:18:58.402 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
         Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         Filter MAC addresses: 0
         ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
@@ -1411,7 +1411,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-CUW': {
+                    'EVPN-Multicast-Genie': {
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
@@ -1600,7 +1600,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
 
         Mon Oct  7 16:18:59.168 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -1798,7 +1798,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             Storm Control: bridge-domain policer
         List of VFIs:
         List of Access VFIs:
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-CUW, id: 1, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 1, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -2057,7 +2057,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-CUW': {
+                    'EVPN-Multicast-Genie': {
                         'state': 'up',
                         'id': 1,
                         'shg_id': 0,
@@ -2217,7 +2217,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
 
         Mon Oct 21 10:42:15.158 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-CUW, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Multicast_genie, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -2304,9 +2304,9 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
     golden_parsed_output5 = {
         'legend': 'pp = Partially Programmed.',
         'bridge_group': {
-            'EVPN-Multicast': {
+            'EVPN-Multicast_genie': {
                 'bridge_domain': {
-                    'EVPN-Multicast-CUW': {
+                    'EVPN-Multicast-Genie': {
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
