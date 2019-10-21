@@ -8,7 +8,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_igmp import ShowIgmpInterface, ShowIgmpSummary
+from genie.libs.parser.iosxr.show_igmp import ShowIgmpInterface, ShowIgmpSummary, ShowIgmpGroupsDetail
 
 #############################################################################
 # unitest For Show IGMP Interface
@@ -494,6 +494,910 @@ class test_show_igmp_summary(unittest.TestCase):
         summary_detail_obj = ShowIgmpSummary(device=self.device)
         parsed_output = summary_detail_obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_summary_output)
-        
+  
+#############################################################################
+# unitest For Show IGMP Groups Detail
+#############################################################################
+ 
+class test_show_igmp_groups_detail(unittest.TestCase):
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+		        "interface": {
+		        	"Loopback0": {
+		                "group": {
+		                	"224.0.0.2": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "2.2.2.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+		                		"up_time": "02:44:55"
+		                		},
+		                	"224.0.0.9": {
+		        				"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                		"up_time": "09:47:23"
+		                		},
+		                    "224.0.0.13": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                    	"up_time": "02:44:55"
+		                    },
+		                    "224.0.0.22": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                    	"up_time": "02:44:55"
+		                	},
+		                	"224.0.1.39": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                		"up_time": "02:19:56"
+		                	},
+		                	"224.0.1.40": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+		        				"Suppress": 0,
+		                		"up_time": "02:44:55"
+		                	}	
+		                }
+                    },
+                    "GigabitEthernet0/0/0/0.90": {
+                    	"group": {
+                    		"224.0.0.10": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+                    			"up_time": "01:53:32"
+                    		}
+                    	}
+                    },
+                    "GigabitEthernet0/0/0/1.90": {
+	                	"group": {
+	                		"224.0.0.10": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "01:53:32"
+	                		}
+	                	}
+	                },
+	                "GigabitEthernet0/0/0/0.110": {
+	                	"group": {
+	                		"224.0.0.2": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "10.12.110.2",
+				        		"Router_mode": "EXCLUDE (Expires: never)",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+	        	        		"up_time": "02:44:55"
+	        	        	},
+	        	        	"224.0.0.5": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "10.12.110.2",
+				        		"Router_mode": "EXCLUDE (Expires: never)",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+	        	        		"up_time": "10:36:57"
+				        	},
+		                	"224.0.0.6": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "10.12.110.2",
+				        		"Router_mode": "EXCLUDE (Expires: never)",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+		                		"up_time": "10:36:57"
+		                	},
+		                	"224.0.0.13": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "10.12.110.2",
+				        		"Router_mode": "EXCLUDE (Expires: never)",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+		                		"up_time": "02:44:55"
+		                	},
+		                	"224.0.0.22": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "10.12.110.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                		"up_time": "02:44:55"
+		                	},
+		                	"224.0.1.39": {
+			        			"Host_mode": "include",
+			        			"Last_reporter": "10.12.110.1",
+			        			"Router_mode": "EXCLUDE (Expires: 00:01:41)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                		"up_time": "02:29:47",
+		                	}
+		                }
+			        },
+	              "GigabitEthernet0/0/0/0.115": {
+                        "group": {
+                            "239.2.2.1": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+                                "up_time": "01:53:32"
+                            },
+                            "239.2.2.2": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+                                "up_time": "01:53:32"
+                            },
+                            "239.2.2.3": {
+                                "Host_mode": "exclude",
+                                "Last_reporter": "0.0.0.0",
+                                "Router_mode": "INCLUDE",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "01:55:08"
+		                	},	
+                            "239.2.2.4": {
+                                "Host_mode": "exclude",
+                                "Last_reporter": "0.0.0.0",
+                                "Router_mode": "INCLUDE",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "01:55:08"
+		                	}			
+		                }
+                    },
+	                "GigabitEthernet0/0/0/0.120": {
+	                	"group": {
+	                		"224.0.0.9": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "0.0.0.0",
+			         			"Router_mode": "INCLUDE",
+			         			"Source_list": "empty",
+			         			"Suppress": 0,
+	                			"up_time": "09:47:23"
+	                		}
+	                	}
+	                },
+	                "GigabitEthernet0/0/0/1.110": {
+	                	"group": {
+	                		"224.0.0.2": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "10.23.110.2",
+			         			"Router_mode": "EXCLUDE (Expires: never)",
+			         			"Source_list": "empty",
+			         			"Suppress": 0,
+	                			"up_time": "02:44:55"
+	                		},
+	                		"224.0.0.5": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "10.23.110.2",
+			         			"Router_mode": "EXCLUDE (Expires: never)",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "10:36:57",
+                            },
+	                    	"224.0.0.6": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "10.23.110.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+	                    		"up_time": "10:36:57"
+	                    	},
+	                    	"224.0.0.13": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "10.23.110.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "02:44:55"
+                            },
+                            "224.0.0.22": {
+                                "Host_mode": "exclude",
+                                "Last_reporter": "10.23.110.2",
+                                "Router_mode": "EXCLUDE (Expires: never)",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "02:44:55"				        
+                            }
+                        }
+                    },
+                    "GigabitEthernet0/0/0/1.120": {
+                    	"group": {
+                    		"224.0.0.9": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "0.0.0.0",
+			         			"Router_mode": "INCLUDE",
+			         			"Source_list": "empty",
+			         			"Suppress": 0,
+                    			"up_time": "09:47:23"
+                    			
+                    		}			
+                    	}
+                    }
+                }
+            }
+        }
+    }
+
+    golden_parsed_igmp_groups_output = {
+        "vrf": {
+            "VRF1": {
+		        "interface": {
+		        	"Loopback300": {
+		                "group": {
+		                	"224.0.0.2": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "2.2.2.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+		                		"up_time": "02:43:30"
+		                		},
+		                	"224.0.0.9": {
+		        				"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                		"up_time": "09:48:07"
+		                		},
+		                    "224.0.0.13": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                    	"up_time": "02:43:30"
+		                    },
+		                    "224.0.0.22": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "2.2.2.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+		                    	"up_time": "02:43:30"
+		                	}
+		                }
+                    },
+                    "GigabitEthernet0/0/0/0.390": {
+                    	"group": {
+                    		"224.0.0.10": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+                    			"up_time": "01:54:16"
+                    		}
+                    	}
+                    },
+                    "GigabitEthernet0/0/0/0.410": {
+	                	"group": {
+	                		"224.0.0.2": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "02:43:30"
+	                		},
+                            "224.0.0.5": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "10:37:41"
+                            },
+                            "224.0.0.6": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "10:37:41"
+                            },
+                            "224.0.0.13": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "02:43:30"
+                            },
+                            "224.0.0.22": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "02:43:30"
+                            },
+                            "224.0.1.39": {
+		        				"Host_mode": "include",
+		        				"Last_reporter": "10.12.110.1",
+		        				"Router_mode": "EXCLUDE (Expires: 00:01:21)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "02:30:06"
+                            },
+                            "224.0.1.40": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "10.12.110.2",
+		        				"Router_mode": "EXCLUDE (Expires: never)",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+	                			"up_time": "02:43:30"
+                            }
+                                
+	                	}
+	                },
+	                "GigabitEthernet0/0/0/0.415": {
+	                	"group": {
+	                		"239.2.2.1": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "0.0.0.0",
+				        		"Router_mode": "INCLUDE",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+	        	        		"up_time": "01:54:16"
+	        	        	},
+	        	        	"239.2.2.2": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "0.0.0.0",
+				        		"Router_mode": "INCLUDE",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+	        	        		"up_time": "01:54:16"
+				        	},
+		                	"239.2.2.3": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "0.0.0.0",
+				        		"Router_mode": "INCLUDE",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+		                		"up_time": "01:55:17"
+		                	},
+		                	"239.2.2.4": {
+				        		"Host_mode": "exclude",
+				        		"Last_reporter": "0.0.0.0",
+				        		"Router_mode": "INCLUDE",
+				        		"Source_list": "empty",
+				        		"Suppress": 0,
+		                		"up_time": "01:55:17"
+		                	}
+                        }
+                    },
+	              "GigabitEthernet0/0/0/0.420": {
+                        "group": {
+                            "224.0.0.9": {
+		        				"Host_mode": "exclude",
+		        				"Last_reporter": "0.0.0.0",
+		        				"Router_mode": "INCLUDE",
+		        				"Source_list": "empty",
+		        				"Suppress": 0,
+                                "up_time": "09:48:07"
+                            }
+                        }
+                    },
+	                "GigabitEthernet0/0/0/1.390": {
+	                	"group": {
+	                		"224.0.0.10": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "0.0.0.0",
+			         			"Router_mode": "INCLUDE",
+			         			"Source_list": "empty",
+			         			"Suppress": 0,
+	                			"up_time": "01:54:16"
+	                		}
+	                	}
+	                },
+                    "GigabitEthernet0/0/0/1.410": {
+                        "group": {
+	                		"224.0.0.2": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "10.23.110.2",
+			         			"Router_mode": "EXCLUDE (Expires: never)",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "02:43:30",
+                            },
+	                    	"224.0.0.5": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "10.23.110.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+			        			"Suppress": 0,
+	                    		"up_time": "10:37:41"
+	                    	},
+	                    	"224.0.0.6": {
+			        			"Host_mode": "exclude",
+			        			"Last_reporter": "10.23.110.2",
+			        			"Router_mode": "EXCLUDE (Expires: never)",
+			        			"Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "10:37:41"
+                            },
+                            "224.0.0.13": {
+                                "Host_mode": "exclude",
+                                "Last_reporter": "10.23.110.2",
+                                "Router_mode": "EXCLUDE (Expires: never)",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "02:43:30"				        
+                            },
+                            "224.0.0.22": {
+                                "Host_mode": "exclude",
+                                "Last_reporter": "10.23.110.2",
+                                "Router_mode": "EXCLUDE (Expires: never)",
+                                "Source_list": "empty",
+                                "Suppress": 0,
+                                "up_time": "02:43:30"
+                            }
+                        }
+                    },
+                    "GigabitEthernet0/0/0/1.420": {
+                    	"group": {
+                    		"224.0.0.9": {
+			         			"Host_mode": "exclude",
+			         			"Last_reporter": "0.0.0.0",
+			         			"Router_mode": "INCLUDE",
+			         			"Source_list": "empty",
+			         			"Suppress": 0,
+                    			"up_time": "09:48:07"
+                    		}			
+                    	}
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_output = {'execute.return_value': '''
+      Interface:	Loopback0
+      Group:		224.0.0.2
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback0
+      Group:		224.0.0.9
+      Uptime:		09:47:23
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback0
+      Group:		224.0.0.13
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback0
+      Group:		224.0.0.22
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback0
+      Group:		224.0.1.39
+      Uptime:		02:19:56
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback0
+      Group:		224.0.1.40
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.90
+      Group:		224.0.0.10
+      Uptime:		01:53:32
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.90
+      Group:		224.0.0.10
+      Uptime:		01:53:32
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.0.2
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.0.5
+      Uptime:		10:36:57
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.0.6
+      Uptime:		10:36:57
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.0.13
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.0.22
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.110
+      Group:		224.0.1.39
+      Uptime:		02:29:47
+      Router mode:	EXCLUDE (Expires: 00:01:41)
+      Host mode:	INCLUDE
+      Last reporter:	10.12.110.1
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.115
+      Group:		239.2.2.1
+      Uptime:		01:53:32
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.115
+      Group:		239.2.2.2
+      Uptime:		01:53:32
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.115
+      Group:		239.2.2.3
+      Uptime:		01:55:08
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.115
+      Group:		239.2.2.4
+      Uptime:		01:55:08
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.120
+      Group:		224.0.0.9
+      Uptime:		09:47:23
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.110
+      Group:		224.0.0.2
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.110
+      Group:		224.0.0.5
+      Uptime:		10:36:57
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.110
+      Group:		224.0.0.6
+      Uptime:		10:36:57
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.110
+      Group:		224.0.0.13
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.110
+      Group:		224.0.0.22
+      Uptime:		02:44:55
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.120
+      Group:		224.0.0.9
+      Uptime:		09:47:23
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+    
+    '''}
+    golden_igmp_groups_output={'execute.return_value':'''
+      Interface:	Loopback300
+      Group:		224.0.0.2
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback300
+      Group:		224.0.0.9
+      Uptime:		09:48:07
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback300
+      Group:		224.0.0.13
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	Loopback300
+      Group:		224.0.0.22
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	2.2.2.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.390
+      Group:		224.0.0.10
+      Uptime:		01:54:16
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.0.2
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.0.5
+      Uptime:		10:37:41
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.0.6
+      Uptime:		10:37:41
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.0.13
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.0.22
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.1.39
+      Uptime:		02:30:06
+      Router mode:	EXCLUDE (Expires: 00:01:21)
+      Host mode:	INCLUDE
+      Last reporter:	10.12.110.1
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.410
+      Group:		224.0.1.40
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.12.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.415
+      Group:		239.2.2.1
+      Uptime:		01:54:16
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.415
+      Group:		239.2.2.2
+      Uptime:		01:54:16
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.415
+      Group:		239.2.2.3
+      Uptime:		01:55:17
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.415
+      Group:		239.2.2.4
+      Uptime:		01:55:17
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/0.420
+      Group:		224.0.0.9
+      Uptime:		09:48:07
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.390
+      Group:		224.0.0.10
+      Uptime:		01:54:16
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.410
+      Group:		224.0.0.2
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.410
+      Group:		224.0.0.5
+      Uptime:		10:37:41
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.410
+      Group:		224.0.0.6
+      Uptime:		10:37:41
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.410
+      Group:		224.0.0.13
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.410
+      Group:		224.0.0.22
+      Uptime:		02:43:30
+      Router mode:	EXCLUDE (Expires: never)
+      Host mode:	EXCLUDE
+      Last reporter:	10.23.110.2
+      Suppress:	0
+      Source list is empty
+      Interface:	GigabitEthernet0/0/0/1.420
+      Group:		224.0.0.9
+      Uptime:		09:48:07
+      Router mode:	INCLUDE
+      Host mode:	EXCLUDE
+      Last reporter:	0.0.0.0
+      Suppress:	0
+      Source list is empty
+
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        igmp_groups_detail_obj = ShowIgmpGroupsDetail(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = igmp_groups_detail_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        igmp_groups_detail_obj = ShowIgmpGroupsDetail(device=self.device)
+        parsed_output = igmp_groups_detail_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_igmp_groups_output)
+        igmp_groups_detail_obj = ShowIgmpGroupsDetail(device=self.device)
+        parsed_output = igmp_groups_detail_obj.parse(vrf='VRF1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_igmp_groups_output)
+      
 if __name__ == '__main__':
     unittest.main()

@@ -422,5 +422,157 @@ class ShowIgmpSummary(ShowIgmpSummarySchema):
                 continue
              
         return result_dict
+        
+#############################################################################
+# Parser For Show Groups Detail 
+#############################################################################
 
+class ShowIgmpGroupsDetailSchema(MetaParser):
+    """Schema for show igmp groups detail"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'group': {
+                            Any(): {
+                                'up_time': str,
+                                'Router_mode': str,
+                                'Host_mode': str,
+                                'Last_reporter': str,
+                                'Suppress': int,
+                                'Source_list': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
+    """Parser for show igmp groups detail"""
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    cli_command = ['show igmp groups detail', 'show igmp vrf {vrf} groups detail']
+    def cli(self, vrf='', output=None):
+        '''
+        parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        '''
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Interface:	Loopback0
+        p1 = re.compile(r'^Interface:+[\s]+(?P<Interface>[\S]+)$') 
+        
+        # Group:		224.0.0.2
+        p2 = re.compile(r'^Group:+[\s*]+(?P<group>[\d\.]+)$')
+        
+        # Uptime:		02:44:55
+        p3 = re.compile(r'^Uptime:+[\s*]+(?P<up_time>[\d\:\S]+)$')
+        
+        # Router mode:	EXCLUDE (Expires: never)
+        p4 = re.compile(r'^Router mode:+[\s*]+(?P<Router_mode>[\s\S]+)$')
+        
+        # Host mode:	EXCLUDE
+        p5 = re.compile(r'^Host mode:+[\s*]+(?P<Host_mode>[\S]+)$')
+        
+        # Last reporter:	2.2.2.2
+        p6 = re.compile(r'^Last reporter:+[\s*]+(?P<Last_reporter>[\d\.]+)$')
+        
+        # Suppress:	0
+        p7 = re.compile(r'^Suppress:+[\s*]+(?P<Suppress>[\d]+)$')
+        
+        # Source list is empty
+        p8 = re.compile(r'^Source +list +is +(?P<source_list>[\S]+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Interface:	Loopback0
+            m = p1.match(line)
+            if m:
+                if 'vrf' not in result_dict:
+                    result_dict['vrf'] = {}
+                if vrf not in result_dict['vrf']:
+                    result_dict['vrf'][vrf] = {}
+                interface = m.groupdict()['Interface']
+
+                if 'interface' not in result_dict['vrf'][vrf]:
+                    result_dict['vrf'][vrf]['interface'] = {}
+                if interface not in result_dict['vrf'][vrf]['interface']:
+                    result_dict['vrf'][vrf]['interface'][interface] = {}
+                continue
+            
+            # Group:		224.0.0.2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()['group']
+                if 'group' not in result_dict['vrf'][vrf]['interface'][interface]:
+                    result_dict['vrf'][vrf]['interface'][interface]['group'] = {}
+                if group not in result_dict['vrf'][vrf]['interface'][interface]['group']:
+                    result_dict['vrf'][vrf]['interface'][interface]['group'][group] = {}
+                continue
+            
+            # Uptime:		02:44:55
+            m = p3.match(line)
+            if m:
+                up_time = m.groupdict()['up_time']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['up_time'] = up_time
+                continue
+            
+            # Router mode:	EXCLUDE (Expires: never)
+            m = p4.match(line)
+            if m:
+                Router_mode = m.groupdict()['Router_mode']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['Router_mode'] = Router_mode
+                continue
+             
+            # Host mode:	EXCLUDE
+            m = p5.match(line)
+            if m:
+                Host_mode = m.groupdict()['Host_mode']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['Host_mode'] = Host_mode.lower()
+                continue
+            
+            # Last reporter:	2.2.2.2
+            m = p6.match(line)
+            if m:
+                Last_reporter = m.groupdict()['Last_reporter']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['Last_reporter'] = Last_reporter
+                continue
+            
+            # Suppress:	0
+            m = p7.match(line)
+            if m:
+                Suppress = m.groupdict()['Suppress']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['Suppress'] = int(Suppress)
+                continue
+              
+            # Source list is empty
+            m = p8.match(line)
+            if m:
+                source_list = m.groupdict()['source_list']
+                result_dict['vrf'][vrf]['interface'][interface]['group'][group]['Source_list'] = source_list
+                continue
+            
+        return result_dict
         

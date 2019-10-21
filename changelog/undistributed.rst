@@ -48,6 +48,7 @@
         * show interface switchport
     * Added ShowIgmpInterface
     * Added ShowIgmpSummary
+    * Added ShowIgmpGroupsDetail
 * IOSXE
     * Update ShowInterfaceAccounting
         * Change {intf} and argument 'intf' into {interface} and 'interface'
