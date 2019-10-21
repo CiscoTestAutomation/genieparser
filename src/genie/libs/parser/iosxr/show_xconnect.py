@@ -450,8 +450,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             ', +state +is +(?P<state>\S+)$')
 
         # AC: GigabitEthernet0/4/0/1, state is up
-        # AC: GigabitEthernet0/4/0/1, state is down (Admin)
-        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>[\S ]+)$')
+        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>\S+)$')
 
         # Type Ethernet
         p4 = re.compile(r'^Type +(?P<type>\S+)$')
@@ -689,7 +688,6 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # AC: GigabitEthernet0/4/0/1, state is up 
-            # AC: GigabitEthernet0/4/0/1, state is down (Admin)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1189,6 +1187,7 @@ class ShowL2vpnXconnectSchema(MetaParser):
         },
     }
 
+
 class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
     """Parser for show l2vpn xconnect """
 
@@ -1236,6 +1235,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
                         '+(?P<segment_2>[\S ]+)$')
 
+        #                                                             UP  
         p4 = re.compile(r'^(?P<status_segment2>(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))))$')
 
         # UP       69.158.196.10   1152   DN
