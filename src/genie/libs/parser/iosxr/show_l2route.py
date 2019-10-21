@@ -221,7 +221,7 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
                 ip_address_dict_in[group_dict['ip_address']
                                    ]['next_hop'] = next_hop
 
-                print(ip_address_dict_in)
+           
 
                 parsed_dict.setdefault(
                     'topo_id',

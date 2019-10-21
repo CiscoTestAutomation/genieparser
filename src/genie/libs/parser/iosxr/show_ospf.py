@@ -2595,7 +2595,7 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
                                                         'maximum_reservable_bandwidth': int,
                                                         'total_priority': int,
                                                         'out_interface_id': int,
-                                                        'affinity_bit': int,
+                                                        'affinity_bit': str,
                                                         'total_extended_admin_group': int,
                                                         'unreserved_bandwidths' : 
                                                             {Any(): 
@@ -2663,7 +2663,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
         p10 = re.compile(r'^Priority +(?P<priority1>(\d+)) *: +(?P<band1>(\d+))'
                             ' *Priority +(?P<priority2>(\d+)) *: +(?P<band2>(\d+))$')
         p11 = re.compile(r'^Out +Interface +ID *: +(?P<out_id>(\d+))$')
-        p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\d+))$')
+        p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\S+))$')
         p13 = re.compile(r'^Extended +Admin +Group *: +(?P<eag>(\d+))$')
         p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]:'
                             ' +(?P<value>(\d+))$')
@@ -2869,9 +2869,10 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Affinity Bit : 0
+            # Affinity Bit : 0x100000
             m = p12.match(line)
             if m:
-                link_dict['affinity_bit'] = int(m.groupdict()['affinity'])
+                link_dict['affinity_bit'] = m.groupdict()['affinity']
                 continue
 
             # Extended Admin Group : 8

@@ -25,8 +25,10 @@
         * 'show clns is-neighbors detail'
     * Saving type as string in schema on:
         * ShowClnsIsNeighborsDetail
+    * Made some keys optionals in schema for ShowClnsTraffic
     * Saving as empty instance when instance not present in output on:
-        * show clns protocol    
+        * show clns protocol
+    * Updates ShowIsisHostname to support outputs without hostnames
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -145,6 +147,9 @@
         - modified regex
         - added schema
         - added unittest
+    * Updated ShowBgpInstanceAllAll:
+        - modified regex
+        - added unittest
     * Updated ShowBgpL2vpnEvpnAdvertised:
         - modified regex
         - added schema
@@ -165,6 +170,7 @@
         * show bgp instance {instance} sessions
     * Updated ShowBgpL2vpnEvpn to parse more varied output
     * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -177,6 +183,8 @@
     * Updated ShowBgpSuperParser for parsing of more varied output
     * Updated ShowIpBgp for parsing of more varied output
     * Updated ShowIpBgpNeighbors schema to support more varied output
+    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser to parse more vrf value
+    
 
 --------------------------------------------------------------------------------
                                 OSPF
@@ -204,6 +212,8 @@
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
         * update schema and add regex
         * to support more varied tlv blocks
+    * Updated ShowOspfMplsTrafficEngLink:
+        * updated schema and regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -285,8 +295,44 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+    * Updated ShowStaticTopologyDetail:
+        * Support more varied output
+* NXOS:
+    * Updated ShowIpRoute for:
+        * show ip route {route} {protocol} interface {interface} vrf {vrf}
+        * show ip route {route} {protocol} interface {interface}
+        * show ip route {protocol} interface {interface} vrf {vrf}
+        * show ip route {route} interface {interface} vrf {vrf}
+        * show ip route {route} {protocol}
+        * show ip route {protocol} interface {interface}
+        * show ip route {protocol} vrf {vrf}
+        * show ip route {route} interface {interface}
+        * show ip route {route} vrf {vrf}
+        * show ip route interface {interface} vrf {vrf}
+        * show ip route {protocol}
+        * show ip route {route}
+        * show ip route interface {interface}
+        * show ip route vrf {vrf}
+        * show ip route vrf all
+        * show ip route
+    * Updated ShowIpv6Route for:
+        * show ipv6 route {route} {protocol} interface {interface} vrf {vrf}
+        * show ipv6 route {route} {protocol} interface {interface}
+        * show ipv6 route {protocol} interface {interface} vrf {vrf}
+        * show ipv6 route {route} interface {interface} vrf {vrf}
+        * show ipv6 route {route} {protocol}
+        * show ipv6 route {protocol} interface {interface}
+        * show ipv6 route {protocol} vrf {vrf}
+        * show ipv6 route {route} interface {interface}
+        * show ipv6 route {route} vrf {vrf}
+        * show ipv6 route interface {interface} vrf {vrf}
+        * show ipv6 route {protocol}
+        * show ipv6 route {route}
+        * show ipv6 route interface {interface}
+        * show ipv6 route vrf {vrf}
+        * show ipv6 route vrf all
+        * show ipv6 route
         * Updated regex
-* NXOS
     * Updated ShowRoutingVrfAll:
         * To match non-best routes
 
@@ -411,6 +457,9 @@
     * Optimization of ShowVersion moving regex compilation out of loop
 * IOSXE
     * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXR
+    * Updated ShowVersion :
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -427,6 +476,8 @@
     * Updated ShowRplPrefixSet regex for:
         * show rpl prefix-set
         * show rpl prefix-set <name>
+    * Updated ShowRplRoutePolicy regex for:
+        * show rpl route-policy
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -457,6 +508,7 @@
         - modified regex
         - added schema
         - added unittest
+        - updated schema, regex, and unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
@@ -477,6 +529,8 @@
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEviMacPrivate to support different outputs
+    * Update ShowEvpnInternalLabelDetail to support optional label key
 
 --------------------------------------------------------------------------------
                                 Route
@@ -511,6 +565,7 @@
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
     * Updated ShowL2vpnBridgeDomain to support more outputs
+    * Updated ShowL2vpnBridgeDomainDetail to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -523,6 +578,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Update schema for ShowPlatformHardware to support more varied output
+* IOSXR
+    * Update schema for AdminShowDiagChassis to support more varied output
+    * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
                                 ACL
@@ -584,6 +642,11 @@
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
 --------------------------------------------------------------------------------
+                                Protocols
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols tu sopport more outputs
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
@@ -619,3 +682,10 @@
 * IOSXE
     * Verified customer outputs
     * Added field to schema advertised_by
+
+--------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists
+        * Updated regex to capture more outputs
