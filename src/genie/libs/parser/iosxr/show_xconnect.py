@@ -689,6 +689,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # AC: GigabitEthernet0/4/0/1, state is up 
+            # AC: GigabitEthernet0/4/0/1, state is down (Admin)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
