@@ -356,7 +356,7 @@ class test_show_static_topology_detail(unittest.TestCase):
 VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
   Last path event occured at Apr 30 15:48:19.545
 Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics       
-10.15.20.2/32       Bundle-Ether2.25         20.21.22.21         None                None                [0/0/1/0/1]
+10.15.20.2/32       Bundle-Ether2.25         10.151.22.21         None                None                [0/0/1/0/1]
   Path is configured at Apr 30 15:43:47.894
   Path version: 0, Path status: 0x80
   Path contains both next-hop and outbound interface.
@@ -375,7 +375,7 @@ Prefix/Len          Interface                Nexthop             Object         
                                             'active': False,
                                             'index': 1,
                                             'metrics': 1,
-                                            'next_hop': '20.21.22.21',
+                                            'next_hop': '10.151.22.21',
                                             'outgoing_interface': 'Bundle-Ether2.25',
                                             'path_event': 'Path is configured at Apr 30 15:43:47.894',
                                             'path_status': '0x80',
