@@ -18620,6 +18620,154 @@ class test_show_ip_bgp_neighbors_advertised_routes(unittest.TestCase):
                 rd='65000:100', neighbor='172.16.1.1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_golden(self):
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            show bgp all neighbors | i BGP neighbor
+            BGP neighbor is 10.120.202.189,  remote AS 65109, internal link
+            BGP neighbor is 192.168.0.6,  remote AS 2516, external link
+            BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+            BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+            BGP neighbor is 192.168.1.254,  vrf L3VPN_1002,  remote AS 60002, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        '''
+
+        golden_output = '''\
+            show ip bgp vpnv4 vrf L3VPN_1001 neighbors 192.168.0.254 advertised-routes
+            Load for five secs: 100%/4%; one minute: 80%; five minutes: 75%
+            Time source is NTP, 21:20:51.739 EST Wed Oct 16 2019
+
+            BGP table version is 6173717, local router ID is 192.168.0.253
+            Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                        r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                        x best-external, a additional-path, c RIB-compressed, 
+                        t secondary path, L long-lived-stale,
+            Origin codes: i - IGP, e - EGP, ? - incomplete
+            RPKI validation codes: V valid, I invalid, N Not found
+
+                Network          Next Hop            Metric LocPrf Weight Path
+            Route Distinguisher: 65109:1001 (default for vrf L3VPN_1001) VRF Router ID 192.168.0.253
+            *>i  10.1.0.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.1.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.2.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.3.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.4.0/24     10.19.198.238            0    100      0 65000 i
+
+            Total number of prefixes 5
+        '''
+
+        golden_parsed_output = {
+            'vrf': {
+                'L3VPN_1001': {
+                    'neighbor': {
+                        '192.168.0.254': {
+                            'address_family': {
+                                'vpnv4': {
+                                    'advertised': {
+                                    },
+                                    'bgp_table_version': 6173717,
+                                    'local_router_id': '192.168.0.253',
+                                },
+                                'vpnv4 RD 65109:1001': {
+                                    'bgp_table_version': 6173717,
+                                    'local_router_id': '192.168.0.253',
+                                    'route_distinguisher': '65109:1001',
+                                    'default_vrf': 'L3VPN_1001',
+                                    'advertised': {
+                                        '10.1.0.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.1.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.2.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.3.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.4.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+        self.outputs = {}
+        self.maxDiff = None 
+        self.outputs['show ip bgp vpnv4 vrf L3VPN_1001 neighbors 192.168.0.254 advertised-routes'] = golden_output
+        self.outputs['show bgp all neighbors | i BGP neighbor'] = raw1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+
+        obj = ShowIpBgpNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN_1001', neighbor='192.168.0.254')
+        self.assertEqual(parsed_output, golden_parsed_output)
 
 #-------------------------------------------------------------------------------
 
