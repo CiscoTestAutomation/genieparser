@@ -352,6 +352,49 @@ class test_show_static_topology_detail(unittest.TestCase):
         Path version: 0, Path status: 0x0
     '''}
 
+    device_output = {'execute.return_value': '''
+VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+  Last path event occured at Apr 30 15:48:19.545
+Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics       
+10.15.20.2/32       Bundle-Ether2.25         10.151.22.21         None                None                [0/0/1/0/1]
+  Path is configured at Apr 30 15:43:47.894
+  Path version: 0, Path status: 0x80
+  Path contains both next-hop and outbound interface.
+    '''}
+
+    device_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.15.20.2/32': {
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'active': False,
+                                            'index': 1,
+                                            'metrics': 1,
+                                            'next_hop': '10.151.22.21',
+                                            'outgoing_interface': 'Bundle-Ether2.25',
+                                            'path_event': 'Path is configured at Apr 30 15:43:47.894',
+                                            'path_status': '0x80',
+                                            'path_version': 0,
+                                            'preference': 1,
+                                        },
+                                    },
+                                },
+                                'route': '10.15.20.2/32',
+                            },
+                        },
+                        'safi': 'unicast',
+                        'table_id': '0xe0000000',
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowStaticTopologyDetail(device=self.device)
@@ -369,7 +412,7 @@ class test_show_static_topology_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_vrf_af)
         obj = ShowStaticTopologyDetail(device=self.device)
-        parsed_output = obj.parse(vrf='all',af='ipv6')
+        parsed_output = obj.parse(vrf='all', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output_vrf_af)
 
     def test_show_ip_static_route_3(self):
@@ -378,6 +421,13 @@ class test_show_static_topology_detail(unittest.TestCase):
         obj = ShowStaticTopologyDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowStaticTopologyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.device_parsed_output)
 
 
 if __name__ == '__main__':

@@ -450,7 +450,8 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             ', +state +is +(?P<state>\S+)$')
 
         # AC: GigabitEthernet0/4/0/1, state is up
-        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>\S+)$')
+        # AC: GigabitEthernet0/4/0/1, state is down (Admin)
+        p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>[\S ]+)$')
 
         # Type Ethernet
         p4 = re.compile(r'^Type +(?P<type>\S+)$')
@@ -688,6 +689,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # AC: GigabitEthernet0/4/0/1, state is up 
+            # AC: GigabitEthernet0/4/0/1, state is down (Admin)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1238,6 +1240,17 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
         #                                                             UP  
         p4 = re.compile(r'^(?P<status_segment2>[A-Z]+)$')
 
+        # UP       10.19.196.10   1152   DN
+        p5 = re.compile(r'^(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)))'
+                r' +(?P<segment_2>[\S ]+) +(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+
+        # UR   10.154.219.75    2015030201
+        p6 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>[\S ]+)$')
+
+        # T-0-4-0-2  UR   10.154.219.98    4293089094
+        p7 = re.compile(r'^(?P<name>\S+) +(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +'
+                r'(?P<segment_1>[\S ]+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -1302,6 +1315,36 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment1_dict['status'] = str(group['status_seg1'])
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
                     .setdefault(str(group['segment_2'].strip()), {})
+            
+            # UR       Nonexistent            UR
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+                segment2_dict['status'] = str(group['status_seg2'])
+                continue
+            
+            # UR   10.154.219.75    2015030201
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
+                continue
+            
+            # T-0-4-0-2  UR   10.154.219.98    4293089094
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
+                continue
 
             m4 = p4.match(line)
             if m4:

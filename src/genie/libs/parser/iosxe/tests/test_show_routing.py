@@ -1464,8 +1464,8 @@ class TestShowIpRouteWord(unittest.TestCase):
     }
 
     golden_output_5 = {'execute.return_value': '''
-        GENIE#show ip route 192.25.70.10
-        Routing entry for 192.25.70.0/25
+        GENIE#show ip route 192.168.4.10
+        Routing entry for 192.168.4.0/25
         Known via "static", distance 1, metric 0
         Tag 113
         Redistributing via eigrp 10
@@ -1479,10 +1479,10 @@ class TestShowIpRouteWord(unittest.TestCase):
 
     golden_parsed_output_5 = {
         'entry': {
-            '192.25.70.0/25': {
+            '192.168.4.0/25': {
                 'distance': '1',
                 'advertised_by': 'eigrp 10 route-map GENIE_INTO_EIGRP',
-                'ip': '192.25.70.0',
+                'ip': '192.168.4.0',
                 'known_via': 'static',
                 'mask': '25',
                 'metric': '0',
@@ -1548,7 +1548,7 @@ class TestShowIpRouteWord(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
         obj = ShowIpRouteWord(device=self.device)
-        parsed_output = obj.parse(route='192.25.70.10')
+        parsed_output = obj.parse(route='192.168.4.10')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
         
 ###################################################

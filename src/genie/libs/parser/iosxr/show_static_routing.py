@@ -111,21 +111,56 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
         route = interface = next_hop = ""
 
         result_dict = {}
+
+        # regex
+
+        # No routes in this topology
+        p = re.compile(r'^\s*No routes in this topology$')
+
+        # VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+) +Table +Id: +(?P<table_id>[\w]+) +AFI: +(?P<af>[\w]+)'
+                        ' +SAFI: +(?P<safi>[\w]+)$')
+
+        # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
+        # 2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
+        #             GigabitEthernet0_0_0_0   None                None                None                [0/4096/1/0/1]
+        # Prefix/Len          Interface                Nexthop             Object         Explicit-path       Metrics          Local-Label
+        # 172.16.0.89/32      TenGigE0_0_1_2           None                None          None                [0/4096/1/0/1]    No label    Path is configured at Sep 11 08:29:25.605
+        # 10.00.00.0/00       Bundle-Ether2.25         10.01.02.03         None                None                [0/0/1/0/1]
+        p2 = re.compile(r'^(?P<route>[\d\s\/\.\:]+)?(?P<interface>[a-zA-Z][\w\/\.-]+) '
+                        r'+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
+                        r'+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'
+                        r'(\s+(?P<local_label>[\w\s]+?))?'
+                        r'(\s+(?P<path_event>(Path|Last).*))?$')
+
+        # Path is installed into RIB at Dec  7 21:52:00.853
+        p3 = re.compile(r'^\s*(?P<path_event>Path +is +installed +into +RIB +at +(?P<date>[\S\s]+))$')
+
+        # Path is configured at Dec  7 21:47:43.624
+        p3_1 = re.compile(r'^\s*(?P<path_event>Path +is +configured +at +(?P<date>[\S\s]+))$')
+
+        # Path is removed from RIB at Dec  7 21:47:43.624
+        p3_2 = re.compile(r'^\s*(?P<path_event>Path +is +removed +from +RIB +at +(?P<date>[\S\s]+))$')
+
+        # Last RIB event is at Dec  7 21:47:43.624
+        p3_3 = re.compile(r'^\s*(?P<path_event>Last +RIB +event +is +at +(?P<date>[\S\s]+))$')
+
+        # Path version: 1, Path status: 0x21
+        p4 = re.compile(r'^\s*Path +version: +(?P<path_version>[\d]+), +Path +status: +(?P<path_status>[\w]+)$')
+
+        # Path has best tag: 0
+        p5 = re.compile(r'^\s*Path +has +best +tag: +(?P<tag>[\d]+)$')
+
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
 
-            # No routes in this topology
-            p = re.compile(r'^\s*No routes in this topology$')
             m = p.match(line)
             if m:
                 continue
 
-            # VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
-            p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+) +Table +Id: +(?P<table_id>[\w]+) +AFI: +(?P<af>[\w]+)'
-                            ' +SAFI: +(?P<safi>[\w]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -140,17 +175,8 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 af_dict['table_id'] = table_id
                 continue
 
-            # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
-            # 2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
-            #             GigabitEthernet0_0_0_0   None                None                None                [0/4096/1/0/1]
-            # Prefix/Len          Interface                Nexthop             Object         Explicit-path       Metrics          Local-Label  
-            # 172.16.0.89/32      TenGigE0_0_1_2           None                None          None                [0/4096/1/0/1]    No label    Path is configured at Sep 11 08:29:25.605
-            p2 = re.compile(r'^\s*(?P<route>[\d\s\/\.\:]+)?(?P<interface>[a-zA-Z][\w\/\.]+) '
-                             '+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
-                             '+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'
-                             '(\s+(?P<local_label>[\w\s]+?))?'
-                             '(\s+(?P<path_event>(Path|Last).*))?$')
             m = p2.match(line)
+
             if m:
                 next_hop = ""
 
@@ -168,7 +194,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 if m.groupdict()['metrics']:
                     metrics_value = m.groupdict()['metrics'].strip('[').strip(']').split('/')
                     metrics = int(metrics_value[4])
-                    prefernce = int(metrics_value[2])
+                    preference = int(metrics_value[2])
 
                 if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower() :
                     object = m.groupdict()['object']
@@ -184,12 +210,13 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop:
+
                     intf_dict = hop_dict.setdefault('outgoing_interface', {}).\
                                          setdefault(interface, {})
                     intf_dict['outgoing_interface'] = interface
 
                     intf_dict['metrics'] = metrics
-                    intf_dict['preference'] = prefernce
+                    intf_dict['preference'] = preference
 
                     if m.groupdict()['explicit_path']and 'none' not in m.groupdict()['explicit_path'].lower():
                         intf_dict['explicit_path'] = explicit_path
@@ -210,7 +237,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                         idx_dict['outgoing_interface'] = interface
 
                     idx_dict['metrics'] = metrics
-                    idx_dict['preference'] = prefernce
+                    idx_dict['preference'] = preference
 
                     if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower():
                         idx_dict['explicit_path'] = explicit_path
@@ -222,8 +249,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                         idx_dict['path_event'] = path_event
                 continue
 
-            # Path is installed into RIB at Dec  7 21:52:00.853
-            p3 = re.compile(r'^\s*(?P<path_event>Path +is +installed +into +RIB +at +(?P<date>[\S\s]+))$')
             m = p3.match(line)
             if m:
                 active = True
@@ -236,8 +261,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     idx_dict['path_event'] = path_event
                 continue
 
-            # Path is configured at Dec  7 21:47:43.624
-            p3_1 = re.compile(r'^\s*(?P<path_event>Path +is +configured +at +(?P<date>[\S\s]+))$')
             m = p3_1.match(line)
             if m:
                 active = False
@@ -250,8 +273,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     idx_dict['path_event'] = path_event
                 continue
 
-            # Path is removed from RIB at Dec  7 21:47:43.624
-            p3_2 = re.compile(r'^\s*(?P<path_event>Path +is +removed +from +RIB +at +(?P<date>[\S\s]+))$')
             m = p3_2.match(line)
             if m:
                 active = False
@@ -264,8 +285,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     idx_dict['path_event'] = path_event
                 continue
 
-            # Last RIB event is at Dec  7 21:47:43.624
-            p3_3 = re.compile(r'^\s*(?P<path_event>Last +RIB +event +is +at +(?P<date>[\S\s]+))$')
             m = p3_3.match(line)
             if m:
                 path_event = m.groupdict()['path_event']
@@ -275,8 +294,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     idx_dict['path_event'] = path_event
                 continue
 
-            # Path version: 1, Path status: 0x21
-            p4 = re.compile(r'^\s*Path +version: +(?P<path_version>[\d]+), +Path +status: +(?P<path_status>[\w]+)$')
             m = p4.match(line)
             if m:
                 path_version = int(m.groupdict()['path_version'])
@@ -289,8 +306,6 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     idx_dict['path_status'] = path_status
                 continue
 
-            # Path has best tag: 0
-            p5 = re.compile(r'^\s*Path +has +best +tag: +(?P<tag>[\d]+)$')
             m = p5.match(line)
             if m:
                 tag = m.groupdict()['tag']
