@@ -4898,12 +4898,12 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 'area_address': '49.0000',
                                 'nlpid': ['0xcc'],
-                                'ip_address': '67.70.219.57',
+                                'ip_address': '10.154.219.57',
                                 'hostname': 'core1-genie',
-                                'router_cap': '67.70.219.57 D:0 S:0',
+                                'router_cap': '10.154.219.57 D:0 S:0',
                                 'extended_ipv4_reachability': {
-                                    '67.70.219.57/32': {
-                                        'ip_prefix': '67.70.219.57',
+                                    '10.154.219.57/32': {
+                                        'ip_prefix': '10.154.219.57',
                                         'prefix_length': '32',
                                         'metric': 0,
                                     },
@@ -4936,12 +4936,12 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 'area_address': '49.0000',
                                 'nlpid': ['0xcc'],
-                                'ip_address': '67.70.219.58',
+                                'ip_address': '10.154.219.58',
                                 'hostname': 'core2-genie',
-                                'router_cap': '67.70.219.58 D:0 S:0',
+                                'router_cap': '10.154.219.58 D:0 S:0',
                                 'extended_ipv4_reachability': {
-                                    '67.70.219.58/32': {
-                                        'ip_prefix': '67.70.219.58',
+                                    '10.154.219.58/32': {
+                                        'ip_prefix': '10.154.219.58',
                                         'prefix_length': '32',
                                         'metric': 0,
                                     },
@@ -4978,10 +4978,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         core1-genie.00-00  0x0000a302   0x1a0e        58285/65534        0/0/0
         Area Address:   49.0000
         NLPID:          0xcc
-        IP Address:     67.70.219.57
+        IP Address:     10.154.219.57
         Hostname:       core1-genie
-        Router Cap:     67.70.219.57 D:0 S:0
-        Metric: 0          IP-Extended 67.70.219.57/32
+        Router Cap:     10.154.219.57 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.57/32
         Metric: 50         IS-Extended core2-genie.00
         Metric: 250        IS-Extended tcore4-genie.00
         Metric: 1000       IS-Extended bl1-genie.00
@@ -4989,10 +4989,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         core2-genie.00-00  0x0000a15b   0xfcfe        60939/65534        0/0/0
         Area Address:   49.0000
         NLPID:          0xcc
-        IP Address:     67.70.219.58
+        IP Address:     10.154.219.58
         Hostname:       core2-genie
-        Router Cap:     67.70.219.58 D:0 S:0
-        Metric: 0          IP-Extended 67.70.219.58/32
+        Router Cap:     10.154.219.58 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.58/32
         Metric: 50         IS-Extended core1-genie.00
         Metric: 1000       IS-Extended bl2-genie.00
         Metric: 1000       IS-Extended bl1-genie.00
