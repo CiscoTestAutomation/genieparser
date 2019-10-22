@@ -3494,7 +3494,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                 'nsf2_t1_delay': int,
                 'nsf2_t1_max_num_exp': int,
                 'nsf_cfg_interval': int,
-                'address_family': {
+                'address_family_table': {
                     Any():{
                         'ref_count': int,
                     },
@@ -3522,6 +3522,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'first_hop_source': bool,                            
                         },
                         'index': int,
+                        'ref_count': int,
                         'ltopo_index': int,
                         'list_linkage_next': str,
                         'list_linkage_previous': str,
@@ -3542,9 +3543,9 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'initial_wait_msecs': int,
                                 'secondary_wait_msecs': int,
                                 'maximum_wait_msecs': int,   
+                                'max_count': int,
+                                'max_window_size_msec': int,
                             },
-                            'max_count': int,
-                            'max_window_size_msec': int,
                             'is_lsp_checksum_interval_set': bool,
                             'lsp_checksum_interval_secs': int,
                             'is_lsp_refresh_interval_set': bool,
@@ -3572,17 +3573,16 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'accept_metric_mask': int,
                                     'summary_table': str,
                                     'metric': int,
-                                    'is_spf_interval_set': bool,
-                                },
-                                'spf_interval': {
-                                    'initial_wait_msecs': int,
-                                    'secondary_wait_msecs': int,
-                                    'maximum_wait_msecs': int,
-                                },
-                                'spf_periodic_interval_secs': str,
-                                'ispf_state': str,
-                                'max_redist_prefixes': {
-                                    'index': {
+                                    'is_spf_interval_set': bool,                                
+                                    'spf_interval': {
+                                        'initial_wait_msecs': int,
+                                        'secondary_wait_msecs': int,
+                                        'maximum_wait_msecs': int,
+                                    },
+                                    'spf_periodic_interval_secs': str,
+                                    'ispf_state': str,
+                                    'max_redist_prefixes': str,
+                                    'topo_index': {
                                         Any(): {
                                             'is_spf_prefix_priority_acl_names_set': bool,
                                             'spf_prefix_priority_acl_names': str,
@@ -3595,7 +3595,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         },
                     },
                 },
-                'level': {
+                'area_tables': {
                     Any(): {
                         'index': int,
                         'nsf_ietf_csnp_rcvd': bool,
@@ -3610,11 +3610,13 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'idb_list': {
                             'sll_head': str,
                             'sll_tail': str,
-                            'sll_count': str,
-                            'sll_maximum': str,
+                            'sll_count': int,
+                            'sll_maximum': int,
                         },
-                        'list_linkage_next': str,
-                        'list_linkage_previous': str,
+                        'list_linkage': {
+                            'next': str,
+                            'previous': str,
+                        },
                         'adj_db': str,
                         'adj_log': str,
                         'uni_db_log': str,
@@ -3631,7 +3633,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'blockedreaders': int,
                                     'heavy': int,
                                     'owner': int,
-                                    'lock': {
+                                    Optional('lock'): {
                                         'count': int,
                                         'owner': int,
                                     },
@@ -3659,6 +3661,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'log': str,
                             'name': str,
                             'lock': {
+                                'description': str,
                                 'rwlock': {
                                     'active': int,
                                     'spare': str,
@@ -3705,18 +3708,18 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'ta_lsp_refresh': int,
                         },
                         'trap_stats': {
-                            'corr_lsp': int,
+                            'corr_lsps': int,
                             'auth_type_fails': int,
                             'auth_fails': int,
                             'lsp_dbase_oloads': int,
                             'man_addr_drop_from_areas': int,
-                            'attmpt_to_ex_max_seq_sNums': int,
+                            'attmpt_to_ex_max_seq_nums': int,
                             'seq_num_skips': int,
                             'own_lsp_purges': int,
-                            'is_field_len_mismatches': int,
+                            'id_field_len_mismatches': int,
                             'lsp_errors': int,
                         },
-                        'ltopology': {
+                        'per_ltopo': {
                             Any(): {
                                 'area': str,
                                 'ltopo_index': str,
@@ -3757,8 +3760,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'log': str, 
                                     'class': str, 
                                     'mutex': {
-                                        'count': int,
-                                        'owner': int,
+                                        'mutex': {
+                                            'count': int,
+                                            'owner': int,
+                                        },                                        
                                         'description': str,
                                     },
                                     'timer': {
@@ -3766,15 +3771,19 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                         'num_execution_events': int,
                                         'is_pending': bool,
                                         'is_executing': bool,
-                                        'postponed_schedule_time_sec': int,
-                                        'postponed_schedule_time_nsec': int,
-                                        'last_execution_time_sec': int,
-                                        'last_execution_time_nsec': int,
+                                        'postponed_schedule_time': {
+                                            'tv_sec': int,
+                                            'tv_nsec': int,
+                                        },                                        
+                                        'last_execution_time': {
+                                            'tv_sec': int,
+                                            'tv_nsec': int,
+                                        },                                        
                                     },
                                 }                            
                             },
                         },
-                        'topology': {
+                        'per_topo': {
                             Any(): {
                                 'area': str,
                                 'topo_index': str,
@@ -3833,30 +3842,28 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'lsp_sent_last_id': str,
                         'lsp_sent_last_area': int,
                         'lsp_send_b2b_limit':int,
-                        'lsp_send_b2b_limit_window_end_tv_sec': int,
-                        'lsp_send_b2b_limit_window_end_tv_nsec': int,
+                        'lsp_send_b2b_limit_window_end': {
+                            'tv_sec': int,
+                            'tv_nsec': int,
+                        },
                         'mesh_group': str,
                         'lsp_send_requested': bool,
                         'lsp_send_in_progress': bool,
                         Optional('topos_enabled_passive'): str,
                         'topos_enabled_active': str,
-                        'stack_limit': {
-                            'pri_label': int,
-                            'bkp_label': int,
-                            'srte_label': int,
-                            'srat_label': int,
-                        },                        
+                        'pri_label_stack_limit': int,
+                        'bkp_label_stack_limit': int,
+                        'srte_label_stack_limit': int,
+                        'srat_label_stack_limit': int,
                         'bandwidth': int,
                         'is_pme_delay_loss_set': bool,
-                        'pme':{
-                            'avg_delay': str,
-                            'min_delay': str,
-                            'max_delay': str,
-                            'delay_var': str,
-                            'loss': str,
-                            'total_bw': str,
-                            'rsvp_te_bw': str,
-                        },
+                        'pme_avg_delay': str,
+                        'pme_min_delay': str,
+                        'pme_max_delay': str,
+                        'pme_delay_var': str,
+                        'pme_loss': str,
+                        'pme_total_bw': str,
+                        'pme_rsvp_te_bw': str,
                         'rsvp_max_res_bw': str,
                         'rsvp_unres_prio_7': str,
                         'cfg': {
@@ -3870,7 +3877,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'bfd_multiplier': int,
                             'topos': str,
                             'cross_levels': {
-                                'topology': {
+                                'per_topo': {
                                     Any(): {
                                         'metric': int,
                                         'weight': str,
@@ -3895,13 +3902,13 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'lsp_rexmit_interval_secs': str,
                                 'min_lsp_rexmit_interval_msecs': str,
                                 'dr_priority': str,
-                                'is_hello_padding_set': str,
+                                'is_hello_padding_set': bool,
                                 'hello_padding': str,
                             },
-                            'level': {
-                                'topology': {
+                            'per_level': {
+                                'per_topo': {
                                     Any(): {
-                                        'metric': int,
+                                        'metric': str,
                                         'weight': str,
                                         'ldp_sync_cfg': str,
                                         'admin_tag': str,
@@ -3924,7 +3931,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'lsp_rexmit_interval_secs': str,
                                 'min_lsp_rexmit_interval_msecs': str,
                                 'dr_priority': str,
-                                'is_hello_padding_set': str,
+                                'is_hello_padding_set': bool,
                                 'hello_padding': str,
                             },
                         },
@@ -3934,44 +3941,52 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'idb': str,
                                 'area': str,
                                 'adj_filter': str,
-                            },
-                            'csnp_control': {
-                                'timer': str,
-                                'next_lsp_id': str,
-                                'building_packets': bool,
-                            },
-                            'psnp_timer': str,
-                            'nsf_ietf': {
-                                'full_csnp_set_rcvd': bool,
-                                'csnp_set_rcvd': {
-                                    'list_head': str,
-                                    'list_size': int,
+                                'csnp_control': {
+                                    'timer': str,
+                                    'next_lsp_id': str,
+                                    'building_packets': bool,
                                 },
-                            },
-                            'adj_up_count': int,
-                            'lan_adj_up_count': int,
-                            'adj_list': str,
-                            'ltopology': {
-                                Any(): {
-                                    'num_requested_adjs': int,
-                                    'num_adjs': int,
+                                'psnp_timer': str,
+                                'nsf_ietf': {
+                                    'full_csnp_set_rcvd': bool,
+                                    'csnp_set_rcvd': {
+                                        'list_head': str,
+                                        'list_size': int,
+                                    },
                                 },
+                                'adj_up_count': int,
+                                'lan_adj_up_count': int,
+                                'adj_list': str,
+                                'per_ltopo': {
+                                    Any(): {
+                                        'num_requested_adjs': int,
+                                        'num_adjs': int,
+                                    },
+                                },
+                                'tmrs_active': bool,
+                                'adj_filter_match_all': bool,
+                                'lsp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },
+                                'csnp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },
+                                'psnp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },                                
+                                'lsp_flooding_dup_count': int,
+                                'lsp_drop_count': int,
                             },
-                            'tmrs_active': bool,
-                            'adj_filter_match_all': bool,
-                            'lsp_count_in': int,
-                            'lsp_count_out': int,
-                            'csnp_count_in': int,
-                            'csnp_count_out': int,
-                            'psnp_count_in': int,
-                            'psnp_count_out': int,
-                            'lsp_flooding_dup_count': int,
-                            'lsp_drop_count': int,
                         },
                         'media': {
-                            'caps_id': int,
-                            'media_class':  str,
-                            'encaps_overhead': int,
+                            Any():{
+                                'caps_id': int,
+                                'media_class':  str,
+                                'encaps_overhead': int,
+                            },                            
                         },
                         'media_specific': {
                             Any(): {
@@ -3993,13 +4008,15 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'rej_adjs': int,
                                     'id_field_len_mismatches': int,
                                     'max_area_addr_mismatches': int,
-                                    'auth_type_fFails': int,
+                                    'auth_type_fails': int,
                                     'auth_fails': int,
                                     'lan_des_is_canges': int,
                                     'index':int,
                                 },
-                                'init_csnp_wait_tv_sec': int,
-                                'init_csnp_wait_tv_nsec': int,
+                                'init_csnp_wait': {
+                                    'tv_sec': int,
+                                    'tv_nsec': int,
+                                },
                                 'lsp_rexmit_queue': {
                                     'sll_head': str,
                                     'sll_tail': str,
@@ -4007,8 +4024,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'sll_maximum': int,
                                 },
                                 'stats': {
-                                    'iih_count_in ': int,
-                                    'iih_count_out': int,
+                                    'iih_count ': {
+                                        'in ': int,
+                                        'out': int,
+                                    },
                                     'iih_nomem': int,
                                     'lsp_retransmits': int,
                                 },
@@ -4023,34 +4042,42 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'ra_expected_neighbor_list': list,
                                 },
                                 'p2p_over_lan': {
-                                    'is_mcast_group_member': bool,
-                                    'mcast_join_reason':  int,
-                                    'im_attr_macaddr_notify_handle':  str,
-                                    'snpa': str,
-                                    'is_snpa_ok': bool,
+                                    'mcast_state': {
+                                        'is_mcast_group_member': bool,
+                                        'mcast_join_reason':  int,
+                                    },
+                                    'snpa_info': {
+                                        'im_attr_macaddr_notify_handle':  str,
+                                        'snpa': str,
+                                        'is_snpa_ok': bool,
+                                    },
                                 },
                             },
                         },
                         'clns': {
-                            'exist_registered': bool,
-                            'node_exists': bool,
-                            'state_registered': bool,
-                            'node_up': bool,
-                            'mtu': int,
-                        },
-                        'address_family': {
-                            Any(): {
+                            'im_node': {
                                 'exist_registered': bool,
                                 'node_exists': bool,
                                 'state_registered': bool,
                                 'node_up': bool,
+                            },
+                            'mtu': int,
+                        },
+                        'per_af': {
+                            Any(): {
+                                'im_node': {
+                                    'exist_registered': bool,
+                                    'node_exists': bool,
+                                    'state_registered': bool,
+                                    'node_up': bool,
+                                },
                                 'local_address': str,
                                 'is_nexthop_addr_registered': bool,
                                 'is_global_prefix_registered': bool,
                                 'is_running_passive': bool,
                             },
                         },
-                        'topology': {
+                        'per_topo': {
                             Any(): {
                                 'ref_count': int,
                             },                            
