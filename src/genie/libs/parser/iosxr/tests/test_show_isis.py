@@ -3919,6 +3919,11 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         device = Mock(**self.golden_output_2)
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):

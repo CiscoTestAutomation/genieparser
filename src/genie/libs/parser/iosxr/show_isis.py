@@ -1690,7 +1690,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 },
                                 'new_lsp_arrivals': int,
                                 'next_wait_interval_ms': int,
-                                'results': {
+                                Optional('results'): {
                                     'nodes': {
                                         'reach': int,
                                         'unreach': int,
@@ -1795,6 +1795,9 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
+
+        # Route Update:            0     0
+        r5_1 = re.compile(r'^Route +Update: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
 
         # CPU Time:         1ms
         # CPU Time:         0ms
@@ -1920,6 +1923,18 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('prefix_update', {})
 
+                continue
+
+            # Route Update:            0     0
+            result = r5_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # CPU Time:         1ms
