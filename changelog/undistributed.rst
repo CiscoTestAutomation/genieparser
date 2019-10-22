@@ -598,6 +598,7 @@
 * IOSXR
     * Fixed parser ShowLldpEntry to support different port descriptions
         * Update regex
+    * Update ShowLldpNeighborsDetail
 
 --------------------------------------------------------------------------------
                                 NTP
