@@ -83,7 +83,7 @@ class ShowProcesses(ShowProcessesSchema):
         # Process name: isis
         r3 = re.compile(r'Process\s+name\s*:\s+(?P<process_name>\S+)')
 
-        # Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+        # Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
         r4 = re.compile(r'Executable\s+path\s*:\s*(?P<executable_path>\S+)')
 
         # Instance #: 1
@@ -123,7 +123,7 @@ class ShowProcesses(ShowProcessesSchema):
         # Placement: Placeable
         r16 = re.compile(r'Placement\s*:\s*(?P<placement>.+)')
 
-        # startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+        # startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
         r17 = re.compile(r'startup\_path\s*:\s*(?P<startup_path>\S+)')
 
         # Ready: 1.804s
@@ -183,7 +183,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+            # Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
             result = r4.match(line)
             if result:
                 group = result.groupdict()
@@ -300,7 +300,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup            
+            # startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup            
             result = r17.match(line)
             if result:
                 group = result.groupdict()

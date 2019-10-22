@@ -96,7 +96,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'g1': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-Genie': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -146,7 +146,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn bridge-domain
 
-        Bridge group: g1, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: g1, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
           Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
           Filter MAC addresses: 0
           ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
@@ -162,7 +162,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-Genie': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -223,7 +223,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
 
         Mon Oct  7 16:18:58.402 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
         Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         Filter MAC addresses: 0
         ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
@@ -1556,7 +1556,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         'bridge_group': {
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-Genie': {
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
@@ -1609,6 +1609,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'xc_id': '0x8000000b',
                                     'interworking': 'none',
                                     'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
                                     'state': 'down (Segment-down)',
@@ -1632,6 +1633,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -1660,6 +1662,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -1737,13 +1740,12 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
         },
     }
-
     golden_output3 = {'execute.return_value': '''
         show l2vpn bridge-domain detail
 
         Mon Oct  7 16:18:59.168 EDT
         Legend: pp = Partially Programmed.
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -1941,7 +1943,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             Storm Control: bridge-domain policer
         List of VFIs:
         List of Access VFIs:
-        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 1, state: up, ShgId: 0, MSTi: 0
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 1, state: up, ShgId: 0, MSTi: 0
         Coupled state: disabled
         VINE state: EVPN-IRB
         MAC learning: enabled
@@ -2074,7 +2076,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_port_down_flush': 'enabled',
                         'mac_secure': 'disabled',
                         'mac_secure_logging': 'disabled',
-                        'split_horizon_group': 'Access',
+                        'split_horizon_group': 'none',
                         'dynamic_arp_inspection': 'disabled',
                         'dynamic_arp_logging': 'disabled',
                         'ip_source_guard': 'disabled',
@@ -2102,6 +2104,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
                                     'bvi_mac_address': ['00c1.6474.81ca'],
+                                    'split_horizon_group': 'Access',
                                 },
                             },
                         },
@@ -2199,7 +2202,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
             'EVPN-Mulicast': {
                 'bridge_domain': {
-                    'EVPN-Multicast-BTV': {
+                    'EVPN-Multicast-Genie': {
                         'state': 'up',
                         'id': 1,
                         'shg_id': 0,
@@ -2253,6 +2256,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
                                     'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
                                     'state': 'down (Segment-down)',
@@ -2276,6 +2280,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -2304,6 +2309,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'no',
                                     'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
                                     'dhcp_v4_snooping': 'disabled',
                                     'dhcp_v4_snooping_profile': 'none',
                                     'igmp_snooping': 'disabled',
@@ -2351,6 +2357,235 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         },
     }
 
+    golden_output5 = {'execute.return_value': '''
+        show l2vpn bridge-domain detail
+
+        Mon Oct 21 10:42:15.158 EDT
+        Legend: pp = Partially Programmed.
+        Bridge group: EVPN-Multicast_genie, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
+        Coupled state: disabled
+        VINE state: EVPN-IRB
+        MAC learning: enabled
+        MAC withdraw: enabled
+            MAC withdraw for Access PW: enabled
+            MAC withdraw sent on: bridge port up
+            MAC withdraw relaying (access to access): disabled
+        Flooding:
+            Broadcast & Multicast: enabled
+            Unknown unicast: enabled
+        MAC aging time: 300 s, Type: inactivity
+        MAC limit: 64000, Action: none, Notification: syslog
+        MAC limit reached: no, threshold: 75%
+        MAC port down flush: enabled
+        MAC Secure: disabled, Logging: disabled
+        Split Horizon Group: none
+        Dynamic ARP Inspection: disabled, Logging: disabled
+        IP Source Guard: disabled, Logging: disabled
+        DHCPv4 Snooping: disabled
+        DHCPv4 Snooping profile: none
+        IGMP Snooping: enabled
+        IGMP Snooping profile: CUW-WTQQ
+        MLD Snooping profile: none
+        Storm Control: disabled
+        Bridge MTU: 1500
+        MIB cvplsConfigIndex: 1
+        Filter MAC addresses:
+        P2MP PW: disabled
+        Multicast Source: Not Set
+        Create time: 19/09/2019 10:23:31 (4w4d ago)
+        No status change since creation
+        ACs: 2 (0 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of EVPNs:
+            EVPN, state: up
+            evi: 1000
+            XC ID 0x80000004
+            Statistics:
+            packets: received 0 (unicast 0), sent 0
+            bytes: received 0 (unicast 0), sent 0
+            MAC move: 0
+        List of ACs:
+            AC: BVI100, state is down (Segment-down)
+            Type Routed-Interface
+            MTU 1514; XC ID 0x80000007; interworking none
+            Error: Need at least 1 bridge port up
+            BVI MAC address:
+                1000.1000.1000
+            Split Horizon Group: Access
+            PD System Data: AF-LIF-IPv4: 0x00000000  AF-LIF-IPv6: 0x00000000
+
+            AC: Bundle-Ether11.100, state is down (Segment-down)
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [100, 100]
+            MTU 9202; XC ID 0xa0000008; interworking none; MSTi 5
+            MAC learning: enabled
+            Flooding:
+                Broadcast & Multicast: enabled
+                Unknown unicast: enabled
+            MAC aging time: 300 s, Type: inactivity
+            MAC limit: 64000, Action: none, Notification: syslog
+            MAC limit reached: no, threshold: 75%
+            MAC port down flush: enabled
+            MAC Secure: disabled, Logging: disabled
+            Split Horizon Group: none
+            E-Tree: Root
+            Dynamic ARP Inspection: disabled, Logging: disabled
+            IP Source Guard: disabled, Logging: disabled
+            DHCPv4 Snooping: disabled
+            DHCPv4 Snooping profile: none
+            IGMP Snooping: enabled
+            IGMP Snooping profile: CUW-WTQQ
+            MLD Snooping profile: none
+            Storm Control: bridge-domain policer
+            Static MAC addresses:
+            PD System Data: AF-LIF-IPv4: 0x00013807  AF-LIF-IPv6: 0x0001381d
+
+        List of Access PWs:
+        List of VFIs:
+        List of Access VFIs:
+
+    '''}
+
+    golden_parsed_output5 = {
+        'legend': 'pp = Partially Programmed.',
+        'bridge_group': {
+            'EVPN-Multicast_genie': {
+                'bridge_domain': {
+                    'EVPN-Multicast-Genie': {
+                        'state': 'up',
+                        'id': 0,
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'coupled_state': 'disabled',
+                        'vine_state': 'EVPN-IRB',
+                        'mac_learning': 'enabled',
+                        'mac_withdraw': 'enabled',
+                        'mac_withdraw_for_access_pw': 'enabled',
+                        'mac_withdraw_sent_on': 'bridge port up',
+                        'mac_withdraw_relaying': 'disabled',
+                        'flooding': {
+                            'broadcast_multicast': 'enabled',
+                            'unknown_unicast': 'enabled',
+                        },
+                        'mac_aging_time': 300,
+                        'mac_aging_type': 'inactivity',
+                        'mac_limit': 64000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'mac_limit_reached': 'no',
+                        'mac_limit_threshold': '75%',
+                        'mac_port_down_flush': 'enabled',
+                        'mac_secure': 'disabled',
+                        'mac_secure_logging': 'disabled',
+                        'split_horizon_group': 'none',
+                        'dynamic_arp_inspection': 'disabled',
+                        'dynamic_arp_logging': 'disabled',
+                        'ip_source_guard': 'disabled',
+                        'ip_source_logging': 'disabled',
+                        'dhcp_v4_snooping': 'disabled',
+                        'dhcp_v4_snooping_profile': 'none',
+                        'igmp_snooping': 'enabled',
+                        'igmp_snooping_profile': 'CUW-WTQQ',
+                        'mld_snooping_profile': 'none',
+                        'storm_control': 'bridge-domain policer',
+                        'bridge_mtu': '1500',
+                        'mid_cvpls_config_index': '1',
+                        'p2mp_pw': 'disabled',
+                        'multicast_source': 'Not Set',
+                        'create_time': '19/09/2019 10:23:31 (4w4d ago)',
+                        'status_changed_since_creation': 'No',
+                        'ac': {
+                            'num_ac': 2,
+                            'num_ac_up': 0,
+                            'interfaces': {
+                                'BVI100': {
+                                    'state': 'down (Segment-down)',
+                                    'type': 'Routed-Interface',
+                                    'mtu': 1514,
+                                    'xc_id': '0x80000007',
+                                    'interworking': 'none',
+                                    'error': 'Need at least 1 bridge port up',
+                                    'bvi_mac_address': ['1000.1000.1000'],
+                                    'split_horizon_group': 'Access',
+                                    'pd_system_data': {
+                                        'af_lif_ipv4': '0x00000000',
+                                        'af_lif_ipv6': '0x00000000',
+                                    },
+                                },
+                                'Bundle-Ether11.100': {
+                                    'state': 'down (Segment-down)',
+                                    'type': 'VLAN',
+                                    'vlan_num_ranges': '1',
+                                    'rewrite_tags': '',
+                                    'vlan_ranges': ['100', '100'],
+                                    'mtu': 9202,
+                                    'xc_id': '0xa0000008',
+                                    'interworking': 'none',
+                                    'mst_i': 5,
+                                    'mac_learning': 'enabled',
+                                    'flooding': {
+                                        'broadcast_multicast': 'enabled',
+                                        'unknown_unicast': 'enabled',
+                                    },
+                                    'mac_aging_time': 300,
+                                    'mac_aging_type': 'inactivity',
+                                    'mac_limit': 64000,
+                                    'mac_limit_action': 'none',
+                                    'mac_limit_notification': 'syslog',
+                                    'mac_limit_reached': 'no',
+                                    'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
+                                    'dhcp_v4_snooping': 'disabled',
+                                    'dhcp_v4_snooping_profile': 'none',
+                                    'igmp_snooping': 'enabled',
+                                    'igmp_snooping_profile': 'CUW-WTQQ',
+                                    'mld_snooping_profile': 'none',
+                                    'pd_system_data': {
+                                        'af_lif_ipv4': '0x00013807',
+                                        'af_lif_ipv6': '0x0001381d',
+                                    },
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 0,
+                        },
+                        'pw': {
+                            'num_pw': 0,
+                            'num_pw_up': 0,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                        'evpn': {
+                            'EVPN': {
+                                'state': 'up',
+                                'evi': '1000',
+                                'xc_id': '0x80000004',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'mac_move': '0',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
@@ -2384,6 +2619,13 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+    
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowL2vpnBridgeDomainDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
         
 if __name__ == '__main__':
     unittest.main()
