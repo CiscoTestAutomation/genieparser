@@ -502,8 +502,9 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                     # if (community matches-any CMT-TP or community matches-any CMT-OLDTP or community matches-any CMT-SBTP or community matches-any CMT-FP) then
                     if 'community matches-any' in m.groupdict()[cond]:
                         match_ext_community_list = re.findall('community matches-any (?P<match_ext_community_list>[A-Z\-]+)', line)
-                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                        ['match_ext_community_list'] = match_ext_community_list
+                        if len(match_ext_community_list)>0:
+                            rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                            ['match_ext_community_list'] = match_ext_community_list
 
                     if 'as-path in' in m.groupdict()[cond]:
                         v = re.match('as-path in (?P<match_as_path_list>[0-9a-zA-Z-]+)', m.groupdict()[cond])
