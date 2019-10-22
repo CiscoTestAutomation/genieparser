@@ -2136,24 +2136,33 @@ class ShowIsisInterfaceSchema(MetaParser):
             Any(): {
                 'interface': {
                     Any(): {
-                        'state': str,
-                        'adjacency_formation': str,
-                        'prefix_advertisement': str,
-                        'ipv6_bfd': bool,
-                        'ipv4_bfd': bool,
-                        'bfd_min_interval': int,
-                        'bfd_multiplier': int,
-                        'bandwidth': int,
-                        'circuit_type': str,
-                        'media_type': str,
-                        'circuit_number': int,
-                        'lsp': {
+                        Optional('state'): str,
+                        Optional('adjacency_formation'): str,
+                        Optional('prefix_advertisement'): str,
+                        Optional('ipv6_bfd'): bool,
+                        Optional('ipv4_bfd'): bool,
+                        Optional('bfd_min_interval'): int,
+                        Optional('bfd_multiplier'): int,
+                        Optional('bandwidth'): int,
+                        Optional('circuit_type'): str,
+                        Optional('media_type'): str,
+                        Optional('circuit_number'): int,
+                        Optional('rsi_srlg'): str,
+                        Optional('next_p2p_iih_in'): str,
+                        Optional('extended_circuit_number'): str,
+                        Optional('lsp_rexmit_queue_size'): str,
+                        Optional('lsp'): {
                             'transmit_timer_expires_ms': int,
                             'transmission_state': str,
                             'lsp_transmit_back_to_back_limit': int,
                             'lsp_transmit_back_to_back_limit_window_msec': int,
                         },
-                        'level': {
+                        Optional('underlying_interface'):{
+                            Any(): {
+                                'index': str
+                            }
+                        },
+                        Optional('level'): {
                             Any(): {
                                 'adjacency_count':int,
                                 Optional('lsp_pacing_interval_ms'): int,
@@ -2168,7 +2177,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 }
                             },
                         },
-                        'clns_io': {
+                        Optional('clns_io'): {
                             'protocol_state': str,
                             'mtu': int,
                             Optional('snpa'): str,
@@ -2177,7 +2186,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'all_level_2_iss': str,
                             },
                         },
-                        'topology': {
+                        Optional('topology'): {
                             Any(): {
                                 'adjacency_formation': str,
                                 'state': str,
@@ -2205,13 +2214,22 @@ class ShowIsisInterfaceSchema(MetaParser):
                                         Any(): {
                                             'state': str,
                                             'type': str,
+                                            Optional(Any()): {
+                                                Optional('state'): str,
+                                                Optional('tie_breaker'): str,
+                                                Optional('line_card_disjoint'): str,
+                                                Optional('lowest_backup_metric'): str,
+                                                Optional('node_protecting'): str,
+                                                Optional('primary_path'): str,
+                                                Optional('link_protecting'): str,
+                                                Optional('srlg_disjoint'): str,
+                                            }
                                         },
                                     },
                                 },
-
                             },
                         },
-                        'address_family': {
+                        Optional('address_family'): {
                             Any(): {
                                 'state': str,
                                 'forwarding_address': list,
@@ -2247,7 +2265,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # Loopback0                   Enabled
         # GigabitEthernet0/0/0/0      Enabled
-        r2 = re.compile(r'^(?P<interface>\w+[\d+\/]+)\s+(?P<interface_state>\w+)$')
+        # TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
 
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
@@ -2396,6 +2415,51 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # All ISs:              Yes
         r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')
+
+        # Extended Circuit Number:  20
+        r41 = re.compile(r'^Extended +Circuit +Number: +(?P<extended_circuit_number>\d+)$')
+        
+        # Next P2P IIH in:          3 s
+        r42 = re.compile(r'^Next +P2P +IIH +in: +(?P<next_p2p_iih_in>\d+) +m?s$')
+
+        # LSP Rexmit Queue Size:    0
+        r43 = re.compile(r'^LSP +Rexmit +Queue +Size: +(?P<lsp_rexmit_queue_size>\d+)$')
+
+        # RSI SRLG:                 Registered
+        r44 = re.compile(r'^RSI +SRLG: +(?P<rsi_srlg>\S+)$')
+
+        # Direct LFA:           Enabled            Enabled 
+        r45 = re.compile(r'^Direct +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Remote LFA:           Not Enabled        Not Enabled 
+        r46 = re.compile(r'^Remote +LFA: +(?P<level_1>(Not +)?Enabled) +(?P<level_2>(Not +)?Enabled)$')
+
+        # Tie Breaker          Default            Default
+        r47 = re.compile(r'^Tie +Breaker +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Line-card disjoint   30                 30
+        r48 = re.compile(r'^Line-card +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Lowest backup metric 20                 20
+        r49 = re.compile(r'^Lowest +backup +metric +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Node protecting      40                 40
+        r50 = re.compile(r'^Node +protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Primary path         10                 10
+        r51 = re.compile(r'^Primary +path +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # TI LFA:               Enabled            Enabled
+        r52 = re.compile(r'^TI +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Link Protecting      Enabled            Enabled
+        r53 = re.compile(r'^Link +Protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # SRLG disjoint        0                  0
+        r54 = re.compile(r'^SRLG +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # IfName: Hu0/0/0/1 IfIndex: 0x55 
+        r55 = re.compile(r'^IfName: +(?P<if_name>\S+) +IfIndex: +(?P<if_index>\S+)$')
 
         parsed_output = {}
         interface_flag = False
@@ -2705,6 +2769,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             # FRR Type:             None               None
             result = r27.match(line)
             if result:
+                lfa_type = 'frr'
                 group = result.groupdict()
                 frr_type_level_1 = group['frr_type_level_1']
                 frr_type_level_2 = group['frr_type_level_2']
@@ -2852,6 +2917,245 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 all_iss = group['all_iss']
                 layer_dict['all_level_1_iss'] = all_iss
                 layer_dict['all_level_2_iss'] = all_iss
+
+                continue
+            # Extended Circuit Number:  20
+            result = r41.match(line)
+            if result:
+                group = result.groupdict()
+                extended_circuit_number = group['extended_circuit_number']
+                if interface_flag:
+                    interface_dict['extended_circuit_number'] = extended_circuit_number
+                else:
+                    topology_dict['extended_circuit_number'] = extended_circuit_number
+                continue
+
+            # Next P2P IIH in:          3 s
+            result = r42.match(line)
+            if result:
+                group = result.groupdict()
+                next_p2p_iih_in = group['next_p2p_iih_in']
+                if interface_flag:
+                    interface_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                else:
+                    topology_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                continue
+
+            # LSP Rexmit Queue Size:    0
+            result = r43.match(line)
+            if result:
+                group = result.groupdict()
+                lsp_rexmit_queue_size = group['lsp_rexmit_queue_size']
+                if interface_flag:
+                    interface_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                else:
+                    topology_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                continue
+
+            # RSI SRLG:                 Registered
+            result = r44.match(line)
+            if result:
+                group = result.groupdict()
+                rsi_srlg = group['rsi_srlg']
+                if interface_flag:
+                    interface_dict['rsi_srlg'] = rsi_srlg
+                else:
+                    topology_dict['rsi_srlg'] = rsi_srlg
+                continue
+            
+            # Direct LFA:           Enabled            Enabled 
+            result = r45.match(line)
+            if result:
+                lfa_type = 'direct_lfa'
+                group = result.groupdict()
+                direct_lfa_level_1 = group['level_1']
+                direct_lfa_level_2 = group['level_2']
+                direct_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_1.update({'state': direct_lfa_level_1})
+                direct_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_2.update({'state': direct_lfa_level_2})
+                continue
+            # Remote LFA:           Not Enabled        Not Enabled 
+            result = r46.match(line)
+            if result:
+                lfa_type = 'remote_lfa'
+                group = result.groupdict()
+                remote_lfa_level_1 = group['level_1']
+                remote_lfa_level_2 = group['level_2']
+                remote_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_1.update({'state': remote_lfa_level_1})
+                remote_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_2.update({'state': remote_lfa_level_2})
+                continue
+
+            # Tie Breaker          Default            Default
+            result = r47.match(line)
+            if result:
+                group = result.groupdict()
+                tie_breaker_level_1 = group['level_1']
+                tie_breaker_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'tie_breaker': tie_breaker_level_1})
+                current_lfa_dict_2.update({'tie_breaker': tie_breaker_level_2})
+                continue
+
+            # Line-card disjoint   30                 30
+            result = r48.match(line)
+            if result:
+                group = result.groupdict()
+                line_card_disjoint_level_1 = group['level_1']
+                line_card_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'line_card_disjoint': line_card_disjoint_level_1})
+                current_lfa_dict_2.update({'line_card_disjoint': line_card_disjoint_level_2})
+                continue
+
+            # Lowest backup metric 20                 20
+            result = r49.match(line)
+            if result:
+                group = result.groupdict()
+                lowest_backup_metric_level_1 = group['level_1']
+                lowest_backup_metric_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'lowest_backup_metric': lowest_backup_metric_level_1})
+                current_lfa_dict_2.update({'lowest_backup_metric': lowest_backup_metric_level_2})
+                continue
+
+            # Node protecting      40                 40
+            result = r50.match(line)
+            if result:
+                group = result.groupdict()
+                node_protecting_level_1 = group['level_1']
+                node_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'node_protecting': node_protecting_level_1})
+                current_lfa_dict_2.update({'node_protecting': node_protecting_level_2})
+                continue
+
+            # Primary path         10                 10
+            result = r51.match(line)
+            if result:
+                group = result.groupdict()
+                primary_path_level_1 = group['level_1']
+                primary_path_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'primary_path': primary_path_level_1})
+                current_lfa_dict_2.update({'primary_path': primary_path_level_2})
+                continue
+
+            # TI LFA:               Enabled            Enabled
+            result = r52.match(line)
+            if result:
+                lfa_type = 'ti_lfa'
+                group = result.groupdict()
+                ti_lfa_level_1 = group['level_1']
+                ti_lfa_level_2 = group['level_2']
+                ti_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_1.update({'state': ti_lfa_level_1})
+                ti_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_2.update({'state': ti_lfa_level_2})
+                continue
+
+            # Link Protecting      Enabled            Enabled
+            result = r53.match(line)
+            if result:
+                group = result.groupdict()
+                link_protecting_level_1 = group['level_1']
+                link_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'link_protecting': link_protecting_level_1})
+                current_lfa_dict_2.update({'link_protecting': link_protecting_level_1})
+                continue
+
+            # SRLG disjoint        0                  0
+            result = r54.match(line)
+            if result:
+                group = result.groupdict()
+                srlg_disjoint_level_1 = group['level_1']
+                srlg_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'srlg_disjoint': srlg_disjoint_level_1})
+                current_lfa_dict_2.update({'srlg_disjoint': srlg_disjoint_level_2})
+                continue
+
+            # IfName: Hu0/0/0/1 IfIndex: 0x55 
+            result = r55.match(line)
+            if result:
+                group = result.groupdict()
+                if_name = Common.convert_intf_name(group['if_name'])
+                if_index = group['if_index']
+                underlying_interface = interface_dict.setdefault('underlying_interface', {}). \
+                    setdefault(if_name, {})
+                underlying_interface.update({'index': if_index})
 
                 continue
 
