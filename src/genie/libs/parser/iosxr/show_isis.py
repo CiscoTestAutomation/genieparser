@@ -2881,12 +2881,15 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                     'overload_bit': int,
                                 },
                                 Optional('router_id'): str,
+                                Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
                                 Optional('topology'): list,
+                                Optional('tlv'): int,
+                                Optional('tlv_length'): int,
                                 Optional('extended_ipv4_reachability'): {
                                     Any(): {
                                         'ip_prefix': str,
@@ -3000,7 +3003,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # router-5.00-00        0x00000005 0x807997c        457                0/0/0
         # 0000.0C00.0C35.00-00  0x0000000C    0x5696        325                0/0/0
         # 0000.0C00.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
-        r2 = re.compile(r'(?P<lspid>[\w\-\.]+)\s*(?P<local_router>\**)\s+(?P<lsp_seq_num>\S+)\s+(?P<lsp_checksum>\S+)\s+(?P<lsp_holdtime>\d+|\*)\s+(/*(?P<lsp_rcvd>\d*|\*)?)\s+(?P<attach_bit>\d+)/(?P<p_bit>\d+)/(?P<overload_bit>\d+)')
+        r2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
+                r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
+                r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
+                r'(?P<overload_bit>\d+)$')
 
         # Area Address:   49.0002
         r3 = re.compile(r'Area\s+Address\s*:\s*(?P<area_address>\S+)')
@@ -3105,6 +3111,12 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 0          IP 172.16.115.0/24
         r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
                          r'(?P<ip_address>[\d\.\/]+)')
+        
+        # Router Cap:     172.19.1.2 D:0 S:0
+        r23 = re.compile(r'^Router +Cap: +(?P<router_cap>[\S ]+)$')
+
+        # TLV 14:         Length: 2
+        r24 = re.compile(r'^TLV +(?P<tlv>\d+): +Length: +(?P<length>\d+)$')
 
         parsed_output = {}
 
@@ -3473,6 +3485,24 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     ip_dict['prefix_length'] = ip_prefix_list[1]
                 ip_dict['metric'] = metric
 
+                continue
+
+            # Router Cap:     172.19.1.2 D:0 S:0
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                router_cap = group['router_cap']
+                lspid_dict['router_cap'] = router_cap
+                continue
+
+            # TLV 14:         Length: 2
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                tlv = int(group['tlv'])
+                length = int(group['length'])
+                lspid_dict['tlv'] = tlv
+                lspid_dict['tlv_length'] = length
                 continue
 
         return parsed_output
