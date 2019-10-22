@@ -501,6 +501,7 @@
     * Updated ShowL2vpnXconnect for:
         * To support more varied output
     * Updated ShowL2vpnXconnectDetail to support different outputs
+    * Updated ShowL2vpnXconnect to support differnt outputs
 
 --------------------------------------------------------------------------------
                                 EVPN
