@@ -1189,7 +1189,7 @@ class test_show_inventory(unittest.TestCase):
 #  Unit test for admin show diag chassis'       
 # =======================================
 
-class test_admin_show_diag_chassis(unittest.TestCase):
+class TestAdminShowDiagChassis(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1220,6 +1220,7 @@ class test_admin_show_diag_chassis(unittest.TestCase):
     
     golden_parsed_output2 = {
         'rack_num': 0,
+        'desc': ' Cisco CRS Series 16 Slots Line Card Chassis',
         'device_family': 'Cisco',
         'device_series': 'CRS Series',
         'num_line_cards': 16,
@@ -1258,7 +1259,7 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         admin show diag chassis
 
         Mon Oct 21 10:54:18.093 EDT
-        
+
         Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
           MAIN:  board type 0001ee
                  800-35128-03 rev B1
@@ -1274,6 +1275,8 @@ class test_admin_show_diag_chassis(unittest.TestCase):
 
     device_parsed_output = {
         'clei': 'IPMS110DRC',
+        'desc': ' CRS 16 Slots Line Card Chassis for CRS-16/S-B',
+        'device_series': 'CRS',
         'eci': '465887',
         'main': {
             'board_type': '0001ee',
@@ -1281,11 +1284,14 @@ class test_admin_show_diag_chassis(unittest.TestCase):
             'part': '800-35128-03 rev B1',
             'serial_number': 'FXS1752Q3AU',
         },
+        'num_line_cards': 16,
         'pca': '73-13062-02 rev A0',
         'pid': 'CRS-16-LCC-B',
         'rack_num': 0,
         'vid': 'V03',
+        'chassis_feature': 'CRS-16/S-B'
     }
+
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
         diag_chassis_obj = AdminShowDiagChassis(device=self.device)
@@ -1305,7 +1311,6 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output2)
-
 
     def test_3(self):
         self.maxDiff = None

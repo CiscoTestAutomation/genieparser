@@ -835,29 +835,44 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
         admin_show_diag_dict = {}
         
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # Rack 0 - ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
             # Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
-            p1 = re.compile(r'\s*Rack +(?P<rack_num>\d+) +- +'
-                '(?P<device_family>\S+) +(?P<device_series>[\S ]+) +'
-                '(?P<num_line_cards>\d+) +((Line +Card +Slot +'
-                'Chassis +with *)|Slots +Line +Card +Chassis *)'
-                '(?P<chassis_feature>[\S ]+)?$')
+            # Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
+            p1 = re.compile(r'Rack +(?P<rack_num>\d+) +-'
+                            r' +(?P<device_group>[a-zA-Z0-9\s]+)'
+                            r' +(?P<num_line_cards>\d+)'
+                            r' +((Line +Card +Slot +Chassis +with *)|'
+                            r'Slots +Line +Card +Chassis(?:( +for))? *)'
+                            r'(?P<chassis_feature>[\S ]+)?$')
 
             m = p1.match(line)
             if m:
                 admin_show_diag_dict['rack_num'] = \
                     int(m.groupdict()['rack_num'])
-                admin_show_diag_dict['device_family'] = \
-                    str(m.groupdict()['device_family'])
-                admin_show_diag_dict['device_series'] = \
-                    m.groupdict()['device_series']
+
+                # ASR 9006
+                # Cisco CRS Series
+                # CRS
+                device_group = m.group(2)
+                split_device_group = re.split('\s', device_group)
+                if len(split_device_group)>1:
+                    admin_show_diag_dict['device_family'] = \
+                        split_device_group[0]
+                    device_series = ' '.join(split_device_group[1:])
+                else:
+                    device_series = split_device_group[0]
+                admin_show_diag_dict['device_series'] = device_series
+
                 admin_show_diag_dict['num_line_cards'] = \
                     int(m.groupdict()['num_line_cards'])
                 if m.groupdict()['chassis_feature']:
                     admin_show_diag_dict['chassis_feature'] = \
                         str(m.groupdict()['chassis_feature'])
+
+                description = line[8:]
+                admin_show_diag_dict['desc'] = description
                 continue
 
             # RACK NUM: 0
@@ -900,7 +915,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['desc'] = \
                     str(m.groupdict()['desc'])
                 continue
-            
+
             # CLEI:  IPMUP00BRB
             p7 = re.compile(r'\s*CLEI: *(?P<clei>[a-zA-Z0-9\-]+)$')
             m = p7.match(line)
