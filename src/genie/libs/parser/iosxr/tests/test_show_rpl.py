@@ -11,7 +11,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.iosxr.show_rpl import ShowRplRoutePolicy
 
-class test_show_rpl_route_policy(unittest.TestCase):
+class TestShowRplRoutePolicy(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -53,7 +53,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                           20: {'actions': {'actions': 'pass'},
                                'conditions': {'match_nexthop_in': 'prefix-set1'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_ext_community_list': 'test',
+                               'conditions': {'match_ext_community_list': [],
                                               'match_local_pref_eq': '130'}}}},
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
@@ -274,6 +274,40 @@ class test_show_rpl_route_policy(unittest.TestCase):
         },
     }
 
+    device_output2 = {'execute.return_value': '''
+            Mon Oct 21 19:00:38.337 EDT
+        Listing for all Route Policy objects
+        route-policy INTERNAL-route
+          if (community matches-any CMT-TP or community matches-any CMT-OLDTP or community matches-any CMT-SBTP or community matches-any CMT-FP) then
+            drop
+          else
+            pass
+          endif
+        end-policy
+        !
+    '''}
+    parsed_output2 = {
+        'INTERNAL-route': {
+            'statements': {
+                10: {
+                    'actions': {
+                        'actions': 'drop',
+                    },
+                    'conditions': {
+                        'match_ext_community_list': ['CMT-TP', 'CMT-OLDTP', 'CMT-SBTP', 'CMT-FP'],
+                    },
+                },
+                20: {
+                    'actions': {
+                        'actions': 'pass',
+                    },
+                    'conditions': {
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         rpl_route_policy_obj = ShowRplRoutePolicy(device=self.device1)
@@ -293,6 +327,13 @@ class test_show_rpl_route_policy(unittest.TestCase):
         parsed_output = rpl_route_policy_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.parsed_output)
+
+    def test_3(self):
+        self.device = Mock(**self.device_output2)
+        rpl_route_policy_obj = ShowRplRoutePolicy(device=self.device)
+        parsed_output = rpl_route_policy_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

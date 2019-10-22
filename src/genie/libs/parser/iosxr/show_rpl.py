@@ -21,7 +21,7 @@ class ShowRplRoutePolicySchema(MetaParser):
                              Optional('match_nexthop_in_v6'): str,
                              Optional('match_local_pref_eq'): str,
                              Optional('match_community_list'): str,
-                             Optional('match_ext_community_list'): str,
+                             Optional('match_ext_community_list'): list,
                              Optional('match_ext_community_list_type'): str,
                              Optional('match_as_path_list'): str,
                              Optional('match_as_path_length'): int,
@@ -499,9 +499,9 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_nexthop_in'] = match_nexthop_in
 
+                    # if (community matches-any CMT-TP or community matches-any CMT-OLDTP or community matches-any CMT-SBTP or community matches-any CMT-FP) then
                     if 'community matches-any' in m.groupdict()[cond]:
-                        v = re.match('community matches-any (?P<match_ext_community_list>\S+)', m.groupdict()[cond])
-                        match_ext_community_list = v.groupdict()['match_ext_community_list']
+                        match_ext_community_list = re.findall('community matches-any (?P<match_ext_community_list>[A-Z\-]+)', line)
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_ext_community_list'] = match_ext_community_list
 
@@ -532,6 +532,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                         else:
                             match_2 = re.search(r'destination in (?P<match_prefix_list>\((.*?)\))', line)
                             match_prefix_list = match_2.group(1)
+
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_prefix_list'] = match_prefix_list
                     continue
