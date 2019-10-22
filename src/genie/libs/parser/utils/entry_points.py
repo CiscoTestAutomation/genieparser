@@ -20,7 +20,11 @@ to add the following to their setup() invocation:
 
 import sys
 import pkg_resources
+import logging
+
 from .common import parser_data
+
+log = logging.getLogger(__name__)
 
 ENTRY_POINT_NAME = 'genie.libs.parser'
 
@@ -60,7 +64,15 @@ def add_parser(parser, os_name):
 def load_entry_points():
     for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
         loader_function = ep.load()
-        loader_function()
+        if not callable(loader_function):
+            log.warning('unable to load parsers from entry point '
+                        '{name} as it is not callable.'.format(name=ep.name))
+            continue
+
+        parser_dict = loader_function()
+        for os_name, parser_list in parser_dict.items():
+            for parser in parser_list:
+                add_parser(parser=parser, os_name=os_name)
 
 
 load_entry_points()
