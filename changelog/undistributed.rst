@@ -297,6 +297,7 @@
         * Optimized parser moving regex compilation out of for loop
     * Updated ShowStaticTopologyDetail:
         * Support more varied output
+        * Update regex
 * NXOS:
     * Updated ShowIpRoute for:
         * show ip route {route} {protocol} interface {interface} vrf {vrf}
@@ -499,7 +500,6 @@
         * To support more varied output
     * Updated ShowL2vpnXconnect for:
         * To support more varied output
-    * Updated ShowL2vpnXconnectDetail to support different outputs
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -581,6 +581,7 @@
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
     * Update schema for AdminShowDiagChassis to support more varied output
+    * Update schema for AdminShowDiagChassis
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
@@ -596,6 +597,8 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowLldpEntry to support different port descriptions
+        * Update regex
+    * Update ShowLldpNeighborsDetail
 
 --------------------------------------------------------------------------------
                                 NTP

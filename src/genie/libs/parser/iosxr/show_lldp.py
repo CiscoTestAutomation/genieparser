@@ -141,7 +141,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Port id: Gi2
         p3 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
         # Port Description: GigabitEthernet2
-        p4 = re.compile(r'^Port +Description: +(?P<port_description>[\S\s]+)$')
+        # Port Description - not advertised
+        # Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30
+        p4 = re.compile(r'^Port +Description(\:|\s\-) '
+                        r'+(?P<port_description>[a-zA-Z0-9\s\/\-.]+)$')
         # System Name: R1_csr1000v.openstacklocal
         p5 = re.compile(r'System +Name: +(?P<system_name>\S+)$')
         # System Description: 
@@ -198,6 +201,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Port Description: GigabitEthernet1/0/4
+            # Port Description - not advertised
+            # Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30
             m = p4.match(line)
             if m:
                 group = m.groupdict()

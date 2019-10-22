@@ -167,6 +167,153 @@ class test_show_lldp_entry(unittest.TestCase):
 
      '''}
 
+    device_output = {'execute.return_value': '''
+            Mon Oct 21 18:41:43.442 EDT
+        Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        
+        ------------------------------------------------
+        Local Interface: TenGigE0/0/0/41
+        Chassis id: 00bc.6017.68d9
+        Port id: TenGigE0/0/0/0/0
+        Port Description - not advertised
+        System Name: tor1-55A1.qa-site1
+        
+        System Description: 
+         6.5.3, NCS-5500
+        
+        Time remaining: 100 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 10.10.10.2
+        
+        Peer MAC Address: 00:bc:60:17:68:00
+        
+        
+        ------------------------------------------------
+        Local Interface: HundredGigE0/0/1/1
+        Chassis id: 008a.960b.2481
+        Port id: HundredGigE0/0/0/2
+        Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
+        System Name: spine2-tatooine.net.bell.ca
+        
+        System Description: 
+         7.0.1, NCS-5500
+        
+        Time remaining: 97 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 172.18.0.7
+        
+        Peer MAC Address: 00:8a:96:0b:20:08
+        
+        
+        ------------------------------------------------
+        Local Interface: HundredGigE0/0/1/0
+        Chassis id: 008a.960b.0c81
+        Port id: HundredGigE0/0/0/2
+        Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
+        System Name: spine1-tatooine.net.bell.ca
+        
+        System Description: 
+         7.0.1, NCS-5500
+        
+        Time remaining: 117 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 172.18.0.5
+        
+        Peer MAC Address: 00:8a:96:0b:08:08
+        
+        
+        Total entries displayed: 3
+    '''}
+
+    expected_output = {
+        'interfaces': {
+            'HundredGigE0/0/1/0': {
+                'port_id': {
+                    'HundredGigE0/0/0/2': {
+                        'neighbors': {
+                            'spine1-tatooine.net.bell.ca': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '008a.960b.0c81',
+                                'hold_time': 120,
+                                'management_address': '172.18.0.5',
+                                'neighbor_id': 'spine1-tatooine.net.bell.ca',
+                                'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
+                                'system_description': '',
+                                'system_name': 'spine1-tatooine.net.bell.ca',
+                                'time_remaining': 117,
+                            },
+                        },
+                    },
+                },
+            },
+            'HundredGigE0/0/1/1': {
+                'port_id': {
+                    'HundredGigE0/0/0/2': {
+                        'neighbors': {
+                            'spine2-tatooine.net.bell.ca': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '008a.960b.2481',
+                                'hold_time': 120,
+                                'management_address': '172.18.0.7',
+                                'neighbor_id': 'spine2-tatooine.net.bell.ca',
+                                'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
+                                'system_description': '',
+                                'system_name': 'spine2-tatooine.net.bell.ca',
+                                'time_remaining': 97,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/0/0/41': {
+                'port_id': {
+                    'TenGigE0/0/0/0/0': {
+                        'neighbors': {
+                            'tor1-55A1.qa-site1': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '00bc.6017.68d9',
+                                'hold_time': 120,
+                                'management_address': '10.10.10.2',
+                                'neighbor_id': 'tor1-55A1.qa-site1',
+                                'port_description': 'not advertised',
+                                'system_description': '',
+                                'system_name': 'tor1-55A1.qa-site1',
+                                'time_remaining': 100,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 3,
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpEntry(device=self.dev1)
@@ -179,6 +326,13 @@ class test_show_lldp_entry(unittest.TestCase):
         obj = ShowLldpEntry(device=self.dev1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.device_output)
+        obj = ShowLldpEntry(device=self.dev1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_output)
 
 class test_show_lldp_neighbor_detail(unittest.TestCase):
     dev = Device(name='empty')
@@ -386,6 +540,152 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         'total_entries': 2,
         }
 
+    device_output = {'execute.return_value': '''
+            Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        
+        ------------------------------------------------
+        Local Interface: TenGigE0/0/0/41
+        Chassis id: 00bc.6017.68d9
+        Port id: TenGigE0/0/0/0/0
+        Port Description - not advertised
+        System Name: tor1-55A1.qa-site1
+        
+        System Description: 
+         6.5.3, NCS-5500
+        
+        Time remaining: 99 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 10.10.10.2
+        
+        Peer MAC Address: 00:bc:60:17:68:00
+        
+        
+        ------------------------------------------------
+        Local Interface: HundredGigE0/0/1/1
+        Chassis id: 008a.960b.2481
+        Port id: HundredGigE0/0/0/2
+        Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
+        System Name: spine2-tatooine.net.bell.ca
+        
+        System Description: 
+         7.0.1, NCS-5500
+        
+        Time remaining: 96 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 172.18.0.7
+        
+        Peer MAC Address: 00:8a:96:0b:20:08
+        
+        
+        ------------------------------------------------
+        Local Interface: HundredGigE0/0/1/0
+        Chassis id: 008a.960b.0c81
+        Port id: HundredGigE0/0/0/2
+        Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
+        System Name: spine1-tatooine.net.bell.ca
+        
+        System Description: 
+         7.0.1, NCS-5500
+        
+        Time remaining: 116 seconds
+        Hold Time: 120 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Addresses:
+          IPv4 address: 172.18.0.5
+        
+        Peer MAC Address: 00:8a:96:0b:08:08
+        
+        
+        Total entries displayed: 3
+    '''}
+
+    expected_output = {
+        'interfaces': {
+            'HundredGigE0/0/1/0': {
+                'port_id': {
+                    'HundredGigE0/0/0/2': {
+                        'neighbors': {
+                            'spine1-tatooine.net.bell.ca': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '008a.960b.0c81',
+                                'hold_time': 120,
+                                'management_address': '172.18.0.5',
+                                'neighbor_id': 'spine1-tatooine.net.bell.ca',
+                                'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
+                                'system_description': '',
+                                'system_name': 'spine1-tatooine.net.bell.ca',
+                                'time_remaining': 116,
+                            },
+                        },
+                    },
+                },
+            },
+            'HundredGigE0/0/1/1': {
+                'port_id': {
+                    'HundredGigE0/0/0/2': {
+                        'neighbors': {
+                            'spine2-tatooine.net.bell.ca': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '008a.960b.2481',
+                                'hold_time': 120,
+                                'management_address': '172.18.0.7',
+                                'neighbor_id': 'spine2-tatooine.net.bell.ca',
+                                'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
+                                'system_description': '',
+                                'system_name': 'spine2-tatooine.net.bell.ca',
+                                'time_remaining': 96,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/0/0/41': {
+                'port_id': {
+                    'TenGigE0/0/0/0/0': {
+                        'neighbors': {
+                            'tor1-55A1.qa-site1': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '00bc.6017.68d9',
+                                'hold_time': 120,
+                                'management_address': '10.10.10.2',
+                                'neighbor_id': 'tor1-55A1.qa-site1',
+                                'port_description': 'not advertised',
+                                'system_description': '',
+                                'system_name': 'tor1-55A1.qa-site1',
+                                'time_remaining': 99,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 3,
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev)
@@ -405,6 +705,13 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.device_output)
+        obj = ShowLldpNeighborsDetail(device=self.dev1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_output)
 
 class test_show_lldp_traffic(unittest.TestCase):
     dev = Device(name='empty')
