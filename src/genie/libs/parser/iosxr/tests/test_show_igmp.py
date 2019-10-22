@@ -19,187 +19,150 @@ class TestShowIgmpInterface(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
-        'GigabitEthernet0/0/0/0.110': {
-            'enabled': True,
-            'igmp_activity_joins': 7,
-            'igmp_activity_leaves': 1,
-            'igmp_max_query_response_time': 10,
-            'igmp_querier_timeout': 125,
-            'igmp_query_interval': 60,
-            'igmp_query_response_interval': 1,
-            'igmp_querying_router': '10.12.110.1',
-            'igmp_state': 'enabled',
-            'igmp_time_since_last_query_sent': '02:42:58',
-            'igmp_time_since_last_report_received': '00:00:31',
-            'igmp_time_since_router_enabled': '02:46:41',
-            'igmp_version': 3,
-            'ipv4': {
-                '10.12.110.2/24': {
-                    'ip': '10.12.110.2',
-                    'prefix_length': 24
-                    }
+        'vrf': {
+            'default': {
+                'GigabitEthernet0/0/0/0.110': {
+                    'enabled': True,
+                    'igmp_activity_joins': 7,
+                    'igmp_activity_leaves': 1,
+                    'igmp_max_query_response_time': 10,
+                    'igmp_querier_timeout': 125,
+                    'igmp_query_interval': 60,
+                    'igmp_query_response_interval': 1,
+                    'igmp_querying_router': '10.12.110.1',
+                    'igmp_state': 'enabled',
+                    'igmp_time_since_last_query_sent': '02:42:58',
+                    'igmp_time_since_last_report_received': '00:00:31',
+                    'igmp_time_since_router_enabled': '02:46:41',
+                    'igmp_version': 3,
+                    'ipv4': {
+                        '10.12.110.2/24': {
+                            'ip': '10.12.110.2',
+                            'prefix_length': 24
+                            }
+                        },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
                 },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/0.115': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4':{
-                '10.12.115.2/24': {
-                    'ip': '10.12.115.2',
-                    'prefix_length': 24
-                    }
+                'GigabitEthernet0/0/0/0.115': {
+                    'enabled': True,
+                    'igmp_state': 'disabled',
+                    'ipv4':{
+                        '10.12.115.2/24': {
+                            'ip': '10.12.115.2',
+                            'prefix_length': 24
+                            }
+                        },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
                 },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/0.120': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.12.120.2/24': {
-                    'ip': '10.12.120.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/0.90':{
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.12.90.2/24': {
-                    'ip': '10.12.90.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/1.110': {
-            'enabled': True,
-            'igmp_activity_joins': 5,
-            'igmp_activity_leaves': 0,
-            'igmp_max_query_response_time': 10,
-            'igmp_querier_timeout': 125,
-            'igmp_query_interval': 60,
-            'igmp_query_response_interval': 1,
-            'igmp_querying_router': '10.23.110.2',
-            'igmp_state': 'enabled',
-            'igmp_time_since_last_query_sent': '00:00:55',
-            'igmp_time_since_last_report_received': '00:00:55',
-            'igmp_time_since_router_enabled': '02:46:41',
-            'igmp_version': 3,
-            'ipv4': {
-                '10.23.110.2/24': {
-                    'ip': '10.23.110.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/1.115': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.23.115.2/24': {
-                    'ip': '10.23.115.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/1.120': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.23.120.2/24': {
-                    'ip': '10.23.120.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'GigabitEthernet0/0/0/1.90': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.23.90.2/24': {
-                    'ip': '10.23.90.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        },
-        'Loopback0': {
-            'enabled': True,
-            'igmp_activity_joins': 6,
-            'igmp_activity_leaves': 0,
-            'igmp_max_query_response_time': 10,
-            'igmp_querier_timeout': 125,
-            'igmp_query_interval': 60,
-            'igmp_query_response_interval': 1,
-            'igmp_querying_router': '2.2.2.2',
-            'igmp_state': 'enabled',
-            'igmp_time_since_last_query_sent': '00:00:53',
-            'igmp_time_since_last_report_received': '00:00:51',
-            'igmp_time_since_router_enabled': '02:46:41',
-            'igmp_version': 3,
-            'ipv4': {
-                '2.2.2.2/32': {
-                    'ip': '2.2.2.2',
-                    'prefix_length': 32
-                    }
+                'GigabitEthernet0/0/0/0.120': {
+                    'enabled': True,
+                    'igmp_state': 'disabled',
+                    'ipv4': {
+                        '10.12.120.2/24': {
+                            'ip': '10.12.120.2',
+                            'prefix_length': 24
+                        }
+                    },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
                 },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        }
-    }
-
-    golden_parsed_interface_output = {
-        'GigabitEthernet0/0/0/1.115': {
-            'enabled': True,
-            'igmp_state': 'disabled',
-            'ipv4': {
-                '10.23.115.2/24': {
-                    'ip': '10.23.115.2',
-                    'prefix_length': 24
-                }
-            },
-            'line_protocol': 'up',
-            'oper_status': 'up'
-        }
-    }
-
-    golden_parsed_interface_output1 = {
-        'Loopback0': {
-            'enabled': True,
-            'igmp_activity_joins': 6,
-            'igmp_activity_leaves': 0,
-            'igmp_max_query_response_time': 10,
-            'igmp_querier_timeout': 125,
-            'igmp_query_interval': 60,
-            'igmp_query_response_interval': 1,
-            'igmp_querying_router': '2.2.2.2',
-            'igmp_state': 'enabled',
-            'igmp_time_since_last_query_sent': '00:00:53',
-            'igmp_time_since_last_report_received': '00:00:51',
-            'igmp_time_since_router_enabled': '02:46:41',
-            'igmp_version': 3,
-            'ipv4': {
-                '2.2.2.2/32': {
-                    'ip': '2.2.2.2',
-                    'prefix_length': 32
-                    }
+                'GigabitEthernet0/0/0/0.90':{
+                    'enabled': True,
+                    'igmp_state': 'disabled',
+                    'ipv4': {
+                        '10.12.90.2/24': {
+                            'ip': '10.12.90.2',
+                            'prefix_length': 24
+                        }
+                    },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
                 },
-            'line_protocol': 'up',
-            'oper_status': 'up'
+                'GigabitEthernet0/0/0/1.110': {
+                    'enabled': True,
+                    'igmp_activity_joins': 5,
+                    'igmp_activity_leaves': 0,
+                    'igmp_max_query_response_time': 10,
+                    'igmp_querier_timeout': 125,
+                    'igmp_query_interval': 60,
+                    'igmp_query_response_interval': 1,
+                    'igmp_querying_router': '10.23.110.2',
+                    'igmp_state': 'enabled',
+                    'igmp_time_since_last_query_sent': '00:00:55',
+                    'igmp_time_since_last_report_received': '00:00:55',
+                   'igmp_time_since_router_enabled': '02:46:41',
+                   'igmp_version': 3,
+                   'ipv4': {
+                       '10.23.110.2/24': {
+                           'ip': '10.23.110.2',
+                           'prefix_length': 24
+                       }
+                   },
+                   'line_protocol': 'up',
+                   'oper_status': 'up'
+               },
+               'GigabitEthernet0/0/0/1.115': {
+                   'enabled': True,
+                   'igmp_state': 'disabled',
+                   'ipv4': {
+                       '10.23.115.2/24': {
+                           'ip': '10.23.115.2',
+                           'prefix_length': 24
+                       }
+                   },
+                   'line_protocol': 'up',
+                   'oper_status': 'up'
+               },
+               'GigabitEthernet0/0/0/1.120': {
+                   'enabled': True,
+                   'igmp_state': 'disabled',
+                   'ipv4': {
+                       '10.23.120.2/24': {
+                           'ip': '10.23.120.2',
+                           'prefix_length': 24
+                       }
+                   },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
+                },
+                'GigabitEthernet0/0/0/1.90': {
+                    'enabled': True,
+                    'igmp_state': 'disabled',
+                    'ipv4': {
+                        '10.23.90.2/24': {
+                            'ip': '10.23.90.2',
+                            'prefix_length': 24
+                        }
+                    },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
+                },
+                'Loopback0': {
+                    'enabled': True,
+                    'igmp_activity_joins': 6,
+                    'igmp_activity_leaves': 0,
+                    'igmp_max_query_response_time': 10,
+                    'igmp_querier_timeout': 125,
+                    'igmp_query_interval': 60,
+                    'igmp_query_response_interval': 1,
+                    'igmp_querying_router': '2.2.2.2',
+                    'igmp_state': 'enabled',
+                    'igmp_time_since_last_query_sent': '00:00:53',
+                    'igmp_time_since_last_report_received': '00:00:51',
+                    'igmp_time_since_router_enabled': '02:46:41',
+                    'igmp_version': 3,
+                    'ipv4': {
+                        '2.2.2.2/32': {
+                            'ip': '2.2.2.2',
+                            'prefix_length': 32
+                            }
+                        },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
+                }
+            }
         }
     }
 
@@ -263,6 +226,56 @@ class TestShowIgmpInterface(unittest.TestCase):
         IGMP is disabled on interface
     
     '''}
+    
+    golden_parsed_interface_output = {
+        'vrf': {
+            'default': {
+                'GigabitEthernet0/0/0/1.115': {
+                    'enabled': True,
+                    'igmp_state': 'disabled',
+                    'ipv4': {
+                        '10.23.115.2/24': {
+                            'ip': '10.23.115.2',
+                            'prefix_length': 24
+                        }
+                    },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
+                }
+            }
+        }
+    }
+
+    golden_parsed_interface_output1 = {
+        'vrf': {
+            'VRF1': {
+                'Loopback0': {
+                    'enabled': True,
+                    'igmp_activity_joins': 6,
+                    'igmp_activity_leaves': 0,
+                    'igmp_max_query_response_time': 10,
+                    'igmp_querier_timeout': 125,
+                    'igmp_query_interval': 60,
+                    'igmp_query_response_interval': 1,
+                    'igmp_querying_router': '2.2.2.2',
+                    'igmp_state': 'enabled',
+                    'igmp_time_since_last_query_sent': '00:00:53',
+                    'igmp_time_since_last_report_received': '00:00:51',
+                    'igmp_time_since_router_enabled': '02:46:41',
+                    'igmp_version': 3,
+                    'ipv4': {
+                        '2.2.2.2/32': {
+                            'ip': '2.2.2.2',
+                            'prefix_length': 32
+                            }
+                        },
+                    'line_protocol': 'up',
+                    'oper_status': 'up'
+                }
+            }
+        }
+    }
+
     golden_interface_output={'execute.return_value':'''
       GigabitEthernet0/0/0/1.115 is up, line protocol is up
         Internet address is 10.23.115.2/24
@@ -310,7 +323,7 @@ class TestShowIgmpInterface(unittest.TestCase):
     def test_golden_custom_vrf(self):
         self.device = Mock(**self.golden_interface_output1)
         interface_detail_obj = ShowIgmpInterface(device=self.device)
-        parsed_output = interface_detail_obj.parse(vrf='default')
+        parsed_output = interface_detail_obj.parse(vrf='VRF1')
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_interface_output1)
 
@@ -323,108 +336,60 @@ class test_show_igmp_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
-        'igmp': {
-            'Disabled_Interfaces': 6,
-            'Enabled_Interfaces': 3,
-            'GroupxInterfaces': 16,
-            'Interface': {
-                'Loopback0': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 6 
-                },
-                'GigabitEthernet0/0/0/0.90': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/1.90': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/0.110': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 6
-                },
-                'GigabitEthernet0/0/0/0.115': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 4
-                },
-                'GigabitEthernet0/0/0/0.120': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/1.110': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 5
-                },
-                'GigabitEthernet0/0/0/1.115': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 0
-                },
-                'GigabitEthernet0/0/0/1.120': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                }
-            },
-            'MTE_tuple_count': 0,
-            'NoOfGroupsForVrf': 50000,
-            'Robustness_value': 2,
-            'Supported_Interfaces': 9,
-            'Unsupported_Interfaces': 0,
+        'vrf': {
+            'default': {
+                'igmp': {
+                    'disabled_interfaces': 6,
+                    'enabled_interfaces': 3,
+                    'groupxInterfaces': 16,
+                    'interface': {
+                        'Loopback0': {
+                            'max_groups': 25000,
+                            'number_groups': 6 
+                        },
+                        'GigabitEthernet0/0/0/0.90': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/1.90': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/0.110': {
+                            'max_groups': 25000,
+                            'number_groups': 6
+                        },
+                        'GigabitEthernet0/0/0/0.115': {
+                            'max_groups': 25000,
+                            'number_groups': 4
+                        },
+                        'GigabitEthernet0/0/0/0.120': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/1.110': {
+                            'max_groups': 25000,
+                            'number_groups': 5
+                        },
+                        'GigabitEthernet0/0/0/1.115': {
+                            'max_groups': 25000,
+                            'number_groups': 0
+                        },
+                        'GigabitEthernet0/0/0/1.120': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        }
+                    },
+                    'mte_tuple_count': 0,
+                    'noOfGroupsForVrf': 50000,
+                    'robustness_value': 2,
+                    'supported_interfaces': 9,
+                    'unsupported_interfaces': 0,
 
+                }
+            }
         }
     }
-
-    golden_parsed_summary_output = {
-        'igmp': {
-            'Disabled_Interfaces': 6,
-            'Enabled_Interfaces': 3,
-            'GroupxInterfaces': 15,
-            'Interface': {
-                'Loopback300': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 4 
-                },
-                'GigabitEthernet0/0/0/0.390': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/0.410': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 7
-                },
-                'GigabitEthernet0/0/0/0.415': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 4
-                },
-                'GigabitEthernet0/0/0/0.420': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/1.390': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                },
-                'GigabitEthernet0/0/0/1.410': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 5
-                },
-                'GigabitEthernet0/0/0/1.415': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 0
-                },
-                'GigabitEthernet0/0/0/1.420': {
-                    'Max_Groups': 25000,
-                    'Number_Groups': 1
-                }
-            },
-            'MTE_tuple_count': 0,
-            'NoOfGroupsForVrf': 50000,
-            'Robustness_value': 2,
-            'Supported_Interfaces': 9,
-            'Unsupported_Interfaces': 0,
-        }
-    }
-
 
     golden_output = {'execute.return_value': '''
       Robustness Value 2
@@ -451,6 +416,62 @@ class test_show_igmp_summary(unittest.TestCase):
       GigabitEthernet0/0/0/1.120      1       25000
     
     '''}
+    
+    golden_parsed_summary_output = {
+        'vrf': {
+            'VRF1': {
+                'igmp': {
+                    'disabled_interfaces': 6,
+                    'enabled_interfaces': 3,
+                    'groupxInterfaces': 15,
+                    'interface': {
+                        'Loopback300': {
+                            'max_groups': 25000,
+                            'number_groups': 4 
+                        },
+                        'GigabitEthernet0/0/0/0.390': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/0.410': {
+                            'max_groups': 25000,
+                            'number_groups': 7
+                        },
+                        'GigabitEthernet0/0/0/0.415': {
+                            'max_groups': 25000,
+                            'number_groups': 4
+                        },
+                        'GigabitEthernet0/0/0/0.420': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/1.390': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        },
+                        'GigabitEthernet0/0/0/1.410': {
+                            'max_groups': 25000,
+                            'number_groups': 5
+                        },
+                        'GigabitEthernet0/0/0/1.415': {
+                            'max_groups': 25000,
+                            'number_groups': 0
+                        },
+                        'GigabitEthernet0/0/0/1.420': {
+                            'max_groups': 25000,
+                            'number_groups': 1
+                        }
+                    },
+                    'mte_tuple_count': 0,
+                    'noOfGroupsForVrf': 50000,
+                    'robustness_value': 2,
+                    'supported_interfaces': 9,
+                    'unsupported_interfaces': 0,
+                }
+            }
+        }
+    }
+
     golden_summary_output={'execute.return_value':'''
       Robustness Value 2
       No. of Group x Interfaces 15
@@ -487,12 +508,14 @@ class test_show_igmp_summary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         summary_detail_obj = ShowIgmpSummary(device=self.device)
         parsed_output = summary_detail_obj.parse()
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_custom(self):
         self.device = Mock(**self.golden_summary_output)
         summary_detail_obj = ShowIgmpSummary(device=self.device)
         parsed_output = summary_detail_obj.parse(vrf='VRF1')
+        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_summary_output)
   
 #############################################################################
@@ -510,51 +533,51 @@ class test_show_igmp_groups_detail(unittest.TestCase):
 		        	"Loopback0": {
 		                "group": {
 		                	"224.0.0.2": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "2.2.2.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
+		        				"host_mode": "exclude",
+		        				"last_reporter": "2.2.2.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
 		                		"up_time": "02:44:55"
 		                		},
 		                	"224.0.0.9": {
-		        				"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+		        				"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                		"up_time": "09:47:23"
 		                		},
 		                    "224.0.0.13": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                    	"up_time": "02:44:55"
 		                    },
 		                    "224.0.0.22": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                    	"up_time": "02:44:55"
 		                	},
 		                	"224.0.1.39": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                		"up_time": "02:19:56"
 		                	},
 		                	"224.0.1.40": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-		        				"Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+		        				"suppress": 0,
 		                		"up_time": "02:44:55"
 		                	}	
 		                }
@@ -562,11 +585,11 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                     "GigabitEthernet0/0/0/0.90": {
                     	"group": {
                     		"224.0.0.10": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
                     			"up_time": "01:53:32"
                     		}
                     	}
@@ -574,11 +597,11 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                     "GigabitEthernet0/0/0/1.90": {
 	                	"group": {
 	                		"224.0.0.10": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
 	                			"up_time": "01:53:32"
 	                		}
 	                	}
@@ -586,51 +609,51 @@ class test_show_igmp_groups_detail(unittest.TestCase):
 	                "GigabitEthernet0/0/0/0.110": {
 	                	"group": {
 	                		"224.0.0.2": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "10.12.110.2",
-				        		"Router_mode": "EXCLUDE (Expires: never)",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
+				        		"host_mode": "exclude",
+				        		"last_reporter": "10.12.110.2",
+				        		"router_mode": "EXCLUDE (Expires: never)",
+				        		"source_list": "empty",
+				        		"suppress": 0,
 	        	        		"up_time": "02:44:55"
 	        	        	},
 	        	        	"224.0.0.5": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "10.12.110.2",
-				        		"Router_mode": "EXCLUDE (Expires: never)",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
+				        		"host_mode": "exclude",
+				        		"last_reporter": "10.12.110.2",
+				        		"router_mode": "EXCLUDE (Expires: never)",
+				        		"source_list": "empty",
+				        		"suppress": 0,
 	        	        		"up_time": "10:36:57"
 				        	},
 		                	"224.0.0.6": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "10.12.110.2",
-				        		"Router_mode": "EXCLUDE (Expires: never)",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
+				        		"host_mode": "exclude",
+				        		"last_reporter": "10.12.110.2",
+				        		"router_mode": "EXCLUDE (Expires: never)",
+				        		"source_list": "empty",
+				        		"suppress": 0,
 		                		"up_time": "10:36:57"
 		                	},
 		                	"224.0.0.13": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "10.12.110.2",
-				        		"Router_mode": "EXCLUDE (Expires: never)",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
+				        		"host_mode": "exclude",
+				        		"last_reporter": "10.12.110.2",
+				        		"router_mode": "EXCLUDE (Expires: never)",
+				        		"source_list": "empty",
+				        		"suppress": 0,
 		                		"up_time": "02:44:55"
 		                	},
 		                	"224.0.0.22": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "10.12.110.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+				        		"host_mode": "exclude",
+				        		"last_reporter": "10.12.110.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                		"up_time": "02:44:55"
 		                	},
 		                	"224.0.1.39": {
-			        			"Host_mode": "include",
-			        			"Last_reporter": "10.12.110.1",
-			        			"Router_mode": "EXCLUDE (Expires: 00:01:41)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+			        			"host_mode": "include",
+			        			"last_reporter": "10.12.110.1",
+			        			"router_mode": "EXCLUDE (Expires: 00:01:41)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 		                		"up_time": "02:29:47",
 		                	}
 		                }
@@ -638,35 +661,35 @@ class test_show_igmp_groups_detail(unittest.TestCase):
 	              "GigabitEthernet0/0/0/0.115": {
                         "group": {
                             "239.2.2.1": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
                                 "up_time": "01:53:32"
                             },
                             "239.2.2.2": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
                                 "up_time": "01:53:32"
                             },
                             "239.2.2.3": {
-                                "Host_mode": "exclude",
-                                "Last_reporter": "0.0.0.0",
-                                "Router_mode": "INCLUDE",
-                                "Source_list": "empty",
-                                "Suppress": 0,
+                                "host_mode": "exclude",
+                                "last_reporter": "0.0.0.0",
+                                "router_mode": "INCLUDE",
+                                "source_list": "empty",
+                                "suppress": 0,
                                 "up_time": "01:55:08"
 		                	},	
                             "239.2.2.4": {
-                                "Host_mode": "exclude",
-                                "Last_reporter": "0.0.0.0",
-                                "Router_mode": "INCLUDE",
-                                "Source_list": "empty",
-                                "Suppress": 0,
+                                "host_mode": "exclude",
+                                "last_reporter": "0.0.0.0",
+                                "router_mode": "INCLUDE",
+                                "source_list": "empty",
+                                "suppress": 0,
                                 "up_time": "01:55:08"
 		                	}			
 		                }
@@ -674,11 +697,11 @@ class test_show_igmp_groups_detail(unittest.TestCase):
 	                "GigabitEthernet0/0/0/0.120": {
 	                	"group": {
 	                		"224.0.0.9": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "0.0.0.0",
-			         			"Router_mode": "INCLUDE",
-			         			"Source_list": "empty",
-			         			"Suppress": 0,
+			         			"host_mode": "exclude",
+			         			"last_reporter": "0.0.0.0",
+			         			"router_mode": "INCLUDE",
+			         			"source_list": "empty",
+			         			"suppress": 0,
 	                			"up_time": "09:47:23"
 	                		}
 	                	}
@@ -686,43 +709,43 @@ class test_show_igmp_groups_detail(unittest.TestCase):
 	                "GigabitEthernet0/0/0/1.110": {
 	                	"group": {
 	                		"224.0.0.2": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "10.23.110.2",
-			         			"Router_mode": "EXCLUDE (Expires: never)",
-			         			"Source_list": "empty",
-			         			"Suppress": 0,
+			         			"host_mode": "exclude",
+			         			"last_reporter": "10.23.110.2",
+			         			"router_mode": "EXCLUDE (Expires: never)",
+			         			"source_list": "empty",
+			         			"suppress": 0,
 	                			"up_time": "02:44:55"
 	                		},
 	                		"224.0.0.5": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "10.23.110.2",
-			         			"Router_mode": "EXCLUDE (Expires: never)",
-                                "Source_list": "empty",
-                                "Suppress": 0,
+			         			"host_mode": "exclude",
+			         			"last_reporter": "10.23.110.2",
+			         			"router_mode": "EXCLUDE (Expires: never)",
+                                "source_list": "empty",
+                                "suppress": 0,
                                 "up_time": "10:36:57",
                             },
 	                    	"224.0.0.6": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "10.23.110.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "10.23.110.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
 	                    		"up_time": "10:36:57"
 	                    	},
 	                    	"224.0.0.13": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "10.23.110.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-                                "Suppress": 0,
+			        			"host_mode": "exclude",
+			        			"last_reporter": "10.23.110.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+                                "suppress": 0,
                                 "up_time": "02:44:55"
                             },
                             "224.0.0.22": {
-                                "Host_mode": "exclude",
-                                "Last_reporter": "10.23.110.2",
-                                "Router_mode": "EXCLUDE (Expires: never)",
-                                "Source_list": "empty",
-                                "Suppress": 0,
+                                "host_mode": "exclude",
+                                "last_reporter": "10.23.110.2",
+                                "router_mode": "EXCLUDE (Expires: never)",
+                                "source_list": "empty",
+                                "suppress": 0,
                                 "up_time": "02:44:55"				        
                             }
                         }
@@ -730,11 +753,11 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                     "GigabitEthernet0/0/0/1.120": {
                     	"group": {
                     		"224.0.0.9": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "0.0.0.0",
-			         			"Router_mode": "INCLUDE",
-			         			"Source_list": "empty",
-			         			"Suppress": 0,
+			         			"host_mode": "exclude",
+			         			"last_reporter": "0.0.0.0",
+			         			"router_mode": "INCLUDE",
+			         			"source_list": "empty",
+			         			"suppress": 0,
                     			"up_time": "09:47:23"
                     			
                     		}			
@@ -744,241 +767,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
             }
         }
     }
-
-    golden_parsed_igmp_groups_output = {
-        "vrf": {
-            "VRF1": {
-		        "interface": {
-		        	"Loopback300": {
-		                "group": {
-		                	"224.0.0.2": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "2.2.2.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-		                		"up_time": "02:43:30"
-		                		},
-		                	"224.0.0.9": {
-		        				"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
-		                		"up_time": "09:48:07"
-		                		},
-		                    "224.0.0.13": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
-		                    	"up_time": "02:43:30"
-		                    },
-		                    "224.0.0.22": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "2.2.2.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
-		                    	"up_time": "02:43:30"
-		                	}
-		                }
-                    },
-                    "GigabitEthernet0/0/0/0.390": {
-                    	"group": {
-                    		"224.0.0.10": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-                    			"up_time": "01:54:16"
-                    		}
-                    	}
-                    },
-                    "GigabitEthernet0/0/0/0.410": {
-	                	"group": {
-	                		"224.0.0.2": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "02:43:30"
-	                		},
-                            "224.0.0.5": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "10:37:41"
-                            },
-                            "224.0.0.6": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "10:37:41"
-                            },
-                            "224.0.0.13": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "02:43:30"
-                            },
-                            "224.0.0.22": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "02:43:30"
-                            },
-                            "224.0.1.39": {
-		        				"Host_mode": "include",
-		        				"Last_reporter": "10.12.110.1",
-		        				"Router_mode": "EXCLUDE (Expires: 00:01:21)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "02:30:06"
-                            },
-                            "224.0.1.40": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "10.12.110.2",
-		        				"Router_mode": "EXCLUDE (Expires: never)",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-	                			"up_time": "02:43:30"
-                            }
-                                
-	                	}
-	                },
-	                "GigabitEthernet0/0/0/0.415": {
-	                	"group": {
-	                		"239.2.2.1": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "0.0.0.0",
-				        		"Router_mode": "INCLUDE",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
-	        	        		"up_time": "01:54:16"
-	        	        	},
-	        	        	"239.2.2.2": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "0.0.0.0",
-				        		"Router_mode": "INCLUDE",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
-	        	        		"up_time": "01:54:16"
-				        	},
-		                	"239.2.2.3": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "0.0.0.0",
-				        		"Router_mode": "INCLUDE",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
-		                		"up_time": "01:55:17"
-		                	},
-		                	"239.2.2.4": {
-				        		"Host_mode": "exclude",
-				        		"Last_reporter": "0.0.0.0",
-				        		"Router_mode": "INCLUDE",
-				        		"Source_list": "empty",
-				        		"Suppress": 0,
-		                		"up_time": "01:55:17"
-		                	}
-                        }
-                    },
-	              "GigabitEthernet0/0/0/0.420": {
-                        "group": {
-                            "224.0.0.9": {
-		        				"Host_mode": "exclude",
-		        				"Last_reporter": "0.0.0.0",
-		        				"Router_mode": "INCLUDE",
-		        				"Source_list": "empty",
-		        				"Suppress": 0,
-                                "up_time": "09:48:07"
-                            }
-                        }
-                    },
-	                "GigabitEthernet0/0/0/1.390": {
-	                	"group": {
-	                		"224.0.0.10": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "0.0.0.0",
-			         			"Router_mode": "INCLUDE",
-			         			"Source_list": "empty",
-			         			"Suppress": 0,
-	                			"up_time": "01:54:16"
-	                		}
-	                	}
-	                },
-                    "GigabitEthernet0/0/0/1.410": {
-                        "group": {
-	                		"224.0.0.2": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "10.23.110.2",
-			         			"Router_mode": "EXCLUDE (Expires: never)",
-                                "Source_list": "empty",
-                                "Suppress": 0,
-                                "up_time": "02:43:30",
-                            },
-	                    	"224.0.0.5": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "10.23.110.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-			        			"Suppress": 0,
-	                    		"up_time": "10:37:41"
-	                    	},
-	                    	"224.0.0.6": {
-			        			"Host_mode": "exclude",
-			        			"Last_reporter": "10.23.110.2",
-			        			"Router_mode": "EXCLUDE (Expires: never)",
-			        			"Source_list": "empty",
-                                "Suppress": 0,
-                                "up_time": "10:37:41"
-                            },
-                            "224.0.0.13": {
-                                "Host_mode": "exclude",
-                                "Last_reporter": "10.23.110.2",
-                                "Router_mode": "EXCLUDE (Expires: never)",
-                                "Source_list": "empty",
-                                "Suppress": 0,
-                                "up_time": "02:43:30"				        
-                            },
-                            "224.0.0.22": {
-                                "Host_mode": "exclude",
-                                "Last_reporter": "10.23.110.2",
-                                "Router_mode": "EXCLUDE (Expires: never)",
-                                "Source_list": "empty",
-                                "Suppress": 0,
-                                "up_time": "02:43:30"
-                            }
-                        }
-                    },
-                    "GigabitEthernet0/0/0/1.420": {
-                    	"group": {
-                    		"224.0.0.9": {
-			         			"Host_mode": "exclude",
-			         			"Last_reporter": "0.0.0.0",
-			         			"Router_mode": "INCLUDE",
-			         			"Source_list": "empty",
-			         			"Suppress": 0,
-                    			"up_time": "09:48:07"
-                    		}			
-                    	}
-                    }
-                }
-            }
-        }
-    }
-
 
     golden_output = {'execute.return_value': '''
       Interface:	Loopback0
@@ -1183,6 +971,241 @@ class test_show_igmp_groups_detail(unittest.TestCase):
       Source list is empty
     
     '''}
+    
+    golden_parsed_igmp_groups_output = {
+        "vrf": {
+            "VRF1": {
+		        "interface": {
+		        	"Loopback300": {
+		                "group": {
+		                	"224.0.0.2": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "2.2.2.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+		                		"up_time": "02:43:30"
+		                		},
+		                	"224.0.0.9": {
+		        				"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
+		                		"up_time": "09:48:07"
+		                		},
+		                    "224.0.0.13": {
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
+		                    	"up_time": "02:43:30"
+		                    },
+		                    "224.0.0.22": {
+			        			"host_mode": "exclude",
+			        			"last_reporter": "2.2.2.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
+		                    	"up_time": "02:43:30"
+		                	}
+		                }
+                    },
+                    "GigabitEthernet0/0/0/0.390": {
+                    	"group": {
+                    		"224.0.0.10": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+                    			"up_time": "01:54:16"
+                    		}
+                    	}
+                    },
+                    "GigabitEthernet0/0/0/0.410": {
+	                	"group": {
+	                		"224.0.0.2": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "02:43:30"
+	                		},
+                            "224.0.0.5": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "10:37:41"
+                            },
+                            "224.0.0.6": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "10:37:41"
+                            },
+                            "224.0.0.13": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "02:43:30"
+                            },
+                            "224.0.0.22": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "02:43:30"
+                            },
+                            "224.0.1.39": {
+		        				"host_mode": "include",
+		        				"last_reporter": "10.12.110.1",
+		        				"router_mode": "EXCLUDE (Expires: 00:01:21)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "02:30:06"
+                            },
+                            "224.0.1.40": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "10.12.110.2",
+		        				"router_mode": "EXCLUDE (Expires: never)",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+	                			"up_time": "02:43:30"
+                            }
+                                
+	                	}
+	                },
+	                "GigabitEthernet0/0/0/0.415": {
+	                	"group": {
+	                		"239.2.2.1": {
+				        		"host_mode": "exclude",
+				        		"last_reporter": "0.0.0.0",
+				        		"router_mode": "INCLUDE",
+				        		"source_list": "empty",
+				        		"suppress": 0,
+	        	        		"up_time": "01:54:16"
+	        	        	},
+	        	        	"239.2.2.2": {
+				        		"host_mode": "exclude",
+				        		"last_reporter": "0.0.0.0",
+				        		"router_mode": "INCLUDE",
+				        		"source_list": "empty",
+				        		"suppress": 0,
+	        	        		"up_time": "01:54:16"
+				        	},
+		                	"239.2.2.3": {
+				        		"host_mode": "exclude",
+				        		"last_reporter": "0.0.0.0",
+				        		"router_mode": "INCLUDE",
+				        		"source_list": "empty",
+				        		"suppress": 0,
+		                		"up_time": "01:55:17"
+		                	},
+		                	"239.2.2.4": {
+				        		"host_mode": "exclude",
+				        		"last_reporter": "0.0.0.0",
+				        		"router_mode": "INCLUDE",
+				        		"source_list": "empty",
+				        		"suppress": 0,
+		                		"up_time": "01:55:17"
+		                	}
+                        }
+                    },
+	              "GigabitEthernet0/0/0/0.420": {
+                        "group": {
+                            "224.0.0.9": {
+		        				"host_mode": "exclude",
+		        				"last_reporter": "0.0.0.0",
+		        				"router_mode": "INCLUDE",
+		        				"source_list": "empty",
+		        				"suppress": 0,
+                                "up_time": "09:48:07"
+                            }
+                        }
+                    },
+	                "GigabitEthernet0/0/0/1.390": {
+	                	"group": {
+	                		"224.0.0.10": {
+			         			"host_mode": "exclude",
+			         			"last_reporter": "0.0.0.0",
+			         			"router_mode": "INCLUDE",
+			         			"source_list": "empty",
+			         			"suppress": 0,
+	                			"up_time": "01:54:16"
+	                		}
+	                	}
+	                },
+                    "GigabitEthernet0/0/0/1.410": {
+                        "group": {
+	                		"224.0.0.2": {
+			         			"host_mode": "exclude",
+			         			"last_reporter": "10.23.110.2",
+			         			"router_mode": "EXCLUDE (Expires: never)",
+                                "source_list": "empty",
+                                "suppress": 0,
+                                "up_time": "02:43:30",
+                            },
+	                    	"224.0.0.5": {
+			        			"host_mode": "exclude",
+			        			"last_reporter": "10.23.110.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+			        			"suppress": 0,
+	                    		"up_time": "10:37:41"
+	                    	},
+	                    	"224.0.0.6": {
+			        			"host_mode": "exclude",
+			        			"last_reporter": "10.23.110.2",
+			        			"router_mode": "EXCLUDE (Expires: never)",
+			        			"source_list": "empty",
+                                "suppress": 0,
+                                "up_time": "10:37:41"
+                            },
+                            "224.0.0.13": {
+                                "host_mode": "exclude",
+                                "last_reporter": "10.23.110.2",
+                                "router_mode": "EXCLUDE (Expires: never)",
+                                "source_list": "empty",
+                                "suppress": 0,
+                                "up_time": "02:43:30"				        
+                            },
+                            "224.0.0.22": {
+                                "host_mode": "exclude",
+                                "last_reporter": "10.23.110.2",
+                                "router_mode": "EXCLUDE (Expires: never)",
+                                "source_list": "empty",
+                                "suppress": 0,
+                                "up_time": "02:43:30"
+                            }
+                        }
+                    },
+                    "GigabitEthernet0/0/0/1.420": {
+                    	"group": {
+                    		"224.0.0.9": {
+			         			"host_mode": "exclude",
+			         			"last_reporter": "0.0.0.0",
+			         			"router_mode": "INCLUDE",
+			         			"source_list": "empty",
+			         			"suppress": 0,
+                    			"up_time": "09:48:07"
+                    		}			
+                    	}
+                    }
+                }
+            }
+        }
+    }
+
     golden_igmp_groups_output={'execute.return_value':'''
       Interface:	Loopback300
       Group:		224.0.0.2
