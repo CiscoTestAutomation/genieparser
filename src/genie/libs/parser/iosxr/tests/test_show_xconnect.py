@@ -376,7 +376,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             'GigabitEthernet2/2/2/34.422': {
                                 'status': 'UP',
                                 'segment2': {
-                                    'EVPN 3223,4112,21.65.21.93': {
+                                    'EVPN 3223,4112,10.1.21.93': {
                                         'status': 'UP',
                                     },
                                 },
@@ -420,7 +420,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                                                                                         DN    
         ----------------------------------------------------------------------------------------
         genie_CM-QF-CF   G2-2-2-34-422
-                            UP   Gi2/2/2/34.422         UP       EVPN 3223,4112,21.65.21.93 
+                            UP   Gi2/2/2/34.422         UP       EVPN 3223,4112,10.1.21.93 
                                                                                         UP    
         ----------------------------------------------------------------------------------------
         genie_CM-3-EDQF  G2-2-2-34-322
