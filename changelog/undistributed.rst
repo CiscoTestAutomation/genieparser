@@ -582,7 +582,6 @@
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
     * Update schema for AdminShowDiagChassis to support more varied output
-    * Update schema for AdminShowDiagChassis
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
