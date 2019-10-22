@@ -933,15 +933,15 @@ class TestShowIpProtocols(unittest.TestCase):
                                         ],
                                         "routing_information_sources": {
                                             "gateway": {
-                                                "2.2.0.7": {
+                                                "10.16.0.7": {
                                                     "distance": 115,
                                                     "last_update": "00:00:37",
                                                 },
-                                                "2.2.0.8": {
+                                                "10.16.0.8": {
                                                     "distance": 115,
                                                     "last_update": "00:00:37",
                                                 },
-                                                "2.2.0.9": {
+                                                "10.16.0.9": {
                                                     "distance": 115,
                                                     "last_update": "00:00:37",
                                                 },
@@ -966,29 +966,29 @@ class TestShowIpProtocols(unittest.TestCase):
                                     "200": {
                                         "outgoing_filter_list": "not set",
                                         "incoming_filter_list": "not set",
-                                        "router_id": "2.2.0.2",
+                                        "router_id": "10.16.0.2",
                                         "total_areas": 1,
                                         "total_normal_area": 1,
                                         "total_stub_area": 0,
                                         "total_nssa_area": 0,
                                         "spf_control": {"paths": 4},
                                         "network": {
-                                            "2.2.0.0": {
+                                            "10.16.0.0": {
                                                 "netmask": "0.0.255.255",
                                                 "area": "0",
                                             }
                                         },
                                         "routing_information_sources": {
                                             "gateway": {
-                                                "2.2.0.7": {
+                                                "10.16.0.7": {
                                                     "distance": 116,
                                                     "last_update": "2w0d",
                                                 },
-                                                "2.2.0.8": {
+                                                "10.16.0.8": {
                                                     "distance": 116,
                                                     "last_update": "2w0d",
                                                 },
-                                                "2.2.0.9": {
+                                                "10.16.0.9": {
                                                     "distance": 116,
                                                     "last_update": "2w0d",
                                                 },
@@ -1050,12 +1050,12 @@ class TestShowIpProtocols(unittest.TestCase):
                                         "igp_sync": False,
                                         "automatic_route_summarization": False,
                                         "neighbors": {
-                                            "2.2.0.9": {}
+                                            "10.16.0.9": {}
                                         },
                                         "maximum_path": 1,
                                         "routing_information_sources": {
-                                            "2.2.0.9": {
-                                                "neighbor_id": "2.2.0.9",
+                                            "10.16.0.9": {
+                                                "neighbor_id": "10.16.0.9",
                                                 "distance": 200,
                                                 "last_update": "6d03h",
                                             }
@@ -1307,24 +1307,24 @@ class TestShowIpProtocols(unittest.TestCase):
                 GigabitEthernet5
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                2.2.0.7              115      00:00:37
-                2.2.0.8              115      00:00:37
-                2.2.0.9              115      00:00:37
+                10.16.0.7              115      00:00:37
+                10.16.0.8              115      00:00:37
+                10.16.0.9              115      00:00:37
               Distance: (default is 115)
 
             Routing Protocol is "ospf 200"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
-              Router ID 2.2.0.2
+              Router ID 10.16.0.2
               Number of areas in this router is 1. 1 normal 0 stub 0 nssa
               Maximum path: 4
               Routing for Networks:
-                2.2.0.0 0.0.255.255 area 0
+                10.16.0.0 0.0.255.255 area 0
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                2.2.0.7              116      2w0d
-                2.2.0.8              116      2w0d
-                2.2.0.9              116      2w0d
+                10.16.0.7              116      2w0d
+                10.16.0.8              116      2w0d
+                10.16.0.9              116      2w0d
               Distance: (default is 116)
 
             Routing Protocol is "rip"
@@ -1348,18 +1348,18 @@ class TestShowIpProtocols(unittest.TestCase):
               Automatic route summarization is disabled
               Neighbor(s):
                 Address          FiltIn FiltOut DistIn DistOut Weight RouteMap
-                2.2.0.9
+                10.16.0.9
               Maximum path: 1
               Routing Information Sources:
                 Gateway         Distance      Last Update
-                2.2.0.9              200      6d03h
+                10.16.0.9              200      6d03h
               Distance: external 20 internal 200 local 200
         '''
 
         raw2 = '''
             show running-config | section router ospf 200
             router ospf 200
-             network 2.2.0.0 0.0.255.255 area 0
+             network 10.16.0.0 0.0.255.255 area 0
              distance 116
         '''
 

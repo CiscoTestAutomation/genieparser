@@ -388,6 +388,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                         Optional('vfi'): {
                             'num_vfi': int,
                             Any(): {
+                                Optional('state'): str,
                                 'neighbor': {
                                     Any(): {
                                         'pw_id': {
@@ -431,10 +432,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
-            out = output
-        
+            out = output        
         ret_dict = {}
-        
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
@@ -442,8 +441,10 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
-        p2 = re.compile(r'^Aging: +(?P<mac_aging_time>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), '
-            '+Action: +(?P<mac_limit_action>\w+), +Notification: +(?P<mac_limit_notification>\w+)$')
+        # Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
+        p2 = re.compile(r'^Aging: +(?P<mac_aging_time>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), +'
+                r'Action: +(?P<mac_limit_action>[\S ]+), +Notification: +'
+                r'(?P<mac_limit_notification>[\S ]+)$')
 
         # Filter MAC addresses: 0
         p3 = re.compile(r'^Filter +MAC +addresses: +(?P<filter_mac_address>\d+)$')
@@ -455,15 +456,16 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
         p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +'
-            'MAC +addresses: +(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+)'
-            '( +\((?P<mst_i_state>\w+)\))?$')
+            'MAC +addresses: +(?P<static_mac_address>\d+)(, +MSTi: +(?P<mst_i>\d+)'
+            '( +\((?P<mst_i_state>\w+)\))?)?$')
         
         # BV100, state: up, BVI MAC addresses: 1
         p5_1 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +BVI +'
             'MAC +addresses: +(?P<bvi_mac_address>\d+)$')
 
         # VFI 1
-        p6 = re.compile(r'^VFI +(?P<vfi>\d+)$')
+        # VFI vfi60 (up)
+        p6 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
         p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>\d+), +state: +'
@@ -562,14 +564,14 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 interface = Common.convert_intf_name(group['interface'])
                 state = group['state']
                 static_mac_address = int(group['static_mac_address'])
-                mst_i = int(group['mst_i'])
-                mst_i_state = group['mst_i_state']
-
                 interface_dict = ac_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 interface_dict.update({'state': state})
                 interface_dict.update({'static_mac_address': static_mac_address})
-                interface_dict.update({'mst_i': mst_i})
+                if group['mst_i']:
+                    mst_i = int(group['mst_i'])
+                    interface_dict.update({'mst_i': mst_i})
+                mst_i_state = group['mst_i_state']
                 if mst_i_state:
                     interface_dict.update({'mst_i_state': mst_i_state})
                 continue
@@ -589,12 +591,16 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 continue
 
             # VFI 1
+            # VFI vfi60 (up)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                vfi = int(group['vfi'])
+                vfi = group['vfi']
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
                     setdefault(vfi, {})
+                state = group['state']
+                if state:
+                    vfi_dict.update({'state': state})
                 continue
 
             # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
