@@ -141,7 +141,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Port id: Gi2
         p3 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
         # Port Description: GigabitEthernet2
-        p4 = re.compile(r'^Port +Description: +(?P<port_description>[\S\s]+)$')
+        p4 = re.compile(r'^Port +Description(\:|\s\-) '
+                        r'+(?P<port_description>[a-zA-Z0-9\s\/\-.]+)$')
         # System Name: R1_csr1000v.openstacklocal
         p5 = re.compile(r'System +Name: +(?P<system_name>\S+)$')
         # System Description: 

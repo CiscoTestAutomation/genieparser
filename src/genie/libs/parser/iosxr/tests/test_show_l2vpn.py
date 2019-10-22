@@ -120,7 +120,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                         },
                         'vfi': {
                             'num_vfi': 1,
-                            1: {
+                            '1': {
                                 'neighbor': {
                                     '10.1.1.1': {
                                         'pw_id': {
@@ -238,6 +238,144 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         List of Access VFIs:
     '''}
 
+    golden_parsed_output3 = {
+        'bridge_group': {
+            'SBC-service': {
+                'bridge_domain': {
+                    'bd100': {
+                        'id': 0,
+                        'state': 'up',
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'mac_aging_time': 300,
+                        'mac_limit': 4000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'filter_mac_address': 0,
+                        'ac': {
+                            'num_ac': 2,
+                            'num_ac_up': 2,
+                            'interfaces': {
+                                'BV100': {
+                                    'state': 'up',
+                                    'bvi_mac_address': 2,
+                                },
+                                'GigabitEthernet0/4/0/1.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 1,
+                            'vfi100': {
+                                'state': 'up',
+                                'neighbor': {
+                                    '11.11.11.11': {
+                                        'pw_id': {
+                                            100100: {
+                                                'state': 'up',
+                                                'static_mac_address': 0,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'num_pw': 1,
+                            'num_pw_up': 1,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                    },
+                },
+            },
+            'evpn_access': {
+                'bridge_domain': {
+                    '100_evpn_access': {
+                        'id': 1,
+                        'state': 'up',
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'mac_aging_time': 300,
+                        'mac_limit': 100,
+                        'mac_limit_action': 'limit, no-flood',
+                        'mac_limit_notification': 'syslog, trap',
+                        'filter_mac_address': 0,
+                        'ac': {
+                            'num_ac': 1,
+                            'num_ac_up': 1,
+                            'interfaces': {
+                                'GigabitEthernet0/4/0/6.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                    'mst_i': 5,
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 0,
+                        },
+                        'pw': {
+                            'num_pw': 0,
+                            'num_pw_up': 0,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                        'evpn': {
+                            'EVPN': {
+                                'state': 'up',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output3 = {'execute.return_value': '''
+        show l2vpn bridge-domain
+
+        Mon Oct 21 11:04:45.164 EDT
+        Legend: pp = Partially Programmed.
+        Bridge group: SBC-service, bridge-domain: bd100, id: 0, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+        Filter MAC addresses: 0
+        ACs: 2 (2 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of ACs:
+            BV100, state: up, BVI MAC addresses: 2
+            Gi0/4/0/1.100, state: up, Static MAC addresses: 0
+        List of Access PWs:
+        List of VFIs:
+            VFI vfi100 (up)
+            Neighbor 11.11.11.11 pw-id 100100, state: up, Static MAC addresses: 0
+        List of Access VFIs:
+        Bridge group: evpn_access, bridge-domain: 100_evpn_access, id: 1, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
+        Filter MAC addresses: 0
+        ACs: 1 (1 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of EVPNs:
+            EVPN, state: up
+        List of ACs:
+            Gi0/4/0/6.100, state: up, Static MAC addresses: 0, MSTi: 5
+        List of Access PWs:
+        List of VFIs:
+        List of Access VFIs:
+        
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomain(device=self.device)
@@ -257,6 +395,13 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowL2vpnBridgeDomain(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding bridge-domain mac-address location {location}'
