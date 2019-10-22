@@ -53,7 +53,9 @@ class TestShowRplRoutePolicy(unittest.TestCase):
                           20: {'actions': {'actions': 'pass'},
                                'conditions': {'match_nexthop_in': 'prefix-set1'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_local_pref_eq': '130'}}}},
+                               'conditions': {
+                                   'match_ext_community_list': ['test'],
+                                   'match_local_pref_eq': '130'}}}},
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
