@@ -3533,7 +3533,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             'IPv4': {
                                 'state': 'Enabled',
                                 'forwarding_address': ['Unknown'],
-                                'global_prefix': ['67.70.219.88/32'],
+                                'global_prefix': ['10.154.219.88/32'],
                             },
                         },
                     },
@@ -3767,7 +3767,7 @@ class TestShowIsisInterface(unittest.TestCase):
         IPv4 Address Family:      Enabled
             Protocol State:         Up
             Forwarding Address(es): Unknown (Intf passive in IS-IS cfg)
-            Global Prefix(es):      67.70.219.88/32
+            Global Prefix(es):      10.154.219.88/32
         
         
         HundredGigE0/0/0/0          Enabled
