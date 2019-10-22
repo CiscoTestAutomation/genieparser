@@ -1678,13 +1678,27 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 Optional('first_trigger_lsp'): str,
                                 'triggers': str,
                                 'trigger_count': int,
+                                Optional('sr_uloop'): str,
                                 'delay_ms': int,
                                 'delay_info': str,
+                                Optional('interrupted'): str,
+                                Optional('rib_batches'): {
+                                    'total': str,
+                                    Optional('critical'): str,
+                                    Optional('high'): str,
+                                    Optional('medium'): str,
+                                    Optional('low'): str,
+                                },
+                                Optional('since_end_of_last_calculation_ms'): str,
                                 'spt_calculation': {
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
                                 'prefix_update': {
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
+                                Optional('full_calculation'):{
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
@@ -1799,6 +1813,9 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # Route Update:            0     0
         r5_1 = re.compile(r'^Route +Update: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
 
+        # Full Calculation:        0     0
+        r5_2 = re.compile(r'^Full +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+
         # CPU Time:         1ms
         # CPU Time:         0ms
         r6 = re.compile(r'CPU\s+Time\s*:\s*(?P<cpu_time>\d+)\w+')
@@ -1832,9 +1849,21 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
                           '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
                           '(?P<total>\d+)')
+        
+        # SR uloop:              No
+        r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
+        
+        # Interrupted:           No
+        r14 = re.compile(r'^Interrupted: +(?P<interrupted>\w+)$')
+
+        # RIB Batches:           0
+        r15 = re.compile(r'^RIB +Batches: +(?P<total>\d+)( +\((?P<critical>\d+) critical, +(?P<high>\d+) +high, +(?P<medium>\d+) +medium, +(?P<low>\d+) +low\))?$')
+
+        # 899545ms (since end of last calculation)
+        r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since +end +of +last +calculation\)$')
 
         # Mon Aug 16 2004
-        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+        r17 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
 
         parsed_dict = {}
         log_index = 1
@@ -1883,7 +1912,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spf_log_dict['triggers'] = triggers
                 spf_log_dict['start_timestamp'] = "{} {}"\
                     .format(timestamp_date, timestamp).strip()
-                
+                log_index += 1
                 continue
 
             # Delay:              51ms (since first trigger)
@@ -1931,6 +1960,18 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 group = result.groupdict()
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('prefix_update', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # Full Calculation:        0     0
+            result = r5_2.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('full_calculation', {})
                 cpu_time = int(group['cpu_time'])
                 spt_prefix_dict['cpu_time_ms'] = cpu_time
                 real_time = int(group['real_time'])
@@ -2035,15 +2076,46 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                     priority_dict['total'] = int(total)
 
                 continue            
+            
+            # SR uloop:              No
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                sr_uloop = group['sr_uloop']
+                spf_log_dict['sr_uloop'] = sr_uloop
+                continue
+            
+            # Interrupted:           No
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                interrupted = group['interrupted']
+                spf_log_dict['interrupted'] = interrupted
+                continue
+
+            # RIB Batches:           0
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                rib_batches_dict = spf_log_dict.setdefault('rib_batches', {})
+                rib_batches_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # 899545ms (since end of last calculation)
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                since_end_of_last_calculation_ms = group['since_end_of_last_calculation_ms']
+                spf_log_dict['since_end_of_last_calculation_ms'] = since_end_of_last_calculation_ms
+                continue
 
             # Mon Aug 16 2004
-            result = r13.match(line)
+            result = r17.match(line)
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
                 
                 continue
-        
         return parsed_dict
 
 class ShowIsisLspLogSchema(MetaParser):
