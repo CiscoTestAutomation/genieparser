@@ -256,7 +256,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
         # 20 permit 10.2.0.0
         # 20 deny   any
-        # 10 permit 7.7.7.7
+        # 10 permit 10.196.7.7
         # 30 deny   any
         # permit 172.20.10.10
         # permit 10.66.12.12
@@ -272,13 +272,13 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 20 permit icmp any any
         # 30 permit ip host 10.34.2.2 host 10.2.54.2
         # 40 permit ip host 10.3.4.31 host 10.3.32.3 log
-        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+        # 30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
         # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
         # 40 permit tcp any range ftp-data bgp any
         # 10 permit ip host 0.0.0.0 any
         # 20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
         # 30 deny tcp any any
-        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+        # 30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
         # 10 permit ip any any(10031 matches)
         # 10 permit tcp any any eq 443
         # 30 deny ip any any
@@ -406,7 +406,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 30 deny ip any any
             # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
             # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
-            # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+            # 30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
             # 40 permit tcp any range ftp-data bgp any
             m_v4 = p_ip_acl.match(line)
 

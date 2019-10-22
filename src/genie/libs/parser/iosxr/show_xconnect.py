@@ -1238,7 +1238,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         '+(?P<segment_2>[\S ]+)$')
 
         #                                                             UP  
-        p4 = re.compile(r'^(?P<status_segment2>(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))))$')
+        p4 = re.compile(r'^(?P<status_segment2>[A-Z]+)$')
 
         # UP       69.158.196.10   1152   DN
         p5 = re.compile(r'^(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)))'

@@ -2454,12 +2454,12 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
         '''}
 
     device_output = {'execute.return_value': '''
-                  OSPF Router with ID (67.70.219.96) (Process ID 64577)
+                  OSPF Router with ID (10.154.219.96) (Process ID 64577)
 
     Area 0 has 9 MPLS TE links. Area instance is 13.
       Link is associated with fragment 1. Link instance is 13
         Link connected to Point-to-Point network
-        Link ID : 67.70.219.75
+        Link ID : 10.154.219.75
         Interface Address : 172.16.1.216
         Neighbor Address : 172.16.1.217
         Admin Metric : TE: 65535
@@ -2532,7 +2532,7 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
                   },
                  },
                  'interface_address': '172.16.1.216',
-                 'link_id': '67.70.219.75',
+                 'link_id': '10.154.219.75',
                  'link_instance': 13,
                  'maximum_bandwidth': 1250000000,
                  'maximum_reservable_bandwidth': 2985974784,
@@ -2616,7 +2616,7 @@ class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
            },
            'mpls': {
             'te': {
-             'router_id': '67.70.219.96',
+             'router_id': '10.154.219.96',
             },
            },
           },
