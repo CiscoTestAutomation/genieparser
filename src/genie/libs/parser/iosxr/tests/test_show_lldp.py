@@ -178,7 +178,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Chassis id: 00bc.6017.68d9
         Port id: TenGigE0/0/0/0/0
         Port Description - not advertised
-        System Name: tor1-55A1.qa-site1
+        System Name: genie1-ggN1.ie-genie1
         
         System Description: 
          6.5.3, NCS-5500
@@ -197,7 +197,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Local Interface: HundredGigE0/0/1/1
         Chassis id: 008a.960b.2481
         Port id: HundredGigE0/0/0/2
-        Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
+        Port Description: to gen-8 nie  0/0/1/1 via gee1.dev 29-30 
         System Name: system2
         
         System Description: 
@@ -217,7 +217,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Local Interface: HundredGigE0/0/1/0
         Chassis id: 008a.960b.0c81
         Port id: HundredGigE0/0/0/2
-        Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
+        Port Description: to gen-8 nie  0/0/1/0 via gee1.dev 31-32 
         System Name: system1
         
         System Description: 
@@ -253,7 +253,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '172.18.0.5',
                                 'neighbor_id': 'system1',
-                                'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
+                                'port_description': 'to gen-8 nie  0/0/1/0 via gee1.dev 31-32',
                                 'system_description': '',
                                 'system_name': 'system1',
                                 'time_remaining': 117,
@@ -277,7 +277,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '172.18.0.7',
                                 'neighbor_id': 'system2',
-                                'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
+                                'port_description': 'to gen-8 nie  0/0/1/1 via gee1.dev 29-30',
                                 'system_description': '',
                                 'system_name': 'system2',
                                 'time_remaining': 97,
@@ -290,7 +290,7 @@ class TestShowLldpEntry(unittest.TestCase):
                 'port_id': {
                     'TenGigE0/0/0/0/0': {
                         'neighbors': {
-                            'tor1-55A1.qa-site1': {
+                            'genie1-ggN1.ie-genie1': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -300,10 +300,10 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'chassis_id': '00bc.6017.68d9',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
-                                'neighbor_id': 'tor1-55A1.qa-site1',
+                                'neighbor_id': 'genie1-ggN1.ie-genie1',
                                 'port_description': 'not advertised',
                                 'system_description': '',
-                                'system_name': 'tor1-55A1.qa-site1',
+                                'system_name': 'genie1-ggN1.ie-genie1',
                                 'time_remaining': 100,
                             },
                         },
@@ -319,7 +319,7 @@ class TestShowLldpEntry(unittest.TestCase):
     Parent Interface: Bundle-Ether1
     Chassis id: ccd8.c1cb.7d11
     Port id: Bundle-Ether2
-    Port Description: 10G to bl2-tatooine port Te0/1/0/0:BE1 
+    Port Description: 10G to ge1-genie port Ge1/1/1/1:GG1 
     System Name: core1-tatooine
     
     System Description: 
@@ -338,7 +338,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Local Interface: TenGigE0/5/0/5
     Chassis id: c471.fec3.ac00
     Port id: Te0/1/0/3
-    Port Description: 10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
+    Port Description: 10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
     System Name: system3
     
     System Description: 
@@ -357,7 +357,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Local Interface: TenGigE0/5/0/6
     Chassis id: 8426.2bbc.2c9d
     Port id: 1611153480
-    Port Description: 2/1/9, 10-Gig Ethernet, "10G interface to TCORE3-ROHAN port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"
+    Port Description: 2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"
     System Name: COTKON04XR1
     
     System Description: 
@@ -394,7 +394,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '172.16.0.90',
                                 'neighbor_id': 'core1-tatooine',
-                                'port_description': '10G to bl2-tatooine port Te0/1/0/0:BE1',
+                                'port_description': '10G to ge1-genie port Ge1/1/1/1:GG1',
                                 'system_description': 'Cisco IOS XR Software, Version 6.5.3[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., ASR9K Series\n',
                                 'system_name': 'core1-tatooine',
                                 'time_remaining': 99,
@@ -418,7 +418,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '69.69.69.16',
                                 'neighbor_id': 'system3',
-                                'port_description': '10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
+                                'port_description': '10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
                                 'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
                                 'system_name': 'system3',
                                 'time_remaining': 108,
@@ -446,7 +446,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'hold_time': 121,
                                 'management_address': '10.11.77.141',
                                 'neighbor_id': 'COTKON04XR1',
-                                'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to TCORE3-ROHAN port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
+                                'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
                                 'system_description': '',
                                 'system_name': 'COTKON04XR1',
                                 'time_remaining': 105,
@@ -702,7 +702,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Chassis id: 00bc.6017.68d9
         Port id: TenGigE0/0/0/0/0
         Port Description - not advertised
-        System Name: tor1-55A1.qa-site1
+        System Name: genie1-ggN1.ie-genie1
         
         System Description: 
          6.5.3, NCS-5500
@@ -721,7 +721,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Local Interface: HundredGigE0/0/1/1
         Chassis id: 008a.960b.2481
         Port id: HundredGigE0/0/0/2
-        Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
+        Port Description: to gen-8 nie  0/0/1/1 via gee1.dev 29-30 
         System Name: system2
         
         System Description: 
@@ -741,7 +741,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Local Interface: HundredGigE0/0/1/0
         Chassis id: 008a.960b.0c81
         Port id: HundredGigE0/0/0/2
-        Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
+        Port Description: to gen-8 nie  0/0/1/0 via gee1.dev 31-32 
         System Name: system1
         
         System Description: 
@@ -777,7 +777,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '172.18.0.5',
                                 'neighbor_id': 'system1',
-                                'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
+                                'port_description': 'to gen-8 nie  0/0/1/0 via gee1.dev 31-32',
                                 'system_description': '',
                                 'system_name': 'system1',
                                 'time_remaining': 116,
@@ -801,7 +801,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 'hold_time': 120,
                                 'management_address': '172.18.0.7',
                                 'neighbor_id': 'system2',
-                                'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
+                                'port_description': 'to gen-8 nie  0/0/1/1 via gee1.dev 29-30',
                                 'system_description': '',
                                 'system_name': 'system2',
                                 'time_remaining': 96,
@@ -814,7 +814,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                 'port_id': {
                     'TenGigE0/0/0/0/0': {
                         'neighbors': {
-                            'tor1-55A1.qa-site1': {
+                            'genie1-ggN1.ie-genie1': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -824,10 +824,10 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 'chassis_id': '00bc.6017.68d9',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
-                                'neighbor_id': 'tor1-55A1.qa-site1',
+                                'neighbor_id': 'genie1-ggN1.ie-genie1',
                                 'port_description': 'not advertised',
                                 'system_description': '',
-                                'system_name': 'tor1-55A1.qa-site1',
+                                'system_name': 'genie1-ggN1.ie-genie1',
                                 'time_remaining': 99,
                             },
                         },

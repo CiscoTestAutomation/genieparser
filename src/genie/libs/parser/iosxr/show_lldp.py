@@ -143,10 +143,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Port Description: GigabitEthernet2
         # Port Description - not advertised
-        # Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30
-        # Port Description: 10G to bl2-tatooine port Te0/1/0/0:BE1
-        # Port Description: "10G link to Spine2 port Te0/0/0/4/0"
-        # Port Description: 10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
+        # Port Description: to genie-3 genie 0/0/1/1 via genie3.genie 00-01
+        # Port Description: 10G to bl2-genie port Ge8/8/8:GG8
+        # Port Description: "10G link to Genie2 port Ge8/8/8/8/8"
+        # Port Description: 10G link to genie3-genie port GEN 8/8/8/8 in BE 43 (with port 0/4/0/3)
         p4 = re.compile(r'^Port +Description(\:|\s\-) '
                         r'+(?P<port_description>[a-zA-Z0-9\s\/\(\)\,\"\:\-.]+)$')
         # System Name: R1_csr1000v.openstacklocal
@@ -206,10 +206,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
             # Port Description: GigabitEthernet1/0/4
             # Port Description - not advertised
-            # Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30
-            # Port Description: 10G to bl2-tatooine port Te0/1/0/0:BE1
-            # Port Description: "10G link to Spine2 port Te0/0/0/4/0"
-            # Port Description: 10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
+            # Port Description: to genie-3 genie 0/0/1/1 via genie3.genie 00-01
+            # Port Description: 10G to bl2-genie port Ge8/8/8:GG8
+            # Port Description: "10G link to Genie2 port Ge8/8/8/8/8"
+            # Port Description: 10G link to genie3-genie port GEN 8/8/8/8 in BE 43 (with port 0/4/0/3)
             m = p4.match(line)
             if m:
                 group = m.groupdict()
