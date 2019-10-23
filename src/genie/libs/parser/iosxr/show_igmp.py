@@ -37,29 +37,29 @@ class ShowIgmpInterfaceSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                Any():{
-                    'oper_status': str,
-                    Optional('line_protocol'): str,
-                    'enabled': bool, 
-                    Optional('ipv4'): {
-                        Any(): {
-                            Optional('ip'): str,
-                            Optional('prefix_length'): int,
+                'interfaces': {
+                    Any():{
+                        'oper_status': str,
+                        Optional('line_protocol'): str,
+                        'interface_status': str, 
+                        Optional('ip_address'): str,  
+                        'igmp_state': str,
+                        Optional('igmp_version'): int,
+                        Optional('igmp_query_interval'): int,
+                        Optional('igmp_querier_timeout'): int,
+                        Optional('igmp_max_query_response_time'): int,
+                        Optional('last_member_query_response_interval'): int,
+                        Optional('igmp_activity'): {
+                            Optional('joins'): int,
+                            Optional('leaves'): int
                         },
-                    },  
-                    'igmp_state': str,
-                    Optional('igmp_version'): int,
-                    Optional('igmp_query_interval'): int,
-                    Optional('igmp_querier_timeout'): int,
-                    Optional('igmp_max_query_response_time'): int,
-                    Optional('igmp_query_response_interval'): int,
-                    Optional('igmp_activity_joins'): int,
-                    Optional('igmp_activity_leaves'): int,
-                    Optional('igmp_querying_router'): str,
-                    Optional('igmp_time_since_last_query_sent'): str,
-                    Optional('igmp_time_since_router_enabled'): str,
-                    Optional('igmp_time_since_last_report_received'): str
-                    },
+                        Optional('igmp_querying_router'): str,
+                        Optional('igmp_querying_router_info'): str,
+                        Optional('time_elapsed_since_last_query_sent'): str,
+                        Optional('time_elapsed_since_router_enabled'): str,
+                        Optional('time_elapsed_since_last_report_received'): str
+                        },
+                    }
                 }
             }
         }
@@ -74,7 +74,11 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = ['show igmp interface', 'show igmp interface {interface}', 'show igmp vrf {vrf} interface']
+    cli_command = [
+            'show igmp interface', 
+            'show igmp interface {interface}', 
+            'show igmp vrf {vrf} interface'
+    ]
     def cli(self, interface="", vrf="", output=None):
         ''' parsing mechanism: cli
 
@@ -98,12 +102,11 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
         result_dict = {}
 
         # Loopback0 is up, line protocol is up
-        p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<enabled>[\w\s]+), '
+        p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_status>[\w\s]+), '
                         r'+line +protocol +is +(?P<line_protocol>[\w\s]+)$') 
 
         # Internet address is 2.2.2.2/32
-        p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[\d\.]+)'
-                         '\/(?P<prefix_length>[\d]+))?$') 
+        p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ip_address>[\d\.\/]+)$')
 
         # IGMP is enabled on interface
         p3 = re.compile(r'^IGMP +is +(?P<igmp_state>[a-zA-Z]+) +on +interface$')
@@ -121,22 +124,22 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
         p7 = re.compile(r'^IGMP +max +query +response +time +is +(?P<igmp_max_query_response_time>[\d]+) +seconds$')
         
         # Last member query response interval is 1 seconds
-        p8 = re.compile(r'^Last +member +query +response +interval +is +(?P<igmp_query_response_interval>[\d]+) +seconds$')
+        p8 = re.compile(r'^Last +member +query +response +interval +is +(?P<last_member_query_response_interval>[\d]+) +seconds$')
         
         # IGMP activity: 6 joins, 0 leaves
-        p9 = re.compile(r'^IGMP +activity: +(?P<igmp_activity_joins>[\d]+) +joins, +(?P<igmp_activity_leaves>[\d]+) +leaves$')
+        p9 = re.compile(r'^IGMP +activity: +(?P<joins>[\d]+) +joins, +(?P<leaves>[\d]+) +leaves$')
         
         # IGMP querying router is 2.2.2.2 (this system)
-        p10 = re.compile(r'^IGMP +querying +router +is +(?P<igmp_querying_router>[\d\.]+)')
+        p10 = re.compile(r'^IGMP +querying +router +is +(?P<igmp_querying_router>[\d\.]+)+([\s*]+\(+(?P<igmp_querying_router_info>[\S\s*]+)+\))?$')
         
         # Time elapsed since last query sent 00:00:53
-        p11 = re.compile(r'^Time +elapsed +since +last +query +sent +(?P<igmp_time_since_last_query_sent>[\d\:]+)$')
+        p11 = re.compile(r'^Time +elapsed +since +last +query +sent +(?P<time_elapsed_since_last_query_sent>[\d\:]+)$')
         
         # Time elapsed since IGMP router enabled 02:46:41
-        p12 = re.compile(r'^Time +elapsed +since +IGMP +router +enabled +(?P<igmp_time_since_router_enabled>[\d\:]+)$')
+        p12 = re.compile(r'^Time +elapsed +since +IGMP +router +enabled +(?P<time_elapsed_since_router_enabled>[\d\:]+)$')
         
         # Time elapsed since last report received 00:00:51
-        p13 = re.compile(r'^Time +elapsed +since +last +report +received +(?P<igmp_time_since_last_report_received>[\d\:]+)$')
+        p13 = re.compile(r'^Time +elapsed +since +last +report +received +(?P<time_elapsed_since_last_report_received>[\d\:]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -146,15 +149,12 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
             if m:
                 group = m.groupdict()
                 interface = group['interface']
-                enabled = group['enabled']
+                interface_status = group['interface_status']
                 line_protocol = group['line_protocol']
 
-                intf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault(interface, {})
-                if 'administratively down' in enabled or 'delete' in enabled:
-                    intf_dict['enabled'] = False
-                else:
-                    intf_dict['enabled'] = True
-
+                intf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                            setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['interface_status'] = interface_status
                 if line_protocol:
                     intf_dict['line_protocol'] = line_protocol
                     intf_dict['oper_status'] = line_protocol
@@ -163,14 +163,8 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
             # Internet address is 2.2.2.2/32
             m = p2.match(line)
             if m:
-                ipv4 = m.groupdict()['ipv4']
-                ip = m.groupdict()['ip']
-                prefix_length = m.groupdict()['prefix_length']
-
-                if ipv4:
-                    ipv4_dict = intf_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
-                    ipv4_dict['ip'] = ip
-                    ipv4_dict['prefix_length'] = int(prefix_length)
+                ip_address = m.groupdict()['ip_address']
+                intf_dict['ip_address'] = ip_address
                 continue
 
             # IGMP is enabled on interface
@@ -211,45 +205,48 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
             # Last member query response interval is 1 seconds
             m = p8.match(line)
             if m:
-                igmp_query_response_interval = m.groupdict()['igmp_query_response_interval']
-                intf_dict['igmp_query_response_interval'] = int(igmp_query_response_interval)
+                last_member_query_response_interval = m.groupdict()['last_member_query_response_interval']
+                intf_dict['last_member_query_response_interval'] = int(last_member_query_response_interval)
                 continue
                 
             # IGMP activity: 6 joins, 0 leaves
             m = p9.match(line)
             if m:
-                igmp_activity_joins = m.groupdict()['igmp_activity_joins']
-                igmp_activity_leaves = m.groupdict()['igmp_activity_leaves']
-                intf_dict['igmp_activity_joins'] = int(igmp_activity_joins)
-                intf_dict['igmp_activity_leaves'] = int(igmp_activity_leaves)
+                joins = m.groupdict()['joins']
+                leaves = m.groupdict()['leaves']
+                igmp_activity_dict = intf_dict.setdefault('igmp_activity', {})
+                igmp_activity_dict['joins'] = int(joins)
+                igmp_activity_dict['leaves'] = int(leaves)
                 continue
                 
             # IGMP querying router is 2.2.2.2 (this system)
             m = p10.match(line)
             if m:
                 igmp_querying_router = m.groupdict()['igmp_querying_router']
+                igmp_querying_router_info = m.groupdict()['igmp_querying_router_info']
                 intf_dict['igmp_querying_router'] = igmp_querying_router
+                intf_dict['igmp_querying_router_info'] = str(igmp_querying_router_info)
                 continue
                 
             # Time elapsed since last query sent 00:00:53
             m = p11.match(line)
             if m:
-                igmp_time_since_last_query_sent = m.groupdict()['igmp_time_since_last_query_sent']
-                intf_dict['igmp_time_since_last_query_sent'] = igmp_time_since_last_query_sent
+                time_elapsed_since_last_query_sent = m.groupdict()['time_elapsed_since_last_query_sent']
+                intf_dict['time_elapsed_since_last_query_sent'] = time_elapsed_since_last_query_sent
                 continue
                
             # Time elapsed since IGMP router enabled 02:46:41
             m = p12.match(line)
             if m:
-                igmp_time_since_router_enabled = m.groupdict()['igmp_time_since_router_enabled']
-                intf_dict['igmp_time_since_router_enabled'] = igmp_time_since_router_enabled
+                time_elapsed_since_router_enabled = m.groupdict()['time_elapsed_since_router_enabled']
+                intf_dict['time_elapsed_since_router_enabled'] = time_elapsed_since_router_enabled
                 continue
                 
             # Time elapsed since last report received 00:00:51
             m = p13.match(line)
             if m:
-                igmp_time_since_last_report_received = m.groupdict()['igmp_time_since_last_report_received']
-                intf_dict['igmp_time_since_last_report_received'] = igmp_time_since_last_report_received
+                time_elapsed_since_last_report_received = m.groupdict()['time_elapsed_since_last_report_received']
+                intf_dict['time_elapsed_since_last_report_received'] = time_elapsed_since_last_report_received
                 continue
                                 
         return result_dict
@@ -263,22 +260,20 @@ class ShowIgmpSummarySchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                Any():{
-                    'robustness_value': int,
-                    'groupxInterfaces': int,
-                    'noOfGroupsForVrf': int,
-                    'supported_interfaces': int,
-                    'unsupported_interfaces': int,
-                    'enabled_interfaces': int,
-                    'disabled_interfaces': int,
-                    'mte_tuple_count': int,
-                    'interface': {
-                        Any(): {
-                            'number_groups': int,
-                            'max_groups': int,
-                        },
-                    }, 
-                }
+                'robustness_value': int,
+                'no_of_group_x_interface': int,
+                'maximum_number_of_groups_for_vrf': int,
+                'supported_interfaces': int,
+                'unsupported_interfaces': int,
+                'enabled_interfaces': int,
+                'disabled_interfaces': int,
+                'mte_tuple_count': int,
+                'interfaces': {
+                    Any(): {
+                        'number_groups': int,
+                        'max_groups': int,
+                    },
+                }, 
             }
         }
     }
@@ -292,7 +287,10 @@ class ShowIgmpSummary(ShowIgmpSummarySchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = ['show igmp summary', 'show igmp vrf {vrf} summary']
+    cli_command = [
+            'show igmp summary', 
+            'show igmp vrf {vrf} summary'
+    ]
     def cli(self, vrf='', output=None):
         '''
         parsing mechanism: cli
@@ -317,10 +315,10 @@ class ShowIgmpSummary(ShowIgmpSummarySchema):
         p1 = re.compile(r'^Robustness +Value +(?P<robustness_value>[\d]+)$') 
 
         # No. of Group x Interfaces 25
-        p2 = re.compile(r'^No. +of +Group +x +Interfaces +(?P<groupxInterfaces>[\d]+)$')
+        p2 = re.compile(r'^No. +of +Group +x +Interfaces +(?P<no_of_group_x_interface>[\d]+)$')
         
         # Maximum number of Groups for this VRF 50000
-        p3 = re.compile(r'^Maximum +number +of +Groups +for +this +VRF +(?P<noOfGroupsForVrf>[\d]+)$')
+        p3 = re.compile(r'^Maximum +number +of +Groups +for +this +VRF +(?P<maximum_number_of_groups_for_vrf>[\d]+)$')
         
         # Supported Interfaces   : 9
         p4 = re.compile(r'^Supported +Interfaces +: +(?P<supported_interfaces>[\d]+)$')
@@ -358,23 +356,22 @@ class ShowIgmpSummary(ShowIgmpSummarySchema):
             m = p1.match(line)
             if m:
                 robustness_value = m.groupdict()['robustness_value']
-                # igmp_dict = result_dict.setdefault('igmp', {})
-                igmp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('igmp', {})
+                igmp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 igmp_dict['robustness_value'] = int(robustness_value)
                 continue
                 
             # No. of Group x Interfaces 25
             m = p2.match(line)
             if m:
-                groupxInterfaces = m.groupdict()['groupxInterfaces']
-                igmp_dict['groupxInterfaces'] = int(groupxInterfaces)
+                no_of_group_x_interface = m.groupdict()['no_of_group_x_interface']
+                igmp_dict['no_of_group_x_interface'] = int(no_of_group_x_interface)
                 continue
                 
             # Maximum number of Groups for this VRF 50000
             m = p3.match(line)
             if m:
-                noOfGroupsForVrf = m.groupdict()['noOfGroupsForVrf']
-                igmp_dict['noOfGroupsForVrf'] = int(noOfGroupsForVrf)
+                maximum_number_of_groups_for_vrf = m.groupdict()['maximum_number_of_groups_for_vrf']
+                igmp_dict['maximum_number_of_groups_for_vrf'] = int(maximum_number_of_groups_for_vrf)
                 continue
                
             # Supported Interfaces   : 9
@@ -429,7 +426,7 @@ class ShowIgmpSummary(ShowIgmpSummarySchema):
                 interface = m.groupdict()['interface']
                 number_groups = m.groupdict()['number_groups']
                 max_groups = m.groupdict()['max_groups']
-                interface_dict = igmp_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict = igmp_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 interface_dict.update({'number_groups': int(number_groups), 'max_groups': int(max_groups)})
                 continue
              
@@ -444,12 +441,13 @@ class ShowIgmpGroupsDetailSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'interface': {
+                'interfaces': {
                     Any(): {
                         'group': {
                             Any(): {
                                 'up_time': str,
                                 'router_mode': str,
+                                'router_mode_expires': str,
                                 'host_mode': str,
                                 'last_reporter': str,
                                 'suppress': int,
@@ -471,7 +469,10 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = ['show igmp groups detail', 'show igmp vrf {vrf} groups detail']
+    cli_command = [
+            'show igmp groups detail', 
+            'show igmp vrf {vrf} groups detail'
+    ]    
     def cli(self, vrf='', output=None):
         '''
         parsing mechanism: cli
@@ -502,7 +503,7 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
         p3 = re.compile(r'^Uptime:+[\s*]+(?P<up_time>[\d\:\S]+)$')
         
         # Router mode:	EXCLUDE (Expires: never)
-        p4 = re.compile(r'^Router mode:+[\s*]+(?P<router_mode>[\s\S]+)$')
+        p4 = re.compile(r'^Router mode:+[\s*]+(?P<router_mode>[\S]+)+([\s*]+\(Expires: +(?P<router_mode_expires>[\S]+)+\))?$')
         
         # Host mode:	EXCLUDE
         p5 = re.compile(r'^Host mode:+[\s*]+(?P<host_mode>[\S]+)$')
@@ -524,7 +525,7 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
             if m:
                 interface = m.groupdict()['interface']
                 intf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
-                            setdefault('interface', {}).setdefault(interface, {})
+                            setdefault('interfaces', {}).setdefault(interface, {})
                 continue
             
             # Group:		224.0.0.2
@@ -545,7 +546,9 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
             m = p4.match(line)
             if m:
                 router_mode = m.groupdict()['router_mode']
+                router_mode_expires = m.groupdict()['router_mode_expires']
                 group_dict['router_mode'] = router_mode
+                group_dict['router_mode_expires'] = str(router_mode_expires)
                 continue
              
             # Host mode:	EXCLUDE
