@@ -327,25 +327,25 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         }
 
     golden_output3 = {'execute.return_value': '''
-    show l2vpn xconnect
+        show l2vpn xconnect
 
-    Fri Sep 27 17:02:50.459 EDT
-    Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
-            SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+        Fri Sep 27 17:02:50.459 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
 
-    XConnect                   Segment 1                       Segment 2                
-    Group      Name       ST   Description            ST       Description            ST    
-    ------------------------   -----------------------------   -----------------------------
-    pe1-to-pe2
-               vpws_bl1_pe2
-                          UP   Te0/0/0/3/1.200        UP       EVPN 12222,32222,10.4.1.1 
-                                                                                      UP    
-    ----------------------------------------------------------------------------------------
-    pe1-to-pe2
-               vpws_pe1_pe1
-                          UP   Te0/0/0/3/1.100        UP       EVPN 11111,31111,10.4.1.1 
-                                                                                      UP    
-    ----------------------------------------------------------------------------------------
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        pe1-to-pe2
+                vpws_bl1_pe2
+                            UP   Te0/0/0/3/1.200        UP       EVPN 12222,32222,10.4.1.1 
+                                                                                        UP    
+        ----------------------------------------------------------------------------------------
+        pe1-to-pe2
+                vpws_pe1_pe1
+                            UP   Te0/0/0/3/1.100        UP       EVPN 11111,31111,10.4.1.1 
+                                                                                        UP    
+        ----------------------------------------------------------------------------------------
 
         '''}
     
@@ -511,6 +511,286 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         
     '''}
 
+    golden_output6 = {'execute.return_value': '''
+        show l2vpn xconnect
+
+        Wed Oct 23 14:33:22.722 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        TO-tcore4-rohan-port
+                T-0-5-0-0  UR   Te0/5/0/0              UR       67.70.219.75    4293089094
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-10
+                            DN   Te0/5/0/0.10           UP       67.70.219.75    4293089010
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-11
+                            DN   Te0/5/0/0.11           UP       67.70.219.75    4293089011
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-12
+                            DN   Te0/5/0/0.12           UP       67.70.219.75    4293089012
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-13
+                            DN   Te0/5/0/0.13           UP       67.70.219.75    4293089013
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-14
+                            DN   Te0/5/0/0.14           UP       67.70.219.75    4293089014
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-15
+                            DN   Te0/5/0/0.15           UP       67.70.219.75    4293089015
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-16
+                            DN   Te0/5/0/0.16           UP       67.70.219.75    4293089016
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-17
+                            DN   Te0/5/0/0.17           UP       67.70.219.75    4293089017
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-18
+                            DN   Te0/5/0/0.18           UP       67.70.219.75    4293089018
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        to-tcore4-rohan-ten-0-0-0-13
+                Ten-0-5-0-0-19
+                            DN   Te0/5/0/0.19           UP       67.70.219.75    4293089019
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+    '''}
+
+    golden_parsed_output6 = {
+        'groups': {
+            'TO-tcore4-rohan-port': {
+                'name': {
+                    'T-0-5-0-0': {
+                        'status': 'UR',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0': {
+                                'status': 'UR',
+                                'segment2': {
+                                    '67.70.219.75    4293089094': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'to-tcore4-rohan-ten-0-0-0-13': {
+                'name': {
+                    'Ten-0-5-0-0-10': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.10': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089010': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-11': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.11': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089011': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-12': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.12': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089012': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-13': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.13': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089013': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-14': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.14': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089014': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-15': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.15': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089015': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-16': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.16': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089016': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-17': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.17': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089017': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-18': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.18': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089018': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-19': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/0.19': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.75    4293089019': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output7 = {'execute.return_value': '''
+        show l2vpn xconnect
+
+        Wed Oct 23 13:57:30.149 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        CRS-CRS    T-0-5-0-8  UP   Te0/5/0/8              UP       69.158.196.51   9651100
+                                                                                        UP    
+        ----------------------------------------------------------------------------------------
+        to-core2-moria
+                to-core2-moria
+                            DN   Te0/0/0/12             UP       67.70.219.106   2015030200
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+    '''}
+    golden_parsed_output7 = {
+        'groups': {
+            'CRS-CRS': {
+                'name': {
+                    'T-0-5-0-8': {
+                        'status': 'UP',
+                        'segment1': {
+                            'TenGigabitEthernet0/5/0/8': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '69.158.196.51   9651100': {
+                                        'status': 'UP',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'to-core2-moria': {
+                'name': {
+                    'to-core2-moria': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/0/0/12': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '67.70.219.106   2015030200': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnect(device=self.device)
@@ -551,6 +831,20 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowL2vpnXconnect(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
+        obj = ShowL2vpnXconnect(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect detail'
@@ -1266,6 +1560,2370 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
             packets: received 0, sent 1809417
             bytes: received 0, sent 174143076
     '''}
+    
+    golden_output4 = {'execute.return_value': '''
+        show l2vpn xconnect detail
+
+        Wed Oct 23 14:33:23.153 EDT
+
+        Group TO-tcore4-rohan-port, XC T-0-5-0-0, state is unresolved; Interworking none
+        Not provisioned reason(s):
+            AC I/F not ready
+
+        AC: TenGigE0/5/0/0, state is unresolved
+        PW: neighbor 67.70.219.75, PW ID 4293089094, state is down ( provisioned )
+            PW class TO-tcore4-rohan-port, XC ID 0xfffe0001
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type unknown, control word unknown, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        unassigned                     unknown                       
+            Group ID     unassigned                     unknown                       
+            Interface    unknown                        unknown                       
+            MTU          unknown                        unknown                       
+            Control word unknown                        unknown                       
+            PW type      unknown                        unknown                       
+            VCCV CV type 0x0                            0x0                           
+                        (none)                         (none)                        
+            VCCV CC type 0x0                            0x0                           
+                        (none)                         (none)                        
+
+            ------------ ------------------------------ -----------------------------
+            MIB cpwVcIndex: 0
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:01:16 (5w1d ago)
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-10, state is down; Interworking none
+        AC: TenGigE0/5/0/0.10, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [10, 10]
+            MTU 4470; XC ID 0x1580001; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089010, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0002
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100592                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.10              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836226
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-11, state is down; Interworking none
+        AC: TenGigE0/5/0/0.11, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [11, 11]
+            MTU 4470; XC ID 0x1580002; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089011, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0003
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100593                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.11              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836227
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-12, state is down; Interworking none
+        AC: TenGigE0/5/0/0.12, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [12, 12]
+            MTU 4470; XC ID 0x1580003; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089012, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0004
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100594                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.12              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836228
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-13, state is down; Interworking none
+        AC: TenGigE0/5/0/0.13, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [13, 13]
+            MTU 4470; XC ID 0x1580004; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089013, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0005
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100595                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.13              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836229
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-14, state is down; Interworking none
+        AC: TenGigE0/5/0/0.14, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [14, 14]
+            MTU 4470; XC ID 0x1580005; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089014, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0006
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100596                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.14              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836230
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-15, state is down; Interworking none
+        AC: TenGigE0/5/0/0.15, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [15, 15]
+            MTU 4470; XC ID 0x1580006; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089015, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0007
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100597                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.15              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836231
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-16, state is down; Interworking none
+        AC: TenGigE0/5/0/0.16, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [16, 16]
+            MTU 4470; XC ID 0x1580007; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089016, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0008
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100598                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.16              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836232
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-17, state is down; Interworking none
+        AC: TenGigE0/5/0/0.17, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [17, 17]
+            MTU 4470; XC ID 0x1580008; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089017, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe0009
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100599                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.17              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836233
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-18, state is down; Interworking none
+        AC: TenGigE0/5/0/0.18, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [18, 18]
+            MTU 4470; XC ID 0x1580009; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089018, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe000a
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100600                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.18              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836234
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group to-tcore4-rohan-ten-0-0-0-13, XC Ten-0-5-0-0-19, state is down; Interworking none
+        AC: TenGigE0/5/0/0.19, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [19, 19]
+            MTU 4470; XC ID 0x158000a; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.75, PW ID 4293089019, state is down ( local ready )
+            PW class vlan-based, XC ID 0xfffe000b
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.106
+            PW type Ethernet VLAN, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100601                         unknown                       
+            Group ID     0x15800c0                      unknown                       
+            Interface    TenGigE0/5/0/0.19              unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet VLAN                  unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836235
+            Create time: 17/09/2019 02:01:16 (5w1d ago)
+            Last time status changed: 17/09/2019 02:06:13 (5w1d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+    '''}
+
+    golden_parsed_output4 = {
+        'group': {
+            'TO-tcore4-rohan-port': {
+                'xc': {
+                    'T-0-5-0-0': {
+                        'state': 'unresolved',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0': {
+                                'state': 'unresolved',
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089094: {
+                                            'state': 'down ( provisioned )',
+                                            'pw_class': 'TO-tcore4-rohan-port',
+                                            'xc_id': '0xfffe0001',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'type': 'unknown',
+                                            'control_word': 'unknown',
+                                            'interworking': 'none',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': 'unassigned',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': 'unassigned',
+                                                    'remote': 'unknown',
+                                                },
+                                                'interface': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x0',
+                                                    'remote': '0x0',
+                                                    'local_type': ['none'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x0',
+                                                    'remote': '0x0',
+                                                    'local_type': ['none'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:01:16 (5w1d ago)',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'to-tcore4-rohan-ten-0-0-0-13': {
+                'xc': {
+                    'Ten-0-5-0-0-10': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.10': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['10', '10'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580001',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089010: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0002',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100592',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.10',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-11': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.11': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['11', '11'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580002',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089011: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0003',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100593',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.11',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-12': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.12': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['12', '12'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580003',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089012: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0004',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100594',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.12',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-13': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.13': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['13', '13'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580004',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089013: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0005',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100595',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.13',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-14': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.14': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['14', '14'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580005',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089014: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0006',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100596',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.14',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-15': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.15': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['15', '15'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580006',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089015: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0007',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100597',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.15',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-16': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.16': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['16', '16'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580007',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089016: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0008',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100598',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.16',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-17': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.17': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['17', '17'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580008',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089017: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe0009',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100599',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.17',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-18': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.18': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['18', '18'],
+                                'mtu': 4470,
+                                'xc_id': '0x1580009',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089018: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe000a',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100600',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.18',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Ten-0-5-0-0-19': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/5/0/0.19': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['19', '19'],
+                                'mtu': 4470,
+                                'xc_id': '0x158000a',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        4293089019: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'vlan-based',
+                                            'xc_id': '0xfffe000b',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.106',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100601',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x15800c0',
+                                                    'remote': 'unknown',
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'TenGigE0/5/0/0.19',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '17/09/2019 02:01:16 (5w1d ago)',
+                                            'last_time_status_changed': '17/09/2019 02:06:13 (5w1d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output5 = {'execute.return_value': '''
+        show l2vpn xconnect detail
+
+        Wed Oct 23 14:13:50.133 EDT
+
+        Group to-tcore4-rohan, XC to-tcore4-rohan, state is unresolved; Interworking none
+        Not provisioned reason(s):
+            Only one segment (Pseudowire) is present
+
+        PW: neighbor 67.70.219.75, PW ID 2015030201, state is unresolved
+        segment state is unresolved
+
+        Group to-tcore1-mordor, XC to-tcore1-mordor, state is down; Interworking none
+        AC: TenGigE0/4/0/5, state is up
+            Type Ethernet
+            MTU 4470; XC ID 0x1480001; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+        PW: neighbor 69.158.196.10, PW ID 1152, state is down ( local ready )
+            PW class port-based, XC ID 0xfffe0001
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.115
+            PW type Ethernet, control word enabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100483                         unknown                       
+            Group ID     0x1480520                      unknown                       
+            Interface    TenGigE0/4/0/5                 unknown                       
+            MTU          4470                           unknown                       
+            Control word enabled                        unknown                       
+            PW type      Ethernet                       unknown                       
+            VCCV CV type 0x2                            0x0                           
+                                                        (none)                        
+                        (LSP ping verification)                                      
+            VCCV CC type 0x7                            0x0                           
+                                                        (none)                        
+                        (control word)                                               
+                        (router alert label)                                         
+                        (TTL expiry)                                                 
+            ------------ ------------------------------ -----------------------------
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 4294836225
+            Create time: 11/10/2019 11:09:47 (1w5d ago)
+            Last time status changed: 11/10/2019 11:13:16 (1w5d ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group TO-tcore4gondor-port, XC T-0-4-0-2, state is unresolved; Interworking none
+        Not provisioned reason(s):
+            Only one segment (Pseudowire) is present
+
+        PW: neighbor 67.70.219.98, PW ID 4293089094, state is unresolved
+        segment state is unresolved
+    '''}
+
+    golden_parsed_output5 = {
+        'group': {
+            'to-tcore4-rohan': {
+                'xc': {
+                    'to-tcore4-rohan': {
+                        'state': 'unresolved',
+                        'interworking': 'none',
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.75': {
+                                    'id': {
+                                        2015030201: {
+                                            'state': 'unresolved',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'to-tcore1-mordor': {
+                'xc': {
+                    'to-tcore1-mordor': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/4/0/5': {
+                                'state': 'up',
+                                'type': 'Ethernet',
+                                'mtu': 4470,
+                                'xc_id': '0x1480001',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '69.158.196.10': {
+                                    'id': {
+                                        1152: {
+                                            'state': 'down ( local ready )',
+                                            'pw_class': 'port-based',
+                                            'xc_id': '0xfffe0001',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.115',
+                                            'type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'interworking': 'none',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100483',
+                                                    'remote': 'unknown',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x1480520',
+                                                    'remote': 'unknown',
+                                                },
+                                                'interface': {
+                                                    'local': 'TenGigE0/4/0/5',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'unknown',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x0',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['none'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x7',
+                                                    'remote': '0x0',
+                                                    'local_type': ['control word', 'router alert label', 'TTL expiry'],
+                                                    'remote_type': ['none'],
+                                                },
+                                            },
+                                            'create_time': '11/10/2019 11:09:47 (1w5d ago)',
+                                            'last_time_status_changed': '11/10/2019 11:13:16 (1w5d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'TO-tcore4gondor-port': {
+                'xc': {
+                    'T-0-4-0-2': {
+                        'state': 'unresolved',
+                        'interworking': 'none',
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.98': {
+                                    'id': {
+                                        4293089094: {
+                                            'state': 'unresolved',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output6 = {'execute.return_value': '''
+        show l2vpn xconnect detail
+
+        Wed Oct 23 13:55:55.601 EDT
+
+        Group vpws, XC vpws, state is unresolved; Interworking none
+        Not provisioned reason(s):
+            AC I/F not ready
+
+        AC: TenGigE0/1/0/0, state is unresolved
+        EVPN: neighbor 0.0.0.0, PW ID: evi 200, ac-id 202, state is down ( idle )
+            XC ID 0xa0000003
+            Encapsulation MPLS
+            Source address 67.70.219.85
+            Encap type unknown, control word unknown
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        unassigned                     unknown                       
+            MTU          unknown                        unknown                       
+            Control word unknown                        unknown                       
+            AC ID        201                            202                           
+            EVPN type    unknown                        unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 11/07/2019 13:01:41 (14w6d ago)
+            No status change since creation
+
+        Group vpws, XC vrp_vpws_tor2_bl2_10294, state is down; Interworking none
+        AC: Bundle-Ether2.60, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [60, 60]
+            MTU 9198; XC ID 0xc0000002; interworking none
+            Statistics:
+            packets: received 1809419, sent 0
+            bytes: received 174143224, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 172.16.2.89, PW ID: evi 10294, ac-id 20294, state is down ( local ready )
+            XC ID 0xa0000005
+            Encapsulation MPLS
+            Source address 67.70.219.85
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
+
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100483                         unknown                       
+            MTU          9198                           unknown                       
+            Control word enabled                        unknown                       
+            AC ID        30294                          20294                         
+            EVPN type    Ethernet                       unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 11/07/2019 13:01:41 (14w6d ago)
+            Last time status changed: 11/09/2019 08:03:16 (6w0d ago)
+            Last time PW went down: 26/08/2019 15:14:22 (8w1d ago)
+            Statistics:
+            packets: received 0, sent 1809419
+            bytes: received 0, sent 174143224
+    '''}
+
+    golden_parsed_output6 = {
+        'group': {
+            'vpws': {
+                'xc': {
+                    'vpws': {
+                        'state': 'unresolved',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/1/0/0': {
+                                'state': 'unresolved',
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '0.0.0.0': {
+                                    'id': {
+                                        'evi 200': {
+                                            'state': 'down ( idle )',
+                                            'ac_id': 202,
+                                            'xc_id': '0xa0000003',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.85',
+                                            'encap_type': 'unknown',
+                                            'control_word': 'unknown',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': 'unassigned',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '201',
+                                                    'remote': '202',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '11/07/2019 13:01:41 (14w6d ago)',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'vrp_vpws_tor2_bl2_10294': {
+                        'state': 'down',
+                        'interworking': 'none',
+                        'ac': {
+                            'Bundle-Ether2.60': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['60', '60'],
+                                'mtu': 9198,
+                                'xc_id': '0xc0000002',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 1809419,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 174143224,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '172.16.2.89': {
+                                    'id': {
+                                        'evi 10294': {
+                                            'state': 'down ( local ready )',
+                                            'ac_id': 20294,
+                                            'xc_id': '0xa0000005',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.85',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100483',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': '9198',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '30294',
+                                                    'remote': '20294',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '11/07/2019 13:01:41 (14w6d ago)',
+                                            'last_time_status_changed': '11/09/2019 08:03:16 (6w0d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 1809419,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 174143224,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output7 = {'execute.return_value': '''
+        show l2vpn xconnect detail
+
+        Wed Oct 23 13:54:23.929 EDT
+
+        Group vpws, XC vrp_vpws_tor1_bl1_10293, state is unresolved; Interworking none
+        Not provisioned reason(s):
+            AC I/F not ready
+
+        AC: Bundle-Ether1.59, state is unresolved
+        EVPN: neighbor 0.0.0.0, PW ID: evi 10293, ac-id 20293, state is down ( idle )
+            XC ID 0xa0000003
+            Encapsulation MPLS
+            Source address 67.70.219.84
+            Encap type unknown, control word unknown
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        unassigned                     unknown                       
+            MTU          unknown                        unknown                       
+            Control word unknown                        unknown                       
+            AC ID        30293                          20293                         
+            EVPN type    unknown                        unknown                       
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 27/08/2019 09:44:55 (8w1d ago)
+            No status change since creation
+
+        Group BL-PE-BG, XC G0-0-0-12-200, state is up; Interworking none
+        AC: GigabitEthernet0/0/0/12.200, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [200, 200]
+            MTU 4474; XC ID 0x200008; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        EVPN: neighbor 67.70.219.82, PW ID: evi 2112, ac-id 3001, state is up ( established )
+            XC ID 0xa0000005
+            Encapsulation MPLS
+            Source address 67.70.219.84
+            Encap type Ethernet, control word enabled
+            Sequencing not set
+            LSP : Up
+
+            EVPN         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100562                         100002                        
+            MTU          4474                           4474                          
+            Control word enabled                        enabled                       
+            AC ID        1001                           3001                          
+            EVPN type    Ethernet                       Ethernet                      
+
+            ------------ ------------------------------ -----------------------------
+            Create time: 27/08/2019 09:44:55 (8w1d ago)
+            Last time status changed: 22/10/2019 14:50:08 (23:04:15 ago)
+            Last time PW went down: 22/10/2019 14:46:56 (23:07:27 ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+
+        Group BL-2-DCPE, XC G0-0-0-12-100, state is up; Interworking none
+        AC: GigabitEthernet0/0/0/12.100, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [100, 100]
+            MTU 4470; XC ID 0x200006; interworking none
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+            drops: illegal VLAN 0, illegal length 0
+        PW: neighbor 67.70.219.82, PW ID 8482100, state is up ( established )
+            PW class BL-2-DCPE, XC ID 0xa0000007
+            Encapsulation MPLS, protocol LDP
+            Source address 67.70.219.84
+            PW type Ethernet VLAN, control word disabled, interworking none
+            PW backup disable delay 0 sec
+            Sequencing not set
+            LSP : Up
+
+            PW Status TLV in use
+            MPLS         Local                          Remote                        
+            ------------ ------------------------------ -----------------------------
+            Label        100563                         100008                        
+            Group ID     0x5c0                          0x1c8                         
+            Interface    GigabitEthernet0/0/0/12.100    TenGigE0/0/0/47.100           
+            MTU          4470                           4470                          
+            Control word disabled                       disabled                      
+            PW type      Ethernet VLAN                  Ethernet VLAN                 
+            VCCV CV type 0x2                            0x2                           
+                        (LSP ping verification)        (LSP ping verification)       
+            VCCV CC type 0x6                            0x6                           
+                        (router alert label)           (router alert label)          
+                        (TTL expiry)                   (TTL expiry)                  
+            ------------ ------------------------------ -----------------------------
+            Incoming Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            Outgoing Status (PW Status TLV):
+            Status code: 0x0 (Up) in Notification message
+            MIB cpwVcIndex: 2684354567
+            Create time: 27/08/2019 09:44:55 (8w1d ago)
+            Last time status changed: 22/10/2019 14:50:02 (23:04:21 ago)
+            Last time PW went down: 22/10/2019 14:46:56 (23:07:27 ago)
+            Statistics:
+            packets: received 0, sent 0
+            bytes: received 0, sent 0
+    '''}
+
+    golden_parsed_output7 = {
+        'group': {
+            'vpws': {
+                'xc': {
+                    'vrp_vpws_tor1_bl1_10293': {
+                        'state': 'unresolved',
+                        'interworking': 'none',
+                        'ac': {
+                            'Bundle-Ether1.59': {
+                                'state': 'unresolved',
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '0.0.0.0': {
+                                    'id': {
+                                        'evi 10293': {
+                                            'state': 'down ( idle )',
+                                            'ac_id': 20293,
+                                            'xc_id': '0xa0000003',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.84',
+                                            'encap_type': 'unknown',
+                                            'control_word': 'unknown',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': 'unassigned',
+                                                    'remote': 'unknown',
+                                                },
+                                                'mtu': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                                'ac_id': {
+                                                    'local': '30293',
+                                                    'remote': '20293',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'unknown',
+                                                    'remote': 'unknown',
+                                                },
+                                            },
+                                            'create_time': '27/08/2019 09:44:55 (8w1d ago)',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'BL-PE-BG': {
+                'xc': {
+                    'G0-0-0-12-200': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'GigabitEthernet0/0/0/12.200': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['200', '200'],
+                                'mtu': 4474,
+                                'xc_id': '0x200008',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '67.70.219.82': {
+                                    'id': {
+                                        'evi 2112': {
+                                            'state': 'up ( established )',
+                                            'ac_id': 3001,
+                                            'xc_id': '0xa0000005',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.84',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100562',
+                                                    'remote': '100002',
+                                                },
+                                                'mtu': {
+                                                    'local': '4474',
+                                                    'remote': '4474',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'enabled',
+                                                },
+                                                'ac_id': {
+                                                    'local': '1001',
+                                                    'remote': '3001',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet',
+                                                },
+                                            },
+                                            'create_time': '27/08/2019 09:44:55 (8w1d ago)',
+                                            'last_time_status_changed': '22/10/2019 14:50:08 (23:04:15 ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'BL-2-DCPE': {
+                'xc': {
+                    'G0-0-0-12-100': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'GigabitEthernet0/0/0/12.100': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['100', '100'],
+                                'mtu': 4470,
+                                'xc_id': '0x200006',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '67.70.219.82': {
+                                    'id': {
+                                        8482100: {
+                                            'state': 'up ( established )',
+                                            'pw_class': 'BL-2-DCPE',
+                                            'xc_id': '0xa0000007',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '67.70.219.84',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '100563',
+                                                    'remote': '100008',
+                                                },
+                                                'group_id': {
+                                                    'local': '0x5c0',
+                                                    'remote': '0x1c8',
+                                                },
+                                                'interface': {
+                                                    'local': 'GigabitEthernet0/0/0/12.100',
+                                                    'remote': 'TenGigE0/0/0/47.100',
+                                                },
+                                                'mtu': {
+                                                    'local': '4470',
+                                                    'remote': '4470',
+                                                },
+                                                'control_word': {
+                                                    'local': 'disabled',
+                                                    'remote': 'disabled',
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet VLAN',
+                                                    'remote': 'Ethernet VLAN',
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x2',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['LSP ping verification'],
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x6',
+                                                    'remote': '0x6',
+                                                    'local_type': ['router alert label', 'TTL expiry'],
+                                                    'remote_type': ['router alert label', 'TTL expiry'],
+                                                },
+                                            },
+                                            'create_time': '27/08/2019 09:44:55 (8w1d ago)',
+                                            'last_time_status_changed': '22/10/2019 14:50:02 (23:04:21 ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1293,6 +3951,34 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+    
+    def test_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+    
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
+    
+    def test_golden7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect summary'
