@@ -3359,9 +3359,9 @@ class TestShowIsisInterface(unittest.TestCase):
                         'circuit_type': 'level-2-only',
                         'media_type': 'P2P',
                         'circuit_number': 0,
-                        'extended_circuit_number': '113',
-                        'next_p2p_iih_in': '4',
-                        'lsp_rexmit_queue_size': '1',
+                        'extended_circuit_number': 113,
+                        'next_p2p_iih_in': 4,
+                        'lsp_rexmit_queue_size': 1,
                         'level': {
                             2: {
                                 'adjacency_count': 1,
@@ -3493,9 +3493,9 @@ class TestShowIsisInterface(unittest.TestCase):
                         'circuit_type': 'level-2-only',
                         'media_type': 'P2P',
                         'circuit_number': 0,
-                        'extended_circuit_number': '27',
-                        'next_p2p_iih_in': '5',
-                        'lsp_rexmit_queue_size': '0',
+                        'extended_circuit_number': 27,
+                        'next_p2p_iih_in': 5,
+                        'lsp_rexmit_queue_size': 0,
                         'level': {
                             2: {
                                 'adjacency_count': 1,
