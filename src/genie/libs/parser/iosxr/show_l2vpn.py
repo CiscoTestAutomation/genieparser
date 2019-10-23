@@ -913,6 +913,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('vfi'): {
                             'num_vfi': int,
                             Any(): {
+                                Optional('state'): str,
                                 'neighbor': {
                                     Any(): {
                                         'pw_id': {
@@ -952,6 +953,25 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                         'send': int,
                                                     },
                                                     Optional('mac_move'): str,
+                                                },
+                                                Optional('dhcp_v4_snooping'): str,
+                                                Optional('dhcp_v4_snooping_profile'): str,
+                                                Optional('igmp_snooping'): str,
+                                                Optional('igmp_snooping_profile'): str,
+                                                Optional('mld_snooping_profile'): str,
+                                                Optional('source_address'): str,
+                                                Optional('forward_class'): str,
+                                                Optional('storm_control_drop_counters'): {
+                                                    'packets': {
+                                                        'broadcast': str,
+                                                        'multicast': str,
+                                                        'unknown_unicast': str,
+                                                    },
+                                                    'bytes': {
+                                                        'broadcast': str,
+                                                        'multicast': str,
+                                                        'unknown_unicast': str,
+                                                    },
                                                 },
                                             }
                                         }
@@ -1092,6 +1112,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         
         ret_dict = {}
         interface_found = False
+        label_found = False
         
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
@@ -1208,7 +1229,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p24 = re.compile(r'^List +of +VFIs:$')
 
         # VFI 1
-        p25 = re.compile(r'^VFI +(?P<vfi>\S+)$')
+        # VFI vfi100 (up)
+        p25 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
 
         # PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
         p26 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +(?P<pw_id>\d+), +state +'
@@ -1394,7 +1416,10 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         
         # PD System Data: AF-LIF-IPv4: 0x00000000  AF-LIF-IPv6: 0x00000000
         p83 = re.compile(r'^PD +System +Data: +(?P<key_1>\S+): +(?P<val_1>\S+) +(?P<key_2>\S+): +(?P<val_2>\S+)$')
-        
+
+        # Virtual MAC addresses:
+        p84 = re.compile(r'^Virtual +MAC +addresses:$')
+
         for line in out.splitlines():
             original_line = line
             line = line.strip()
@@ -1679,6 +1704,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p15.match(line)
             if m:
                 dict_type = 'ac'
+                label_found = False
                 continue
 
             # AC: GigabitEthernet0/1/0/0, state is up
@@ -1799,12 +1825,14 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p23.match(line)
             if m:
                 dict_type = 'access_pw'
+                label_found = False
                 continue
 
             # List of VFIs:
             m = p24.match(line)
             if m:
                 dict_type = 'vfi'
+                label_found = False
                 continue
 
             # PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
@@ -1885,6 +1913,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p32.match(line)
             if m:
                 group = m.groupdict()
+                label_found = True
                 type_found = group['type'].lower()
                 continue
 
@@ -1949,6 +1978,9 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 dict_type = 'vfi'
                 vfi = group['vfi']
                 vfi_obj_dict = vfi_dict.setdefault(vfi, {})
+                state = group['state']
+                if state:
+                    vfi_obj_dict.update({'state': state})
                 continue
 
             # drops: illegal VLAN 0, illegal length 0
@@ -2119,6 +2151,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p61.match(line)
             if m:
                 dict_type = 'evpn'
+                label_found = False
                 continue
 
             # EVPN, state: up
@@ -2207,8 +2240,15 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 broadcast = group['broadcast']
                 multicast = group['multicast']
                 unknown_unicast = group['unknown_unicast']
-                packet_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
-                    setdefault('packets', {})
+                if dict_type == 'pw' or dict_type == 'access_pw':
+                    packet_dict = pw_id_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('packets', {})
+                elif dict_type == 'ac':
+                    packet_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('packets', {})
+                else:
+                    packet_dict = bridge_domain_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('packets', {})
                 packet_dict.update({'broadcast': broadcast})
                 packet_dict.update({'multicast': multicast})
                 packet_dict.update({'unknown_unicast': unknown_unicast})
@@ -2221,8 +2261,15 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 broadcast = group['broadcast']
                 multicast = group['multicast']
                 unknown_unicast = group['unknown_unicast']
-                byte_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
-                    setdefault('bytes', {})
+                if dict_type == 'pw' or dict_type == 'access_pw':
+                    byte_dict = pw_id_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('bytes', {})
+                elif dict_type == 'ac':
+                    byte_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('bytes', {})
+                else:
+                    byte_dict = bridge_domain_dict.setdefault('storm_control_drop_counters', {}). \
+                        setdefault('bytes', {})
                 byte_dict.update({'broadcast': broadcast})
                 byte_dict.update({'multicast': multicast})
                 byte_dict.update({'unknown_unicast': unknown_unicast})
@@ -2253,6 +2300,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # List of Access VFIs:
             m = p76.match(line)
             if m:
+                label_found = False
                 continue
 
             # Error: Need at least 1 bridge port up
@@ -2328,25 +2376,32 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 pd_system_data.update({key_2: val_2})
                 continue
 
+            # Virtual MAC addresses:
+            m = p84.match(line)
+            if m:
+                mac_address_type = 'virtual_mac_address'
+                continue
+
             #     (LSP ping verification)               
             #                                    (none)
             #     (control word)                 (control word)
             #     (control word) 
             m = p42.match(line)
             if m:
-                mpls_items = list(mpls_pairs.items()) 
-                local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
-                                replace('(','').replace(')', '').strip()) 
-                remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
-                                replace('(','').replace(')', '').strip())
-                local_type = mpls_dict.get('local_type', [])
-                remote_type = mpls_dict.get('remote_type', [])
-                if local_value:
-                    local_type.append(local_value)
-                if remote_value:
-                    remote_type.append(remote_value)
-                mpls_dict.update({'local_type': local_type})
-                mpls_dict.update({'remote_type': remote_type})
+                if label_found:
+                    mpls_items = list(mpls_pairs.items()) 
+                    local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
+                                    replace('(','').replace(')', '').strip()) 
+                    remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
+                                    replace('(','').replace(')', '').strip())
+                    local_type = mpls_dict.get('local_type', [])
+                    remote_type = mpls_dict.get('remote_type', [])
+                    if local_value:
+                        local_type.append(local_value)
+                    if remote_value:
+                        remote_type.append(remote_value)
+                    mpls_dict.update({'local_type': local_type})
+                    mpls_dict.update({'remote_type': remote_type})
                 continue
 
             # Label        30005                          unknown
@@ -2356,26 +2411,27 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
             m = p33.match(line)
             if m:
-                group = m.groupdict()
-                mpls = group['mpls'].strip().lower().replace(' ','_')
-                local = group['local'].strip()
-                remote = group['remote']
-                if mpls == 'interface':
-                    if interface_found:
-                        interface_dict = label_dict.setdefault(type_found, {}). \
-                            setdefault('monitor_interface', {})
-                        interface_dict.update({'local': local})
-                        interface_dict.update({'remote': remote})
+                if label_found:
+                    group = m.groupdict()
+                    mpls = group['mpls'].strip().lower().replace(' ','_')
+                    local = group['local'].strip()
+                    remote = group['remote']
+                    if mpls == 'interface':
+                        if interface_found:
+                            mpls_dict = label_dict.setdefault(type_found, {}). \
+                                setdefault('monitor_interface', {})
+                            mpls_dict.update({'local': local})
+                            mpls_dict.update({'remote': remote})
+                        else:
+                            interface_found = True
+                            mpls_dict = label_dict.setdefault(type_found, {}). \
+                                setdefault(mpls, {})
+                            mpls_dict.update({'local': local})
+                            mpls_dict.update({'remote': remote})
                     else:
-                        interface_found = True
                         mpls_dict = label_dict.setdefault(type_found, {}). \
                             setdefault(mpls, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
-                else:
-                    mpls_dict = label_dict.setdefault(type_found, {}). \
-                        setdefault(mpls, {})
-                    mpls_dict.update({'local': local})
-                    mpls_dict.update({'remote': remote})
-                    continue
+                continue
         return ret_dict
