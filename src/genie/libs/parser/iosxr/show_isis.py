@@ -2276,7 +2276,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 Optional('next_lan_iih_sec'): int,
                                 Optional('lan_id'): str,
                                 Optional('hello_interval_sec'): int,
-                                'hello_multiplier': int,
+                                Optional('hello_multiplier'): int,
                                 Optional('priority'): {
                                     'local': str,
                                     'dis': str
@@ -2297,6 +2297,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'adjacency_formation': str,
                                 'state': str,
                                 'prefix_advertisement': str,
+                                Optional('protocol_state'): str,
                                 'metric': {
                                     'level': {
                                         Any(): int
@@ -2315,7 +2316,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                         }
                                     },
                                 },
-                                'frr': {
+                                Optional('frr'): {
                                     'level': {
                                         Any(): {
                                             'state': str,
@@ -2340,6 +2341,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'state': str,
                                 'forwarding_address': list,
                                 'global_prefix': list,
+                                Optional('protocol_state'): str,
                             },
                         }
                     }
@@ -2371,7 +2373,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Loopback0                   Enabled
         # GigabitEthernet0/0/0/0      Enabled
         # TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
-        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
+        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/\.]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
 
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
@@ -2433,7 +2435,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r18 = re.compile(r'CLNS\s+I\/O')
 
         # Protocol State:         Up
-        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>\w+)')
+        # Protocol State:         Down (Intf not up in CLNS proto stack)
+        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>[\S\s]+)')
 
         # MTU:                    1500
         r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
@@ -2452,7 +2455,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
-        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
+        # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
@@ -2569,6 +2573,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         parsed_output = {}
         interface_flag = False
         clns_flag = False
+        topology_falg = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -2765,6 +2770,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 protocol_state = group['protocol_state']
                 if clns_flag:
                     clns_dict['protocol_state'] = protocol_state
+                elif topology_falg:
+                    topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
 
@@ -2791,7 +2798,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault(topology, {})
                 topology_dict['state'] = topology_state
                 interface_flag = False
-
+                topology_falg = True
                 continue
 
             # Metric (L1/L2):         10/10
@@ -2827,10 +2834,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 continue
 
             # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
             result = r24.match(line)            
             if result:
                 group = result.groupdict()
-                mpls_stack = group['mpls_max_label_stack'].strip()
+                mpls_stack = group['mpls_max_label_stack'].replace(':', ' ').strip()
                 mpls_dict = topology_dict.setdefault('mpls', {})                
                 mpls_dict['mpls_max_label_stack'] = mpls_stack
 
