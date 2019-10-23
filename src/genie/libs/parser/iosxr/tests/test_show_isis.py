@@ -3477,67 +3477,10 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                         },
                     },
-                    'Loopback0': {
-                        'state': 'Enabled',
-                        'adjacency_formation': 'Disabled',
-                        'prefix_advertisement': 'Enabled',
-                        'ipv4_bfd': False,
-                        'ipv6_bfd': False,
-                        'bfd_min_interval': 150,
-                        'bfd_multiplier': 3,
-                        'bandwidth': 0,
-                        'circuit_type': 'level-2-only',
-                        'media_type': 'Loop',
-                        'circuit_number': 0,
-                        'topology': {
-                            'ipv4 unicast': {
-                                'state': 'Enabled',
-                                'adjacency_formation': 'Disabled',
-                                'prefix_advertisement': 'Running',
-                                'metric': {
-                                    'level': {
-                                        1: 10,
-                                        2: 10,
-                                    },
-                                },
-                                'weight': {
-                                    'level': {
-                                        1: 0,
-                                        2: 0,
-                                    },
-                                },
-                                'mpls': {
-                                    'mpls_max_label_stack': '1/3/10/10 (PRI/BKP/SRTE/SRAT)',
-                                    'ldp_sync': {
-                                        'level': {
-                                            1: 'Disabled',
-                                            2: 'Disabled',
-                                        },
-                                    },
-                                },
-                                'frr': {
-                                    'level': {
-                                        1: {
-                                            'state': 'Not Enabled',
-                                            'type': 'None',
-                                        },
-                                        2: {
-                                            'state': 'Not Enabled',
-                                            'type': 'None',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        'address_family': {
-                            'IPv4': {
-                                'state': 'Enabled',
-                                'forwarding_address': ['Unknown'],
-                                'global_prefix': ['10.154.219.88/32'],
-                            },
-                        },
+                    'TenGigE0/0/0/0/0': {
+                        'state': 'Disabled',
                     },
-                    'HundredGigE0/0/0/0': {
+                    'TenGigE0/0/0/4/0': {
                         'state': 'Enabled',
                         'adjacency_formation': 'Enabled',
                         'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
@@ -3546,11 +3489,11 @@ class TestShowIsisInterface(unittest.TestCase):
                         'bfd_min_interval': 250,
                         'bfd_multiplier': 3,
                         'rsi_srlg': 'Registered',
-                        'bandwidth': 100000000,
+                        'bandwidth': 10000000,
                         'circuit_type': 'level-2-only',
                         'media_type': 'P2P',
                         'circuit_number': 0,
-                        'extended_circuit_number': '247',
+                        'extended_circuit_number': '27',
                         'next_p2p_iih_in': '5',
                         'lsp_rexmit_queue_size': '0',
                         'level': {
@@ -3565,7 +3508,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         'clns_io': {
                             'protocol_state': 'Up',
                             'mtu': 9199,
-                            'snpa': '008a.960b.0800',
+                            'snpa': '008a.960b.0810',
                             'layer2_mcast_groups_membership': {
                                 'all_level_1_iss': 'Yes',
                                 'all_level_2_iss': 'Yes',
@@ -3600,50 +3543,12 @@ class TestShowIsisInterface(unittest.TestCase):
                                 'frr': {
                                     'level': {
                                         1: {
-                                            'state': 'Enabled',
-                                            'type': 'per-prefix',
-                                            'direct_lfa': {
-                                                'state': 'Enabled',
-                                            },
-                                            'remote_lfa': {
-                                                'state': 'Not Enabled',
-                                                'tie_breaker': 'Default',
-                                                'line_card_disjoint': '30',
-                                                'lowest_backup_metric': '20',
-                                                'node_protecting': '40',
-                                                'primary_path': '10',
-                                            },
-                                            'ti_lfa': {
-                                                'state': 'Enabled',
-                                                'tie_breaker': 'Default',
-                                                'link_protecting': 'Enabled',
-                                                'line_card_disjoint': '0',
-                                                'node_protecting': '100',
-                                                'srlg_disjoint': '0',
-                                            },
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
                                         },
                                         2: {
-                                            'state': 'Enabled',
-                                            'type': 'per-prefix',
-                                            'direct_lfa': {
-                                                'state': 'Enabled',
-                                            },
-                                            'remote_lfa': {
-                                                'state': 'Not Enabled',
-                                                'tie_breaker': 'Default',
-                                                'line_card_disjoint': '30',
-                                                'lowest_backup_metric': '20',
-                                                'node_protecting': '40',
-                                                'primary_path': '10',
-                                            },
-                                            'ti_lfa': {
-                                                'state': 'Enabled',
-                                                'tie_breaker': 'Default',
-                                                'link_protecting': 'Enabled',
-                                                'line_card_disjoint': '0',
-                                                'node_protecting': '100',
-                                                'srlg_disjoint': '0',
-                                            },
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
                                         },
                                     },
                                 },
@@ -3652,7 +3557,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         'address_family': {
                             'IPv4': {
                                 'state': 'Enabled',
-                                'forwarding_address': ['172.16.1.244'],
+                                'forwarding_address': ['172.16.2.133'],
                                 'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
                             },
                         },
@@ -3742,35 +3647,8 @@ class TestShowIsisInterface(unittest.TestCase):
             IfName: Hu0/0/0/1 IfIndex: 0x55 
             
         
-        Loopback0                   Enabled
-        Adjacency Formation:      Disabled (Passive in IS-IS cfg)
-        Prefix Advertisement:     Enabled
-        IPv4 BFD:                 Disabled
-        IPv6 BFD:                 Disabled
-        BFD Min Interval:         150
-        BFD Multiplier:           3
-        Bandwidth:                0
-        
-        Circuit Type:             level-2-only (Interface circuit type is level-1-2)
-        Media Type:               Loop
-        Circuit Number:           0
-        IPv4 Unicast Topology:    Enabled
-            Adjacency Formation:    Disabled (Intf passive in IS-IS cfg)
-            Prefix Advertisement:   Running
-            Metric (L1/L2):         10/10
-            Weight (L1/L2):         0/0
-            MPLS Max Label Stack:   1/3/10/10 (PRI/BKP/SRTE/SRAT)
-            MPLS LDP Sync (L1/L2):  Disabled/Disabled
-            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
-            FRR Type:             None               None           
-        
-        IPv4 Address Family:      Enabled
-            Protocol State:         Up
-            Forwarding Address(es): Unknown (Intf passive in IS-IS cfg)
-            Global Prefix(es):      10.154.219.88/32
-        
-        
-        HundredGigE0/0/0/0          Enabled
+        TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        TenGigE0/0/0/4/0            Enabled
         Adjacency Formation:      Enabled
         Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
         IPv4 BFD:                 Enabled
@@ -3778,12 +3656,12 @@ class TestShowIsisInterface(unittest.TestCase):
         BFD Min Interval:         250
         BFD Multiplier:           3
         RSI SRLG:                 Registered
-        Bandwidth:                100000000
+        Bandwidth:                10000000
         
         Circuit Type:             level-2-only (Interface circuit type is level-1-2)
         Media Type:               P2P
         Circuit Number:           0
-        Extended Circuit Number:  247
+        Extended Circuit Number:  27
         Next P2P IIH in:          5 s
         LSP Rexmit Queue Size:    0
         
@@ -3797,7 +3675,7 @@ class TestShowIsisInterface(unittest.TestCase):
         CLNS I/O
             Protocol State:         Up
             MTU:                    9199
-            SNPA:                   008a.960b.0800
+            SNPA:                   008a.960b.0810
             Layer-2 MCast Groups Membership:
             All ISs:              Yes
         
@@ -3808,25 +3686,12 @@ class TestShowIsisInterface(unittest.TestCase):
             Weight (L1/L2):         0/0
             MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
             MPLS LDP Sync (L1/L2):  Disabled/Disabled
-            FRR (L1/L2):            L1 Enabled         L2 Enabled     
-            FRR Type:             per-prefix         per-prefix     
-            Direct LFA:           Enabled            Enabled        
-            Remote LFA:           Not Enabled        Not Enabled    
-            Tie Breaker          Default            Default        
-            Line-card disjoint   30                 30             
-            Lowest backup metric 20                 20             
-            Node protecting      40                 40             
-            Primary path         10                 10             
-            TI LFA:               Enabled            Enabled        
-            Tie Breaker          Default            Default        
-            Link Protecting      Enabled            Enabled        
-            Line-card disjoint   0                  0              
-            Node protecting      100                100            
-            SRLG disjoint        0                  0              
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+            FRR Type:             None               None           
         
         IPv4 Address Family:      Enabled
             Protocol State:         Up
-            Forwarding Address(es): 172.16.1.244
+            Forwarding Address(es): 172.16.2.133
             Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
         
         LSP transmit timer expires in 0 ms

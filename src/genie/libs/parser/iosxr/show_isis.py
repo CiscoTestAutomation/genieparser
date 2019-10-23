@@ -2136,7 +2136,7 @@ class ShowIsisInterfaceSchema(MetaParser):
             Any(): {
                 'interface': {
                     Any(): {
-                        Optional('state'): str,
+                        'state': str,
                         Optional('adjacency_formation'): str,
                         Optional('prefix_advertisement'): str,
                         Optional('ipv6_bfd'): bool,
