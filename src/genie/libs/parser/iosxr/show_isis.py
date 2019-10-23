@@ -2148,9 +2148,9 @@ class ShowIsisInterfaceSchema(MetaParser):
                         Optional('media_type'): str,
                         Optional('circuit_number'): int,
                         Optional('rsi_srlg'): str,
-                        Optional('next_p2p_iih_in'): str,
-                        Optional('extended_circuit_number'): str,
-                        Optional('lsp_rexmit_queue_size'): str,
+                        Optional('next_p2p_iih_in'): int,
+                        Optional('extended_circuit_number'): int,
+                        Optional('lsp_rexmit_queue_size'): int,
                         Optional('lsp'): {
                             'transmit_timer_expires_ms': int,
                             'transmission_state': str,
@@ -2923,7 +2923,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r41.match(line)
             if result:
                 group = result.groupdict()
-                extended_circuit_number = group['extended_circuit_number']
+                extended_circuit_number = int(group['extended_circuit_number'])
                 if interface_flag:
                     interface_dict['extended_circuit_number'] = extended_circuit_number
                 else:
@@ -2934,7 +2934,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r42.match(line)
             if result:
                 group = result.groupdict()
-                next_p2p_iih_in = group['next_p2p_iih_in']
+                next_p2p_iih_in = int(group['next_p2p_iih_in'])
                 if interface_flag:
                     interface_dict['next_p2p_iih_in'] = next_p2p_iih_in
                 else:
@@ -2945,7 +2945,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r43.match(line)
             if result:
                 group = result.groupdict()
-                lsp_rexmit_queue_size = group['lsp_rexmit_queue_size']
+                lsp_rexmit_queue_size = int(group['lsp_rexmit_queue_size'])
                 if interface_flag:
                     interface_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
                 else:
