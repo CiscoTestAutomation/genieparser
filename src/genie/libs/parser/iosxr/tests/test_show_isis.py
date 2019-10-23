@@ -5245,6 +5245,173 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10    IS (MT-IPv6) cisco.03
     '''}
 
+    golden_parsed_output_4 = {
+        'instance': {
+            'Genie': {
+                'level': {
+                    2: {
+                        'lspid': {
+                            'core1-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a302',
+                                    'checksum': '0x1a0e',
+                                    'local_router': False,
+                                    'holdtime': 58285,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.57',
+                                'hostname': 'core1-genie',
+                                'router_cap': '10.154.219.57 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.57/32': {
+                                        'ip_prefix': '10.154.219.57',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core2-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'tcore4-genie.00': {
+                                        'metric': 250,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                },
+                            },
+                            'core2-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a15b',
+                                    'checksum': '0xfcfe',
+                                    'local_router': False,
+                                    'holdtime': 60939,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.58',
+                                'hostname': 'core2-genie',
+                                'router_cap': '10.154.219.58 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.58/32': {
+                                        'ip_prefix': '10.154.219.58',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core1-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 250,
+                                    },
+                                },
+                            },
+                            'dis17-genie_RE1.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x00000215',
+                                    'checksum': '0xf5f4',
+                                    'local_router': False,
+                                    'holdtime': 32551,
+                                    'received': 65535,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'tlv': 14,
+                                'tlv_length': 2,
+                                'nlpid': ['0xcc', '0x8e'],
+                                'router_id': '10.154.219.102',
+                                'ip_address': '10.154.219.102',
+                                'hostname': 'dis17-genie_RE1',
+                                'extended_is_neighbor': {
+                                    'tcore4-genie.00': {
+                                        'metric': 100,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 100,
+                                    },
+                                },
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.102/32': {
+                                        'ip_prefix': '10.154.219.102',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'router_cap': '10.154.219.102 D:0 S:0',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show isis database detail
+
+        Mon Oct 22 10:40:56.529 EDT
+
+        IS-IS Genie (Level-2) Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        core1-genie.00-00  0x0000a302   0x1a0e        58285/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.57
+        Hostname:       core1-genie
+        Router Cap:     10.154.219.57 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.57/32
+        Metric: 50         IS-Extended core2-genie.00
+        Metric: 250        IS-Extended tcore4-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        core2-genie.00-00  0x0000a15b   0xfcfe        60939/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.58
+        Hostname:       core2-genie
+        Router Cap:     10.154.219.58 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.58/32
+        Metric: 50         IS-Extended core1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 250        IS-Extended tcore3-genie.00
+        dis17-genie_RE1.00-00  0x00000215   0xf5f4        32551/65535        0/0/0
+        Area Address:   49.0000
+        TLV 14:         Length: 2
+        NLPID:          0xcc
+        NLPID:          0x8e
+        Router ID:      10.154.219.102
+        IP Address:     10.154.219.102
+        Hostname:       dis17-genie_RE1
+        Metric: 100        IS-Extended tcore4-genie.00
+        Metric: 100        IS-Extended tcore3-genie.00
+        Metric: 0          IP-Extended 10.154.219.102/32
+        Router Cap:     10.154.219.102 D:0 S:0
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisDatabaseDetail(device=self.device)
@@ -5268,6 +5435,12 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_output_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()
