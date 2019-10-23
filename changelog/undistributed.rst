@@ -644,6 +644,7 @@
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
+    * Updated ShowIsisSpfLogDetail to support different outputs
     * Updated ShowIsisInterface to support different outputs
     * Updated ShowIsisDatabaseDetail to support different outputs
 * IOSXE
