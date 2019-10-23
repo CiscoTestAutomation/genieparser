@@ -1282,7 +1282,6 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
 
             m = p1.match(line)
             if m:
-                print(line)
                 if flag_group:
                     group = m.groupdict()
                     group_dict = ret_dict.setdefault('groups', {}) \
