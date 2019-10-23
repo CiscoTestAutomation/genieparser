@@ -2976,7 +2976,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'share': int,
                         'plevel': int,
                         'priority': int,
-                        'defer_obj_refcnt': int,
+                        Optional('defer_obj_refcnt'): int,
+                        Optional('cp_ppe_addr'): str,
                     },
                     'statistics': {
                         'tail_drops_bytes': int,
@@ -3075,7 +3076,9 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +priority: +(?P<priority>\d+)$')  
 
         #       defer_obj_refcnt: 0
-        p12 = re.compile(r'^defer_obj_refcnt: +(?P<defer_obj_refcnt>\d+)$')  
+        #   defer_obj_refcnt: 0, cp_ppe_addr: 0x00000000
+        p12 = re.compile(r'^defer_obj_refcnt: +(?P<defer_obj_refcnt>\d+)'
+                         r'(, +cp_ppe_addr: +(?P<cp_ppe_addr>\w+))?$')
 
         #     Statistics:
         p13_1 = re.compile(r'^Statistics:$')  
@@ -3207,11 +3210,16 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                 group = m.groupdict()
                 ret_dict[interface]['index'][index]['software_control_info']\
                     ['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
+
+                if group['cp_ppe_addr']:
+                    ret_dict[interface]['index'][index]['software_control_info']\
+                        ['cp_ppe_addr'] = group['cp_ppe_addr']
                 continue
 
             m = p13_1.match(line)
             if m:
                 ret_dict[interface]['index'][index].setdefault('statistics', {})
+                continue
 
             m = p13_2.match(line)
             if m:

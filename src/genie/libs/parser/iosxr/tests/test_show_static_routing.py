@@ -47,36 +47,35 @@ class test_show_static_topology_detail(unittest.TestCase):
       Path version: 0, Path status: 0x80
       Path contains both next-hop and outbound interface.
 
-    '''
-}
+    '''}
     golden_parsed_output_1 = {
-        'vrf':{
-            'default':{
+        'vrf': {
+            'default': {
                 'address_family': {
                     'ipv4': {
-                        'table_id': '0xe0000000',
                         'safi': 'unicast',
+                        'table_id': '0xe0000000',
                         'routes': {
                             '10.4.1.1/32': {
                                 'route': '10.4.1.1/32',
                                 'next_hop': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/0/0/3': {
-                                            'active': True,
                                             'outgoing_interface': 'GigabitEthernet0/0/0/3',
-                                            'install_date': 'Dec  7 21:52:00.853',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.853',
                                             'path_version': 1,
                                             'path_status': '0x21',
-                                            'tag':0,
+                                            'tag': 0,
                                         },
                                         'GigabitEthernet0/0/0/0': {
-                                            'active': True,
                                             'outgoing_interface': 'GigabitEthernet0/0/0/0',
-                                            'install_date': 'Dec  7 21:52:00.733',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.733',
                                             'path_version': 1,
                                             'path_status': '0x21',
                                             'tag': 0,
@@ -90,48 +89,43 @@ class test_show_static_topology_detail(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'active': True,
                                             'next_hop': '10.229.3.3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/2',
-                                            'install_date': 'Dec  7 21:52:00.843',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.843',
                                             'path_version': 1,
                                             'path_status': '0xa1',
                                             'tag': 0,
-
                                         },
                                         2: {
                                             'index': 2,
-                                            'active': False,
                                             'next_hop': '10.229.3.3',
-                                            'configure_date': 'Dec  7 21:47:43.624',
                                             'metrics': 1,
                                             'preference': 3,
+                                            'active': False,
+                                            'path_event': 'Path is configured at Dec  7 21:47:43.624',
                                             'path_version': 0,
                                             'path_status': '0x0',
-
                                         },
                                         3: {
                                             'index': 3,
-                                            'active': False,
                                             'next_hop': '10.2.3.3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/1',
-                                            'configure_date': 'Dec  7 21:47:43.624',
                                             'metrics': 1,
                                             'preference': 17,
-                                            'path_version': 0,
                                             'track': 1,
+                                            'active': False,
+                                            'path_event': 'Path is configured at Dec  7 21:47:43.624',
+                                            'path_version': 0,
                                             'path_status': '0x80',
-
                                         },
                                     },
-
                                 },
                             },
                         },
                     },
-
                 },
             },
         },
@@ -184,59 +178,14 @@ class test_show_static_topology_detail(unittest.TestCase):
       Path version: 1, Path status: 0x21
       Path has best tag: 0
 
-    '''
-    }
+    '''}
     golden_parsed_output_vrf_af = {
         'vrf': {
-            'VRF1': {
-                'address_family': {
-                    'ipv6': {
-                        'table_id': '0xe0800010',
-                        'safi': 'unicast',
-                        'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
-                                'next_hop': {
-                                    'outgoing_interface': {
-                                        'Null0': {
-                                            'active': True,
-                                            'outgoing_interface': 'Null0',
-                                            'install_date': 'Dec  7 21:51:47.424',
-                                            'metrics': 1234,
-                                            'preference': 99,
-                                            'path_version': 1,
-                                            'path_status': '0x21',
-                                            'tag': 0,
-                                        },
-                                    },
-                                },
-                            },
-                            '2001:2:2:2::2/128': {
-                                'route': '2001:2:2:2::2/128',
-                                'next_hop': {
-                                    'outgoing_interface': {
-                                        'Null0': {
-                                            'active': True,
-                                            'outgoing_interface': 'Null0',
-                                            'install_date': 'Dec  7 21:51:47.424',
-                                            'metrics': 3456,
-                                            'preference': 101,
-                                            'path_version': 1,
-                                            'path_status': '0x21',
-                                            'tag': 0,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
             'default': {
                 'address_family': {
                     'ipv6': {
-                        'table_id': '0xe0800000',
                         'safi': 'unicast',
+                        'table_id': '0xe0800000',
                         'routes': {
                             '2001:1:1:1::1/128': {
                                 'route': '2001:1:1:1::1/128',
@@ -244,24 +193,24 @@ class test_show_static_topology_detail(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'active': True,
                                             'next_hop': '2001:10:1:2::1',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/3',
-                                            'install_date': 'Dec  7 21:52:00.843',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.843',
                                             'path_version': 1,
                                             'path_status': '0xa1',
                                             'tag': 0,
                                         },
                                         2: {
                                             'index': 2,
-                                            'active': True,
                                             'next_hop': '2001:20:1:2::1',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/0',
-                                            'install_date': 'Dec  7 21:52:00.733',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.733',
                                             'path_version': 1,
                                             'path_status': '0xa1',
                                             'tag': 0,
@@ -275,35 +224,35 @@ class test_show_static_topology_detail(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'active': True,
                                             'next_hop': '2001:20:2:3::3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/2',
-                                            'install_date': 'Dec  7 21:52:00.763',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.763',
                                             'path_version': 1,
                                             'path_status': '0xa1',
                                             'tag': 0,
                                         },
                                         2: {
                                             'index': 2,
-                                            'active': True,
                                             'next_hop': '2001:10:2:3::3',
                                             'outgoing_interface': 'GigabitEthernet0/0/0/1',
-                                            'install_date': 'Dec  7 21:52:00.753',
                                             'metrics': 1,
                                             'preference': 1,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:52:00.753',
                                             'path_version': 1,
                                             'path_status': '0xa1',
                                             'tag': 0,
                                         },
                                         3: {
                                             'index': 3,
-                                            'active': False,
                                             'next_hop': '2001:20:2:3::3',
-                                            'configure_date': 'Dec  7 21:47:43.624',
                                             'metrics': 1,
                                             'preference': 3,
+                                            'active': False,
+                                            'path_event': 'Path is configured at Dec  7 21:47:43.624',
                                             'path_version': 0,
                                             'path_status': '0x0',
                                         },
@@ -311,6 +260,135 @@ class test_show_static_topology_detail(unittest.TestCase):
                                 },
                             },
                         },
+                    },
+                },
+            },
+            'VRF1': {
+                'address_family': {
+                    'ipv6': {
+                        'safi': 'unicast',
+                        'table_id': '0xe0800010',
+                        'routes': {
+                            '2001:1:1:1::1/128': {
+                                'route': '2001:1:1:1::1/128',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Null0': {
+                                            'outgoing_interface': 'Null0',
+                                            'metrics': 1234,
+                                            'preference': 99,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:51:47.424',
+                                            'path_version': 1,
+                                            'path_status': '0x21',
+                                            'tag': 0,
+                                        },
+                                    },
+                                },
+                            },
+                            '2001:2:2:2::2/128': {
+                                'route': '2001:2:2:2::2/128',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Null0': {
+                                            'outgoing_interface': 'Null0',
+                                            'metrics': 3456,
+                                            'preference': 101,
+                                            'active': True,
+                                            'path_event': 'Path is installed into RIB at Dec  7 21:51:47.424',
+                                            'path_version': 1,
+                                            'path_status': '0x21',
+                                            'tag': 0,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'safi': 'unicast',
+                        'table_id': '0xe0000000',
+                        'routes': {
+                            '172.16.0.89/32': {
+                                'route': '172.16.0.89/32',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'TenGigE0/0/1/2': {
+                                            'outgoing_interface': 'TenGigE0/0/1/2',
+                                            'metrics': 1,
+                                            'preference': 1,
+                                            'local_label': 'No label',
+                                            'path_event': 'Path is configured at Sep 11 08:29:25.605',
+                                            'path_version': 0,
+                                            'path_status': '0x0',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        show static topology detail
+
+        Wed Oct  9 14:34:58.699 EDT 
+
+        VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+        Last path event occured at Sep 11 08:29:25.605
+        Prefix/Len        Interface          Nexthop  Object    Explicit-path       Metrics         Local-Label   
+        172.16.0.89/32    TenGigE0_0_1_2     None     None      None                [0/4096/1/0/1]	No label    Path is configured at Sep 11 08:29:25.605
+        Path version: 0, Path status: 0x0
+    '''}
+
+    device_output = {'execute.return_value': '''
+VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+  Last path event occured at Apr 30 15:48:19.545
+Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics       
+10.15.20.2/32       Bundle-Ether2.25         10.151.22.21         None                None                [0/0/1/0/1]
+  Path is configured at Apr 30 15:43:47.894
+  Path version: 0, Path status: 0x80
+  Path contains both next-hop and outbound interface.
+    '''}
+
+    device_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.15.20.2/32': {
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'active': False,
+                                            'index': 1,
+                                            'metrics': 1,
+                                            'next_hop': '10.151.22.21',
+                                            'outgoing_interface': 'Bundle-Ether2.25',
+                                            'path_event': 'Path is configured at Apr 30 15:43:47.894',
+                                            'path_status': '0x80',
+                                            'path_version': 0,
+                                            'preference': 1,
+                                        },
+                                    },
+                                },
+                                'route': '10.15.20.2/32',
+                            },
+                        },
+                        'safi': 'unicast',
+                        'table_id': '0xe0000000',
                     },
                 },
             },
@@ -334,8 +412,22 @@ class test_show_static_topology_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_vrf_af)
         obj = ShowStaticTopologyDetail(device=self.device)
-        parsed_output = obj.parse(vrf='all',af='ipv6')
+        parsed_output = obj.parse(vrf='all', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output_vrf_af)
+
+    def test_show_ip_static_route_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowStaticTopologyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowStaticTopologyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.device_parsed_output)
 
 
 if __name__ == '__main__':

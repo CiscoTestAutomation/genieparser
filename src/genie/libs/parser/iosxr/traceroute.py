@@ -1,6 +1,6 @@
 ''' traceroute.py
 
-IOSXE parsers for the following show commands:
+IOSXR parsers for the following show commands:
 
     * traceroute {traceroute} numeric timeout {timeout} probe {probe} ttl {min} {max} source {source}
 

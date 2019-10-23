@@ -2595,7 +2595,7 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
                                                         'maximum_reservable_bandwidth': int,
                                                         'total_priority': int,
                                                         'out_interface_id': int,
-                                                        'affinity_bit': int,
+                                                        'affinity_bit': str,
                                                         'total_extended_admin_group': int,
                                                         'unreserved_bandwidths' : 
                                                             {Any(): 
@@ -2663,7 +2663,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
         p10 = re.compile(r'^Priority +(?P<priority1>(\d+)) *: +(?P<band1>(\d+))'
                             ' *Priority +(?P<priority2>(\d+)) *: +(?P<band2>(\d+))$')
         p11 = re.compile(r'^Out +Interface +ID *: +(?P<out_id>(\d+))$')
-        p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\d+))$')
+        p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\S+))$')
         p13 = re.compile(r'^Extended +Admin +Group *: +(?P<eag>(\d+))$')
         p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]:'
                             ' +(?P<value>(\d+))$')
@@ -2869,9 +2869,10 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Affinity Bit : 0
+            # Affinity Bit : 0x100000
             m = p12.match(line)
             if m:
-                link_dict['affinity_bit'] = int(m.groupdict()['affinity'])
+                link_dict['affinity_bit'] = m.groupdict()['affinity']
                 continue
 
             # Extended Admin Group : 8
@@ -2912,7 +2913,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -2956,7 +2957,10 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
         p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\d+))$')
         p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
-        p17 = re.compile(r'^Number +of +(l|L)inks: +(?P<num>(\d+))$')
+
+        # Number of Links : 1
+        # Number of Links: 3
+        p17 = re.compile(r'^Number +of +(l|L)inks *: +(?P<num>(\d+))$')
         p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
         p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
         p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
@@ -2996,7 +3000,92 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
                             ' +(?P<eag_length>(\d+))$')
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
-            
+        
+        # --regex for opaque-- #
+        # Router Information TLV: Length: 4
+        p38 = re.compile(r'^Router +Information +TLV: +Length: +(?P<length>\d+)$')
+
+        # Capabilities:
+        #   Graceful Restart Helper Capable
+        p39 = re.compile(r'^Graceful +Restart +Helper +Capable$')
+
+        #   Stub Router Capable
+        p40 = re.compile(r'^Stub +Router +Capable$')
+
+        #   All capability bits: 0x60000000
+        p41 = re.compile(r'^All +capability +bits: +(?P<bits>\w+)$')
+
+        # Segment Routing Algorithm TLV: Length: 2
+        p42 = re.compile(r'^Segment +Routing +Algorithm +TLV: +Length: +(?P<length>\d+)$')
+
+        #   Algorithm: 0
+        #   Algorithm: 1
+        p43 = re.compile(r'^Algorithm: +(?P<algo>\d+)$')
+
+        # Segment Routing Range TLV: Length: 12
+        p44 = re.compile(r'^Segment +Routing +Range +TLV: +Length: +(?P<length>\d+)$')
+
+        #   Range Size: 65535
+        p45 = re.compile(r'^Range +Size: +(?P<range_size>\d+)$')
+
+        #     SID sub-TLV: Length 3
+        #     SID sub-TLV: Length: 8
+        p46 = re.compile(r'^(?P<type>[\S\s]+) +sub-TLV: +Length:? +(?P<length>\d+)$')
+
+        #      Label: 16000
+        p47 = re.compile(r'^Label *: +(?P<label>\d+)$')
+
+        # Node MSD TLV: Length: 2
+        p48 = re.compile(r'^Node MSD TLV: +Length: +(?P<length>\d+)$')
+
+        #     Type: 1, Value 10
+        p49 = re.compile(r'^Type: +(?P<type>\d+), +Value +(?P<value>\d+)$')
+
+        # Segment Routing Local Block TLV: Length: 12
+        p50 = re.compile(r'^Segment +Routing +Local +Block +TLV: +Length: +(?P<length>\d+)$')
+
+        # Extended Prefix Range TLV: Length: 24
+        p51 = re.compile(r'^Extended +Prefix +Range +TLV: +Length: +(?P<length>\d+)$')
+
+        #   AF        : 0
+        p52 = re.compile(r'^AF *: +(?P<af>\d+)$')
+
+        #   Prefix    : 10.246.254.0/32
+        p53 = re.compile(r'^Prefix *: +(?P<prefix>\S+)$')
+
+        #   Flags     : 0x0
+        p54 = re.compile(r'^Flags *: +(?P<flags>\S+)$')
+
+        #     MTID      : 0
+        p55 = re.compile(r'^MTID *: +(?P<mt_id>\d+)$')
+
+        #     Algo      : 0
+        p56 = re.compile(r'^Algo *: +(?P<algo>\d+)$')
+
+        #     SID Index : 1028
+        p57 = re.compile(r'^SID +Index *: +(?P<sid_index>\d+)$')
+
+        # Extended Link TLV: Length: 76
+        p58 = re.compile(r'^Extended +Link +TLV: +Length: +(?P<length>\d+)$')
+
+        #   Link-type : 1
+        p59 = re.compile(r'^Link-type *: +(?P<link_type>\d+)$')
+
+        #   Link Data : 172.16.0.91
+        p60 = re.compile(r'^Link +Data *: +(?P<link_data>\S+)$')
+
+        #     Weight    : 0
+        p61 = re.compile(r'^Weight *: +(?P<weight>\d+)$')
+
+        #     Local Interface ID: 78
+        p62 = re.compile(r'^Local +Interface +ID *: +(?P<local_id>\d+)$')
+
+        #     Remote Interface ID: 76
+        p63 = re.compile(r'^Remote +Interface +ID *: +(?P<remote_id>\d+)$')
+
+        #     Neighbor Address: 172.16.0.90
+        p64 = re.compile(r'^Neighbor +Address *: +(?P<nbr_addr>\S+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -3011,21 +3100,11 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     vrf = str(m.groupdict()['vrf'])
                 else:
                     vrf = 'default'
-                if 'vrf' not in ret_dict:
-                    ret_dict['vrf'] = {}
-                if vrf not in ret_dict['vrf']:
-                    ret_dict['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['vrf'][vrf]:
-                    ret_dict['vrf'][vrf]['address_family'] = {}
-                if af not in ret_dict['vrf'][vrf]['address_family']:
-                    ret_dict['vrf'][vrf]['address_family'][af] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
-                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance] = {}
-                    continue
+
+                inst_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                            setdefault('address_family', {}).setdefault(af, {}).\
+                            setdefault('instance', {}).setdefault(instance, {})
+                continue
 
             # Router Link States (Area 0)
             # Net Link States (Area 1)
@@ -3048,36 +3127,12 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     area = '0.0.0.0'
 
                 # Create dict structure
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area] = {}
-                if 'database' not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['database'] = {}
-                if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]['database']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['database']['lsa_types'] = {}
-                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]['database']\
-                        ['lsa_types']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['database']['lsa_types']\
-                        [lsa_type] = {}
-
-                # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]['database']\
-                            ['lsa_types'][lsa_type]
+                type_dict = inst_dict.setdefault('areas', {}).setdefault(area, {}).\
+                            setdefault('database', {}).setdefault('lsa_types', {}).\
+                            setdefault(lsa_type, {})
 
                 # Set lsa_type
-                sub_dict['lsa_type'] = lsa_type
+                type_dict['lsa_type'] = lsa_type
                 continue
 
             # Routing Bit Set on this LSA
@@ -3122,44 +3177,30 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 lsa = lsa_id + ' ' + adv_router
                 
                 # Reset counters for this lsa
-                link_tlv_counter = 0
+                tlv_idx = 0
                 unknown_tlvs_counter = 0
 
                 # Create schema structure
-                if 'lsas' not in sub_dict:
-                    sub_dict['lsas'] = {}
-                if lsa not in sub_dict['lsas']:
-                    sub_dict['lsas'][lsa] = {}
+                lsa_dict = type_dict.setdefault('lsas', {}).setdefault(lsa, {})
                 
                 # Set keys under 'lsa'
-                sub_dict['lsas'][lsa]['adv_router'] = adv_router
+                lsa_dict['adv_router'] = adv_router
                 try:
-                    sub_dict['lsas'][lsa]['lsa_id'] = lsa_id
+                    lsa_dict['lsa_id'] = lsa_id
                 except Exception:
                     pass
 
+                # Set header dict
+                header_dict = lsa_dict.setdefault('ospfv2', {}).setdefault('header', {})
+
                 # Set db_dict
-                if 'ospfv2' not in sub_dict['lsas'][lsa]:
-                    sub_dict['lsas'][lsa]['ospfv2'] = {}
-                if 'body' not in sub_dict['lsas'][lsa]['ospfv2']:
-                    sub_dict['lsas'][lsa]['ospfv2']['body'] = {}
-                if db_type not in sub_dict['lsas'][lsa]['ospfv2']['body']:
-                    sub_dict['lsas'][lsa]['ospfv2']['body'][db_type] = {}
-                db_dict = sub_dict['lsas'][lsa]['ospfv2']['body'][db_type]
+                db_dict = lsa_dict.setdefault('ospfv2', {}).setdefault('body', {}).\
+                                   setdefault(db_type, {})
 
                 # Create 'topologies' sub_dict if 'summary' or 'database'
                 if db_type in ['summary', 'external']:
-                    if 'topologies' not in db_dict:
-                        db_dict['topologies'] = {}
-                    if mt_id not in db_dict['topologies']:
-                        db_dict['topologies'][mt_id] = {}
-                    db_topo_dict = db_dict['topologies'][mt_id]
+                    db_topo_dict = db_dict.setdefault('topologies', {}).setdefault(mt_id, {})
                     db_topo_dict['mt_id'] = mt_id
-
-                # Set header dict
-                if 'header' not in sub_dict['lsas'][lsa]['ospfv2']:
-                    sub_dict['lsas'][lsa]['ospfv2']['header'] = {}
-                header_dict = sub_dict['lsas'][lsa]['ospfv2']['header']
 
                 # Set previously parsed values
                 try:
@@ -3292,7 +3333,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['attached_routers'][attached_router] = {}
                     continue
 
-            # Number of links: 3
             # Number of Links: 3
             m = p17.match(line)
             if m:
@@ -3449,177 +3489,363 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             # Link connected to Broadcast network
             m = p27.match(line)
             if m:
-                link_tlv_counter += 1
-                if 'link_tlvs' not in db_dict:
-                    db_dict['link_tlvs'] = {}
-                if link_tlv_counter not in db_dict['link_tlvs']:
-                    db_dict['link_tlvs'][link_tlv_counter] = {}
+                tlv_idx = len(db_dict.get('link_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('link_tlvs', {}).setdefault(tlv_idx, {})
 
                 # Set link type
-                opaque_link = str(m.groupdict()['link']).lower()
+                opaque_link = m.groupdict()['link'].lower()
                 if opaque_link == 'broadcast network':
                     opaque_link_type = 2
                 else:
                     opaque_link_type = 1
-                db_dict['link_tlvs'][link_tlv_counter]\
-                    ['link_type'] = opaque_link_type
-                db_dict['link_tlvs'][link_tlv_counter]\
-                    ['link_name'] = opaque_link
+                tlv_dict['link_type'] = opaque_link_type
+                tlv_dict['link_name'] = opaque_link
                 
                 # Set remote_if_ipv4_addrs (if needed)
                 if opaque_link_type == 2:
-                    if 'remote_if_ipv4_addrs' not in db_dict['link_tlvs']\
-                            [link_tlv_counter]:
-                        db_dict['link_tlvs'][link_tlv_counter]\
-                            ['remote_if_ipv4_addrs'] = {}
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['remote_if_ipv4_addrs']['0.0.0.0'] = {}
+                    if_dict = tlv_dict.setdefault('remote_if_ipv4_addrs', {})
+                    if_dict['remote_if_ipv4_addr'] = '0.0.0.0'
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
                 continue
 
             # Link ID : 10.1.4.4
             m = p28.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['link_id'] = \
-                    str(m.groupdict()['id'])
+                tlv_dict['link_id'] = m.groupdict()['id']
                 continue
 
             # Interface Address : 10.1.4.1
             m = p29.match(line)
             if m:
-                addr = str(m.groupdict()['addr'])
-                if 'local_if_ipv4_addrs' not in db_dict['link_tlvs']\
-                        [link_tlv_counter]:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['local_if_ipv4_addrs'] = {}
-                if addr not in db_dict['link_tlvs'][link_tlv_counter]\
-                        ['local_if_ipv4_addrs']:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['local_if_ipv4_addrs'][addr] = {}
-                    continue
+                addr = m.groupdict()['addr']
+                tlv_dict.setdefault('local_if_ipv4_addrs', {}).setdefault(addr, {})
+                continue
 
             # Admin Metric : 1
             m = p30.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['te_metric'] = \
-                    int(m.groupdict()['te_metric'])
+                tlv_dict['te_metric'] = int(m.groupdict()['te_metric'])
                 continue
 
             # Maximum Bandwidth : 125000000
             # Maximum bandwidth : 125000000
             m = p31.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['max_bandwidth'] = \
-                    int(m.groupdict()['max_band'])
+                tlv_dict['max_bandwidth'] = int(m.groupdict()['max_band'])
                 continue
 
             # Maximum reservable bandwidth : 93750000
             # Maximum reservable bandwidth global: 93750000
             m = p32.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]\
-                    ['max_reservable_bandwidth'] = \
-                    int(m.groupdict()['max_res_band'])
+                tlv_dict['max_reservable_bandwidth'] = int(m.groupdict()['max_res_band'])
                 continue
 
             # Affinity Bit : 0x0
             m = p33.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['admin_group'] = \
-                    str(m.groupdict()['admin_group'])
+                tlv_dict['admin_group'] = m.groupdict()['admin_group']
                 continue
 
             # IGP Metric : 1
             m = p33_1.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['igp_metric'] = \
-                    int(m.groupdict()['igp_metric'])
+                tlv_dict['igp_metric'] = int(m.groupdict()['igp_metric'])
                 continue
 
             # Number of Priority : 8
             m = p33_2.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['total_priority'] = \
-                    int(m.groupdict()['num'])
+                tlv_dict['total_priority'] = int(m.groupdict()['num'])
                 continue
             
             # Priority 0 : 93750000    Priority 1 : 93750000
             m = p34.match(line)
             if m:
-                value1 = str(m.groupdict()['num1']) + ' ' + \
-                         str(m.groupdict()['band1'])
-                value2 = str(m.groupdict()['num2']) + ' ' + \
-                         str(m.groupdict()['band2'])
-                if 'unreserved_bandwidths' not in db_dict['link_tlvs']\
-                        [link_tlv_counter]:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'] = {}
-                if value1 not in db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths']:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value1] = {}
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value1]['priority'] = \
-                        int(m.groupdict()['num1'])
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value1]\
-                        ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
-                if value2 not in db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths']:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value2] = {}
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value2]['priority'] = \
-                            int(m.groupdict()['num2'])
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['unreserved_bandwidths'][value2]\
-                        ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
-                    continue
+                value1 = m.groupdict()['num1'] + ' ' + m.groupdict()['band1']
+                value2 = m.groupdict()['num2'] + ' ' + m.groupdict()['band2']
+                unres_dict = tlv_dict.setdefault('unreserved_bandwidths', {})
+
+                v1_dict = unres_dict.setdefault(value1, {})
+                v1_dict['priority'] = int(m.groupdict()['num1'])
+                v1_dict['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+
+                v2_dict = unres_dict.setdefault(value2, {})
+                v2_dict['priority'] = int(m.groupdict()['num2'])
+                v2_dict['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+                continue
 
             # Unknown Sub-TLV   :  Type = 32770, Length = 4 Value = 00 00 00 01
             m = p35.match(line)
             if m:
                 unknown_tlvs_counter += 1
-                if 'unknown_tlvs' not in db_dict['link_tlvs'][link_tlv_counter]:
-                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs'] = {}
-                if unknown_tlvs_counter not in db_dict['link_tlvs']\
-                        [link_tlv_counter]['unknown_tlvs']:
-                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                        [unknown_tlvs_counter] = {}
-                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                    [unknown_tlvs_counter]['type'] = int(m.groupdict()['type'])
-                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                    [unknown_tlvs_counter]['length'] = int(m.groupdict()['length'])
-                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                    [unknown_tlvs_counter]['value'] = str(m.groupdict()['value'])
+                unknown_dict = tlv_dict.setdefault('unknown_tlvs', {}).\
+                                        setdefault(unknown_tlvs_counter, {})
+
+                unknown_dict['type'] = int(m.groupdict()['type'])
+                unknown_dict['length'] = int(m.groupdict()['length'])
+                unknown_dict['value'] = m.groupdict()['value']
                 continue
 
             # Extended Administrative Group : Length: 8
             m = p36.match(line)
             if m:
-                if 'extended_admin_group' not in db_dict['link_tlvs']\
-                        [link_tlv_counter]:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['extended_admin_group'] = {}
-                db_dict['link_tlvs'][link_tlv_counter]['extended_admin_group']\
-                    ['length'] = int(m.groupdict()['eag_length'])
+                ext_dict = tlv_dict.setdefault('extended_admin_group', {})
+                ext_dict['length'] = int(m.groupdict()['eag_length'])
                 continue
 
             # EAG[0]: 0
             m = p37.match(line)
             if m:
                 group_num = int(m.groupdict()['group_num'])
-                if 'groups' not in db_dict['link_tlvs'][link_tlv_counter]\
-                        ['extended_admin_group']:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['extended_admin_group']['groups'] = {}
-                if group_num not in db_dict['link_tlvs'][link_tlv_counter]\
-                    ['extended_admin_group']['groups']:
-                    db_dict['link_tlvs'][link_tlv_counter]\
-                        ['extended_admin_group']['groups'][group_num] = {}
-                db_dict['link_tlvs'][link_tlv_counter]['extended_admin_group']\
-                    ['groups'][group_num]['value'] = int(m.groupdict()['val'])
+                gr_dict = ext_dict.setdefault('groups', {}).setdefault(group_num, {})
+                gr_dict['value'] = int(m.groupdict()['val'])
                 continue
 
+            # Router Information TLV: Length: 4
+            m = p38.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('router_capabilities_tlv', {})) + 1
+                tlv_dict = db_dict.setdefault('router_capabilities_tlv', {}).\
+                                   setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            # Capabilities:
+            #   Graceful Restart Helper Capable
+            m = p39.match(line)
+            if m:
+                info_dict = tlv_dict.setdefault('information_capabilities', {})
+                info_dict['graceful_restart_helper'] = True
+                continue
+
+            #   Stub Router Capable
+            m = p40.match(line)
+            if m:
+                info_dict = tlv_dict.setdefault('information_capabilities', {})
+                info_dict['stub_router'] = True
+                continue
+
+            #   All capability bits: 0x60000000
+            m = p41.match(line)
+            if m:
+                info_dict = tlv_dict.setdefault('information_capabilities', {})
+                info_dict['capability_bits'] = m.groupdict()['bits']
+                continue
+
+            # Segment Routing Algorithm TLV: Length: 2
+            m = p42.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('sr_algorithm_tlv', {})) + 1
+                tlv_dict = db_dict.setdefault('sr_algorithm_tlv', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            #   Algorithm: 0
+            #   Algorithm: 1
+            m = p43.match(line)
+            if m:
+                algo = tlv_dict.setdefault('algorithm', {})
+                algo.update({m.groupdict()['algo']: True})
+                continue
+
+            # Segment Routing Range TLV: Length: 12
+            m = p44.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('sid_range_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('sid_range_tlvs', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+                tlv_dict['tlv_type'] = 'Segment Routing Range'
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            #   Range Size: 65535
+            m = p45.match(line)
+            if m:
+                tlv_dict['range_size'] = int(m.groupdict()['range_size'])
+                continue
+
+            #     SID sub-TLV: Length 3
+            #     SID sub-TLV: Length: 8
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                sub_tlv_idx += 1
+                sub_tlv_dict = tlv_dict.setdefault('sub_tlvs', {}).setdefault(sub_tlv_idx, {})
+
+                is_sub_tlv = True
+                sub_tlv_dict['length'] = int(group['length'])
+                sub_tlv_dict['type'] = group['type']
+                continue
+
+            #      Label: 16000
+            m = p47.match(line)
+            if m:
+                if is_sub_tlv:
+                    tmp = sub_tlv_dict
+                else:
+                    tmp = tlv_dict
+
+                tmp['label'] = int(m.groupdict()['label'])
+                continue
+
+            # Node MSD TLV: Length: 2
+            m = p48.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('node_msd_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('node_msd_tlvs', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            #     Type: 1, Value 10
+            m = p49.match(line)
+            if m:
+                # check if is sub_tlv
+                if is_sub_tlv:
+                    tmp = sub_tlv_dict
+                else:
+                    tmp = tlv_dict
+
+                tmp['node_type'] = int(m.groupdict()['type'])
+                tmp['value'] = int(m.groupdict()['value'])
+                continue
+
+            # Segment Routing Local Block TLV: Length: 12
+            m = p50.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('local_block_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('local_block_tlvs', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            # Extended Prefix Range TLV: Length: 24
+            m = p51.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('extended_prefix_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('extended_prefix_tlvs', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            #   AF   : 0
+            m = p52.match(line)
+            if m:
+                tlv_dict['af'] = int(m.groupdict()['af'])
+                continue
+
+            #   Prefix    : 10.246.254.0/32
+            m = p53.match(line)
+            if m:
+                tlv_dict['prefix'] = m.groupdict()['prefix']
+                continue
+
+            #   Flags     : 0x0
+            m = p54.match(line)
+            if m:
+                # check if is sub_tlv
+                if is_sub_tlv:
+                    tmp = sub_tlv_dict
+                else:
+                    tmp = tlv_dict
+
+                tmp['flags'] = m.groupdict()['flags']
+                continue
+
+            #     MTID      : 0
+            m = p55.match(line)
+            if m:
+                sub_tlv_dict['mt_id'] = m.groupdict()['mt_id']
+                continue
+
+            #     Algo      : 0
+            m = p56.match(line)
+            if m:
+                # check if is sub_tlv
+                sub_tlv_dict['algo'] = int(m.groupdict()['algo'])
+                continue
+
+            #     SID Index : 1028
+            m = p57.match(line)
+            if m:
+                sub_tlv_dict['sid'] = int(m.groupdict()['sid_index'])
+                continue
+
+            # Extended Link TLV: Length: 76
+            m = p58.match(line)
+            if m:
+                tlv_idx = len(db_dict.get('extended_link_tlvs', {})) + 1
+                tlv_dict = db_dict.setdefault('extended_link_tlvs', {}).setdefault(tlv_idx, {})
+                tlv_dict['length'] = int(m.groupdict()['length'])
+
+                # Reset index for sub_tlv
+                is_sub_tlv = False
+                sub_tlv_idx = 0
+                continue
+
+            #   Link-type : 1
+            m = p59.match(line)
+            if m:
+                tlv_dict['link_type'] = int(m.groupdict()['link_type'])
+                continue
+
+            #   Link Data : 172.16.0.91
+            m = p60.match(line)
+            if m:
+                tlv_dict['link_data'] = m.groupdict()['link_data']
+                continue
+
+            #     Weight    : 0
+            m = p61.match(line)
+            if m:
+                sub_tlv_dict['weight'] = int(m.groupdict()['weight'])
+                continue
+
+            #     Local Interface ID: 78
+            m = p62.match(line)
+            if m:
+                sub_tlv_dict['local_interface_id'] = int(m.groupdict()['local_id'])
+                continue
+
+            #     Remote Interface ID: 76
+            m = p63.match(line)
+            if m:
+                sub_tlv_dict['remote_interface_id'] = int(m.groupdict()['remote_id'])
+                continue
+
+            #     Neighbor Address: 172.16.0.90
+            m = p64.match(line)
+            if m:
+                if is_sub_tlv:
+                    tmp = sub_tlv_dict
+                else:
+                    tmp = tlv_dict
+                tmp['neighbor_address'] = m.groupdict()['nbr_addr']
+                continue
 
         return ret_dict
 
@@ -4024,22 +4250,26 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                     Optional('mpls_te_router_id'): str,
                                                                     Optional('num_links'): int},
                                                                 'body': 
-                                                                    {'opaque': 
-                                                                        {Optional('link_tlvs'): 
+                                                                    {'opaque': {
+                                                                        Optional('num_of_links'): int,
+                                                                        Optional('link_tlvs'): 
                                                                             {Any(): 
                                                                                 {'link_type': int,
                                                                                 'link_name': str,
                                                                                 'link_id': str,
                                                                                 'te_metric': int,
                                                                                 'max_bandwidth': int,
-                                                                                'max_reservable_bandwidth': int,
-                                                                                'admin_group': str,
+                                                                                Optional('max_reservable_bandwidth'): int,
+                                                                                Optional('admin_group'): str,
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
+                                                                                Optional('neighbor_address'): str,
                                                                                 Optional('local_if_ipv4_addrs'): 
                                                                                     {Any(): {}},
                                                                                 Optional('remote_if_ipv4_addrs'): 
-                                                                                    {Any(): {}},
+                                                                                    {
+                                                                                        Optional('remote_if_ipv4_addr'): Or(str, {})
+                                                                                    },
                                                                                 Optional('unreserved_bandwidths'): 
                                                                                     {Any(): 
                                                                                         {'priority': int,
@@ -4060,6 +4290,99 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                                     },
                                                                                 },
                                                                             },
+                                                                        Optional('extended_link_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'link_type': int,
+                                                                                'link_id': str,
+                                                                                'link_data': str,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): str,
+                                                                                        Optional('weight'): int,
+                                                                                        Optional('label'): int,
+                                                                                        Optional('local_interface_id'): int,
+                                                                                        Optional('remote_interface_id'): int,
+                                                                                        Optional('neighbor_address'): str,
+                                                                                        Optional('node_type'): int,
+                                                                                        Optional('value'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('extended_prefix_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('af'): int,
+                                                                                Optional('prefix'): str,
+                                                                                Optional('range_size'): int,
+                                                                                Optional('flags'): str,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): str,
+                                                                                        Optional('algo'): int,
+                                                                                        Optional('sid'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('router_capabilities_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('information_capabilities'): {
+                                                                                    Optional('graceful_restart_helper'): bool,
+                                                                                    Optional('stub_router'): bool,
+                                                                                    Optional('capability_bits'): str,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('sr_algorithm_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('algorithm'): {
+                                                                                    Any(): bool,
+                                                                                }
+                                                                            },
+                                                                        },
+                                                                        Optional('sid_range_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'tlv_type': str,
+                                                                                'range_size': int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('label'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('node_msd_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('node_type'): int,
+                                                                                Optional('value'): int,
+                                                                            },
+                                                                        },
+                                                                        Optional('local_block_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('range_size'): int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('label'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
                                                                         },
                                                                     },
                                                                 },
@@ -4076,7 +4399,8 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # =============================================================

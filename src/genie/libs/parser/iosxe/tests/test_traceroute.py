@@ -285,7 +285,7 @@ class TestTraceroute(unittest.TestCase):
                     '1': {
                         'paths': {
                             1: {
-                                'address': '27.86.198.29',
+                                'address': '10.19.198.29',
                                 'probe_msec': ['2', '2', '2'],
                                 'label_info': {
                                     'MPLS': {
@@ -299,7 +299,7 @@ class TestTraceroute(unittest.TestCase):
                     '2': {
                         'paths': {
                             1: {
-                                'address': '106.187.14.129',
+                                'address': '10.169.14.129',
                                 'probe_msec': ['3', '1', '1'],
                                 'label_info': {
                                     'MPLS': {
@@ -313,7 +313,7 @@ class TestTraceroute(unittest.TestCase):
                     '3': {
                         'paths': {
                             1: {
-                                'address': '106.187.14.34',
+                                'address': '10.169.14.34',
                                 'probe_msec': ['3', '1', '2'],
                                 'label_info': {
                                     'MPLS': {
@@ -342,16 +342,16 @@ class TestTraceroute(unittest.TestCase):
         Type escape sequence to abort.
         Tracing the route to 192.168.1.1
         VRF info: (vrf in name/id, vrf out name/id)
-        1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
-        2 106.187.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
-        3 106.187.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
+        1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+        2 10.169.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
+        3 10.169.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
         4 192.168.1.1 2 msec *  2 msec
     '''
 
     golden_parsed_output6 = {
         'traceroute': {
-            '22.22.22.22': {
-                'address': '22.22.22.22',
+            '10.151.22.22': {
+                'address': '10.151.22.22',
                 'hops': {
                     '1': {
                         'paths': {
@@ -381,9 +381,9 @@ class TestTraceroute(unittest.TestCase):
     }
 
     golden_output6 = '''
-        traceroute 22.22.22.22
+        traceroute 10.151.22.22
         Type escape sequence to abort.
-        Tracing the route to 22.22.22.22
+        Tracing the route to 10.151.22.22
         VRF info: (vrf in name/id, vrf out name/id)
         1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
         2 10.0.0.18 351 msec *  8 msec

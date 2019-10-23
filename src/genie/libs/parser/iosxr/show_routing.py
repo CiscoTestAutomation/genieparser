@@ -5,8 +5,8 @@ show_route.py
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional
+    Any, \
+    Optional
 
 
 # ====================================================
@@ -63,25 +63,24 @@ class ShowRouteIpv4Schema(MetaParser):
        M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
     """
     source_protocol_dict = {
-        'ospf' : ['O','IA','N1','N2','E1','E2'],
-        'odr' : ['o'],
-        'isis' : ['i','su','L1','L2','ia'],
-        'eigrp' : ['D','EX'],
-        'static' : ['S'],
-        'egp' : ['E'],
-        'dagr' : ['G'],
-        'rpl' : ['r'],
-        'mobile router' : ['M'],
-        'lisp' : ['I', 'l'],
-        'nhrp' : ['H'],
-        'local' : ['L'],
-        'connected' : ['C'],
-        'bgp' : ['B'],
-        'rip' : ['R'], 
-        'per-user static route' : ['U'],
-        'rip' : ['R'],
-        'access/subscriber' : ['A'],
-        'traffic engineering' : ['t'],
+        'ospf': ['O', 'IA', 'N1', 'N2', 'E1', 'E2'],
+        'odr': ['o'],
+        'isis': ['i', 'su', 'L1', 'L2', 'ia'],
+        'eigrp': ['D', 'EX'],
+        'static': ['S'],
+        'egp': ['E'],
+        'dagr': ['G'],
+        'rpl': ['r'],
+        'mobile router': ['M'],
+        'lisp': ['I', 'l'],
+        'nhrp': ['H'],
+        'local': ['L'],
+        'connected': ['C'],
+        'bgp': ['B'],
+        'rip': ['R'],
+        'per-user static route': ['U'],
+        'access/subscriber': ['A'],
+        'traffic engineering': ['t'],
     }
 
 
@@ -92,10 +91,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv4
        show route vrf <vrf> ipv4"""
-    cli_command = ['show route vrf {vrf} ipv4','show route ipv4']
+    cli_command = ['show route vrf {vrf} ipv4', 'show route ipv4']
     exclude = ['updated']
 
-    def cli(self, vrf="",output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -116,7 +115,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # VRF: VRF501
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
 
-        # i L2 67.70.219.32/32 [115/100030] via 1.1.1.1, 1d06h, HundredGigE0/0/1/1 (!)
+        # i L2 10.154.219.32/32 [115/100030] via 10.4.1.1, 1d06h, HundredGigE0/0/1/1 (!)
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
         # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
         # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
@@ -126,21 +125,20 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # O E1 2001:db8::/39
         # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
         # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
-        p2 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>'
-                         '[\w\*\(\>\)\!]+)? +(?P<network>\S+\.\S+\.\S+\.\S+)'
-                         '( +is +directly +connected)?( +\[(?P<route_preference>[\d\/]+)\]?'
-                         '( +via )?(?P<next_hop>[\w\/\:\.]+)?)?\s*'
-                         '(:?\(nexthop +in +vrf +default\))?,'
-                         '( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?( +(?P<code3>[\w\*\(\>\)\!]+))?$')
+        p2 = re.compile(r'^(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+\.\S+\.\S+\.\S+)'
+                        '( +is +directly +connected)?( +\[(?P<route_preference>[\d\/]+)\]?'
+                        '( +via )?(?P<next_hop>[\w\/\:\.]+)?)?\s*'
+                        '(:?\(nexthop +in +vrf +default\))?,'
+                        '( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
         #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
-        p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
-                         ' +via +(?P<next_hop>[\d\.]+)?,?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+        p3 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\]'
+                        ' +via +(?P<next_hop>[\d\.]+)?,?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
 
         #       is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-        p4 = re.compile(r'^\s*is +directly +connected,'
-                         '( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
-        
+        p4 = re.compile(r'^is +directly +connected,'
+                        '( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+
         for line in out.splitlines():
             line = line.strip()
             next_hop = interface = updated = metrics = route_preference = ""
@@ -151,7 +149,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # i L2 67.70.219.32/32 [115/100030] via 1.1.1.1, 1d06h, HundredGigE0/0/1/1 (!)
+            # i L2 10.154.219.32/32 [115/100030] via 10.4.1.1, 1d06h, HundredGigE0/0/1/1 (!)
             # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
             # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
             # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
@@ -171,8 +169,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 updated = ""
                 if group['code1']:
                     source_protocol_codes = group['code1'].strip()
-                    for key,val in super().source_protocol_dict.items():
-                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                    for key, val in super().source_protocol_dict.items():
+                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)', source_protocol_codes)[0].strip()
                         if source_protocol_replaced in val:
                             source_protocol = key
 
@@ -242,13 +240,13 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                         if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
                                 ['routes'][route]['next_hop']:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                                 ['next_hop']['outgoing_interface'] = {}
 
                         if m.groupdict()['interface'] and interface not in \
-                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
-                                ['next_hop']['outgoing_interface']:
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]\
+                                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                        ['next_hop']['outgoing_interface']:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                                 ['next_hop']['outgoing_interface'][interface] = {}
 
                         if interface:
@@ -259,10 +257,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                                 ['next_hop']['outgoing_interface'][interface]['updated'] = updated
 
                     else:
-                        if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
+                        if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                            'next_hop']:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
                                 'next_hop_list'] = {}
-
 
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index] = {}
@@ -285,6 +283,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
             #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
             m = p3.match(line)
+
             if m:
                 updated = ""
                 routepreference = m.groupdict()['route_preference']
@@ -293,6 +292,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     metrics = routepreference.split('/')[1]
 
                 next_hop = m.groupdict()['next_hop']
+
                 index += 1
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
@@ -331,8 +331,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'] = {}
 
-                    if m.groupdict()['interface'] and interface not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface']:
+                    if m.groupdict()['interface'] and interface not in \
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                    ['next_hop']['outgoing_interface']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface] = {}
 
@@ -343,7 +344,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                             ['next_hop']['outgoing_interface'][interface]['updated'] = updated
 
                 else:
-                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
+                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
                             'next_hop_list'] = {}
 
@@ -377,7 +379,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 if m.groupdict()['date']:
                     updated = m.groupdict()['date']
-
 
                 if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
                         ['routes'][route]['next_hop']:
@@ -428,7 +429,34 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         route = ""
 
         result_dict = {}
-        for line in out.splitlines():
+
+        split_output_list = []
+        old_output_list = out.splitlines()
+
+        # check if the output contains pattern:
+        #   S    2001:1:1:1::1/128
+        #       [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
+        pattern_0 = re.compile(r'.*\n\s+\[')
+
+        #   L    2001:32:32:32::32/128 is directly connected,
+        #       01:52:24, Loopback3
+        pattern_1 = re.compile(r'.*completed,\n')
+
+        match_0 = pattern_0.search(out)
+        match_1 = pattern_1.search(out)
+
+        if match_0 or match_1:
+            split_output_list = old_output_list
+        else:
+            # B    182.18.246.0/24 [200/0] via 67.70.219.128, 1w3d
+            for old in old_output_list:
+                break_pt = old.find('[')
+                new_line1 = old[:break_pt]
+                new_line2 = old[break_pt:]
+                split_output_list.append(new_line1)
+                split_output_list.append(new_line2)
+
+        for line in split_output_list:
             line = line.strip()
 
             # VRF: VRF501
@@ -440,12 +468,12 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
             # S    2001:1:1:1::1/128
             # L    2001:2:2:2::2/128 is directly connected,
-            #i L1 2001:23:23:23::23/128
+            # i L1 2001:23:23:23::23/128
             # R*   ::/128 
             # L    ::ffff:192.168.1.1/10
             p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +'
-                '(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
-                '( +is +directly +connected,)?$')
+                            '(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
+                            '( +is +directly +connected,)?$')
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -455,7 +483,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 if group['code1']:
                     source_protocol_codes = group['code1'].strip()
                     for key, val in super().source_protocol_dict.items():
-                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)', source_protocol_codes)[0].strip()
                         if source_protocol_replaced in val:
                             source_protocol = key
 
@@ -544,7 +572,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['route_preference'] = route_preference
 
-
                 if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
                     result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
 
@@ -554,8 +581,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'] = {}
 
-                    if m.groupdict()['interface'] and interface not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface']:
+                    if m.groupdict()['interface'] and interface not in \
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                                    ['next_hop']['outgoing_interface']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface] = {}
 
@@ -567,7 +595,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                             ['next_hop']['outgoing_interface'][interface]['updated'] = updated
 
                 else:
-                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
+                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop']:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
                             'next_hop_list'] = {}
 
@@ -603,7 +632,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
                 if m.groupdict()['date']:
                     updated = m.groupdict()['date']
-
 
                 if 'vrf' not in result_dict:
                     result_dict['vrf'] = {}
@@ -643,7 +671,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 if updated:
                     result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['updated'] = updated
-
 
                 continue
 
