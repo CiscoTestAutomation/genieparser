@@ -29,7 +29,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesCounters, \
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBriefPipeIp,\
-                                        ShowInterfacesStats
+                                        ShowInterfacesStats,\
+                                        ShowInterfacesDescription
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -18607,6 +18608,253 @@ class TestShowInterfacesStats(unittest.TestCase):
         obj = ShowInterfacesStats(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+        
+###################################################
+# unit test for show interfaces description
+####################################################
+
+class TestShowInterfacesDescription(unittest.TestCase):
+    """unit test for show interfaces description """
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+        Interface                      Status         Protocol Description
+        Gi0/0                          up             up       
+        Gi0/1                          up             up       
+        Gi0/2                          up             up       
+        Gi0/2.90                       up             up       
+        Gi0/2.110                      up             up       
+        Gi0/2.115                      up             up       
+        Gi0/2.120                      up             up       
+        Gi0/2.390                      up             up       
+        Gi0/2.410                      up             up       
+        Gi0/2.415                      up             up       
+        Gi0/2.420                      up             up       
+        Gi0/3                          up             up       
+        Gi0/3.90                       up             up       
+        Gi0/3.110                      up             up       
+        Gi0/3.115                      up             up       
+        Gi0/3.120                      up             up       
+        Gi0/3.390                      up             up       
+        Gi0/3.410                      up             up       
+        Gi0/3.415                      up             up       
+        Gi0/3.420                      up             up       
+        Gi1/0                          up             up       
+        Gi1/1                          up             up       
+        Gi1/2                          up             up       
+        Gi1/3                          up             up       
+        Lo0                            up             up       
+        Lo300                          up             up       
+        Po12                           up             up       
+        Po13                           up             up       
+        Tu0                            up             up       Pim Register Tunnel (Encap) for RP 2001:2:2:2::2
+        Tu1                            up             up       Pim Register Tunnel (Encap) for Embedded RP
+        Tu2                            up             up       Pim Register Tunnel (Encap) for RP 2.2.2.2
+        Tu3                            up             up       Pim Register Tunnel (Encap) for RP 2.2.2.2 on VRF VRF1
+        Tu4                            up             up       Pim Register Tunnel (Decap) for RP 1.1.1.1 on VRF VRF1
+        Tu5                            up             up       Pim Register Tunnel (Decap) for RP 1.1.1.1
+        Tu6                            up             up       Pim Register Tunnel (Encap) for RP 1.1.1.1 on VRF VRF1
+        Tu7                            up             up       Pim Register Tunnel (Encap) for RP 1.1.1.1
+    '''}
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Gi0/0": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/1": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.90": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.110": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.115": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.120": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.390": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.410": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.415": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/2.420": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.90": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.110": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.115": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.120": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.390": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.410": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.415": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi0/3.420": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi1/0": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi1/1": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi1/2": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Gi1/3": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Lo0": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Lo300": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Po12": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Po13": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu0": {
+                "description": "Pim Register Tunnel (Encap) for RP 2001:2:2:2::2",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu1": {
+                "description": "Pim Register Tunnel (Encap) for Embedded RP",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu2": {
+                "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu3": {
+                "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2 on VRF VRF1",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu4": {
+                "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1 on VRF VRF1",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu5": {
+                "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu6": {
+                "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1 on VRF VRF1",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Tu7": {
+                "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1",
+                "protocol": "up",
+                "status": "up"
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 

@@ -3110,3 +3110,57 @@ class ShowInterfacesStats(ShowInterfacesStatsSchema):
                 continue
 
         return result_dict
+        
+# ====================================================
+#  parser for show interfaces description
+# ====================================================
+
+class ShowInterfacesDescriptionSchema(MetaParser):
+    """schema for show interfaces description
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'status': str,
+                'protocol': str,
+                Optional('description'): str
+            }
+        }
+    }
+
+class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
+    """parser for show interfaces description
+    """
+
+    cli_command = ['show interfaces description']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+        index = 1
+
+        #Interface                      Status         Protocol Description
+        #Gi0/0                          up             up 
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            #Interface                      Status         Protocol Description
+            #Gi0/0                          up             up 
+            m = p1.match(line)
+            if m and m.groupdict()['protocol'] != 'Protocol':
+                group = m.groupdict()
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
+                intf_dict['status'] = group['status']
+                intf_dict['protocol'] = group['protocol']
+                intf_dict['description'] = str(group['description'])
+                index += 1                
+                continue
+
+        return result_dict

@@ -15,7 +15,8 @@ from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowEthernetTags, \
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBrief,\
-                                        ShowInterfaces
+                                        ShowInterfaces,\
+                                        ShowInterfacesDescription
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -5194,6 +5195,71 @@ class test_show_interfaces(unittest.TestCase):
         obj = ShowInterfaces(device=self.device)
         parsed_output = obj.parse(interface='Bundle-Ether1')
         self.assertEqual(parsed_output,self.golden_interface_parsed_output)
+        
+#############################################################################
+# unitest For show interfaces description
+#############################################################################
+class test_show_interfaces_description(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Et0/0": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Et0/1": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Et0/2": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Et0/3": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Lo0": {
+                "description": "None",
+                "protocol": "up",
+                "status" :"up"
+            },
+            "Vl1": {
+                "description": "None",
+                "protocol": "up",
+                "status": "up"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        Interface Status Protocol Description
+        Et0/0 		up	 up
+        Et0/1 		up   up
+        Et0/2 		up   up
+        Et0/3 		up   up
+        Lo0 		up   up
+        Vl1 		up   up
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
