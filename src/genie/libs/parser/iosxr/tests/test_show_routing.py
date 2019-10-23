@@ -1380,10 +1380,10 @@ VRF: VRF505
     }
 
     device_output = {'execute.return_value': '''
-    7.70.219.128, 2d04h
-    B    182.18.240.0/22 [200/0] via 67.70.219.128, 1w3d
-    B    182.18.244.0/22 [200/0] via 67.70.219.128, 1w3d
-    B    182.18.246.0/24 [200/0] via 67.70.219.128, 1w3d
+    10.64.219.128, 2d04h
+    B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
+    B    172.16.21.0/22 [200/0] via 10.154.219.128, 1w3d
+    B    172.16.16.0/24 [200/0] via 10.154.219.128, 1w3d
     '''}
 
     device_parsed_output = {
@@ -1392,53 +1392,53 @@ VRF: VRF505
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '182.18.240.0/22': {
+                            '172.16.55.0/22': {
                                 'active': True,
                                 'metric': 0,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '67.70.219.128',
+                                            'next_hop': '10.154.219.128',
                                             'updated': '1w3d',
                                         },
                                     },
                                 },
-                                'route': '182.18.240.0/22',
+                                'route': '172.16.55.0/22',
                                 'route_preference': 200,
                                 'source_protocol': 'bgp',
                                 'source_protocol_codes': 'B',
                             },
-                            '182.18.244.0/22': {
+                            '172.16.21.0/22': {
                                 'active': True,
                                 'metric': 0,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '67.70.219.128',
+                                            'next_hop': '10.154.219.128',
                                             'updated': '1w3d',
                                         },
                                     },
                                 },
-                                'route': '182.18.244.0/22',
+                                'route': '172.16.21.0/22',
                                 'route_preference': 200,
                                 'source_protocol': 'bgp',
                                 'source_protocol_codes': 'B',
                             },
-                            '182.18.246.0/24': {
+                            '172.16.16.0/24': {
                                 'active': True,
                                 'metric': 0,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '67.70.219.128',
+                                            'next_hop': '10.154.219.128',
                                             'updated': '1w3d',
                                         },
                                     },
                                 },
-                                'route': '182.18.246.0/24',
+                                'route': '172.16.16.0/24',
                                 'route_preference': 200,
                                 'source_protocol': 'bgp',
                                 'source_protocol_codes': 'B',
