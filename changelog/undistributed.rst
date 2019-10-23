@@ -644,7 +644,8 @@
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
-    * Update ShowIsisDatabaseDetail to support different outputs
+    * Updated ShowIsisInterface to support different outputs
+    * Updated ShowIsisDatabaseDetail to support different outputs
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
