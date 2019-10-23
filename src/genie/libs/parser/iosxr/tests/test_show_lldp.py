@@ -198,7 +198,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Chassis id: 008a.960b.2481
         Port id: HundredGigE0/0/0/2
         Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
-        System Name: spine2-tatooine.net.bell.ca
+        System Name: system2
         
         System Description: 
          7.0.1, NCS-5500
@@ -218,7 +218,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Chassis id: 008a.960b.0c81
         Port id: HundredGigE0/0/0/2
         Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
-        System Name: spine1-tatooine.net.bell.ca
+        System Name: system1
         
         System Description: 
          7.0.1, NCS-5500
@@ -242,7 +242,7 @@ class TestShowLldpEntry(unittest.TestCase):
                 'port_id': {
                     'HundredGigE0/0/0/2': {
                         'neighbors': {
-                            'spine1-tatooine.net.bell.ca': {
+                            'system1': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -252,10 +252,10 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'chassis_id': '008a.960b.0c81',
                                 'hold_time': 120,
                                 'management_address': '172.18.0.5',
-                                'neighbor_id': 'spine1-tatooine.net.bell.ca',
+                                'neighbor_id': 'system1',
                                 'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
                                 'system_description': '',
-                                'system_name': 'spine1-tatooine.net.bell.ca',
+                                'system_name': 'system1',
                                 'time_remaining': 117,
                             },
                         },
@@ -266,7 +266,7 @@ class TestShowLldpEntry(unittest.TestCase):
                 'port_id': {
                     'HundredGigE0/0/0/2': {
                         'neighbors': {
-                            'spine2-tatooine.net.bell.ca': {
+                            'system2': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -276,10 +276,10 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'chassis_id': '008a.960b.2481',
                                 'hold_time': 120,
                                 'management_address': '172.18.0.7',
-                                'neighbor_id': 'spine2-tatooine.net.bell.ca',
+                                'neighbor_id': 'system2',
                                 'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
                                 'system_description': '',
-                                'system_name': 'spine2-tatooine.net.bell.ca',
+                                'system_name': 'system2',
                                 'time_remaining': 97,
                             },
                         },
@@ -339,7 +339,7 @@ class TestShowLldpEntry(unittest.TestCase):
     Chassis id: c471.fec3.ac00
     Port id: Te0/1/0/3
     Port Description: 10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
-    System Name: tcore3-moria.cove.bell.ca
+    System Name: system3
     
     System Description: 
     Cisco IOS XR Software, Version 6.4.2[Default]
@@ -407,7 +407,7 @@ class TestShowLldpEntry(unittest.TestCase):
                 'port_id': {
                     'TenGigabitEthernet0/1/0/3': {
                         'neighbors': {
-                            'tcore3-moria.cove.bell.ca': {
+                            'system3': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -417,10 +417,10 @@ class TestShowLldpEntry(unittest.TestCase):
                                 'chassis_id': 'c471.fec3.ac00',
                                 'hold_time': 120,
                                 'management_address': '69.69.69.16',
-                                'neighbor_id': 'tcore3-moria.cove.bell.ca',
+                                'neighbor_id': 'system3',
                                 'port_description': '10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
                                 'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
-                                'system_name': 'tcore3-moria.cove.bell.ca',
+                                'system_name': 'system3',
                                 'time_remaining': 108,
                             },
                         },
@@ -722,7 +722,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Chassis id: 008a.960b.2481
         Port id: HundredGigE0/0/0/2
         Port Description: to tor-3 hun 0/0/1/1 via novi2.dev 29-30 
-        System Name: spine2-tatooine.net.bell.ca
+        System Name: system2
         
         System Description: 
          7.0.1, NCS-5500
@@ -742,7 +742,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Chassis id: 008a.960b.0c81
         Port id: HundredGigE0/0/0/2
         Port Description: to tor-3 hun 0/0/1/0 via novi2.dev 31-32 
-        System Name: spine1-tatooine.net.bell.ca
+        System Name: system1
         
         System Description: 
          7.0.1, NCS-5500
@@ -766,7 +766,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                 'port_id': {
                     'HundredGigE0/0/0/2': {
                         'neighbors': {
-                            'spine1-tatooine.net.bell.ca': {
+                            'system1': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -776,10 +776,10 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 'chassis_id': '008a.960b.0c81',
                                 'hold_time': 120,
                                 'management_address': '172.18.0.5',
-                                'neighbor_id': 'spine1-tatooine.net.bell.ca',
+                                'neighbor_id': 'system1',
                                 'port_description': 'to tor-3 hun 0/0/1/0 via novi2.dev 31-32',
                                 'system_description': '',
-                                'system_name': 'spine1-tatooine.net.bell.ca',
+                                'system_name': 'system1',
                                 'time_remaining': 116,
                             },
                         },
@@ -790,7 +790,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                 'port_id': {
                     'HundredGigE0/0/0/2': {
                         'neighbors': {
-                            'spine2-tatooine.net.bell.ca': {
+                            'system2': {
                                 'capabilities': {
                                     'router': {
                                         'enabled': True,
@@ -800,10 +800,10 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 'chassis_id': '008a.960b.2481',
                                 'hold_time': 120,
                                 'management_address': '172.18.0.7',
-                                'neighbor_id': 'spine2-tatooine.net.bell.ca',
+                                'neighbor_id': 'system2',
                                 'port_description': 'to tor-3 hun 0/0/1/1 via novi2.dev 29-30',
                                 'system_description': '',
-                                'system_name': 'spine2-tatooine.net.bell.ca',
+                                'system_name': 'system2',
                                 'time_remaining': 96,
                             },
                         },
