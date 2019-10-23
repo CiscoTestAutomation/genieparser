@@ -91,7 +91,8 @@ class ShowIsisSchema(MetaParser):
 class ShowIsis(ShowIsisSchema):
     """Parser for show isis"""
 
-    cli_command = ['show isis', 'show isis vrf {vrf}']
+    cli_command = ['show isis', 
+                   'show isis vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -568,7 +569,8 @@ class ShowIsisInterfaceSchema(MetaParser):
 class ShowIsisInterface(ShowIsisInterfaceSchema):
     """Parser for show isis interface"""
 
-    cli_command = ['show isis interface', 'show isis interface vrf {vrf}']
+    cli_command = ['show isis interface', 
+                   'show isis interface vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -853,20 +855,22 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                             'max_log_entry': int,
                             'log_entrys': {
                                 Any(): {
-                                    Optional('metric'): str,
-                                    Optional('designated_is'): str,
-                                    Optional('metric_0'): str,
-                                    Optional('metric_2'): str,
-                                    Optional('csnp'): str,
-                                    Optional('next_csnp'): str,
-                                    Optional('hello'): str,
-                                    Optional('multi'): str,
-                                    Optional('next_iih'): str,
-                                    Optional('adjs'): str,
-                                    Optional('adjs_up'): str,
-                                    Optional('pri'): str,
-                                    Optional('circuit_id'): str,
-                                    Optional('since'): str,
+                                    'ago': str,
+                                    'date': str,
+                                    'level': {
+                                        Any(): {
+                                            Optional('instance'): str,
+                                            Optional('init'): str,
+                                            Optional('spf'): str,
+                                            Optional('is_update'): str,
+                                            Optional('urib_update'): str,
+                                            Optional('total'): str,
+                                            Optional('node'): int,
+                                            Optional('count'): int,
+                                            Optional('changed'): int,
+                                            Optional('reason'): str,
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -880,7 +884,8 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
 class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
     """Parser for show isis spf-log detail"""
 
-    cli_command = ['show isis spf-log detail', 'show isis spf-log detail vrf {vrf}']
+    cli_command = ['show isis spf-log detail', 
+                   'show isis spf-log detail vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -915,7 +920,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
         #   Level  Instance    Init      SPF       IS Update  URIB Update  Total
         #   2      0x0001B80B  0.000919  0.000896  0.000157   0.000439     0.002559
-        p6 = re.compile(r'^(?P<level>\d+) +(?P<instance>\S+) +(?P<init>[\d\.]) '
+        p6 = re.compile(r'^(?P<level>\d+) +(?P<instance>\S+) +(?P<init>[\d\.]+) '
                         r'+(?P<spf>\S+) +(?P<is_update>\S+) '
                         r'+(?P<urib_update>\S+) +(?P<total>\S+)$')
 
@@ -927,7 +932,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # IS-IS process: test VRF: default
+            # IS-IS Process: test SPF information VRF: default
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -939,56 +944,61 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                                        setdefault(vrf, {})
                 continue
 
-            # Ethernet1/2.115, Interface status: protocol-up/link-up/admin-up
+            # SPF log for Topology 0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
-                status = group['status']
-                intf_dict = vrf_dict.setdefault('interfaces', {}).setdefault(interface, {})
-                intf_dict.update({'name': interface, 'status': status})
+                topo = group['topology']
+                topo_dict = vrf_dict.setdefault('topology', {}).setdefault(topo, {})
                 continue
 
-            #  IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
+            # Total number of SPF calculations: 225303
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ip = group['ip']
-                subnet = group['subnet']
-                intf_dict.update({'ipv4': ip, 'ipv4_subnet': subnet})
+                total_num = int(group['total_num'])
+                topo_dict.update({'total_num': total_num})
                 continue
 
-            #  2001:3:3:3::3/128 [VALID]
+            # Log entry (current/max): 20/20
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ipv6 = group['ipv6']
-                state = group['state']
-                intf_dict.update({'ipv6': ipv6, 'ipv6_state': state})
+                curr = int(group['curr'])
+                max = int(group['max'])
+                topo_dict.update({'current_log_entry': curr, 'max_log_entry': max})
                 continue
 
-            #  IPv6 subnet:  2001:3:3:3::3/128
+            # Log entry: 01, Ago: 00:01:25, Date: Tue Oct 15 21:52:57 2019
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                subnet = group['subnet']
-                intf_dict.update({'ipv6_subnet': subnet})
+                entry = group['entry']
+                ago = group['ago']
+                date = group['date']
+
+                entry_dict = topo_dict.setdefault('log_entrys', {}).setdefault(entry, {})
+                entry_dict.update({'ago': ago, 'date': date})
                 continue
 
-            #  IPv6 link-local address: fe80::5c00:80ff:fe02:0
+            #   Level  Instance    Init      SPF       IS Update  URIB Update  Total
+            #   2      0x0001B80B  0.000919  0.000896  0.000157   0.000439     0.002559
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                link_address = group['link_address']
-                intf_dict.update({'ipv6_link_address': link_address})
+                level = int(group.pop('level'))
+                lvl_dict = entry_dict.setdefault('level', {}).setdefault(level, {})
+                lvl_dict.update({k: v for k, v in group.items()})
                 continue
 
-            #   Level1
+            #   Level  Node Count   Changed  Reason
+            #   2         4     6         0  New adj R1_xe on Ethernet1/2.115
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                level = 'level_{}'.format(group['level'])
-                level_dict = intf_dict.setdefault('authentication', {}).setdefault(level, {})
+                level = int(group.pop('level'))
+                lvl_dict = entry_dict.setdefault('level', {}).setdefault(level, {})
+                lvl_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items()})
                 continue
 
         return result_dict
@@ -1028,7 +1038,8 @@ class ShowIsisAdjacencySchema(MetaParser):
 class ShowIsisAdjacency(ShowIsisAdjacencySchema):
     """Parser for show isis adjacency"""
 
-    cli_command = ['show isis adjacency', 'show isis adjacency vrf {vrf}']
+    cli_command = ['show isis adjacency', 
+                   'show isis adjacency vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -1051,7 +1062,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         # R2_xr           fa16.3e44.0679  1      UP     00:00:09   Ethernet1/1.115
         # 2222.2222.2222  fa16.3e44.0679  1      INIT   00:00:32   Ethernet1/1.415
         p2 = re.compile(r'^(?P<sysid>\S+) +(?P<snpa>[\w\.]+) +(?P<level>\d+) '
-                         '+(?P<state>\S+) +(?P<hold_time>[\d\:]+) +(?P<interface>\S+)$')
+                        r'+(?P<state>\S+) +(?P<hold_time>[\d\:]+) +(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1117,7 +1128,8 @@ class ShowIsisHostnameSchema(MetaParser):
 class ShowIsisHostname(ShowIsisHostnameSchema):
     """Parser for show isis hostname"""
 
-    cli_command = ['show isis hostname', 'show isis hostname vrf {vrf}']
+    cli_command = ['show isis hostname', 
+                   'show isis hostname vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -1135,13 +1147,13 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
         # IS-IS Process: test dynamic hostname table VRF: default
         p1 = re.compile(r'^IS-IS +Process: +(?P<process_id>\S+) +dynamic '
-                         '+hostname +table +VRF: +(?P<vrf>\S+)$')
+                        r'+hostname +table +VRF: +(?P<vrf>\S+)$')
 
         #  Level  System ID       Dynamic hostname
         #  1      1111.1111.1111  R1_ios
         #  1      3333.3333.3333* R3_nx
         p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\.]+)(?P<star>\*)? '
-                         '+(?P<dynamic_hostname>\S+)$')
+                        r'+(?P<dynamic_hostname>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1177,17 +1189,13 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         return result_dict
 
 
-
-
-
-
 class ShowIsisDatabaseDetailSchema(MetaParser):
     """Schema for show isis database detail"""
 
     schema = {
-        'tag': {
-            Any(): {
-                'level': {
+        Any(): {
+            'vrf': {
+                Any(): {
                     Any(): {
                         Any(): {
                             'lsp_sequence_num': str,

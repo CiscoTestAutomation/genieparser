@@ -11,15 +11,15 @@ from genie.libs.parser.nxos.show_isis import (ShowIsis,
                                               ShowIsisHostname,
                                               ShowIsisAdjacency,
                                               ShowIsisInterface,
-                                            #    ShowIsisDatabaseDetail,
-                                            #    ShowRunSectionIsis,
-                                            #    ShowIsisNeighbors
-                                               )
+                                              ShowIsisSpfLogDetail,
+                                              ShowIsisDatabaseDetail)
 
 
 class TestShowIsis(unittest.TestCase):
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'test': {
@@ -252,7 +252,6 @@ class TestShowIsis(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse(vrf='all')
@@ -260,9 +259,10 @@ class TestShowIsis(unittest.TestCase):
 
 
 class TestShowIsisInterface(unittest.TestCase):
-    device = Device(name='aDevice')
 
+    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'test': {
@@ -673,17 +673,388 @@ class TestShowIsisInterface(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
+class TestShowIsisSpfLogDetail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output = {
+        'test': {
+            'vrf': {
+                'default': {
+                    'topology': {
+                        '0': {
+                            'total_num': 362685,
+                            'current_log_entry': 20,
+                            'max_log_entry': 20,
+                            'log_entrys': {
+                                '01': {
+                                    'ago': '00:01:23',
+                                    'date': 'Tue Oct 22 18:33:26 2019',
+                                    'level': {
+                                        1: {
+                                            'instance': '0x0002C453',
+                                            'init': '0.000728',
+                                            'spf': '0.000813',
+                                            'is_update': '0.000160',
+                                            'urib_update': '0.000520',
+                                            'total': '0.002374',
+                                            'node': 4,
+                                            'count': 6,
+                                            'changed': 0,
+                                            'reason': 'New adj R2_xr on Ethernet1/1.115',
+                                        },
+                                    },
+                                },
+                                '02': {
+                                    'ago': '00:01:18',
+                                    'date': 'Tue Oct 22 18:33:31 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C458',
+                                            'init': '0.000878',
+                                            'spf': '0.000771',
+                                            'is_update': '0.000127',
+                                            'urib_update': '0.000375',
+                                            'total': '0.002283',
+                                            'node': 4,
+                                            'count': 6,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.115',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        '2': {
+                            'total_num': 362754,
+                            'current_log_entry': 4,
+                            'max_log_entry': 4,
+                            'log_entrys': {
+                                '01': {
+                                    'ago': '00:01:20',
+                                    'date': 'Tue Oct 22 18:33:29 2019',
+                                    'level': {
+                                        1: {
+                                            'instance': '0x0002C476',
+                                            'init': '0.000681',
+                                            'spf': '0.001235',
+                                            'is_update': '0.000155',
+                                            'urib_update': '0.000713',
+                                            'total': '0.002985',
+                                            'node': 4,
+                                            'count': 5,
+                                            'changed': 0,
+                                            'reason': 'New adj R2_xr on Ethernet1/1.115',
+                                        },
+                                    },
+                                },
+                                '02': {
+                                    'ago': '00:01:17',
+                                    'date': 'Tue Oct 22 18:33:32 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C47A',
+                                            'init': '0.000891',
+                                            'spf': '0.001380',
+                                            'is_update': '0.000291',
+                                            'urib_update': '0.000530',
+                                            'total': '0.003275',
+                                            'node': 4,
+                                            'count': 6,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.115',
+                                        },
+                                    },
+                                },
+                                '03': {
+                                    'ago': '00:01:12',
+                                    'date': 'Tue Oct 22 18:33:37 2019',
+                                    'level': {
+                                        1: {
+                                            'instance': '0x0002C477',
+                                            'init': '0.001086',
+                                            'spf': '0.000931',
+                                            'is_update': '0.000200',
+                                            'urib_update': '0.001112',
+                                            'total': '0.003581',
+                                            'node': 4,
+                                            'count': 6,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.115',
+                                        },
+                                    },
+                                },
+                                '04': {
+                                    'ago': '00:01:09',
+                                    'date': 'Tue Oct 22 18:33:40 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C47B',
+                                            'init': '0.001284',
+                                            'spf': '0.001047',
+                                            'is_update': '0.000209',
+                                            'urib_update': '0.000336',
+                                            'total': '0.003068',
+                                            'node': 4,
+                                            'count': 6,
+                                            'changed': 0,
+                                            'reason': 'New adj R2_xr on Ethernet1/1.115',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                'VRF1': {
+                    'topology': {
+                        '0': {
+                            'total_num': 361971,
+                            'current_log_entry': 3,
+                            'max_log_entry': 3,
+                            'log_entrys': {
+                                '01': {
+                                    'ago': '00:01:24',
+                                    'date': 'Tue Oct 22 18:33:25 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C2F5',
+                                            'init': '0.000793',
+                                            'spf': '0.000268',
+                                            'is_update': '0.000078',
+                                            'urib_update': '0.000395',
+                                            'total': '0.001709',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                                '02': {
+                                    'ago': '00:01:19',
+                                    'date': 'Tue Oct 22 18:33:30 2019',
+                                    'level': {
+                                        1: {
+                                            'instance': '0x0002C2EC',
+                                            'init': '0.000547',
+                                            'spf': '0.000655',
+                                            'is_update': '0.000099',
+                                            'urib_update': '0.000507',
+                                            'total': '0.001968',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                                '03': {
+                                    'ago': '00:01:15',
+                                    'date': 'Tue Oct 22 18:33:34 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C2F6',
+                                            'init': '0.000728',
+                                            'spf': '0.000200',
+                                            'is_update': '0.000063',
+                                            'urib_update': '0.000298',
+                                            'total': '0.001445',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        '2': {
+                            'total_num': 362019,
+                            'current_log_entry': 3,
+                            'max_log_entry': 3,
+                            'log_entrys': {
+                                '01': {
+                                    'ago': '00:01:25',
+                                    'date': 'Tue Oct 22 18:33:24 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C305',
+                                            'init': '0.000499',
+                                            'spf': '0.000217',
+                                            'is_update': '0.000064',
+                                            'urib_update': '0.000208',
+                                            'total': '0.001116',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                                '02': {
+                                    'ago': '00:01:21',
+                                    'date': 'Tue Oct 22 18:33:29 2019',
+                                    'level': {
+                                        1: {
+                                            'instance': '0x0002C30C',
+                                            'init': '0.001635',
+                                            'spf': '0.000398',
+                                            'is_update': '0.000083',
+                                            'urib_update': '0.000547',
+                                            'total': '0.002902',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                                '03': {
+                                    'ago': '00:01:16',
+                                    'date': 'Tue Oct 22 18:33:33 2019',
+                                    'level': {
+                                        2: {
+                                            'instance': '0x0002C306',
+                                            'init': '0.000615',
+                                            'spf': '0.000236',
+                                            'is_update': '0.000064',
+                                            'urib_update': '0.000219',
+                                            'total': '0.001268',
+                                            'node': 2,
+                                            'count': 3,
+                                            'changed': 0,
+                                            'reason': 'New adj R1_xe on Ethernet1/2.415',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''\
+        R3_nx# show isis spf-log detail vrf all
+        IS-IS Process: test SPF information VRF: default
+        SPF log for Topology 0
+        Total number of SPF calculations: 362685
+
+        Log entry (current/max): 20/20
+        Log entry: 01, Ago: 00:01:23, Date: Tue Oct 22 18:33:26 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        1      0x0002C453  0.000728  0.000813  0.000160   0.000520     0.002374
+        Level  Node Count   Changed  Reason
+        1         4     6         0  New adj R2_xr on Ethernet1/1.115
+
+        Log entry: 02, Ago: 00:01:18, Date: Tue Oct 22 18:33:31 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C458  0.000878  0.000771  0.000127   0.000375     0.002283
+        Level  Node Count   Changed  Reason
+        2         4     6         0  New adj R1_xe on Ethernet1/2.115
+
+        SPF log for Topology 2
+        Total number of SPF calculations: 362754
+
+        Log entry (current/max): 4/4
+        Log entry: 01, Ago: 00:01:20, Date: Tue Oct 22 18:33:29 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        1      0x0002C476  0.000681  0.001235  0.000155   0.000713     0.002985
+        Level  Node Count   Changed  Reason
+        1         4     5         0  New adj R2_xr on Ethernet1/1.115
+
+        Log entry: 02, Ago: 00:01:17, Date: Tue Oct 22 18:33:32 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C47A  0.000891  0.001380  0.000291   0.000530     0.003275
+        Level  Node Count   Changed  Reason
+        2         4     6         0  New adj R1_xe on Ethernet1/2.115
+
+        Log entry: 03, Ago: 00:01:12, Date: Tue Oct 22 18:33:37 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        1      0x0002C477  0.001086  0.000931  0.000200   0.001112     0.003581
+        Level  Node Count   Changed  Reason
+        1         4     6         0  New adj R1_xe on Ethernet1/2.115
+
+        Log entry: 04, Ago: 00:01:09, Date: Tue Oct 22 18:33:40 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C47B  0.001284  0.001047  0.000209   0.000336     0.003068
+        Level  Node Count   Changed  Reason
+        2         4     6         0  New adj R2_xr on Ethernet1/1.115
+
+        IS-IS Process: test SPF information VRF: VRF1
+        SPF log for Topology 0
+        Total number of SPF calculations: 361971
+
+        Log entry (current/max): 3/3
+        Log entry: 01, Ago: 00:01:24, Date: Tue Oct 22 18:33:25 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C2F5  0.000793  0.000268  0.000078   0.000395     0.001709
+        Level  Node Count   Changed  Reason
+        2         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+        Log entry: 02, Ago: 00:01:19, Date: Tue Oct 22 18:33:30 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        1      0x0002C2EC  0.000547  0.000655  0.000099   0.000507     0.001968
+        Level  Node Count   Changed  Reason
+        1         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+        Log entry: 03, Ago: 00:01:15, Date: Tue Oct 22 18:33:34 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C2F6  0.000728  0.000200  0.000063   0.000298     0.001445
+        Level  Node Count   Changed  Reason
+        2         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+        SPF log for Topology 2
+        Total number of SPF calculations: 362019
+
+        Log entry (current/max): 3/3
+        Log entry: 01, Ago: 00:01:25, Date: Tue Oct 22 18:33:24 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C305  0.000499  0.000217  0.000064   0.000208     0.001116
+        Level  Node Count   Changed  Reason
+        2         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+        Log entry: 02, Ago: 00:01:21, Date: Tue Oct 22 18:33:29 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        1      0x0002C30C  0.001635  0.000398  0.000083   0.000547     0.002902
+        Level  Node Count   Changed  Reason
+        1         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+        Log entry: 03, Ago: 00:01:16, Date: Tue Oct 22 18:33:33 2019
+        Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        2      0x0002C306  0.000615  0.000236  0.000064   0.000219     0.001268
+        Level  Node Count   Changed  Reason
+        2         2     3         0  New adj R1_xe on Ethernet1/2.415
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisSpfLogDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIsisSpfLogDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
 class TestShowIsisHostname(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'test': {
@@ -741,7 +1112,6 @@ class TestShowIsisHostname(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIsisHostname(device=self.device)
         parsed_output = obj.parse(vrf='all')
@@ -749,9 +1119,10 @@ class TestShowIsisHostname(unittest.TestCase):
 
 
 class TestShowIsisAdjacency(unittest.TestCase):
-    device = Device(name='aDevice')
 
+    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'test': {
@@ -853,7 +1224,6 @@ class TestShowIsisAdjacency(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse(vrf='all')
@@ -1117,198 +1487,6 @@ class TestShowIsisAdjacency(unittest.TestCase):
 #         platform_obj = ShowIsisDatabaseDetail(device=self.device)
 #         parsed_output = platform_obj.parse()
 #         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-# class TestShowRunSecIsis(unittest.TestCase):
-#     device = Device(name='aDevice')
-
-#     empty_output = {'execute.return_value': ''}
-
-#     golden_parsed_output = {
-#         'instance':{
-#             'test':{
-#                 'vrf':{
-#                     'default':{}
-#                 }
-#             },
-#             'test1':{
-#                 'vrf':{
-#                     'VRF1':{}
-#                 }
-#             }
-#         }
-#     }
-
-#     golden_output = {'execute.return_value': '''\
-
-#     R2#show run | sec isis
-#      ip router isis test
-#      ipv6 router isis test
-#      ip router isis test1
-#      ipv6 router isis test1
-#      ip router isis test
-#      ipv6 router isis test
-#      ip router isis test1
-#      ipv6 router isis test1
-#     router isis test
-#      net 49.0001.1111.1111.1111.00
-#      metric-style wide
-#      !
-#      address-family ipv6
-#       multi-topology
-#      exit-address-family
-#     router isis test1
-#      vrf VRF1
-#      net 49.0001.1111.1111.1111.00
-#      metric-style wide
-#      !
-#      address-family ipv6
-#       multi-topology
-#      exit-address-family
-#     R1_xe#
-#     '''
-#     }
-
-#     golden_parsed_output_2 = {
-#         'instance': {
-#             '': {
-#                 'vrf': {
-#                     'default': {}}}}}
-
-#     golden_output_2 = {'execute.return_value': '''
-#          ip router isis
-#          ipv6 router isis
-#          ip router isis
-#          ipv6 router isis
-#          ip router isis
-#          ipv6 router isis
-#          ip router isis
-#          ipv6 router isis
-#         router isis
-#          net 47.0002.0000.0000.0002.00
-#          is-type level-1
-#          metric-style wide
-#          mpls traffic-eng router-id Loopback0
-#          mpls traffic-eng level-1
-#     '''}
-
-#     def test_golden(self):
-#         self.maxDiff = None
-#         self.device = Mock(**self.golden_output)
-#         obj = ShowRunSectionIsis(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-#     def test_golden_2(self):
-#         self.maxDiff = None
-#         self.device = Mock(**self.golden_output_2)
-#         obj = ShowRunSectionIsis(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
-# # ====================================
-# #  Unit test for 'show isis neighbors'
-# # ====================================
-
-# class TestShowIsisNeighbors(unittest.TestCase):
-    # '''Unit test for "show isis neighbors"'''
-
-    # device = Device(name='aDevice')
-    # empty_output = {'execute.return_value': ''}
-
-    # golden_parsed_output1 = {
-    #     'isis': {
-    #         'test': {
-    #             'neighbors': {
-    #                 'R2_xr': {
-    #                     'type': {
-    #                         'L1': {
-    #                             'interface': 'Gi2.115',
-    #                             'ip_address': '10.12.115.2',
-    #                             'state': 'UP',
-    #                             'holdtime': '7',
-    #                             'circuit_id': 'R2_xr.01'},
-    #                         'L2': {
-    #                             'interface': 'Gi2.115',
-    #                             'ip_address': '10.12.115.2',
-    #                             'state': 'UP',
-    #                             'holdtime': '7',
-    #                             'circuit_id': 'R2_xr.01'}}},
-    #                 'R3_nx': {
-    #                     'type': {
-    #                         'L1': {
-    #                             'interface': 'Gi3.115',
-    #                             'ip_address': '10.13.115.3',
-    #                             'state': 'UP',
-    #                             'holdtime': '28',
-    #                             'circuit_id': 'R1_xe.02'},
-    #                         'L2': {
-    #                             'interface': 'Gi3.115',
-    #                             'ip_address': '10.13.115.3',
-    #                             'state': 'UP',
-    #                             'holdtime': '23',
-    #                             'circuit_id': 'R1_xe.02'}}}}},
-    #         'test1': {
-    #             'neighbors': {
-    #                 '2222.2222.2222': {
-    #                     'type': {
-    #                         'L1': {
-    #                             'interface': 'Gi2.415',
-    #                             'ip_address': '10.12.115.2',
-    #                             'state': 'INIT',
-    #                             'holdtime': '21',
-    #                             'circuit_id': '2222.2222.2222.01'},
-    #                         'L2': {
-    #                             'interface': 'Gi2.415',
-    #                             'ip_address': '10.12.115.2',
-    #                             'state': 'INIT',
-    #                             'holdtime': '20',
-    #                             'circuit_id': '2222.2222.2222.01'}}},
-    #                 'R3_nx': {
-    #                     'type': {
-    #                         'L1': {
-    #                             'interface': 'Gi3.415',
-    #                             'ip_address': '10.13.115.3',
-    #                             'state': 'UP',
-    #                             'holdtime': '21',
-    #                             'circuit_id': 'R1_xe.02'},
-    #                         'L2': {
-    #                             'interface': 'Gi3.415',
-    #                             'ip_address': '10.13.115.3',
-    #                             'state': 'UP',
-    #                             'holdtime': '27',
-    #                             'circuit_id': 'R1_xe.02'}}}}}}}
-
-    # golden_output1 = {'execute.return_value': '''
-    #     R1_xe#show isis neighbors 
-
-    #     Tag test:
-    #     System Id       Type Interface     IP Address      State Holdtime Circuit Id
-    #     R2_xr           L1   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
-    #     R2_xr           L2   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
-    #     R3_nx           L1   Gi3.115       10.13.115.3     UP    28       R1_xe.02           
-    #     R3_nx           L2   Gi3.115       10.13.115.3     UP    23       R1_xe.02           
-        
-    #     Tag test1:
-    #     System Id       Type Interface     IP Address      State Holdtime Circuit Id
-    #     2222.2222.2222  L1   Gi2.415       10.12.115.2     INIT  21       2222.2222.2222.01  
-    #     2222.2222.2222  L2   Gi2.415       10.12.115.2     INIT  20       2222.2222.2222.01  
-    #     R3_nx           L1   Gi3.415       10.13.115.3     UP    21       R1_xe.02           
-    #     R3_nx           L2   Gi3.415       10.13.115.3     UP    27       R1_xe.02           
-        
-    # '''}
-
-    # def test_show_isis_neighbors_empty(self):
-    #     self.device = Mock(**self.empty_output)
-    #     obj = ShowIsisNeighbors(device=self.device)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
-
-    # def test_show_isis_neighbors_golden1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowIsisNeighbors(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':
