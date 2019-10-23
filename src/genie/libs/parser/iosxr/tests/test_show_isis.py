@@ -4961,6 +4961,41 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     },
                                 },
                             },
+                            'dis17-genie_RE1.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x00000215',
+                                    'checksum': '0xf5f4',
+                                    'local_router': False,
+                                    'holdtime': 32551,
+                                    'received': 65535,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'tlv': 14,
+                                'tlv_length': 2,
+                                'nlpid': ['0xcc', '0x8e'],
+                                'router_id': '10.154.219.102',
+                                'ip_address': '10.154.219.102',
+                                'hostname': 'dis17-genie_RE1',
+                                'extended_is_neighbor': {
+                                    'tcore4-genie.00': {
+                                        'metric': 100,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 100,
+                                    },
+                                },
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.102/32': {
+                                        'ip_prefix': '10.154.219.102',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'router_cap': '10.154.219.102 D:0 S:0',
+                            },
                         },
                     },
                 },
@@ -4997,6 +5032,18 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         Metric: 1000       IS-Extended bl2-genie.00
         Metric: 1000       IS-Extended bl1-genie.00
         Metric: 250        IS-Extended tcore3-genie.00
+        dis17-genie_RE1.00-00  0x00000215   0xf5f4        32551/65535        0/0/0
+        Area Address:   49.0000
+        TLV 14:         Length: 2
+        NLPID:          0xcc
+        NLPID:          0x8e
+        Router ID:      10.154.219.102
+        IP Address:     10.154.219.102
+        Hostname:       dis17-genie_RE1
+        Metric: 100        IS-Extended tcore4-genie.00
+        Metric: 100        IS-Extended tcore3-genie.00
+        Metric: 0          IP-Extended 10.154.219.102/32
+        Router Cap:     10.154.219.102 D:0 S:0
     '''}
 
     def test_empty_output(self):
