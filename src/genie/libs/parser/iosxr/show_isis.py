@@ -3504,8 +3504,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'ref_count': int,
                         'index': int,
                         'is_running': bool,
-                        'list_linkage_next':str,
-                        'list_linkage_previous': str,
+                        'list_linkage': {
+                            'next':str,
+                            'previous': str,
+                        },
                     },
                 },
                 'topology_table': {
@@ -3524,9 +3526,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'index': int,
                         'ref_count': int,
                         'ltopo_index': int,
-                        'list_linkage_next': str,
-                        'list_linkage_previous': str,
-
+                        'list_linkage': {
+                            'next':str,
+                            'previous': str,
+                        },
                     },
                 },
                 'area_configuration_table': {
@@ -3546,53 +3549,53 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'max_count': int,
                                 'max_window_size_msec': int,
                             },
-                            'is_lsp_checksum_interval_set': bool,
-                            'lsp_checksum_interval_secs': int,
-                            'is_lsp_refresh_interval_set': bool,
-                            'lsp_refresh_interval_secs': int,
-                            'is_lsp_lifetime_set': bool,
-                            'lsp_lifetime_secs': int,
-                            'is_lsp_mtu_set': bool,
-                            'lsp_mtu': int,
-                            'is_auth_cfg_ctx_set': bool,
-                            'auth_cfg_ctx': {
-                                'alg': str,
-                                'failure_mode': str,
-                                'password':  str,
-                                'accept_password': str,
-                            },
-                            'is_snp_authentication_options_set': bool,
-                            'snp_authentication_options': int,
-                            'is_overload_set': bool,
-                            'overload_mode': int,
-                            'overload_on_startup_secs': int,
-                            'per_topo': {
-                                Any(): {
-                                    'is_metric_style_set': bool,
-                                    'generate_metric_mask': int,
-                                    'accept_metric_mask': int,
-                                    'summary_table': str,
-                                    'metric': int,
-                                    'is_spf_interval_set': bool,                                
-                                    'spf_interval': {
-                                        'initial_wait_msecs': int,
-                                        'secondary_wait_msecs': int,
-                                        'maximum_wait_msecs': int,
-                                    },
-                                    'spf_periodic_interval_secs': str,
-                                    'ispf_state': str,
-                                    'max_redist_prefixes': str,
-                                    'topo_index': {
-                                        Any(): {
-                                            'is_spf_prefix_priority_acl_names_set': bool,
-                                            'spf_prefix_priority_acl_names': str,
-                                            'is_spf_prefix_priority_tags_set': bool,
-                                            'spf_prefix_priority_tags': str,
-                                        },
+                        },
+                        'is_lsp_checksum_interval_set': bool,
+                        'lsp_checksum_interval_secs': int,
+                        'is_lsp_refresh_interval_set': bool,
+                        'lsp_refresh_interval_secs': int,
+                        'is_lsp_lifetime_set': bool,
+                        'lsp_lifetime_secs': int,
+                        'is_lsp_mtu_set': bool,
+                        'lsp_mtu': int,
+                        'is_auth_cfg_ctx_set': bool,
+                        'auth_cfg_ctx': {
+                            'alg': str,
+                            'failure_mode': str,
+                            'password':  str,
+                            'accept_password': str,
+                        },
+                        'is_snp_authentication_options_set': bool,
+                        'snp_authentication_options': int,
+                        'is_overload_set': bool,
+                        'overload_mode': int,
+                        'overload_on_startup_secs': int,
+                        'per_topo': {
+                            Any(): {
+                                'is_metric_style_set': bool,
+                                'generate_metric_mask': int,
+                                'accept_metric_mask': int,
+                                'summary_table': str,
+                                'metric': Any(),
+                                'is_spf_interval_set': bool,
+                                'spf_interval': {
+                                    'initial_wait_msecs': int,
+                                    'secondary_wait_msecs': int,
+                                    'maximum_wait_msecs': int,
+                                },
+                                'spf_periodic_interval_secs': str,
+                                'ispf_state': str,
+                                'max_redist_prefixes': str,
+                                'topo_index': {
+                                    Any(): {
+                                        'is_spf_prefix_priority_acl_names_set': bool,
+                                        'spf_prefix_priority_acl_names': str,
+                                        'is_spf_prefix_priority_tags_set': bool,
+                                        'spf_prefix_priority_tags': int,
                                     },
                                 },
                             },
-                        },
+                        },                    
                     },
                 },
                 'area_tables': {
@@ -3726,11 +3729,11 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'spf_periodic_timer': str,
                                 'reachable_area_addresses': str,
                                 'stats': {
-                                    'spfs': int,
-                                    'ispfs': int,
-                                    'nhcs': int,
-                                    'prcs': int,
-                                    'periodic_spfs': int,
+                                    'num_spfs': int,
+                                    'num_ispfs': int,
+                                    'num_nhcs': int,
+                                    'num_prcs': int,
+                                    'num_periodic_spfs': int,
                                 },
                                 'paths':{
                                     'classification': int,
@@ -3824,7 +3827,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         },
                     },
                 },
-                'interfaces': {
+                Optional('interfaces'): {
                     Any(): {
                         'im_handle': str,
                         'name': str,
@@ -3879,7 +3882,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'cross_levels': {
                                 'per_topo': {
                                     Any(): {
-                                        'metric': int,
+                                        'metric': str,
                                         'weight': str,
                                         'ldp_sync_cfg': str,
                                         'admin_tag': str,
@@ -4109,11 +4112,31 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
        * show isis private all 
     '''
 
-    def get_boolean_value(self, item):
+    def _get_boolean_value(self, item):
         if item == 'TRUE':
             return True
         elif item == 'FALSE':
             return False
+    
+    priority_level = {
+        'ISIS_PREFIX_PRIORITY_CRITICAL': 'critical',
+        'ISIS_PREFIX_PRIORITY_HIGH': 'high',
+        'ISIS_PREFIX_PRIORITY_MED': 'medium',
+        'ISIS_PREFIX_PRIORITY_LOW': 'low',
+    }
+
+    trap_stats_field = {
+        'isisSysStatCorrLSPs': 'corr_lsps',
+        'isisSysStatAuthTypeFails': 'auth_type_fails',
+        'isisSysStatAuthFails':'auth_fails',
+        'isisSysStatLSPDbaseOloads':'lsp_dbase_oloads',
+        'isisSysStatManAddrDropFromAreas':'man_addr_drop_from_areas',
+        'isisSysStatAttmptToExMaxSeqNums':'attmpt_to_ex_max_seq_nums',
+        'isisSysStatSeqNumSkips':'seq_num_skips',
+        'isisSysStatOwnLSPPurges':'own_lsp_purges',
+        'isisSysStatIDFieldLenMismatches':'id_field_len_mismatches',
+        'isisSysStatLSPErrors':'lsp_errors',
+    }
 
 
     cli_command = 'show isis private all'
@@ -4141,7 +4164,7 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # lsp_gen_interval.initial_wait_msecs           : 50
         # lsp_gen_interval.secondary_wait_msecs         : 200
         # lsp_gen_interval.maximum_wait_msecs           : 5000
-        r4 = re.compile(r'^lsp_gen_interval\.*(?P<field_1>\w*)\s*\:'
+        r4 = re.compile(r'^lsp_gen_interval\.*(?P<field>\w*)\s*\:'
                         r'\s*(?P<value>\d+)')
 
         # auth_cfg_ctx.alg                              : None
@@ -4150,28 +4173,35 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # auth_cfg_ctx.accept_password                  : 0xdecafbad
         r5 = re.compile(r'^auth_cfg_ctx\.*(?P<field_1>\w+)\s*\:\s*'
                         r'(?P<value>\w+)')
+        
+        # upd_db.tree_node_chunks.size                    : 28
+        # upd_db.tree_node_chunks.flags                   : 1297
+        # upd_db.tree_node_chunks.num_allocated_elements  : 0        
+        r6 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                        r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
+                        r'(?P<value>\-*\d+)$')
 
         # upd_db.tree.node_free_fn                        : 0x42fd08a
         # upd_db.tree.data_to_str_fn                      : 0x42fd094
         # upd_db.tree_node_chunks.name                    : 0x448764c
-        # upd_db.tree_node_chunks.size                    : 28
-        # upd_db.tree_node_chunks.flags                   : 1297
         # upd_db.tree_node_chunks.chunk                   : 0x1543146c
-        # upd_db.tree_node_chunks.num_allocated_elements  : 0        
-        r6 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                        r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:'
-                        r'\s*(?P<value>[\s\S]+)$')
+        r6_2 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                          r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:'
+                          r'\s*(?P<value>[\w\s]+)$')
+
 
         # spf_interval.initial_wait_msecs             : 50
         # spf_interval.secondary_wait_msecs           : 200
         # spf_interval.maximum_wait_msecs             : 5000
         r7 = re.compile(r'^spf_interval\.*(?P<field>\w+)\s*\:\s*(?P<value>\d+)')
+        
+        # idb_list.sll_count                              : 8
+        # idb_list.sll_maximum                            : 0
+        r8 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\d+)$')
 
         # idb_list.sll_head                               : 0x151942e0
         # idb_list.sll_tail                               : 0x15193fd4
-        # idb_list.sll_count                              : 8
-        # idb_list.sll_maximum                            : 0
-        r8 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\w+)$')
+        r8_2 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\w+)$')
 
         # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
         # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
@@ -4180,11 +4210,20 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         r9 = re.compile(r'^prefix_priority_acl\[(?P<priority>\w+)\]\s*\:\s*'
                         r'(?P<value>\w+)')
 
-        # roca_event.timer.last_execution_time.tv_nsec  : 824108467
-        # roca_event.log                                : 0x15474024
-        # roca_event.class                              : <error>
+        # roca_event.timer.num_execution_events         : 1
+        # roca_event.timer.postponed_schedule_time.tv_sec: 0
+        # roca_event.timer.postponed_schedule_time.tv_nsec: 0
         r10 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)\.*'
-                         r'(?P<field_3>\w*)\s*\:\s*(?P<value>\S+)')
+                         r'(?P<field_3>\w*)\s*\:\s*(?P<value>\-*\d+)$')
+
+        # roca_event.timer.is_pending                   : FALSE
+        r10_2 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
+                           r'\.*(?P<field_3>\w*)\s*\:\s*(?P<value>TRUE|FALSE)$')
+
+        # roca_event.class                              : <error> 
+        # roca_event.log                                : 0x15474024   
+        r10_3 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
+                           r'\.*(?P<field_3>\w*)\s*\:\s*(?P<value>[\w\<\>]+)$')
 
         # stats.num_spfs                                : 5004
         # stats.num_ispfs                               : 0
@@ -4201,15 +4240,22 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # trap_stats.isisSysStatLSPErrors                 : 0
         r12 = re.compile(r'^trap_stats\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)')
 
-        # dec_db.name                                     : L2 Decision DB
         # dec_db.tree.key_size                            : 8
         # dec_db.tree.size                                : 82
+        r13 = re.compile(r'dec_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                         r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
+                         r'(?P<value>\-*\d+)$')
+
+        # dec_db.name                                     : L2 Decision DB        
         # dec_db.tree.node_alloc_data                     : 0x15394290
         # dec_db.tree.node_alloc_fn                       : 0x42fd024
         # dec_db.tree.node_free_fn                        : 0x42fd
-        r13 = re.compile(r'^dec_db\.*(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                         r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
-                         r'(?P<value>[\S\s]+)')
+        r13_2 = re.compile(r'dec_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
+                           r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
+                           r'(?P<value>[\w\s]+)$')
+        
+        # node_db.num_nodes                               : 64
+        r14 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
 
         # node_db.node_created_fn                         : 0x424fd84
         # node_db.node_destroyed_fn                       : 0x424ffa6
@@ -4219,55 +4265,78 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # node_db.node_topo_destroyed_fn                  : 0x42506b4
         # node_db.callback_context                        : 0x15393bfc
         # node_db.root_element                            : 0x151fb9bc
-        # node_db.num_nodes                               : 64
-        r14 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+        r14_1 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
 
         # [001] is_spf_prefix_priority_acl_names_set : FALSE
         # [001] is_spf_prefix_priority_tags_set      : FALSE
-        r15 = re.compike(r'\[(?P<index>\d+)\]\s*(?P<field>is\S+)\s*:\s*'
+        r15 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>is\S+)\s*:\s*'
                          r'(?P<value>FALSE|TRUE)')
+        
+        # [000] spf_prefix_priority_tags             : 0
+        # [001] spf_prefix_priority_tags             : 0
+        # [002] spf_prefix_priority_tags             : 0
+        # [003] spf_prefix_priority_tags             : 0
+        r16 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:\s*'
+                         r'(?P<value>\d+)$')
 
         # [000] spf_prefix_priority_acl_names        : 0x0
         # [001] spf_prefix_priority_acl_names        : 0x0
         # [002] spf_prefix_priority_acl_names        : 0x0
         # [003] spf_prefix_priority_acl_names        : 0x0
-        # [000] spf_prefix_priority_tags             : 0
-        # [001] spf_prefix_priority_tags             : 0
-        # [002] spf_prefix_priority_tags             : 0
-        # [003] spf_prefix_priority_tags             : 0
-        r16 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:'
-                         r'\s*(?P<value>\S+)')
+        r16_1 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:\s*'
+                           r'(?P<value>\w+)$')
+
+        # te.is_pce_ready                               : FALSE
+        r17 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
 
         # te.tunnel_table                               : 0x153ab844
         # te.info_from_te                               : 0x0
         # te.pce_info_from_te                           : 0x0
-        # te.is_pce_ready                               : FALSE
-        r17 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+        r17_2 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
 
         # firsthopchanged.classification                : 0
-        # firsthopchanged.is_sorted                     : TRUE
-        # firsthopchanged.array                         : 0x1540d4e0
         # firsthopchanged.num_elements                  : 0
         r18 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>\d+)$')
+
+        # firsthopchanged.is_sorted                     : TRUE
+        r18_2 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
+                         r'(?P<value>TRUE|FALSE)')
+
+        # firsthopchanged.array                         : 0x1540d4e0
+        r18_3 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
                          r'(?P<value>\w+)')
 
         # unreached.classification                      : 0
-        # unreached.is_sorted                           : FALSE
-        # unreached.array                               : 0x1540d4b4
         # unreached.num_elements                        : 0
-        r19 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+        r19 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
+
+        # unreached.is_sorted                           : FALSE
+        r19_2 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
+
+        # unreached.array                               : 0x1540d4b4
+        r19_3 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
 
         # paths.classification                          : 0
-        # paths.is_sorted                               : FALSE
-        # paths.array                                   : 0x1540d45c
         # paths.num_elements                            : 64
-        r20 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+        r20 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
 
+        # paths.is_sorted                               : FALSE
+        r20_2 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
+
+        # paths.array                                   : 0x1540d45c
+        r20_3 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+
+        # linkchanged.num_elements                      : 0        
         # linkchanged.classification                    : 2
+        r21 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
+
         # linkchanged.is_sorted                         : TRUE
-        # linkchanged.array                             : 0x1540d66c
-        # linkchanged.num_elements                      : 0
-        r21 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
+        r21_2 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*'
+                           r'(?P<value>TRUE|FALSE)')        
+        
+        # linkchanged.array                             : 0x1540d66c        
+        r21_3 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
 
         # checksum_ptimer.tv_sec                          : 3657420
         # checksum_ptimer.tv_nsec                         : 458761224
@@ -4277,7 +4346,13 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # is_lsp_gen_interval_set                       : FALSE
         # is_lsp_arrivaltime_parameter_set              : FALSE
         # is_lsp_checksum_interval_set                  : FALSE
-        r23 = re.compile(r'^is_lsp_(?P<field>\S+)\s*\:\s(?P<value>TRUE|FALSE)')
+        r23 = re.compile(r'^(?P<field>is_lsp_\S+)\s*\:\s(?P<value>TRUE|FALSE)')
+        
+        # lsp_pacing_interval_msecs                       : (not set)
+        # lsp_fast_flood_threshold                        : (not set)
+        # lsp_rexmit_interval_secs                        : (not set)
+        r24 = re.compile(r'(?P<field_1>^lsp_\w+)\.*(?P<field_2>\w*)\s*\:\s*'
+                         r'(?P<value>[a-zA-Z\.\-\(\)\s]+)$')
 
         # lsp_checksum_interval_secs                    : 0
         # lsp_refresh_interval_secs                     : 35000
@@ -4285,11 +4360,8 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # lsp_mtu                                       : 0
         # lsp_count.in                                    : 101725
         # lsp_count.out                                   : 176736
-        # lsp_pacing_interval_msecs                       : (not set)
-        # lsp_fast_flood_threshold                        : (not set)
-        # lsp_rexmit_interval_secs                        : (not set)
-        r24 = re.compile(r'^lsp_(?P<field_1>\w+)\.*(?P<field_2>\w*)\s*\:\s*'
-                         r'(?P<value>[\w\.\-\(\)\s]+)$')
+        r24_2 = re.compile(r'(?P<field_1>^lsp_\w+)\.*(?P<field_2>\w*)\s*\:\s*'
+                           r'(?P<value>\d+)$')
 
         # per_topo[IPv4 Unicast]                        :
         r25 = re.compile(r'per_topo\[(?P<topology>[\w\s]+)\]\s*:$')
@@ -4301,19 +4373,29 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # IPv6
         r27 = re.compile(r'^IPv(4|6)$')
 
-        # overload_bit_on_startup_timer                   : 0x15017530
         # overload_bit_trigger_expired                    : TRUE
+        # overload_bit_trigger_running                  : FALSE
+        r28 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>TRUE|FALSE)')
+
+        # overload_mode                                 : -1
+        r28_1 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>\-*\d*)$')
+
+        # overload_bit_on_startup_timer                   : 0x15017530        
         # overload_bit_forced_reasons                     :
-        r28 = re.compile(r'^overload_(?P<field>\w+)\s*:\s*(?P<value>\S*)')
+        r28_2 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>\S*)')
 
         # postponed_added_first_hops                    : 0x0
         # postponed_deleted_first_hops                  : 0x0
-        r29 = re.compile(r'postponed_(?P<field>\w+)\s*\:\s*(?P<value>\w+)')
+        r29 = re.compile(r'(?P<field>postponed_\w+)\s*\:\s*(?P<value>\w+)')
 
         # max_redist_prefixes_exceeded                  : FALSE
         # max_redist_prefixes_alarm_on                  : FALSE
-        r30 = re.compile(r'max_redist_(?P<field>\w+)\s*\:\s*'
+        r30 = re.compile(r'(?P<field>max_redist_\w+)\s*\:\s*'
                          r'(?P<value>FALSE|TRUE)')
+
+        # max_redist_prefixes                         : (not set)
+        r30_1 = re.compile(r'(?P<field>max_redist_\w+)\s*\:\s*'
+                           r'(?P<value>[\w\(\)\s]+)')
 
         # per_af[IPv6]                                    :
         # per_af[IPv4]                                    :
@@ -4325,7 +4407,7 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
 
         # adj_db                                          : 0x1540cee4
         # adj_log                                         : 0x1539b844
-        r33 = re.compile(r'^adj_(?P<field>\w+)\s*\:\s*(?P<value>\S+)$')
+        r33 = re.compile(r'(?P<field>^adj_\w+)\s*\:\s*(?P<value>\S+)$')
 
         # cfg.refcount                                      : 7
         # cfg.is_p2p                                        : TRUE
@@ -4337,7 +4419,7 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # cfg.bfd_multiplier                                : 3
         # cfg.topos                                         : IPv4 Unicast
         # cfg.cross_levels                                  :
-        r34 = re.compile(r'^cfg\.*(?P<field>\S+)\s*\:\s*(?P<value>[\w\-\s]+)$')
+        r34 = re.compile(r'^cfg\.+(?P<field>\S+)\s*\:\s*(?P<value>[\w\-\s]+)$')
 
         # cfg.per_level[Level-1]                            :
         # cfg.per_level[Level-2]                            :
@@ -4371,12 +4453,12 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
                          r'(?P<value>\w+)')
 
         # per_area[Level-2]                                 :
-        r40 = re.compile(r'per_area\[Level-(?P<level>\d+)\]\s*:')
+        r40 = re.compile(r'per_area\[Level-(?P<level>\d+)\]\s*:')        
 
         # nsf_ietf.full_csnp_set_rcvd                     : FALSE
         # nsf_ietf.csnp_set_rcvd.list_head                : 0x0
         # nsf_ietf.csnp_set_rcvd.list_size                : 0
-        r41 = re.compile(r'^nsf_ietf\.*(?P<field_1>\w*)\.*'
+        r41 = re.compile(r'^nsf_ietf\.(?P<field_1>\w*)\.*'
                          r'(?P<field_2>\w*)\s*\:\s*(?P<value>\w+)')
 
         # im_node.exist_registered                        : TRUE
@@ -4472,16 +4554,1231 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # Area Configuration Table
         r63 = re.compile(r'^Area\s+Configuration\s+Table$')
 
-        # check_adjacencies                           : (not set)
-        # attached_bit                                : (not set)
-        # max_paths                                   : (not set)
         # is_mcast_intact_set                         : FALSE
-        r64 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>[\w\(\)\s]+)$')
+        r64 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>TRUE|FALSE)')
 
-        parsed_dict = {}
+        # cfg_refcount                                      : 57
+        r65 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>\-*\d+)$')
+
+        # check_adjacencies                           : (not set)
+        r66 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>[\(\w\s\)\-]+)$')        
+
+        parsed_dict = {}        
+        address_family_table_flag = False
+        link_topology_table_flag = False
+        topology_table_flag = False
+        configuration_flag = False
+        area_configuration_table_flag = False
+        area_configuration_table_per_topo_flag = False
+        area_configuration_table_topo_index_flag = False
+        area_table_flag = False
+        area_table_per_ltopo_flag = False
+        area_table_per_topo_flag = False
+        area_table_per_af_flag = False
+
 
         for line in output.splitlines():
             line = line.strip()
 
+            # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                instance_dict = parsed_dict\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})
+                continue
+
+            # list_linkage.next                               : 0x0
+            # list_linkage.previous                           : 0x44b2534
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+
+                if area_table_flag:
+                    list_linkage_dict = area_table_dict\
+                        .setdefault('list_linkage', {})                
+                elif topology_table_flag:
+                    list_linkage_dict = topology_table_dict\
+                        .setdefault('list_linkage', {})
+                elif link_topology_table_flag:
+                    list_linkage_dict = link_topology_table_dict\
+                        .setdefault('list_linkage', {})
+
+                list_linkage_dict[field] = value
+                continue
+
+            # lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
+            # lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+            # lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
+            # lsp_arrivaltime_parameter.max_count           : 0
+            # lsp_arrivaltime_parameter.max_window_size_msec: 120001
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                value = int(group['value'])
+                back_off_dict = area_configuration_table_dict\
+                    .setdefault('lsp_arrivaltime_parameter', {})\
+                    .setdefault('backoff_cfg', {})
+                if field_2:
+                    back_off_dict[field_2] = value
+                elif field_1:
+                    back_off_dict[field_1] = value
+
+                continue
+
+            # lsp_gen_interval.initial_wait_msecs           : 50
+            # lsp_gen_interval.secondary_wait_msecs         : 200
+            # lsp_gen_interval.maximum_wait_msecs           : 5000
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                lsp_gen_interval = area_configuration_table_dict\
+                    .setdefault('lsp_gen_interval', {})
+                lsp_gen_interval[field] = value
+                continue
+
+            # auth_cfg_ctx.alg                              : None
+            # auth_cfg_ctx.failure_mode                     : Drop
+            # auth_cfg_ctx.password                         : 0xdecafbad
+            # auth_cfg_ctx.accept_password                  : 0xdecafbad
+            result = r5.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                value = group['value']
+                if area_configuration_table_flag:
+                    auth_cfg_ctx_dict = area_configuration_table_dict\
+                        .setdefault('auth_cfg_ctx', {})
+                    auth_cfg_ctx_dict[field_1] = value
+
+                continue
+
+            # upd_db.tree_node_chunks.size                    : 28
+            # upd_db.tree_node_chunks.flags                   : 1297            
+            # upd_db.tree_node_chunks.num_allocated_elements  : 0 
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                field_4 = group['field_4']
+                value = int(group['value'])
+                upd_db_dict = area_table_dict\
+                    .setdefault('upd_db', {})
+                if field_4:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    field_4 = re.sub(r'^_+', '', field_4)
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})\
+                        .setdefault(field_3, {})
+                    lock_dict[field_4] = value
+                elif field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    lock_dict[field_3] = value
+                elif field_2:
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})
+                    lock_dict[field_2] = value
+
+                continue
+
+            # upd_db.tree_node_chunks.chunk                   : 0x1543146c
+            # upd_db.tree.node_free_fn                        : 0x42fd08a
+            # upd_db.tree.data_to_str_fn                      : 0x42fd094
+            # upd_db.tree_node_chunks.name                    : 0x448764c
+            result = r6_2.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                field_4 = group['field_4']
+                value = group['value']
+                upd_db_dict = area_table_dict\
+                    .setdefault('upd_db', {})
+                if field_4:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    field_4 = re.sub(r'^_+', '', field_4)
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})\
+                        .setdefault(field_3, {})
+                    lock_dict[field_4] = value
+                elif field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    lock_dict[field_3] = value
+                elif field_2:
+                    lock_dict = upd_db_dict\
+                        .setdefault(field_1, {})
+                    lock_dict[field_2] = value
+                else:
+                    upd_db_dict[field_1] = value
+
+                continue
+
+            # spf_interval.initial_wait_msecs             : 50
+            # spf_interval.secondary_wait_msecs           : 200
+            # spf_interval.maximum_wait_msecs             : 5000
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                spf_interval_dict = area_configuration_table_per_topo_dict\
+                    .setdefault('spf_interval', {})
+                spf_interval_dict[field] = value
+
+                continue
+            
+            # idb_list.sll_count                              : 8
+            # idb_list.sll_maximum                            : 0
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                idb_list_dict = area_table_dict\
+                    .setdefault('idb_list', {})
+                idb_list_dict[field] = value
+                continue
+
+            # idb_list.sll_head                               : 0x151942e0
+            # idb_list.sll_tail                               : 0x15193fd4
+            result = r8_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                idb_list_dict = area_table_dict\
+                    .setdefault('idb_list', {})
+                idb_list_dict[field] = value
+                continue
+
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                priority = self.priority_level[group['priority']]
+                value = group['value']
+                prefix_priority_acl_dict = area_table_per_topo_dict\
+                    .setdefault('prefix_priority_acl', {})
+                prefix_priority_acl_dict[priority] = value
+                continue
+
+            # roca_event.timer.num_execution_events         : 1
+            # roca_event.timer.postponed_schedule_time.tv_sec: 0
+            # roca_event.timer.postponed_schedule_time.tv_nsec: 0
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                value = int(group['value'])
+                roca_event_dict = area_table_per_ltopo_dict\
+                    .setdefault('roca_event', {})
+                if field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    subfield_dict[field_3] = value
+                elif field_2:
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})
+                    subfield_dict[field_2] = value
+                elif field_1:
+                    roca_event_dict[field_1] = value
+
+                continue
+
+            # roca_event.timer.is_pending                   : FALSE
+            result = r10_2.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                value = self._get_boolean_value(group['value'])
+                roca_event_dict = area_table_per_ltopo_dict\
+                    .setdefault('roca_event', {})
+                if field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    subfield_dict[field_3] = value
+                elif field_2:
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})
+                    subfield_dict[field_2] = value
+                elif field_1:
+                    roca_event_dict[field_1] = value
+                
+                continue
+
+            # roca_event.timer.last_execution_time.tv_nsec  : 824108467
+            # roca_event.log                                : 0x15474024
+            # roca_event.class                              : <error>
+            result = r10_3.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                value = group['value']
+                roca_event_dict = area_table_per_ltopo_dict\
+                    .setdefault('roca_event', {})
+                if field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    subfield_dict[field_3] = value
+                elif field_2:
+                    subfield_dict = roca_event_dict\
+                        .setdefault(field_1, {})
+                    subfield_dict[field_2] = value
+                elif field_1:
+                    roca_event_dict[field_1] = value
+                continue
+
+            # stats.num_spfs                                : 5004
+            # stats.num_ispfs                               : 0
+            # stats.num_nhcs                                : 10
+            # stats.num_prcs                                : 1219
+            # stats.num_periodic_spfs                       : 3876
+            result = r11.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                if area_table_per_ltopo_flag:
+                    stats_dict = area_table_per_ltopo_dict\
+                        .setdefault('stats', {})
+                    stats_dict[field] = value
+                elif area_table_flag:
+                    stats_dict = area_table_dict.setdefault('stats', {})
+                    stats_dict[field] = value
+                continue
+
+            # trap_stats.isisSysStatManAddrDropFromAreas      : 0
+            # trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
+            # trap_stats.isisSysStatSeqNumSkips               : 1
+            # trap_stats.isisSysStatOwnLSPPurges              : 3
+            # trap_stats.isisSysStatIDFieldLenMismatches      : 0
+            # trap_stats.isisSysStatLSPErrors                 : 0
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                field = self.trap_stats_field[group['field']]
+                value = int(group['value'])
+                if area_table_flag:
+                    trap_stats_dict = area_table_dict\
+                        .setdefault('trap_stats', {})
+                    trap_stats_dict[field] = value
+                continue
+            
+            # dec_db.tree.key_size                            : 8
+            # dec_db.tree.size                                : 82
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                field_4 = group['field_4']
+                value = int(group['value'])
+                dec_db_dict = area_table_dict\
+                    .setdefault('dec_db', {})
+                if field_4:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    field_4 = re.sub(r'^_+', '', field_4)
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})\
+                        .setdefault(field_3, {})
+                    lock_dict[field_4] = value
+                elif field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    lock_dict[field_3] = value
+                elif field_2:
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})
+                    lock_dict[field_2] = value
+                else:
+                    dec_db_dict[field_1] = value
+
+                continue
+
+            # dec_db.tree.node_alloc_data                     : 0x15394290
+            # dec_db.tree.node_alloc_fn                       : 0x42fd024
+            # dec_db.tree.node_free_fn                        : 0x42fd
+            # dec_db.name                                     : L2 Decision DB
+            result = r13_2.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                field_3 = group['field_3']
+                field_4 = group['field_4']
+                value = group['value']
+                dec_db_dict = area_table_dict\
+                    .setdefault('dec_db', {})
+                if field_4:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    field_4 = re.sub(r'^_+', '', field_4)
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})\
+                        .setdefault(field_3, {})
+                    lock_dict[field_4] = value
+                elif field_3:
+                    field_3 = re.sub(r'^_+', '', field_3)
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})\
+                        .setdefault(field_2, {})
+                    lock_dict[field_3] = value
+                elif field_2:
+                    lock_dict = dec_db_dict\
+                        .setdefault(field_1, {})
+                    lock_dict[field_2] = value
+                else:
+                    dec_db_dict[field_1] = value
+
+                continue
+            
+            # node_db.num_nodes                               : 64
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                node_db_dict = area_table_dict.setdefault('node_db', {})
+                node_db_dict[field] = value
+                continue
+
+            
+            # node_db.node_created_fn                         : 0x424fd84
+            # node_db.node_destroyed_fn                       : 0x424ffa6
+            # node_db.node_ltopo_created_fn                   : 0x42500b6
+            # node_db.node_ltopo_destroyed_fn                 : 0x42503ba
+            # node_db.node_topo_created_fn                    : 0x4250536
+            # node_db.node_topo_destroyed_fn                  : 0x42506b4
+            # node_db.callback_context                        : 0x15393bfc
+            # node_db.root_element                            : 0x151fb9bc
+            result = r14_1.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                node_db_dict = area_table_dict.setdefault('node_db', {})
+                node_db_dict[field] = value
+                continue
+
+            # [001] is_spf_prefix_priority_acl_names_set : FALSE
+            # [001] is_spf_prefix_priority_tags_set      : FALSE
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                index = int(group['index'])
+                field = group['field']
+                value = self._get_boolean_value(group['value'])                
+                topo_index_dict = area_configuration_table_per_topo_dict\
+                    .setdefault('topo_index', {})\
+                    .setdefault(index, {})
+                topo_index_dict[field] = value
+                area_configuration_table_per_topo_flag = False
+                continue
+
+            # [000] spf_prefix_priority_tags             : 0
+            # [001] spf_prefix_priority_tags             : 0
+            # [002] spf_prefix_priority_tags             : 0
+            # [003] spf_prefix_priority_tags             : 0            
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                index = int(group['index'])
+                field = group['field']
+                value = int(group['value'])
+                topo_index_dict = area_configuration_table_per_topo_dict\
+                    .setdefault('topo_index', {})\
+                    .setdefault(index, {})
+                topo_index_dict[field] = value
+                area_configuration_table_per_topo_flag = False
+                continue
+
+            # [000] spf_prefix_priority_acl_names        : 0x0
+            # [001] spf_prefix_priority_acl_names        : 0x0
+            # [002] spf_prefix_priority_acl_names        : 0x0
+            # [003] spf_prefix_priority_acl_names        : 0x0
+            result = r16_1.match(line)
+            if result:
+                group = result.groupdict()
+                index = int(group['index'])
+                field = group['field']
+                value = group['value']                
+                topo_index_dict = area_configuration_table_per_topo_dict\
+                    .setdefault('topo_index', {})\
+                    .setdefault(index, {})
+                topo_index_dict[field] = value
+                area_configuration_table_per_topo_flag = False
+                continue
+
+            # te.is_pce_ready                               : FALSE            
+            result = r17.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                te_dict = area_table_per_topo_dict.setdefault('te', {})
+                te_dict[field] = value
+                continue
+
+            # te.tunnel_table                               : 0x153ab844
+            # te.info_from_te                               : 0x0
+            # te.pce_info_from_te                           : 0x0            
+            result = r17_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                te_dict = area_table_per_topo_dict.setdefault('te', {})
+                te_dict[field] = value
+                continue
+
+            # firsthopchanged.classification                : 0
+            # firsthopchanged.num_elements                  : 0
+            result = r18.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                firsthopchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('firsthopchanged', {})
+                firsthopchanged_dict[field] = value
+                continue
+
+            # firsthopchanged.is_sorted                     : TRUE
+            result = r18_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                firsthopchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('firsthopchanged', {})
+                firsthopchanged_dict[field] = value
+                continue
+
+            # firsthopchanged.array                         : 0x1540d4e0
+            result = r18_3.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                firsthopchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('firsthopchanged', {})
+                firsthopchanged_dict[field] = value
+                continue
+
+            # unreached.classification                      : 0
+            # unreached.num_elements                        : 0
+            result = r19.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                unreached_dict = area_table_per_ltopo_dict\
+                    .setdefault('unreached', {})
+                unreached_dict[field] = value
+
+                continue
+
+            # unreached.is_sorted                           : FALSE
+            result = r19_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                unreached_dict = area_table_per_ltopo_dict\
+                    .setdefault('unreached', {})
+                unreached_dict[field] = value
+                continue
+
+            # unreached.array                               : 0x1540d4b4
+            result = r19_3.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                unreached_dict = area_table_per_ltopo_dict\
+                    .setdefault('unreached', {})
+                unreached_dict[field] = value
+                continue
+
+            # paths.classification                          : 0
+            # paths.num_elements                            : 64
+            result = r20.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
+                paths_dict[field] = value
+                continue
+
+            # paths.is_sorted                               : FALSE
+            result = r20_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
+                paths_dict[field] = value
+                continue
+
+            # paths.array                                   : 0x1540d45c
+            result = r20_3.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
+                paths_dict[field] = value
+                continue
+
+            # linkchanged.classification                    : 2                        
+            # linkchanged.num_elements                      : 0
+            result = r21.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                linkchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('linkchanged', {})
+                linkchanged_dict[field] = value
+                continue
+
+            # linkchanged.is_sorted                         : TRUE
+            result = r21_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                linkchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('linkchanged', {})
+                linkchanged_dict[field] = value
+                continue
+
+            # linkchanged.array                             : 0x1540d66c
+            result = r21_3.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                linkchanged_dict = area_table_per_ltopo_dict\
+                    .setdefault('linkchanged', {})
+                linkchanged_dict[field] = value
+                continue
+
+            # checksum_ptimer.tv_sec                          : 3657420
+            # checksum_ptimer.tv_nsec                         : 458761224
+            result = r22.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+                checksum_ptimer_dict = area_table_dict\
+                    .setdefault('checksum_ptimer', {})
+                checksum_ptimer_dict[field] = value
+                continue
+
+            # is_lsp_gen_interval_set                       : FALSE
+            # is_lsp_arrivaltime_parameter_set              : FALSE
+            # is_lsp_checksum_interval_set                  : FALSE
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                if area_configuration_table_flag:
+                    area_configuration_table_dict = instance_dict\
+                        .setdefault('area_configuration_table', {})\
+                        .setdefault(area_config_table_level, {})
+                    area_configuration_table_dict[field] = value
+                continue
+            
+            # lsp_pacing_interval_msecs                       : (not set)
+            # lsp_fast_flood_threshold                        : (not set)
+            # lsp_rexmit_interval_secs                        : (not set)
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                value = group['value']
+                if area_configuration_table_flag:
+                    area_configuration_table_dict[field_1] = value
+
+            # lsp_checksum_interval_secs                    : 0
+            # lsp_refresh_interval_secs                     : 35000
+            # lsp_lifetime_secs                             : 65535
+            # lsp_mtu                                       : 0
+            # lsp_count.in                                    : 101725
+            # lsp_count.out                                   : 176736            
+            result = r24_2.match(line)
+            if result:
+                group = result.groupdict()
+                field_1 = group['field_1']
+                field_2 = group['field_2']
+                value = int(group['value'])
+
+                if area_configuration_table_flag:
+                    area_configuration_table_dict[field_1] = value
+
+                continue
+
+
+            # per_topo[IPv4 Unicast]                        :
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                topology = group['topology']
+                if area_table_flag:
+                    area_table_per_topo_flag = True
+                    area_table_per_topo_dict = area_table_dict\
+                        .setdefault('per_topo', {})\
+                        .setdefault(topology, {})
+                else:
+                    area_configuration_table_per_topo_dict = area_configuration_table_dict\
+                        .setdefault('per_topo', {})\
+                        .setdefault(topology, {})
+                    area_configuration_table_per_topo_flag = True
+                continue
+
+            # per_ltopo[Standard (IPv4 Unicast)]              :
+            result = r26.match(line)
+            if result:
+                group = result.groupdict()
+                topology = group['topology']
+                if area_table_flag:
+                    area_table_per_ltopo_dict = area_table_dict\
+                        .setdefault('per_ltopo', {})\
+                        .setdefault(topology, {})
+                area_table_per_ltopo_flag = True
+                continue
+
+            # IPv4
+            # IPv6
+            result = r27.match(line)
+            if result:
+                if address_family_table_flag:
+                    address_family_table_dict = instance_dict\
+                        .setdefault('address_family_table', {})\
+                        .setdefault(line, {})
+
+                continue
+            
+            # overload_bit_trigger_expired                    : TRUE            
+            result = r28.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                if area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                elif area_table_flag:
+                    area_table_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+
+                continue
+
+            # overload_mode                                 : -1
+            result = r28_1.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                if not value:
+                    continue
+                value = int(group['value'])
+                if area_table_flag and value:
+                    area_table_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+
+                continue
+
+            # overload_bit_on_startup_timer                   : 0x15017530
+            # overload_bit_forced_reasons                     :            
+            result = r28_2.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                if area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                elif area_table_flag and value:
+                    area_table_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+
+                continue
+
+            # postponed_added_first_hops                    : 0x0
+            # postponed_deleted_first_hops                  : 0x0
+            result = r29.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                area_table_per_topo_dict[field] = value
+                continue
+
+            # max_redist_prefixes_exceeded                  : FALSE
+            # max_redist_prefixes_alarm_on                  : FALSE
+            result = r30.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+                if area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                continue
+
+            # max_redist_prefixes                         : (not set)
+            result = r30_1.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                if area_configuration_table_per_topo_flag:
+                    area_configuration_table_per_topo_dict[field] = value
+                continue
+
+            # per_af[IPv6]                                    :
+            # per_af[IPv4]                                    :
+            result = r31.match(line)
+            if result:
+                group = result.groupdict()
+                address_family = group['address_family']
+                if area_table_flag:
+                    area_table_per_af_dict = area_table_dict\
+                        .setdefault('address_family', {})\
+                        .setdefault(address_family, {})
+
+                area_table_per_af_flag = True
+                continue
+
+            # Level-1
+            # Level-2
+            result = r32.match(line)
+            if result:
+                group = result.groupdict()
+                level = group['level']
+                if area_table_flag:
+                    area_table_level = int(level)
+                    area_table_dict = instance_dict\
+                        .setdefault('area_tables', {})\
+                        .setdefault('level-'+level, {})
+                elif area_configuration_table_flag:
+                    area_config_table_level = 'level-' + level
+                continue
+
+            # adj_db                                          : 0x1540cee4
+            # adj_log                                         : 0x1539b844
+            result = r33.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+                if area_table_flag:
+                    area_table_dict[field] = value
+                continue
+
+            # cfg.refcount                                      : 7
+            # cfg.is_p2p                                        : TRUE
+            # cfg.enabled_mode                                  : Active
+            # cfg.circuit_type                                  : level-1-2
+            # cfg.ipv4_bfd_enabled                              : TRUE
+            # cfg.ipv6_bfd_enabled                              : FALSE
+            # cfg.bfd_interval                                  : 250
+            # cfg.bfd_multiplier                                : 3
+            # cfg.topos                                         : IPv4 Unicast
+            # cfg.cross_levels                                  :
+            result = r34.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # cfg.per_level[Level-1]                            :
+            # cfg.per_level[Level-2]                            :
+            result = r35.match(line)
+            if result:
+                level
+                continue
+
+            # media_specific.p2p.do_ietf_3way                   : TRUE
+            # media_specific.p2p.received_ietf_3way             : TRUE
+            # media_specific.p2p.neighbor_extended_circuit_number: 89
+            # media_specific.p2p.neighbor_system_id             : 0670.7021.9088
+            # media_specific.p2p.nsf_ietf
+            result = r36.match(line)
+            if result:
+                field_1
+                field_2
+                field_3
+                field_4
+                value
+                continue
+
+            # clns.im_node.state_registered                     : TRUE
+            # clns.im_node.node_up                              : TRUE
+            # clns.mtu                                          : 9199
+            result = r37.match(line)            
+            if result:
+                field_1
+                field_2
+                value
+                continue
+
+            # mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
+            # mpls_ldp_sync.ldp_sync_info                       : FALSE
+            # mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
+            result = r38.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
+            # mpls_ldpv6_sync.ldp_sync_info                     : FALSE
+            # mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
+            result = r39.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # per_area[Level-2]                                 :
+            result = r40.match(line)
+            if result:
+                level
+                continue
+
+            # nsf_ietf.full_csnp_set_rcvd                     : FALSE
+            # nsf_ietf.csnp_set_rcvd.list_head                : 0x0
+            # nsf_ietf.csnp_set_rcvd.list_size                : 0
+            result = r41.match(line)
+            if result:
+                field_1
+                field_2
+                value
+                continue
+
+            # im_node.exist_registered                        : TRUE
+            # im_node.node_exists                             : TRUE
+            # im_node.state_registered                        : TRUE
+            # im_node.node_up                                 : TRUE
+            result = r42.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
+            # snpa_info.snpa                                  : 00c1.641b.33d6
+            # snpa_info.is_snpa_ok                            : TRUE
+            result = r43.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # csnp_control.timer                              : 0x15768174
+            # csnp_control.next_lsp_id                        : 0000.0000.0000.00-00
+            # csnp_control.building_packets                   : FALSE
+            result = r44.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # pri_label_stack_limit                             : 1
+            # bkp_label_stack_limit                             : 3
+            # srte_label_stack_limit                            : 10
+            # srat_label_stack_limit                            : 10
+            result = r45.match(line)
+            if result:
+                field
+                value
+                continue
+            
+            # hello_interval_msecs                            : (not set)
+            # hello_multiplier                                : (not set)
+            result = r46.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # pme_avg_delay                                     : (not set)
+            # pme_min_delay                                     : (not set)
+            # pme_max_delay                                     : (not set)
+            # pme_delay_var                                     : (not set)
+            # pme_loss                                          : (not set)
+            # pme_total_bw                                      : (not set)
+            # pme_rsvp_te_bw                                    : (not set)
+            result = r47.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # mcast_state.is_mcast_group_member               : TRUE
+            # mcast_state.mcast_join_reason                   : 2
+            result = r48.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # csnp_count.in                                   : 4
+            # csnp_count.out                                  : 4
+            # psnp_count.in                                   : 168148
+            # psnp_count.out                                  : 98923
+            result = r49.match(line)
+            if result:
+                field_1
+                field_2
+                value
+                continue
+
+            # rsvp_max_res_bw                                   : 0 kbits/sec
+            # rsvp_unres_prio_7                                 : 0 kbits/sec
+            result = r50.match(line)
+            if result:
+                field
+                value
+                continue
+
+            # chkpt.objid                      : 0x0
+            result = r51.match(line)
+            if result:
+                value
+                continue
+
+            # RA-expected neighbor list:
+            result = r52.match(line)
+            if result:
+                continue
+
+            # local_address                          : 0.0.0.0    
+            result = r53.match(line)
+            if result:
+                local_address
+                continue
+
+            # Interface TenGigE0/0/1/2
+            result = r54.match(line)
+            if result:
+                interface
+                continue
+
+            # Address Family Table
+            result = r55.match(line)
+            if result:
+                address_family_table_flag = True
+                continue
+
+            # Configuration:
+            result = r56.match(line)
+            if result:
+                configuration_flag = True
+                configuration_dict = topology_table_dict\
+                    .setdefault('configuration', {})
+                continue
+
+            # Standard (IPv4 Unicast)
+            result = r57.match(line)
+            if result:
+                if link_topology_table_flag:
+                    link_topology_table_dict = instance_dict\
+                        .setdefault('link_topology_table', {})\
+                        .setdefault(line, {})
+                continue
+            
+            # IPv4 Unicast
+            result = r58.match(line)
+            if result:
+                if topology_table_flag:
+                    topology_table_dict = instance_dict\
+                        .setdefault('topology_table', {})\
+                        .setdefault(line, {})
+                continue
+            
+            # Topology Table            
+            result = r59.match(line)
+            if result:
+                topology_table_flag = True
+                continue
+
+            # Cross Levels
+            result = r60.match(line)
+            if result:
+                if area_configuration_table_flag:
+                    area_config_table_level = 'cross_levels'
+                continue
+
+            # Area Table            
+            result = r61.match(line)
+            if result:
+                area_table_flag = True
+                area_configuration_table_topo_index_flag = False
+                area_configuration_table_per_topo_flag = False
+                area_configuration_table_flag = False
+                configuration_flag = False
+                continue
+
+            # Link Topology Table            
+            result = r62.match(line)
+            if result:
+                link_topology_table_flag = True
+                continue
+
+            # Area Configuration Table
+            result = r63.match(line)
+            if result:
+                area_configuration_table_flag = True
+                continue
+
+            # is_mcast_intact_set                         : FALSE
+            result = r64.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = self._get_boolean_value(group['value'])
+
+                if area_table_per_af_flag:
+                    area_table_per_af_dict[field] = value
+                elif area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                elif area_table_per_ltopo_flag:
+                    area_table_per_ltopo_dict[field] = value
+                elif area_table_flag:
+                    area_table_dict[field] = value
+                elif area_configuration_table_topo_index_flag:
+                    area_configuration_table_topo_index_dict[field] = value
+                elif area_configuration_table_per_topo_flag:
+                    area_configuration_table_per_topo_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+                elif configuration_flag:
+                    configuration_dict[field] = value
+                elif topology_table_flag:
+                    topology_table_dict[field] = value
+                elif link_topology_table_flag:
+                    link_topology_table_dict[field] = value
+                elif address_family_table_flag:
+                    address_family_table_dict[field] = value
+                else:
+                    instance_dict[field] = value
+                continue
+
+            # cfg_refcount                                      : 57
+            result = r65.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = int(group['value'])
+
+
+                if field == 'ref_count':
+                    configuration_flag = False
+                if area_table_per_af_flag:
+                    area_table_per_af_dict[field] = value
+                elif area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                elif area_table_per_ltopo_flag:
+                    area_table_per_ltopo_dict[field] = value
+                elif area_table_flag:
+                    area_table_dict[field] = value
+                elif area_configuration_table_topo_index_flag:
+                    area_configuration_table_topo_index_dict[field] = value
+                elif area_configuration_table_per_topo_flag:
+                    area_configuration_table_per_topo_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+                elif configuration_flag:
+                    configuration_dict[field] = value
+                elif topology_table_flag:
+                    topology_table_dict[field] = value
+                elif link_topology_table_flag:
+                    link_topology_table_dict[field] = value
+                elif address_family_table_flag:
+                    address_family_table_dict[field] = value
+                else:
+                    instance_dict[field] = value
+
+                continue
+
+            # check_adjacencies                           : (not set)
+            # isis_is_level                               : level-2-only
+            result = r66.match(line)
+            if result:
+                group = result.groupdict()
+                field = group['field']
+                value = group['value']
+
+                if area_table_per_af_flag:
+                    area_table_per_af_dict[field] = value
+                elif area_table_per_topo_flag:
+                    area_table_per_topo_dict[field] = value
+                elif area_table_per_ltopo_flag:
+                    area_table_per_ltopo_dict[field] = value
+                elif area_table_flag:
+                    area_table_dict[field] = value
+                elif area_configuration_table_topo_index_flag:
+                    area_configuration_table_topo_index_dict[field] = value
+                elif area_configuration_table_per_topo_flag:
+                    area_configuration_table_per_topo_dict[field] = value
+                elif area_configuration_table_flag:
+                    area_configuration_table_dict[field] = value
+                elif configuration_flag:
+                    configuration_dict[field] = value
+                elif topology_table_flag:
+                    topology_table_dict[field] = value
+                elif link_topology_table_flag:
+                    link_topology_table_dict[field] = value
+                elif address_family_table_flag:
+                    address_family_table_dict[field] = value
+                else:
+                    instance_dict[field] = value
+
+                continue
 
         return parsed_dict
