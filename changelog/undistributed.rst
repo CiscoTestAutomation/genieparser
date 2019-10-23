@@ -500,6 +500,8 @@
         * To support more varied output
     * Updated ShowL2vpnXconnect for:
         * To support more varied output
+    * Updated ShowL2vpnXconnectDetail to support different outputs
+    * Updated ShowL2vpnXconnect to support differnt outputs
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -581,7 +583,7 @@
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
     * Update schema for AdminShowDiagChassis to support more varied output
-    * Update schema for AdminShowDiagChassis
+    * Update regex and logic for AdminShowDiagChassis
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
@@ -598,6 +600,7 @@
 * IOSXR
     * Fixed parser ShowLldpEntry to support different port descriptions
         * Update regex
+    * Update ShowLldpNeighborsDetail
 
 --------------------------------------------------------------------------------
                                 NTP
@@ -642,6 +645,8 @@
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
     * Updated ShowIsisSpfLogDetail to support different outputs
+    * Updated ShowIsisInterface to support different outputs
+    * Updated ShowIsisDatabaseDetail to support different outputs
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
