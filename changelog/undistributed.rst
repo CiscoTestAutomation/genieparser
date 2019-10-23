@@ -298,6 +298,8 @@
     * Updated ShowStaticTopologyDetail:
         * Support more varied output
         * Update regex
+    * Updated ShowRouteIpv6:
+        * Updated logic to support varies output
 * NXOS:
     * Updated ShowIpRoute for:
         * show ip route {route} {protocol} interface {interface} vrf {vrf}

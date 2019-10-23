@@ -429,7 +429,34 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         route = ""
 
         result_dict = {}
-        for line in out.splitlines():
+
+        split_output_list = []
+        old_output_list = out.splitlines()
+
+        # check if the output contains pattern:
+        #   S    2001:1:1:1::1/128
+        #       [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
+        pattern_0 = re.compile(r'.*\n\s+\[')
+
+        #   L    2001:32:32:32::32/128 is directly connected,
+        #       01:52:24, Loopback3
+        pattern_1 = re.compile(r'.*completed,\n')
+
+        match_0 = pattern_0.search(out)
+        match_1 = pattern_1.search(out)
+
+        if match_0 or match_1:
+            split_output_list = old_output_list
+        else:
+            # B    182.18.246.0/24 [200/0] via 67.70.219.128, 1w3d
+            for old in old_output_list:
+                break_pt = old.find('[')
+                new_line1 = old[:break_pt]
+                new_line2 = old[break_pt:]
+                split_output_list.append(new_line1)
+                split_output_list.append(new_line2)
+
+        for line in split_output_list:
             line = line.strip()
 
             # VRF: VRF501
