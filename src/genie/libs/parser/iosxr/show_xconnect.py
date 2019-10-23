@@ -272,12 +272,12 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                         'ac':{
                             Any(): {
                                 'state': str,
-                                'type': str,
+                                Optional('type'): str,
                                 Optional('num_ranges'): int,
                                 Optional('rewrite_tags'): str,
-                                'mtu': int,
-                                'xc_id': str,
-                                'interworking': str,
+                                Optional('mtu'): int,
+                                Optional('xc_id'): str,
+                                Optional('interworking'): str,
                                 Optional('msti'): int,
                                 Optional('statistics'): {
                                     'packet_totals': {
@@ -353,6 +353,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'encap_type': str,
                                             'control_word': str,
                                             'lsp': str,
+                                            Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'evpn': {
                                                 Any(): {
@@ -363,8 +364,8 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                                 }
                                             },
                                             'create_time': str,
-                                            'last_time_status_changed': str,
-                                            'statistics': {
+                                            Optional('last_time_status_changed'): str,
+                                            Optional('statistics'): {
                                                 'packet_totals': {
                                                     Optional('receive'): int,
                                                     Optional('send'): int
@@ -441,6 +442,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         current_dict = None
         pw_backup = False
         interface_found = False
+        label_found = False
         # Group siva_xc, XC siva_p2p, state is down; Interworking none
         p1 = re.compile(r'^Group +(?P<group>\S+), +XC +(?P<xc>\S+), +'
             'state +is +(?P<state>\S+); +Interworking +(?P<interworking>\S+)')
@@ -659,6 +661,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
                 xc_dict.update({'state': state})
                 xc_dict.update({'interworking': interworking})
+                label_found = False
                 continue
 
             # Group gr1, MP2MP mp1, state: up
@@ -675,6 +678,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault(mp2mp, {})
 
                 mp2mp_dict.update({'state': state})
+                label_found = False
                 continue
             
             # Monitor-Session: pw-span-test, state is configured
@@ -930,6 +934,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
                     mpls_pairs.update({m.start(): m.end() + 1})
+                label_found = not label_found
                 continue
 
             # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
@@ -1096,55 +1101,56 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # VCCV CV type 0x2                            0x0
             m = p15.match(line)
             if m:
-                mpls_items = list(mpls_pairs.items())
+                if label_found:
+                    mpls_items = list(mpls_pairs.items())
 
-                # Last index of MPLS label section
-                mpls_end_index = mpls_items[0][1]
+                    # Last index of MPLS label section
+                    mpls_end_index = mpls_items[0][1]
 
-                # Start and end index of Local section
-                local_start_index = mpls_items[1][0]
-                local_end_index = mpls_items[1][1]
-                
-                # Start and end index of Remote section
-                remote_start_index = mpls_items[2][0]
-                remote_end_index = mpls_items[2][1]
+                    # Start and end index of Local section
+                    local_start_index = mpls_items[1][0]
+                    local_end_index = mpls_items[1][1]
+                    
+                    # Start and end index of Remote section
+                    remote_start_index = mpls_items[2][0]
+                    remote_end_index = mpls_items[2][1]
 
-                mpls_value = original_line[:mpls_end_index]
-                mpls_value = (original_line[:mpls_end_index].strip().
-                                replace('-', '_').
-                                replace(' ', '_').
-                                lower())
-                
-                local_value = (original_line[local_start_index:local_end_index])
-                local_value = local_value.replace('(',''). \
+                    mpls_value = original_line[:mpls_end_index]
+                    mpls_value = (original_line[:mpls_end_index].strip().
+                                    replace('-', '_').
+                                    replace(' ', '_').
+                                    lower())
+                    
+                    local_value = (original_line[local_start_index:local_end_index])
+                    local_value = local_value.replace('(',''). \
+                                        replace(')', ''). \
+                                        strip()
+
+                    remote_value = (original_line[remote_start_index:remote_end_index])
+                    remote_value = remote_value.replace('(',''). \
                                     replace(')', ''). \
                                     strip()
-
-                remote_value = (original_line[remote_start_index:remote_end_index])
-                remote_value = remote_value.replace('(',''). \
-                                replace(')', ''). \
-                                strip()
-                # Any thing between () brackets will be added to Local or Remote based on position
-                if ')' not in line:
-                    if mpls_value == 'interface':
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                                setdefault('monitor_interface' if interface_found else mpls_value, {})
-                        if not interface_found:
-                            interface_found = True
+                    # Any thing between () brackets will be added to Local or Remote based on position
+                    if ')' not in line:
+                        if mpls_value == 'interface':
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                    setdefault('monitor_interface' if interface_found else mpls_value, {})
+                            if not interface_found:
+                                interface_found = True
+                        else:
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                setdefault(mpls_value, {})
+                        mpls_dict.update({'local': local_value})
+                        mpls_dict.update({'remote': remote_value})
                     else:
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                            setdefault(mpls_value, {})
-                    mpls_dict.update({'local': local_value})
-                    mpls_dict.update({'remote': remote_value})
-                else:
-                    local_type = mpls_dict.get('local_type', [])
-                    remote_type = mpls_dict.get('remote_type', [])
-                    if local_value:
-                        local_type.append(local_value)
-                    if remote_value:
-                        remote_type.append(remote_value)
-                    mpls_dict.update({'local_type': local_type})
-                    mpls_dict.update({'remote_type': remote_type})
+                        local_type = mpls_dict.get('local_type', [])
+                        remote_type = mpls_dict.get('remote_type', [])
+                        if local_value:
+                            local_type.append(local_value)
+                        if remote_value:
+                            remote_type.append(remote_value)
+                        mpls_dict.update({'local_type': local_type})
+                        mpls_dict.update({'remote_type': remote_type})
                 continue
         return ret_dict
 
