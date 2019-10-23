@@ -1113,11 +1113,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                             },
                         },
                     },
-                },
-            },
-            'vpws': {
-                'xc': {
-                    'vrp_vpws_tor2_bl2_10294': {
+                    'genie_wqst_tor2_bl2_10294': {
                         'state': 'down',
                         'interworking': 'none',
                         'ac': {
@@ -1236,7 +1232,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
             Create time: 11/07/2019 13:01:41 (14w4d ago)
             No status change since creation
 
-        Group vpws, XC vrp_vpws_tor2_bl2_10294, state is down; Interworking none
+        Group genie_wqst, XC genie_wqst_tor2_bl2_10294, state is down; Interworking none
         AC: Bundle-Ether2.60, state is up
             Type VLAN; Num Ranges: 1
             Rewrite Tags: []
