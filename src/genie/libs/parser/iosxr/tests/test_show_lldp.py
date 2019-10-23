@@ -51,7 +51,7 @@ class test_show_lldp(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-class test_show_lldp_entry(unittest.TestCase):
+class TestShowLldpEntry(unittest.TestCase):
     dev1 = Device(name='empty')
     empty_output = {'execute.return_value': ''}
 
@@ -314,6 +314,151 @@ class test_show_lldp_entry(unittest.TestCase):
         'total_entries': 3,
     }
 
+    device_output2 = {'execute.return_value': '''
+        Local Interface: TenGigE0/1/0/0
+    Parent Interface: Bundle-Ether1
+    Chassis id: ccd8.c1cb.7d11
+    Port id: Bundle-Ether2
+    Port Description: 10G to bl2-tatooine port Te0/1/0/0:BE1 
+    System Name: core1-tatooine
+    
+    System Description: 
+    Cisco IOS XR Software, Version 6.5.3[Default]
+    Copyright (c) 2019 by Cisco Systems, Inc., ASR9K Series
+    
+    Time remaining: 99 seconds
+    Hold Time: 120 seconds
+    System Capabilities: R
+    Enabled Capabilities: R
+    Management Addresses:
+      IPv4 address: 172.16.0.90
+    
+    Peer MAC Address: cc:d8:c1:cb:7d:14
+    
+        Local Interface: TenGigE0/5/0/5
+    Chassis id: c471.fec3.ac00
+    Port id: Te0/1/0/3
+    Port Description: 10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
+    System Name: tcore3-moria.cove.bell.ca
+    
+    System Description: 
+    Cisco IOS XR Software, Version 6.4.2[Default]
+    Copyright (c) 2019 by Cisco Systems, Inc., CRS
+    
+    Time remaining: 108 seconds
+    Hold Time: 120 seconds
+    System Capabilities: R
+    Enabled Capabilities: R
+    Management Addresses:
+      IPv4 address: 69.69.69.16
+    
+    Peer MAC Address: c4:71:fe:c3:af:79
+    
+        Local Interface: TenGigE0/5/0/6
+    Chassis id: 8426.2bbc.2c9d
+    Port id: 1611153480
+    Port Description: 2/1/9, 10-Gig Ethernet, "10G interface to TCORE3-ROHAN port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"
+    System Name: COTKON04XR1
+    
+    System Description: 
+    TiMOS-C-16.0.R7 cpm/hops64 Nokia 7950 XRS Copyright (c) 2000-2019 Nokia.
+    All rights reserved. All use subject to applicable license agreements.
+    Built on Wed Apr 10 16:45:38 PDT 2019 by builder in /builds/c/160B/R7/panos/main
+    
+    
+    Time remaining: 105 seconds
+    Hold Time: 121 seconds
+    System Capabilities: B,R
+    Enabled Capabilities: B,R
+    Management Addresses:
+      IPv4 address: 10.11.77.141
+    
+    Peer MAC Address: a0:f3:e4:c6:52:0e
+    
+    Total entries displayed: 3
+    '''}
+    expected_output2 = {
+        'interfaces': {
+            'TenGigE0/1/0/0': {
+                'port_id': {
+                    'Bundle-Ether2': {
+                        'neighbors': {
+                            'core1-tatooine': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': 'ccd8.c1cb.7d11',
+                                'hold_time': 120,
+                                'management_address': '172.16.0.90',
+                                'neighbor_id': 'core1-tatooine',
+                                'port_description': '10G to bl2-tatooine port Te0/1/0/0:BE1',
+                                'system_description': 'Cisco IOS XR Software, Version 6.5.3[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., ASR9K Series\n',
+                                'system_name': 'core1-tatooine',
+                                'time_remaining': 99,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/5/0/5': {
+                'port_id': {
+                    'TenGigabitEthernet0/1/0/3': {
+                        'neighbors': {
+                            'tcore3-moria.cove.bell.ca': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': 'c471.fec3.ac00',
+                                'hold_time': 120,
+                                'management_address': '69.69.69.16',
+                                'neighbor_id': 'tcore3-moria.cove.bell.ca',
+                                'port_description': '10G link to tcore3-rohan port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
+                                'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
+                                'system_name': 'tcore3-moria.cove.bell.ca',
+                                'time_remaining': 108,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/5/0/6': {
+                'port_id': {
+                    '1611153480': {
+                        'neighbors': {
+                            'COTKON04XR1': {
+                                'capabilities': {
+                                    'bridge': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '8426.2bbc.2c9d',
+                                'hold_time': 121,
+                                'management_address': '10.11.77.141',
+                                'neighbor_id': 'COTKON04XR1',
+                                'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to TCORE3-ROHAN port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
+                                'system_description': '',
+                                'system_name': 'COTKON04XR1',
+                                'time_remaining': 105,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 3,
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpEntry(device=self.dev1)
@@ -334,7 +479,14 @@ class test_show_lldp_entry(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output)
 
-class test_show_lldp_neighbor_detail(unittest.TestCase):
+    def test2(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.device_output2)
+        obj = ShowLldpEntry(device=self.dev1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_output2)
+
+class TestShowLldpNeighborDetail(unittest.TestCase):
     dev = Device(name='empty')
     empty_output = {'execute.return_value': '      '}
     golden_parsed_output = {
