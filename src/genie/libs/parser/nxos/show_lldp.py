@@ -184,7 +184,7 @@ class ShowLldpNeighborsDetailSchema(MetaParser):
                                 'system_name': str,
                                 'system_description': str,
                                 'time_remaining': int,
-                                'capabilities': {
+                                Optional('capabilities'): {
                                     Any(): {
                                         'name': str,
                                         Optional('system'): bool,
@@ -193,7 +193,8 @@ class ShowLldpNeighborsDetailSchema(MetaParser):
                                 },
                                 'management_address_v4': str,
                                 'management_address_v6': str,
-
+                                Optional('system_capabilities'): str,
+                                Optional('enabled_capabilities'): str,
                                 'vlan_id': str
                             }
                         }
@@ -235,9 +236,9 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         tmp_chassis_id = ''
         tmp_port_id = ''
         # Chassis id: 000d.bd09.46fa
-        p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w.]+)$')
+        p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\S]+)$')
         # Port id: Gi0/0/0/1
-        p2 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
+        p2 = re.compile(r'^Port +id: +(?P<port_id>[\S ]+)$')
         # Local Port id: Eth1/2
         p3 = re.compile(r'^Local +Port +id: +(?P<local_port_id>\S+)$')
         # Port Description: null
@@ -245,9 +246,9 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # System Name: R2_xrv9000
         p5 = re.compile(r'^System +Name: +(?P<system_name>\S+)$')
         # System Description:  6.2.2, IOS-XRv 9000
-        p6 = re.compile(r'^System +Description:[ \xa0]+(?P<system_description>.+)$')
+        p6 = re.compile(r'^System +Description: +(?P<system_description>.+)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
-        p6_1 = re.compile(r'^(?P<copyright>Copyright +\(c\) +.+)$')
+        p6_1 = re.compile(r'^(?P<copyright>Copyright +\([c|C]\) +.+)$')
         # Compiled Sat 22-Jul-17 05:51 by
         p6_2 = re.compile(r'^(?P<compiled_by>Compiled +.+)$')
         # Technical Support: http://www.cisco.com/techsupport
@@ -255,8 +256,10 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # Time remaining: 95 seconds
         p7 = re.compile(r'^Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # System Capabilities: B, R
+        # System Capabilities: not advertised
         p8 = re.compile(r'^System +Capabilities: +(?P<system>[\w ,]+)$')
         # Enabled Capabilities: R
+        # Enabled Capabilities: not advertised
         p9 = re.compile(r'^Enabled +Capabilities: +(?P<enabled>[\w ,]+)$')
         # Management Address: 10.2.3.2
         p10 = re.compile(r'^Management +Address: +(?P<mgmt_address_ipv4>.+)$')
@@ -352,29 +355,39 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 continue
 
             # System Capabilities: B, R
+            # System Capabilities: not advertised
             m = p8.match(line)
             if m:
                 cap_list = m.groupdict()['system'].split(',')
-                cap_list = map(str.strip, cap_list)
-                cap = [self.CAPABILITY_CODES[n] for n in cap_list]
-                for item in cap:
-                    cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
-                                                                                  {})
-                    cap_dict.update({'name': item})
-                    cap_dict.update({'system': True})
+
+                if 'not advertised' in cap_list:
+                    sub_dict.update({'system_capabilities': 'not advertised'})
+                else:
+                    cap_list = map(str.strip, cap_list)
+                    cap = [self.CAPABILITY_CODES[n] for n in cap_list]
+                    for item in cap:
+                        cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
+                                                                                    {})
+                        cap_dict.update({'name': item})
+                        cap_dict.update({'system': True})
                 continue
 
             # Enabled Capabilities: R
+            # Enabled Capabilities: not advertised
             m = p9.match(line)
             if m:
                 cap_list = m.groupdict()['enabled'].split(',')
-                cap_list = map(str.strip, cap_list)
-                cap = [self.CAPABILITY_CODES[n] for n in cap_list]
-                for item in cap:
-                    cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
-                                                                                  {})
-                    cap_dict.update({'name': item})
-                    cap_dict.update({'enabled': True})
+                if 'not advertised' in cap_list:
+                    sub_dict.update({'enabled_capabilities': 'not advertised'})
+                else:
+                    cap_list = map(str.strip, cap_list)
+                    cap = [self.CAPABILITY_CODES[n] for n in cap_list]
+                    for item in cap:
+                        cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
+                                                                                      {})
+                        cap_dict.update({'name': item})
+                        cap_dict.update({'enabled': True})
+
                 continue
 
             # Management Address: 10.2.3.2
