@@ -208,7 +208,7 @@ class TestShowLldpEntry(unittest.TestCase):
         System Capabilities: R
         Enabled Capabilities: R
         Management Addresses:
-          IPv4 address: 172.18.0.7
+          IPv4 address: 10.10.10.10
         
         Peer MAC Address: 00:8a:96:0b:20:08
         
@@ -228,7 +228,7 @@ class TestShowLldpEntry(unittest.TestCase):
         System Capabilities: R
         Enabled Capabilities: R
         Management Addresses:
-          IPv4 address: 172.18.0.5
+          IPv4 address: 10.10.10.11
         
         Peer MAC Address: 00:8a:96:0b:08:08
         
@@ -251,7 +251,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 },
                                 'chassis_id': '008a.960b.0c81',
                                 'hold_time': 120,
-                                'management_address': '172.18.0.5',
+                                'management_address': '10.10.10.11',
                                 'neighbor_id': 'system1',
                                 'port_description': 'to gen-8 nie  0/0/1/0 via gee1.dev 31-32',
                                 'system_description': '',
@@ -275,7 +275,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 },
                                 'chassis_id': '008a.960b.2481',
                                 'hold_time': 120,
-                                'management_address': '172.18.0.7',
+                                'management_address': '10.10.10.10',
                                 'neighbor_id': 'system2',
                                 'port_description': 'to gen-8 nie  0/0/1/1 via gee1.dev 29-30',
                                 'system_description': '',
@@ -331,7 +331,7 @@ class TestShowLldpEntry(unittest.TestCase):
     System Capabilities: R
     Enabled Capabilities: R
     Management Addresses:
-      IPv4 address: 172.16.0.90
+      IPv4 address: 10.10.10.12
     
     Peer MAC Address: cc:d8:c1:cb:7d:14
     
@@ -350,7 +350,7 @@ class TestShowLldpEntry(unittest.TestCase):
     System Capabilities: R
     Enabled Capabilities: R
     Management Addresses:
-      IPv4 address: 69.69.69.16
+      IPv4 address: 10.10.10.13
     
     Peer MAC Address: c4:71:fe:c3:af:79
     
@@ -371,7 +371,7 @@ class TestShowLldpEntry(unittest.TestCase):
     System Capabilities: B,R
     Enabled Capabilities: B,R
     Management Addresses:
-      IPv4 address: 10.11.77.141
+      IPv4 address: 10.10.10.14
     
     Peer MAC Address: a0:f3:e4:c6:52:0e
     
@@ -392,7 +392,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 },
                                 'chassis_id': 'ccd8.c1cb.7d11',
                                 'hold_time': 120,
-                                'management_address': '172.16.0.90',
+                                'management_address': '10.10.10.12',
                                 'neighbor_id': 'core1-tatooine',
                                 'port_description': '10G to ge1-genie port Ge1/1/1/1:GG1',
                                 'system_description': 'Cisco IOS XR Software, Version 6.5.3[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., ASR9K Series\n',
@@ -416,7 +416,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 },
                                 'chassis_id': 'c471.fec3.ac00',
                                 'hold_time': 120,
-                                'management_address': '69.69.69.16',
+                                'management_address': '10.10.10.13',
                                 'neighbor_id': 'system3',
                                 'port_description': '10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
                                 'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
@@ -444,7 +444,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                 },
                                 'chassis_id': '8426.2bbc.2c9d',
                                 'hold_time': 121,
-                                'management_address': '10.11.77.141',
+                                'management_address': '10.10.10.14',
                                 'neighbor_id': 'COTKON04XR1',
                                 'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
                                 'system_description': '',
@@ -732,7 +732,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         System Capabilities: R
         Enabled Capabilities: R
         Management Addresses:
-          IPv4 address: 172.18.0.7
+          IPv4 address: 10.10.10.10
         
         Peer MAC Address: 00:8a:96:0b:20:08
         
@@ -752,7 +752,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         System Capabilities: R
         Enabled Capabilities: R
         Management Addresses:
-          IPv4 address: 172.18.0.5
+          IPv4 address: 10.10.10.11
         
         Peer MAC Address: 00:8a:96:0b:08:08
         
@@ -775,7 +775,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 },
                                 'chassis_id': '008a.960b.0c81',
                                 'hold_time': 120,
-                                'management_address': '172.18.0.5',
+                                'management_address': '10.10.10.11',
                                 'neighbor_id': 'system1',
                                 'port_description': 'to gen-8 nie  0/0/1/0 via gee1.dev 31-32',
                                 'system_description': '',
@@ -799,7 +799,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                 },
                                 'chassis_id': '008a.960b.2481',
                                 'hold_time': 120,
-                                'management_address': '172.18.0.7',
+                                'management_address': '10.10.10.10',
                                 'neighbor_id': 'system2',
                                 'port_description': 'to gen-8 nie  0/0/1/1 via gee1.dev 29-30',
                                 'system_description': '',
