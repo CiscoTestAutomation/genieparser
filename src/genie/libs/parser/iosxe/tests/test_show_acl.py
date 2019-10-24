@@ -1,5 +1,6 @@
 #!/bin/env python
 import unittest
+
 from unittest.mock import Mock
 from ats.topology import Device
 
@@ -1475,15 +1476,15 @@ IPv6 access list OutFilter_IPv6
             10 permit 10.2.0.0, wildcard bits 0.0.255.255
             20 permit 10.2.0.0
             30 deny   any
-            40 permit 7.7.7.7
+            40 permit 10.196.7.7
         Standard IP access list NAT_ACL2
             10 permit 10.2.0.0, wildcard bits 0.0.255.255
-            20 permit 7.7.7.8
+            20 permit 10.196.7.8
             30 deny   any
         Extended IP access list PYATS_ACL_TEST
             10 permit ip host 0.0.0.0 any
             20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
-            30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+            30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
         IPv6 access list PYATS_ACL_TEST_IPv6
             permit ipv6 2001:DB8::/64 any sequence 10
             permit esp host 2001:DB8:5::1 any sequence 20
@@ -1558,8 +1559,8 @@ IPv6 access list OutFilter_IPv6
                             'ipv4': {
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.7 0.0.0.0': {
-                                        'source_network': '7.7.7.7 0.0.0.0'
+                                    '10.196.7.7 0.0.0.0': {
+                                        'source_network': '10.196.7.7 0.0.0.0'
                                     }
                                 }
                             }
@@ -1600,8 +1601,8 @@ IPv6 access list OutFilter_IPv6
                             'ipv4': {
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.8 0.0.0.0': {
-                                        'source_network': '7.7.7.8 0.0.0.0'
+                                    '10.196.7.8 0.0.0.0': {
+                                        'source_network': '10.196.7.8 0.0.0.0'
                                     }
                                 }
                             }
@@ -1700,14 +1701,14 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'tcp': {
                                 'destination_network': {
-                                    '200.0.0.0 0.0.0.255': {
-                                        'destination_network': '200.0.0.0 0.0.0.255'
+                                    '192.168.220.0 0.0.0.255': {
+                                        'destination_network': '192.168.220.0 0.0.0.255'
                                     }
                                 },
                                 'protocol': 'tcp',
                                 'source_network': {
-                                    '100.0.0.0 0.0.0.255': {
-                                        'source_network': '100.0.0.0 0.0.0.255'
+                                    '10.55.0.0 0.0.0.255': {
+                                        'source_network': '10.55.0.0 0.0.0.255'
                                     }
                                 }
                             }
@@ -1860,6 +1861,102 @@ IPv6 access list OutFilter_IPv6
         }
     }
 
+    golden_output_customer = {'execute.return_value': '''
+        Standard IP access list 43
+            10 permit 10.1.0.2 (1168716 matches)
+            20 permit 10.144.0.9
+            30 permit 10.70.10.0, wildcard bits 0.0.10.255
+            40 permit 10.196.0.0, wildcard bits 0.0.255.255 (8353358 matches)
+    '''
+    }
+
+    golden_parsed_output_customer = {
+        '43': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'statistics': {
+                        'matched_packets': 1168716
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.1.0.2 0.0.0.0': {
+                                        'source_network': '10.1.0.2 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '10'
+                },
+                '20': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.144.0.9 0.0.0.0': {
+                                        'source_network': '10.144.0.9 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '20'
+                },
+                '30': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.70.10.0 0.0.10.255': {
+                                        'source_network': '10.70.10.0 0.0.10.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '30'
+                },
+                '40': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'statistics': {
+                        'matched_packets': 8353358
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.196.0.0 0.0.255.255': {
+                                        'source_network': '10.196.0.0 0.0.255.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '40'
+                }
+            },
+            'name': '43',
+            'type': 'ipv4-acl-type'
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -1900,6 +1997,13 @@ IPv6 access list OutFilter_IPv6
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_customer)
+        obj = ShowIpAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='43')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer)
 
 if __name__ == '__main__':
     unittest.main()

@@ -297,6 +297,9 @@
         * Optimized parser moving regex compilation out of for loop
     * Updated ShowStaticTopologyDetail:
         * Support more varied output
+        * Update regex
+    * Updated ShowRouteIpv6:
+        * Updated logic and add regex to support varies output
 * NXOS:
     * Updated ShowIpRoute for:
         * show ip route {route} {protocol} interface {interface} vrf {vrf}
@@ -512,6 +515,8 @@
         * To support more varied output
     * Updated ShowL2vpnXconnect for:
         * To support more varied output
+    * Updated ShowL2vpnXconnectDetail to support different outputs
+    * Updated ShowL2vpnXconnect to support differnt outputs
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -543,6 +548,7 @@
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEviMacPrivate to support different outputs
+    * Update ShowEvpnInternalLabelDetail to support optional label key
 
 --------------------------------------------------------------------------------
                                 Route
@@ -592,6 +598,7 @@
     * Update schema for ShowPlatformHardware to support more varied output
 * IOSXR
     * Update schema for AdminShowDiagChassis to support more varied output
+    * Update regex and logic for AdminShowDiagChassis
     * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
@@ -607,6 +614,8 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowLldpEntry to support different port descriptions
+        * Update regex
+    * Update ShowLldpNeighborsDetail
 
 --------------------------------------------------------------------------------
                                 NTP
@@ -650,6 +659,9 @@
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
+    * Updated ShowIsisSpfLogDetail to support different outputs
+    * Updated ShowIsisInterface to support different outputs
+    * Updated ShowIsisDatabaseDetail to support different outputs
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
@@ -694,3 +706,10 @@
 * IOSXE
     * Verified customer outputs
     * Added field to schema advertised_by
+
+--------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists
+        * Updated regex to capture more outputs

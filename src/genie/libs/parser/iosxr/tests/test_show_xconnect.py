@@ -376,7 +376,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             'GigabitEthernet2/2/2/34.422': {
                                 'status': 'UP',
                                 'segment2': {
-                                    'EVPN 3223,4112,21.265.321.93': {
+                                    'EVPN 3223,4112,10.1.21.93': {
                                         'status': 'UP',
                                     },
                                 },
@@ -406,28 +406,163 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     }
 
     golden_output4 = {'execute.return_value': '''
-    show l2vpn xconnect
+        show l2vpn xconnect
 
-    Mon Oct  7 16:22:44.651 EDT
-    Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
-            SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+        Mon Oct  7 16:22:44.651 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
 
-    XConnect                   Segment 1                       Segment 2                
-    Group      Name       ST   Description            ST       Description            ST    
-    ------------------------   -----------------------------   -----------------------------
-    genie_wqst       wsq_wqxt_ups2_cm2_21314
-                        UR   BE2.61                 UR       EVPN 21314,31314,10.4.1.1 
-                                                                                    DN    
-    ----------------------------------------------------------------------------------------
-    genie_CM-QF-CF   G2-2-2-34-422
-                        UP   Gi2/2/2/34.422         UP       EVPN 3223,4112,21.265.321.93 
-                                                                                    UP    
-    ----------------------------------------------------------------------------------------
-    genie_CM-3-EDQF  G2-2-2-34-322
-                        UP   Gi2/2/2/34.322         UP       10.154.219.82    9593211
-                                                                                    UP    
-    ----------------------------------------------------------------------------------------
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        genie_wqst       wsq_wqxt_ups2_cm2_21314
+                            UR   BE2.61                 UR       EVPN 21314,31314,10.4.1.1 
+                                                                                        DN    
+        ----------------------------------------------------------------------------------------
+        genie_CM-QF-CF   G2-2-2-34-422
+                            UP   Gi2/2/2/34.422         UP       EVPN 3223,4112,10.1.21.93 
+                                                                                        UP    
+        ----------------------------------------------------------------------------------------
+        genie_CM-3-EDQF  G2-2-2-34-322
+                            UP   Gi2/2/2/34.322         UP       10.154.219.82    9593211
+                                                                                        UP    
+        ----------------------------------------------------------------------------------------
         '''}
+
+    golden_parsed_output5 = {
+        'groups': {
+            'up-udpsf5-genie': {
+                'name': {
+                    'up-udpsf5-genie': {
+                        'status': 'UR',
+                        'segment1': {
+                            '10.154.219.82    2015030201': {
+                                'status': 'UR',
+                                'segment2': {
+                                    'Nonexistent': {
+                                        'status': 'UR',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'up-udpsf2-genie': {
+                'name': {
+                    'up-udpsf2-genie': {
+                        'status': 'DN',
+                        'segment1': {
+                            'TenGigabitEthernet0/4/0/5': {
+                                'status': 'UP',
+                                'segment2': {
+                                    '10.154.219.83   1152': {
+                                        'status': 'DN',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'UP-udpsf5genie-port': {
+                'name': {
+                    'U-1-5-1-3': {
+                        'status': 'UR',
+                        'segment1': {
+                            '10.154.219.84    4293089094': {
+                                'status': 'UR',
+                                'segment2': {
+                                    'Nonexistent': {
+                                        'status': 'UR',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output5 = {'execute.return_value': '''
+        show l2vpn xconnect
+
+        Mon Oct 21 11:03:04.538 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        up-udpsf5-genie
+                up-udpsf5-genie
+                            UR   10.154.219.82    2015030201
+                                                        UR       Nonexistent            UR    
+        ----------------------------------------------------------------------------------------
+        up-udpsf2-genie
+                up-udpsf2-genie
+                            DN   Te0/4/0/5              UP       10.154.219.83   1152   DN    
+        ----------------------------------------------------------------------------------------
+        UP-udpsf5genie-port
+                U-1-5-1-3  UR   10.154.219.84    4293089094
+                                                        UR       Nonexistent            UR    
+        ----------------------------------------------------------------------------------------
+        
+    '''}
+
+    golden_parsed_output6 = {
+        "groups": {
+            "vpws": {
+                "name": {
+                    "vpws": {
+                        "status": "UR",
+                        "segment1": {
+                            "TenGigabitEthernet0/0/15/0": {
+                                "status": "UR",
+                                "segment2": {
+                                    "EVPN 302,302,0.0.0.0": {
+                                        "status": "DN"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "vrp_vpws_2": {
+                        "status": "DN",
+                        "segment1": {
+                            "Bundle-Ether2.78": {
+                                "status": "UP",
+                                "segment2": {
+                                    "EVPN 12345,67895,1.1.2.1": {
+                                        "status": "DN"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output6 = {'execute.return_value': '''
+        show l2vpn xconnect
+
+        Thu Oct 24 11:40:08.221 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        vpws       vpws       UR   Te0/0/15/0              UR       EVPN 302,302,0.0.0.0   DN    
+        ----------------------------------------------------------------------------------------
+        vpws       vrp_vpws_2
+                              DN   BE2.78                 UP       EVPN 12345,67895,1.1.2.1 
+                                                                                          DN    
+        ----------------------------------------------------------------------------------------
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -462,6 +597,20 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+    
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowL2vpnXconnect(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowL2vpnXconnect(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect detail'

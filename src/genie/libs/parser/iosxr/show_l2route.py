@@ -187,10 +187,10 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
 
         # Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
         # -------- -------------- --------------- ----------- -----------------
-        # 0        0001.0003.0004 100.69.0.250    LOCAL       N/A
+        # 0        0001.0003.0004 10.1.0.250    LOCAL       N/A
         # 0        0001.0003.0004 2001:db8::250   LOCAL       N/A
-        # 0        0aaa.0bbb.0000 100.69.0.3      LOCAL       N/A
-        # 0        0aaa.0bbb.0001 100.69.0.4      LOCAL       N/A
+        # 0        0aaa.0bbb.0000 10.1.0.3      LOCAL       N/A
+        # 0        0aaa.0bbb.0001 10.1.0.4      LOCAL       N/A
         # 0        fc00.0001.0006 192.168.166.3   L2VPN  Bundle-Ether1.0
         # 0        fc00.0001.0008 192.168.49.3    L2VPN  68101/I/ME
 
