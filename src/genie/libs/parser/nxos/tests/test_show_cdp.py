@@ -439,18 +439,18 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     '192.168.0.95': {},
                     '192.168.0.96': {},
                     '192.168.0.97': {},
-                    '4000::BC:0:C0A8B:BC06': {
+                    '2001:DB8:1000::BC:0:C0A8B:BC06': {
                         'type': 'global unicast'},
-                    '5000::CB:0:C0B8B:BCC6': {
+                    '2001:DB8:1900::CB:0:C0B8B:BCC6': {
                         'type': 'link-local'}},
                 'local_interface': 'Ethernet1/29',
                 'management_addresses': {
                     '192.168.0.95': {},
                     '192.168.0.96': {},
                     '192.168.0.97': {},
-                    '4000::BC:0:C0A8B:BC06': {
+                    '2001:DB8:1000::BC:0:C0A8B:BC06': {
                         'type': 'global unicast'},
-                    '5000::CB:0:C0B8B:BCC6': {
+                    '2001:DB8:1900::CB:0:C0B8B:BCC6': {
                         'type': 'link-local'}},
                 'native_vlan': '1',
                 'physical_location': 'snmplocation',
@@ -470,8 +470,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         System Name:swor95
         Interface address(es):
         IPv4 Address: 192.168.0.95
-        IPv6 Address: 4000::BC:0:C0A8B:BC06 (global unicast)
-        IPv6 Address: 5000::CB:0:C0B8B:BCC6 (link-local)
+        IPv6 Address: 2001:DB8:1000::BC:0:C0A8B:BC06 (global unicast)
+        IPv6 Address: 2001:DB8:1900::CB:0:C0B8B:BCC6 (link-local)
         IPv4 Address: 192.168.0.96
         IPv4 Address: 192.168.0.97
         Platform: N5K-C5010P-BF, Capabilities: Switch IGMP Filtering Supports-STP-Dispute
@@ -487,8 +487,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Physical Location: snmplocation
         Mgmt address(es):
         IPv4 Address: 192.168.0.95
-        IPv6 Address: 4000::BC:0:C0A8B:BC06 (global unicast)
-        IPv6 Address: 5000::CB:0:C0B8B:BCC6 (link-local)
+        IPv6 Address: 2001:DB8:1000::BC:0:C0A8B:BC06 (global unicast)
+        IPv6 Address: 2001:DB8:1900::CB:0:C0B8B:BCC6 (link-local)
         IPv4 Address: 192.168.0.96
         IPv4 Address: 192.168.0.97
     """}

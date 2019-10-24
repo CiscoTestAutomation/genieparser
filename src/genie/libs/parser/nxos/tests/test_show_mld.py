@@ -77,8 +77,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:05:18",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1::1/64": {
-                                     "ip": "2001:db1:1::1",
+                                "2001:db8:8404:751c::1/64": {
+                                     "ip": "2001:db8:8404:751c::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -146,8 +146,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:03:01",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1:1::1/64": {
-                                     "ip": "2001:db1:1:1::1",
+                                "2001:db8:8404:907f::1/64": {
+                                     "ip": "2001:db8:8404:907f::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -172,7 +172,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "VRF1"
         Ethernet2/2, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1::1/64 [VALID]
+            2001:db8:8404:751c::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -204,7 +204,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "default"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1:1::1/64 [VALID]
+            2001:db8:8404:907f::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -289,8 +289,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:03:01",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1:1::1/64": {
-                                     "ip": "2001:db1:1:1::1",
+                                "2001:db8:8404:907f::1/64": {
+                                     "ip": "2001:db8:8404:907f::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -315,7 +315,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "default"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1:1::1/64 [VALID]
+            2001:db8:8404:907f::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -710,7 +710,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1:1::1",
+                                               "last_reporter": "2001:db8:8404:907f::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:26:28"
@@ -718,7 +718,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1:1::1",
+                                     "last_reporter": "2001:db8:8404:907f::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:26:05"
@@ -735,7 +735,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1::1",
+                                               "last_reporter": "2001:db8:8404:751c::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:25:49"
@@ -743,7 +743,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1::1",
+                                     "last_reporter": "2001:db8:8404:751c::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:25:49"
@@ -759,20 +759,20 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         MLD Connected Group Membership for VRF "default" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
 
         MLD Connected Group Membership for VRF "VRF1" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/2
-          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db1:1::1
+          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/2
-          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db1:1::1
+          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1
     '''}
 
     golden_parsed_output_1 = {
@@ -785,7 +785,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1:1::1",
+                                               "last_reporter": "2001:db8:8404:907f::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:26:28"
@@ -793,7 +793,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1:1::1",
+                                     "last_reporter": "2001:db8:8404:907f::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:26:05"
@@ -809,11 +809,11 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         MLD Connected Group Membership for VRF "default" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
     '''}
 
     def test_empty(self):

@@ -500,7 +500,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                             ['source_protocol'] = source_protocol
                 continue
 
-            #   B    182.18.240.0/22 [200/0] via 67.70.219.128, 1w3d
+            #   B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
             p2_1 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)'
                               r'( +(?P<code2>[\w\*\(\>\)\!]+))?'
                               r' +(?P<route>[\w\/\:\.]+) +\[.*$')
@@ -556,7 +556,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             #   [200/0] via ::ffff:10.229.11.11 (nexthop in vrf default), 00:55:12
-            #   B    182.18.240.0/22 [200/0] via 67.70.219.128, 1w3d
+            #   B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
             p3 = re.compile(r'.*\[(?P<route_preference>[\d\/]+)\]'
                             r' +via +(?P<next_hop>[\w\:\.\)]+)?( \(nexthop in '
                             r'vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +'

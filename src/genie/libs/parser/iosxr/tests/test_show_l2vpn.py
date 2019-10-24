@@ -271,7 +271,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                             'vfi100': {
                                 'state': 'up',
                                 'neighbor': {
-                                    '11.11.11.11': {
+                                    '10.229.11.11': {
                                         'pw_id': {
                                             100100: {
                                                 'state': 'up',
@@ -360,7 +360,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         List of Access PWs:
         List of VFIs:
             VFI vfi100 (up)
-            Neighbor 11.11.11.11 pw-id 100100, state: up, Static MAC addresses: 0
+            Neighbor 10.229.11.11 pw-id 100100, state: up, Static MAC addresses: 0
         List of Access VFIs:
         Bridge group: evpn_access, bridge-domain: 100_evpn_access, id: 1, state: up, ShgId: 0, MSTi: 0
         Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
@@ -2670,10 +2670,10 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         List of Access PWs:
         List of VFIs:
           VFI vfi100 (up)
-            PW: neighbor 11.11.11.11, PW ID 100100, state is up ( established )
+            PW: neighbor 10.229.11.11, PW ID 100100, state is up ( established )
               PW class link1, XC ID 0xa0000007
               Encapsulation MPLS, protocol LDP
-              Source address 22.22.22.22
+              Source address 10.151.22.22
               PW type Ethernet, control word disabled, interworking none
               Sequencing not set
 
@@ -2843,7 +2843,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             'vfi100': {
                                 'state': 'up',
                                 'neighbor': {
-                                    '11.11.11.11': {
+                                    '10.229.11.11': {
                                         'pw_id': {
                                             '100100': {
                                                 'state': 'up ( established )',
@@ -2851,7 +2851,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                 'xc_id': '0xa0000007',
                                                 'encapsulation': 'MPLS',
                                                 'protocol': 'LDP',
-                                                'source_address': '22.22.22.22',
+                                                'source_address': '10.151.22.22',
                                                 'pw_type': 'Ethernet',
                                                 'control_word': 'disabled',
                                                 'interworking': 'none',

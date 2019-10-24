@@ -3695,7 +3695,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 continue
                     
            # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-            # *> 615:11:11::/64     2001:db8:20:1:5::5
+            # *> 2001:db8:cdc9:121::/64     2001:db8:20:1:5::5
 
             m = p13.match(line)
             if m:
@@ -4071,7 +4071,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
             # Network            Next Hop        From            AS Path
             # 10.169.1.0/24        10.186.5.1        10.16.2.2         100 300 33299 51178 47751 {27016}e
-            # 615:11:11::/64     10.4.1.1         2001:db8:20:1:5::5
+            # 2001:db8:cdc9:121::/64     10.4.1.1         2001:db8:20:1:5::5
             # 10.4.1.1/32         10.4.1.1         Local           ?
 
             m = p4.match(line)
@@ -4867,7 +4867,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                          r' +(?P<route_distinguisher>\S+)'
                          r'(?: +\(default +for +vrf +(?P<default_vrf>\S+)\))?$')
 
-        # *> 615:11:11:3::/64   2001:db8:20:1:5::5
+        # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
         # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                            r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))'
@@ -5046,7 +5046,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     af_dict['default_vrf'] = group['default_vrf'].lower()
                 continue
 
-            # *> 615:11:11:3::/64   2001:db8:20:1:5::5
+            # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
             # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
             m = p16_1.match(line)
             if m:
@@ -5581,7 +5581,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict.update({'local_router_id': local_router_id})
                 continue
 
-            #                     20:47::21a:1ff:fe00:161/128
+            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
             m = p3_4.match(line)
             if m:
                 # Get keys
@@ -5601,7 +5601,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'next_hop': next_hop})
                 continue
 
-            # * i                   2000:1015::abcd:5678:3
+            # * i                   2001:db8:400:a2bb:0:abcd:5678:3
             m = p3_1_2.match(line)
             if m:
                 # Get keys
@@ -5648,7 +5648,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             # Network            Next Hop         Metric   LocPrf   Weight Path
             
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3_1.match(line)
             # *>i10.111.8.3/32     10.84.66.66           2000        100          0 200 i
             # *>i10.111.8.4/32     10.84.66.66           2000        100          0 200 i
