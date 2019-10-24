@@ -77,7 +77,8 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
     cli_command = [
             'show igmp interface', 
             'show igmp interface {interface}', 
-            'show igmp vrf {vrf} interface'
+            'show igmp vrf {vrf} interface',
+            'show igmp vrf {vrf} interface {interface}'
     ]
     def cli(self, interface="", vrf="", output=None):
         ''' parsing mechanism: cli
@@ -87,11 +88,13 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
         cuting, transforming, returning
         '''
         if output is None:
-            if interface:
+            if interface and not vrf:
                 cmd = self.cli_command[1].format(interface=interface)
                 vrf = 'default'
-            elif vrf:
+            elif vrf and not interface:
                 cmd = self.cli_command[2].format(vrf=vrf)
+            elif vrf and interface:
+                cmd = self.cli_command[3].format(vrf=vrf, interface=interface)
             else:
                 cmd = self.cli_command[0]
                 vrf = 'default'
@@ -225,7 +228,8 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
                 igmp_querying_router = m.groupdict()['igmp_querying_router']
                 igmp_querying_router_info = m.groupdict()['igmp_querying_router_info']
                 intf_dict['igmp_querying_router'] = igmp_querying_router
-                intf_dict['igmp_querying_router_info'] = str(igmp_querying_router_info)
+                if igmp_querying_router_info is not None:
+                    intf_dict['igmp_querying_router_info'] = str(igmp_querying_router_info)
                 continue
                 
             # Time elapsed since last query sent 00:00:53
