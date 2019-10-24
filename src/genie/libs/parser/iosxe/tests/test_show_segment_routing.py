@@ -1092,10 +1092,10 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
 
     def test_golden_affinity(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output_affinity)
         obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_affinity)
 
 
 # ====================================================================
