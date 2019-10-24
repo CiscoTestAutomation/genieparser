@@ -481,14 +481,18 @@
         * show ip route vrf {vrf} {protocol}
         * show ip route vrf {vrf}
         * show ip route {protocol}
-        * show ip route {route}
         * show ip route
+    * Updated ShowIpRouteWord for:
+        * show ip route {route}
+        * show ip route vrf {vrf} {route}
     * Updated ShowIpv6Route for:
         * show ipv6 route vrf {vrf} {protocol}
         * show ipv6 route vrf {vrf}
         * show ipv6 route {protocol}
-        * show ipv6 route {route}
         * show ipv6 route
+    * Updated ShowIpv6RouteWord for:
+        * show ipv6 route {route}
+        * show ipv6 route vrf {vrf} {route}
     * Updated ShowRplPrefixSet regex for:
         * show rpl prefix-set
         * show rpl prefix-set <name>
