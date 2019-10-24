@@ -1196,191 +1196,335 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
         Any(): {
             'vrf': {
                 Any(): {
-                    Any(): {
-                        Any(): {
-                            'lsp_sequence_num': str,
-                            'lsp_checksum': str,
-                            Optional('local_router'): bool,
-                            'lsp_holdtime': str,
-                            Optional('lsp_rcvd'): str,
-                            'attach_bit': int,
-                            'p_bit': int,
-                            'overload_bit': int,
-                            Optional('area_address'): str,
-                            Optional('router_id'): str,
-                            Optional('nlpid'): str,
-                            Optional('topology'): {
-                                Any(): {
-                                    'code': str,
+                    'level_db': {
+                        Any(): { # level
+                            Any(): { # lsp_id
+                                'lsp_id': str,
+                                'sequence': str,
+                                'checksum': str,
+                                'lifetime': int,
+                                'attach_bit': int,
+                                'p_bit': int,
+                                'overload_bit': int,
+                                't_bit': int,
+                                'instance': str,
+                                Optional('area_address'): str,
+                                Optional('nlpid'): str,
+                                Optional('topo_id'): int,
+                                Optional('hostname'): str,
+                                Optional('router_id'): str,
+                                Optional('length'): int,
+                                Optional('mt_entries'): {
+                                    Any(): {
+                                        'att': int,
+                                        'ol': int,
+                                    }
                                 },
-                            },
-                            Optional('hostname'): str,
-                            Optional('ip_address'): str,
-                            Optional('ipv6_address'): str,
-                            Any(): {
-                                Any(): {
-                                    'metric': int,
-                                    Optional('mt_ipv6'): bool,
+                                Optional('extended_is_neighbor'): {
+                                    Any(): {
+                                        'neighbor_id': str,
+                                        'metric': int,
+                                    },
                                 },
+                                Optional('mt_is_neighbor'): {
+                                    Any(): {
+                                        'neighbor_id': str,
+                                        'metric': int,
+                                    },
+                                },
+                                Optional('ip_address'): str,
+                                Optional('extended_ip'): {
+                                    Any(): {
+                                        'ip': str,
+                                        'metric': int,
+                                        Optional('sub_tlv_length'): int,
+                                        Optional('sub_tlv_type'): int,
+                                    },
+                                },
+                                Optional('ipv6_address'): str,
+                                Optional('mt_ipv6_prefix'): {
+                                    Any(): {
+                                        'ipv6': str,
+                                        'metric': int,
+                                        Optional('sub_tlv_length'): int,
+                                        Optional('sub_tlv_type'): int,
+                                    },
+                                },
+                                'digest_offset': int,
                             },
                         },
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        },
     }
 
 
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     """Parser for show isis database detail"""
 
-    cli_command = 'show isis database detail'
-    exclude = ['lsp_holdtime' , 'lsp_checksum', 'lsp_sequence_num']
+    cli_command = ['show isis database detail', 
+                   'show isis database detail vrf {vrf}']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # initial return dictionary
         result_dict = {}
-        tag = ""
-        #  Tag VRF1:
-        p1 = re.compile(r'^Tag +(?P<tag>\w+):$')
 
-        # IS-IS Level-1 Link State Database:
-        p2 = re.compile(r'^IS\-IS +Level\-(?P<level>\d+) +Link +State +Database(:)?$')
+        # IS-IS Process: test dynamic hostname table VRF: default
+        p1 = re.compile(r'^IS-IS +Process: +(?P<process_id>\S+) '
+                        r'+LSP +database +VRF: +(?P<vrf>\S+)$')
 
-        # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
-        # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
+        # IS-IS Level-1 Link State Database
+        p2 = re.compile(r'^IS-IS +Level-(?P<level>\d+) +Link +State +Database(:)?$')
+
+        # LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+        # R1_xe.00-00           0x000007CC   0xAF21    490        0/0/0/3
+        # R3_nx.00-00         * 0x00000B05   0x7FA7    697        0/0/0/3
         p3 = re.compile(
-            r'^(?P<lspid>[\w\-\.]+)(\s*(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
-            ' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
-        #   Area Address: 49.0001
-        p4 = re.compile(r'^Area +Address: +(?P<area_address>[\w\.]+)$')
+            r'^(?P<lsp_id>\S+)(\s*(?P<star>\*))? +(?P<sequence>\w+) +(?P<checksum>\w+) '
+            r'+(?P<lifetime>[\d\*]+) +(?P<a>\d+)/(?P<p>\d+)/(?P<o>\d+)/(?P<t>\d+)$')
 
-        #   NLPID:        0xCC 0x8E
-        p5 = re.compile(r'^NLPID: +(?P<nlp_id>[\w\s]+)$')
+        #   Instance      :  0x000007C8
+        p4 = re.compile(r'^Instance *: +(?P<instance>\w+)$')
 
-        #   Topology:     IPv4 (0x0)
-        #                 IPv6 (0x4002 ATT)
-        p6 = re.compile(r'^(Topology: +)?(?P<topology>(IP)+[\w]+) +\((?P<code>[\w\s]+)\)$')
+        #   Area Address : 49.0001
+        p5 = re.compile(r'^Area +Address *: +(?P<area_address>[\w\.]+)$')
 
-        #   Hostname: R2
-        p7 = re.compile(r'^Hostname: +(?P<hostname>\w+)$')
-        #   IP Address:   10.84.66.66
-        p8 = re.compile(r'^IP +Address: +(?P<ip_address>[\d\.]+)$')
+        #   NLPID      :  0xCC 0x8E
+        p6 = re.compile(r'^NLPID *: +(?P<nlp_id>[\w\s]+)$')
 
-        #   Metric: 10         IP 10.229.7.0/24
-        p9 = re.compile(r'^Metric: +(?P<metric>\d+) +(?P<metric_topology>[\w\-]+)( +\((?P<mt_ipv6>[\w\-]+)\))? +(?P<ip>\S+)$')
+        #   MT TopoId     : TopoId:0 Att: 0 Ol: 0
+        #                   TopoId:2 Att: 0 Ol: 0
+        p7 = re.compile(r'^(MT TopoId *: +)?TopoId:(?P<topo_id>\d+) +Att: +(?P<att>\d+) +Ol: +(?P<ol>\d+)$')
 
-        #   IPv6 Address: 2001:DB8:66:66:66::66
-        p10 = re.compile(r'^IPv6 +Address: +(?P<ip_address>[\w\:]+)$')
+        #   Hostname      :  R1_xe              Length : 5
+        p8 = re.compile(r'^Hostname *: +(?P<hostname>\S+) +Length *: +(?P<length>\d+)$')
 
-        # Router ID:    10.1.77.77
-        p11 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
+        #   Extended IS   :  R1_xe.02           Metric : 10
+        p9 = re.compile(r'^Extended +IS *: +(?P<ext>\S+) +Metric *: +(?P<metric>\d+)$')
+        
+        #   TopoId: 2
+        p10 = re.compile(r'^TopoId *: +(?P<topo_id>\d+)$')
+        
+        #   MtExtend IS   :  R1_xe.01           Metric : 10
+        #                    R2_xr.03           Metric : 10
+        p11 = re.compile(r'^(MtExtend +IS *: +)?(?P<mt_ext>\S+) +Metric *: +(?P<metric>\d+)$')
+
+        #   IP Address    :  10.13.115.1
+        p12 = re.compile(r'^IP +Address *: +(?P<ip_address>[\d\.]+)$')
+
+        #   Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+        p13 = re.compile(r'^Extended +IP *: +(?P<ext_ip>\S+) +Metric *: +(?P<metric>\d+) +\(.*\)$')
+
+        #   IPv6 Address  :  2001:10:13:115::1
+        p14 = re.compile(r'^IPv6 +Address *: +(?P<ip_address>\S+)$')
+
+        #   Router ID     :  3.3.3.3
+        p15 = re.compile(r'^Router +ID *: +(?P<router_id>\S+)$')
+
+        #   MT-IPv6 Prefx :  TopoId : 2
+        p16 = re.compile(r'^MT-IPv6 +Prefx *: +TopoId *: +(?P<topo_id>\d+)$')
+
+        #   2001:10:12:115::/64  Metric : 10          (U/I)
+        p17 = re.compile(r'^(?P<prefix>\S+) +Metric *: +(?P<metric>\d+) +\(.*\)$')
+
+        #   Unknown Sub-TLV      :  Length : 1  Type :   4
+        p18 = re.compile(r'^Unknown +Sub-TLV *: +Length *: +(?P<length>\d+) +Type *: +(?P<type>\d+)$')
+
+        #   Digest Offset :  0
+        p19 = re.compile(r'^Digest +Offset *: +(?P<offset>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
-
-            #  Tag VRF1:
+            if not line:
+                continue
+            
+            # IS-IS Process: test dynamic hostname table VRF: default
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                tag = group['tag']
+                process_id = group['process_id']
+                vrf = group['vrf']
+
+                vrf_dict = result_dict.setdefault(process_id, {}).\
+                                       setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
                 continue
 
-            # IS-IS Level-1 Link State Database:
+            # IS-IS Level-1 Link State Database
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                tag_dict = result_dict.setdefault('tag', {}). \
-                                       setdefault(tag, {}). \
-                                       setdefault('level', {}). \
-                                       setdefault(int(group['level']), {})
-
+                lvl = int(group['level'])
+                lvl_dict = vrf_dict.setdefault('level_db', {}).setdefault(lvl, {})
                 continue
 
-            # LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
-            # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
+            # LSPID                 Seq Number   Checksum  Lifetime   A/P/O/T
+            # R1_xe.00-00           0x000007CC   0xAF21    490        0/0/0/3
+            # R3_nx.00-00         * 0x00000B05   0x7FA7    697        0/0/0/3
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                lsp_dict = tag_dict.setdefault(group['lspid'], {})
-                if group['star']:
-                    lsp_dict.update({'local_router': True})
-                lsp_dict.update({'lsp_sequence_num': group['lsp_seq_num']})
-                lsp_dict.update({'lsp_checksum': group['lsp_checksum']})
-                lsp_dict.update({'lsp_holdtime': group['lsp_holdtime']})
-                if group['lsp_rcvd']:
-                    lsp_dict.update({'lsp_rcvd': group['lsp_rcvd']})
-                lsp_dict.update({'attach_bit': int(group['att'])})
-                lsp_dict.update({'p_bit': int(group['p'])})
-                lsp_dict.update({'overload_bit': int(group['ol'])})
+                lsp_id = group['lsp_id']
+                sequence = group['sequence']
+                checksum = group['checksum']
+                lifetime = int(group['lifetime'])
+                a = int(group['a'])
+                p = int(group['p'])
+                o = int(group['o'])
+                t = int(group['t'])
+
+                lsp_dict = lvl_dict.setdefault(lsp_id, {})
+                lsp_dict['lsp_id'] = lsp_id
+                lsp_dict['sequence'] = sequence
+                lsp_dict['checksum'] = checksum
+                lsp_dict['lifetime'] = lifetime
+                lsp_dict['attach_bit'] = a
+                lsp_dict['p_bit'] = p
+                lsp_dict['overload_bit'] = o
+                lsp_dict['t_bit'] = t
                 continue
 
-            #   Area Address: 49.0001
+            #   Instance      :  0x000007C8
             m = p4.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({"area_address": group['area_address']})
+                lsp_dict['instance'] = m.groupdict()['instance']
                 continue
 
-            #   NLPID:        0xCC 0x8E
+            #   Area Address : 49.0001
             m = p5.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({"nlpid": group['nlp_id']})
+                lsp_dict['area_address'] = m.groupdict()['area_address']
                 continue
 
-            #   Topology:     IPv4 (0x0)
-            #                 IPv6 (0x4002 ATT)
+            #   NLPID      :  0xCC 0x8E
             m = p6.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.setdefault('topology', {}).setdefault(group['topology'].lower(), {}).update({'code': group['code']})
+                lsp_dict['nlpid'] = m.groupdict()['nlp_id']
                 continue
 
-            #   Hostname: R2
+            #   MT TopoId     : TopoId:0 Att: 0 Ol: 0
+            #                   TopoId:2 Att: 0 Ol: 0
             m = p7.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({'hostname': group['hostname']})
+                topo_id = int(m.groupdict()['topo_id'])
+                att = int(m.groupdict()['att'])
+                ol = int(m.groupdict()['ol'])
+                
+                entry_dict = lsp_dict.setdefault('mt_entries', {}).setdefault(topo_id, {})
+                entry_dict['att'] = att
+                entry_dict['ol'] = ol
                 continue
 
-            #   IP Address:   10.84.66.66
+            #   Hostname      :  R1_xe              Length : 5
             m = p8.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({'ip_address': group['ip_address']})
+                lsp_dict['hostname'] = m.groupdict()['hostname']
+                lsp_dict['length'] = int(m.groupdict()['length'])
                 continue
 
-            #  Metric: 10         IP 10.229.7.0/24
-            #  Metric: 40         IS (MT-IPv6) R2.01
-            #  Metric: 40         IS-Extended R2.01
+            #   Extended IS   :  R1_xe.02           Metric : 10
             m = p9.match(line)
             if m:
-                group = m.groupdict()
-                ip_dict = lsp_dict.setdefault(group['ip'], {}).setdefault(group['metric_topology'].lower(), {})
-                ip_dict.update({'metric': int(group['metric'])})
-                if group['mt_ipv6']:
-                    ip_dict.update({'mt_ipv6': True})
+                ext = m.groupdict()['ext']
+                metric = int(m.groupdict()['metric'])
 
+                ext_is_dict = lsp_dict.setdefault('extended_is_neighbor', {}).\
+                                       setdefault(ext, {})
+                ext_is_dict['neighbor_id'] = ext
+                ext_is_dict['metric'] = metric
                 continue
-
-            #   IPv6 Address: 2001:DB8:66:66:66::66
+            
+            #   TopoId: 2
             m = p10.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({'ipv6_address': group['ip_address']})
+                lsp_dict['topo_id'] = int(m.groupdict()['topo_id'])
                 continue
-
-            #  Router ID:    10.1.77.77
+            
+            #   MtExtend IS   :  R1_xe.01           Metric : 10
+            #                    R2_xr.03           Metric : 10
             m = p11.match(line)
             if m:
-                group = m.groupdict()
-                lsp_dict.update({'router_id': group['router_id']})
+                mt_ext = m.groupdict()['mt_ext']
+                metric = int(m.groupdict()['metric'])
+
+                mt_ext_dict = lsp_dict.setdefault('mt_is_neighbor', {}).\
+                                       setdefault(ext, {})
+                mt_ext_dict['neighbor_id'] = mt_ext
+                mt_ext_dict['metric'] = metric
+                continue
+
+            #   IP Address    :  10.13.115.1
+            m = p12.match(line)
+            if m:
+                lsp_dict['ip_address'] = m.groupdict()['ip_address']
+                continue
+
+            #   Extended IP   :     10.12.115.0/24  Metric : 10          (U)
+            m = p13.match(line)
+            if m:
+                ip = m.groupdict()['ext_ip']
+                metric = int(m.groupdict()['metric'])
+                ip_dict = lsp_dict.setdefault('extended_ip', {}).setdefault(ip, {})
+
+                ip_dict['ip'] = ip
+                ip_dict['metric'] = metric
+                continue
+
+            #   IPv6 Address  :  2001:10:13:115::1
+            m = p14.match(line)
+            if m:
+                lsp_dict['ipv6_address'] = m.groupdict()['ip_address']
+                continue
+
+            #   Router ID     :  3.3.3.3
+            m = p15.match(line)
+            if m:
+                lsp_dict['router_id'] = m.groupdict()['router_id']
+                continue
+
+            #   MT-IPv6 Prefx :  TopoId : 2
+            m = p16.match(line)
+            if m:
+                topo_id = int(m.groupdict()['topo_id'])
+                lsp_dict['topo_id'] = topo_id
+                continue
+
+            #   2001:10:12:115::/64  Metric : 10          (U/I)
+            m = p17.match(line)
+            if m:
+                prefix = m.groupdict()['prefix']
+                metric = int(m.groupdict()['metric'])
+                ip_dict = lsp_dict.setdefault('mt_ipv6_prefix', {}).setdefault(prefix, {})
+
+                ip_dict['ipv6'] = prefix
+                ip_dict['metric'] = metric
+                continue
+
+            #   Unknown Sub-TLV      :  Length : 1  Type :   4
+            m = p18.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                stype = int(m.groupdict()['type'])
+
+                ip_dict['sub_tlv_length'] = length
+                ip_dict['sub_tlv_type'] = stype
+                continue
+
+            #   Digest Offset :  0
+            m = p19.match(line)
+            if m:
+                lsp_dict['digest_offset'] = int(m.groupdict()['offset'])
                 continue
 
         return result_dict
