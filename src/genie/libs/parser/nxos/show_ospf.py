@@ -65,6 +65,7 @@ class ShowIpOspfSchema(MetaParser):
                                 },
                                 Optional('single_tos_routes_enable'): bool,
                                 Optional('opaque_lsa_enable'): bool,
+                                Optional('system_boundary'): str,
                                 Optional('preference'): {
                                     'single_value': {
                                         'all': int
@@ -143,6 +144,7 @@ class ShowIpOspfSchema(MetaParser):
                                     Any(): {
                                         'area_type': str,
                                         'area_id': str,
+                                        Optional('generate_nssa'): str,
                                         Optional('summary'): bool,
                                         Optional('perform_translation'): str,
                                         Optional('existed'): str,
@@ -174,12 +176,9 @@ class ShowIpOspfSchema(MetaParser):
                                 Optional('redistribution'): {
                                     Optional('bgp'): {
                                         'bgp_id': int,  # 'redist_bgp_id',
-                                        Optional('metric'): int,  # 'redist_bgp_metric',
                                     },
                                     Optional('static'): {
                                         'enabled': bool,  # 'redist_static'
-                                        Optional('metric'): int,  # redist_static_metric
-                                        Optional('route_policy'): str,  # redist_static_route_policy
                                     }
                                 },
                             },
@@ -298,6 +297,11 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         p42 = re.compile(r'(?P<authentication>No|Message\-digest|Simple)'
                          r'(?: +password)?(?: +authentication(?: +available)?)?$')
+        
+        p43 = re.compile(r'^Generates +NSSA ?(?P<generate_nssa>[\S ]+)$')
+
+        p44 = re.compile(r'^This +router +is +an '
+                         r'+(?P<system_boundary>[\w ]+)(?:\.)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -818,6 +822,22 @@ class ShowIpOspf(ShowIpOspfSchema):
                     auth_dict['authentication'] = 'none'
                 else:
                     auth_dict['authentication'] = message
+
+                continue
+            # Generates NSSA default route    
+            m43 = p43.match(line)
+            if m43:
+                route = m43.groupdict()['generate_nssa']
+                route_dict = sub_dict['areas'][area]
+                route_dict['generate_nssa'] = route
+
+                continue
+
+            # This router is an autonomous system boundary
+            m44 = p44.match(line)
+            if m44:
+                boundary = m44.groupdict()['system_boundary']
+                sub_dict['system_boundary'] = boundary
 
                 continue
             

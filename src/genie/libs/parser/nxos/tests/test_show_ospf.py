@@ -107,6 +107,8 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
+                                'system_boundary': 'area border and '
+                                'autonomous system boundary',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
@@ -623,6 +625,7 @@ class TestShowIpOspf(unittest.TestCase):
                             '10': {
                                 'areas': {
                                     '10.4.2.255': {
+                                        'generate_nssa': 'default route',
                                         'area_id': '10.4.2.255',
                                         'area_type': 'nssa',
                                         'authentication': 'none',
@@ -682,6 +685,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
+                                'system_boundary': 'autonomous system boundary',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
@@ -1106,6 +1110,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
+                                'system_boundary': 'autonomous system boundary',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
