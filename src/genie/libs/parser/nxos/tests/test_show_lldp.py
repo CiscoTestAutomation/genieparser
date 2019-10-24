@@ -18,7 +18,7 @@ from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers, \
 # =================================
 # Unit test for 'show lldp all'
 # =================================
-class test_show_lldp_all(unittest.TestCase):
+class TestShowLldpAll(unittest.TestCase):
     '''unit test for "show lldp all'''
     device = Device(name='aDevice')
 
@@ -66,7 +66,7 @@ class test_show_lldp_all(unittest.TestCase):
 # =================================
 # Unit test for 'show lldp timers'
 # =================================
-class test_show_lldp_timers(unittest.TestCase):
+class TestShowLldpTimers(unittest.TestCase):
     '''unit test for show lldp timers'''
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -102,7 +102,7 @@ class test_show_lldp_timers(unittest.TestCase):
 # =================================
 # Unit test for 'show lldp tlv-select'
 # =================================
-class test_show_lldp_tlv_select(unittest.TestCase):
+class TestShowLldpTlvSelect(unittest.TestCase):
     '''unit test for show lldp tlv-select'''
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -150,7 +150,7 @@ class test_show_lldp_tlv_select(unittest.TestCase):
 # =================================
 # Unit test for 'show lldp neighbors detail'
 # =================================
-class test_show_lldp_neighbors_detail(unittest.TestCase):
+class TestShowLldpNeighborsDetail(unittest.TestCase):
     '''unit test for show lldp neighbors detail'''
     empty_output = {'execute.return_value': ''}
 
@@ -242,7 +242,7 @@ class test_show_lldp_neighbors_detail(unittest.TestCase):
             Local Port id: Eth1/2
             Port Description: null
             System Name: R2_xrv9000
-            System Description: 6.2.2, IOS-XRv 9000
+            System Description: 6.2.2, IOS-XRv 9000
             Time remaining: 95 seconds
             System Capabilities: R
             Enabled Capabilities: R
@@ -252,6 +252,352 @@ class test_show_lldp_neighbors_detail(unittest.TestCase):
 
             Total entries displayed: 2
         '''}
+
+    golden_output_customer = {'execute.return_value': '''
+        show lldp neighbors detail
+
+        Capability codes:
+        (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+        (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        Device ID            Local Intf      Hold-time  Capability  Port ID  
+
+        Chassis id: 3935-5A43-4A37-39373638-35303036574C
+        Port id: PCI-E Slot 1, Port 2
+        Local Port id: Eth1/14
+        Port Description: ConnectX-4 Lx, 25G/10G/1G SFP
+        System Name: null
+        System Description: ProLiant DL360 Gen10
+        Time remaining: 40 seconds
+        System Capabilities: not advertised
+        Enabled Capabilities: not advertised
+        Management Address: 98f2.b322.e4d2
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: e0cb.bca3.9eec
+        Port id: 0
+        Local Port id: Eth1/38
+        Port Description: internet port 0
+        System Name: VPN-1
+        System Description: Meraki MX450 Cloud Managed Security Appliance
+        Time remaining: 101 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Address: not advertised
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: e0cb.bca3.d708
+        Port id: 1
+        Local Port id: Eth1/40
+        Port Description: internet port 1
+        System Name: MX-L0
+        System Description: Meraki MX450 Cloud Managed Security Appliance
+        Time remaining: 90 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Address: not advertised
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 7018.a7e3.9980
+        Port id: Te2/0/2
+        Local Port id: Eth1/42
+        Port Description: - NX1-2 (Eth1/43) -
+        System Name: CAT2960-CED1
+        System Description: Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(4)E7, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Tue 18-Sep-18 13:07 by prod_rel_team
+        Time remaining: 93 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B
+        Management Address: 10.22.134.6
+        Management Address IPV6: not advertised
+        Vlan ID: 1
+
+
+        Chassis id: 7018.a7e3.9980
+        Port id: Te1/0/1
+        Local Port id: Eth1/43
+        Port Description: - NX1-1 (Eth1/42) -
+        System Name: RCAT2960
+        System Description: Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(4)E7, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Tue 18-Sep-18 13:07 by prod_rel_team
+        Time remaining: 109 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B
+        Management Address: 10.22.134.6
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 70ea.1aa1.1555
+        Port id: Ethernet1/46
+        Local Port id: Eth1/46
+        Port Description: - NX1-1 (eth1/46) - vPC Peer Keepalive link
+        System Name: NX1-2
+        System Description: Cisco Nexus Operating System (NX-OS) Software 9.2(3)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2019, Cisco Systems, Inc. All rights reserved.
+        Time remaining: 116 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B, R
+        Management Address: 70ea.1aa1.1555
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 70ea.1aa0.e4ac
+        Port id: Ethernet1/54
+        Local Port id: Eth1/54
+        Port Description: - NX1 -
+        System Name: NX2-2
+        System Description: Cisco Nexus Operating System (NX-OS) Software 9.2(3)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2019, Cisco Systems, Inc. All rights reserved.
+        Time remaining: 116 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B, R
+        Management Address: 70ea.1aa0.e4ac
+        Management Address IPV6: not advertised
+        Vlan ID: 1
+
+        Total entries displayed: 22
+    
+    '''
+    }
+
+    golden_parsed_output_customer = {
+        'interfaces': {
+                'Ethernet1/14': {
+                    'port_id': {
+                        'PCI-ESlot1,Port2': {
+                            'neighbors': {
+                                'null': {
+                                    'chassis_id': '3935-5A43-4A37-39373638-35303036574C',
+                                    'enabled_capabilities': 'not advertised',
+                                    'management_address_v4': '98f2.b322.e4d2',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': 'ConnectX-4 Lx, 25G/10G/1G SFP',
+                                    'system_capabilities': 'not advertised',
+                                    'system_description': 'ProLiant DL360 Gen10',
+                                    'system_name': 'null',
+                                    'time_remaining': 40,
+                                    'vlan_id': 'not advertised'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/38': {
+                    'port_id': {
+                        '0': {
+                            'neighbors': {
+                                'VPN-1': {
+                                    'capabilities': {
+                                        'router': {
+                                            'enabled': True,
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': 'e0cb.bca3.9eec',
+                                    'management_address_v4': 'not advertised',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': 'internet port 0',
+                                    'system_description': 'Meraki MX450 '
+                                    'Cloud Managed Security Appliance',
+                                    'system_name': 'VPN-1',
+                                    'time_remaining': 101,
+                                    'vlan_id': 'not advertised'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/40': {
+                    'port_id': {
+                        '1': {
+                            'neighbors': {
+                                'MX-L0': {
+                                    'capabilities': {
+                                        'router': {
+                                            'enabled': True,
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': 'e0cb.bca3.d708',
+                                    'management_address_v4': 'not advertised',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': 'internet port 1',
+                                    'system_description': 'Meraki MX450 Cloud '
+                                    'Managed Security Appliance',
+                                    'system_name': 'MX-L0',
+                                    'time_remaining': 90,
+                                    'vlan_id': 'not advertised'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/42': {
+                    'port_id': {
+                        'TenGigabitEthernet2/0/2': {
+                            'neighbors': {
+                                'CAT2960-CED1': {
+                                    'capabilities': {
+                                        'bridge': {
+                                            'enabled': True,
+                                            'name': 'bridge',
+                                            'system': True
+                                        },
+                                        'router': {
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': '7018.a7e3.9980',
+                                    'management_address_v4': '10.22.134.6',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': '- NX1-2 (Eth1/43) -',
+                                    'system_description': 'Cisco IOS Software, '
+                                    'C2960X Software (C2960X-UNIVERSALK9-M), '
+                                    'Version 15.2(4)E7, RELEASE SOFTWARE '
+                                    '(fc2)\n'
+                                    'Technical Support: '
+                                    'http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2018 by Cisco '
+                                    'Systems, Inc.\n'
+                                    'Compiled Tue 18-Sep-18 13:07 by '
+                                    'prod_rel_team',
+                                    'system_name': 'CAT2960-CED1',
+                                    'time_remaining': 93,
+                                    'vlan_id': '1'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/43': {
+                    'port_id': {
+                        'TenGigabitEthernet1/0/1': {
+                            'neighbors': {
+                                'RCAT2960': {
+                                    'capabilities': {
+                                        'bridge': {
+                                            'enabled': True,
+                                            'name': 'bridge',
+                                            'system': True
+                                        },
+                                        'router': {
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': '7018.a7e3.9980',
+                                    'management_address_v4': '10.22.134.6',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': '- NX1-1 (Eth1/42) -',
+                                    'system_description': 'Cisco IOS Software, '
+                                    'C2960X Software (C2960X-UNIVERSALK9-M), '
+                                    'Version 15.2(4)E7, RELEASE SOFTWARE '
+                                    '(fc2)\n'
+                                    'Technical Support: '
+                                    'http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2018 by Cisco Systems, '
+                                    'Inc.\n'
+                                    'Compiled Tue 18-Sep-18 13:07 by prod_rel_team',
+                                    'system_name': 'RCAT2960',
+                                    'time_remaining': 109,
+                                    'vlan_id': 'not advertised'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/46': {
+                    'port_id': {
+                        'Ethernet1/46': {
+                            'neighbors': {
+                                'NX1-2': {
+                                    'capabilities': {
+                                        'bridge': {
+                                            'enabled': True,
+                                            'name': 'bridge',
+                                            'system': True
+                                        },
+                                        'router': {
+                                            'enabled': True,
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': '70ea.1aa1.1555',
+                                    'management_address_v4': '70ea.1aa1.1555',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': '- NX1-1 (eth1/46) - '
+                                    'vPC Peer Keepalive link',
+                                    'system_description': 'Cisco Nexus Operating '
+                                    'System (NX-OS) Software 9.2(3)\n'
+                                    'TAC support: '
+                                    'http://www.cisco.com/tac\n'
+                                    'Copyright (c) 2002-2019, Cisco Systems, '
+                                    'Inc. All rights reserved.\n',
+                                    'system_name': 'NX1-2',
+                                    'time_remaining': 116,
+                                    'vlan_id': 'not advertised'
+                                }
+                            }
+                        }
+                    }
+                },
+                'Ethernet1/54': {
+                    'port_id': {
+                        'Ethernet1/54': {
+                            'neighbors': {
+                                'NX2-2': {
+                                    'capabilities': {
+                                        'bridge': {
+                                            'enabled': True,
+                                            'name': 'bridge',
+                                            'system': True
+                                        },
+                                        'router': {
+                                            'enabled': True,
+                                            'name': 'router',
+                                            'system': True
+                                        }
+                                    },
+                                    'chassis_id': '70ea.1aa0.e4ac',
+                                    'management_address_v4': '70ea.1aa0.e4ac',
+                                    'management_address_v6': 'not advertised',
+                                    'port_description': '- NX1 -',
+                                    'system_description': 'Cisco Nexus Operating '
+                                    'System (NX-OS) Software 9.2(3)\n'
+                                    'TAC support: '
+                                    'http://www.cisco.com/tac\n'
+                                    'Copyright (c) 2002-2019, '
+                                    'Cisco Systems, Inc. '
+                                    'All rights reserved.\n',
+                                    'system_name': 'NX2-2',
+                                    'time_remaining': 116,
+                                    'vlan_id': '1'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'total_entries': 22
+        }
+
 
     def test_empty(self):
         self.maxDiff = None
@@ -267,11 +613,17 @@ class test_show_lldp_neighbors_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_customer)
+        obj = ShowLldpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer)
 
 # =================================
 # Unit test for 'show lldp traffic'
 # =================================
-class test_show_lldp_traffic(unittest.TestCase):
+class TestShowLldpTraffic(unittest.TestCase):
     '''unit test for show lldp traffic'''
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {

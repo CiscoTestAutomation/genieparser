@@ -700,3 +700,12 @@
 * IOSXE
     * ShowAccessLists
         * Updated regex to capture more outputs
+
+--------------------------------------------------------------------------------
+                                LLDP
+--------------------------------------------------------------------------------
+* NXOS
+    * ShowLldpNeighborsDetail
+        * Added new keys to schema
+        * Handle unknown variables
+        
