@@ -1,6 +1,6 @@
 # Python
 import unittest
-
+import genie.gre
 from unittest.mock import Mock
 
 # ATS
@@ -262,20 +262,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         Device ID            Local Intf      Hold-time  Capability  Port ID  
 
-        Chassis id: 39373638-3935-5A43-4A39-32343033314C
-        Port id: b883.037e.6d15
-        Local Port id: Eth1/1
-        Port Description: Embedded ALOM, Port 2
-        System Name: null
-        System Description: ProLiant DL360 Gen10
-        Time remaining: 61 seconds
-        System Capabilities: not advertised
-        Enabled Capabilities: not advertised
-        Management Address: 10.22.129.40
-        Management Address IPV6: not advertised
-        Vlan ID: not advertised
-
-
         Chassis id: 39373638-3935-5A43-4A37-35303036574C
         Port id: PCI-E Slot 1, Port 2
         Local Port id: Eth1/14
@@ -288,27 +274,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Management Address: 98f2.b322.e4d2
         Management Address IPV6: not advertised
         Vlan ID: not advertised
-
-        Chassis id: 74a0.63f5.4881
-        Port id: 10GE1/0/14
-        Local Port id: Eth1/37
-        Port Description: _SRL
-        System Name: CE6K-3L0-DCS-UL-1
-        System Description: Huawei Versatile Routing Platform Software
-
-        VRP (R) software, Version 8.80 (CE6850 V100R003C00SPC600)
-
-        Copyright (C) 2012-2014 Huawei Technologies Co., Ltd.
-
-        HUAWEI CE6850-48S4Q-EI
-
-
-        Time remaining: 92 seconds
-        System Capabilities: B, R
-        Enabled Capabilities: B, R
-        Management Address: 10.20.35.243
-        Management Address IPV6: not advertised
-        Vlan ID: 266
 
 
         Chassis id: e0cb.bca3.9eec
@@ -337,20 +302,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Management Address: not advertised
         Management Address IPV6: not advertised
         Vlan ID: not advertised
-
-
-        Chassis id: 38ea.a771.c1cb
-        Port id: 49
-        Local Port id: Eth1/41
-        Port Description: 1/49
-        System Name: SWCOREDC
-        System Description: HP J9576A E3800-48G-4SFP+ Switch, revision KA.15.03.3015, ROM KA.15.05 (/ws/swbuildm/KA_15_03/code/build/tam(KA_15_03))
-        Time remaining: 93 seconds
-        System Capabilities: B, R
-        Enabled Capabilities: B, R
-        Management Address: 10.202.73.254
-        Management Address IPV6: not advertised
-        Vlan ID: 1
 
 
         Chassis id: 7018.a7e3.9980
@@ -425,27 +376,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
 
     golden_parsed_output_customer = {
         'interfaces': {
-            'Ethernet1/1': {
-                'port_id': {
-                    'B883.037e.6d15': {
-                        'neighbors': {
-                            'null': {
-                                'chassis_id': 
-                                    '39373638-3935-5A43-4A39-32343033314C',
-                                    'enabled_capabilities': 'not advertised',
-                                    'management_address_v4': '10.22.129.40',
-                                    'management_address_v6': 'not advertised',
-                                    'port_description': 'Embedded ALOM, Port 2',
-                                    'system_capabilities': 'not advertised',
-                                    'system_description': 'ProLiant DL360 Gen10',
-                                    'system_name': 'null',
-                                    'time_remaining': 61,
-                                    'vlan_id': 'not advertised'
-                                }
-                            }
-                        }
-                    }
-                },
                 'Ethernet1/14': {
                     'port_id': {
                         'PCI-ESlot1,Port2': {
@@ -461,40 +391,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                     'system_name': 'null',
                                     'time_remaining': 40,
                                     'vlan_id': 'not advertised'
-                                }
-                            }
-                        }
-                    }
-                },
-                'Ethernet1/37': {
-                    'port_id': {
-                        'GigabitEthernet10': {
-                            'neighbors': {
-                                'CE6K-3L0-DCS-UL-1': {
-                                    'capabilities': {
-                                        'bridge': {
-                                            'enabled': True,
-                                            'name': 'bridge',
-                                            'system': True
-                                        },
-                                        'router': {
-                                            'enabled': True,
-                                            'name': 'router',
-                                            'system': True
-                                        }
-                                    },
-                                    'chassis_id': '74a0.63f5.4881',
-                                    'management_address_v4': '10.20.35.243',
-                                    'management_address_v6': 'not '
-                                    'advertised',
-                                    'port_description': '_SRL',
-                                    'system_description': 'Huawei Versatile '
-                                    'Routing Platform SoftwareCopyright (C) '
-                                    '2012-2014 Huawei Technologies Co., '
-                                    'Ltd.\n',
-                                    'system_name': 'CE6K-3L0-DCS-UL-1',
-                                    'time_remaining': 92,
-                                    'vlan_id': '266'
                                 }
                             }
                         }
@@ -547,38 +443,6 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                     'system_name': 'MX-L0',
                                     'time_remaining': 90,
                                     'vlan_id': 'not advertised'
-                                }
-                            }
-                        }
-                    }
-                },
-                'Ethernet1/41': {
-                    'port_id': {
-                        '49': {
-                            'neighbors': {
-                                'SWCOREDC': {
-                                    'capabilities': {
-                                        'bridge': {
-                                            'enabled': True,
-                                            'name': 'bridge',
-                                            'system': True
-                                        },
-                                        'router': {
-                                            'enabled': True,
-                                            'name': 'router',
-                                            'system': True
-                                        }
-                                    },
-                                    'chassis_id': '38ea.a771.c1cb',
-                                    'management_address_v4': '10.202.73.254',
-                                    'management_address_v6': 'not advertised',
-                                    'port_description': '1/49',
-                                    'system_description': 'HP J9576A E3800-48G-4SFP+ '
-                                    'Switch, revision KA.15.03.3015, ROM '
-                                    'KA.15.05 (/ws/swbuildm/KA_15_03/code/build/tam(KA_15_03))',
-                                    'system_name': 'SWCOREDC',
-                                    'time_remaining': 93,
-                                    'vlan_id': '1'
                                 }
                             }
                         }

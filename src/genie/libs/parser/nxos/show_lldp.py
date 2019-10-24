@@ -236,8 +236,10 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         tmp_chassis_id = ''
         tmp_port_id = ''
         # Chassis id: 000d.bd09.46fa
+        # Chassis id: 39373638-3935-5A43-4A37-35303036574C
         p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\S]+)$')
         # Port id: Gi0/0/0/1
+        # Port id: PCI-E Slot 1, Port 2
         p2 = re.compile(r'^Port +id: +(?P<port_id>[\S ]+)$')
         # Local Port id: Eth1/2
         p3 = re.compile(r'^Local +Port +id: +(?P<local_port_id>\S+)$')
@@ -264,17 +266,23 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # Management Address: 10.2.3.2
         p10 = re.compile(r'^Management +Address: +(?P<mgmt_address_ipv4>.+)$')
         # Management Address IPV6: not advertised
-        p11 = re.compile(
-            r'^Management +Address +IPV6: +(?P<mgmt_address_ipv6>.+)$')
+        p11 = re.compile(r'^Management +Address +IPV6: +(?P<mgmt_address_ipv6>.+)$')
         # Vlan ID: not advertised
         p12 = re.compile(r'^Vlan +ID: +(?P<vlan_id>.+)$')
         # Total entries displayed: 2
         p13 = re.compile(r'^Total +entries +displayed: +(?P<total_entries>\d+)$')
 
+        # VRP (R) software, Version 8.80 (CE6850 V100R003C00SPC600)
+        p14 = re.compile(r'(?P<custom_name>VRP .+)$')
+
+        # customer devices
+        p15 = re.compile(r'(?P<special_name>HUA.+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Chassis id: 000d.bd09.46fa
+            # Chassis id: 39373638-3935-5A43-4A37-35303036574C
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -282,6 +290,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 continue
 
             # Port id: Gi0/0/0/1
+            # Port id: PCI-E Slot 1, Port 2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -419,6 +428,20 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     m.groupdict()['total_entries'])})
 
                 continue
+                
+            # VRP (R) software, Version 8.80 (CE6850 V100R003C00SPC600)
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                sub_dict['system_description'] += '\n' + group['custom_name'] + '\n'
+
+                continue
+
+            # customer device
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                sub_dict['system_description'] += group['special_name'] + '\n'
 
         return parsed_dict
 
