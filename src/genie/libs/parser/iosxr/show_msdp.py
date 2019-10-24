@@ -97,7 +97,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         else:
             out = output
 
-        # MSDP Peer 202.202.33.3 (?), AS 4134
+        # MSDP Peer 192.168.229.3 (?), AS 4134
         r1 = re.compile(r'MSDP\sPeer\s*(?P<peer>\S+)\s*\(\?\)\,\s*'
                         r'AS\s*(?P<peer_as>\d+)')
 
@@ -105,7 +105,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         # Description:
         r2 = re.compile(r'Description\s*:\s*(?:(?P<description>\S+))?$')
 
-        # State: Inactive, Resets: 999, Connection Source: 202.202.11.1
+        # State: Inactive, Resets: 999, Connection Source: 192.168.100.1
         r3 = re.compile(
             r'\s*State:\s*(?P<session_state>\S+)\,'
             r'\s*Resets:\s*(?P<reset>\d+)\,'
@@ -179,7 +179,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # MSDP Peer 202.202.33.3 (?), AS 4134
+            # MSDP Peer 192.168.229.3 (?), AS 4134
             result = r1.match(line)
 
             if result:
@@ -516,7 +516,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         r12 = re.compile(
             r'\s*RP\s+Filter\s+Out\s+:\s(?:(?P<rp_filter_out>\S+))?')
 
-        # Originator Address         : 150.150.1.1
+        # Originator Address         : 172.16.76.1
         # Originator Interface Name  : Loopback150
         # Default Peer Address       : 0.0.0.0
         # SA Holdtime                : 150
@@ -679,7 +679,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
                 continue
 
             # Configuration:
-            #   Originator Address         : 150.150.1.1
+            #   Originator Address         : 172.16.76.1
             result = r13.match(line)
             if result:
                 group_dict = result.groupdict()
@@ -892,10 +892,10 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
         r2 = re.compile(r'Current\sExternal\sActive\sSAs'
                         r'\s:\s(?P<current_external_active_sa>\d+)')
 
-        # Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
-        #                                       Downtime  Count Name    SA Cnt Ext.SAs recv/sent
-        # 4.4.4.4         200          Connect  20:35:48  0     R4       0     444      0/0
-        # 11.11.11.11     0            Listen   18:14:53  0     ?        0      0       0/0
+        # Peer Address	  AS		   State    Uptime/    Reset Peer    Active Cfg.Max    TLV
+        #             Downtime    Count Name    SA Cnt Ext.SAs recv/sent
+        # 10.64.4.4    200    Connect    20:35:48    0    R4    0   444    0/0
+        # 10.229.11.11    0    Listen    18:14:53    0    ?    0    0   0/0
         r3 = re.compile(r'(?P<address>\S+)\s*(?P<as>\d+)'
                         r'\s*(?P<state>\S+)\s*(?P<uptime_downtime>\S+)'
                         r'\s*(?P<reset_count>\d+)\s*(?P<name>\S+)'
@@ -927,7 +927,7 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
                     group_dict['current_external_active_sa'])
                 continue
 
-            # 4.4.4.4         200          Connect  20:35:48  0     R4      0      444      0/0
+            # 10.64.4.4    200    Connect    20:35:48    0    R4   0    444    0/0
             result = r3.match(line)
             if result:
                 # import pdb
@@ -952,4 +952,148 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
                 tlv_dict['sent'] = int(group_dict['sent'])
                 continue
 
+        return parsed_dict
+
+class ShowMsdpSaCacheSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show msdp sa-cache'
+        * 'show msdp vrf <vrf> sa-cache'
+    '''
+    schema = {
+        'vrf': {
+            Any(): {
+                'sa_cache': {
+                    Any(): {
+                        'group': str,
+                        'source_addr': str,
+                        Optional('peer_as'): int,
+                        Optional('peer_learned_from'): str,
+                        Optional('rpf_peer'): str,
+                        'origin_rp': {
+                            Any(): {
+                                'rp_address': str,
+                             },
+                        },
+                        Optional('statistics'): {
+                            'received': {
+                                'sa': int,
+                                'encapsulated_data_received': int,
+                            },
+                            'flags': {
+                                'grp': str,
+                                'src': str,
+                            }
+                        },
+                        'up_time': str,
+                        'expire': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
+
+    cli_command = ['show msdp vrf {vrf} sa-cache',
+                   'show msdp sa-cache', ]
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # (10.1.1.10, 239.1.1.1), RP 192.168.1.1, MBGP/AS 200, 00:01:02/00:01:32
+        r1 = re.compile(r'\((?P<source_addr>\S+),\s*(?P<group>\S+)\),'
+                        r'\s*RP\s*(?P<rp_address>\S+),\s*(?:MBGP\/)?'
+                        r'AS\s*(?P<peer_as>\S+),\s*(?P<up_time>\S+)\/(?P<expire>\S+)')
+
+        #    Learned from peer 192.168.1.1, RPF peer 192.168.1.1
+        r2 = re.compile(r'Learned +from +peer +(?P<peer_learned_from>\S+),'
+                        r' +RPF +peer +(?P<rpf_peer>\S+)')
+
+        # SAs recvd 2, Encapsulated data received: 0
+        r3 = re.compile(r'SAs +recvd +(?P<sa_received>\d+),'
+                        r' +Encapsulated\s+data\s+received:'
+                        r' +(?P<encapsulated_data_received>\d+)')
+
+        # grp flags: PI,    src flags: E, EA, PI
+        r4 = re.compile(r'grp +flags: +(?P<grp_flag>\S+),\s*src'
+                        r' +flags: +(?P<src_flag>[\S\s]+)')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # (10.1.1.10, 239.1.1.1), RP 192.168.1.1, MBGP/AS 200, 00:01:02/00:01:32
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+
+                source_addr = group['source_addr']
+                addres_group = group['group']
+                rp_address = group['rp_address']
+                peer_as = group['peer_as']
+                up_time = group['up_time']
+                expire = group['expire']
+
+                sa_cache = '{} {}'.format(addres_group, source_addr)
+                if not vrf:
+                    vrf = 'default'
+
+                vrf_dict = parsed_dict.setdefault('vrf', {})\
+                    .setdefault(vrf, {})
+                # vrf_dict['num_of_sa_cache'] = num_of_sa_cache
+
+                sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
+                    .setdefault(sa_cache, {})
+                sa_cache_dict['group'] = addres_group
+                sa_cache_dict['source_addr'] = source_addr
+                sa_cache_dict['up_time'] = up_time
+                sa_cache_dict['expire'] = expire
+
+                if not peer_as or peer_as != '?':
+                    sa_cache_dict['peer_as'] = int(peer_as)
+
+                sa_cache_dict.setdefault('origin_rp', {})\
+                    .setdefault(rp_address, {})\
+                    .setdefault('rp_address', rp_address)
+
+                continue
+
+            #  Learned from peer 192.168.1.1, RPF peer 192.168.1.1
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                sa_cache_dict['peer_learned_from'] = group['peer_learned_from']
+                sa_cache_dict['rpf_peer'] = group['rpf_peer']
+
+                continue
+
+            # SAs recvd 2, Encapsulated data received: 0
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                received_dict = sa_cache_dict.setdefault('statistics', {})\
+                    .setdefault('received', {})
+                received_dict['sa'] = int(group['sa_received'])
+                received_dict['encapsulated_data_received'] = \
+                    int(group['encapsulated_data_received'])
+
+                continue
+
+            # grp flags: PI,    src flags: E, EA, PI
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                flags_dict = sa_cache_dict.setdefault('statistics', {}) \
+                    .setdefault('flags', {})
+                flags_dict['grp'] = group['grp_flag']
+                flags_dict['src'] = group['src_flag']
         return parsed_dict
