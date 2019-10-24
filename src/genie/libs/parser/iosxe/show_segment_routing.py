@@ -1082,18 +1082,22 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 event.update({k: v.strip() for k, v in group.items()})
                 continue
 
+            # Affinity:
             m = p15.match(line)
             if m:
                 aff_flag = True
                 aff_dict = pref_dict.setdefault('constraints', {}).setdefault('affinity', {})
                 continue
 
+            # include-all:
+            # exclude-all:
             m = p16.match(line)
             if m and aff_flag:
                 aff_type = m.groupdict()['affinity_type']
                 aff_dict.update({aff_type: []})
                 continue
 
+            # blue
             m = p17.match(line)
             if m and aff_flag:
                 temp_list = aff_dict.get(aff_type)
