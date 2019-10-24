@@ -42,117 +42,146 @@ class ShowIpOspfSchema(MetaParser):
         show ip ospf vrf <vrf>"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'router_id': str,
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': {
+                            Any(): {
+                                'router_id': str,
                                 'instance': int,
-                                Optional('nsr'): 
-                                    {'enable': bool},
-                                Optional('graceful_restart'): 
-                                    {Any(): 
-                                        {'enable': bool,
+                                Optional('name_lookup'): bool,
+                                Optional('nsr'): {
+                                    'enable': bool
+                                },
+                                Optional('graceful_restart'):{
+                                    Any(): {
+                                        'enable': bool,
                                         'type': str,
                                         'restart_interval': int,
                                         'state': str,
-                                        'exist_status': str},
+                                        'exist_status': str
                                     },
+                                },
                                 Optional('single_tos_routes_enable'): bool,
                                 Optional('opaque_lsa_enable'): bool,
-                                Optional('preference'): 
-                                    {'single_value': 
-                                        {'all': int},
+                                Optional('preference'): {
+                                    'single_value': {
+                                        'all': int
                                     },
-                                Optional('bfd'): 
-                                    {'enable': bool},
-                                Optional('auto_cost'): 
-                                    {'enable': bool,
+                                },
+                                Optional('bfd'): {
+                                    'enable': bool
+                                },
+                                Optional('auto_cost'): {
+                                    'enable': bool,
                                     'reference_bandwidth': int,
-                                    'bandwidth_unit': str},
-                                Optional('spf_control'): 
-                                    {'paths': int,
-                                    'throttle': 
-                                        {'spf': 
-                                            {'start': int,
+                                    'bandwidth_unit': str
+                                },
+                                Optional('spf_control'): {
+                                    'paths': int,
+                                    'throttle': {
+                                        'spf': {
+                                            'start': int,
                                             'hold': int,
-                                            'maximum': int},
-                                        'lsa': 
-                                            {'start': int,
+                                            'maximum': int
+                                        },
+                                        'lsa': {
+                                            'start': int,
                                             'hold': int,
                                             'maximum': int,
                                             Optional('minimum'): int,
                                             Optional('group_pacing'): int,
-                                            Optional('numbers'): 
-                                                {Optional('external_lsas'): 
-                                                    {Optional('total'): int,
-                                                    Optional('checksum'): str},
-                                                Optional('opaque_as_lsas'): 
-                                                    {Optional('total'): int,
-                                                    Optional('checksum'): str},
+                                            Optional('numbers'): {
+                                                Optional('external_lsas'): {
+                                                    Optional('total'): int,
+                                                    Optional('checksum'): str
+                                                },
+                                                Optional('opaque_as_lsas'): {
+                                                    Optional('total'): int,
+                                                    Optional('checksum'): str
                                                 },
                                             },
                                         },
                                     },
-                                Optional('numbers'): 
-                                    {'active_areas': 
-                                        {'total': int,
+                                },
+                                Optional('numbers'): {
+                                    'active_areas': {
+                                        'total': int,
                                         'nssa': int,
                                         'normal': int,
-                                        'stub': int},
-                                    'areas': 
-                                        {'total': int,
+                                        'stub': int
+                                    },
+                                    'areas': {
+                                        'total': int,
                                         'nssa': int,
                                         'normal': int,
                                         'stub': int,
-                                        },
                                     },
-                                Optional('database_control'): 
-                                    {'max_lsa': int},
-                                Optional('stub_router'): 
-                                    {'always': 
-                                        {'always': bool,
+                                },
+                                Optional('database_control'): {
+                                    'max_lsa': int
+                                },
+                                Optional('stub_router'): {
+                                    'always': {
+                                        'always': bool,
                                         Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
-                                        Optional('external_lsa'): bool},
-                                    Optional('on_startup'): 
-                                        {'on_startup': int,
+                                        Optional('external_lsa'): bool
+                                    },
+                                    Optional('on_startup'): {
+                                        'on_startup': int,
                                         Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
-                                        Optional('external_lsa'): bool},
+                                        Optional('external_lsa'): bool
                                     },
+                                },
                                 Optional('enable'): bool,
                                 Optional('discard_route_external'): bool,
                                 Optional('discard_route_internal'): bool,
-                                Optional('areas'): 
-                                    {Any(): 
-                                        {'area_type': str,
+                                Optional('areas'): {
+                                    Any(): {
+                                        'area_type': str,
                                         'area_id': str,
+                                        Optional('summary'): bool,
+                                        Optional('perform_translation'): str,
                                         Optional('existed'): str,
                                         Optional('default_cost'): int,
-                                        Optional('numbers'): 
-                                            {'interfaces': int,
+                                        Optional('message_digest'): str,
+                                        Optional('numbers'): {
+                                            'interfaces': int,
                                             'active_interfaces': int,
                                             'passive_interfaces': int,
-                                            'loopback_interfaces': int},
-                                        Optional('ranges'): 
-                                            {Any(): 
-                                                {'prefix': str,
+                                            'loopback_interfaces': int
+                                        },
+                                        Optional('ranges'): {
+                                            Any(): {
+                                                'prefix': str,
                                                 'advertise': bool,
                                                 'cost': int,
-                                                'net': int},
+                                                'net': int
                                             },
+                                        },
                                         Optional('authentication'): str,
-                                        Optional('statistics'): 
-                                            {'spf_runs_count': int,                                            
+                                        Optional('statistics'): {
+                                            'spf_runs_count': int,                                            
                                             'spf_last_run_time': float,
                                             'area_scope_lsa_count': int,
                                             'area_scope_lsa_cksum_sum': str,
-                                            Optional('as_nssa_translator_event_count'): int}
-                                        },
+                                            Optional('as_nssa_translator_event_count'): int
+                                        }
                                     },
+                                },
+                                Optional('redistribution'): {
+                                    Optional('bgp'): {
+                                        'bgp_id': int,  # 'redist_bgp_id',
+                                        Optional('metric'): int,  # 'redist_bgp_metric',
+                                    },
+                                    Optional('static'): {
+                                        'enabled': bool,  # 'redist_static'
+                                        Optional('metric'): int,  # redist_static_metric
+                                        Optional('route_policy'): str,  # redist_static_route_policy
+                                    }
                                 },
                             },
                         },
@@ -160,6 +189,7 @@ class ShowIpOspfSchema(MetaParser):
                 },
             },
         }
+    }
 
 
 # ======================================
@@ -187,75 +217,89 @@ class ShowIpOspf(ShowIpOspfSchema):
         # Init vars
         ret_dict = {}
         sub_dict = {}
+        redist = False
 
         p1 = re.compile(r'^Routing +Process +(?P<instance>\d+) +'
-                            'with +ID +(?P<router_id>[\d\.]+) +'
-                            'VRF +(?P<vrf>\S+)$')
+                        r'with +ID +(?P<router_id>[\d\.]+) +'
+                        r'VRF +(?P<vrf>\S+)$')
         p2 = re.compile(r'^Routing +Process +Instance +Number'
-                            ' +(?P<instance>\d+)$')
+                        r' +(?P<instance>\d+)$')
         p3 = re.compile(r'^Stateful +High +Availability +(?P<enable>\w+)$')
         p4 = re.compile(r'^Graceful\-restart +is +(?P<gr_enable>\w+)$')
         p5 = re.compile(r'^Grace +period: +(?P<interval>\w+) +'
-                            'state: +(?P<state>\w+)$')
-        p6 = re.compile(r'^Last +graceful +restart +exit +status:'
-                            ' +(?P<status>\w+)$')
+                        r'state: +(?P<state>\w+)$')
+        p6 = re.compile(r'^Last +graceful +restart +exit +status: '
+                        r'+(?P<status>\w+)(?: +\([\w ]+\))?$')
         p7 = re.compile(r'^Supports +only +single +TOS\(TOS0\) +routes$')
         p8 = re.compile(r'^Supports +opaque +LSA$')
         p9 = re.compile(r'^Administrative +distance +(?P<pref_all>\d+)$')
         p10 = re.compile(r'^BFD +is +enabled$')
         p11 = re.compile(r'^Reference +Bandwidth +is +(?P<bd>\d+)'
-                        ' +(?P<unit>\w+)$')
+                         r' +(?P<unit>\w+)$')
         p12 = re.compile(r'^SPF +throttling +delay +time +of'
-                            ' +(?P<time>[\d\.]+) +msecs,$')
+                         r' +(?P<time>[\d\.]+) +msecs,$')
         p13 = re.compile(r'^SPF +throttling +hold +time +of'
-                            ' +(?P<time>[\d\.]+) +msecs,$')
+                         r' +(?P<time>[\d\.]+) +msecs,$')
         p14 = re.compile(r'^SPF +throttling +maximum +wait +time +of'
-                            ' +(?P<time>[\d\.]+) +msecs$')
+                         r' +(?P<time>[\d\.]+) +msecs$')
         p15 = re.compile(r'^LSA +throttling +start +time +of'
-                            ' +(?P<time>[\d\.]+) +msecs,$')
+                         r' +(?P<time>[\d\.]+) +msecs,$')
         p16 = re.compile(r'^LSA +throttling +hold +interval +of'
-                            ' +(?P<time>[\d\.]+) +msecs,$')
+                         r' +(?P<time>[\d\.]+) +msecs,$')
         p17 = re.compile(r'^LSA +throttling +maximum +wait +time +of'
-                            ' +(?P<time>[\d\.]+) +msecs$')
+                         r' +(?P<time>[\d\.]+) +msecs$')
         p18 = re.compile(r'^Minimum +LSA +arrival +(?P<time>[\d\.]+) +msec$')
         p19 = re.compile(r'^Maximum +number +of +non +self\-generated +'
-                            'LSA +allowed +(?P<max>\d+)$')
+                         r'LSA +allowed +(?P<max>\d+)$')
         p19_1 = re.compile(r'^Originating +router +LSA +with +maximum +metric$')
         p20 = re.compile(r'^LSA +group +pacing +timer +(?P<time>\d+) +secs$')
         p21 = re.compile(r'^Maximum paths to destination +(?P<path>\d+)$')
         p22 = re.compile(r'^Number +of +external +LSAs +(?P<total>\d+), +'
-                            'checksum +sum +(?P<checksum>\w+)$')
+                         r'checksum +sum +(?P<checksum>\w+)$')
         p23 = re.compile(r'^Number +of +opaque +AS +LSAs +(?P<total>\d+),'
-                            ' +checksum +sum +(?P<checksum>\w+)$')
+                         r' +checksum +sum +(?P<checksum>\w+)$')
         p24 = re.compile(r'^Number +of +areas +is +(?P<total>\d+), +'
-                            '(?P<normal>\d+) +normal, +'
-                            '(?P<stub>\d+) +stub, +'
-                            '(?P<nssa>\d+) +nssa$')
+                         r'(?P<normal>\d+) +normal, +'
+                         r'(?P<stub>\d+) +stub, +'
+                         r'(?P<nssa>\d+) +nssa$')
         p25 = re.compile(r'^Number +of +active +areas +is +(?P<total>\d+),'
-                            ' +(?P<normal>\d+) +normal, +'
-                            '(?P<stub>\d+) +stub, +'
-                            '(?P<nssa>\d+) +nssa$')
+                         r' +(?P<normal>\d+) +normal, +'
+                         r'(?P<stub>\d+) +stub, +'
+                         r'(?P<nssa>\d+) +nssa$')
         p26 = re.compile(r'^Install +discard +route +for +'
-                            'summarized +(?P<type>\w+) +routes.$')
+                         r'summarized +(?P<type>\w+) +routes.$')
         p27 = re.compile(r'^Area +(?P<type>\w+)?\((?P<area>[\w\.\:]+)\)'
-                            '( *\((?P<status>\w+)\))?$')
+                         r'( *\((?P<status>\w+)\))?$')
         p34 = re.compile(r'^This +area +is +a +(?P<type>\w+) +area$')
         p35 = re.compile(r'^Generates +stub +default +route +with +'
-                            'cost +(?P<cost>\d+)$')
+                         r'cost +(?P<cost>\d+)$')
         p28 = re.compile(r'^Area +has +existed +for +(?P<time>[\w\.\:]+)$')
         p29 = re.compile(r'^Interfaces +in +this +area: +(?P<num1>\d+) +'
-                            'Active +interfaces: +(?P<num2>\d+)$')
+                         r'Active +interfaces: +(?P<num2>\d+)$')
         p30 = re.compile(r'^Passive +interfaces: +(?P<num1>\d+) +'
-                            'Loopback +interfaces: +(?P<num2>\d+)$')
+                         r'Loopback +interfaces: +(?P<num2>\d+)$')
         p30_1 = re.compile(r'No +authentication +available$')
         p31 = re.compile(r'^SPF +calculation +has +run +(?P<num1>\d+) +times$')
         p32 = re.compile(r'^Last +SPF +ran +for +(?P<num1>[\d\.]+)s$')
         p36 = re.compile(r'^(?P<prefix>[\d\/\.]+) +'
-                            '(Active|Passive) +\(Num +nets: +(?P<net>\d+)\) +'
-                            '(?P<advertise>\w+) +'
-                            'Cost +configured +(?P<cost>\d+)$')
+                         r'(Active|Passive) +\(Num +nets: +(?P<net>\d+)\) +'
+                         r'(?P<advertise>\w+) +'
+                         r'Cost +configured +(?P<cost>\d+)$')
         p33 = re.compile(r'^Number +of +LSAs: +(?P<num1>\d+), +'
-                            'checksum +sum +(?P<num2>\w+)$')
+                         r'checksum +sum +(?P<num2>\w+)$')
+
+        p37 = re.compile(r'^Redistributing +External +Routes +from$')
+
+        p38 = re.compile(r'^(?P<redist>[\w]+)(?:-(?P<redist_id>\d+))?$')
+
+        p39 = re.compile(r'^Name +Lookup +is +(?P<name_lookup>enabled|disabled)$')
+
+        p40 = re.compile(r'^Summarization +is +(?P<summary>disabled)$')
+
+        p41 = re.compile(r'^Perform +(?P<perform_translation>\S+) +LSA +translation$')
+
+        p42 = re.compile(r'^Message\-digest +(?P<message_digest>\S+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -334,6 +378,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Last graceful restart exit status: None
+            # Last graceful restart exit status: Failed (grace period timeout)
             m = p6.match(line)
             if m:
                 sub_dict['graceful_restart']['ietf']['exist_status'] = \
@@ -719,7 +764,63 @@ class ShowIpOspf(ShowIpOspfSchema):
                 sub_dict['areas'][area]['statistics']\
                     ['area_scope_lsa_cksum_sum'] = m.groupdict()['num1']
                 continue
+            
+            # Redistributing External Routes from
+            m37 = p37.match(line)
+            if m37:
+                redist = True
+                redist_dict = sub_dict.setdefault('redistribution', {})
 
+                continue   
+            
+            # static
+            # bgp-100
+            m38 = p38.match(line)
+            if m38:
+                if redist:
+                    group = m38.groupdict()
+                    if group['redist'] == 'bgp':
+                        bgp_dict = redist_dict.setdefault('bgp', {})
+                        bgp_dict.update({'bgp_id': int(group['redist_id'])})
+                    elif group['redist'] == 'static':
+                        static_dict = redist_dict.setdefault('static', {})
+                        static_dict.update({'enabled': True})
+                continue
+
+            # Name Lookup is enabled
+            m39 = p39.match(line)
+            if m39:
+                group = m39.groupdict()['name_lookup']
+                sub_dict['name_lookup'] = True if group == 'enabled' else False
+
+                continue
+            
+            # Summarization is disabled
+            m40 = p40.match(line)
+            if m40:
+                summary = m40.groupdict()['summary']
+                status = sub_dict['areas'][area]
+
+                status['summary'] = True if summary == 'enabled' else False
+
+                continue
+
+            # Perform type-7/type-5 LSA translation
+            m41 = p41.match(line)
+            if m41:
+                translation = m41.groupdict()['perform_translation']
+                sub_dict['areas'][area]['perform_translation'] = translation
+
+                continue
+            
+            # Message-digest authentication
+            m42 = p42.match(line)
+            if m42:
+                message_digest = m42.groupdict()['message_digest']
+                sub_dict['areas'][area]['message_digest'] = message_digest
+
+                continue
+            
         return ret_dict
 
 

@@ -697,3 +697,11 @@
 * IOSXE
     * ShowAccessLists
         * Updated regex to capture more outputs
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* NXOS
+    * ShowIpOspf
+        * Added missing keys to schema
+        * Added regex to capture more outputs
