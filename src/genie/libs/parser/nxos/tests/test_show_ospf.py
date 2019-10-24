@@ -483,7 +483,7 @@ class TestShowIpOspf(unittest.TestCase):
                                         'area_id': '0.0.0.0',
                                         'area_type': 'normal',
                                         'existed': '2d05h',
-                                        'message_digest': 'authentication',
+                                        'authentication': 'Message-digest',
                                         'numbers': {
                                             'active_interfaces': 3,
                                             'interfaces': 4,

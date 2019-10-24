@@ -147,7 +147,6 @@ class ShowIpOspfSchema(MetaParser):
                                         Optional('perform_translation'): str,
                                         Optional('existed'): str,
                                         Optional('default_cost'): int,
-                                        Optional('message_digest'): str,
                                         Optional('numbers'): {
                                             'interfaces': int,
                                             'active_interfaces': int,
@@ -278,7 +277,6 @@ class ShowIpOspf(ShowIpOspfSchema):
                          r'Active +interfaces: +(?P<num2>\d+)$')
         p30 = re.compile(r'^Passive +interfaces: +(?P<num1>\d+) +'
                          r'Loopback +interfaces: +(?P<num2>\d+)$')
-        p30_1 = re.compile(r'No +authentication +available$')
         p31 = re.compile(r'^SPF +calculation +has +run +(?P<num1>\d+) +times$')
         p32 = re.compile(r'^Last +SPF +ran +for +(?P<num1>[\d\.]+)s$')
         p36 = re.compile(r'^(?P<prefix>[\d\/\.]+) +'
@@ -298,7 +296,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         p41 = re.compile(r'^Perform +(?P<perform_translation>\S+) +LSA +translation$')
 
-        p42 = re.compile(r'^Message\-digest +(?P<message_digest>\S+)$')
+        p42 = re.compile(r'(?P<authentication>No|Message\-digest|Simple)'
+                         r'(?: +password)?(?: +authentication(?: +available)?)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -710,11 +709,6 @@ class ShowIpOspf(ShowIpOspfSchema):
                     int(m.groupdict()['num2'])
                 continue
 
-            #  No authentication available
-            m = p30_1.match(line)
-            if m:
-                sub_dict['areas'][area]['authentication'] = 'none'
-
             # SPF calculation has run 8 times
             m = p31.match(line)
             if m:
@@ -814,10 +808,16 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
             
             # Message-digest authentication
+            # Simple password authentication
+            # No authentication available
             m42 = p42.match(line)
             if m42:
-                message_digest = m42.groupdict()['message_digest']
-                sub_dict['areas'][area]['message_digest'] = message_digest
+                message = m42.groupdict()['authentication']
+                auth_dict = sub_dict['areas'][area]
+                if message == 'No':
+                    auth_dict['authentication'] = 'none'
+                else:
+                    auth_dict['authentication'] = message
 
                 continue
             
