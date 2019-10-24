@@ -1253,6 +1253,12 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>.*?) +'
                 r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_2>[\S ]+)$')
 
+        # vpws       vpws       UR   Te0/2/1/0              UR       EVPN 302,302,0.0.0.0   DN
+        p3_4 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+) +'
+                r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>.*?) +'
+                r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_2>[\S ]+)'
+                r' +(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+
         #                                                             UP  
         p4 = re.compile(r'^(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
@@ -1272,7 +1278,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
             
             if '--------' in line:
                 continue
-            
+
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
@@ -1352,7 +1358,24 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
                     .setdefault(str(group['segment_2'].strip()), {})
                 continue
-            
+
+            # vpws       vpws       UR   Te0/2/1/0              UR       EVPN 302,302,0.0.0.0   DN
+            m = p3_4.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}). \
+                    setdefault(group['group'], {})
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+                segment2_dict['status'] = str(group['status_segment2'])
+                continue
+
             # CRS-CRS    T-0-5-0-8  UP   Te0/5/0/8              UP       69.158.196.51   9651100
             m = p3_3.match(line)
             if m:
@@ -1368,7 +1391,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
                     .setdefault(str(group['segment_2'].strip()), {})
                 continue
-            
+
             # UR       Nonexistent            UR
             m = p5.match(line)
             if m:
