@@ -905,15 +905,16 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                           '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
 
         # Affinity:
-        p15 = re.compile(r'^Affinity:')
+        p15 = re.compile(r'^Affinity:$')
 
-        # include-all:
-        # exclude-all:
-        p16 = re.compile(r'^(?P<affinity_type>[\w-]+):')
+        # exclude-any
+        # include-all
+        # include-any
+        p16 = re.compile(r'^(?P<affinity_type>exclude-any|include-all|include-any):$')
 
         # blue
         # green
-        p17 = re.compile(r'^(?P<affinity>\w+)')
+        p17 = re.compile(r'^(?P<affinity>\w+)$')
 
         # initial variables
         aff_flag=False
@@ -1090,8 +1091,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 continue
 
             if aff_flag:
-                # include-all:
-                # exclude-all:
+                # exclude-any
+                # include-all
+                # include-any
                 m = p16.match(line)
                 if m:
                     aff_type = m.groupdict()['affinity_type']
