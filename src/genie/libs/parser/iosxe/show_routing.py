@@ -42,15 +42,15 @@ class ShowIpRouteDistributor(MetaParser):
         else:
             out = output
 
-        if (route or protocol) in self.protocol_set or (not route and not protocol):
+        if not route:
             parser = ShowIpRoute(self.device)
             self.schema = parser.schema
-            return parser.parse(vrf=vrf, protocol=protocol, output=out)
+            return parser.parse(output=out)
 
         else:
             parser = ShowIpRouteWord(self.device)
             self.schema=parser.schema
-            return parser.parse(vrf=vrf, route=route, output=out)
+            return parser.parse(output=out)
 
 # ====================================================
 #  distributor class for show ipv6 route
@@ -619,23 +619,22 @@ class ShowIpv6Route(ShowIpRoute):
     exclude = ['uptime']
 
     IP_VER = 'ipv6'
-    def cli(self, vrf='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, output=None):
+        
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[3].format(protocol=protocol)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
+        if not vrf:
+            vrf = 'default'
         return super().cli(vrf=vrf, protocol=protocol, output=out)
 
 # ====================================================
@@ -1109,7 +1108,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
                         r'(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
                         r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
-       
+
+        # * directly connected, via GigabitEthernet1.120
+        p5_1 = re.compile(r'^\* +directly +connected, via +(?P<interface>\S+)$')
+        
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                         r'traffic +share +count +is +(?P<share_count>\d+)$')
@@ -1241,7 +1243,17 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 path_dict.update({'prefer_non_rib_labels': True if group['rib_labels'] else False})
                 path_dict.update({'merge_labels': True if group['merge_labels'] else False})
                 continue
-            
+
+            # * directly connected, via GigabitEthernet1.120
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                if group['interface']:
+                    path_dict.update({'interface': group['interface']})
+                continue
+
             # AS Hops 9
             m = p16.match(line)
             if m:
@@ -1383,24 +1395,22 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
                    'show ipv6 route', 'show ipv6 route {route}']
     IP_VER = 'ipv6'
 
-    def cli(self, route='', vrf='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, route=None, vrf=None, output=None):
+        
         if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.command[1].format(vrf=vrf, route=route)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf, route=route)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif route:
+                cmd = self.command[3].format(route=route)
             else:
-                if route:
-                    cmd = self.command[3].format(route=route)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
-
+        if not vrf:
+            vrf = 'default'
         return super().cli(route=route, vrf=vrf, output=out)
 
 
