@@ -2941,14 +2941,17 @@ class ShowInterfacesDescriptionSchema(MetaParser):
 
 
 class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
-    """parser for show interfaces
+    """parser for show interface description
     """
 
-    cli_command = ['show interfaces description']
+    cli_command = ['show interfaces description', 'show interfaces {interface} description']
 
-    def cli(self, output=None):
+    def cli(self, interface="", output=None):
         if output is None:
-            cmd = self.cli_command[0]
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -2971,7 +2974,10 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
                 intf_dict['status'] = group['status']
                 intf_dict['protocol'] = group['protocol']
-                intf_dict['description'] = str(group['description'])
+                if group['description'] is not None:
+                    intf_dict['description'] = str(group['description'])
+                else:
+                    intf_dict['description'] = ''
                 index += 1                
                 continue
 

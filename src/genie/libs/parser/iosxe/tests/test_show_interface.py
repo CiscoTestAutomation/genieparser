@@ -18661,142 +18661,142 @@ class TestShowInterfacesDescription(unittest.TestCase):
     golden_parsed_output = {
         "interfaces": {
             "Gi0/0": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/1": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.90": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.110": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.115": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.120": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.390": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.410": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.415": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/2.420": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.90": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.110": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.115": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.120": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.390": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.410": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.415": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi0/3.420": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi1/0": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi1/1": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi1/2": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Gi1/3": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Lo0": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Lo300": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Po12": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
             "Po13": {
-                "description": "None",
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             },
@@ -18843,6 +18843,21 @@ class TestShowInterfacesDescription(unittest.TestCase):
         }
     }
 
+    golden_interface_output = {'execute.return_value': '''
+        Interface                      Status         Protocol Description
+        Gi0/0                          up             up     
+    '''}
+    
+    golden_parsed_interface_output = {
+        "interfaces": {
+            "Gi0/0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            }
+        }
+    }
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfacesDescription(device=self.device)
@@ -18855,7 +18870,13 @@ class TestShowInterfacesDescription(unittest.TestCase):
         obj = ShowInterfacesDescription(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
+        
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse(interface='Gi0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':
