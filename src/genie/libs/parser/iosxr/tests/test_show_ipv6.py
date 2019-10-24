@@ -25,9 +25,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
             'GigabitEthernet0/0/0/0': {
                 'interface': 'GigabitEthernet0/0/0/0',
                 'neighbors': {
-                    '2010:1:2::1': {
+                    '2001:db8:8548:1::1': {
                         'age': '82',
-                        'ip': '2010:1:2::1',
+                        'ip': '2001:db8:8548:1::1',
                         'link_layer_address': 'fa16.3e19.abba',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -37,9 +37,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                         'serg_flags': 'ff',
                         'origin': 'dynamic',
                     },
-                    '2010:1:2::22': {
+                    '2001:db8:8548:1::22': {
                         'age': '-',
-                        'ip': '2010:1:2::22',
+                        'ip': '2001:db8:8548:1::22',
                         'link_layer_address': 'aaaa.beaf.bbbb',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -78,9 +78,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
             'GigabitEthernet0/0/0/3': {
                 'interface': 'GigabitEthernet0/0/0/3',
                 'neighbors': {
-                    '2020:2:3::3': {
+                    '2001:db8:c8d1:4::3': {
                         'age': '114',
-                        'ip': '2020:2:3::3',
+                        'ip': '2001:db8:c8d1:4::3',
                         'link_layer_address': '5e01.c002.0007',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -119,9 +119,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
             'GigabitEthernet0/0/0/2': {
                 'interface': 'GigabitEthernet0/0/0/2',
                 'neighbors': {
-                    '2010:2:3::3': {
+                    '2001:db8:c56d:4::3': {
                         'age': '1',
-                        'ip': '2010:2:3::3',
+                        'ip': '2001:db8:c56d:4::3',
                         'link_layer_address': '5e01.c002.0007',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -160,9 +160,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
             'GigabitEthernet0/0/0/1': {
                 'interface': 'GigabitEthernet0/0/0/1',
                 'neighbors': {
-                    '2020:1:2::1': {
+                    '2001:db8:888c:1::1': {
                         'age': '4',
-                        'ip': '2020:1:2::1',
+                        'ip': '2001:db8:888c:1::1',
                         'link_layer_address': 'fa16.3e72.8407',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -172,9 +172,9 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                         'serg_flags': 'ff',
                         'origin': 'dynamic',
                     },
-                    '2020:1:2::22': {
+                    '2001:db8:888c:1::22': {
                         'age': '-',
-                        'ip': '2020:1:2::22',
+                        'ip': '2001:db8:888c:1::22',
                         'link_layer_address': 'dddd.beef.aaaa',
                         'neighbor_state': 'REACH',
                         'location': '0/0/CPU0',
@@ -217,18 +217,18 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
         RP/0/RP0/CPU0:xr9kv-2#show ipv6 neighbors detail
         Thu Apr 26 13:09:53.379 UTC
         IPv6 Address                             Age  Link-layer Add State Interface            Location      Static Dynamic Sync       Serg-Flags 
-        2010:1:2::1                              82   fa16.3e19.abba REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
-        2010:1:2::22                                - aaaa.beaf.bbbb REACH Gi0/0/0/0            0/0/CPU0        Y      -       -            ff
+        2001:db8:8548:1::1                              82   fa16.3e19.abba REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
+        2001:db8:8548:1::22                                - aaaa.beaf.bbbb REACH Gi0/0/0/0            0/0/CPU0        Y      -       -            ff
         fe80::f816:3eff:fe19:abba                158  fa16.3e19.abba REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
         [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
-        2020:2:3::3                              114  5e01.c002.0007 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
+        2001:db8:c8d1:4::3                              114  5e01.c002.0007 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
         fe80::5c01:c0ff:fe02:7                   12   5e01.c002.0007 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
         [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/3            0/0/CPU0        -      -       -            ff
-        2010:2:3::3                              1    5e01.c002.0007 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
+        2001:db8:c56d:4::3                              1    5e01.c002.0007 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
         fe80::5c01:c0ff:fe02:7                   12   5e01.c002.0007 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
         [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/2            0/0/CPU0        -      -       -            ff
-        2020:1:2::1                              4    fa16.3e72.8407 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
-        2020:1:2::22                                - dddd.beef.aaaa REACH Gi0/0/0/1            0/0/CPU0        Y      -       -            ff
+        2001:db8:888c:1::1                              4    fa16.3e72.8407 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
+        2001:db8:888c:1::22                                - dddd.beef.aaaa REACH Gi0/0/0/1            0/0/CPU0        Y      -       -            ff
         fe80::f816:3eff:fe72:8407                37   fa16.3e72.8407 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
         [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0        -      -       -            ff
     '''}

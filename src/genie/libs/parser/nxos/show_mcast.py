@@ -653,7 +653,7 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
                     ipv6_multicast_dict['vrf'][vrf]['address_family'][address_family] = {}
                 continue
 
-            # 126::/16 -> Null0, preference: 1
+            # 2001:db8:51a5::/16 -> Null0, preference: 1
             p2 = re.compile(r'^\s*(?P<mroute>[a-zA-Z0-9\:\/]+) +->'
                              ' +(?P<mroute_int>[\w\W]+), preference:'
                              ' +(?P<preference>[0-9]+)$')

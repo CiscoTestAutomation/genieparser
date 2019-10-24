@@ -75,7 +75,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         #                                             172.16.64.1/2       
         #                                    inet6    fe80::250:56ff:fe82:ba52/64
-        #                                             fec0::a:0:0:4/64
+        #                                             2001:db8:8d82:0:a::4/64
         #                                    tnp      0x4
         #                                             10.11.11.11         --> 0/0
         p2 =  re.compile(r'^((?P<protocol>\S+) +)?(?P<local>((\d+\.[\d\.\/]+)|(\w+\:[\w\:\/]+)|(0x\d+))+)'
@@ -118,7 +118,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
             #                                             172.16.64.1/2       
             #                                    inet6    fe80::250:56ff:fe82:ba52/64
-            #                                             fec0::a:0:0:4/64
+            #                                             2001:db8:8d82:0:a::4/64
             #                                    tnp      0x4
             #                                             10.11.11.11         --> 0/0
             m = p2.match(line)

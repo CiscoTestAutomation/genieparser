@@ -1236,14 +1236,14 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
                                           "up_time": "03:29:13",
                                           "address": "2001:db8:1:1::1"
                                      },
-                                     "2010::1 SM static": {
+                                     "2001:db8:504::1 SM static": {
                                           "expiration": "0.000000",
                                           "info_source_type": "static",
                                           "mode": "SM",
                                           "group_ranges": "ff1e::3002/128 ff1e::3001/128",
                                           "df_ordinal": 0,
                                           "up_time": "00:00:02",
-                                          "address": "2010::1"
+                                          "address": "2001:db8:504::1"
                                      },
                                      "2001:db8:12:12::12 BIDIR static": {
                                           "expiration": "0.000000",
@@ -1286,9 +1286,9 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
                                           "protocol": "static",
                                           "up_time": "00:58:17"
                                      },
-                                     "ff1e::3002/128 ff1e::3001/128 2010::1 static": {
+                                     "ff1e::3002/128 ff1e::3001/128 2001:db8:504::1 static": {
                                           "group": "ff1e::3002/128 ff1e::3001/128",
-                                          "rp_address": "2010::1",
+                                          "rp_address": "2001:db8:504::1",
                                           "expiration": "0.000000",
                                           "protocol": "static",
                                           "up_time": "00:00:02"
@@ -1300,7 +1300,7 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
                                                "policy_name": "ff09::/16"
                                           }
                                      },
-                                     "2010::1": {
+                                     "2001:db8:504::1": {
                                           "sm": {
                                                "route_map": "PIM6-STATIC-RP",
                                                "policy_name": "ff1e::3002/128 ff1e::3001/128"
@@ -1380,7 +1380,7 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
         RP: 2001:db8:111:111::111, (0), uptime: 00:00:52, expires: 0.000000,
          priority: 0, RP-source: (local), group ranges:
               ff09::/16
-        RP: 2010::1, (0), uptime: 00:00:02, expires: 0.000000,
+        RP: 2001:db8:504::1, (0), uptime: 00:00:02, expires: 0.000000,
          priority: 0, RP-source: (local), group-map: PIM6-STATIC-RP, group ranges:
               ff1e::3002/128 ff1e::3001/128
 

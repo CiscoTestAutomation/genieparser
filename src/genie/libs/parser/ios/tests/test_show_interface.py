@@ -744,9 +744,9 @@ class TestShowIpv6Interface(unittest.TestCase):
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
                "enabled": True,
-               "201::1:1/112": {
+               "2001:db8:405::1:1/112": {
                     "status": "valid",
-                    "ip": "201::1:1",
+                    "ip": "2001:db8:405::1:1",
                     "prefix_length": "112"
                },
                "FE80::F816:3EFF:FE4B:55FD": {
@@ -754,9 +754,9 @@ class TestShowIpv6Interface(unittest.TestCase):
                     "ip": "FE80::F816:3EFF:FE4B:55FD",
                     "origin": "link_layer"
                },
-               "201::5:2/112": {
+               "2001:db8:405::5:2/112": {
                     "status": "valid",
-                    "ip": "201::5:2",
+                    "ip": "2001:db8:405::5:2",
                     "prefix_length": "112"
                },
                "nd": {
@@ -793,9 +793,9 @@ class TestShowIpv6Interface(unittest.TestCase):
             "enabled": True,
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
-               "100:1::1:1/112": {
+               "2001:db8:1:1::1:1/112": {
                     "status": "valid",
-                    "ip": "100:1::1:1",
+                    "ip": "2001:db8:1:1::1:1",
                     "prefix_length": "112"
                },
                "enabled": True,
@@ -830,8 +830,8 @@ class TestShowIpv6Interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::F816:3EFF:FE4B:55FD 
           No Virtual link-local address(es):
           Global unicast address(es):
-            201::1:1, subnet is 201::1:0/112 
-            201::5:2, subnet is 201::5:0/112 
+            2001:db8:405::1:1, subnet is 2001:db8:405::1:0/112 
+            2001:db8:405::5:2, subnet is 2001:db8:405::5:0/112 
           Joined group address(es):
             FF02::1
             FF02::2
@@ -856,7 +856,7 @@ class TestShowIpv6Interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::5C00:C0FF:FE00:0 
           No Virtual link-local address(es):
           Global unicast address(es):
-            100:1::1:1, subnet is 100:1::1:0/112 
+            2001:db8:1:1::1:1, subnet is 2001:db8:1:1::1:0/112 
           Joined group address(es):
             FF02::1
             FF02::2

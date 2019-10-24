@@ -298,7 +298,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
         # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
         # permit ipv6 host 2001:: 1 host 2001: 1: : 2 sequence 20
-        # permit tcp any eq www 8443 host 2001: 2:: 2 sequence 30
+        # permit tcp any eq www 8443 host 2001: 2001:db8:4:: 2 sequence 30
         # permit ipv6 3: 3: : 3 4: 4: : 4 1: 1: : 1 6: 6: : 6 log sequence 80
         # permit udp any any eq domain sequence 10
         # permit esp any any dscp cs7 log sequence 20
