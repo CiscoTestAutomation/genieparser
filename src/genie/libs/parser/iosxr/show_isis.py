@@ -1678,8 +1678,19 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 Optional('first_trigger_lsp'): str,
                                 'triggers': str,
                                 'trigger_count': int,
-                                'delay_ms': int,
-                                'delay_info': str,
+                                Optional('sr_uloop'): str,
+                                'delay': {
+                                    'since_first_trigger_ms': int,
+                                    Optional('since_end_of_last_calculation'): int,
+                                },
+                                Optional('interrupted'): str,
+                                Optional('rib_batches'): {
+                                    'total': str,
+                                    Optional('critical'): str,
+                                    Optional('high'): str,
+                                    Optional('medium'): str,
+                                    Optional('low'): str,
+                                },
                                 'spt_calculation': {
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
@@ -1688,9 +1699,13 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
+                                Optional('full_calculation'):{
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
                                 'new_lsp_arrivals': int,
                                 'next_wait_interval_ms': int,
-                                'results': {
+                                Optional('results'): {
                                     'nodes': {
                                         'reach': int,
                                         'unreach': int,
@@ -1780,18 +1795,27 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
         # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
         r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
-                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
-                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+                r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                r'(\s+(?P<first_trigger_lsp>[\w\-\.]+))?\s+(?P<triggers>\w+)')
 
         # Delay:              51ms (since first trigger)
         r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
                         r'\((?P<delay_info>[\w\s]+)\)')
 
         # SPT Calculation
-        r4 = re.compile(r'SPT\s+Calculation')
+        r4 = re.compile(r'SPT\s+Calculation$')
 
+        # SPT Calculation:         5     5
+        r4_1 = re.compile(r'^SPT +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+        
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
+
+        # Route Update:            0     0
+        r5_1 = re.compile(r'^Route +Update: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+
+        # Full Calculation:        0     0
+        r5_2 = re.compile(r'^Full +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
 
         # CPU Time:         1ms
         # CPU Time:         0ms
@@ -1826,9 +1850,24 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
                           '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
                           '(?P<total>\d+)')
+        
+        # SR uloop:              No
+        r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
+        
+        # Interrupted:           No
+        r14 = re.compile(r'^Interrupted: +(?P<interrupted>\w+)$')
+
+        # RIB Batches:           0
+        r15 = re.compile(r'^RIB +Batches: +(?P<total>\d+)( +\((?P<critical>\d+) '
+                r'critical, +(?P<high>\d+) +high, +(?P<medium>\d+) +medium, +'
+                r'(?P<low>\d+) +low\))?$')
+
+        # 899545ms (since end of last calculation)
+        r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since '
+                r'+end +of +last +calculation\)$')
 
         # Mon Aug 16 2004
-        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+        r17 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
 
         parsed_dict = {}
         log_index = 1
@@ -1872,11 +1911,12 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spf_log_dict['level'] = level
                 spf_log_dict['total_nodes'] = nodes
                 spf_log_dict['trigger_count'] = trigger_count
-                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                if first_trigger_lsp:
+                    spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
                 spf_log_dict['triggers'] = triggers
                 spf_log_dict['start_timestamp'] = "{} {}"\
                     .format(timestamp_date, timestamp).strip()
-
+                log_index += 1
                 continue
 
             # Delay:              51ms (since first trigger)
@@ -1884,10 +1924,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 delay = int(group['delay'])
-                delay_info = group['delay_info']
-                spf_log_dict['delay_ms'] = delay
-                spf_log_dict['delay_info'] = delay_info
-
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_first_trigger_ms'] = delay
                 continue
 
             # SPT Calculation
@@ -1898,12 +1936,48 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
                 continue
 
+            # SPT Calculation:         5     5
+            result = r4_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
             # Prefix Updates
             result = r5.match(line)
             if result:
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('prefix_update', {})
 
+                continue
+
+            # Route Update:            0     0
+            result = r5_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # Full Calculation:        0     0
+            result = r5_2.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('full_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # CPU Time:         1ms
@@ -2004,17 +2078,48 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                     priority_dict['total'] = int(total)
 
                 continue            
+            
+            # SR uloop:              No
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                sr_uloop = group['sr_uloop']
+                spf_log_dict['sr_uloop'] = sr_uloop
+                continue
+            
+            # Interrupted:           No
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                interrupted = group['interrupted']
+                spf_log_dict['interrupted'] = interrupted
+                continue
+
+            # RIB Batches:           0
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                rib_batches_dict = spf_log_dict.setdefault('rib_batches', {})
+                rib_batches_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # 899545ms (since end of last calculation)
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                delay = int(group['since_end_of_last_calculation_ms'])
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_end_of_last_calculation'] = delay
+                continue
 
             # Mon Aug 16 2004
-            result = r13.match(line)
+            result = r17.match(line)
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
                 
                 continue
-        
         return parsed_dict
-
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
         * show isis lsp-log     
@@ -2126,6 +2231,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                 continue
 
         return parsed_output
+
 class ShowIsisInterfaceSchema(MetaParser):
     ''' Schema for commands:
         * show isis interface
@@ -2137,23 +2243,32 @@ class ShowIsisInterfaceSchema(MetaParser):
                 'interface': {
                     Any(): {
                         'state': str,
-                        'adjacency_formation': str,
-                        'prefix_advertisement': str,
-                        'ipv6_bfd': bool,
-                        'ipv4_bfd': bool,
-                        'bfd_min_interval': int,
-                        'bfd_multiplier': int,
-                        'bandwidth': int,
-                        'circuit_type': str,
-                        'media_type': str,
-                        'circuit_number': int,
-                        'lsp': {
+                        Optional('adjacency_formation'): str,
+                        Optional('prefix_advertisement'): str,
+                        Optional('ipv6_bfd'): bool,
+                        Optional('ipv4_bfd'): bool,
+                        Optional('bfd_min_interval'): int,
+                        Optional('bfd_multiplier'): int,
+                        Optional('bandwidth'): int,
+                        Optional('circuit_type'): str,
+                        Optional('media_type'): str,
+                        Optional('circuit_number'): int,
+                        Optional('rsi_srlg'): str,
+                        Optional('next_p2p_iih_in'): int,
+                        Optional('extended_circuit_number'): int,
+                        Optional('lsp_rexmit_queue_size'): int,
+                        Optional('lsp'): {
                             'transmit_timer_expires_ms': int,
                             'transmission_state': str,
                             'lsp_transmit_back_to_back_limit': int,
                             'lsp_transmit_back_to_back_limit_window_msec': int,
                         },
-                        'level': {
+                        Optional('underlying_interface'):{
+                            Any(): {
+                                'index': str
+                            }
+                        },
+                        Optional('level'): {
                             Any(): {
                                 'adjacency_count':int,
                                 Optional('lsp_pacing_interval_ms'): int,
@@ -2161,14 +2276,14 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 Optional('next_lan_iih_sec'): int,
                                 Optional('lan_id'): str,
                                 Optional('hello_interval_sec'): int,
-                                'hello_multiplier': int,
+                                Optional('hello_multiplier'): int,
                                 Optional('priority'): {
                                     'local': str,
                                     'dis': str
                                 }
                             },
                         },
-                        'clns_io': {
+                        Optional('clns_io'): {
                             'protocol_state': str,
                             'mtu': int,
                             Optional('snpa'): str,
@@ -2177,11 +2292,12 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'all_level_2_iss': str,
                             },
                         },
-                        'topology': {
+                        Optional('topology'): {
                             Any(): {
                                 'adjacency_formation': str,
                                 'state': str,
                                 'prefix_advertisement': str,
+                                Optional('protocol_state'): str,
                                 'metric': {
                                     'level': {
                                         Any(): int
@@ -2200,22 +2316,32 @@ class ShowIsisInterfaceSchema(MetaParser):
                                         }
                                     },
                                 },
-                                'frr': {
+                                Optional('frr'): {
                                     'level': {
                                         Any(): {
                                             'state': str,
                                             'type': str,
+                                            Optional(Any()): {
+                                                Optional('state'): str,
+                                                Optional('tie_breaker'): str,
+                                                Optional('line_card_disjoint'): str,
+                                                Optional('lowest_backup_metric'): str,
+                                                Optional('node_protecting'): str,
+                                                Optional('primary_path'): str,
+                                                Optional('link_protecting'): str,
+                                                Optional('srlg_disjoint'): str,
+                                            }
                                         },
                                     },
                                 },
-
                             },
                         },
-                        'address_family': {
+                        Optional('address_family'): {
                             Any(): {
                                 'state': str,
                                 'forwarding_address': list,
                                 'global_prefix': list,
+                                Optional('protocol_state'): str,
                             },
                         }
                     }
@@ -2223,8 +2349,7 @@ class ShowIsisInterfaceSchema(MetaParser):
             }
         }
     }
-
-
+    
 class ShowIsisInterface(ShowIsisInterfaceSchema):
     ''' Parser for commands:
         * show isis interface
@@ -2247,7 +2372,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # Loopback0                   Enabled
         # GigabitEthernet0/0/0/0      Enabled
-        r2 = re.compile(r'^(?P<interface>\w+[\d+\/]+)\s+(?P<interface_state>\w+)$')
+        # TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/\.]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
 
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
@@ -2309,7 +2435,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r18 = re.compile(r'CLNS\s+I\/O')
 
         # Protocol State:         Up
-        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>\w+)')
+        # Protocol State:         Down (Intf not up in CLNS proto stack)
+        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>[\S\s]+)')
 
         # MTU:                    1500
         r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
@@ -2328,7 +2455,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
-        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
+        # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
@@ -2397,9 +2525,55 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # All ISs:              Yes
         r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')
 
+        # Extended Circuit Number:  20
+        r41 = re.compile(r'^Extended +Circuit +Number: +(?P<extended_circuit_number>\d+)$')
+        
+        # Next P2P IIH in:          3 s
+        r42 = re.compile(r'^Next +P2P +IIH +in: +(?P<next_p2p_iih_in>\d+) +m?s$')
+
+        # LSP Rexmit Queue Size:    0
+        r43 = re.compile(r'^LSP +Rexmit +Queue +Size: +(?P<lsp_rexmit_queue_size>\d+)$')
+
+        # RSI SRLG:                 Registered
+        r44 = re.compile(r'^RSI +SRLG: +(?P<rsi_srlg>\S+)$')
+
+        # Direct LFA:           Enabled            Enabled 
+        r45 = re.compile(r'^Direct +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Remote LFA:           Not Enabled        Not Enabled 
+        r46 = re.compile(r'^Remote +LFA: +(?P<level_1>(Not +)?Enabled) +(?P<level_2>(Not +)?Enabled)$')
+
+        # Tie Breaker          Default            Default
+        r47 = re.compile(r'^Tie +Breaker +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Line-card disjoint   30                 30
+        r48 = re.compile(r'^Line-card +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Lowest backup metric 20                 20
+        r49 = re.compile(r'^Lowest +backup +metric +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Node protecting      40                 40
+        r50 = re.compile(r'^Node +protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Primary path         10                 10
+        r51 = re.compile(r'^Primary +path +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # TI LFA:               Enabled            Enabled
+        r52 = re.compile(r'^TI +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Link Protecting      Enabled            Enabled
+        r53 = re.compile(r'^Link +Protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # SRLG disjoint        0                  0
+        r54 = re.compile(r'^SRLG +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # IfName: Hu0/0/0/1 IfIndex: 0x55 
+        r55 = re.compile(r'^IfName: +(?P<if_name>\S+) +IfIndex: +(?P<if_index>\S+)$')
+
         parsed_output = {}
         interface_flag = False
         clns_flag = False
+        topology_falg = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -2596,6 +2770,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 protocol_state = group['protocol_state']
                 if clns_flag:
                     clns_dict['protocol_state'] = protocol_state
+                elif topology_falg:
+                    topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
 
@@ -2622,7 +2798,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault(topology, {})
                 topology_dict['state'] = topology_state
                 interface_flag = False
-
+                topology_falg = True
                 continue
 
             # Metric (L1/L2):         10/10
@@ -2658,10 +2834,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 continue
 
             # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
             result = r24.match(line)            
             if result:
                 group = result.groupdict()
-                mpls_stack = group['mpls_max_label_stack'].strip()
+                mpls_stack = group['mpls_max_label_stack'].replace(':', ' ').strip()
                 mpls_dict = topology_dict.setdefault('mpls', {})                
                 mpls_dict['mpls_max_label_stack'] = mpls_stack
 
@@ -2705,6 +2882,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             # FRR Type:             None               None
             result = r27.match(line)
             if result:
+                lfa_type = 'frr'
                 group = result.groupdict()
                 frr_type_level_1 = group['frr_type_level_1']
                 frr_type_level_2 = group['frr_type_level_2']
@@ -2854,9 +3032,247 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 layer_dict['all_level_2_iss'] = all_iss
 
                 continue
+            # Extended Circuit Number:  20
+            result = r41.match(line)
+            if result:
+                group = result.groupdict()
+                extended_circuit_number = int(group['extended_circuit_number'])
+                if interface_flag:
+                    interface_dict['extended_circuit_number'] = extended_circuit_number
+                else:
+                    topology_dict['extended_circuit_number'] = extended_circuit_number
+                continue
+
+            # Next P2P IIH in:          3 s
+            result = r42.match(line)
+            if result:
+                group = result.groupdict()
+                next_p2p_iih_in = int(group['next_p2p_iih_in'])
+                if interface_flag:
+                    interface_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                else:
+                    topology_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                continue
+
+            # LSP Rexmit Queue Size:    0
+            result = r43.match(line)
+            if result:
+                group = result.groupdict()
+                lsp_rexmit_queue_size = int(group['lsp_rexmit_queue_size'])
+                if interface_flag:
+                    interface_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                else:
+                    topology_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                continue
+
+            # RSI SRLG:                 Registered
+            result = r44.match(line)
+            if result:
+                group = result.groupdict()
+                rsi_srlg = group['rsi_srlg']
+                if interface_flag:
+                    interface_dict['rsi_srlg'] = rsi_srlg
+                else:
+                    topology_dict['rsi_srlg'] = rsi_srlg
+                continue
+            
+            # Direct LFA:           Enabled            Enabled 
+            result = r45.match(line)
+            if result:
+                lfa_type = 'direct_lfa'
+                group = result.groupdict()
+                direct_lfa_level_1 = group['level_1']
+                direct_lfa_level_2 = group['level_2']
+                direct_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_1.update({'state': direct_lfa_level_1})
+                direct_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_2.update({'state': direct_lfa_level_2})
+                continue
+            # Remote LFA:           Not Enabled        Not Enabled 
+            result = r46.match(line)
+            if result:
+                lfa_type = 'remote_lfa'
+                group = result.groupdict()
+                remote_lfa_level_1 = group['level_1']
+                remote_lfa_level_2 = group['level_2']
+                remote_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_1.update({'state': remote_lfa_level_1})
+                remote_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_2.update({'state': remote_lfa_level_2})
+                continue
+
+            # Tie Breaker          Default            Default
+            result = r47.match(line)
+            if result:
+                group = result.groupdict()
+                tie_breaker_level_1 = group['level_1']
+                tie_breaker_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'tie_breaker': tie_breaker_level_1})
+                current_lfa_dict_2.update({'tie_breaker': tie_breaker_level_2})
+                continue
+
+            # Line-card disjoint   30                 30
+            result = r48.match(line)
+            if result:
+                group = result.groupdict()
+                line_card_disjoint_level_1 = group['level_1']
+                line_card_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'line_card_disjoint': line_card_disjoint_level_1})
+                current_lfa_dict_2.update({'line_card_disjoint': line_card_disjoint_level_2})
+                continue
+
+            # Lowest backup metric 20                 20
+            result = r49.match(line)
+            if result:
+                group = result.groupdict()
+                lowest_backup_metric_level_1 = group['level_1']
+                lowest_backup_metric_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'lowest_backup_metric': lowest_backup_metric_level_1})
+                current_lfa_dict_2.update({'lowest_backup_metric': lowest_backup_metric_level_2})
+                continue
+
+            # Node protecting      40                 40
+            result = r50.match(line)
+            if result:
+                group = result.groupdict()
+                node_protecting_level_1 = group['level_1']
+                node_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'node_protecting': node_protecting_level_1})
+                current_lfa_dict_2.update({'node_protecting': node_protecting_level_2})
+                continue
+
+            # Primary path         10                 10
+            result = r51.match(line)
+            if result:
+                group = result.groupdict()
+                primary_path_level_1 = group['level_1']
+                primary_path_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'primary_path': primary_path_level_1})
+                current_lfa_dict_2.update({'primary_path': primary_path_level_2})
+                continue
+
+            # TI LFA:               Enabled            Enabled
+            result = r52.match(line)
+            if result:
+                lfa_type = 'ti_lfa'
+                group = result.groupdict()
+                ti_lfa_level_1 = group['level_1']
+                ti_lfa_level_2 = group['level_2']
+                ti_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_1.update({'state': ti_lfa_level_1})
+                ti_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_2.update({'state': ti_lfa_level_2})
+                continue
+
+            # Link Protecting      Enabled            Enabled
+            result = r53.match(line)
+            if result:
+                group = result.groupdict()
+                link_protecting_level_1 = group['level_1']
+                link_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'link_protecting': link_protecting_level_1})
+                current_lfa_dict_2.update({'link_protecting': link_protecting_level_1})
+                continue
+
+            # SRLG disjoint        0                  0
+            result = r54.match(line)
+            if result:
+                group = result.groupdict()
+                srlg_disjoint_level_1 = group['level_1']
+                srlg_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'srlg_disjoint': srlg_disjoint_level_1})
+                current_lfa_dict_2.update({'srlg_disjoint': srlg_disjoint_level_2})
+                continue
+
+            # IfName: Hu0/0/0/1 IfIndex: 0x55 
+            result = r55.match(line)
+            if result:
+                group = result.groupdict()
+                if_name = Common.convert_intf_name(group['if_name'])
+                if_index = group['if_index']
+                underlying_interface = interface_dict.setdefault('underlying_interface', {}). \
+                    setdefault(if_name, {})
+                underlying_interface.update({'index': if_index})
+
+                continue
 
         return parsed_output
-
 
 class ShowIsisDatabaseDetailSchema(MetaParser):
     ''' Schema for commands:
@@ -2881,12 +3297,15 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                     'overload_bit': int,
                                 },
                                 Optional('router_id'): str,
+                                Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
                                 Optional('topology'): list,
+                                Optional('tlv'): int,
+                                Optional('tlv_length'): int,
                                 Optional('extended_ipv4_reachability'): {
                                     Any(): {
                                         'ip_prefix': str,
@@ -3000,7 +3419,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # router-5.00-00        0x00000005 0x807997c        457                0/0/0
         # 0000.0C00.0C35.00-00  0x0000000C    0x5696        325                0/0/0
         # 0000.0C00.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
-        r2 = re.compile(r'(?P<lspid>[\w\-\.]+)\s*(?P<local_router>\**)\s+(?P<lsp_seq_num>\S+)\s+(?P<lsp_checksum>\S+)\s+(?P<lsp_holdtime>\d+|\*)\s+(/*(?P<lsp_rcvd>\d*|\*)?)\s+(?P<attach_bit>\d+)/(?P<p_bit>\d+)/(?P<overload_bit>\d+)')
+        r2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
+                r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
+                r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
+                r'(?P<overload_bit>\d+)$')
 
         # Area Address:   49.0002
         r3 = re.compile(r'Area\s+Address\s*:\s*(?P<area_address>\S+)')
@@ -3105,6 +3527,12 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 0          IP 172.16.115.0/24
         r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
                          r'(?P<ip_address>[\d\.\/]+)')
+        
+        # Router Cap:     172.19.1.2 D:0 S:0
+        r23 = re.compile(r'^Router +Cap: +(?P<router_cap>[\S ]+)$')
+
+        # TLV 14:         Length: 2
+        r24 = re.compile(r'^TLV +(?P<tlv>\d+): +Length: +(?P<length>\d+)$')
 
         parsed_output = {}
 
@@ -3473,6 +3901,24 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     ip_dict['prefix_length'] = ip_prefix_list[1]
                 ip_dict['metric'] = metric
 
+                continue
+
+            # Router Cap:     172.19.1.2 D:0 S:0
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                router_cap = group['router_cap']
+                lspid_dict['router_cap'] = router_cap
+                continue
+
+            # TLV 14:         Length: 2
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                tlv = int(group['tlv'])
+                length = int(group['length'])
+                lspid_dict['tlv'] = tlv
+                lspid_dict['tlv_length'] = length
                 continue
 
         return parsed_output
