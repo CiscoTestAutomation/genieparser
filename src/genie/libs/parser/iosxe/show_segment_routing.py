@@ -1089,21 +1089,23 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 aff_dict = pref_dict.setdefault('constraints', {}).setdefault('affinity', {})
                 continue
 
-            # include-all:
-            # exclude-all:
-            m = p16.match(line)
-            if m and aff_flag:
-                aff_type = m.groupdict()['affinity_type']
-                aff_dict.update({aff_type: []})
-                continue
+            if aff_flag:
+                # include-all:
+                # exclude-all:
+                m = p16.match(line)
+                if m:
+                    aff_type = m.groupdict()['affinity_type']
+                    aff_dict.update({aff_type: []})
+                    continue
 
-            # blue
-            m = p17.match(line)
-            if m and aff_flag:
-                temp_list = aff_dict.get(aff_type)
-                if temp_list is not None:
-                    temp_list.append(m.groupdict()['affinity'])
-                    aff_dict.update({aff_type: temp_list})
+            if aff_flag:
+                # blue
+                m = p17.match(line)
+                if m:
+                    temp_list = aff_dict.get(aff_type)
+                    if temp_list is not None:
+                        temp_list.append(m.groupdict()['affinity'])
+                        aff_dict.update({aff_type: temp_list})
 
         return ret_dict
 
