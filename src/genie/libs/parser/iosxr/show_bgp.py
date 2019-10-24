@@ -1068,7 +1068,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9\_]+)$')
         p1_1_1 = re.compile(r'^BGP +Process +Information: +VRF +(?P<vrf>[\w_]+)$')
         p1_2 = re.compile(r'^\s*BGP *Route *Distinguisher:'
-                          ' *(?P<route_distinguisher>[0-9\:]+)$')
+                          ' *(?P<route_distinguisher>\S+)$')
         p2 = re.compile(r'BGP *is *operating *in *'
                         '(?P<operation_mode>\w+) *mode$')
         p3 = re.compile(r'^Autonomous *System *number *format: *'
@@ -3460,7 +3460,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p15 = re.compile(r'^BGP *VRF *(?P<vrf>[a-zA-Z0-9]+), *'
                             'state: *(?P<state>[a-zA-Z]+)$')
-        p15_1 = re.compile(r'^BGP Route Distinguisher: *(?P<route_distinguisher>[0-9\:]+)')
+        p15_1 = re.compile(r'^BGP Route Distinguisher: *(?P<route_distinguisher>\S+)')
         p16 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p2 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
         p3 = re.compile(r'^BGP *router *identifier *(?P<router_identifier>[0-9\.]+), *local *AS *number *(?P<local_as>[0-9]+)$')
@@ -3472,7 +3472,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p9 = re.compile(r'^BGP *NSR *Initial *initsync *version *(?P<nsr_initial_initsync_version>[0-9]+) *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
         p10 = re.compile(r'^BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p11 = re.compile(r'^BGP *scan *interval *(?P<scan_interval>[0-9\S]+) *secs$')
-        p12 = re.compile(r'^Route +Distinguisher: *(?P<route_distinguisher>[0-9\:]+) *'
+        p12 = re.compile(r'^Route +Distinguisher: *(?P<route_distinguisher>\S+) *'
                             '(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
                             '(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+))? +'
@@ -4001,7 +4001,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             r'a-zA-Z0-9\-\_\']+)$')
         p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
         p7 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
-        p3 = re.compile(r'^Route *Distinguisher: *(?P<route_distinguisher>[0-9\:]+) *'
+        p3 = re.compile(r'^Route *Distinguisher: *(?P<route_distinguisher>\S+) *'
                         '(\(default *for *vrf (?P<default_vrf>[0-9A-Z]+)\))?$')
         p4 = re.compile(
             r'^(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
@@ -4351,7 +4351,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
                         ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
-                        ' *(?P<route_distinguisher>[0-9\:]+)$')
+                        ' *(?P<route_distinguisher>\S+)$')
         p6 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p7 = re.compile(r'^\s*BGP *router *identifier'
                         ' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
