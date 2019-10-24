@@ -262,7 +262,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         Device ID            Local Intf      Hold-time  Capability  Port ID  
 
-        Chassis id: 39373638-3935-5A43-4A37-35303036574C
+        Chassis id: 3935-5A43-4A37-39373638-35303036574C
         Port id: PCI-E Slot 1, Port 2
         Local Port id: Eth1/14
         Port Description: ConnectX-4 Lx, 25G/10G/1G SFP
@@ -381,7 +381,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                         'PCI-ESlot1,Port2': {
                             'neighbors': {
                                 'null': {
-                                    'chassis_id': '39373638-3935-5A43-4A37-35303036574C',
+                                    'chassis_id': '3935-5A43-4A37-39373638-35303036574C',
                                     'enabled_capabilities': 'not advertised',
                                     'management_address_v4': '98f2.b322.e4d2',
                                     'management_address_v6': 'not advertised',
