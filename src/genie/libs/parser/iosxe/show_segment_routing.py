@@ -760,6 +760,11 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
             "candidate_paths": {
                 "preference": {
                     Any(): {
+                        Optional("constraints"): {
+                            "affinity": {
+                                Any(): list
+                            }
+                        },
                         "path_type": {
                             Optional("dynamic"): {
                                 "status": str,
@@ -820,6 +825,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
             },
         },
     }
+
 
 class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchema):
     """ Parser for 
@@ -898,7 +904,19 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+) +(?P<client>(?:[\S]+ )+) '
                           '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
 
+        # Affinity:
+        p15 = re.compile(r'^Affinity:')
+
+        # include-all:
+        # exclude-all:
+        p16 = re.compile(r'^(?P<affinity_type>[\w-]+):')
+
+        # blue
+        # green
+        p17 = re.compile(r'^(?P<affinity>\w+)')
+
         # initial variables
+        aff_flag=False
         ret_dict = {}
 
         for line in out.splitlines():
@@ -910,6 +928,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             # Name: test1 (Color: 100 End-point: 10.169.196.241)
             m = p1.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 name = group['name']
                 policy_dict = ret_dict.setdefault(name, {})
@@ -924,6 +943,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
             m = p2.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 status_dict = policy_dict.setdefault('status', {})
                 status_dict.update({'admin': group['admin']})
@@ -938,6 +958,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Preference 400:
             m = p3.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 pref = int(group['preference'])
                 pref_dict = policy_dict.setdefault("candidate_paths", {}).\
@@ -948,6 +969,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Dynamic (pce) (inactive)
             m = p4.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict = pref_dict.setdefault('path_type', {}).setdefault('dynamic', {})
                 path_dict.update({'status': group['status']})
@@ -958,6 +980,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Weight: 0, Metric Type: TE
             m = p5.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict.update({'weight': int(group['weight'])})
                 path_dict.update({'metric_type': group['metric_type']})
@@ -966,6 +989,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Metric Type: IGP, Path Accumulated Metric: 2200
             m = p6.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict.update({'metric_type': group['metric_type']})
 
@@ -976,6 +1000,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   16063 [Prefix-SID, 10.169.196.241]
             m = p7.match(line)
             if m:
+                aff_flag = False
                 hop_index += 1
                 group = m.groupdict()
                 hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
@@ -990,6 +1015,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Explicit: segment-list test1 (inactive)
             m = p8.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 category = group['category'].replace('-', '_')
                 name = group['name']
@@ -1005,6 +1031,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Binding SID: 15000
             m = p9.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 sid = int(group['binding_sid'])
                 bind_dict = policy_dict.setdefault("attributes", {}).\
@@ -1014,6 +1041,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Allocation mode: explicit
             m = p10.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 bind_dict.update({'allocation_mode': group['allocation_mode'].lower()})
                 continue
@@ -1021,6 +1049,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   State: Programmed
             m = p11.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 bind_dict.update({'state': group['state'].lower()})
                 continue
@@ -1028,6 +1057,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Forwarding-ID: 65536 (0x18)
             m = p12.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 policy_dict.update({'forwarding_id': group['id']})
                 continue
@@ -1035,6 +1065,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Packets: 44         Bytes: 1748
             m = p13.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 stats = policy_dict.setdefault('stats', {})
                 stats.update({k: int(v) for k, v in group.items()})
@@ -1044,13 +1075,34 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             # 08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
             m = p14.match(line)
             if m:
+                aff_flag = False
                 event_index += 1
                 group = m.groupdict()
                 event = policy_dict.setdefault('event_history', {}).setdefault(event_index, {})
                 event.update({k: v.strip() for k, v in group.items()})
                 continue
 
+            m = p15.match(line)
+            if m:
+                aff_flag = True
+                aff_dict = pref_dict.setdefault('constraints', {}).setdefault('affinity', {})
+                continue
+
+            m = p16.match(line)
+            if m and aff_flag:
+                aff_type = m.groupdict()['affinity_type']
+                aff_dict.update({aff_type: []})
+                continue
+
+            m = p17.match(line)
+            if m and aff_flag:
+                temp_list = aff_dict.get(aff_type)
+                if temp_list is not None:
+                    temp_list.append(m.groupdict()['affinity'])
+                    aff_dict.update({aff_type: temp_list})
+
         return ret_dict
+
 
 class ShowSegmentRoutingTrafficEngPolicyDetail(ShowSegmentRoutingTrafficEngPolicy):
     """ Parser for 
