@@ -97,7 +97,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         else:
             out = output
 
-        # MSDP Peer 192.168.229.3 (?), AS 4134
+        # MSDP Peer 202.202.33.3 (?), AS 4134
         r1 = re.compile(r'MSDP\sPeer\s*(?P<peer>\S+)\s*\(\?\)\,\s*'
                         r'AS\s*(?P<peer_as>\d+)')
 
@@ -105,7 +105,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         # Description:
         r2 = re.compile(r'Description\s*:\s*(?:(?P<description>\S+))?$')
 
-        # State: Inactive, Resets: 999, Connection Source: 192.168.100.1
+        # State: Inactive, Resets: 999, Connection Source: 202.202.11.1
         r3 = re.compile(
             r'\s*State:\s*(?P<session_state>\S+)\,'
             r'\s*Resets:\s*(?P<reset>\d+)\,'
@@ -179,7 +179,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # MSDP Peer 192.168.229.3 (?), AS 4134
+            # MSDP Peer 202.202.33.3 (?), AS 4134
             result = r1.match(line)
 
             if result:
@@ -516,7 +516,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         r12 = re.compile(
             r'\s*RP\s+Filter\s+Out\s+:\s(?:(?P<rp_filter_out>\S+))?')
 
-        # Originator Address         : 172.16.76.1
+        # Originator Address         : 150.150.1.1
         # Originator Interface Name  : Loopback150
         # Default Peer Address       : 0.0.0.0
         # SA Holdtime                : 150
@@ -679,7 +679,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
                 continue
 
             # Configuration:
-            #   Originator Address         : 172.16.76.1
+            #   Originator Address         : 150.150.1.1
             result = r13.match(line)
             if result:
                 group_dict = result.groupdict()
@@ -842,20 +842,18 @@ class ShowMsdpSummarySchema(MetaParser):
             Any(): {
                 'maximum_external_sa_global': int,
                 'current_external_active_sa': int,
-                'peer_status': {
-                    'address': {
-                        Any(): {
-                            'as': int,
-                            'state': str,
-                            'uptime_downtime': str,
-                            'reset_count': int,
-                            'name': str,
-                            'active_sa_cnt': int,
-                            'cfg_max_ext_sas': int,
-                            'tlv': {
-                                'receive': int,
-                                'sent': int,
-                            }
+                'peer_address': {
+                    Any(): {
+                        'as': int,
+                        'state': str,
+                        'uptime_downtime': str,
+                        'reset_count': int,
+                        'name': str,
+                        'active_sa_cnt': int,
+                        'cfg_max_ext_sas': int,
+                        'tlv': {
+                            'receive': int,
+                            'sent': int,
                         }
                     }
                 }
@@ -894,8 +892,8 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
 
         # Peer Address	  AS		   State    Uptime/    Reset Peer    Active Cfg.Max    TLV
         #             Downtime    Count Name    SA Cnt Ext.SAs recv/sent
-        # 10.64.4.4    200    Connect    20:35:48    0    R4    0   444    0/0
-        # 10.229.11.11    0    Listen    18:14:53    0    ?    0    0   0/0
+        # 4.4.4.4    200    Connect    20:35:48    0    R4    0   444    0/0
+        # 11.11.11.11    0    Listen    18:14:53    0    ?    0    0   0/0
         r3 = re.compile(r'(?P<address>\S+)\s*(?P<as>\d+)'
                         r'\s*(?P<state>\S+)\s*(?P<uptime_downtime>\S+)'
                         r'\s*(?P<reset_count>\d+)\s*(?P<name>\S+)'
@@ -927,14 +925,14 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
                     group_dict['current_external_active_sa'])
                 continue
 
-            # 10.64.4.4    200    Connect    20:35:48    0    R4   0    444    0/0
+            # 4.4.4.4    200    Connect    20:35:48    0    R4   0    444    0/0
             result = r3.match(line)
             if result:
                 # import pdb
                 # pdb.set_trace()
                 group_dict = result.groupdict()
-                summary_dict = vrf_dict.setdefault('peer_status', {})
-                address_dict = summary_dict.setdefault('address', {}).setdefault(group_dict['address'], {})
+                summary_dict = vrf_dict.setdefault('peer_address', {})
+                address_dict = summary_dict.setdefault(group_dict['address'], {})
                 str_name_list = ['state', 'uptime_downtime', 'name']
                 int_name_list = [
                     'as',
