@@ -7,99 +7,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
-
-# ====================================================
-#  distributor class for show ip route
-# ====================================================
-class ShowIpRouteDistributor(MetaParser):
-    """distributor class for show ip route"""
-    cli_command = ['show ip route vrf {vrf}',
-                   'show ip route vrf {vrf} {route}',
-                   'show ip route vrf {vrf} {protocol}',
-                   'show ip route',
-                   'show ip route {route}',
-                   'show ip route {protocol}']
-
-    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
-
-    def cli(self, vrf=None, route=None, protocol=None, output=None):
-
-        if output is None:
-            if vrf and protocol:
-                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
-            elif vrf and route:
-                cmd = self.cli_command[1].format(vrf=vrf, route=route)
-            elif vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
-            elif protocol:
-                cmd = self.cli_command[5].format(protocol=protocol)
-            elif route:
-                cmd = self.cli_command[4].format(route=route)
-            else:
-                cmd = self.cli_command[3]
-            out = self.device.execute(cmd)
-        else:
-            out = output
-
-        if not route:
-            parser = ShowIpRoute(self.device)
-            self.schema = parser.schema
-            return parser.parse(output=out)
-
-        else:
-            parser = ShowIpRouteWord(self.device)
-            self.schema=parser.schema
-            return parser.parse(output=out)
-
-# ====================================================
-#  distributor class for show ipv6 route
-# ====================================================
-class ShowIpv6RouteDistributor(MetaParser):
-    """distributor class for show ipv6 route"""
-    cli_command = ['show ipv6 route vrf {vrf}',
-                   'show ipv6 route vrf {vrf} {route}',
-                   'show ipv6 route vrf {vrf} {protocol}',
-                   'show ipv6 route',
-                   'show ipv6 route {route}',
-                   'show ipv6 route {protocol}']
-
-    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
-
-    def cli(self, vrf='', route='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
-        if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
-                elif protocol:
-                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                if route:
-                    cmd = self.cli_command[4].format(route=route)
-                elif protocol:
-                    cmd = self.cli_command[5].format(protocol=protocol)
-                else:
-                    cmd = self.cli_command[3]
-
-            out = self.device.execute(cmd)
-        else:
-            out = output
-
-        if (route or protocol) in self.protocol_set or (not route and not protocol):
-            parser = ShowIpv6Route(self.device)
-            self.schema = parser.schema
-            return parser.parse(vrf=vrf, protocol=protocol, output=out)
-
-        else:
-            parser = ShowIpv6RouteWord(self.device)
-            self.schema=parser.schema
-            return parser.parse(vrf=vrf, route=route, output=out)
-
+                                         
 # ====================================================
 #  schema for show ip route
 # ====================================================
@@ -620,7 +528,7 @@ class ShowIpv6Route(ShowIpRoute):
 
     IP_VER = 'ipv6'
     def cli(self, vrf=None, protocol=None, output=None):
-        
+        self.IP_VER = 'ipv6'
         if output is None:
             if vrf and protocol:
                 cmd = self.command[1].format(vrf=vrf, protocol=protocol)
