@@ -4869,8 +4869,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # *> 615:11:11:3::/64   2001:db8:20:1:5::5
         # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+        # *> [1][1.1.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                           r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)/(?P<mask>\d+))'
+                           r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))'
                            r'(?: +(?P<next_hop>\S+))?$')
 
         # 2219             0 200 33299 51178 47751 {27016} e
