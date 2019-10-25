@@ -65,7 +65,7 @@ class ShowIpOspfSchema(MetaParser):
                                 },
                                 Optional('single_tos_routes_enable'): bool,
                                 Optional('opaque_lsa_enable'): bool,
-                                Optional('system_boundary'): str,
+                                Optional('this_router_is'): str,
                                 Optional('preference'): {
                                     'single_value': {
                                         'all': int
@@ -144,7 +144,7 @@ class ShowIpOspfSchema(MetaParser):
                                     Any(): {
                                         'area_type': str,
                                         'area_id': str,
-                                        Optional('generate_nssa'): str,
+                                        Optional('generate_nssa_default_route'): bool,
                                         Optional('summary'): bool,
                                         Optional('perform_translation'): str,
                                         Optional('existed'): str,
@@ -300,8 +300,7 @@ class ShowIpOspf(ShowIpOspfSchema):
         
         p43 = re.compile(r'^Generates +NSSA ?(?P<generate_nssa>[\S ]+)$')
 
-        p44 = re.compile(r'^This +router +is +an '
-                         r'+(?P<system_boundary>[\w ]+)(?:\.)?$')
+        p44 = re.compile(r'^This +router +is +(?P<this_router_is>[\w ]+)(?:\.)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -829,15 +828,15 @@ class ShowIpOspf(ShowIpOspfSchema):
             if m43:
                 route = m43.groupdict()['generate_nssa']
                 route_dict = sub_dict['areas'][area]
-                route_dict['generate_nssa'] = route
+                route_dict['generate_nssa_default_route'] = True
 
                 continue
 
             # This router is an autonomous system boundary
             m44 = p44.match(line)
             if m44:
-                boundary = m44.groupdict()['system_boundary']
-                sub_dict['system_boundary'] = boundary
+                boundary = m44.groupdict()['this_router_is']
+                sub_dict['this_router_is'] = boundary
 
                 continue
             
