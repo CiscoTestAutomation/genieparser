@@ -290,7 +290,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                         {'flags': 'ipv6 mld pim6',
                                         'incoming_interface_list': 
                                             {'loopback10': 
-                                                {'rpf_nbr': '2001:9999::1'}},
+                                                {'rpf_nbr': '2001:db8:4401:9999::1'}},
                                         'oil_count': '3',
                                         'uptime': '00:04:03'},
                                     '2001::222:1:1:1234/128': 
@@ -483,7 +483,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
           Outgoing interface list: (count: 0)
           
         (*, ff1e:1111::1:0/128), uptime: 00:04:03, mld pim6 ipv6 
-          Incoming interface: loopback10, RPF nbr: 2001:9999::1
+          Incoming interface: loopback10, RPF nbr: 2001:db8:4401:9999::1
           Outgoing interface list: (count: 3)
             Ethernet1/26, uptime: 00:02:58, pim6
             port-channel1001, uptime: 00:04:01, pim6
@@ -863,7 +863,7 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                 {'address_family': 
                     {'ipv6': 
                         {'mroute': 
-                            {'126::/16': 
+                            {'2001:db8:51a5::/16': 
                                 {'path': 
                                     {'0:: Null0': 
                                         {'bfd_enable': False,
@@ -878,7 +878,7 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                       'in '
                                                       'u6rib',
                                         'vrf_id': '1'}}},
-                            '127::/16': 
+                            '2001:db8:53f2::/16': 
                                 {'path': 
                                     {'0:: port-channel8': 
                                         {'bfd_enable': False,
@@ -893,7 +893,7 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                       'in '
                                                       'u6rib',
                                         'vrf_id': '1'}}},
-                            '226::/16': 
+                            '2001:db8:9da8::/16': 
                                 {'path': 
                                     {'0:: Null0': 
                                         {'bfd_enable': False,
@@ -908,7 +908,7 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                       'in '
                                                       'u6rib',
                                         'vrf_id': '1'}}},
-                            '227::/16': 
+                            '2001:db8:a1f5::/16': 
                                 {'path': 
                                     {'0:: Ethernet1/2.10': 
                                         {'bfd_enable': False,
@@ -927,22 +927,22 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         IPv6 Configured Static Routes for VRF "default"(1)
 
-        126::/16 -> Null0, preference: 1
+        2001:db8:51a5::/16 -> Null0, preference: 1
         nh_vrf(default) reslv_tid 80000001
         real-next-hop: 0::, interface: Null0
           rnh(not installed in u6rib)
           bfd_enabled no
-        226::/16 -> Null0, preference: 1
+        2001:db8:9da8::/16 -> Null0, preference: 1
         nh_vrf(default) reslv_tid 80000001
         real-next-hop: 0::, interface: Null0
           rnh(not installed in u6rib)
           bfd_enabled no
-        127::/16 -> port-channel8, preference: 2
+        2001:db8:53f2::/16 -> port-channel8, preference: 2
         nh_vrf(default) reslv_tid 80000001
         real-next-hop: 0::, interface: port-channel8
           rnh(not installed in u6rib)
           bfd_enabled no
-        227::/16 -> Ethernet1/2.10, preference: 3
+        2001:db8:a1f5::/16 -> Ethernet1/2.10, preference: 3
         nh_vrf(default) reslv_tid 80000001
         real-next-hop: 0::, interface: Ethernet1/2.10
           rnh(not installed in u6rib)

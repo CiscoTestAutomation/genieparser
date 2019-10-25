@@ -534,7 +534,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             "Bundle-Ether2.78": {
                                 "status": "UP",
                                 "segment2": {
-                                    "EVPN 12345,67895,1.1.2.1": {
+                                    "EVPN 12345,67895,10.4.2.1": {
                                         "status": "DN"
                                     }
                                 }
@@ -559,7 +559,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         vpws       vpws       UR   Te0/0/15/0              UR       EVPN 302,302,0.0.0.0   DN    
         ----------------------------------------------------------------------------------------
         vpws       vrp_vpws_2
-                              DN   BE2.78                 UP       EVPN 12345,67895,1.1.2.1 
+                              DN   BE2.78                 UP       EVPN 12345,67895,10.4.2.1 
                                                                                           DN    
         ----------------------------------------------------------------------------------------
     '''}

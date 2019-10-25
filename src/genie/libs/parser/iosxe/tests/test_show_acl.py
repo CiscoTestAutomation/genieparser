@@ -124,11 +124,11 @@ class TestShowAccessLists(unittest.TestCase):
                                       'name': '30'},
                                '80': {'actions': {'forwarding': 'permit',
                                                   'logging': 'log-syslog'},
-                                      'matches': {'l3': {'ipv6': {'destination_network': {'1:1::1 6:6::6': {'destination_network': '1:1::1 '
-                                                                                                                                             '6:6::6'}},
+                                      'matches': {'l3': {'ipv6': {'destination_network': {'2001:db8:1:1::1 2001:db8:24:24::6': {'destination_network': '2001:db8:1:1::1 '
+                                                                                                                                             '2001:db8:24:24::6'}},
                                                                   'protocol': 'ipv6',
-                                                                  'source_network': {'3:3::3 4:4::4': {'source_network': '3:3::3 '
-                                                                                                                                   '4:4::4'}}}},
+                                                                  'source_network': {'2001:db8:9:9::3 2001:db8:10:10::4': {'source_network': '2001:db8:9:9::3 '
+                                                                                                                                   '2001:db8:10:10::4'}}}},
                                                   'l4': {'ipv6': {'established': False}}},
                                       'name': '80'}},
                       'name': 'ipv6_acl',
@@ -213,7 +213,7 @@ class TestShowAccessLists(unittest.TestCase):
         IPv6 access list ipv6_acl
             permit ipv6 host 2001::1 host 2001:1::2 sequence 20
             permit tcp any eq www 8443 host 2001:2::2 sequence 30
-            permit ipv6 3:3::3 4:4::4 1:1::1 6:6::6 log sequence 80
+            permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
         IPv6 access list preauth_v6 (per-user)
             permit udp any any eq domain sequence 10
             permit esp any any dscp cs7 log sequence 20
@@ -865,12 +865,12 @@ IPv6 access list OutFilter_IPv6
     deny 103 any any sequence 50
     permit icmp any any packet-too-big sequence 60
     deny icmp any any sequence 70
-    deny ipv6 2404:1A8:1100:9::/64 any sequence 74
-    deny ipv6 2404:1A8:1100:10::/64 any sequence 75
-    permit ipv6 any 2050::/16 log-input sequence 80
-    deny ipv6 2404:1A8:1100:13::/64 any sequence 90
-    deny ipv6 2404:1A8:1100:14::/64 any sequence 100
-    deny ipv6 2408:40:2000::/35 2408:40:2000::/35 dscp default sequence 110
+    deny ipv6 2001:DB8:B30A:DC63::/64 any sequence 74
+    deny ipv6 2001:DB8:B30A:F442::/64 any sequence 75
+    permit ipv6 any 2001:db8:1d14::/16 log-input sequence 80
+    deny ipv6 2001:DB8:B30A:FE9B::/64 any sequence 90
+    deny ipv6 2001:DB8:B30A:213::/64 any sequence 100
+    deny ipv6 2001:db8:5254:1000::/35 2001:db8:5254:1000::/35 dscp default sequence 110
     permit ipv6 any any (3974749339 matches) sequence 120
     '''}
 
@@ -953,8 +953,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:14::/64': {
-                                        'source_network': '2404:1A8:1100:14::/64'
+                                    '2001:DB8:B30A:213::/64': {
+                                        'source_network': '2001:DB8:B30A:213::/64'
                                     }
                                 }
                             }
@@ -976,15 +976,15 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'ipv6': {
                                 'destination_network': {
-                                    '2408:40:2000::/35': {
-                                        'destination_network': '2408:40:2000::/35'
+                                    '2001:db8:5254:1000::/35': {
+                                        'destination_network': '2001:db8:5254:1000::/35'
                                     }
                                 },
                                 'dscp': 'default',
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2408:40:2000::/35': {
-                                        'source_network': '2408:40:2000::/35'
+                                    '2001:db8:5254:1000::/35': {
+                                        'source_network': '2001:db8:5254:1000::/35'
                                     }
                                 }
                             }
@@ -1003,7 +1003,7 @@ IPv6 access list OutFilter_IPv6
                               "eth": {
                                    "source_mac_address": "ipv6",
                                    "destination_mac_address": "2404",
-                                   "ether_type": ":1A8:1100:10::/64 any sequence 75"
+                                   "ether_type": ":2001:DB8:F442:121::/64 any sequence 75"
                               }
                          }
                     },
@@ -1019,7 +1019,7 @@ IPv6 access list OutFilter_IPv6
                               "eth": {
                                    "source_mac_address": "ipv6",
                                    "destination_mac_address": "2404",
-                                   "ether_type": ":1A8:1100:9::/64 any sequence 74"
+                                   "ether_type": ":2001:DB8:DC63:121::/64 any sequence 74"
                               }
                          }
                     },
@@ -1147,8 +1147,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:10::/64': {
-                                        'source_network': '2404:1A8:1100:10::/64'
+                                    '2001:DB8:B30A:F442::/64': {
+                                        'source_network': '2001:DB8:B30A:F442::/64'
                                     }
                                 }
                             }
@@ -1176,8 +1176,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:9::/64': {
-                                        'source_network': '2404:1A8:1100:9::/64'
+                                    '2001:DB8:B30A:DC63::/64': {
+                                        'source_network': '2001:DB8:B30A:DC63::/64'
                                     }
                                 }
                             }
@@ -1199,8 +1199,8 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'ipv6': {
                                 'destination_network': {
-                                    '2050::/16': {
-                                        'destination_network': '2050::/16'
+                                    '2001:db8:1d14::/16': {
+                                        'destination_network': '2001:db8:1d14::/16'
                                     }
                                 },
                                 'protocol': 'ipv6',
@@ -1234,8 +1234,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:13::/64': {
-                                        'source_network': '2404:1A8:1100:13::/64'
+                                    '2001:DB8:B30A:FE9B::/64': {
+                                        'source_network': '2001:DB8:B30A:FE9B::/64'
                                     }
                                 }
                             }

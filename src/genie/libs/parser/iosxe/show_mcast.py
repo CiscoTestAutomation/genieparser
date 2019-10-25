@@ -229,7 +229,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['incoming_interface_list'][incoming_interface] = {}
                 continue
 
-            # RPF nbr:6:6:6::6
+            # RPF nbr:2001:db8:90:24::6
             p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
             m = p3_2.match(line)
             if m:

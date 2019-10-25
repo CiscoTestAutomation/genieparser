@@ -4322,7 +4322,7 @@ Tunnel0 is up, line protocol is up
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 191:168:101:2::1 (Vlan102), destination ::
+  Tunnel source 2001:db8:9b4a:ffe5::1 (Vlan102), destination ::
    Tunnel Subblocks:
       src-track:
          Tunnel0 source tracking subblock associated with Vlan102
@@ -17327,8 +17327,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                       "prefix_length": "64",
                       "status": "tentative"
                  },
-                 "2000::1/126": {
-                      "ip": "2000::1",
+                 "2001:db8:400::1/126": {
+                      "ip": "2001:db8:400::1",
                       "prefix_length": "126",
                       "status": "tentative"
                  },
@@ -17482,7 +17482,7 @@ class TestShowIpv6Interface(unittest.TestCase):
         No Virtual link-local address(es):
         Description: desc
         Global unicast address(es):
-          2000::1, subnet is 2000::/126 [TEN]
+          2001:db8:400::1, subnet is 2001:db8:400::/126 [TEN]
           2001:DB8:1:1::1, subnet is 2001:DB8:1:1::/64 [TEN]
           2001:DB8:2:2::2, subnet is 2001:DB8:2:2::/64 [TEN]
           2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
@@ -17529,8 +17529,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                     'ip': 'FE80::F816:3EFF:FE19:ABBA',
                     'origin': 'link_layer',
                     'status': 'valid'},
-                '2010:1:2::1/64': {
-                    'ip': '2010:1:2::1',
+                '2001:db8:8548:1::1/64': {
+                    'ip': '2001:db8:8548:1::1',
                     'prefix_length': '64',
                     'status': 'valid'},
                 'enabled': True,
@@ -17566,8 +17566,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                     'ip': 'FE80::F816:3EFF:FE72:8407',
                     'origin': 'link_layer',
                     'status': 'valid'},
-                '2020:1:2::1/64': {
-                    'ip': '2020:1:2::1',
+                '2001:db8:888c:1::1/64': {
+                    'ip': '2001:db8:888c:1::1',
                     'prefix_length': '64',
                     'status': 'valid'},
                 'enabled': True,
@@ -17605,8 +17605,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                     'ip': 'FE80::F816:3EFF:FE19:8682',
                     'origin': 'link_layer',
                     'status': 'valid'},
-                '2010:1:3::1/64': {
-                    'ip': '2010:1:3::1',
+                '2001:db8:c56d:1::1/64': {
+                    'ip': '2001:db8:c56d:1::1',
                     'prefix_length': '64',
                     'status': 'valid'},
                 'enabled': True,
@@ -17643,8 +17643,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                     'ip': 'FE80::F816:3EFF:FEC7:8140',
                     'origin': 'link_layer',
                     'status': 'valid'},
-                '2020:1:3::1/64': {
-                    'ip': '2020:1:3::1',
+                '2001:db8:c8d1:1::1/64': {
+                    'ip': '2001:db8:c8d1:1::1',
                     'prefix_length': '64',
                     'status': 'valid'},
                 'enabled': True,
@@ -17750,7 +17750,7 @@ class TestShowIpv6Interface(unittest.TestCase):
             IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA 
             No Virtual link-local address(es):
             Global unicast address(es):
-              2010:1:2::1, subnet is 2010:1:2::/64 
+              2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64 
             Joined group address(es):
                 FF02::1
                 FF02::2
@@ -17774,7 +17774,7 @@ class TestShowIpv6Interface(unittest.TestCase):
             IPv6 is enabled, link-local address is FE80::F816:3EFF:FE72:8407 
             No Virtual link-local address(es):
             Global unicast address(es):
-                2020:1:2::1, subnet is 2020:1:2::/64 
+                2001:db8:888c:1::1, subnet is 2001:db8:888c:1::/64 
             Joined group address(es):
                 FF02::1
                 FF02::2
@@ -17799,7 +17799,7 @@ class TestShowIpv6Interface(unittest.TestCase):
             IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:8682 
             No Virtual link-local address(es):
             Global unicast address(es):
-                2010:1:3::1, subnet is 2010:1:3::/64 
+                2001:db8:c56d:1::1, subnet is 2001:db8:c56d:1::/64 
             Joined group address(es):
                 FF02::1
                 FF02::2
@@ -17823,7 +17823,7 @@ class TestShowIpv6Interface(unittest.TestCase):
             IPv6 is enabled, link-local address is FE80::F816:3EFF:FEC7:8140 
             No Virtual link-local address(es):
             Global unicast address(es):
-                2020:1:3::1, subnet is 2020:1:3::/64 
+                2001:db8:c8d1:1::1, subnet is 2001:db8:c8d1:1::/64 
             Joined group address(es):
                 FF02::1
                 FF02::2
