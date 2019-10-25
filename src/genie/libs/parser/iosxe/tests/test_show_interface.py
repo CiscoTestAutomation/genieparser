@@ -18660,182 +18660,182 @@ class TestShowInterfacesDescription(unittest.TestCase):
 
     golden_parsed_output = {
         "interfaces": {
-            "Gi0/0": {
+            "GigabitEthernet0/0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/1": {
+            "GigabitEthernet0/1": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2": {
+            "GigabitEthernet0/2": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.90": {
+            "GigabitEthernet0/2.90": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.110": {
+            "GigabitEthernet0/2.110": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.115": {
+            "GigabitEthernet0/2.115": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.120": {
+            "GigabitEthernet0/2.120": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.390": {
+            "GigabitEthernet0/2.390": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.410": {
+            "GigabitEthernet0/2.410": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.415": {
+            "GigabitEthernet0/2.415": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/2.420": {
+            "GigabitEthernet0/2.420": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3": {
+            "GigabitEthernet0/3": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.90": {
+            "GigabitEthernet0/3.90": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.110": {
+            "GigabitEthernet0/3.110": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.115": {
+            "GigabitEthernet0/3.115": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.120": {
+            "GigabitEthernet0/3.120": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.390": {
+            "GigabitEthernet0/3.390": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.410": {
+            "GigabitEthernet0/3.410": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.415": {
+            "GigabitEthernet0/3.415": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi0/3.420": {
+            "GigabitEthernet0/3.420": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi1/0": {
+            "GigabitEthernet1/0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi1/1": {
+            "GigabitEthernet1/1": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi1/2": {
+            "GigabitEthernet1/2": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Gi1/3": {
+            "GigabitEthernet1/3": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Lo0": {
+            "Loopback0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Lo300": {
+            "Loopback300": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Po12": {
+            "Port-channel12": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Po13": {
+            "Port-channel13": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu0": {
+            "Tunnel0": {
                 "description": "Pim Register Tunnel (Encap) for RP 2001:2:2:2::2",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu1": {
+            "Tunnel1": {
                 "description": "Pim Register Tunnel (Encap) for Embedded RP",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu2": {
+            "Tunnel2": {
                 "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu3": {
+            "Tunnel3": {
                 "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu4": {
+            "Tunnel4": {
                 "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu5": {
+            "Tunnel5": {
                 "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu6": {
+            "Tunnel6": {
                 "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
-            "Tu7": {
+            "Tunnel7": {
                 "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1",
                 "protocol": "up",
                 "status": "up"
@@ -18845,12 +18845,12 @@ class TestShowInterfacesDescription(unittest.TestCase):
 
     golden_interface_output = {'execute.return_value': '''
         Interface                      Status         Protocol Description
-        Gi0/0                          up             up     
+        GigabitEthernet0/0                          up             up     
     '''}
     
     golden_parsed_interface_output = {
         "interfaces": {
-            "Gi0/0": {
+            "GigabitEthernet0/0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"

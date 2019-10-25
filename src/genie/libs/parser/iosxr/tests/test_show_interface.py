@@ -5205,32 +5205,32 @@ class test_show_interfaces_description(unittest.TestCase):
 
     golden_parsed_output = {
         "interfaces": {
-            "Et0/0": {
+            "Ethernet0/0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Et0/1": {
+            "Ethernet0/1": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Et0/2": {
+            "Ethernet0/2": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Et0/3": {
+            "Ethernet0/3": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Lo0": {
+            "Loopback0": {
                 "description": "",
                 "protocol": "up",
                 "status" :"up"
             },
-            "Vl1": {
+            "Vlan1": {
                 "description": ""   ,
                 "protocol": "up",
                 "status": "up"
@@ -5250,7 +5250,7 @@ class test_show_interfaces_description(unittest.TestCase):
 
     golden_parsed_interface_output = {
         "interfaces": {
-            "Et0/0": {
+            "Ethernet0/0": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"

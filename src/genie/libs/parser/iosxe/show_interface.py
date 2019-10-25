@@ -3159,7 +3159,8 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
             m = p1.match(line)
             if m and m.groupdict()['protocol'] != 'Protocol':
                 group = m.groupdict()
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['interface'], {})
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 intf_dict['status'] = group['status']
                 intf_dict['protocol'] = group['protocol']
                 if group['description'] is not None:
