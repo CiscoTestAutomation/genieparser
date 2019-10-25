@@ -22,125 +22,137 @@ class TestShowIsis(unittest.TestCase):
     maxDiff = None
 
     golden_parsed_output = {
-        'test': {
-            'process_id': 'test',
-            'instance_number': 1,
-            'uuid': '1090519320',
-            'pid': 1581,
-            'vrf': {
-                'default': {
-                    'vrf': 'default',
-                    'system_id': '3333.3333.3333',
-                    'is_type': 'L1-L2',
-                    'sap': 412,
-                    'queue_handle': 15,
-                    'lsp_mtu': 1492,
-                    'stateful_ha': 'enabled',
-                    'graceful_restart': {
-                        'enable': True,
-                        'state': 'Inactive',
-                        'last_gr_status': 'none',
+        'instance': {
+            'test': {
+                'isis_process': 'test',
+                'instance_number': 1,
+                'uuid': '1090519320',
+                'process_id': 1581,
+                'vrf': {
+                    'default': {
+                        'vrf': 'default',
+                        'system_id': '3333.3333.3333',
+                        'is_type': 'L1-L2',
+                        'sap': 412,
+                        'queue_handle': 15,
+                        'maximum_lsp_mtu': 1492,
+                        'stateful_ha': 'enabled',
+                        'graceful_restart': {
+                            'enable': True,
+                            'state': 'Inactive',
+                            'last_gr_status': 'none',
+                        },
+                        'start_mode': 'Complete',
+                        'bfd_ipv4': 'globally disabled',
+                        'bfd_ipv6': 'globally disabled',
+                        'topology_mode': 'Multitopology',
+                        'metric_type': {
+                            'advertise': ['wide'],
+                            'accept': ['narrow', 'wide'],
+                        },
+                        'area_address': ['49.0001'],
+                        'process': 'up and running',
+                        'vrf_id': 1,
+                        'during_non_graceful_controlled_restart': 'Stale routes',
+                        'resolution_of_l3_to_l2': 'Enable',
+                        'sr_ipv4': 'not configured and disabled',
+                        'sr_ipv6': 'not configured and disabled',
+                        'supported_interfaces': ['Loopback0', 'Ethernet1/1.115', 'Ethernet1/2.115'],
+                        'topology': {
+                            0: {
+                                'address_family': {
+                                    'ipv4_unicast': {
+                                        'number_of_interface': 3,
+                                        'distance': 115,
+                                    },
+                                    'ipv6_unicast': {
+                                        'number_of_interface': 0,
+                                        'distance': 115,
+                                    },
+                                },
+                            },
+                            2: {
+                                'address_family': {
+                                    'ipv6_unicast': {
+                                        'number_of_interface': 3,
+                                        'distance': 115,
+                                    },
+                                },
+                            },
+                        },
+                        'authentication': {
+                            'level_1': {
+                                'auth_check': 'set',
+                            },
+                            'level_2': {
+                                'auth_check': 'set',
+                            },
+                        },
+                        'l1_next_spf': '00:00:07',
+                        'l2_next_spf': '00:00:04',
                     },
-                    'start_mode': 'Complete',
-                    'bfd_ipv4': 'disabled',
-                    'bfd_ipv6': 'disabled',
-                    'topology_mode': 'Multitopology',
-                    'metric_type': 'advertise(wide), accept(narrow, wide)',
-                    'area_address': ['49.0001'],
-                    'enable': True,
-                    'vrf_id': 1,
-                    'sr_ipv4': 'not configured and disabled',
-                    'sr_ipv6': 'not configured and disabled',
-                    'supported_interfaces': ['Loopback0', 'Ethernet1/1.115', 'Ethernet1/2.115'],
-                    'topology': {
-                        0: {
-                            'ipv4_unicast': {
-                                'number_of_interface': 3,
-                                'distance': 115,
+                    'VRF1': {
+                        'vrf': 'VRF1',
+                        'system_id': '3333.3333.3333',
+                        'is_type': 'L1-L2',
+                        'sap': 412,
+                        'queue_handle': 15,
+                        'maximum_lsp_mtu': 1492,
+                        'stateful_ha': 'enabled',
+                        'graceful_restart': {
+                            'enable': True,
+                            'state': 'Inactive',
+                            'last_gr_status': 'none',
+                        },
+                        'start_mode': 'Complete',
+                        'bfd_ipv4': 'globally disabled',
+                        'bfd_ipv6': 'globally disabled',
+                        'topology_mode': 'Multitopology',
+                        'metric_type': {
+                            'advertise': ['wide'],
+                            'accept': ['narrow', 'wide'],
+                        },
+                        'area_address': ['49.0001'],
+                        'process': 'up and running',
+                        'vrf_id': 3,
+                        'during_non_graceful_controlled_restart': 'Stale routes',
+                        'resolution_of_l3_to_l2': 'Enable',
+                        'sr_ipv4': 'not configured and disabled',
+                        'sr_ipv6': 'not configured and disabled',
+                        'supported_interfaces': ['Loopback300', 'Ethernet1/1.415', 'Ethernet1/2.415'],
+                        'topology': {
+                            0: {
+                                'address_family': {
+                                    'ipv4_unicast': {
+                                        'number_of_interface': 3,
+                                        'distance': 115,
+                                    },
+                                    'ipv6_unicast': {
+                                        'number_of_interface': 0,
+                                        'distance': 115,
+                                    },
+                                },
                             },
-                            'ipv6_unicast': {
-                                'number_of_interface': 0,
-                                'distance': 115,
+                            2: {
+                                'address_family': {
+                                    'ipv6_unicast': {
+                                        'number_of_interface': 3,
+                                        'distance': 115,
+                                    },
+                                },
                             },
                         },
-                        2: {
-                            'ipv6_unicast': {
-                                'number_of_interface': 3,
-                                'distance': 115,
+                        'authentication': {
+                            'level_1': {
+                                'auth_check': 'set',
+                            },
+                            'level_2': {
+                                'auth_check': 'set',
                             },
                         },
+                        'l1_next_spf': 'Inactive',
+                        'l2_next_spf': 'Inactive',
                     },
-                    'authentication': {
-                        'level_1': {
-                            'authentication_type': {
-                            },
-                            'auth_check': 'set',
-                        },
-                        'level_2': {
-                            'authentication_type': {
-                            },
-                            'auth_check': 'set',
-                        },
-                    },
-                    'l1_next_spf': '00:00:07',
-                    'l2_next_spf': '00:00:04',
-                },
-                'VRF1': {
-                    'vrf': 'VRF1',
-                    'system_id': '3333.3333.3333',
-                    'is_type': 'L1-L2',
-                    'sap': 412,
-                    'queue_handle': 15,
-                    'lsp_mtu': 1492,
-                    'stateful_ha': 'enabled',
-                    'graceful_restart': {
-                        'enable': True,
-                        'state': 'Inactive',
-                        'last_gr_status': 'none',
-                    },
-                    'start_mode': 'Complete',
-                    'bfd_ipv4': 'disabled',
-                    'bfd_ipv6': 'disabled',
-                    'topology_mode': 'Multitopology',
-                    'metric_type': 'advertise(wide), accept(narrow, wide)',
-                    'area_address': ['49.0001'],
-                    'enable': True,
-                    'vrf_id': 3,
-                    'sr_ipv4': 'not configured and disabled',
-                    'sr_ipv6': 'not configured and disabled',
-                    'supported_interfaces': ['Loopback300', 'Ethernet1/1.415', 'Ethernet1/2.415'],
-                    'topology': {
-                        0: {
-                            'ipv4_unicast': {
-                                'number_of_interface': 3,
-                                'distance': 115,
-                            },
-                            'ipv6_unicast': {
-                                'number_of_interface': 0,
-                                'distance': 115,
-                            },
-                        },
-                        2: {
-                            'ipv6_unicast': {
-                                'number_of_interface': 3,
-                                'distance': 115,
-                            },
-                        },
-                    },
-                    'authentication': {
-                        'level_1': {
-                            'authentication_type': {
-                            },
-                            'auth_check': 'set',
-                        },
-                        'level_2': {
-                            'authentication_type': {
-                            },
-                            'auth_check': 'set',
-                        },
-                    },
-                    'l1_next_spf': 'Inactive',
-                    'l2_next_spf': 'Inactive',
                 },
             },
         },
@@ -272,8 +284,8 @@ class TestShowIsisInterface(unittest.TestCase):
                         'loopback0': {
                             'name': 'loopback0',
                             'status': 'protocol-up/link-up/admin-up',
-                            'ipv4': '3.3.3.3',
-                            'ipv4_subnet': '3.3.3.3/32',
+                            'ipv4': '10.36.3.3',
+                            'ipv4_subnet': '10.36.3.3/32',
                             'ipv6': '2001:3:3:3::3/128',
                             'ipv6_state': 'VALID',
                             'ipv6_subnet': '2001:3:3:3::3/128',
@@ -576,7 +588,7 @@ class TestShowIsisInterface(unittest.TestCase):
         R3_nx# show isis interface vrf default
         IS-IS process: test VRF: default
         loopback0, Interface status: protocol-up/link-up/admin-up
-        IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
+        IP address: 10.36.3.3, IP subnet: 10.36.3.3/32
         IPv6 address:
             2001:3:3:3::3/128 [VALID]
         IPv6 subnet:  2001:3:3:3::3/128
@@ -1230,7 +1242,6 @@ class TestShowIsisAdjacency(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
 class TestShowIsisDatabaseDetail(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -1376,10 +1387,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x000007BD',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'ip_address': '2.2.2.2',
+                                'ip_address': '10.16.2.2',
                                 'extended_ip': {
-                                    '2.2.2.2/32': {
-                                        'ip': '2.2.2.2/32',
+                                    '10.16.2.2/32': {
+                                        'ip': '10.16.2.2/32',
                                         'metric': 10,
                                         'sub_tlv_length': 1,
                                         'sub_tlv_type': 4,
@@ -1483,8 +1494,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x00000B05',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'router_id': '3.3.3.3',
-                                'ip_address': '3.3.3.3',
+                                'router_id': '10.36.3.3',
+                                'ip_address': '10.36.3.3',
                                 'mt_entries': {
                                     2: {
                                         'att': 0,
@@ -1515,8 +1526,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     },
                                 },
                                 'extended_ip': {
-                                    '3.3.3.3/32': {
-                                        'ip': '3.3.3.3/32',
+                                    '10.36.3.3/32': {
+                                        'ip': '10.36.3.3/32',
                                         'metric': 1,
                                     },
                                     '10.13.115.0/24': {
@@ -1691,10 +1702,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x000007C9',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'ip_address': '2.2.2.2',
+                                'ip_address': '10.16.2.2',
                                 'extended_ip': {
-                                    '2.2.2.2/32': {
-                                        'ip': '2.2.2.2/32',
+                                    '10.16.2.2/32': {
+                                        'ip': '10.16.2.2/32',
                                         'metric': 10,
                                         'sub_tlv_length': 1,
                                         'sub_tlv_type': 4,
@@ -1711,8 +1722,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         'sub_tlv_length': 1,
                                         'sub_tlv_type': 4,
                                     },
-                                    '3.3.3.3/32': {
-                                        'ip': '3.3.3.3/32',
+                                    '10.36.3.3/32': {
+                                        'ip': '10.36.3.3/32',
                                         'metric': 11,
                                         'sub_tlv_length': 1,
                                         'sub_tlv_type': 4,
@@ -1822,8 +1833,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x00000B05',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'router_id': '3.3.3.3',
-                                'ip_address': '3.3.3.3',
+                                'router_id': '10.36.3.3',
+                                'ip_address': '10.36.3.3',
                                 'mt_entries': {
                                     2: {
                                         'att': 0,
@@ -1854,8 +1865,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     },
                                 },
                                 'extended_ip': {
-                                    '3.3.3.3/32': {
-                                        'ip': '3.3.3.3/32',
+                                    '10.36.3.3/32': {
+                                        'ip': '10.36.3.3/32',
                                         'metric': 1,
                                     },
                                     '10.13.115.0/24': {
@@ -1992,8 +2003,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x00000B09',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'router_id': '3.3.3.3',
-                                'ip_address': '3.3.3.3',
+                                'router_id': '10.36.3.3',
+                                'ip_address': '10.36.3.3',
                                 'mt_entries': {
                                     2: {
                                         'att': 0,
@@ -2020,8 +2031,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     },
                                 },
                                 'extended_ip': {
-                                    '3.3.3.3/32': {
-                                        'ip': '3.3.3.3/32',
+                                    '10.36.3.3/32': {
+                                        'ip': '10.36.3.3/32',
                                         'metric': 1,
                                     },
                                     '10.13.115.0/24': {
@@ -2166,8 +2177,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 'instance': '0x00000B06',
                                 'area_address': '49.0001',
                                 'nlpid': '0xCC 0x8E',
-                                'router_id': '3.3.3.3',
-                                'ip_address': '3.3.3.3',
+                                'router_id': '10.36.3.3',
+                                'ip_address': '10.36.3.3',
                                 'mt_entries': {
                                     2: {
                                         'att': 0,
@@ -2194,8 +2205,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     },
                                 },
                                 'extended_ip': {
-                                    '3.3.3.3/32': {
-                                        'ip': '3.3.3.3/32',
+                                    '10.36.3.3/32': {
+                                        'ip': '10.36.3.3/32',
                                         'metric': 1,
                                     },
                                     '10.13.115.0/24': {
@@ -2273,8 +2284,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x000007BD
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            IP Address    :  2.2.2.2
-            Extended IP   :         2.2.2.2/32  Metric : 10          (U)
+            IP Address    :  10.16.2.2
+            Extended IP   :         10.16.2.2/32  Metric : 10          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
             Extended IP   :     10.12.115.0/24  Metric : 10          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
@@ -2306,8 +2317,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x00000B05
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            Router ID     :  3.3.3.3
-            IP Address    :  3.3.3.3
+            Router ID     :  10.36.3.3
+            IP Address    :  10.36.3.3
             MT TopoId     : TopoId:2 Att: 0 Ol: 0
                             TopoId:0 Att: 0 Ol: 0
             Hostname      :  R3_nx              Length : 5
@@ -2316,7 +2327,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             R1_xe.02           Metric : 40
             Extended IS   :  R2_xr.03           Metric : 40
             Extended IS   :  R1_xe.02           Metric : 40
-            Extended IP   :         3.3.3.3/32  Metric : 1           (U)
+            Extended IP   :         10.36.3.3/32  Metric : 1           (U)
             Extended IP   :     10.13.115.0/24  Metric : 40          (U)
             Extended IP   :     10.23.115.0/24  Metric : 40          (U)
             MT-IPv6 Prefx :  TopoId : 2
@@ -2372,14 +2383,14 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x000007C9
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            IP Address    :  2.2.2.2
-            Extended IP   :         2.2.2.2/32  Metric : 10          (U)
+            IP Address    :  10.16.2.2
+            Extended IP   :         10.16.2.2/32  Metric : 10          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
             Extended IP   :     10.12.115.0/24  Metric : 10          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
             Extended IP   :     10.23.115.0/24  Metric : 10          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
-            Extended IP   :         3.3.3.3/32  Metric : 11          (U)
+            Extended IP   :         10.36.3.3/32  Metric : 11          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
             Extended IP   :     10.13.115.0/24  Metric : 20          (U)
             Unknown Sub-TLV      :  Length : 1  Type :   4
@@ -2413,8 +2424,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x00000B05
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            Router ID     :  3.3.3.3
-            IP Address    :  3.3.3.3
+            Router ID     :  10.36.3.3
+            IP Address    :  10.36.3.3
             MT TopoId     : TopoId:2 Att: 0 Ol: 0
                             TopoId:0 Att: 0 Ol: 0
             Hostname      :  R3_nx              Length : 5
@@ -2423,7 +2434,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             R1_xe.02           Metric : 40
             Extended IS   :  R2_xr.03           Metric : 40
             Extended IS   :  R1_xe.02           Metric : 40
-            Extended IP   :         3.3.3.3/32  Metric : 1           (U)
+            Extended IP   :         10.36.3.3/32  Metric : 1           (U)
             Extended IP   :     10.13.115.0/24  Metric : 40          (U)
             Extended IP   :     10.23.115.0/24  Metric : 40          (U)
             MT-IPv6 Prefx :  TopoId : 2
@@ -2468,15 +2479,15 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x00000B09
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            Router ID     :  3.3.3.3
-            IP Address    :  3.3.3.3
+            Router ID     :  10.36.3.3
+            IP Address    :  10.36.3.3
             MT TopoId     : TopoId:2 Att: 0 Ol: 0
                             TopoId:0 Att: 0 Ol: 0
             Hostname      :  R3_nx              Length : 5
             TopoId: 2
             MtExtend IS   :  R1_xe.02           Metric : 40
             Extended IS   :  R1_xe.02           Metric : 40
-            Extended IP   :         3.3.3.3/32  Metric : 1           (U)
+            Extended IP   :         10.36.3.3/32  Metric : 1           (U)
             Extended IP   :     10.13.115.0/24  Metric : 40          (U)
             Extended IP   :     10.23.115.0/24  Metric : 40          (U)
             MT-IPv6 Prefx :  TopoId : 2
@@ -2524,15 +2535,15 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
             Instance      :  0x00000B06
             Area Address  :  49.0001
             NLPID         :  0xCC 0x8E
-            Router ID     :  3.3.3.3
-            IP Address    :  3.3.3.3
+            Router ID     :  10.36.3.3
+            IP Address    :  10.36.3.3
             MT TopoId     : TopoId:2 Att: 0 Ol: 0
                             TopoId:0 Att: 0 Ol: 0
             Hostname      :  R3_nx              Length : 5
             TopoId: 2
             MtExtend IS   :  R1_xe.02           Metric : 40
             Extended IS   :  R1_xe.02           Metric : 40
-            Extended IP   :         3.3.3.3/32  Metric : 1           (U)
+            Extended IP   :         10.36.3.3/32  Metric : 1           (U)
             Extended IP   :     10.13.115.0/24  Metric : 40          (U)
             Extended IP   :     10.23.115.0/24  Metric : 40          (U)
             MT-IPv6 Prefx :  TopoId : 2

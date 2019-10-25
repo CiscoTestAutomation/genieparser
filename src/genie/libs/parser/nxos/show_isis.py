@@ -28,60 +28,69 @@ class ShowIsisSchema(MetaParser):
     """Schema for show isis"""
 
     schema = {
-        Any(): {
-            'process_id': str,
-            'instance_number': int,
-            'uuid': str,
-            'pid': int,
-            'vrf': {
-                Any(): {
-                    'vrf': str,
-                    'system_id': str,
-                    'is_type': str,
-                    'sap': int,
-                    'queue_handle': int,
-                    'lsp_mtu': int,
-                    'stateful_ha': str,
-                    'graceful_restart': {
-                        'enable': bool,
-                        'state': str,
-                        'last_gr_status': str,
-                    },
-                    'start_mode': str,
-                    'bfd_ipv4': str,
-                    'bfd_ipv6': str,
-                    'topology_mode': str,
-                    'metric_type': str,
-                    'area_address': list,
-                    'enable': bool,
-                    'vrf_id': int,
-                    'sr_ipv4': str,
-                    'sr_ipv6': str,
-                    'supported_interfaces': list,
-                    'topology': {
-                        Any(): {
-                            Optional('ipv4_unicast'): {
-                                'number_of_interface': int,
-                                'distance': int,
+        'instance': {
+            Any(): {
+                'isis_process': str,
+                'instance_number': int,
+                'uuid': str,
+                'process_id': int,
+                'vrf': {
+                    Any(): {
+                        'vrf': str,
+                        'system_id': str,
+                        'is_type': str,
+                        'sap': int,
+                        'queue_handle': int,
+                        'maximum_lsp_mtu': int,
+                        'stateful_ha': str,
+                        'graceful_restart': {
+                            'enable': bool,
+                            'state': str,
+                            'last_gr_status': str,
+                        },
+                        'start_mode': str,
+                        'bfd_ipv4': str,
+                        'bfd_ipv6': str,
+                        'topology_mode': str,
+                        'metric_type': {
+                            'advertise': list,
+                            'accept': list,
+                        },
+                        'area_address': list,
+                        'process': str,
+                        'vrf_id': int,
+                        'during_non_graceful_controlled_restart': str,
+                        'resolution_of_l3_to_l2': str,
+                        'sr_ipv4': str,
+                        'sr_ipv6': str,
+                        'supported_interfaces': list,
+                        'topology': {
+                            Any(): {
+                                'address_family': {
+                                    Optional('ipv4_unicast'): {
+                                        'number_of_interface': int,
+                                        'distance': int,
+                                    },
+                                    Optional('ipv6_unicast'): {
+                                        'number_of_interface': int,
+                                        'distance': int,
+                                    },
+                                },
                             },
-                            Optional('ipv6_unicast'): {
-                                'number_of_interface': int,
-                                'distance': int,
+                        },
+                        'authentication': {
+                            'level_1': {
+                                Optional('authentication_type'): dict,
+                                'auth_check': str,
+                            },
+                            'level_2': {
+                                Optional('authentication_type'): dict,
+                                'auth_check': str,
                             },
                         },
+                        'l1_next_spf': str,
+                        'l2_next_spf': str,
                     },
-                    'authentication': {
-                        'level_1': {
-                            'authentication_type': dict,
-                            'auth_check': str,
-                        },
-                        'level_2': {
-                            'authentication_type': dict,
-                            'auth_check': str,
-                        },
-                    },
-                    'l1_next_spf': str,
-                    'l2_next_spf': str,
                 },
             },
         },
@@ -109,7 +118,7 @@ class ShowIsis(ShowIsisSchema):
         result_dict = {}
 
         # ISIS process : test
-        p1 = re.compile(r'^ISIS +[Pp]rocess *: +(?P<process_id>\S+)$')
+        p1 = re.compile(r'^ISIS +[Pp]rocess *: +(?P<isis_process>\S+)$')
 
         # Instance number :  1
         p2 = re.compile(r'^Instance +number *: +(?P<instance_number>\d+)$')
@@ -118,7 +127,7 @@ class ShowIsis(ShowIsisSchema):
         p3 = re.compile(r'^UUID *: +(?P<uuid>\d+)$')
 
         # Process ID 1581
-        p4 = re.compile(r'^Process +ID +(?P<pid>\d+)$')
+        p4 = re.compile(r'^Process +ID +(?P<process_id>\d+)$')
 
         # VRF: default
         p5 = re.compile(r'^VRF *: +(?P<vrf>\S+)$')
@@ -145,32 +154,32 @@ class ShowIsis(ShowIsisSchema):
         p12 = re.compile(r'^Start-Mode +(?P<start_mode>\w+)$')
 
         # BFD IPv4 is globally disabled for ISIS process: test
-        p13 = re.compile(r'^BFD +IPv4 +is +globally +(?P<bfd_ipv4>\w+) +for +ISIS +process: +(?P<name>.*)$')
+        p13 = re.compile(r'^BFD +IPv4 +is +(?P<bfd_ipv4>[\w\s]+) +for +ISIS +process: +(?P<name>.*)$')
 
         # BFD IPv6 is globally disabled for ISIS process: test
-        p14 = re.compile(r'^BFD +IPv6 +is +globally +(?P<bfd_ipv6>\w+) +for +ISIS +process: +(?P<name>.*)$')
+        p14 = re.compile(r'^BFD +IPv6 +is +(?P<bfd_ipv6>[\w\s]+) +for +ISIS +process: +(?P<name>.*)$')
 
         # Topology-mode is Multitopology
         p15 = re.compile(r'^Topology-mode +is +(?P<topology_mode>\w+)$')
 
         # Metric-style : advertise(wide), accept(narrow, wide)
-        p16 = re.compile(r'^Metric-style *: +(?P<metric_type>[\S\s]+)$')
+        p16 = re.compile(r'^Metric-style *: +advertise\((?P<adv>.*)\), +accept\((?P<acc>.*)\)$')
 
         # Area address(es) :
         #     49.0001
         p17 = re.compile(r'^(?P<area>[\d\.]+)$')
 
         # Process is up and running
-        p18 = re.compile(r'^Process +is +(?P<enable>[\S\s]+)$')
+        p18 = re.compile(r'^Process +is +(?P<process>[\S\s]+)$')
 
         # VRF ID: 1
         p19 = re.compile(r'^VRF +ID *: +(?P<vrf_id>\d+)$')
 
         # Stale routes during non-graceful controlled restart
-        p20 = re.compile(r'^Stale routes during non-graceful controlled restart$')
+        p20 = re.compile(r'^(?P<route>[\w\s]+) +during +non-graceful +controlled +restart$')
 
         # Enable resolution of L3->L2 address for ISIS adjacency
-        p21 = re.compile(r'^Enable resolution of L3->L2 address for ISIS adjacency$')
+        p21 = re.compile(r'^(?P<resolution>\w+) +resolution +of +L3->L2 +address +for +ISIS +adjacency$')
 
         # SR IPv4 is not configured and disabled for ISIS process: test
         p22 = re.compile(r'^SR +IPv4 +is +(?P<sr_ipv4>[\w\s]+) +for +ISIS +process: +(?P<name>.*)$')
@@ -217,9 +226,9 @@ class ShowIsis(ShowIsisSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                process_id = group['process_id']
-                pid_dict = result_dict.setdefault(process_id, {})
-                pid_dict.update({'process_id': process_id})
+                isis_process = group['isis_process']
+                pid_dict = result_dict.setdefault('instance', {}).setdefault(isis_process, {})
+                pid_dict.update({'isis_process': isis_process})
                 continue
 
             #  Instance number :  1
@@ -242,8 +251,8 @@ class ShowIsis(ShowIsisSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                pid = int(group['pid'])
-                pid_dict.update({'pid': pid})            
+                process_id = int(group['process_id'])
+                pid_dict.update({'process_id': process_id})            
                 continue
 
             # VRF: VRF1
@@ -278,7 +287,7 @@ class ShowIsis(ShowIsisSchema):
             if m:
                 group = m.groupdict()
                 lsp_mtu = int(group['lsp_mtu'])
-                vrf_dict.update({'lsp_mtu': lsp_mtu})
+                vrf_dict.update({'maximum_lsp_mtu': lsp_mtu})
                 continue
 
             #   Stateful HA enabled
@@ -350,8 +359,12 @@ class ShowIsis(ShowIsisSchema):
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                metric_type = group['metric_type']
-                vrf_dict.update({'metric_type': metric_type})
+                advertise = group['adv'].replace(' ', '').split(',')
+                accept = group['acc'].replace(' ', '').split(',')
+
+                metric_dict = vrf_dict.setdefault('metric_type', {})
+                metric_dict.update({'advertise': advertise, 
+                                    'accept': accept})
                 continue
 
             #   Area address(es) :
@@ -368,11 +381,8 @@ class ShowIsis(ShowIsisSchema):
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                enable = group['enable']
-                if 'up' in enable.lower():
-                    vrf_dict.update({'enable': True})
-                else:
-                    vrf_dict.update({'enable': False})
+                process = group['process']
+                vrf_dict.update({'process': process})
                 continue
 
             #   VRF ID: 3
@@ -387,12 +397,16 @@ class ShowIsis(ShowIsisSchema):
             m = p20.match(line)
             if m:
                 group = m.groupdict()
+                route = group['route']
+                vrf_dict.update({'during_non_graceful_controlled_restart': route})
                 continue
 
             #   Enable resolution of L3->L2 address for ISIS adjacency
             m = p21.match(line)
             if m:
                 group = m.groupdict()
+                res = group['resolution']
+                vrf_dict.update({'resolution_of_l3_to_l2': res})
                 continue
 
             #   SR IPv4 is not configured and disabled for ISIS process: test
@@ -434,7 +448,7 @@ class ShowIsis(ShowIsisSchema):
             if m:
                 group = m.groupdict()
                 af = group['af'].replace(' ', '_').lower()
-                af_dict = topo_dict.setdefault(af, {})
+                af_dict = topo_dict.setdefault('address_family', {}).setdefault(af, {})
                 continue
 
             #     Number of interface : 3
@@ -465,7 +479,6 @@ class ShowIsis(ShowIsisSchema):
             m = p30.match(line)
             if m:
                 group = m.groupdict()
-                level_dict.update({'authentication_type': {}})
                 continue
 
             #   Auth check set
@@ -592,7 +605,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # loopback0, Interface status: protocol-up/link-up/admin-up
         p2 = re.compile(r'^(?P<interface>\S+), +Interface +status: +(?P<status>\S+)$')
 
-        #   IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
+        #   IP address: 10.36.3.3, IP subnet: 10.36.3.3/32
         p3 = re.compile(r'^IP +address: +(?P<ip>\S+), +IP +subnet: +(?P<subnet>\S+)$')
 
         #   IPv6 address:
@@ -683,7 +696,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 intf_dict.update({'name': interface, 'status': status})
                 continue
 
-            #  IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
+            #  IP address: 10.36.3.3, IP subnet: 10.36.3.3/32
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1329,7 +1342,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         #   IPv6 Address  :  2001:10:13:115::1
         p14 = re.compile(r'^IPv6 +Address *: +(?P<ip_address>\S+)$')
 
-        #   Router ID     :  3.3.3.3
+        #   Router ID     :  10.36.3.3
         p15 = re.compile(r'^Router +ID *: +(?P<router_id>\S+)$')
 
         #   MT-IPv6 Prefx :  TopoId : 2
@@ -1487,7 +1500,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict['ipv6_address'] = m.groupdict()['ip_address']
                 continue
 
-            #   Router ID     :  3.3.3.3
+            #   Router ID     :  10.36.3.3
             m = p15.match(line)
             if m:
                 lsp_dict['router_id'] = m.groupdict()['router_id']
