@@ -20,7 +20,8 @@ from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary,\
                                            ShowBgpAllNeighborsPolicy,\
                                            ShowBgpAll,\
                                            ShowBgpAllDetail, \
-                                           ShowBgpSummary
+                                           ShowBgpSummary, \
+                                           ShowIpBgp
 
 # iosxe tests/test_show_bgp
 from genie.libs.parser.iosxe.tests.test_show_bgp import \
@@ -36,7 +37,21 @@ from genie.libs.parser.iosxe.tests.test_show_bgp import \
                                 test_show_ip_bgp_template_peer_policy as test_show_ip_bgp_template_peer_policy_iosxe,\
                                 test_show_ip_bgp_all_dampening_parameters as test_show_ip_bgp_all_dampening_parameters_iosxe,\
                                 test_show_bgp_all as test_show_bgp_all_iosxe, \
-                                test_show_bgp_summary as test_show_bgp_summary_iosxe
+                                test_show_bgp_summary as test_show_bgp_summary_iosxe, \
+                                test_show_ip_bgp as test_show_bgp_iosxe
+
+# ===================================
+# Unit test for 'show bgp all detail'
+# ===================================
+class test_show_ip_bgp(test_show_bgp_iosxe):
+
+    def test_show_ip_bgp(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 # ===================================
 # Unit test for 'show bgp all detail'

@@ -39,7 +39,14 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAllDetail as ShowBgpAllDetai
                                              ShowBgpAllNeighborsReceivedRoutes as ShowBgpAllNeighborsReceivedRoutes_iosxe,\
                                              ShowIpBgpTemplatePeerPolicy as ShowIpBgpTemplatePeerPolicy_iosxe,\
                                              ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe, \
-                                             ShowBgpSummary as ShowBgpSummary_iosxe
+                                             ShowBgpSummary as ShowBgpSummary_iosxe, \
+                                             ShowIpBgp as ShowIpBgp_iosxe
+
+
+class ShowIpBgp(ShowIpBgp_iosxe):
+    """Parser for show ip bgp"""
+    pass
+
 
 class ShowBgpAllDetail(ShowBgpAllDetail_iosxe):
     """Parser for show bgp all detail"""

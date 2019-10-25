@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import Mock
-
 # ATS
 from ats.topology import Device
 
@@ -832,7 +831,7 @@ class TestShowIpRoute(unittest.TestCase):
                                 "source_protocol_codes": "LC",
                                 "route": "2001:2:2:2::2/128"
                             },
-                            "615:11:11:4::/64": {
+                            "2001:db8:cdc9:1b9::/64": {
                                 "active": True,
                                 "metric": 2219,
                                 "next_hop": {
@@ -844,7 +843,7 @@ class TestShowIpRoute(unittest.TestCase):
                                         }
                                     }
                                 },
-                                "route": "615:11:11:4::/64",
+                                "route": "2001:db8:cdc9:1b9::/64",
                                 "route_preference": 200,
                                 "source_protocol": "bgp",
                                 "source_protocol_codes": "B"
@@ -869,7 +868,7 @@ class TestShowIpRoute(unittest.TestCase):
                  ld - LISP dyn-eid, a - Application
         LC   2001:2:2:2::2/128 [200/0]
                via 2001:DB8:1:1::2
-          B   615:11:11:4::/64 [200/2219]
+          B   2001:db8:cdc9:1b9::/64 [200/2219]
             via 10.4.1.1%default, indirectly connected
     '''}
 
@@ -1003,7 +1002,7 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
           Last updated 22:57:34 04 December 2017
          via GigabitEthernet0/3, directly connected
           Last updated 22:57:43 04 December 2017
-    B   20:0:0:1::/64 [200/1]
+    B   2001:db8:400:1::/64 [200/1]
         via 192.168.51.1%default, indirectly connected
         Last updated 09:43:27 06 December 2017
     '''}
@@ -1074,8 +1073,8 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
                                     },
                                 },
                             },
-                            '20:0:0:1::/64': {
-                                'route': '20:0:0:1::/64',
+                            '2001:db8:400:1::/64': {
+                                'route': '2001:db8:400:1::/64',
                                 'active': True,
                                 'route_preference': 200,
                                 'metric': 1,
@@ -1108,13 +1107,13 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
            OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
            la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid
            a - Application
-    O   10::/64 [110/1]
+    O   2001:db8:100::/64 [110/1]
          via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
           Last updated 09:42:39 06 December 2017
-    O   10:0:0:1::/64 [110/1]
+    O   2001:db8:100:1::/64 [110/1]
          via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
           Last updated 09:42:39 06 December 2017
-    O   10:0:0:2::/64 [110/1]
+    O   2001:db8:100:4::/64 [110/1]
          via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
           Last updated 09:42:39 06 December 2017
 
@@ -1126,8 +1125,8 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '10::/64': {
-                                'route': '10::/64',
+                            '2001:db8:100::/64': {
+                                'route': '2001:db8:100::/64',
                                 'active': True,
                                 'source_protocol_codes': 'O',
                                 'source_protocol': 'ospf',
@@ -1144,8 +1143,8 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
                                     },
                                 },
                             },
-                            '10:0:0:1::/64': {
-                                'route': '10:0:0:1::/64',
+                            '2001:db8:100:1::/64': {
+                                'route': '2001:db8:100:1::/64',
                                 'active': True,
                                 'source_protocol_codes': 'O',
                                 'source_protocol': 'ospf',
@@ -1162,8 +1161,8 @@ class TestShowIpv6RouteUpdated(unittest.TestCase):
                                     },
                                 },
                             },
-                            '10:0:0:2::/64': {
-                                'route': '10:0:0:2::/64',
+                            '2001:db8:100:4::/64': {
+                                'route': '2001:db8:100:4::/64',
                                 'active': True,
                                 'source_protocol_codes': 'O',
                                 'source_protocol': 'ospf',
@@ -1464,6 +1463,46 @@ class TestShowIpRouteWord(unittest.TestCase):
         'total_prefixes': 1
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        GENIE#show ip route 192.168.4.10
+        Routing entry for 192.168.4.0/25
+        Known via "static", distance 1, metric 0
+        Tag 113
+        Redistributing via eigrp 10
+        Advertised by eigrp 10 route-map GENIE_INTO_EIGRP
+        Routing Descriptor Blocks:
+        * 10.1.11.9
+            Route metric is 0, traffic share count is 1
+            Route tag 113
+    '''
+    }
+
+    golden_parsed_output_5 = {
+        'entry': {
+            '192.168.4.0/25': {
+                'distance': '1',
+                'advertised_by': 'eigrp 10 route-map GENIE_INTO_EIGRP',
+                'ip': '192.168.4.0',
+                'known_via': 'static',
+                'mask': '25',
+                'metric': '0',
+                'paths': {
+                    1: {
+                        'merge_labels': False,
+                        'metric': '0',
+                        'nexthop': '10.1.11.9',
+                        'prefer_non_rib_labels': False,
+                        'route_tag': '113',
+                        'share_count': '1'
+                    }
+                },
+                'redist_via': 'eigrp',
+                'redist_via_tag': '10'
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1484,7 +1523,7 @@ class TestShowIpRouteWord(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
-    def test_golden2(self):
+    def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpRouteWord(device=self.device)
@@ -1505,6 +1544,13 @@ class TestShowIpRouteWord(unittest.TestCase):
         parsed_output = obj.parse(route='0.0.0.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.168.4.10')
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+        
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
@@ -1517,8 +1563,8 @@ class TestShowIpv6RouteWord(unittest.TestCase):
     golden_parsed_output_with_route = {
     	"total_prefixes": 1,
 		"entry": {
-		    "2000:2::4:1/128": {
-		       "ip": "2000:2::4:1",
+		    "2001:db8:400:4::4:1/128": {
+		       "ip": "2001:db8:400:4::4:1",
 		       "type": "level-2",
 		       "distance": "115",
 		       "metric": "20",
@@ -1539,7 +1585,7 @@ class TestShowIpv6RouteWord(unittest.TestCase):
     }
 
     golden_output_with_ipv6_route = {'execute.return_value': '''
-        Routing entry for 2000:2::4:1/128
+        Routing entry for 2001:db8:400:4::4:1/128
 		  Known via "isis", distance 115, metric 20, type level-2
 		  Route count is 1/1, share count 0
 		  Routing paths:
@@ -1553,13 +1599,13 @@ class TestShowIpv6RouteWord(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6RouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(route='2000:2::4:1')
+            parsed_output = obj.parse(route='2001:db8:400:4::4:1')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
         obj = ShowIpv6RouteDistributor(device=self.device)
-        parsed_output = obj.parse(route='2000:2::4:1')
+        parsed_output = obj.parse(route='2001:db8:400:4::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
@@ -1895,6 +1941,39 @@ class TestShowIpCef(unittest.TestCase):
         no route
     '''}
 
+    golden_parsed_output_8 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '10.169.196.241/32': {
+                                'nexthop': {
+                                    '10.0.0.10': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet3': {
+                                                'local_label': 16022,
+                                                'outgoing_label': ['16022'],
+                                                'outgoing_label_backup': '16002',
+                                                'outgoing_label_info': 'elc',
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+        show ip cef 10.169.196.241
+        10.169.196.241/32
+            nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1950,6 +2029,13 @@ class TestShowIpCef(unittest.TestCase):
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
+    def test_golden_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
 
 ###################################################
 # unit test for show ipv6 cef <prefix>
@@ -1977,7 +2063,7 @@ class TestShowIpv6Cef(unittest.TestCase):
       nexthop FE80::F816:3EFF:FEF3:7B32 GigabitEthernet3.100
     2001:DB8:2:3::/64
       attached to GigabitEthernet3.100
-    A::4:5:0/112
+    2001:DB8:64::4:5:0/112
       nexthop 10.2.3.3 FastEthernet1/0/0 label 17 21
     '''}
 
@@ -2047,7 +2133,7 @@ class TestShowIpv6Cef(unittest.TestCase):
                                     }
                                 }
                             },
-                            'A::4:5:0/112': {
+                            '2001:DB8:64::4:5:0/112': {
                                 'nexthop': {
                                     '10.2.3.3': {
                                         'outgoing_interface': {

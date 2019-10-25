@@ -145,7 +145,7 @@ class test_show_ipv6_pim_bsr_candidate_rp(unittest.TestCase):
     golden_output_ios = {'execute.return_value': '''
             Device# show ipv6 pim bsr candidate-rp
             PIMv2 C-RP information
-                Candidate RP: 10::1:1:3
+                Candidate RP: 2001:db8:100::1:1:3
                   All Learnt Scoped Zones, Priority 192, Holdtime 150
                   Advertisement interval 60 seconds
                   Next advertisement in 00:00:33
@@ -159,12 +159,12 @@ class test_show_ipv6_pim_bsr_candidate_rp(unittest.TestCase):
                         "rp": {
                             "bsr": {
                                 "rp_candidate_next_advertisement": "00:00:33",
-                                "10::1:1:3": {
+                                "2001:db8:100::1:1:3": {
                                     "holdtime": 150,
                                     "priority": 192,
                                     "interval": 60,
                                     "scope": "All Learnt Scoped Zones",
-                                    "address": "10::1:1:3"
+                                    "address": "2001:db8:100::1:1:3"
                                 }
                             }
                         }

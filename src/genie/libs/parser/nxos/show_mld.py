@@ -178,7 +178,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
                     m.groupdict()['admin_status'].lower() == 'up' else False
                 continue
 
-            # 2001:db1:1::1/64 [VALID]
+            # 2001:db8:8404:751c::1/64 [VALID]
             p3 = re.compile(r'^(?P<address>(?P<ip>[a-z0-9\:]+)'
                              '\/(?P<prefix_length>[0-9]+))'
                              ' *\[(?P<status>[a-zA-Z]+)\]$')
@@ -566,7 +566,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 continue
 
-            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
             p4 = re.compile(r'^Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
                              'Last +Reporter *: +(?P<last_reporter>[\w\.\:]+)$')
             m = p4.match(line)
