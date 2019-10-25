@@ -9,7 +9,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxr show msdp
-from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache
+from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer
 
 
 class TestShowMsdpPeer(unittest.TestCase):
@@ -26,8 +26,8 @@ class TestShowMsdpPeer(unittest.TestCase):
         'vrf': {
             'default': {
                 'peer': {
-                    '202.202.33.3': {
-                        'connect_source_address': '202.202.11.1',
+                    '192.168.229.3': {
+                        'connect_source_address': '192.168.100.1',
                         'elapsed_time': '00:00:09',
                         'nsr': {
                             'oper_downs': 0,
@@ -71,10 +71,10 @@ class TestShowMsdpPeer(unittest.TestCase):
         'execute.return_value': '''
         Router# show msdp peer
 
-        MSDP Peer 202.202.33.3 (?), AS 65109
+        MSDP Peer 192.168.229.3 (?), AS 65109
         Description:
             Connection status:
-            State: Inactive, Resets: 999, Connection Source: 202.202.11.1
+            State: Inactive, Resets: 999, Connection Source: 192.168.100.1
             Uptime(Downtime): 00:00:09, SA messages received: 0
             TLV messages sent/received: 3/0
             Output messages discarded: 0
@@ -101,8 +101,8 @@ class TestShowMsdpPeer(unittest.TestCase):
         'vrf': {
             'VRF1': {
                 'peer': {
-                    '1.1.1.1': {
-                        'connect_source_address': '22.22.22.23',
+                    '10.4.1.1': {
+                        'connect_source_address': '10.151.22.23',
                         'description': 'R1',
                         'elapsed_time': '18:19:47',
                         'nsr': {
@@ -146,10 +146,10 @@ class TestShowMsdpPeer(unittest.TestCase):
     device_output_2 = {'execute.return_value': '''
         Router# show msdp vrf VRF1 peer
 
-        MSDP Peer 1.1.1.1 (?), AS 0
+        MSDP Peer 10.4.1.1 (?), AS 0
         Description: R1
             Connection status:
-            State: Listen, Resets: 0, Connection Source: 22.22.22.23
+            State: Listen, Resets: 0, Connection Source: 10.151.22.23
             Uptime(Downtime): 18:19:47, SA messages received: 0
             TLV messages sent/received: 0/0
             Output messages discarded: 0
@@ -211,7 +211,7 @@ class TestShowMsdpContext(unittest.TestCase):
                     'allow_encaps_count': 0,
                     'default_peer_address': '0.0.0.0',
                     'maximum_sa': 20000,
-                    'originator_address': '150.150.1.1',
+                    'originator_address': '172.16.76.1',
                     'originator_interface': 'Loopback150',
                     'sa_holdtime': 150},
                 'context_info': {
@@ -267,7 +267,7 @@ class TestShowMsdpContext(unittest.TestCase):
             RP Filter In    :   
             RP Filter Out    :   
         Configuration
-            Originator Address    : 150.150.1.1
+            Originator Address    : 172.16.76.1
             Originator Interface Name    : Loopback150
             Default Peer Address    : 0.0.0.0
             SA Holdtime    : 150
@@ -297,7 +297,7 @@ class TestShowMsdpContext(unittest.TestCase):
                     'allow_encaps_count': 0,
                     'default_peer_address': '0.0.0.0',
                     'maximum_sa': 22222,
-                    'originator_address': '22.22.22.23',
+                    'originator_address': '10.151.22.23',
                     'originator_interface': 'Loopback3',
                     'sa_holdtime': 150},
                 'context_info': {
@@ -357,7 +357,7 @@ class TestShowMsdpContext(unittest.TestCase):
         RP Filter In    :   
         RP Filter Out    :   
     Configuration
-        Originator Address    : 22.22.22.23
+        Originator Address    : 10.151.22.23
         Originator Interface Name    : Loopback3
         Default Peer Address    : 0.0.0.0
         SA Holdtime    : 150
@@ -420,7 +420,7 @@ class TestShowMsdpSummary(unittest.TestCase):
                 'current_external_active_sa': 0,
                 'maximum_external_sa_global': 20000,
                 'peer_address': {
-                    '1.1.1.1': {
+                    '10.4.1.1': {
                         'active_sa_cnt': 0,
                         'as': 0,
                         'cfg_max_ext_sas': 0,
@@ -433,7 +433,7 @@ class TestShowMsdpSummary(unittest.TestCase):
                         },
                         'uptime_downtime': '18:25:02',
                     },
-                    '11.11.11.11': {
+                    '10.229.11.11': {
                         'active_sa_cnt': 0,
                         'as': 0,
                         'cfg_max_ext_sas': 0,
@@ -460,8 +460,8 @@ class TestShowMsdpSummary(unittest.TestCase):
     MSDP Peer Status Summary
        Peer Address    AS    State    Uptime/    Reset Peer    Active Cfg.Max    TLV
         Downtime    Count Name    SA Cnt Ext.SAs recv/sent
-       1.1.1.1    0    Listen    18:25:02    0    R1    0    0    0/0
-       11.11.11.11    0    Listen    18:14:53    0    ?    0    0    0/0
+       10.4.1.1    0    Listen    18:25:02    0    R1    0    0    0/0
+       10.229.11.11    0    Listen    18:14:53    0    ?    0    0    0/0
     '''}
 
     expected_output_2 = {
@@ -470,7 +470,7 @@ class TestShowMsdpSummary(unittest.TestCase):
                 'current_external_active_sa': 0,
                 'maximum_external_sa_global': 20000,
                 'peer_address': {
-                    '4.4.4.4': {
+                    '10.64.4.4': {
                         'active_sa_cnt': 0,
                         'as': 200,
                         'cfg_max_ext_sas': 444,
@@ -497,7 +497,7 @@ class TestShowMsdpSummary(unittest.TestCase):
     MSDP Peer Status Summary
        Peer Address    AS    State    Uptime/    Reset Peer    Active Cfg.Max    TLV
         Downtime    Count Name    SA Cnt Ext.SAs recv/sent
-       4.4.4.4    200    Connect    20:35:48    0    R4    0    444    0/0
+       10.64.4.4    200    Connect    20:35:48    0    R4    0    444    0/0
     '''}
 
     def test_show_msdp_summary_empty(self):
@@ -647,6 +647,175 @@ class TestShowMsdpSaCache(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output_2)
 
+class TestShowMsdpStatisticsPeer(unittest.TestCase):
+    """
+         Commands:
+         show msdp statistics peer
+         show msdp vrf <vrf> statistics peer
+     """
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    device_output_1 = {'execute.return_value': '''
+    RP/0/0/CPU0:R2_xrvr#show msdp vrf VRF1 statistics peer 
+    Fri Jun 16 15:52:06.775 UTC
+    MSDP Peer Statistics :- VRF1
+    Peer 10.4.1.1 : AS is 0, State is Listen, 0 active SAs
+        TLV Rcvd : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses, 0 unknowns
+        TLV Sent : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses
+        SA msgs  : 0 received, 0 sent
+    Peer 10.229.11.11 : AS is 0, State is Listen, 0 active SAs
+        TLV Rcvd : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses, 0 unknowns
+        TLV Sent : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses
+        SA msgs  : 0 received, 0 sent
+
+    '''}
+
+    expected_output_1 = {
+        'vrf': {
+            'VRF1': {
+                'peer_address': {
+                    '10.4.1.1': {
+                        'active_sa': 0,
+                        'as': 0,
+                        'sa_msgs': {
+                            'received': 0,
+                            'sent': 0,
+                        },
+                        'state': 'Listen',
+                        'tlv_rcvd': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                            'unknowns': 0,
+                        },
+                        'tlv_sent': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                        },
+                    },
+                    '10.229.11.11': {
+                        'active_sa': 0,
+                        'as': 0,
+                        'sa_msgs': {
+                            'received': 0,
+                            'sent': 0,
+                        },
+                        'state': 'Listen',
+                        'tlv_rcvd': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                            'unknowns': 0,
+                        },
+                        'tlv_sent': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    device_output_2 = {'execute.return_value': '''
+    P/0/0/CPU0:R2_xrvr#show msdp statistics peer 
+    Fri Jun 16 15:52:01.005 UTC
+    MSDP Peer Statistics :- default
+    Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
+        TLV Rcvd : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses, 0 unknowns
+        TLV Sent : 0 total
+                   0 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses
+        SA msgs  : 0 received, 0 sent
+    '''}
+
+    expected_output_2 = {
+        'vrf': {
+            'default': {
+                'peer_address': {
+                    '10.64.4.4': {
+                        'active_sa': 0,
+                        'as': 200,
+                        'sa_msgs': {
+                            'received': 0,
+                            'sent': 0,
+                        },
+                        'state': 'Connect',
+                        'tlv_rcvd': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                            'unknowns': 0,
+                        },
+                        'tlv_sent': {
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'request': 0,
+                            'sa': 0,
+                            'sa_response': 0,
+                            'total': 0,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    def test_show_msdp_statistics_peer_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMsdpStatisticsPeer(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_msdp_statistics_peer_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowMsdpStatisticsPeer(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.expected_output_1)
+
+    def test_show_msdp_statistics_peer_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowMsdpStatisticsPeer(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_output_2)
 
 if __name__ == '__main__':
     unittest.main()

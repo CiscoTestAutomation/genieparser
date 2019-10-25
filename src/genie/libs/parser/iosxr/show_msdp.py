@@ -97,15 +97,16 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         else:
             out = output
 
-        # MSDP Peer 202.202.33.3 (?), AS 4134
-        r1 = re.compile(r'MSDP\sPeer\s*(?P<peer>\S+)\s*\(\?\)\,\s*'
+        # MSDP Peer 192.168.229.3 (?), AS 65109
+        # MSDP Peer 10.1.1.1 (R1.cisco.com), AS 65109
+        r1 = re.compile(r'MSDP\sPeer\s*(?P<peer>\S+)\s*\(\S+\)\,\s*'
                         r'AS\s*(?P<peer_as>\d+)')
 
         # Description: R1
         # Description:
         r2 = re.compile(r'Description\s*:\s*(?:(?P<description>\S+))?$')
 
-        # State: Inactive, Resets: 999, Connection Source: 202.202.11.1
+        # State: Inactive, Resets: 999, Connection Source: 192.168.100.1
         r3 = re.compile(
             r'\s*State:\s*(?P<session_state>\S+)\,'
             r'\s*Resets:\s*(?P<reset>\d+)\,'
@@ -179,7 +180,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # MSDP Peer 202.202.33.3 (?), AS 4134
+            # MSDP Peer 192.168.229.3 (?), AS 65109
             result = r1.match(line)
 
             if result:
@@ -516,7 +517,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
         r12 = re.compile(
             r'\s*RP\s+Filter\s+Out\s+:\s(?:(?P<rp_filter_out>\S+))?')
 
-        # Originator Address         : 150.150.1.1
+        # Originator Address         : 172.16.76.1
         # Originator Interface Name  : Loopback150
         # Default Peer Address       : 0.0.0.0
         # SA Holdtime                : 150
@@ -679,7 +680,7 @@ class ShowMsdpContext(ShowMsdpContextSchema):
                 continue
 
             # Configuration:
-            #   Originator Address         : 150.150.1.1
+            #   Originator Address         : 172.16.76.1
             result = r13.match(line)
             if result:
                 group_dict = result.groupdict()
@@ -892,8 +893,8 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
 
         # Peer Address	  AS		   State    Uptime/    Reset Peer    Active Cfg.Max    TLV
         #             Downtime    Count Name    SA Cnt Ext.SAs recv/sent
-        # 4.4.4.4    200    Connect    20:35:48    0    R4    0   444    0/0
-        # 11.11.11.11    0    Listen    18:14:53    0    ?    0    0   0/0
+        # 10.64.4.4    200    Connect    20:35:48    0    R4    0   444    0/0
+        # 10.229.11.11    0    Listen    18:14:53    0    ?    0    0   0/0
         r3 = re.compile(r'(?P<address>\S+)\s*(?P<as>\d+)'
                         r'\s*(?P<state>\S+)\s*(?P<uptime_downtime>\S+)'
                         r'\s*(?P<reset_count>\d+)\s*(?P<name>\S+)'
@@ -925,7 +926,7 @@ class ShowMsdpSummary(ShowMsdpSummarySchema):
                     group_dict['current_external_active_sa'])
                 continue
 
-            # 4.4.4.4    200    Connect    20:35:48    0    R4   0    444    0/0
+            # 10.64.4.4    200    Connect    20:35:48    0    R4   0    444    0/0
             result = r3.match(line)
             if result:
                 # import pdb
@@ -1047,7 +1048,6 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
-                # vrf_dict['num_of_sa_cache'] = num_of_sa_cache
 
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
@@ -1095,3 +1095,170 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
                 flags_dict['grp'] = group['grp_flag']
                 flags_dict['src'] = group['src_flag']
         return parsed_dict
+
+class ShowMsdpStatisticsPeerSchema(MetaParser):
+    ''' Schema for:
+        * 'show msdp statistics peer'
+        * 'show msdp vrf <vrf> statistics peer'
+    '''
+    schema = {
+        'vrf': {
+            Any(): {
+                'peer_address': {
+                    Any(): {
+                        'as': int,
+                        'state': str,
+                        'active_sa': int,
+                        'tlv_rcvd': {
+                            'total': int,
+                            'keepalives': int,
+                            'notifications': int,
+                            'sa': int,
+                            'request': int,
+                            'sa_response': int,
+                            'unknowns': int,
+                        },
+                        'tlv_sent': {
+                            'total': int,
+                            'keepalives': int,
+                            'notifications': int,
+                            'sa': int,
+                            'request': int,
+                            'sa_response': int,
+                        },
+                        'sa_msgs': {
+                            'received': int,
+                            'sent': int,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
+
+    cli_command = ['show msdp statistics peer',
+                   'show msdp vrf <vrf> statistics peer']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
+        r1 = re.compile(r'Peer +(?P<peer_address>\d+.+) : '
+                        r'+AS +is +(?P<as>\d+), +State +is +(?P<state>\S+), '
+                        r'+(?P<active_sa>\d+) +active SAs$')
+
+        #     TLV Rcvd : 0 total
+        r2 = re.compile(r'TLV +Rcvd +: +(?P<total>\d+) +total$')
+
+        # 0 keepalives, 0 notifications
+        r3 = re.compile(r'(?P<keepalives>\d+) +keepalives, +(?P<notifications>\d+) +notifications$')
+
+        # 0 SAs, 0 SA Requests
+        r4 = re.compile(r'(?P<sa>\d+) +SAs, +(?P<request>\d+) +SA Requests$')
+
+        # 0 SA responses, 0 unknowns
+        # 0 SA responses
+        r5 = re.compile(r'(?P<sa_response>\d+) +SA responses(?:, +(?P<unknowns>\d+) +unknowns$)?')
+
+        # TLV Sent : 0 total
+        r6 = re.compile(r'TLV +Sent +: +(?P<total>\d+) +total')
+
+        # SA msgs  : 0 received, 0 sent
+        r7 = re.compile(r'SA +msgs +: +(?P<received>\d+) +received, +(?P<sent>\d+) +sent$')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
+            m = r1.match(line)
+            if m:
+                group = m.groupdict()
+                if not vrf:
+                    vrf = 'default'
+
+                vrf_dict = parsed_dict.setdefault('vrf', {})\
+                    .setdefault(vrf, {})
+                peer_dict = vrf_dict.setdefault('peer_address', {})\
+                    .setdefault(group['peer_address'], {})
+
+                peer_dict['as'] = int(group['as'])
+                peer_dict['state'] = group['state']
+                peer_dict['active_sa'] = int(group['active_sa'])
+
+                continue
+
+            #     TLV Rcvd : 0 total
+            m = r2.match(line)
+            if m:
+                if 'tlv_rcvd' not in peer_dict:
+                    tlv_rcvd_dict = peer_dict.setdefault('tlv_rcvd', {})
+                tlv_rcvd_dict['total'] = int(m.groupdict()['total'])
+
+                continue
+
+            # TLV Sent : 0 total
+            m = r6.match(line)
+            if m:
+                if 'tlv_sent' not in peer_dict:
+                    tlv_sent_dict = peer_dict.setdefault('tlv_sent', {})
+                tlv_sent_dict['total'] = int(m.groupdict()['total'])
+
+                continue
+
+            # 0 keepalives, 0 notifications
+            m = r3.match(line)
+            if m:
+                if 'tlv_sent' not in peer_dict:
+                    tlv_rcvd_dict['keepalives'] = int(m.groupdict()['keepalives'])
+                    tlv_rcvd_dict['notifications'] = int(m.groupdict()['notifications'])
+                else:
+                    tlv_sent_dict['keepalives'] = int(m.groupdict()['keepalives'])
+                    tlv_sent_dict['notifications'] = int(m.groupdict()['notifications'])
+
+                continue
+
+            # 0 SAs, 0 SA Requests
+            m = r4.match(line)
+            if m:
+                if 'tlv_sent' not in peer_dict:
+                    tlv_rcvd_dict['sa'] = int(m.groupdict()['sa'])
+                    tlv_rcvd_dict['request'] = int(m.groupdict()['request'])
+                else:
+                    tlv_sent_dict['sa'] = int(m.groupdict()['request'])
+                    tlv_sent_dict['request'] = int(m.groupdict()['request'])
+
+                continue
+
+            # 0 SA responses, 0 unknowns
+            # 0 SA responses
+            m = r5.match(line)
+            if m:
+                if 'tlv_sent' not in peer_dict:
+                    tlv_rcvd_dict['sa_response'] = int(m.groupdict()['sa_response'])
+                    tlv_rcvd_dict['unknowns'] = int(m.groupdict()['unknowns'])
+                else:
+                    tlv_sent_dict['sa_response'] = int(m.groupdict()['sa_response'])
+
+                continue
+
+            # SA msgs  : 0 received, 0 sent
+            m = r7.match(line)
+            if m:
+                if 'sa_msgs' not in peer_dict:
+                    sa_msg_dict = peer_dict.setdefault('sa_msgs', {})
+                sa_msg_dict['received'] = int(m.groupdict()['received'])
+                sa_msg_dict['sent'] = int(m.groupdict()['sent'])
+
+        return parsed_dict
+
