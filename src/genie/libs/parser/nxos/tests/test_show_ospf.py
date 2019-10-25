@@ -107,7 +107,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
-                                'system_boundary': 'area border and '
+                                'this_router_is': 'an area border and '
                                 'autonomous system boundary',
                                 'preference': {
                                     'single_value': {
@@ -625,7 +625,7 @@ class TestShowIpOspf(unittest.TestCase):
                             '10': {
                                 'areas': {
                                     '10.4.2.255': {
-                                        'generate_nssa': 'default route',
+                                        'generate_nssa_default_route': True,
                                         'area_id': '10.4.2.255',
                                         'area_type': 'nssa',
                                         'authentication': 'none',
@@ -685,7 +685,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
-                                'system_boundary': 'autonomous system boundary',
+                                'this_router_is': 'an autonomous system boundary',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
@@ -820,6 +820,7 @@ class TestShowIpOspf(unittest.TestCase):
         Last graceful restart exit status: Successful
         Supports only single TOS(TOS0) routes
         Supports opaque LSA
+        This router is an area border
         Administrative distance 110
         Reference Bandwidth is 40000 Mbps
         SPF throttling delay time of 200.000 msecs,
@@ -1017,6 +1018,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
+                                'this_router_is': 'an area border',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
@@ -1110,7 +1112,7 @@ class TestShowIpOspf(unittest.TestCase):
                                     }
                                 },
                                 'opaque_lsa_enable': True,
-                                'system_boundary': 'autonomous system boundary',
+                                'this_router_is': 'an autonomous system boundary',
                                 'preference': {
                                     'single_value': {
                                         'all': 110
