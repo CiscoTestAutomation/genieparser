@@ -201,7 +201,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     ip_dict['attach'] = m.groupdict()['attach']
                 continue
 
-            # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+            # *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
             # *via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
@@ -562,7 +562,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # 10.94.77.1/32, ubest/mbest: 1/0 time
         # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
         # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
-        # 2700:1::1/128, ubest/mbest: 1/0, attached
+        # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
         p2 = re.compile(r'^(?P<route>[\w\/\.\:]+), +(ubest/mbest: +(?P<ubest_mbest>[\d\/]+)'
                         r'( +time)?)?((?P<ubest>\d+) +ucast +next-hops, +(?P<mbest>\d+) +'
                         r'mcast +next-hops)?(, +(?P<attached>[\w]+))?$')
@@ -570,7 +570,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
         # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
-        # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
+        # *via 2001:db8:5f1:1::1, Eth1/27, [0/0], 05:56:03, local
         # *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
         # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
@@ -607,7 +607,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # 10.94.77.1/32, ubest/mbest: 1/0 time
             # 0.0.0.0/0, 1 ucast next-hops, 0 mcast next-hops
             # 0.1.3.255/32, 1 ucast next-hops, 0 mcast next-hops, attached
-            # 2700:1::1/128, ubest/mbest: 1/0, attached
+            # 2001:db8:5f1:1::1/128, ubest/mbest: 1/0, attached
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -652,7 +652,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.2.3.2, Eth1/4, [1/0], 01:01:30, static
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
             # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
-            # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
+            # *via 2001:db8:5f1:1::1, Eth1/27, [0/0], 05:56:03, local
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
             # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip

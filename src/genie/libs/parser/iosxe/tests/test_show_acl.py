@@ -1,5 +1,6 @@
 #!/bin/env python
 import unittest
+
 from unittest.mock import Mock
 from ats.topology import Device
 
@@ -123,11 +124,11 @@ class TestShowAccessLists(unittest.TestCase):
                                       'name': '30'},
                                '80': {'actions': {'forwarding': 'permit',
                                                   'logging': 'log-syslog'},
-                                      'matches': {'l3': {'ipv6': {'destination_network': {'1:1::1 6:6::6': {'destination_network': '1:1::1 '
-                                                                                                                                             '6:6::6'}},
+                                      'matches': {'l3': {'ipv6': {'destination_network': {'2001:db8:1:1::1 2001:db8:24:24::6': {'destination_network': '2001:db8:1:1::1 '
+                                                                                                                                             '2001:db8:24:24::6'}},
                                                                   'protocol': 'ipv6',
-                                                                  'source_network': {'3:3::3 4:4::4': {'source_network': '3:3::3 '
-                                                                                                                                   '4:4::4'}}}},
+                                                                  'source_network': {'2001:db8:9:9::3 2001:db8:10:10::4': {'source_network': '2001:db8:9:9::3 '
+                                                                                                                                   '2001:db8:10:10::4'}}}},
                                                   'l4': {'ipv6': {'established': False}}},
                                       'name': '80'}},
                       'name': 'ipv6_acl',
@@ -212,7 +213,7 @@ class TestShowAccessLists(unittest.TestCase):
         IPv6 access list ipv6_acl
             permit ipv6 host 2001::1 host 2001:1::2 sequence 20
             permit tcp any eq www 8443 host 2001:2::2 sequence 30
-            permit ipv6 3:3::3 4:4::4 1:1::1 6:6::6 log sequence 80
+            permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
         IPv6 access list preauth_v6 (per-user)
             permit udp any any eq domain sequence 10
             permit esp any any dscp cs7 log sequence 20
@@ -864,12 +865,12 @@ IPv6 access list OutFilter_IPv6
     deny 103 any any sequence 50
     permit icmp any any packet-too-big sequence 60
     deny icmp any any sequence 70
-    deny ipv6 2404:1A8:1100:9::/64 any sequence 74
-    deny ipv6 2404:1A8:1100:10::/64 any sequence 75
-    permit ipv6 any 2050::/16 log-input sequence 80
-    deny ipv6 2404:1A8:1100:13::/64 any sequence 90
-    deny ipv6 2404:1A8:1100:14::/64 any sequence 100
-    deny ipv6 2408:40:2000::/35 2408:40:2000::/35 dscp default sequence 110
+    deny ipv6 2001:DB8:B30A:DC63::/64 any sequence 74
+    deny ipv6 2001:DB8:B30A:F442::/64 any sequence 75
+    permit ipv6 any 2001:db8:1d14::/16 log-input sequence 80
+    deny ipv6 2001:DB8:B30A:FE9B::/64 any sequence 90
+    deny ipv6 2001:DB8:B30A:213::/64 any sequence 100
+    deny ipv6 2001:db8:5254:1000::/35 2001:db8:5254:1000::/35 dscp default sequence 110
     permit ipv6 any any (3974749339 matches) sequence 120
     '''}
 
@@ -952,8 +953,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:14::/64': {
-                                        'source_network': '2404:1A8:1100:14::/64'
+                                    '2001:DB8:B30A:213::/64': {
+                                        'source_network': '2001:DB8:B30A:213::/64'
                                     }
                                 }
                             }
@@ -975,15 +976,15 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'ipv6': {
                                 'destination_network': {
-                                    '2408:40:2000::/35': {
-                                        'destination_network': '2408:40:2000::/35'
+                                    '2001:db8:5254:1000::/35': {
+                                        'destination_network': '2001:db8:5254:1000::/35'
                                     }
                                 },
                                 'dscp': 'default',
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2408:40:2000::/35': {
-                                        'source_network': '2408:40:2000::/35'
+                                    '2001:db8:5254:1000::/35': {
+                                        'source_network': '2001:db8:5254:1000::/35'
                                     }
                                 }
                             }
@@ -1002,7 +1003,7 @@ IPv6 access list OutFilter_IPv6
                               "eth": {
                                    "source_mac_address": "ipv6",
                                    "destination_mac_address": "2404",
-                                   "ether_type": ":1A8:1100:10::/64 any sequence 75"
+                                   "ether_type": ":2001:DB8:F442:121::/64 any sequence 75"
                               }
                          }
                     },
@@ -1018,7 +1019,7 @@ IPv6 access list OutFilter_IPv6
                               "eth": {
                                    "source_mac_address": "ipv6",
                                    "destination_mac_address": "2404",
-                                   "ether_type": ":1A8:1100:9::/64 any sequence 74"
+                                   "ether_type": ":2001:DB8:DC63:121::/64 any sequence 74"
                               }
                          }
                     },
@@ -1146,8 +1147,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:10::/64': {
-                                        'source_network': '2404:1A8:1100:10::/64'
+                                    '2001:DB8:B30A:F442::/64': {
+                                        'source_network': '2001:DB8:B30A:F442::/64'
                                     }
                                 }
                             }
@@ -1175,8 +1176,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:9::/64': {
-                                        'source_network': '2404:1A8:1100:9::/64'
+                                    '2001:DB8:B30A:DC63::/64': {
+                                        'source_network': '2001:DB8:B30A:DC63::/64'
                                     }
                                 }
                             }
@@ -1198,8 +1199,8 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'ipv6': {
                                 'destination_network': {
-                                    '2050::/16': {
-                                        'destination_network': '2050::/16'
+                                    '2001:db8:1d14::/16': {
+                                        'destination_network': '2001:db8:1d14::/16'
                                     }
                                 },
                                 'protocol': 'ipv6',
@@ -1233,8 +1234,8 @@ IPv6 access list OutFilter_IPv6
                                 },
                                 'protocol': 'ipv6',
                                 'source_network': {
-                                    '2404:1A8:1100:13::/64': {
-                                        'source_network': '2404:1A8:1100:13::/64'
+                                    '2001:DB8:B30A:FE9B::/64': {
+                                        'source_network': '2001:DB8:B30A:FE9B::/64'
                                     }
                                 }
                             }
@@ -1475,15 +1476,15 @@ IPv6 access list OutFilter_IPv6
             10 permit 10.2.0.0, wildcard bits 0.0.255.255
             20 permit 10.2.0.0
             30 deny   any
-            40 permit 7.7.7.7
+            40 permit 10.196.7.7
         Standard IP access list NAT_ACL2
             10 permit 10.2.0.0, wildcard bits 0.0.255.255
-            20 permit 7.7.7.8
+            20 permit 10.196.7.8
             30 deny   any
         Extended IP access list PYATS_ACL_TEST
             10 permit ip host 0.0.0.0 any
             20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
-            30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+            30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
         IPv6 access list PYATS_ACL_TEST_IPv6
             permit ipv6 2001:DB8::/64 any sequence 10
             permit esp host 2001:DB8:5::1 any sequence 20
@@ -1558,8 +1559,8 @@ IPv6 access list OutFilter_IPv6
                             'ipv4': {
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.7 0.0.0.0': {
-                                        'source_network': '7.7.7.7 0.0.0.0'
+                                    '10.196.7.7 0.0.0.0': {
+                                        'source_network': '10.196.7.7 0.0.0.0'
                                     }
                                 }
                             }
@@ -1600,8 +1601,8 @@ IPv6 access list OutFilter_IPv6
                             'ipv4': {
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.8 0.0.0.0': {
-                                        'source_network': '7.7.7.8 0.0.0.0'
+                                    '10.196.7.8 0.0.0.0': {
+                                        'source_network': '10.196.7.8 0.0.0.0'
                                     }
                                 }
                             }
@@ -1700,14 +1701,14 @@ IPv6 access list OutFilter_IPv6
                         'l3': {
                             'tcp': {
                                 'destination_network': {
-                                    '200.0.0.0 0.0.0.255': {
-                                        'destination_network': '200.0.0.0 0.0.0.255'
+                                    '192.168.220.0 0.0.0.255': {
+                                        'destination_network': '192.168.220.0 0.0.0.255'
                                     }
                                 },
                                 'protocol': 'tcp',
                                 'source_network': {
-                                    '100.0.0.0 0.0.0.255': {
-                                        'source_network': '100.0.0.0 0.0.0.255'
+                                    '10.55.0.0 0.0.0.255': {
+                                        'source_network': '10.55.0.0 0.0.0.255'
                                     }
                                 }
                             }
@@ -1860,6 +1861,102 @@ IPv6 access list OutFilter_IPv6
         }
     }
 
+    golden_output_customer = {'execute.return_value': '''
+        Standard IP access list 43
+            10 permit 10.1.0.2 (1168716 matches)
+            20 permit 10.144.0.9
+            30 permit 10.70.10.0, wildcard bits 0.0.10.255
+            40 permit 10.196.0.0, wildcard bits 0.0.255.255 (8353358 matches)
+    '''
+    }
+
+    golden_parsed_output_customer = {
+        '43': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'statistics': {
+                        'matched_packets': 1168716
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.1.0.2 0.0.0.0': {
+                                        'source_network': '10.1.0.2 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '10'
+                },
+                '20': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.144.0.9 0.0.0.0': {
+                                        'source_network': '10.144.0.9 0.0.0.0'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '20'
+                },
+                '30': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.70.10.0 0.0.10.255': {
+                                        'source_network': '10.70.10.0 0.0.10.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '30'
+                },
+                '40': {
+                    'actions': {
+                        'forwarding': 'permit'
+                    },
+                    'statistics': {
+                        'matched_packets': 8353358
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.196.0.0 0.0.255.255': {
+                                        'source_network': '10.196.0.0 0.0.255.255'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'name': '40'
+                }
+            },
+            'name': '43',
+            'type': 'ipv4-acl-type'
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -1900,6 +1997,13 @@ IPv6 access list OutFilter_IPv6
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_customer)
+        obj = ShowIpAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='43')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer)
 
 if __name__ == '__main__':
     unittest.main()

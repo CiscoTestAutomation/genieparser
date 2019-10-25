@@ -736,7 +736,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   },
                                              },
                                         },
-                                   '615:11:11::/64':
+                                   '2001:db8:cdc9:121::/64':
                                        {'index':
                                             {1:
                                                  {'metric': 2219,
@@ -758,7 +758,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   },
                                              },
                                         },
-                                   '615:11:11:1::/64':
+                                   '2001:db8:cdc9:144::/64':
                                        {'index':
                                             {1:
                                                  {'metric': 2219,
@@ -835,9 +835,9 @@ class test_show_bgp_all(unittest.TestCase):
         *>  10.9.4.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
         *>  10.9.5.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
         *>  10.9.6.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-        * i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
+        * i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
         *>i                  ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
-        * i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
+        * i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
         *>i                  ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
 
 
@@ -5271,7 +5271,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                 'tbl_ver': 1,
                                 'up_down': '01:07:38',
                                 'version': 4}}},
-                    '2000::1:1': 
+                    '2001:db8:400::1:1': 
                         {'address_family': 
                             {'ipv6 unicast': 
                                 {'as': 100,
@@ -5287,7 +5287,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                 'tbl_ver': 1,
                                 'up_down': '01:07:38',
                                 'version': 4}}},
-                    '2000::4:1': 
+                    '2001:db8:400::4:1': 
                         {'address_family': 
                             {'ipv6 unicast': 
                                 {'as': 100,
@@ -5397,8 +5397,8 @@ class test_show_bgp_all_summary(unittest.TestCase):
         BGP table version is 1, main routing table version 1
 
         Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        2000::1:1       4          100       0       0        1    0    0 01:07:38 Idle
-        2000::4:1       4          100       0       0        1    0    0 01:07:38 Idle
+        2001:db8:400::1:1       4          100       0       0        1    0    0 01:07:38 Idle
+        2001:db8:400::4:1       4          100       0       0        1    0    0 01:07:38 Idle
         2001::14:4      4          200       0       0        1    0    0 never    Idle
         2001::26:2      4          300       0       0        1    0    0 01:07:38 Idle
 
@@ -17428,7 +17428,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                    'local_router_id': '10.64.4.4'},
                 'vpnv6 unicast RD 300:1':
                   {'advertised':
-                    {'646:11:11:1::/64':
+                    {'2001:db8:31b9:144::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17441,7 +17441,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:2::/64':
+                    '2001:db8:31b9:169::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17454,7 +17454,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:3::/64':
+                    '2001:db8:31b9:190::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17467,7 +17467,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:4::/64':
+                    '2001:db8:31b9:1b9::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17480,7 +17480,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11::/64':
+                    '2001:db8:31b9:121::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17499,7 +17499,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                  'route_distinguisher': '300:1'},
                 'vpnv6 unicast RD 400:1':
                   {'advertised':
-                    {'646:22:22:1::/64':
+                    {'2001:db8:a69:4c9::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17512,7 +17512,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:2::/64':
+                    '2001:db8:a69:510::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17525,7 +17525,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:3::/64':
+                    '2001:db8:a69:559::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17538,7 +17538,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:4::/64':
+                    '2001:db8:a69:5a4::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17551,7 +17551,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22::/64':
+                    '2001:db8:a69:484::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17605,21 +17605,21 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
 
              Network          Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         *>  646:11:11::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:1::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:2::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:3::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:4::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:121::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:144::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:169::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:190::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:1b9::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
-         *>  646:22:22::/64   2001:DB8:20:4:6::6
+         *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:1::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:4c9::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:2::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:510::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:3::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:559::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:4::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:5a4::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
 
         Total number of prefixes 10
@@ -19101,7 +19101,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'received_routes': 
-                                    {'aaaa:1::/113': 
+                                    {'2001:db8:aaaa:1::/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -19110,7 +19110,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
+                                    '2001:db8:2001:db8:aaaa:1::8000/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -19187,9 +19187,9 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
@@ -19567,7 +19567,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '200:1',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19582,7 +19582,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19597,7 +19597,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19612,7 +19612,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19627,7 +19627,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19647,7 +19647,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '200:2',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19662,7 +19662,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19677,7 +19677,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19692,7 +19692,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19707,7 +19707,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19728,7 +19728,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '300:1',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19756,7 +19756,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19784,7 +19784,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19812,7 +19812,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19840,7 +19840,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19916,27 +19916,27 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
 
              Network          Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1
-         *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2
-         *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         * i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
 
         Total number of prefixes 20
@@ -20157,7 +20157,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'routes': 
-                                    {'aaaa:1::/113': 
+                                    {'2001:db8:aaaa:1::/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -20166,7 +20166,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
+                                    '2001:db8:2001:db8:aaaa:1::8000/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -20243,9 +20243,9 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000

@@ -902,92 +902,99 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     parsed_output_1 = {
-        "instance": {
-            "isp": {
-                "address_family": {
-                    "IPv4 Unicast": {
-                        "spf_log": {
+        'instance': {
+            'isp': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
                             1: {
-                                "type": "FSPF",
-                                "time_ms": 1,
-                                "level": 1,
-                                "total_nodes": 1,
-                                "trigger_count": 1,
-                                "first_trigger_lsp": "12a5.00-00",
-                                "triggers": "NEWLSP0",
-                                "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
-                                "delay_ms": 51, 
-                                "delay_info": "since first trigger",
-                                "spt_calculation": {
-                                    "cpu_time_ms": 0, 
-                                    "real_time_ms": 0},
-                                "prefix_update": {
-                                    "cpu_time_ms": 1, 
-                                    "real_time_ms": 1},
-                                "new_lsp_arrivals": 0,
-                                "next_wait_interval_ms": 200,
-                                "results": {
-                                    "nodes": {
-                                        "reach": 1, 
-                                        "unreach": 0, 
-                                        "total": 1},
-                                    "prefixes": {
-                                        "items": {
-                                            "critical_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                'type': 'FSPF',
+                                'time_ms': 1,
+                                'level': 1,
+                                'total_nodes': 1,
+                                'trigger_count': 1,
+                                'first_trigger_lsp': '12a5.00-00',
+                                'triggers': 'NEWLSP0',
+                                'start_timestamp': 'Mon Aug 16 2004 19:25:35.140',
+                                'delay': {
+                                    'since_first_trigger_ms': 51,
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 1,
+                                    'real_time_ms': 1,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'next_wait_interval_ms': 200,
+                                'results': {
+                                    'nodes': {
+                                        'reach': 1,
+                                        'unreach': 0,
+                                        'total': 1,
+                                    },
+                                    'prefixes': {
+                                        'items': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "high_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "medium_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "low_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "all_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                        },                                        
-                                        "routes": {
-                                            "critical_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "high_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "medium_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "low_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "all_priority": {
-                                                "reach": 0, 
-                                                "total": 0
+                                        },
+                                        'routes': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'total': 0,
                                             },
-                                        }
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                        },
                                     },
                                 },
                             },
-                        }
-                    }
-                }
-            }
-        }
+                        },
+                    },
+                },
+            },
+        },
     }
     
-
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
           
@@ -1024,6 +1031,169 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                All Priorities         0        -    0
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        show isis spf-log detail
+
+        Mon Oct 21 10:41:33.540 EDT
+
+        IS-IS Genie Level 2 IPv4 Unicast Route Calculation Log
+                            Time Total Trig.
+        Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        ------------ ----- ----- ----- ----- -------------------- -----------------------
+        --- Sun Oct 20 2019 ---
+        15:53:18.505 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:08:18.055  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:08:18.555 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+    '''}
+
+    parsed_output_2 = {
+        'instance': {
+            'Genie': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
+                            1: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Timestamp    Type    15:53:18.505',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                            2: {
+                                'type': 'FSPF',
+                                'time_ms': 0,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERIODIC',
+                                'start_timestamp': 'Real   CPU 16:08:18.055',
+                                'delay': {
+                                    'since_first_trigger_ms': 50,
+                                    'since_end_of_last_calculation': 899545,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 150,
+                                'rib_batches': {
+                                    'total': '0',
+                                    'critical': '0',
+                                    'high': '0',
+                                    'medium': '0',
+                                    'low': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                            },
+                            3: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Real   CPU 16:08:18.555',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                    'since_end_of_last_calculation': 500,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLogDetail(device=device)
@@ -1035,6 +1205,12 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
@@ -3342,6 +3518,366 @@ class TestShowIsisInterface(unittest.TestCase):
           Can send up to 9 back-to-back LSPs in the next 0 ms
     '''}
 
+    parsed_output_2 = {
+        'instance': {
+            'Genie': {
+                'interface': {
+                    'Bundle-Ether2': {
+                        'state': 'Enabled',
+                        'adjacency_formation': 'Enabled',
+                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
+                        'ipv4_bfd': False,
+                        'ipv6_bfd': False,
+                        'bfd_min_interval': 150,
+                        'bfd_multiplier': 3,
+                        'rsi_srlg': 'Registered',
+                        'bandwidth': 100000000,
+                        'circuit_type': 'level-2-only',
+                        'media_type': 'P2P',
+                        'circuit_number': 0,
+                        'extended_circuit_number': 113,
+                        'next_p2p_iih_in': 4,
+                        'lsp_rexmit_queue_size': 1,
+                        'level': {
+                            2: {
+                                'adjacency_count': 1,
+                                'lsp_pacing_interval_ms': 33,
+                                'psnp_entry_queue_size': 0,
+                                'hello_interval_sec': 10,
+                                'hello_multiplier': 3,
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': 'Up',
+                            'mtu': 9199,
+                            'snpa': '008a.960b.0c85',
+                            'layer2_mcast_groups_membership': {
+                                'all_level_1_iss': 'Yes',
+                                'all_level_2_iss': 'Yes',
+                            },
+                        },
+                        'topology': {
+                            'ipv4 unicast': {
+                                'state': 'Enabled',
+                                'adjacency_formation': 'Running',
+                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
+                                'metric': {
+                                    'level': {
+                                        1: 10,
+                                        2: 10,
+                                    },
+                                },
+                                'weight': {
+                                    'level': {
+                                        1: 0,
+                                        2: 0,
+                                    },
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
+                                    'ldp_sync': {
+                                        'level': {
+                                            1: 'Disabled',
+                                            2: 'Disabled',
+                                        },
+                                    },
+                                },
+                                'frr': {
+                                    'level': {
+                                        1: {
+                                            'state': 'Enabled',
+                                            'type': 'per-prefix',
+                                            'direct_lfa': {
+                                                'state': 'Enabled',
+                                            },
+                                            'remote_lfa': {
+                                                'state': 'Not Enabled',
+                                                'tie_breaker': 'Default',
+                                                'line_card_disjoint': '30',
+                                                'lowest_backup_metric': '20',
+                                                'node_protecting': '40',
+                                                'primary_path': '10',
+                                            },
+                                            'ti_lfa': {
+                                                'state': 'Enabled',
+                                                'tie_breaker': 'Default',
+                                                'link_protecting': 'Enabled',
+                                                'line_card_disjoint': '0',
+                                                'node_protecting': '100',
+                                                'srlg_disjoint': '0',
+                                            },
+                                        },
+                                        2: {
+                                            'state': 'Enabled',
+                                            'type': 'per-prefix',
+                                            'direct_lfa': {
+                                                'state': 'Enabled',
+                                            },
+                                            'remote_lfa': {
+                                                'state': 'Not Enabled',
+                                                'tie_breaker': 'Default',
+                                                'line_card_disjoint': '30',
+                                                'lowest_backup_metric': '20',
+                                                'node_protecting': '40',
+                                                'primary_path': '10',
+                                            },
+                                            'ti_lfa': {
+                                                'state': 'Enabled',
+                                                'tie_breaker': 'Default',
+                                                'link_protecting': 'Enabled',
+                                                'line_card_disjoint': '0',
+                                                'node_protecting': '100',
+                                                'srlg_disjoint': '0',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'address_family': {
+                            'IPv4': {
+                                'state': 'Enabled',
+                                'forwarding_address': ['172.18.0.1'],
+                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
+                            },
+                        },
+                        'lsp': {
+                            'transmit_timer_expires_ms': 0,
+                            'transmission_state': 'idle',
+                            'lsp_transmit_back_to_back_limit_window_msec': 0,
+                            'lsp_transmit_back_to_back_limit': 9,
+                        },
+                        'underlying_interface': {
+                            'HundredGigE0/0/0/1': {
+                                'index': '0x55',
+                            },
+                        },
+                    },
+                    'TenGigE0/0/0/0/0': {
+                        'state': 'Disabled',
+                    },
+                    'TenGigE0/0/0/4/0': {
+                        'state': 'Enabled',
+                        'adjacency_formation': 'Enabled',
+                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
+                        'ipv4_bfd': True,
+                        'ipv6_bfd': False,
+                        'bfd_min_interval': 250,
+                        'bfd_multiplier': 3,
+                        'rsi_srlg': 'Registered',
+                        'bandwidth': 10000000,
+                        'circuit_type': 'level-2-only',
+                        'media_type': 'P2P',
+                        'circuit_number': 0,
+                        'extended_circuit_number': 27,
+                        'next_p2p_iih_in': 5,
+                        'lsp_rexmit_queue_size': 0,
+                        'level': {
+                            2: {
+                                'adjacency_count': 1,
+                                'lsp_pacing_interval_ms': 33,
+                                'psnp_entry_queue_size': 0,
+                                'hello_interval_sec': 10,
+                                'hello_multiplier': 3,
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': 'Up',
+                            'mtu': 9199,
+                            'snpa': '008a.960b.0810',
+                            'layer2_mcast_groups_membership': {
+                                'all_level_1_iss': 'Yes',
+                                'all_level_2_iss': 'Yes',
+                            },
+                        },
+                        'topology': {
+                            'ipv4 unicast': {
+                                'state': 'Enabled',
+                                'adjacency_formation': 'Running',
+                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
+                                'metric': {
+                                    'level': {
+                                        1: 10,
+                                        2: 10,
+                                    },
+                                },
+                                'weight': {
+                                    'level': {
+                                        1: 0,
+                                        2: 0,
+                                    },
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
+                                    'ldp_sync': {
+                                        'level': {
+                                            1: 'Disabled',
+                                            2: 'Disabled',
+                                        },
+                                    },
+                                },
+                                'frr': {
+                                    'level': {
+                                        1: {
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
+                                        },
+                                        2: {
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'address_family': {
+                            'IPv4': {
+                                'state': 'Enabled',
+                                'forwarding_address': ['172.16.2.133'],
+                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
+                            },
+                        },
+                        'lsp': {
+                            'transmit_timer_expires_ms': 0,
+                            'transmission_state': 'idle',
+                            'lsp_transmit_back_to_back_limit_window_msec': 0,
+                            'lsp_transmit_back_to_back_limit': 9,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_parsed_output_2 = {'execute.return_value': '''
+        +++ genie-Router: executing command 'show isis interface' +++
+        show isis interface
+
+        Mon Oct 21 10:46:56.224 EDT
+
+        IS-IS Genie Interfaces
+        Bundle-Ether2               Enabled
+        Adjacency Formation:      Enabled
+        Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+        IPv4 BFD:                 Disabled
+        IPv6 BFD:                 Disabled
+        BFD Min Interval:         150
+        BFD Multiplier:           3
+        RSI SRLG:                 Registered
+        Bandwidth:                100000000
+        
+        Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+        Media Type:               P2P
+        Circuit Number:           0
+        Extended Circuit Number:  113
+        Next P2P IIH in:          4 s
+        LSP Rexmit Queue Size:    1
+        
+        Level-2                   
+            Adjacency Count:        1
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+        
+        CLNS I/O
+            Protocol State:         Up
+            MTU:                    9199
+            SNPA:                   008a.960b.0c85
+            Layer-2 MCast Groups Membership:
+            All ISs:              Yes
+        
+        IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Enabled         L2 Enabled     
+            FRR Type:             per-prefix         per-prefix     
+            Direct LFA:           Enabled            Enabled        
+            Remote LFA:           Not Enabled        Not Enabled    
+            Tie Breaker          Default            Default        
+            Line-card disjoint   30                 30             
+            Lowest backup metric 20                 20             
+            Node protecting      40                 40             
+            Primary path         10                 10             
+            TI LFA:               Enabled            Enabled        
+            Tie Breaker          Default            Default        
+            Link Protecting      Enabled            Enabled        
+            Line-card disjoint   0                  0              
+            Node protecting      100                100            
+            SRLG disjoint        0                  0              
+        
+        IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 172.18.0.1
+            Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+        
+        LSP transmit timer expires in 0 ms
+        LSP transmission is idle
+        Can send up to 9 back-to-back LSPs in the next 0 ms
+        
+        Underlying Interface List
+            IfName: Hu0/0/0/1 IfIndex: 0x55 
+            
+        
+        TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        TenGigE0/0/0/4/0            Enabled
+        Adjacency Formation:      Enabled
+        Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+        IPv4 BFD:                 Enabled
+        IPv6 BFD:                 Disabled
+        BFD Min Interval:         250
+        BFD Multiplier:           3
+        RSI SRLG:                 Registered
+        Bandwidth:                10000000
+        
+        Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+        Media Type:               P2P
+        Circuit Number:           0
+        Extended Circuit Number:  27
+        Next P2P IIH in:          5 s
+        LSP Rexmit Queue Size:    0
+        
+        Level-2                   
+            Adjacency Count:        1
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+        
+        CLNS I/O
+            Protocol State:         Up
+            MTU:                    9199
+            SNPA:                   008a.960b.0810
+            Layer-2 MCast Groups Membership:
+            All ISs:              Yes
+        
+        IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+            FRR Type:             None               None           
+        
+        IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 172.16.2.133
+            Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+        
+        LSP transmit timer expires in 0 ms
+        LSP transmission is idle
+        Can send up to 9 back-to-back LSPs in the next 0 ms
+        
+        RP/0/RP0/CPU0:genie-Router#
+
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisInterface(device=self.device)
@@ -3353,6 +3889,12 @@ class TestShowIsisInterface(unittest.TestCase):
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_parsed_output_2)
+        obj = ShowIsisInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestShowIsisDatabaseDetail(unittest.TestCase):
     ''' Unit tests for commands/parser:
@@ -4879,6 +5421,173 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10    IS (MT-IPv6) cisco.03
     '''}
 
+    golden_parsed_output_4 = {
+        'instance': {
+            'Genie': {
+                'level': {
+                    2: {
+                        'lspid': {
+                            'core1-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a302',
+                                    'checksum': '0x1a0e',
+                                    'local_router': False,
+                                    'holdtime': 58285,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.57',
+                                'hostname': 'core1-genie',
+                                'router_cap': '10.154.219.57 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.57/32': {
+                                        'ip_prefix': '10.154.219.57',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core2-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'tcore4-genie.00': {
+                                        'metric': 250,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                },
+                            },
+                            'core2-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a15b',
+                                    'checksum': '0xfcfe',
+                                    'local_router': False,
+                                    'holdtime': 60939,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.58',
+                                'hostname': 'core2-genie',
+                                'router_cap': '10.154.219.58 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.58/32': {
+                                        'ip_prefix': '10.154.219.58',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core1-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 250,
+                                    },
+                                },
+                            },
+                            'dis17-genie_RE1.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x00000215',
+                                    'checksum': '0xf5f4',
+                                    'local_router': False,
+                                    'holdtime': 32551,
+                                    'received': 65535,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'tlv': 14,
+                                'tlv_length': 2,
+                                'nlpid': ['0xcc', '0x8e'],
+                                'router_id': '10.154.219.102',
+                                'ip_address': '10.154.219.102',
+                                'hostname': 'dis17-genie_RE1',
+                                'extended_is_neighbor': {
+                                    'tcore4-genie.00': {
+                                        'metric': 100,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 100,
+                                    },
+                                },
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.102/32': {
+                                        'ip_prefix': '10.154.219.102',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'router_cap': '10.154.219.102 D:0 S:0',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show isis database detail
+
+        Mon Oct 22 10:40:56.529 EDT
+
+        IS-IS Genie (Level-2) Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        core1-genie.00-00  0x0000a302   0x1a0e        58285/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.57
+        Hostname:       core1-genie
+        Router Cap:     10.154.219.57 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.57/32
+        Metric: 50         IS-Extended core2-genie.00
+        Metric: 250        IS-Extended tcore4-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        core2-genie.00-00  0x0000a15b   0xfcfe        60939/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.58
+        Hostname:       core2-genie
+        Router Cap:     10.154.219.58 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.58/32
+        Metric: 50         IS-Extended core1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 250        IS-Extended tcore3-genie.00
+        dis17-genie_RE1.00-00  0x00000215   0xf5f4        32551/65535        0/0/0
+        Area Address:   49.0000
+        TLV 14:         Length: 2
+        NLPID:          0xcc
+        NLPID:          0x8e
+        Router ID:      10.154.219.102
+        IP Address:     10.154.219.102
+        Hostname:       dis17-genie_RE1
+        Metric: 100        IS-Extended tcore4-genie.00
+        Metric: 100        IS-Extended tcore3-genie.00
+        Metric: 0          IP-Extended 10.154.219.102/32
+        Router Cap:     10.154.219.102 D:0 S:0
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisDatabaseDetail(device=self.device)
@@ -4902,6 +5611,12 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_output_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()

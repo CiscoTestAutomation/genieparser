@@ -30,8 +30,8 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
             'Ethernet1/1':{
                 'interface': 'Ethernet1/1',
                 'neighbors': {
-                    '2010:2:3::2': {
-                        'ip': '2010:2:3::2',
+                    '2001:db8:c56d:4::2': {
+                        'ip': '2001:db8:c56d:4::2',
                         'link_layer_address': 'fa16.3e82.6320',
                         'age': '00:09:27',
                         'preference': 50,
@@ -42,8 +42,8 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                         'best': 'Yes',
                         'throttled': 'No',
                     },
-                    '2010:2:3::33': {
-                        'ip': '2010:2:3::33',
+                    '2001:db8:c56d:4::33': {
+                        'ip': '2001:db8:c56d:4::33',
                         'link_layer_address': 'aabb.beef.cccc',
                         'age': '2d15h',
                         'preference': 1,
@@ -66,8 +66,8 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                         'best': 'Yes',
                         'throttled': 'No',
                         },
-                    '2010:2:3::34': {
-                        'ip': '2010:2:3::34',
+                    '2001:db8:c56d:4::34': {
+                        'ip': '2001:db8:c56d:4::34',
                         'link_layer_address': 'aaab.beef.ccce',
                         'age': '1d18h',
                         'preference': 1,
@@ -83,8 +83,8 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
             'Ethernet1/2':{
                 'interface': 'Ethernet1/2',
                 'neighbors':{
-                    '2020:2:3::33': {
-                        'ip': '2020:2:3::33',
+                    '2001:db8:c8d1:4::33': {
+                        'ip': '2001:db8:c8d1:4::33',
                         'link_layer_address': 'aaaa.bbbb.cccc',
                         'age': '2d15h',
                         'preference': 1,
@@ -142,7 +142,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
         IPv6 Adjacency Table for all VRFs
         Total number of entries: 11
 
-        Address :            2010:2:3::2
+        Address :            2001:db8:c56d:4::2
         Age :                00:09:27
         MacAddr :            fa16.3e82.6320
         Preference :         50
@@ -154,7 +154,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
         Best :               Yes
         Throttled :           No
 
-        Address :            2010:2:3::33
+        Address :            2001:db8:c56d:4::33
         Age :                   2d15h
         MacAddr :            aabb.beef.cccc
         Preference :         1
@@ -166,7 +166,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
         Best :               Yes
         Throttled :           No
 
-        Address :            2010:2:3::34
+        Address :            2001:db8:c56d:4::34
         Age :                   1d18h
         MacAddr :            aaab.beef.ccce
         Preference :         1
@@ -191,7 +191,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
         Throttled :          No
 
 
-        Address :            2020:2:3::33
+        Address :            2001:db8:c8d1:4::33
         Age :                   2d15h
         MacAddr :            aaaa.bbbb.cccc
         Preference :         1
@@ -227,7 +227,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
         ICMPv6 ND Interfaces for VRF "default"
         Ethernet1/1, Interface status: protocol-up/link-up/admin-up
         IPv6 address:
-            2010:2:3::3/64 [VALID]
+            2001:db8:c56d:4::3/64 [VALID]
         IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         ND mac-extract : Disabled
         ICMPv6 active timers:
@@ -261,7 +261,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
             Current DAD attempt : 1
         Ethernet1/3, Interface status: protocol-up/link-up/admin-up
         IPv6 address:
-            2010:1:3::3/64 [VALID]
+            2001:db8:c56d:1::3/64 [VALID]
         IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         ND mac-extract : Disabled
         ICMPv6 active timers:
@@ -367,7 +367,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
         ICMPv6 ND Interfaces for VRF "vrf1"
         Ethernet1/2, Interface status: protocol-up/link-up/admin-up
         IPv6 address:
-            2020:2:3::3/64 [VALID]
+            2001:db8:c8d1:4::3/64 [VALID]
         IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         ND mac-extract : Disabled
         ICMPv6 active timers:
@@ -401,7 +401,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
             Current DAD attempt : 1
         Ethernet1/4, Interface status: protocol-up/link-up/admin-up
         IPv6 address:
-            2020:1:3::3/64 [VALID]
+            2001:db8:c8d1:1::3/64 [VALID]
         IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         ND mac-extract : Disabled
         ICMPv6 active timers:
@@ -472,7 +472,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
                         },
                         "enable": True,
                         "link_status": "up",
-                        "ip": "2020:2:3::3/64",
+                        "ip": "2001:db8:c8d1:4::3/64",
                         "mac_extract": "disabled",
                         "active_timers": {
                             "last_router_advertisement": "00:05:42",
@@ -515,7 +515,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
                         },
                         "enable": True,
                         "link_status": "up",
-                        "ip": "2020:1:3::3/64",
+                        "ip": "2001:db8:c8d1:1::3/64",
                         "mac_extract": "disabled",
                         "active_timers": {
                             "last_router_advertisement": "00:08:09",
@@ -605,7 +605,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
                         },
                         "enable": True,
                         "link_status": "up",
-                        "ip": "2010:2:3::3/64",
+                        "ip": "2001:db8:c56d:4::3/64",
                         "mac_extract": "disabled",
                         "active_timers": {
                             "last_router_advertisement": "1d18h",
@@ -648,7 +648,7 @@ class test_show_ipv6_nd_interface(unittest.TestCase):
                         },
                         "enable": True,
                         "link_status": "up",
-                        "ip": "2010:1:3::3/64",
+                        "ip": "2001:db8:c56d:1::3/64",
                         "mac_extract": "disabled",
                         "active_timers": {
                             "last_router_advertisement": "00:01:33",
@@ -829,16 +829,16 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
 
         ICMPv6 Adjacency Table for all VRFs
         Address         Age       MAC Address     State      Interface  Phy-Interface
-        2010:2:3::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
+        2001:db8:c56d:4::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
         fe80::f816:3eff:fe82:6320
                         00:18:33  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
-        2020:2:3::2     00:03:30  fa16.3e8b.59c9  STALE       Eth1/2      Eth1/2
+        2001:db8:c8d1:4::2     00:03:30  fa16.3e8b.59c9  STALE       Eth1/2      Eth1/2
         fe80::f816:3eff:fe8b:59c9
                         00:14:19  fa16.3e8b.59c9  STALE       Eth1/2      Eth1/2
-        2010:1:3::1     00:15:31  fa16.3e19.8682  STALE       Eth1/3      Eth1/3
+        2001:db8:c56d:1::1     00:15:31  fa16.3e19.8682  STALE       Eth1/3      Eth1/3
         fe80::f816:3eff:fe19:8682
                         00:15:31  fa16.3e19.8682  STALE       Eth1/3      Eth1/3
-        2020:1:3::1     00:07:58  fa16.3ec7.8140  STALE       Eth1/4      Eth1/4
+        2001:db8:c8d1:1::1     00:07:58  fa16.3ec7.8140  STALE       Eth1/4      Eth1/4
         fe80::f816:3eff:fec7:8140
                         00:02:41  fa16.3ec7.8140  STALE       Eth1/4      Eth1/4
     '''}
@@ -854,10 +854,10 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
                         "link_layer_address": "fa16.3ec7.8140",
                         "physical_interface": "Ethernet1/4"
                     },
-                    "2020:1:3::1": {
+                    "2001:db8:c8d1:1::1": {
                         "neighbor_state": "stale",
                         "age": "00:07:58",
-                        "ip": "2020:1:3::1",
+                        "ip": "2001:db8:c8d1:1::1",
                         "link_layer_address": "fa16.3ec7.8140",
                         "physical_interface": "Ethernet1/4"
                     }
@@ -866,10 +866,10 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
             },
             "Ethernet1/2": {
                 "neighbors": {
-                    "2020:2:3::2": {
+                    "2001:db8:c8d1:4::2": {
                         "neighbor_state": "stale",
                         "age": "00:03:30",
-                        "ip": "2020:2:3::2",
+                        "ip": "2001:db8:c8d1:4::2",
                         "link_layer_address": "fa16.3e8b.59c9",
                         "physical_interface": "Ethernet1/2"
                     },
@@ -892,10 +892,10 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
                         "link_layer_address": "fa16.3e82.6320",
                         "physical_interface": "Ethernet1/1"
                     },
-                    "2010:2:3::2": {
+                    "2001:db8:c56d:4::2": {
                         "neighbor_state": "stale",
                         "age": "00:15:02",
-                        "ip": "2010:2:3::2",
+                        "ip": "2001:db8:c56d:4::2",
                         "link_layer_address": "fa16.3e82.6320",
                         "physical_interface": "Ethernet1/1"
                     }
@@ -904,10 +904,10 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
             },
             "Ethernet1/3": {
                 "neighbors": {
-                    "2010:1:3::1": {
+                    "2001:db8:c56d:1::1": {
                         "neighbor_state": "stale",
                         "age": "00:15:31",
-                        "ip": "2010:1:3::1",
+                        "ip": "2001:db8:c56d:1::1",
                         "link_layer_address": "fa16.3e19.8682",
                         "physical_interface": "Ethernet1/3"
                     },
@@ -983,7 +983,7 @@ class test_show_ipv6_routers(unittest.TestCase):
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
-      Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
+      Prefix 2001:db8:c56d:4::/64  onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
 
 
@@ -991,9 +991,9 @@ class test_show_ipv6_routers(unittest.TestCase):
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
-      Prefix 2020:2:3::/64  onlink_flag 1 autonomous_flag 1
+      Prefix 2001:db8:c8d1:4::/64  onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
-      Prefix 2020:2:2::/64   onlink_flag 1 autonomous_flag 1
+      Prefix 2001:db8:888c:4::/64   onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
 
 
@@ -1001,7 +1001,7 @@ class test_show_ipv6_routers(unittest.TestCase):
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
-      Prefix 2010:1:3::/64  onlink_flag 1 autonomous_flag 1
+      Prefix 2001:db8:c56d:1::/64  onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
 
 
@@ -1009,7 +1009,7 @@ class test_show_ipv6_routers(unittest.TestCase):
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
-      Prefix 2020:1:3::/64  onlink_flag 1 autonomous_flag 1
+      Prefix 2001:db8:c8d1:1::/64  onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
     '''}
 
@@ -1031,7 +1031,7 @@ class test_show_ipv6_routers(unittest.TestCase):
                         "other_flag": 0,
                         "reachable_time": 0,
                         "prefix": {
-                            "2010:1:3::/64": {
+                            "2001:db8:c56d:1::/64": {
                                 "preferred_lifetime": 604800,
                                 "valid_lifetime": 2592000,
                                 "autonomous_flag": 1,
@@ -1058,7 +1058,7 @@ class test_show_ipv6_routers(unittest.TestCase):
                         "other_flag": 0,
                         "reachable_time": 0,
                         "prefix": {
-                            "2010:2:3::/64": {
+                            "2001:db8:c56d:4::/64": {
                                 "preferred_lifetime": 604800,
                                 "valid_lifetime": 2592000,
                                 "autonomous_flag": 1,
@@ -1085,7 +1085,7 @@ class test_show_ipv6_routers(unittest.TestCase):
                         "other_flag": 0,
                         "reachable_time": 0,
                         "prefix": {
-                            "2020:1:3::/64": {
+                            "2001:db8:c8d1:1::/64": {
                                 "preferred_lifetime": 604800,
                                 "autonomous_flag": 1,
                                 "valid_lifetime": 2592000,
@@ -1112,13 +1112,13 @@ class test_show_ipv6_routers(unittest.TestCase):
                         "other_flag": 0,
                         "reachable_time": 0,
                         "prefix": {
-                            "2020:2:3::/64": {
+                            "2001:db8:c8d1:4::/64": {
                                 "preferred_lifetime": 604800,
                                 "onlink_flag": 1,
                                 "valid_lifetime": 2592000,
                                 "autonomous_flag": 1,
                             },
-                            "2020:2:2::/64": {
+                            "2001:db8:888c:4::/64": {
                                 "preferred_lifetime": 604800,
                                 "onlink_flag": 1,
                                 "valid_lifetime": 2592000,

@@ -56,8 +56,8 @@ class test_show_hsrp_summary(unittest.TestCase):
 
         Total Groups: 3
              Version::    V1-IPV4: 0       V2-IPV4: 3      V2-IPV6: 0   
-               State::     Active: 0       Standby: 0       Listen: 0   
-               State::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0   
+               Stat2001:db8:c4::     Active: 0       Standby: 0       Listen: 0   
+               Stat2001:db8:c4::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0   
 
         Total HSRP Enabled interfaces: 1
 
@@ -224,8 +224,8 @@ class test_show_hsrp_all(unittest.TestCase):
                                     'authentication': 'cisco',
                                     'configured_priority': 100,
                                     'global_ipv6_addresses':
-                                        {'192:168::1':
-                                            {'address': '192:168::1'
+                                        {'2001:db8:7746:fa41::1':
+                                            {'address': '2001:db8:7746:fa41::1'
                                       }
                                     },
                                     'group_number': 2,
@@ -237,7 +237,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                     'lower_fwd_threshold': 0,
                                     'num_state_changes': 2,
                                     'priority': 100,
-                                    'secondary_vips': ['192:168::1'],
+                                    'secondary_vips': ['2001:db8:7746:fa41::1'],
                                     'session_name': 'hsrp-Eth1/3-2-V6',
                                     'standby_expire': 8.96,
                                     'standby_ipv6_address': 'fe80::20c:29ff:fe69:14bb',
@@ -300,7 +300,7 @@ class test_show_hsrp_all(unittest.TestCase):
         2 state changes, last state change 02:43:40
         IP redundancy name is hsrp-Eth1/3-2-V6 (default)
         Secondary VIP(s):
-                        192:168::1
+                        2001:db8:7746:fa41::1
       '''}
 
     golden_parsed_output_3 = {
