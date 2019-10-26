@@ -13,8 +13,23 @@ to add the following to their setup() invocation:
 
     where <packagename> is the name of their specific package
           <module> is the module within their package that contains the function
-          <function> is a callable that calls the add_parser() function for each
-            parser the developer wants to add into the genie framework
+          <function> is a callable that returns a dictionary of parsers
+
+Notes
+-----
+The following is an example User provided function that returns a dictionary of
+parser to be added into the genie framework.  The key is the os_name, for
+example 'nxos', and the value is a list of MetaParser class definitions.
+
+    def add_my_parsers():
+        return {
+            'iosxe': [
+                iosxe.show_interface_transceiver.ShowInterfaceTransceiver
+            ],
+            'nxos': [
+                nxos.show_interface_transceiver.ShowInterfaceTransceiver
+            ]
+        }
 
 """
 
