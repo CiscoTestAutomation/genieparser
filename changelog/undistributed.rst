@@ -15,8 +15,8 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* IOSXE
-    * Enhanced ShowFix;
-        * Updated my code
-        * Fixed bad code i wrote before
+* IOSXR
+    * Enhanced ShowBgpInstanceNeighborsReceivedRoutes;
+        * Updated code to support various outputs
+        * Added unittest corresponding to the new supported output
 

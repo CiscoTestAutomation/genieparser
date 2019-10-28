@@ -5599,7 +5599,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
 # ==============================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> received routes'
 # ==============================================================================
@@ -6210,6 +6209,130 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Processed 1 prefixes, 1 paths
         '''}
 
+    golden_parsed_output_2 = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "l2vpn evpn": {
+                            "router_identifier": "1.1.1.1",
+                            "local_as": 12354,
+                            "generic_scan_interval": 60,
+                            "non_stop_routing": True,
+                            "table_state": "active",
+                            "table_id": "0x0",
+                            "rd_version": 11111,
+                            "routing_table_version": 11111,
+                            "nsr_initial_initsync_version": "1",
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "scan_interval": 60,
+                            "routes": {
+                                "[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "1.1.1.1",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[V][L2][I2x2][N[c5678][b0.0.0.0][s05.5.5.5]]/328": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "2.2.2.2",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[E][L2][I3x3][N[c9124][b0.0.0.0][s02.2.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "3.3.3.3",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[T][L2][I4x4][N[c4567][b0.0.0.0][s6.6.6.00]][P[p67.70.219.57/32]]/400": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "4.4.4.4",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                }
+                            },
+                            "processed_prefixes": 4,
+                            "processed_paths": 2
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output_2 = {'execute.return_value': '''
+        Fri Oct 25 18:08:45.287 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: IPv4 Unicast
+        ----------------------------
+
+
+        Address Family: L2VPN EVPN
+        --------------------------
+
+
+        Address Family: Link-state Link-state
+        ------------------------------------
+
+        BGP router identifier 1.1.1.1, local AS number 12354
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 11111
+        BGP main routing table version 11111
+        BGP NSR Initial initsync version 1 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Prefix codes: E link, V node, T IP reacheable route, u/U unknown
+                      I Identifier, N local node, R remote node, L link, P prefix
+                      L1/L2 ISIS level-1/level-2, O OSPF, D direct, S static/peer-node
+                      a area-ID, l link-ID, t topology-ID, s ISO-ID,
+                      c confed-ID/ASN, b bgp-identifier, r router-ID,
+                      i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+                      d designated router address
+           Network            Next Hop            Metric LocPrf Weight Path
+        *>i[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328
+                              1.1.1.1                  100      0 i
+        *>i[V][L2][I2x2][N[c5678][b0.0.0.0][s05.5.5.5]]/328
+                              2.2.2.2                  100      0 i
+        *>i[E][L2][I3x3][N[c9124][b0.0.0.0][s02.2.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696
+                              3.3.3.3                  100      0 i
+        *>i[T][L2][I4x4][N[c4567][b0.0.0.0][s6.6.6.00]][P[p67.70.219.57/32]]/400
+                              4.4.4.4                  100      0 i
+        Processed 4 prefixes, 2 paths
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
@@ -6229,6 +6352,13 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
         parsed_output = obj.parse(vrf_type='all', neighbor='192.168.0.4')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
+        parsed_output = obj.parse(vrf_type='all', neighbor='1.1.1.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 # =====================================================
 # Unit test for 'show bgp instance all all all summary'
