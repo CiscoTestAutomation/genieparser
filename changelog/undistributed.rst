@@ -23,3 +23,10 @@
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
 
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessions
+        * Changed keyword to Optional
+        

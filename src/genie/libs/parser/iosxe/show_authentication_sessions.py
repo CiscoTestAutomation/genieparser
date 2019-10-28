@@ -181,7 +181,7 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                             Optional('security_policy'): str,
                             Optional('security_status'): str,
                         },
-                        'method_status': {
+                        Optional('method_status'): {
                             Any(): {
                                 'method': str,
                                 'state': str,
@@ -258,6 +258,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         #   Security Status:  Link Unsecure
         p10 = re.compile(r'^Security +(?P<security_name>\S+): +(?P<policy_status>[\S ]+)$')
 
+        # IPv6 Address: fe80::2119:3248:786b:40db
+        # IPv6 Address: fe80:0000:0000:0000:0204:61ff:fe9d:f156
+        # IPv6 Address: fe80:0:0:0:204:61ff:fe9d:f156
+        # IPv6 Address: fe80::204:61ff:fe9d:f156
+        # IPv6 Address: fe80::204:61ff
+        # IPv6 Address: fe9d:f156::1
+        p11 = re.compile(r'^IPv6 +Address\: +(?P<ipv6>([[0-9a-f:A-F]+)(\:[0-9]+)?)$')
+
         # initial return dictionary
         ret_dict = {}
         hold_dict = {}
@@ -272,7 +280,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
             #   Security Policy:  Should Secure
             #   Security Status:  Link Unsecure
-
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -349,10 +356,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(group['value'], \
                                                                                  {}).setdefault('mac_address', {})
 
-                # else:
-                #     if key != 'interface':
-                #         hold_dict.update({group['value']: key})
-
                 continue
 
             # Template: CRITICAL_VLAN (priority 150)
@@ -382,6 +385,18 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 method_stat = mac_dict.setdefault('method_status', {}).setdefault(group['method'], {})
                 method_stat.update({'method': group['method']})
                 method_stat.update({'state': group['state']})
+                continue
+
+            # IPv6 Address: fe80::2119:3248:786b:40db
+            # IPv6 Address: fe80:0000:0000:0000:0204:61ff:fe9d:f156
+            # IPv6 Address: fe80:0:0:0:204:61ff:fe9d:f156
+            # IPv6 Address: fe80::204:61ff:fe9d:f156
+            # IPv6 Address: fe80::204:61ff
+            # IPv6 Address: fe9d:f156::1
+            m11 = p11.match(line)
+            if m11:
+                mac_dict.update({'ipv6_address': m11.groupdict()['ipv6']})
+
                 continue
 
         return ret_dict
