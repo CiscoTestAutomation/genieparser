@@ -7,7 +7,105 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
-                                         
+
+# ====================================================
+#  distributor class for show ip route
+# ====================================================
+class ShowIpRouteDistributor(MetaParser):
+    """distributor class for show ip route"""
+    cli_command = ['show ip route vrf {vrf}',
+                   'show ip route vrf {vrf} {route}',
+                   'show ip route vrf {vrf} {protocol}',
+                   'show ip route',
+                   'show ip route {route}',
+                   'show ip route {protocol}']
+
+    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+
+    def cli(self, vrf=None, route=None, protocol=None, output=None):
+
+        if output is None:
+            if vrf and protocol:
+                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
+            elif vrf and route:
+                cmd = self.cli_command[1].format(vrf=vrf, route=route)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.cli_command[5].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[4].format(route=route)
+            else:
+                cmd = self.cli_command[3]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not route:
+            parser = ShowIpRoute(self.device)
+            self.schema = parser.schema
+            return parser.parse(output=out)
+
+        else:
+            parser = ShowIpRouteWord(self.device)
+            self.schema=parser.schema
+            return parser.parse(output=out)
+
+# ====================================================
+#  distributor class for show ipv6 route
+# ====================================================
+class ShowIpv6RouteDistributor(MetaParser):
+    """distributor class for show ipv6 route"""
+    cli_command = ['show ipv6 route vrf {vrf}',
+                   'show ipv6 route vrf {vrf} {route}',
+                   'show ipv6 route vrf {vrf} {protocol}',
+                   'show ipv6 route',
+                   'show ipv6 route {route}',
+                   'show ipv6 route {protocol}',
+                   'show ipv6 route interface {interface}',
+                   'show ipv6 route vrf {vrf} interface {interface}']
+
+    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+
+    def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
+        
+        if output is None:
+
+            if vrf and route:
+                cmd = self.cli_command[1].format(vrf=vrf, route=route)
+            elif vrf and protocol:
+                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
+            elif vrf and interface:
+                cmd = self.cli_command[7].format(vrf=vrf, interface=interface)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif route:
+                cmd = self.cli_command[4].format(route=route)
+            elif protocol:
+                cmd = self.cli_command[5].format(protocol=protocol)
+            elif interface:
+                cmd = self.cli_command[6].format(interface=interface)
+            else:
+                cmd = self.cli_command[3]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        if not vrf:
+            vrf = 'default'
+
+        if (route or protocol) in self.protocol_set or (not route and not protocol):
+            parser = ShowIpv6Route(self.device)
+            self.schema = parser.schema
+            return parser.parse(vrf=vrf, protocol=protocol, output=out)
+
+        else:
+            parser = ShowIpv6RouteWord(self.device)
+            self.schema=parser.schema
+            return parser.parse(vrf=vrf, route=route, output=out)
+
 # ====================================================
 #  schema for show ip route
 # ====================================================
@@ -522,13 +620,16 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for:
         show ipv6 route
         show ipv6 route vrf <vrf>"""
-    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {protocol}',
-               'show ipv6 route', 'show ipv6 route {protocol}']
+    command = ['show ipv6 route vrf {vrf}', 
+                'show ipv6 route vrf {vrf} {protocol}',
+               'show ipv6 route', 
+               'show ipv6 route {protocol}',
+               'show ipv6 route interface {interface}']
     exclude = ['uptime']
 
     IP_VER = 'ipv6'
-    def cli(self, vrf=None, protocol=None, output=None):
-        self.IP_VER = 'ipv6'
+    def cli(self, vrf=None, protocol=None, interface=None, output=None):
+        
         if output is None:
             if vrf and protocol:
                 cmd = self.command[1].format(vrf=vrf, protocol=protocol)
@@ -536,6 +637,8 @@ class ShowIpv6Route(ShowIpRoute):
                 cmd = self.command[0].format(vrf=vrf)
             elif protocol:
                 cmd = self.command[3].format(protocol=protocol)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
                 cmd = self.command[2]
             out = self.device.execute(cmd)
@@ -600,7 +703,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
     cli_command = ['show ipv6 route vrf {vrf} updated', 'show ipv6 route updated']
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf=None, output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -958,8 +1061,11 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
     """Parser for :
        show ip route <Hostname or A.B.C.D>
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {route}',
-                   'show ip route', 'show ip route {route}']
+    command = ['show ip route vrf {vrf}', 
+                'show ip route vrf {vrf} {route}',
+                'show ip route', 
+                'show ip route {route}',
+                'show ip route interface {interface}']
     IP_VER = 'ip'
 
     def cli(self, route=None, vrf=None, output=None):
@@ -971,6 +1077,8 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 cmd = self.command[3].format(route=route)
             elif vrf:
                 cmd = self.command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
                 cmd = self.command[2].format()
             out = self.device.execute(cmd)
@@ -1299,11 +1407,14 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
     """Parser for :
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {route}',
-                   'show ipv6 route', 'show ipv6 route {route}']
+    command = ['show ipv6 route vrf {vrf}', 
+                'show ipv6 route vrf {vrf} {route}',
+                'show ipv6 route', 
+                'show ipv6 route {route}',
+                'show ipv6 route interface {interface}']
     IP_VER = 'ipv6'
 
-    def cli(self, route=None, vrf=None, output=None):
+    def cli(self, route=None, vrf=None, interface=None, output=None):
         
         if output is None:
             if vrf and route:
@@ -1312,6 +1423,8 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
                 cmd = self.command[0].format(vrf=vrf)
             elif route:
                 cmd = self.command[3].format(route=route)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
                 cmd = self.command[2]
             out = self.device.execute(cmd)
