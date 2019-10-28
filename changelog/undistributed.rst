@@ -19,4 +19,7 @@
     * Enhanced ShowBgpInstanceNeighborsReceivedRoutes;
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
+    * Enhanced ShowBgpInstanceSummary;
+        * Updated code to support various outputs
+        * Added unittest corresponding to the new supported output
 

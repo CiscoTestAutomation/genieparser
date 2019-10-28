@@ -6493,6 +6493,122 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         10.36.3.3           0   100      68      58       43    0    0 00:47:11         10
         '''}
 
+    golden_parsed_output_1 = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "HI-TST": {
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "route_distinguisher": "2.2.2.2:0",
+                            "vrf_id": "0x60000001",
+                            "router_id": "1.1.1.1",
+                            "local_as": 64577,
+                            "non_stop_routing": "enabled",
+                            "table_state": "active",
+                            "table_id": "0xe0011110",
+                            "rd_version": 19,
+                            "bgp_table_version": 1,
+                            "nsr_initial_initsync_version": 18,
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "operation_mode": "standalone",
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 1,
+                                    "brib_rib": 1,
+                                    "labelver": 1,
+                                    "importver": 1,
+                                    "sendtblver": 1,
+                                    "standbyver": 0
+                                }
+                            }
+                        }
+                    }
+                },
+                "CTV-BG-JYI": {
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "route_distinguisher": "2.3.4.5:1",
+                            "vrf_id": "0x60000004",
+                            "router_id": "1.1.1.1",
+                            "local_as": 12345,
+                            "non_stop_routing": "enabled",
+                            "table_state": "active",
+                            "table_id": "0xe0011114",
+                            "rd_version": 1,
+                            "bgp_table_version": 1,
+                            "nsr_initial_initsync_version": 18,
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "operation_mode": "standalone",
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 1,
+                                    "brib_rib": 1,
+                                    "labelver": 1,
+                                    "importver": 1,
+                                    "sendtblver": 1,
+                                    "standbyver": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output_1 = {'execute.return_value': '''
+        show bgp instance all vrf all ipv4 unicast summary
+
+        Fri Oct 25 18:08:37.602 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: HI-TST
+        -----------
+        BGP VRF HI-TST, state: Active
+        BGP Route Distinguisher: 2.2.2.2:0
+        VRF ID: 0x60000001
+        BGP router identifier 1.1.1.1, local AS number 64577
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011110  RD version: 19
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0
+
+
+        VRF: CTV-BG-JYI
+        ---------------
+        BGP VRF CTV-BG-JYI, state: Active
+        BGP Route Distinguisher: 2.3.4.5:1
+        VRF ID: 0x60000004
+        BGP router identifier 1.1.1.1, local AS number 12345
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011114   RD version: 1
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0
+
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
@@ -6506,6 +6622,12 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
        self.maxDiff = None
        self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_1(self):
+       self.device = Mock(**self.golden_output_1)
+       bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+       parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', address_family='ipv4 unicast')
+       self.maxDiff = None
+       self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 # =====================================================
 # Unit test for 'show bgp instance all vrf all summary'

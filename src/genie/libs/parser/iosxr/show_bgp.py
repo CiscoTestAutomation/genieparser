@@ -4374,7 +4374,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             out = output
         p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
                         ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
-        p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
+        p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
                         ' *(?P<address_family>[a-zA-Z0-9\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
