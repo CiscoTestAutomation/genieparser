@@ -1,5 +1,6 @@
 #!/bin/env python
 import unittest
+
 from unittest.mock import Mock
 # ATS
 from ats.topology import Device
@@ -9,7 +10,6 @@ from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
 
 from genie.libs.parser.iosxe.show_ip_nat import (ShowIpNatTranslations,
                                                 ShowIpNatStatistics)
-
 
 ####################################################
 # Unit test for:
@@ -31,28 +31,30 @@ class TestShowIpNatTranslations(unittest.TestCase):
     }
 
     golden_parsed_output = {
-        'nat_translations': {
-            'index': {
-                1: {
-                    'inside_global': '10.5.5.1:1025',
-                    'inside_local': '192.0.2.1:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
-                },
-                2: {
-                    'inside_global': '10.5.5.1:1024',
-                    'inside_local': '192.0.2.3:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
-                },
-                3: {
-                    'inside_global': '10.5.5.1:1026',
-                    'inside_local': '192.0.2.2:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
+        'vrf': {
+            'default': {
+                'index': {
+                    1: {
+                        'inside_global': '10.5.5.1:1025',
+                        'inside_local': '192.0.2.1:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
+                    },
+                    2: {
+                        'inside_global': '10.5.5.1:1024',
+                        'inside_local': '192.0.2.3:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
+                    },
+                    3: {
+                        'inside_global': '10.5.5.1:1026',
+                        'inside_local': '192.0.2.2:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
+                    }
                 }
             },
             'number_of_translations': 3
@@ -69,21 +71,23 @@ class TestShowIpNatTranslations(unittest.TestCase):
     }
 
     golden_parsed_output_1 = {
-        'nat_translations': {
-            'index': {
-                1: {
-                    'inside_global': '171.69.233.209',
-                    'inside_local': '192.168.1.95',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': '---'
-                },
-                2: {
-                    'inside_global': '171.69.233.210',
-                    'inside_local': '192.168.1.89',
-                    'outside_global': '--',
-                    'outside_local': '---',
-                    'protocol': '---'
+        'vrf': {
+            'default': { 
+                'index': {
+                    1: {
+                        'inside_global': '171.69.233.209',
+                        'inside_local': '192.168.1.95',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    2: {
+                        'inside_global': '171.69.233.210',
+                        'inside_local': '192.168.1.89',
+                        'outside_global': '--',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    }
                 }
             },
             'number_of_translations': 2
@@ -100,28 +104,30 @@ class TestShowIpNatTranslations(unittest.TestCase):
     }
 
     golden_parsed_output_2 = {
-        'nat_translations': {
-            'index': {
-                1: {
-                    'inside_global': '171.69.233.209:1220',
-                    'inside_local': '192.168.1.95:1220',
-                    'outside_global': '171.69.2.132:53',
-                    'outside_local': '171.69.2.132:53',
-                    'protocol': 'udp'
-                },
-                2: {
-                    'inside_global': '171.69.233.209:11012',
-                    'inside_local': '192.168.1.89:11012',
-                    'outside_global': '171.69.1.220:23',
-                    'outside_local': '171.69.1.220:23',
-                    'protocol': 'tcp'
-                },
-                3: {
-                    'inside_global': '171.69.233.209:1067',
-                    'inside_local': '192.168.1.95:1067',
-                    'outside_global': '171.69.1.161:23',
-                    'outside_local': '171.69.1.161:23',
-                    'protocol': 'tcp'
+        'vrf': {
+            'default': {
+                'index': {
+                    1: {
+                        'inside_global': '171.69.233.209:1220',
+                        'inside_local': '192.168.1.95:1220',
+                        'outside_global': '171.69.2.132:53',
+                        'outside_local': '171.69.2.132:53',
+                        'protocol': 'udp'
+                    },
+                    2: {
+                        'inside_global': '171.69.233.209:11012',
+                        'inside_local': '192.168.1.89:11012',
+                        'outside_global': '171.69.1.220:23',
+                        'outside_local': '171.69.1.220:23',
+                        'protocol': 'tcp'
+                    },
+                    3: {
+                        'inside_global': '171.69.233.209:1067',
+                        'inside_local': '192.168.1.95:1067',
+                        'outside_global': '171.69.1.161:23',
+                        'outside_local': '171.69.1.161:23',
+                        'protocol': 'tcp'
+                    }
                 }
             },
             'number_of_translations': 3
@@ -155,61 +161,290 @@ class TestShowIpNatTranslations(unittest.TestCase):
     }
 
     golden_parsed_output_3 = {
-        'nat_translations': {
-            'index': {
-                1: {
-                    'details': {
-                        'create': '02/15/12 11:38:01',
-                        'entry_id': '0x0',
-                        'input_idb': 'TenGigabitEthernet1/1/0',
-                        'mac_address': '0000.0000.0000',
-                        'map_id_in': 1,
-                        'timeout': '00:00:00',
-                        'use': '02/15/12 11:39:02',
-                        'use_count': 1
+        'vrf': {
+            'default': {
+                'index': {
+                    1: {
+                        'details': {
+                            'create': '02/15/12 11:38:01',
+                            'entry_id': '0x0',
+                            'input_idb': 'TenGigabitEthernet1/1/0',
+                            'mac_address': '0000.0000.0000',
+                            'map_id_in': 1,
+                            'timeout': '00:00:00',
+                            'use': '02/15/12 11:39:02',
+                            'use_count': 1
+                        },
+                        'inside_global': '10.5.5.1:1025',
+                        'inside_local': '192.0.2.1:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
                     },
-                    'inside_global': '10.5.5.1:1025',
-                    'inside_local': '192.0.2.1:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
-                },
-                2: {
-                    'details': {
-                        'create': '02/15/12 11:38:00',
-                        'entry_id': '0x0',
-                        'input_idb': 'TenGigabitEthernet1/1/0',
-                        'mac_address': '0000.0000.0000',
-                        'map_id_in': 1,
-                        'timeout': '00:00:00',
-                        'use': '02/15/12 11:39:02',
-                        'use_count': 1
+                    2: {
+                        'details': {
+                            'create': '02/15/12 11:38:00',
+                            'entry_id': '0x0',
+                            'input_idb': 'TenGigabitEthernet1/1/0',
+                            'mac_address': '0000.0000.0000',
+                            'map_id_in': 1,
+                            'timeout': '00:00:00',
+                            'use': '02/15/12 11:39:02',
+                            'use_count': 1
+                        },
+                        'inside_global': '10.5.5.1:1024',
+                        'inside_local': '192.0.2.3:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
                     },
-                    'inside_global': '10.5.5.1:1024',
-                    'inside_local': '192.0.2.3:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
-                },
-                3: {
-                    'details': {
-                        'create': '02/15/12 11:38:00',
-                        'entry_id': '0x0',
-                        'input_idb': 'TenGigabitEthernet1/1/0',
-                        'mac_address': '0000.0000.0000',
-                        'map_id_in': 1,
-                        'timeout': '00:00:00',
-                        'use': '02/15/12 11:39:02',
-                        'use_count': 1
-                    },
-                    'inside_global': '10.5.5.1:1026',
-                    'inside_local': '192.0.2.2:4000',
-                    'outside_global': '---',
-                    'outside_local': '---',
-                    'protocol': 'udp'
+                    3: {
+                        'details': {
+                            'create': '02/15/12 11:38:00',
+                            'entry_id': '0x0',
+                            'input_idb': 'TenGigabitEthernet1/1/0',
+                            'mac_address': '0000.0000.0000',
+                            'map_id_in': 1,
+                            'timeout': '00:00:00',
+                            'use': '02/15/12 11:39:02',
+                            'use_count': 1
+                        },
+                        'inside_global': '10.5.5.1:1026',
+                        'inside_local': '192.0.2.2:4000',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': 'udp'
+                    }
                 }
             },
             'number_of_translations': 3
+        }
+    }
+
+    golden_output_vrf = {'execute.return_value': '''
+        Router# show ip nat translations vrf abc
+        Pro Inside global Inside local Outside local Outside global
+        --- 2.2.2.1 192.168.121.113 --- ---
+        --- 2.2.2.2 192.168.122.49 --- ---
+        --- 2.2.2.11 192.168.11.1 --- ---
+        --- 2.2.2.12 192.168.11.3 --- ---
+        --- 2.2.2.13 140.48.5.20 --- ---
+
+        Pro Inside global Inside local Outside local Outside global
+        --- 2.2.2.3 192.168.121.113 --- ---
+        --- 2.2.2.4 192.168.22.49 --- ---
+    '''
+    }
+
+    golden_parsed_output_vrf = {
+        'vrf': {
+            'default': {
+                'index': {
+                    1: {
+                        'inside_global': '2.2.2.1',
+                        'inside_local': '192.168.121.113',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    2: {
+                        'inside_global': '2.2.2.2',
+                        'inside_local': '192.168.122.49',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    3: {
+                        'inside_global': '2.2.2.11',
+                        'inside_local': '192.168.11.1',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    4: {
+                        'inside_global': '2.2.2.12',
+                        'inside_local': '192.168.11.3',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    5: {
+                        'inside_global': '2.2.2.13',
+                        'inside_local': '140.48.5.20',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    6: {
+                        'inside_global': '2.2.2.3',
+                        'inside_local': '192.168.121.113',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    },
+                    7: {
+                        'inside_global': '2.2.2.4',
+                        'inside_local': '192.168.22.49',
+                        'outside_global': '---',
+                        'outside_local': '---',
+                        'protocol': '---'
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_vrf_1 = {'execute.return_value': '''
+        ISRG2#show ip nat translations vrf T172
+        Pro Inside global      Inside local       Outside local      Outside global
+        icmp 192.168.33.28:228 172.25.0.1:228     192.168.33.1:228   192.168.33.1:228
+        icmp 192.168.33.28:229 172.25.0.1:229     192.168.33.28:229  192.168.33.28:229
+        icmp 192.168.33.28:230 172.25.0.1:230     8.8.8.8:230        8.8.8.8:230
+        icmp 192.168.33.28:231 172.25.0.1:231     198.80.55.1:231    198.80.55.1:231
+        icmp 192.168.33.28:27432 172.25.0.2:27432 8.8.8.8:27432      8.8.8.8:27432
+    '''
+    }
+
+    golden_parsed_output_vrf_1 = {
+        'vrf': {
+            'default': {
+                'index': {
+                    1: {
+                        'inside_global': '192.168.33.28:228',
+                        'inside_local': '172.25.0.1:228',
+                        'outside_global': '192.168.33.1:228',
+                        'outside_local': '192.168.33.1:228',
+                        'protocol': 'icmp'
+                    },
+                    2: {
+                        'inside_global': '192.168.33.28:229',
+                        'inside_local': '172.25.0.1:229',
+                        'outside_global': '192.168.33.28:229',
+                        'outside_local': '192.168.33.28:229',
+                        'protocol': 'icmp'
+                    },
+                    3: {
+                        'inside_global': '192.168.33.28:230',
+                        'inside_local': '172.25.0.1:230',
+                        'outside_global': '8.8.8.8:230',
+                        'outside_local': '8.8.8.8:230',
+                        'protocol': 'icmp'
+                    },
+                    4: {
+                        'inside_global': '192.168.33.28:231',
+                        'inside_local': '172.25.0.1:231',
+                        'outside_global': '198.80.55.1:231',
+                        'outside_local': '198.80.55.1:231',
+                        'protocol': 'icmp'
+                    },
+                    5: {
+                        'inside_global': '192.168.33.28:27432',
+                        'inside_local': '172.25.0.2:27432',
+                        'outside_global': '8.8.8.8:27432',
+                        'outside_local': '8.8.8.8:27432',
+                        'protocol': 'icmp'
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_vrf_verbose = {'execute.return_value': '''
+        GENIE-1(config)# show ip nat translations vrf genie verbose
+        Pro Inside global      Inside local       Outside local      Outside global
+        any ---                ---                10.1.0.2          11.1.0.2
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:0:-1
+        any ---                ---                100.1.2.21          120.1.211
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:38
+        any ---                ---                100.1.2.22          120.1.212
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:56
+        any ---                ---                100.1.2.23          120.1.213
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:30
+        any ---                ---                100.1.2.24          120.1.214
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:54
+        any ---                ---                100.1.2.25          120.1.215
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:58
+        any ---                ---                100.1.2.26          120.1.216
+            Group_id:0   vrf: genie
+            Format(H:M:S) Time-left :0:1:30
+    '''
+    }
+
+    golden_parsed_output_vrf_verbose = {
+        'vrf': {
+            'genie': {
+                'index': {
+                    1: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '11.1.0.2',
+                        'outside_local': '10.1.0.2',
+                        'protocol': 'any',
+                        'time_left': '0:0:-1'
+                    },
+                    2: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.211',
+                        'outside_local': '100.1.2.21',
+                        'protocol': 'any',
+                        'time_left': '0:1:38'
+                    },
+                    3: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.212',
+                        'outside_local': '100.1.2.22',
+                        'protocol': 'any',
+                        'time_left': '0:1:56'
+                    },
+                    4: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.213',
+                        'outside_local': '100.1.2.23',
+                        'protocol': 'any',
+                        'time_left': '0:1:30'
+                    },
+                    5: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.214',
+                        'outside_local': '100.1.2.24',
+                        'protocol': 'any',
+                        'time_left': '0:1:54'
+                    },
+                    6: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.215',
+                        'outside_local': '100.1.2.25',
+                        'protocol': 'any',
+                        'time_left': '0:1:58'
+                    },
+                    7: {
+                        'group_id': 0,
+                        'inside_global': '---',
+                        'inside_local': '---',
+                        'outside_global': '120.1.216',
+                        'outside_local': '100.1.2.26',
+                        'protocol': 'any',
+                        'time_left': '0:1:30'
+                    }
+                }
+            }
         }
     }
 
@@ -250,6 +485,27 @@ class TestShowIpNatTranslations(unittest.TestCase):
         obj = ShowIpNatTranslations(device=self.device)
         parsed_output = obj.parse(option='verbose')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_golden_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf)
+        obj = ShowIpNatTranslations(device=self.device)
+        parsed_output = obj.parse(vrf='abc')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
+
+    def test_golden_vrf_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf_1)
+        obj = ShowIpNatTranslations(device=self.device)
+        parsed_output = obj.parse(vrf='T172')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf_1)
+    
+    def test_golden_vrf_verbose(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vrf_verbose)
+        obj = ShowIpNatTranslations(device=self.device)
+        parsed_output = obj.parse(vrf='genie', option='verbose')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf_verbose)
 
 class TestShowIpNatStatistics(unittest.TestCase):
 
@@ -296,20 +552,22 @@ class TestShowIpNatStatistics(unittest.TestCase):
             'cef_translated_pkts': 0,
             'dynamic_mappings': {
                 'inside_source': {
-                    'access_list': '102',
-                    'id': 1,
-                    'pool': {
-                        'mypool': {
-                            'allocated': '1 (20%)',
-                            'end': '10.5.5.5',
-                            'misses': '0',
-                            'netmask': '255.255.255.0',
-                            'start': '10.5.5.1',
-                            'total': '5',
-                            'type': 'generic'
-                        }
+                    '102': {
+                        'access_method': 'access-list',
+                        'id': 1,
+                        'pool': {
+                            'mypool': {
+                                'allocated': '1 (20%)',
+                                'end': '10.5.5.5',
+                                'misses': '0',
+                                'netmask': '255.255.255.0',
+                                'start': '10.5.5.1',
+                                'total': '5',
+                                'type': 'generic'
+                            }
+                        },
+                        'refcount': 3
                     },
-                    'refcount': 3
                 }
             },
             'expired_translations': 0,
@@ -323,9 +581,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
             'mapping_stats_drop': 0,
             'misses': 3,
             'nat_limit_statistics': {
-                'max_allowed': 2147483647,
-                'missed': 0,
-                'used': 3
+                'max_entry': {
+                    'max_allowed': 2147483647,
+                    'missed': 0,
+                    'used': 3
+                }
             },
             'outside_interfaces': ['TenGigabitEthernet2/0/0,',
                                     'TenGigabitEthernet2/1/0,',
@@ -370,21 +630,22 @@ class TestShowIpNatStatistics(unittest.TestCase):
             'cef_translated_pkts': 0,
             'dynamic_mappings': {
                 'inside_source': {
-                    'access_list': 
-                    'test-robot',
-                    'id': 1,
-                    'pool': {
-                        'test-robot': {
-                            'allocated': '0 (0%)',
-                            'end': '10.1.1.1',
-                            'misses': '0',
-                            'netmask': '255.255.255.252',
-                            'start': '10.1.1.1',
-                            'total': '1',
-                            'type': 'generic'
-                        }
-                    },
-                    'refcount': 0
+                    'test-robot': {
+                        'access_method': 'access-list',
+                        'id': 1,
+                        'pool': {
+                            'test-robot': {
+                                'allocated': '0 (0%)',
+                                'end': '10.1.1.1',
+                                'misses': '0',
+                                'netmask': '255.255.255.252',
+                                'start': '10.1.1.1',
+                                'total': '1',
+                                'type': 'generic'
+                            }
+                        },
+                        'refcount': 0
+                    }
                 }
             },
             'expired_translations': 11013,
@@ -432,18 +693,17 @@ class TestShowIpNatStatistics(unittest.TestCase):
         r1#sh ip nat stat
         Total active translations: 1 (0 static, 1 dynamic; 1 extended)
         Outside interfaces:
-          Serial0/0
+          Serial0/0
         Inside interfaces:
-          FastEthernet0/0
-        Hits: 3  Misses: 1
+          FastEthernet0/0
+        Hits: 3  Misses: 1
         CEF Translated packets: 4, CEF Punted packets: 0
         Expired translations: 0
         Dynamic mappings:
         -- Inside Source
         [Id: 3] access-list 99 interface Serial0/0 refcount 1
         Queued Packets: 0
-    '''
-    }
+    '''}
 
     golden_parsed_output_3 = {
         'active_translations': {
@@ -456,10 +716,12 @@ class TestShowIpNatStatistics(unittest.TestCase):
             'cef_translated_pkts': 4,
             'dynamic_mappings': {
                 'inside_source': {
-                    'access_list': '99',
-                    'id': 3,
-                    'interface': 'Serial0/0',
-                    'refcount': 1
+                    '99': {
+                        'access_method': 'access-list',
+                        'id': 3,
+                        'interface': 'Serial0/0',
+                        'refcount': 1
+                    }
                 }
             },
             'expired_translations': 0,
@@ -468,6 +730,288 @@ class TestShowIpNatStatistics(unittest.TestCase):
             'misses': 1,
             'outside_interfaces': ['Serial0/0'],
             'queued_pkts': 0
+        }
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        Total active translations: 0 (0 static, 0 dynamic; 0 extended)
+        Peak translations: 0
+        Outside interfaces:
+        Inside interfaces: 
+        Hits: 0  Misses: 0
+        CEF Translated packets: 0, CEF Punted packets: 0
+        Expired translations: 0
+        Dynamic mappings:
+
+        Total doors: 0
+        Appl doors: 0
+        Normal doors: 0
+        Queued Packets: 0
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        'active_translations': {
+            0: {
+                'dynamic': 0, 
+                'extended': 0, 
+                'static': 0
+            },
+            'appl_doors': 0,
+            'cef_punted_pkts': 0,
+            'cef_translated_pkts': 0,
+            'dynamic_mappings': {},
+            'expired_translations': 0,
+            'hits': 0,
+            'misses': 0,
+            'normal_doors': 0,
+            'peak_translations': 0,
+            'queued_pkts': 0,
+            'total_doors': 0
+        }
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+        show ip nat statistics
+        Total active translations: 5 (0 static, 5 dynamic; 5 extended)
+        Outside interfaces:
+        GigabitEthernet0/0/1
+        Inside interfaces: 
+        GigabitEthernet0/0/0
+        Hits: 11178  Misses: 8
+        Expired translations: 0
+        Dynamic mappings:
+        -- Inside Source
+        [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+        pool inside-pool: id 1, netmask 255.255.255.0
+            start 6.1.1.1 end 6.1.1.1
+            type generic, total addresses 1, allocated 1 (100%), misses 0
+        nat-limit statistics:
+        max entry: max allowed 0, used 0, missed 0
+        In-to-out drops: 0  Out-to-in drops: 0
+        Pool stats drop: 0  Mapping stats drop: 0
+        Port block alloc fail: 0
+        IP alias add fail: 0
+        Limit entry add fail: 0
+    '''
+    }
+
+    golden_parsed_output_5 = {
+        'active_translations': {
+            5: {
+                'dynamic': 5, 
+                'extended': 5, 
+                'static': 0
+            },
+            'dynamic_mappings': {
+                'inside_source': {
+                    'NAT-MAP': {
+                        'access_method': 'route-map',
+                        'id': 1,
+                        'pool': {
+                            'inside-pool': {
+                                'allocated': '1 (100%)',
+                                'end': '6.1.1.1',
+                                'misses': '0',
+                                'netmask': '255.255.255.0',
+                                'start': '6.1.1.1',
+                                'total': '1',
+                                'type': 'generic',
+                                'pool_id': 1
+                            }
+                        },
+                        'refcount': 6
+                    }
+                }
+            },
+            'expired_translations': 0,
+            'hits': 11178,
+            'in_to_out_drops': 0,
+            'inside_interfaces': ['GigabitEthernet0/0/0'],
+            'ip_alias_add_fail': 0,
+            'limit_entry_add_fail': 0,
+            'mapping_stats_drop': 0,
+            'misses': 8,
+            'nat_limit_statistics': {
+                'max_entry': {
+                    'max_allowed': 0,
+                    'missed': 0,
+                    'used': 0
+                }
+            },
+            'out_to_in_drops': 0,
+            'outside_interfaces': ['GigabitEthernet0/0/1'],
+            'pool_stats_drop': 0,
+            'port_block_alloc_fail': 0
+        }
+    }
+
+    golden_output_6 = {'execute.return_value': '''
+        show ip nat statistics
+        Total active translations: 6 (1 static, 5 dynamic; 5 extended)
+        Outside interfaces:
+        GigabitEthernet0/0/1
+        Inside interfaces: 
+        GigabitEthernet0/0/0
+        Hits: 78230  Misses: 56
+        Expired translations: 0
+        Dynamic mappings:
+        -- Inside Source
+        [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+        pool inside-pool: id 6, netmask 255.255.255.0
+            start 6.1.1.1 end 6.1.1.1
+            type generic, total addresses 1, allocated 1 (100%), misses 0
+        [Id: 0] route-map STATIC-MAP pool genie-pool refcount 5
+        pool genie-pool: id 5, netmask 255.255.255.0
+            start 6.1.1.1 end 6.1.1.1
+            type generic, total addresses 1, allocated 1 (100%), misses 0
+        [Id: 4] route-map GENIE-MAP
+        [Id: 3] access-list 99 interface Serial0/0 refcount 1
+        nat-limit statistics:
+        max entry: max allowed 0, used 0, missed 0
+        In-to-out drops: 0  Out-to-in drops: 0
+        Pool stats drop: 0  Mapping stats drop: 0
+        Port block alloc fail: 0
+        IP alias add fail: 0
+        Limit entry add fail: 0
+    '''
+    }
+
+    golden_parsed_output_6 = {
+        'active_translations': {
+            6: {
+                'dynamic': 5,
+                'extended': 5,
+                'static': 1
+            },
+            'dynamic_mappings': {
+                'inside_source': {
+                    '99': {
+                        'access_method': 'access-list',
+                        'id': 3,
+                        'interface': 'Serial0/0',
+                        'refcount': 1
+                    },
+                    'GENIE-MAP': {
+                        'access_method': 'route-map',
+                        'id': 4
+                    },
+                    'NAT-MAP': {
+                        'access_method': 'route-map',
+                        'id': 1,
+                        'pool': {
+                            'inside-pool': {
+                                'allocated': '1 (100%)',
+                                'end': '6.1.1.1',
+                                'misses': '0',
+                                'netmask': '255.255.255.0',
+                                'pool_id': 6,
+                                'start': '6.1.1.1',
+                                'total': '1',
+                                'type': 'generic'
+                            }
+                        },
+                        'refcount': 6
+                    },
+                    'STATIC-MAP': {
+                        'access_method': 'route-map',
+                        'id': 0,
+                        'pool': {
+                            'genie-pool': {
+                                'allocated': '1 (100%)',
+                                'end': '6.1.1.1',
+                                'misses': '0',
+                                'netmask': '255.255.255.0',
+                                'pool_id': 5,
+                                'start': '6.1.1.1',
+                                'total': '1',
+                                'type': 'generic'
+                            }
+                        },
+                        'refcount': 5
+                    }
+                }
+            },
+            'expired_translations': 0,
+            'hits': 78230,
+            'in_to_out_drops': 0,
+            'inside_interfaces': ['GigabitEthernet0/0/0'],
+            'ip_alias_add_fail': 0,
+            'limit_entry_add_fail': 0,
+            'mapping_stats_drop': 0,
+            'misses': 56,
+            'nat_limit_statistics': {
+                'max_entry': {
+                    'max_allowed': 0,
+                    'missed': 0,
+                    'used': 0
+                }
+            },
+            'out_to_in_drops': 0,
+            'outside_interfaces': ['GigabitEthernet0/0/1'],
+            'pool_stats_drop': 0,
+            'port_block_alloc_fail': 0
+        }
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+        NIM-SG-L#show ip nat statistics 
+        Total active translations: 3001 (1 static, 3000 dynamic; 1500 extended)
+        Outside interfaces:
+        Vlan89
+        Inside interfaces: 
+        Vlan88
+        Hits: 45392  Misses: 0
+        CEF Translated packets: 0, CEF Punted packets: 0
+        Expired translations: 1
+        Dynamic mappings:
+        -- Inside Source
+        [Id: 1] access-list test pool net-208 refcount 3000
+        pool net-208: id 1, netmask 255.255.0.0
+            start 50.50.0.1 end 50.50.100.254
+            type generic, total addresses 25854, allocated 1500 (5%), misses 0
+        longest chain in pool: net-208's addr-hash: 6, average len 5,chains 256/256
+    '''
+    }
+
+    golden_parsed_output_7 = {
+        'active_translations': {
+            3001: {
+                'dynamic': 3000, 
+                'extended': 1500, 
+                'static': 1
+            },
+            'cef_punted_pkts': 0,
+            'cef_translated_pkts': 0,
+            'dynamic_mappings': {
+                'inside_source': {
+                    'test': {
+                        'access_method': 'access-list',
+                        'id': 1,
+                        'pool': {
+                            'net-208': {
+                                'addr_hash': 6,
+                                'allocated': '1500 (5%)',
+                                'average_len': 5,
+                                'chains': '256/256',
+                                'end': '50.50.100.254',
+                                'misses': '0',
+                                'netmask': '255.255.0.0',
+                                'pool_id': 1,
+                                'start': '50.50.0.1',
+                                'total': '25854',
+                                'type': 'generic'
+                            }
+                        },
+                        'refcount': 3000
+                    }
+                }
+            },
+            'expired_translations': 1,
+            'hits': 45392,
+            'inside_interfaces': ['Vlan88'],
+            'misses': 0,
+            'outside_interfaces': ['Vlan89']
         }
     }
     def test_empty(self):
@@ -503,6 +1047,34 @@ class TestShowIpNatStatistics(unittest.TestCase):
         obj = ShowIpNatStatistics(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+    
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+    
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+    
 if __name__ == '__main__':
     unittest.main()

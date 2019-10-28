@@ -27,30 +27,36 @@ class ShowIpNatTranslationsSchema(MetaParser):
     """ Schema for the commands:
             * show ip nat translations
             * show ip nat translations verbose
+            * show ip nat translations vrf {vrf}
+            * show ip nat translations vrf {vrf} verbose
     """
 
     schema = {
-        'nat_translations': {
-            'index': {
-                Any(): {  # 1, 2 ,3, ...
-                    'protocol': str,
-                    Optional('inside_global'): str,
-                    Optional('inside_local'): str,
-                    Optional('outside_local'): str,
-                    Optional('outside_global'): str,
-                    Optional('details'): {
-                        'create': str,
-                        'use': str,
-                        'timeout': str,
-                        'map_id_in': int,
-                        'mac_address': str,
-                        'input_idb': str,
-                        'entry_id': str,
-                        'use_count': int
-                    }
+        'vrf': {
+            Any(): {  # name of vrf
+                'index': {  
+                    Any(): {  # 1, 2 ,3, ...
+                        'protocol': str,
+                        Optional('inside_global'): str,
+                        Optional('inside_local'): str,
+                        Optional('outside_local'): str,
+                        Optional('outside_global'): str,
+                        Optional('group_id'): int,
+                        Optional('time_left'): str,
+                        Optional('details'): {
+                            'create': str,
+                            'use': str,
+                            'timeout': str,
+                            'map_id_in': int,
+                            'mac_address': str,
+                            'input_idb': str,
+                            'entry_id': str,
+                            'use_count': int,
+                        }
+                    },
                 },
             },
-            'number_of_translations': int
+            Optional('number_of_translations'): int
         }
     }
 
@@ -59,20 +65,27 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
     """
         * show ip nat translations
         * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
     """
 
     cli_command = ['show ip nat translation',
-                   'show ip nat translations {verbose}']
+                   'show ip nat translations {verbose}',
+                   'show ip nat translations vrf {vrf}',
+                   'show ip nat translations vrf {vrf} {verbose}']
 
-    def cli(self, option=None, output=None):
+    def cli(self, vrf=None, option=None, output=None):
         if output is None:
-            if option:
+            if option and vrf is None:
                 cmd = self.cli_command[1].format(verbose=option)
+            elif option and vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, verbose=option)
+            elif vrf and option is None:
+                cmd = self.cli_command[2].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
 
             out = self.device.execute(cmd)
-
         else:
             out = output
 
@@ -84,7 +97,9 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         # udp 171.69.233.209:1220  192.168.1.95:1220  171.69.2.132:53    171.69.2.132:53
         # tcp 171.69.233.209:11012 192.168.1.89:11012 171.69.1.220:23    171.69.1.220:23
         # tcp 171.69.233.209:1067  192.168.1.95:1067  171.69.1.161:23    171.69.1.161:23
-        p1 = re.compile(r'^(?P<protocol>-+|udp|tcp) +(?P<inside_global>\S+) '
+        # icmp 10.10.140.200:66      10.10.40.100:66       10.10.140.110:66      10.10.140.110:66
+        # any ---                ---                10.1.0.2          11.1.0.2
+        p1 = re.compile(r'^(?P<protocol>-+|udp|tcp|icmp|any) +(?P<inside_global>\S+) '
                         r'+(?P<inside_local>\S+) +(?P<outside_local>\S+) '
                         r'+(?P<outside_global>\S+)$')
         
@@ -106,17 +121,28 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         p4 = re.compile(r'^Mac-Address: +(?P<mac_address>\S+) +Input-IDB: '
                         r'+(?P<input_idb>\S+)$')
 
-        #entry-id: 0x0, use_count:1
+        # entry-id: 0x0, use_count:1
         p5 = re.compile(r'^entry-id: +(?P<entry_id>\S+), '
                         r'+use_count:+(?P<use_count>\d+)$')
 
         # Total number of translations: 3
         p6 = re.compile(r'^Total +number +of +translations: '
                         r'+(?P<number_of_translations>\d+)$')
+        
+        # Group_id:0   vrf: genie
+        p7 = re.compile(r'^Group_id\:(?P<group_id>\d+) +vrf\: +(?P<vrf_name>\S+)$')
+
+        # Format(H:M:S) Time-left :0:0:-1
+        p8 = re.compile(r'^Format\S+ +Time\-left +\:(?P<time_left>\S+)$')
 
         # initialize variables
         ret_dict = {}
+        index_dict = {}
+        tmp_dict = {}
         index = 1
+        m8_index = 1
+        vrf_name = ''
+        vrf_flag = False
 
         for line in out.splitlines():
             line = line.strip()
@@ -129,18 +155,37 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
             # udp 171.69.233.209:1220  192.168.1.95:1220  171.69.2.132:53    171.69.2.132:53
             # tcp 171.69.233.209:11012 192.168.1.89:11012 171.69.1.220:23    171.69.1.220:23
             # tcp 171.69.233.209:1067  192.168.1.95:1067  171.69.1.161:23    171.69.1.161:23
+            # any ---                ---                10.1.0.2          11.1.0.2
             m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
+                if 'vrf' in ret_dict:
+                    if vrf_flag:
+                        protocol_dict = index_dict.setdefault(index, {})
+                        protocol_dict.update(group)
+                        
+                    elif vrf_flag == False and index >= 2:
+                        default_dict = vrf_dict.setdefault('default', {})
+                        index_dict = default_dict.setdefault('index', {})
+                        protocol_dict = index_dict.setdefault(index, {})
+                        protocol_dict.update(group)
+                        
+                        if tmp_dict:
+                            default_dict = vrf_dict.setdefault('default', {})
+                            index_dict = default_dict.setdefault('index', {})
+                            protocol_dict = index_dict.setdefault(index, {})
+                            vrf_dict['default']['index'].update(tmp_dict)
+                            tmp_dict.clear()
 
-                proto_dict = ret_dict.setdefault('nat_translations', {})
-                protocol_dict = proto_dict.setdefault('index', {}).setdefault(index, {})
-                protocol_dict.update({'protocol': group['protocol']})
-                protocol_dict.update({'inside_global': group['inside_global']})
-                protocol_dict.update({'inside_local': group['inside_local']})
-                protocol_dict.update({'outside_global': group['outside_global']})
-                protocol_dict.update({'outside_local': group['outside_local']})
+                else:
+                    vrf_dict = ret_dict.setdefault('vrf', {})
 
+                    itemp_dict = tmp_dict.setdefault(index, {})
+
+                    itemp_dict.update(group)
+                    
+                    protocol_dict = index_dict.setdefault(index, {})
+                    
                 index += 1
 
                 continue
@@ -150,11 +195,13 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
-
-                details_dict = protocol_dict.setdefault('details', {})
-                details_dict.update({'create': group['create']})
-                details_dict.update({'use': group['use']})
-                details_dict.update({'timeout': group['timeout']})
+                if protocol_dict:
+                    details_dict = protocol_dict.setdefault('details', {})
+                    details_dict.update(group)
+                        
+                else:
+                    tmp_details_dict = tmp_dict[1].setdefault('details', {})
+                    tmp_details_dict.update(group)
 
                 continue
             
@@ -166,13 +213,21 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
             if m3:
                 group = m3.groupdict()
 
-                details_dict.update({'map_id_in': int(group['map_id_in'])})
+                if protocol_dict:
+                    details_dict.update({'map_id_in': int(group['map_id_in'])})
 
-                if group['mac_address']:
-                    details_dict.update({'mac_address': group['mac_address']})
-                
-                if group['input_idb']:
-                    details_dict.update({'input_idb': group['input_idb']})
+                    if group['mac_address']:
+                        details_dict.update({'mac_address': group['mac_address']})
+                    
+                    if group['input_idb']:
+                        details_dict.update({'input_idb': group['input_idb']})
+
+                else:
+                    tmp_details_dict.update(
+                        {'mac_address': group['mac_address']})
+                    tmp_details_dict.update({'input_idb': group['input_idb']})
+                    tmp_details_dict.update(
+                        {'map_id_in': int(group['map_id_in'])})
 
                 continue
 
@@ -182,8 +237,11 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
             if m4:
                 group = m4.groupdict()
 
-                details_dict.update({'mac_address': group['mac_address']})
-                details_dict.update({'input_idb': group['input_idb']})
+                if protocol_dict:
+                    details_dict.update(group)
+
+                else:
+                    tmp_details_dict.update(group)
 
                 continue
             
@@ -191,17 +249,61 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
+                if protocol_dict:
+                    details_dict.update({'entry_id': group['entry_id']})
+                    details_dict.update({'use_count': int(group['use_count'])})
 
-                details_dict.update({'entry_id': group['entry_id']})
-                details_dict.update({'use_count': int(group['use_count'])})
+                else:
+                    tmp_details_dict.update({'entry_id': group['entry_id']})
+                    tmp_details_dict.update(
+                        {'use_count': int(group['use_count'])})
+
+                if tmp_dict:
+                    default_dict = vrf_dict.setdefault('default', {})
+                    index_dict = default_dict.setdefault('index', {})
+                    protocol_dict = index_dict.setdefault(index, {})   
+                    vrf_dict['default']['index'].update(tmp_dict)
+                    tmp_dict.clear()
 
                 continue
             
             # Total number of translations: 3
             m6 = p6.match(line)
             if m6:
-                total_dict = ret_dict.setdefault('nat_translations', {})
-                total_dict.update({'number_of_translations': int(m6.groupdict()['number_of_translations'])})
+
+                anumber = int(m6.groupdict()['number_of_translations'])
+                total_dict = ret_dict.setdefault('vrf', {})
+                total_dict.update({'number_of_translations': anumber})
+
+                continue
+
+            # Group_id:0   vrf: genie
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                vrf_name = group['vrf_name']
+                if tmp_dict:
+                    vrf_name_dict = vrf_dict.setdefault(group['vrf_name'], {})
+                    index_dict = vrf_name_dict.setdefault('index', {})
+                    tmp_dict[1].update({'group_id': int(group['group_id'])})
+                    vrf_flag = True
+
+                else:
+                    protocol_dict.update({'group_id': int(group['group_id'])})
+                
+                continue
+
+            # Format(H:M:S) Time-left :0:0:-1
+            m8 = p8.match(line)
+            if m8:
+                time_left = m8.groupdict()['time_left']
+                if tmp_dict:
+                    m8_dict = vrf_name_dict.setdefault('index', {})
+                    tmp_dict[1].update({'time_left': time_left})
+                    vrf_dict[vrf_name]['index'].update(tmp_dict)
+                    tmp_dict.clear()
+                else:
+                    protocol_dict.update({'time_left': time_left})
 
                 continue
 
@@ -215,43 +317,50 @@ class ShowIpNatStatisticsSchema(MetaParser):
 
     schema = {
         'active_translations': {
-            Any(): {  #Total active translations
+            Any(): {  # Total active translations
                 'static': int,
                 'dynamic': int,
                 'extended': int,
             },
-            'outside_interfaces': list,
-            'inside_interfaces': list,
+            Optional('outside_interfaces'): list,
+            Optional('inside_interfaces'): list,
             'hits': int,
             'misses': int,
             Optional('dynamic_mappings'): {
                 Any(): {  # 'Inside source'
-                    Optional('id'): int,
-                    'access_list': str,
-                    'refcount': int,
-                    Optional('interface'): str,
-                    Optional('pool'): {
-                        Any(): {  # mypool test-pool
-                        'netmask': str,
-                        'start': str,
-                        'end': str,
-                        'type': str,
-                        'total': str,
-                        'allocated': str,
-                        'misses': str,
-                        Optional('addr_hash'): int,
-                        Optional('average_len'): int,
-                        Optional('chains'): str
-                        }
+                    Any(): {  # name of access method
+                        Optional('access_method'): str, #access-list, route-map
+                        Optional('refcount'): int,
+                        Optional('id'): int,
+                        Optional('interface'): str,
+                        Optional('pool'): {
+                            Any(): {  # mypool test-pool
+                                'netmask': str,
+                                'start': str,
+                                'end': str,
+                                'type': str,
+                                'total': str,
+                                'allocated': str,
+                                'misses': str,
+                                Optional('addr_hash'): int,
+                                Optional('average_len'): int,
+                                Optional('chains'): str,
+                                Optional('pool_id'): int,
+                            }
+                        },
                     },
                 }
             },
             Optional('nat_limit_statistics'): {
-                'max_allowed': int,
-                'used': int,
-                'missed': int,
+                'max_entry': {
+                    'max_allowed': int,
+                    'used': int,
+                    'missed': int,
+                }
             },
             Optional('cef_translated_pkts'): int,
+            Optional('in_to_out_drops'): int,
+            Optional('out_to_in_drops'): int,
             Optional('cef_punted_pkts'): int,
             Optional('expired_translations'): int,
             Optional('pool_stats_drop'): int,
@@ -262,6 +371,9 @@ class ShowIpNatStatisticsSchema(MetaParser):
             Optional('queued_pkts'): int,
             Optional('peak_translations'): int,
             Optional('occurred'): str,
+            Optional('total_doors'): int,
+            Optional('appl_doors'): int,
+            Optional('normal_doors'): int,
         }
     }
     
@@ -284,6 +396,11 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         'Peak translations': 'peak_translations',
         'CEF Punted packets': 'cef_punted_pkts',
         'Mapping stats drop': 'mapping_stats_drop',
+        'In-to-out drops': 'in_to_out_drops',
+        'Out-to-in drops': 'out_to_in_drops',
+        'Total doors': 'total_doors',
+        'Appl doors': 'appl_doors',
+        'Normal doors': 'normal_doors',
     }
     
     # Mapping for string variables
@@ -326,8 +443,10 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         # Limit entry add fail: 0
         # Queued Packets: 0
         # Peak translations: 8114, occurred 18:35:17 ago
-        p4 = re.compile(r'^(?P<name_1>[\w|\s]+)\: +(?P<number_1>\w+)(?:[\,|\s*]'
-                        r'+(?P<name_2>[\w|\s]+)(?:\:|\s*)? +(?P<number_2>\S+)(?: +ago)?)?$')
+        # In-to-out drops: 0  Out-to-in drops: 0
+        p4 = re.compile(r'^(?P<name_1>[\w|\s|\-]+)\: +(?P<number_1>\w+)'
+                        r'(?:[\,|\s*]+(?P<name_2>[\w|\s|\-]+)(?:\:|\s*)? '
+                        r'+(?P<number_2>\S+)(?: +ago)?)?$')
 
         # Dynamic mappings:
         p5 = re.compile(r'^(?P<dynamic>\w+) +mappings\:$')
@@ -341,12 +460,17 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         # [Id: 3] access-list 99 interface Serial0/0 refcount 1
         # [Id: 1] access-list test-robot pool test-robot refcount 0
         # [Id: 3] access-list 99 interface Serial0/0 refcount 1
-        p6 = re.compile(r'^(?:\[Id\: +(?P<id>\d+)\] )?access\-+list '
-                        r'+(?P<access_list>[\w\-]+) +(?P<method>pool|interface) '
-                        r'+(?P<pool>[\w\/-]+) +refcount +(?P<refcount>\d+)$')
+        # [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+        # [Id: 0] route-map STATIC-MAP
+        p6 = re.compile(r'^(?:\[Id\: +(?P<id>\d+)\] )?(?P<access_method>'
+                        r'access\-+list|route\-map) +(?P<access_list>[\w\-]+)'
+                        r'(?: +(?P<method>pool|interface) +(?P<pool>[\w\/-]+) '
+                        r'+refcount +(?P<refcount>\d+))?$')
 
         # pool mypool: netmask 255.255.255.0
-        p7 = re.compile(r'^pool +(?P<pool>[\w\/-]+)\: +netmask +(?P<netmask>[\d+\.]+)$')
+        # pool inside-pool: id 1, netmask 255.255.255.0
+        p7 = re.compile(r'^pool +(?P<pool>\S+)\:(?: +(id +(?P<id>\d+))\,)?'
+                        r'(?:( +netmask +(?P<netmask>[\d+\.]+))?)$')
 
         # start 10.5.5.1 end 10.5.5.5
         p7_1 = re.compile(r'^start +(?P<start>[\d\.]+) +end +(?P<end>[\d\.]+)$')
@@ -467,6 +591,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             # Limit entry add fail: 0
             # Queued Packets: 0
             # Peak translations: 8114, occurred 18:35:17 ago
+            # In-to-out drops: 0  Out-to-in drops: 0
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
@@ -510,24 +635,31 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             # [Id: 3] access-list 99 interface Serial0/0 refcount 1
             # [Id: 1] access-list test-robot pool test-robot refcount 0
             # [Id: 3] access-list 99 interface Serial0/0 refcount 1
+            # [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+            # [Id: 0] route-map STATIC-MAP
             m6 = p6.match(line)
             if m6:
                 group = m6.groupdict()
+                access_name = group['access_list']
+                name_dict = source_dict.setdefault(access_name, {})
+
+                name_dict.update({'access_method': group['access_method']})
                 if group['id']:
-                    source_dict.update({'id': int(group['id'])})
+                    name_dict.update({'id': int(group['id'])})
                 
                 if group['method'] == 'interface':
-                    source_dict.update({'interface': group['pool']})
+                    name_dict.update({'interface': group['pool']})
 
                 elif group['method'] == 'pool':
-                    pool_dict = source_dict.setdefault('pool', {})
+                    pool_dict = name_dict.setdefault('pool', {})
 
-                source_dict.update({'access_list': group['access_list']})
-                source_dict.update({'refcount': int(group['refcount'])})
+                if group['refcount']:
+                    name_dict.update({'refcount': int(group['refcount'])})
 
                 continue
             
             # pool mypool: netmask 255.255.255.0
+            # pool inside-pool: id 1, netmask 255.255.255.0
             m7 = p7.match(line)
 
             # start 10.5.5.1 end 10.5.5.5
@@ -538,11 +670,13 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m7_2 = p7_2.match(line)
 
             if m7 or m7_1 or m7_2:
-
                 if m7:
                     group = m7.groupdict()
                     mypool_dict = pool_dict.setdefault(group['pool'], {})
                     mypool_dict.update({'netmask': group['netmask']})
+
+                    if group['id']:
+                        mypool_dict.update({'pool_id': int(group['id'])})
 
                 if m7_1:
                     group = m7_1.groupdict()
@@ -565,8 +699,8 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             if m8:
                 group = m8.groupdict()
 
-                nat_limit_dict = active_dict.setdefault('nat_limit_statistics', {})
-
+                max_dict = active_dict.setdefault('nat_limit_statistics', {})
+                nat_limit_dict = max_dict.setdefault('max_entry', {})
                 nat_limit_dict.update({'max_allowed': int(group['max_allowed'])})
                 nat_limit_dict.update({'used': int(group['used'])})
                 nat_limit_dict.update({'missed': int(group['missed'])})
