@@ -30,3 +30,10 @@
     * ShowIpOspf
         * Added missing keys to schema
         * Added regex to capture more outputs
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessions
+        * Changed keyword to Optional
