@@ -11,8 +11,9 @@ IOSXR parsers for the following show commands:
     * show isis neighbors    
     * show isis interface
     * show isis statistics
+    * show isis private all
     * show isis spf-log detail
-    * show isis database detail 
+    * show isis database detail
     * show isis instance {instance} hostname
 """
 
@@ -333,6 +334,7 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 
         return isis_dict
 
+
 class ShowIsisSchema(MetaParser):
     ''' Schema for commands:
         * show isis
@@ -391,7 +393,7 @@ class ShowIsisSchema(MetaParser):
             }
         }
     }
-    
+
 
 class ShowIsis(ShowIsisSchema):
     ''' Parser for commands:
@@ -783,6 +785,7 @@ class ShowIsis(ShowIsisSchema):
 
         return parsed_output
 
+
 class ShowIsisProtocol(ShowIsis):
     ''' Parser for commands:
         * show isis protocol
@@ -794,6 +797,7 @@ class ShowIsisProtocol(ShowIsis):
             output = self.device.execute(self.cli_command)
 
         return super().cli(output=output)
+
 
 class ShowIsisHostnameSchema(MetaParser):
     ''' Schema for commands:
@@ -821,6 +825,7 @@ class ShowIsisHostnameSchema(MetaParser):
             }
         }
     }    
+
 
 class ShowIsisHostname(ShowIsisHostnameSchema):
     ''' Parser for commands:
@@ -895,6 +900,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                 continue
 
         return parsed_output
+
 
 class ShowIsisStatisticsSchema(MetaParser):
     ''' Schema for commands:
@@ -1543,6 +1549,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         return parsed_dict
 
+
 class ShowIsisSpfLogSchema(MetaParser):
     ''' Schema for command
         * show isis spf-log
@@ -1569,6 +1576,7 @@ class ShowIsisSpfLogSchema(MetaParser):
             }
         }
     }
+
 
 class ShowIsisSpfLog(ShowIsisSpfLogSchema):
     ''' Parser for commands:
@@ -1659,6 +1667,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
 
         return parsed_output
 
+
 class ShowIsisSpfLogDetailSchema(MetaParser):
     ''' Schema for command
         * show isis spf-log detail
@@ -1678,8 +1687,19 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 Optional('first_trigger_lsp'): str,
                                 'triggers': str,
                                 'trigger_count': int,
-                                'delay_ms': int,
-                                'delay_info': str,
+                                Optional('sr_uloop'): str,
+                                'delay': {
+                                    'since_first_trigger_ms': int,
+                                    Optional('since_end_of_last_calculation'): int,
+                                },
+                                Optional('interrupted'): str,
+                                Optional('rib_batches'): {
+                                    'total': str,
+                                    Optional('critical'): str,
+                                    Optional('high'): str,
+                                    Optional('medium'): str,
+                                    Optional('low'): str,
+                                },
                                 'spt_calculation': {
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
@@ -1688,9 +1708,13 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
+                                Optional('full_calculation'):{
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
                                 'new_lsp_arrivals': int,
                                 'next_wait_interval_ms': int,
-                                'results': {
+                                Optional('results'): {
                                     'nodes': {
                                         'reach': int,
                                         'unreach': int,
@@ -1761,6 +1785,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
         }
     }    
 
+
 class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
     ''' Parser for command
         * show isis spf-log detail
@@ -1780,18 +1805,27 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
         # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
         r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
-                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
-                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+                r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                r'(\s+(?P<first_trigger_lsp>[\w\-\.]+))?\s+(?P<triggers>\w+)')
 
         # Delay:              51ms (since first trigger)
         r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
                         r'\((?P<delay_info>[\w\s]+)\)')
 
         # SPT Calculation
-        r4 = re.compile(r'SPT\s+Calculation')
+        r4 = re.compile(r'SPT\s+Calculation$')
 
+        # SPT Calculation:         5     5
+        r4_1 = re.compile(r'^SPT +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+        
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
+
+        # Route Update:            0     0
+        r5_1 = re.compile(r'^Route +Update: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+
+        # Full Calculation:        0     0
+        r5_2 = re.compile(r'^Full +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
 
         # CPU Time:         1ms
         # CPU Time:         0ms
@@ -1826,9 +1860,24 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
                           '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
                           '(?P<total>\d+)')
+        
+        # SR uloop:              No
+        r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
+        
+        # Interrupted:           No
+        r14 = re.compile(r'^Interrupted: +(?P<interrupted>\w+)$')
+
+        # RIB Batches:           0
+        r15 = re.compile(r'^RIB +Batches: +(?P<total>\d+)( +\((?P<critical>\d+) '
+                r'critical, +(?P<high>\d+) +high, +(?P<medium>\d+) +medium, +'
+                r'(?P<low>\d+) +low\))?$')
+
+        # 899545ms (since end of last calculation)
+        r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since '
+                r'+end +of +last +calculation\)$')
 
         # Mon Aug 16 2004
-        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+        r17 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
 
         parsed_dict = {}
         log_index = 1
@@ -1872,11 +1921,12 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spf_log_dict['level'] = level
                 spf_log_dict['total_nodes'] = nodes
                 spf_log_dict['trigger_count'] = trigger_count
-                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                if first_trigger_lsp:
+                    spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
                 spf_log_dict['triggers'] = triggers
                 spf_log_dict['start_timestamp'] = "{} {}"\
                     .format(timestamp_date, timestamp).strip()
-
+                log_index += 1
                 continue
 
             # Delay:              51ms (since first trigger)
@@ -1884,10 +1934,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 delay = int(group['delay'])
-                delay_info = group['delay_info']
-                spf_log_dict['delay_ms'] = delay
-                spf_log_dict['delay_info'] = delay_info
-
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_first_trigger_ms'] = delay
                 continue
 
             # SPT Calculation
@@ -1898,12 +1946,48 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
                 continue
 
+            # SPT Calculation:         5     5
+            result = r4_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
             # Prefix Updates
             result = r5.match(line)
             if result:
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('prefix_update', {})
 
+                continue
+
+            # Route Update:            0     0
+            result = r5_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # Full Calculation:        0     0
+            result = r5_2.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('full_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # CPU Time:         1ms
@@ -2004,16 +2088,49 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                     priority_dict['total'] = int(total)
 
                 continue            
+            
+            # SR uloop:              No
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                sr_uloop = group['sr_uloop']
+                spf_log_dict['sr_uloop'] = sr_uloop
+                continue
+            
+            # Interrupted:           No
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                interrupted = group['interrupted']
+                spf_log_dict['interrupted'] = interrupted
+                continue
+
+            # RIB Batches:           0
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                rib_batches_dict = spf_log_dict.setdefault('rib_batches', {})
+                rib_batches_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # 899545ms (since end of last calculation)
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                delay = int(group['since_end_of_last_calculation_ms'])
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_end_of_last_calculation'] = delay
+                continue
 
             # Mon Aug 16 2004
-            result = r13.match(line)
+            result = r17.match(line)
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
                 
                 continue
-        
         return parsed_dict
+
 
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
@@ -2035,6 +2152,7 @@ class ShowIsisLspLogSchema(MetaParser):
             }
         }
     }
+
 
 class ShowIsisLspLog(ShowIsisLspLogSchema):
     ''' Parser for commands:
@@ -2126,6 +2244,8 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                 continue
 
         return parsed_output
+
+
 class ShowIsisInterfaceSchema(MetaParser):
     ''' Schema for commands:
         * show isis interface
@@ -2137,23 +2257,32 @@ class ShowIsisInterfaceSchema(MetaParser):
                 'interface': {
                     Any(): {
                         'state': str,
-                        'adjacency_formation': str,
-                        'prefix_advertisement': str,
-                        'ipv6_bfd': bool,
-                        'ipv4_bfd': bool,
-                        'bfd_min_interval': int,
-                        'bfd_multiplier': int,
-                        'bandwidth': int,
-                        'circuit_type': str,
-                        'media_type': str,
-                        'circuit_number': int,
-                        'lsp': {
+                        Optional('adjacency_formation'): str,
+                        Optional('prefix_advertisement'): str,
+                        Optional('ipv6_bfd'): bool,
+                        Optional('ipv4_bfd'): bool,
+                        Optional('bfd_min_interval'): int,
+                        Optional('bfd_multiplier'): int,
+                        Optional('bandwidth'): int,
+                        Optional('circuit_type'): str,
+                        Optional('media_type'): str,
+                        Optional('circuit_number'): int,
+                        Optional('rsi_srlg'): str,
+                        Optional('next_p2p_iih_in'): int,
+                        Optional('extended_circuit_number'): int,
+                        Optional('lsp_rexmit_queue_size'): int,
+                        Optional('lsp'): {
                             'transmit_timer_expires_ms': int,
                             'transmission_state': str,
                             'lsp_transmit_back_to_back_limit': int,
                             'lsp_transmit_back_to_back_limit_window_msec': int,
                         },
-                        'level': {
+                        Optional('underlying_interface'):{
+                            Any(): {
+                                'index': str
+                            }
+                        },
+                        Optional('level'): {
                             Any(): {
                                 'adjacency_count':int,
                                 Optional('lsp_pacing_interval_ms'): int,
@@ -2161,14 +2290,14 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 Optional('next_lan_iih_sec'): int,
                                 Optional('lan_id'): str,
                                 Optional('hello_interval_sec'): int,
-                                'hello_multiplier': int,
+                                Optional('hello_multiplier'): int,
                                 Optional('priority'): {
                                     'local': str,
                                     'dis': str
                                 }
                             },
                         },
-                        'clns_io': {
+                        Optional('clns_io'): {
                             'protocol_state': str,
                             'mtu': int,
                             Optional('snpa'): str,
@@ -2177,11 +2306,12 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'all_level_2_iss': str,
                             },
                         },
-                        'topology': {
+                        Optional('topology'): {
                             Any(): {
                                 'adjacency_formation': str,
                                 'state': str,
                                 'prefix_advertisement': str,
+                                Optional('protocol_state'): str,
                                 'metric': {
                                     'level': {
                                         Any(): int
@@ -2200,22 +2330,32 @@ class ShowIsisInterfaceSchema(MetaParser):
                                         }
                                     },
                                 },
-                                'frr': {
+                                Optional('frr'): {
                                     'level': {
                                         Any(): {
                                             'state': str,
                                             'type': str,
+                                            Optional(Any()): {
+                                                Optional('state'): str,
+                                                Optional('tie_breaker'): str,
+                                                Optional('line_card_disjoint'): str,
+                                                Optional('lowest_backup_metric'): str,
+                                                Optional('node_protecting'): str,
+                                                Optional('primary_path'): str,
+                                                Optional('link_protecting'): str,
+                                                Optional('srlg_disjoint'): str,
+                                            }
                                         },
                                     },
                                 },
-
                             },
                         },
-                        'address_family': {
+                        Optional('address_family'): {
                             Any(): {
                                 'state': str,
                                 'forwarding_address': list,
                                 'global_prefix': list,
+                                Optional('protocol_state'): str,
                             },
                         }
                     }
@@ -2247,7 +2387,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # Loopback0                   Enabled
         # GigabitEthernet0/0/0/0      Enabled
-        r2 = re.compile(r'^(?P<interface>\w+[\d+\/]+)\s+(?P<interface_state>\w+)$')
+        # TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/\.]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
 
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
@@ -2309,7 +2450,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r18 = re.compile(r'CLNS\s+I\/O')
 
         # Protocol State:         Up
-        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>\w+)')
+        # Protocol State:         Down (Intf not up in CLNS proto stack)
+        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>[\S\s]+)')
 
         # MTU:                    1500
         r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
@@ -2328,7 +2470,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
-        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
+        # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
@@ -2397,9 +2540,55 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # All ISs:              Yes
         r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')
 
+        # Extended Circuit Number:  20
+        r41 = re.compile(r'^Extended +Circuit +Number: +(?P<extended_circuit_number>\d+)$')
+        
+        # Next P2P IIH in:          3 s
+        r42 = re.compile(r'^Next +P2P +IIH +in: +(?P<next_p2p_iih_in>\d+) +m?s$')
+
+        # LSP Rexmit Queue Size:    0
+        r43 = re.compile(r'^LSP +Rexmit +Queue +Size: +(?P<lsp_rexmit_queue_size>\d+)$')
+
+        # RSI SRLG:                 Registered
+        r44 = re.compile(r'^RSI +SRLG: +(?P<rsi_srlg>\S+)$')
+
+        # Direct LFA:           Enabled            Enabled 
+        r45 = re.compile(r'^Direct +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Remote LFA:           Not Enabled        Not Enabled 
+        r46 = re.compile(r'^Remote +LFA: +(?P<level_1>(Not +)?Enabled) +(?P<level_2>(Not +)?Enabled)$')
+
+        # Tie Breaker          Default            Default
+        r47 = re.compile(r'^Tie +Breaker +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Line-card disjoint   30                 30
+        r48 = re.compile(r'^Line-card +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Lowest backup metric 20                 20
+        r49 = re.compile(r'^Lowest +backup +metric +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Node protecting      40                 40
+        r50 = re.compile(r'^Node +protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Primary path         10                 10
+        r51 = re.compile(r'^Primary +path +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # TI LFA:               Enabled            Enabled
+        r52 = re.compile(r'^TI +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # Link Protecting      Enabled            Enabled
+        r53 = re.compile(r'^Link +Protecting +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # SRLG disjoint        0                  0
+        r54 = re.compile(r'^SRLG +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
+
+        # IfName: Hu0/0/0/1 IfIndex: 0x55 
+        r55 = re.compile(r'^IfName: +(?P<if_name>\S+) +IfIndex: +(?P<if_index>\S+)$')
+
         parsed_output = {}
         interface_flag = False
         clns_flag = False
+        topology_falg = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -2596,6 +2785,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 protocol_state = group['protocol_state']
                 if clns_flag:
                     clns_dict['protocol_state'] = protocol_state
+                elif topology_falg:
+                    topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
 
@@ -2622,7 +2813,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault(topology, {})
                 topology_dict['state'] = topology_state
                 interface_flag = False
-
+                topology_falg = True
                 continue
 
             # Metric (L1/L2):         10/10
@@ -2658,10 +2849,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 continue
 
             # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
             result = r24.match(line)            
             if result:
                 group = result.groupdict()
-                mpls_stack = group['mpls_max_label_stack'].strip()
+                mpls_stack = group['mpls_max_label_stack'].replace(':', ' ').strip()
                 mpls_dict = topology_dict.setdefault('mpls', {})                
                 mpls_dict['mpls_max_label_stack'] = mpls_stack
 
@@ -2705,6 +2897,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             # FRR Type:             None               None
             result = r27.match(line)
             if result:
+                lfa_type = 'frr'
                 group = result.groupdict()
                 frr_type_level_1 = group['frr_type_level_1']
                 frr_type_level_2 = group['frr_type_level_2']
@@ -2854,6 +3047,245 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 layer_dict['all_level_2_iss'] = all_iss
 
                 continue
+            # Extended Circuit Number:  20
+            result = r41.match(line)
+            if result:
+                group = result.groupdict()
+                extended_circuit_number = int(group['extended_circuit_number'])
+                if interface_flag:
+                    interface_dict['extended_circuit_number'] = extended_circuit_number
+                else:
+                    topology_dict['extended_circuit_number'] = extended_circuit_number
+                continue
+
+            # Next P2P IIH in:          3 s
+            result = r42.match(line)
+            if result:
+                group = result.groupdict()
+                next_p2p_iih_in = int(group['next_p2p_iih_in'])
+                if interface_flag:
+                    interface_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                else:
+                    topology_dict['next_p2p_iih_in'] = next_p2p_iih_in
+                continue
+
+            # LSP Rexmit Queue Size:    0
+            result = r43.match(line)
+            if result:
+                group = result.groupdict()
+                lsp_rexmit_queue_size = int(group['lsp_rexmit_queue_size'])
+                if interface_flag:
+                    interface_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                else:
+                    topology_dict['lsp_rexmit_queue_size'] = lsp_rexmit_queue_size
+                continue
+
+            # RSI SRLG:                 Registered
+            result = r44.match(line)
+            if result:
+                group = result.groupdict()
+                rsi_srlg = group['rsi_srlg']
+                if interface_flag:
+                    interface_dict['rsi_srlg'] = rsi_srlg
+                else:
+                    topology_dict['rsi_srlg'] = rsi_srlg
+                continue
+            
+            # Direct LFA:           Enabled            Enabled 
+            result = r45.match(line)
+            if result:
+                lfa_type = 'direct_lfa'
+                group = result.groupdict()
+                direct_lfa_level_1 = group['level_1']
+                direct_lfa_level_2 = group['level_2']
+                direct_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_1.update({'state': direct_lfa_level_1})
+                direct_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('direct_lfa', {})
+                direct_lfa_dict_2.update({'state': direct_lfa_level_2})
+                continue
+            # Remote LFA:           Not Enabled        Not Enabled 
+            result = r46.match(line)
+            if result:
+                lfa_type = 'remote_lfa'
+                group = result.groupdict()
+                remote_lfa_level_1 = group['level_1']
+                remote_lfa_level_2 = group['level_2']
+                remote_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_1.update({'state': remote_lfa_level_1})
+                remote_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('remote_lfa', {})
+                remote_lfa_dict_2.update({'state': remote_lfa_level_2})
+                continue
+
+            # Tie Breaker          Default            Default
+            result = r47.match(line)
+            if result:
+                group = result.groupdict()
+                tie_breaker_level_1 = group['level_1']
+                tie_breaker_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'tie_breaker': tie_breaker_level_1})
+                current_lfa_dict_2.update({'tie_breaker': tie_breaker_level_2})
+                continue
+
+            # Line-card disjoint   30                 30
+            result = r48.match(line)
+            if result:
+                group = result.groupdict()
+                line_card_disjoint_level_1 = group['level_1']
+                line_card_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'line_card_disjoint': line_card_disjoint_level_1})
+                current_lfa_dict_2.update({'line_card_disjoint': line_card_disjoint_level_2})
+                continue
+
+            # Lowest backup metric 20                 20
+            result = r49.match(line)
+            if result:
+                group = result.groupdict()
+                lowest_backup_metric_level_1 = group['level_1']
+                lowest_backup_metric_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'lowest_backup_metric': lowest_backup_metric_level_1})
+                current_lfa_dict_2.update({'lowest_backup_metric': lowest_backup_metric_level_2})
+                continue
+
+            # Node protecting      40                 40
+            result = r50.match(line)
+            if result:
+                group = result.groupdict()
+                node_protecting_level_1 = group['level_1']
+                node_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'node_protecting': node_protecting_level_1})
+                current_lfa_dict_2.update({'node_protecting': node_protecting_level_2})
+                continue
+
+            # Primary path         10                 10
+            result = r51.match(line)
+            if result:
+                group = result.groupdict()
+                primary_path_level_1 = group['level_1']
+                primary_path_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'primary_path': primary_path_level_1})
+                current_lfa_dict_2.update({'primary_path': primary_path_level_2})
+                continue
+
+            # TI LFA:               Enabled            Enabled
+            result = r52.match(line)
+            if result:
+                lfa_type = 'ti_lfa'
+                group = result.groupdict()
+                ti_lfa_level_1 = group['level_1']
+                ti_lfa_level_2 = group['level_2']
+                ti_lfa_dict_1 = frr_dict.setdefault(level_1, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_1.update({'state': ti_lfa_level_1})
+                ti_lfa_dict_2 = frr_dict.setdefault(level_2, {}). \
+                    setdefault('ti_lfa', {})
+                ti_lfa_dict_2.update({'state': ti_lfa_level_2})
+                continue
+
+            # Link Protecting      Enabled            Enabled
+            result = r53.match(line)
+            if result:
+                group = result.groupdict()
+                link_protecting_level_1 = group['level_1']
+                link_protecting_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'link_protecting': link_protecting_level_1})
+                current_lfa_dict_2.update({'link_protecting': link_protecting_level_1})
+                continue
+
+            # SRLG disjoint        0                  0
+            result = r54.match(line)
+            if result:
+                group = result.groupdict()
+                srlg_disjoint_level_1 = group['level_1']
+                srlg_disjoint_level_2 = group['level_2']
+                if lfa_type == 'direct_lfa':
+                    current_lfa_dict_1 = direct_lfa_dict_2
+                    current_lfa_dict_2 = direct_lfa_dict_2
+                elif lfa_type == 'remote_lfa':
+                    current_lfa_dict_1 = remote_lfa_dict_1
+                    current_lfa_dict_2 = remote_lfa_dict_2
+                else:
+                    current_lfa_dict_1 = ti_lfa_dict_1
+                    current_lfa_dict_2 = ti_lfa_dict_2
+                
+                current_lfa_dict_1.update({'srlg_disjoint': srlg_disjoint_level_1})
+                current_lfa_dict_2.update({'srlg_disjoint': srlg_disjoint_level_2})
+                continue
+
+            # IfName: Hu0/0/0/1 IfIndex: 0x55 
+            result = r55.match(line)
+            if result:
+                group = result.groupdict()
+                if_name = Common.convert_intf_name(group['if_name'])
+                if_index = group['if_index']
+                underlying_interface = interface_dict.setdefault('underlying_interface', {}). \
+                    setdefault(if_name, {})
+                underlying_interface.update({'index': if_index})
+
+                continue
 
         return parsed_output
 
@@ -2881,12 +3313,15 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                     'overload_bit': int,
                                 },
                                 Optional('router_id'): str,
+                                Optional('router_cap'): str,
                                 Optional('area_address'): str,
                                 Optional('nlpid'): list,
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
                                 Optional('topology'): list,
+                                Optional('tlv'): int,
+                                Optional('tlv_length'): int,
                                 Optional('extended_ipv4_reachability'): {
                                     Any(): {
                                         'ip_prefix': str,
@@ -2976,6 +3411,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
         }
     }
 
+
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     ''' Parser for commands:
        * show isis database detail 
@@ -3000,7 +3436,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # router-5.00-00        0x00000005 0x807997c        457                0/0/0
         # 0000.0C00.0C35.00-00  0x0000000C    0x5696        325                0/0/0
         # 0000.0C00.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
-        r2 = re.compile(r'(?P<lspid>[\w\-\.]+)\s*(?P<local_router>\**)\s+(?P<lsp_seq_num>\S+)\s+(?P<lsp_checksum>\S+)\s+(?P<lsp_holdtime>\d+|\*)\s+(/*(?P<lsp_rcvd>\d*|\*)?)\s+(?P<attach_bit>\d+)/(?P<p_bit>\d+)/(?P<overload_bit>\d+)')
+        r2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
+                r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
+                r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
+                r'(?P<overload_bit>\d+)$')
 
         # Area Address:   49.0002
         r3 = re.compile(r'Area\s+Address\s*:\s*(?P<area_address>\S+)')
@@ -3105,6 +3544,12 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 0          IP 172.16.115.0/24
         r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
                          r'(?P<ip_address>[\d\.\/]+)')
+        
+        # Router Cap:     172.19.1.2 D:0 S:0
+        r23 = re.compile(r'^Router +Cap: +(?P<router_cap>[\S ]+)$')
+
+        # TLV 14:         Length: 2
+        r24 = re.compile(r'^TLV +(?P<tlv>\d+): +Length: +(?P<length>\d+)$')
 
         parsed_output = {}
 
@@ -3475,6 +3920,24 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
+            # Router Cap:     172.19.1.2 D:0 S:0
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                router_cap = group['router_cap']
+                lspid_dict['router_cap'] = router_cap
+                continue
+
+            # TLV 14:         Length: 2
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                tlv = int(group['tlv'])
+                length = int(group['length'])
+                lspid_dict['tlv'] = tlv
+                lspid_dict['tlv_length'] = length
+                continue
+
         return parsed_output
 
 
@@ -3482,7 +3945,11 @@ class ShowIsisPrivateAllSchema(MetaParser):
     ''' Schema for commands:
        * show isis private all 
     '''
-
+    # schema = {
+    #     Any(): {
+    #         Any(): Any(),
+    #     },
+    # }
     schema = {
         'instance': {
             Any(): {
@@ -3545,10 +4012,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'backoff_cfg': {
                                 'initial_wait_msecs': int,
                                 'secondary_wait_msecs': int,
-                                'maximum_wait_msecs': int,   
-                                'max_count': int,
-                                'max_window_size_msec': int,
+                                'maximum_wait_msecs': int, 
                             },
+                            'max_count': int,
+                            'max_window_size_msec': int,
                         },
                         'is_lsp_checksum_interval_set': bool,
                         'lsp_checksum_interval_secs': int,
@@ -3820,7 +4287,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'has_prefix_policy_changed': bool,
                             },
                         },
-                        'address_family': {
+                        'per_af': {
                             Any(): {
                                 'router_id': str,
                             },
@@ -4107,17 +4574,12 @@ class ShowIsisPrivateAllSchema(MetaParser):
         },
     }
 
+
 class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):    
     ''' Parser for commands:
        * show isis private all 
     '''
 
-    def _get_boolean_value(self, item):
-        if item == 'TRUE':
-            return True
-        elif item == 'FALSE':
-            return False
-    
     priority_level = {
         'ISIS_PREFIX_PRIORITY_CRITICAL': 'critical',
         'ISIS_PREFIX_PRIORITY_HIGH': 'high',
@@ -4138,1647 +4600,394 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         'isisSysStatLSPErrors':'lsp_errors',
     }
 
+    mib_counters_field = {
+        'isisCircuitType': 'circuit_type',
+        'isisCircAdjChanges': 'adj_changes',
+        'isisCircNumAdj': 'num_adj',
+        'isisCircInitFails': 'init_fails',
+        'isisCircRejAdjs': 'rej_adjs',
+        'isisCircIDFieldLenMismatches': 'id_field_len_mismatches',
+        'isisCircMaxAreaAddrMismatches': 'max_area_addr_mismatches',
+        'isisCircAuthTypeFails': 'auth_type_fails',
+        'isisCircAuthFails': 'auth_fails',
+        'isisCircLANDesISChanges': 'lan_des_is_canges',
+        'isisCircIndex': 'index',
+    }
 
     cli_command = 'show isis private all'
 
     def cli(self, output=None):
+
         if not output:
             output = self.device.execute(self.cli_command)
 
+        # initial variables
+        result_dict = {}
+        indent_map = {}
+        area_table_flag = False
+
+        def get_parent_dict(indent):
+            while indent > 0:
+                indent -= 1
+                parent = indent_map.get(indent)
+                if parent is not None:
+                    return parent
+
+        def clear_indent_map(indent):
+            for idx in list(indent_map):
+                if idx >= indent:
+                    indent_map.pop(idx)
+
+        def get_key(key):
+            if key.startswith('__'):
+                return key.replace('__', '')
+
+            if key in self.priority_level:
+                return self.priority_level[key]
+
+            if key in self.trap_stats_field:
+                return self.trap_stats_field[key]
+
+            if key in self.mib_counters_field:
+                return self.mib_counters_field[key]
+
+            return key
+
+        def get_value(value):
+            if not value:
+                return None
+
+            try:
+                return int(value)
+            except Exception:
+                pass
+
+            if value.lower() == 'true':
+                return True
+
+            if value.lower() == 'false':
+                return False
+
+            return value
+
         # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
-        r1 = re.compile(r'\++\s+IS\-IS\s+(?P<instance>\w+)\s+Global'
-                        r'\s+Private\s+Data\s+\++')
 
-        # list_linkage.next                               : 0x0
-        # list_linkage.previous                           : 0x44b2534
-        r2 = re.compile(r'list_linkage\.(?P<field>\w+)\s+\:\s*(?P<value>\w+)')
+        # ISIS Test private data:
+        r1 = re.compile(r'^(?P<indent>\s*)ISIS +(?P<instance>\w+) +private +data:$')
 
-        # lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
-        # lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
-        # lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
-        # lsp_arrivaltime_parameter.max_count           : 0
-        # lsp_arrivaltime_parameter.max_window_size_msec: 120001
-        r3 = re.compile(r'^lsp_arrivaltime_parameter\.*(?P<field_1>\w+)\.*'
-                        r'(?P<field_2>\w*)\s*\:\s*(?P<value>\d+)')
-
-        # lsp_gen_interval.initial_wait_msecs           : 50
-        # lsp_gen_interval.secondary_wait_msecs         : 200
-        # lsp_gen_interval.maximum_wait_msecs           : 5000
-        r4 = re.compile(r'^lsp_gen_interval\.*(?P<field>\w*)\s*\:'
-                        r'\s*(?P<value>\d+)')
-
-        # auth_cfg_ctx.alg                              : None
-        # auth_cfg_ctx.failure_mode                     : Drop
-        # auth_cfg_ctx.password                         : 0xdecafbad
-        # auth_cfg_ctx.accept_password                  : 0xdecafbad
-        r5 = re.compile(r'^auth_cfg_ctx\.*(?P<field_1>\w+)\s*\:\s*'
-                        r'(?P<value>\w+)')
-        
-        # upd_db.tree_node_chunks.size                    : 28
-        # upd_db.tree_node_chunks.flags                   : 1297
-        # upd_db.tree_node_chunks.num_allocated_elements  : 0        
-        r6 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                        r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
-                        r'(?P<value>\-*\d+)$')
-
-        # upd_db.tree.node_free_fn                        : 0x42fd08a
-        # upd_db.tree.data_to_str_fn                      : 0x42fd094
-        # upd_db.tree_node_chunks.name                    : 0x448764c
-        # upd_db.tree_node_chunks.chunk                   : 0x1543146c
-        r6_2 = re.compile(r'upd_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                          r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:'
-                          r'\s*(?P<value>[\w\s]+)$')
-
-
-        # spf_interval.initial_wait_msecs             : 50
-        # spf_interval.secondary_wait_msecs           : 200
-        # spf_interval.maximum_wait_msecs             : 5000
-        r7 = re.compile(r'^spf_interval\.*(?P<field>\w+)\s*\:\s*(?P<value>\d+)')
-        
-        # idb_list.sll_count                              : 8
-        # idb_list.sll_maximum                            : 0
-        r8 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\d+)$')
-
-        # idb_list.sll_head                               : 0x151942e0
-        # idb_list.sll_tail                               : 0x15193fd4
-        r8_2 = re.compile(r'^idb_list\.*(?P<field>\w+)\s*\:\s*(?P<value>\w+)$')
-
-        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
-        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
-        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
-        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
-        r9 = re.compile(r'^prefix_priority_acl\[(?P<priority>\w+)\]\s*\:\s*'
-                        r'(?P<value>\w+)')
-
-        # roca_event.timer.num_execution_events         : 1
-        # roca_event.timer.postponed_schedule_time.tv_sec: 0
-        # roca_event.timer.postponed_schedule_time.tv_nsec: 0
-        r10 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)\.*'
-                         r'(?P<field_3>\w*)\s*\:\s*(?P<value>\-*\d+)$')
-
-        # roca_event.timer.is_pending                   : FALSE
-        r10_2 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
-                           r'\.*(?P<field_3>\w*)\s*\:\s*(?P<value>TRUE|FALSE)$')
-
-        # roca_event.class                              : <error> 
-        # roca_event.log                                : 0x15474024   
-        r10_3 = re.compile(r'^roca_event\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
-                           r'\.*(?P<field_3>\w*)\s*\:\s*(?P<value>[\w\<\>]+)$')
-
-        # stats.num_spfs                                : 5004
-        # stats.num_ispfs                               : 0
-        # stats.num_nhcs                                : 10
-        # stats.num_prcs                                : 1219
-        # stats.num_periodic_spfs                       : 3876
-        r11 = re.compile(r'^stats\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)')
-
-        # trap_stats.isisSysStatManAddrDropFromAreas      : 0
-        # trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
-        # trap_stats.isisSysStatSeqNumSkips               : 1
-        # trap_stats.isisSysStatOwnLSPPurges              : 3
-        # trap_stats.isisSysStatIDFieldLenMismatches      : 0
-        # trap_stats.isisSysStatLSPErrors                 : 0
-        r12 = re.compile(r'^trap_stats\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)')
-
-        # dec_db.tree.key_size                            : 8
-        # dec_db.tree.size                                : 82
-        r13 = re.compile(r'dec_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                         r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
-                         r'(?P<value>\-*\d+)$')
-
-        # dec_db.name                                     : L2 Decision DB        
-        # dec_db.tree.node_alloc_data                     : 0x15394290
-        # dec_db.tree.node_alloc_fn                       : 0x42fd024
-        # dec_db.tree.node_free_fn                        : 0x42fd
-        r13_2 = re.compile(r'dec_db\.(?P<field_1>\w*)\.*(?P<field_2>\w*)\.*'
-                           r'(?P<field_3>\w*)\.*(?P<field_4>\w*)\s*\:\s*'
-                           r'(?P<value>[\w\s]+)$')
-        
-        # node_db.num_nodes                               : 64
-        r14 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
-
-        # node_db.node_created_fn                         : 0x424fd84
-        # node_db.node_destroyed_fn                       : 0x424ffa6
-        # node_db.node_ltopo_created_fn                   : 0x42500b6
-        # node_db.node_ltopo_destroyed_fn                 : 0x42503ba
-        # node_db.node_topo_created_fn                    : 0x4250536
-        # node_db.node_topo_destroyed_fn                  : 0x42506b4
-        # node_db.callback_context                        : 0x15393bfc
-        # node_db.root_element                            : 0x151fb9bc
-        r14_1 = re.compile(r'node_db\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # [001] is_spf_prefix_priority_acl_names_set : FALSE
-        # [001] is_spf_prefix_priority_tags_set      : FALSE
-        r15 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>is\S+)\s*:\s*'
-                         r'(?P<value>FALSE|TRUE)')
-        
-        # [000] spf_prefix_priority_tags             : 0
-        # [001] spf_prefix_priority_tags             : 0
-        # [002] spf_prefix_priority_tags             : 0
-        # [003] spf_prefix_priority_tags             : 0
-        r16 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:\s*'
-                         r'(?P<value>\d+)$')
-
-        # [000] spf_prefix_priority_acl_names        : 0x0
-        # [001] spf_prefix_priority_acl_names        : 0x0
-        # [002] spf_prefix_priority_acl_names        : 0x0
-        # [003] spf_prefix_priority_acl_names        : 0x0
-        r16_1 = re.compile(r'\[(?P<index>\d+)\]\s*(?P<field>spf\S+)\s*:\s*'
-                           r'(?P<value>\w+)$')
-
-        # te.is_pce_ready                               : FALSE
-        r17 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
-
-        # te.tunnel_table                               : 0x153ab844
-        # te.info_from_te                               : 0x0
-        # te.pce_info_from_te                           : 0x0
-        r17_2 = re.compile(r'^te\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # firsthopchanged.classification                : 0
-        # firsthopchanged.num_elements                  : 0
-        r18 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>\d+)$')
-
-        # firsthopchanged.is_sorted                     : TRUE
-        r18_2 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>TRUE|FALSE)')
-
-        # firsthopchanged.array                         : 0x1540d4e0
-        r18_3 = re.compile(r'firsthopchanged\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>\w+)')
-
-        # unreached.classification                      : 0
-        # unreached.num_elements                        : 0
-        r19 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
-
-        # unreached.is_sorted                           : FALSE
-        r19_2 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
-
-        # unreached.array                               : 0x1540d4b4
-        r19_3 = re.compile(r'unreached\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # paths.classification                          : 0
-        # paths.num_elements                            : 64
-        r20 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
-
-        # paths.is_sorted                               : FALSE
-        r20_2 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>TRUE|FALSE)')
-
-        # paths.array                                   : 0x1540d45c
-        r20_3 = re.compile(r'paths\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # linkchanged.num_elements                      : 0        
-        # linkchanged.classification                    : 2
-        r21 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\d+)$')
-
-        # linkchanged.is_sorted                         : TRUE
-        r21_2 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*'
-                           r'(?P<value>TRUE|FALSE)')        
-        
-        # linkchanged.array                             : 0x1540d66c        
-        r21_3 = re.compile(r'linkchanged\.*(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # checksum_ptimer.tv_sec                          : 3657420
-        # checksum_ptimer.tv_nsec                         : 458761224
-        r22 = re.compile(r'^checksum_ptimer\.(?P<field>\w+)\s*\:\s*'
-                         r'(?P<value>\d+)')
-
-        # is_lsp_gen_interval_set                       : FALSE
-        # is_lsp_arrivaltime_parameter_set              : FALSE
-        # is_lsp_checksum_interval_set                  : FALSE
-        r23 = re.compile(r'^(?P<field>is_lsp_\S+)\s*\:\s(?P<value>TRUE|FALSE)')
-        
-        # lsp_pacing_interval_msecs                       : (not set)
-        # lsp_fast_flood_threshold                        : (not set)
-        # lsp_rexmit_interval_secs                        : (not set)
-        r24 = re.compile(r'(?P<field_1>^lsp_\w+)\.*(?P<field_2>\w*)\s*\:\s*'
-                         r'(?P<value>[a-zA-Z\.\-\(\)\s]+)$')
-
-        # lsp_checksum_interval_secs                    : 0
-        # lsp_refresh_interval_secs                     : 35000
-        # lsp_lifetime_secs                             : 65535
-        # lsp_mtu                                       : 0
-        # lsp_count.in                                    : 101725
-        # lsp_count.out                                   : 176736
-        r24_2 = re.compile(r'(?P<field_1>^lsp_\w+)\.*(?P<field_2>\w*)\s*\:\s*'
-                           r'(?P<value>\d+)$')
-
-        # per_topo[IPv4 Unicast]                        :
-        r25 = re.compile(r'per_topo\[(?P<topology>[\w\s]+)\]\s*:$')
-
-        # per_ltopo[Standard (IPv4 Unicast)]              :
-        r26 = re.compile(r'^per_ltopo\[(?P<topology>[\w\s\(\)]+)\]\s*:$')
+        # Address Family Table
+        r2 = re.compile(r'^(?P<indent>\s*)Address +Family +Table$')
 
         # IPv4
         # IPv6
-        r27 = re.compile(r'^IPv(4|6)$')
-
-        # overload_bit_trigger_expired                    : TRUE
-        # overload_bit_trigger_running                  : FALSE
-        r28 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>TRUE|FALSE)')
-
-        # overload_mode                                 : -1
-        r28_1 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>\-*\d*)$')
-
-        # overload_bit_on_startup_timer                   : 0x15017530        
-        # overload_bit_forced_reasons                     :
-        r28_2 = re.compile(r'^(?P<field>overload_\w+)\s*:\s*(?P<value>\S*)')
-
-        # postponed_added_first_hops                    : 0x0
-        # postponed_deleted_first_hops                  : 0x0
-        r29 = re.compile(r'(?P<field>postponed_\w+)\s*\:\s*(?P<value>\w+)')
-
-        # max_redist_prefixes_exceeded                  : FALSE
-        # max_redist_prefixes_alarm_on                  : FALSE
-        r30 = re.compile(r'(?P<field>max_redist_\w+)\s*\:\s*'
-                         r'(?P<value>FALSE|TRUE)')
-
-        # max_redist_prefixes                         : (not set)
-        r30_1 = re.compile(r'(?P<field>max_redist_\w+)\s*\:\s*'
-                           r'(?P<value>[\w\(\)\s]+)')
-
-        # per_af[IPv6]                                    :
-        # per_af[IPv4]                                    :
-        r31 = re.compile(r'^per_af\[(?P<address_family>IPv(4|6))\]\s*\:*$')
-
-        # Level-1
-        # Level-2
-        r32 = re.compile(r'^Level\-(?P<level>\d+)$')
-
-        # adj_db                                          : 0x1540cee4
-        # adj_log                                         : 0x1539b844
-        r33 = re.compile(r'(?P<field>^adj_\w+)\s*\:\s*(?P<value>\S+)$')
-
-        # cfg.refcount                                      : 7
-        # cfg.is_p2p                                        : TRUE
-        # cfg.enabled_mode                                  : Active
-        # cfg.circuit_type                                  : level-1-2
-        # cfg.ipv4_bfd_enabled                              : TRUE
-        # cfg.ipv6_bfd_enabled                              : FALSE
-        # cfg.bfd_interval                                  : 250
-        # cfg.bfd_multiplier                                : 3
-        # cfg.topos                                         : IPv4 Unicast
-        # cfg.cross_levels                                  :
-        r34 = re.compile(r'^cfg\.+(?P<field>\S+)\s*\:\s*(?P<value>[\w\-\s]+)$')
-
-        # cfg.per_level[Level-1]                            :
-        # cfg.per_level[Level-2]                            :
-        r35 = re.compile(r'cfg\.per_level\[Level-(?P<level>\d+)\]\s*:')
-
-        # media_specific.p2p.do_ietf_3way                   : TRUE
-        # media_specific.p2p.received_ietf_3way             : TRUE
-        # media_specific.p2p.neighbor_extended_circuit_number: 89
-        # media_specific.p2p.neighbor_system_id             : 0670.7021.9088
-        # media_specific.p2p.nsf_ietf
-        r36 = re.compile(r'^media_specific\.*(?P<field_1>\w*)\.'
-                         r'(?P<field_2>\w*)\.*(?P<field_3>\w*)\.*'
-                         r'(?P<field_4>\w*)\s*\:*\s*(?P<value>[\w\.]*)')
-
-        # clns.im_node.state_registered                     : TRUE
-        # clns.im_node.node_up                              : TRUE
-        # clns.mtu                                          : 9199
-        r37 = re.compile(r'^clns\.*(?P<field_1>\w+)\.*(?P<field_2>\w*)'
-                         r'\s*\:\s*(?P<value>\w+)')
-
-        # mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
-        # mpls_ldp_sync.ldp_sync_info                       : FALSE
-        # mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
-        r38 = re.compile(r'mpls_ldp_sync\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>\w+)')
-
-        # mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
-        # mpls_ldpv6_sync.ldp_sync_info                     : FALSE
-        # mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
-        r39 = re.compile(r'^mpls_ldpv6_sync\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>\w+)')
-
-        # per_area[Level-2]                                 :
-        r40 = re.compile(r'per_area\[Level-(?P<level>\d+)\]\s*:')        
-
-        # nsf_ietf.full_csnp_set_rcvd                     : FALSE
-        # nsf_ietf.csnp_set_rcvd.list_head                : 0x0
-        # nsf_ietf.csnp_set_rcvd.list_size                : 0
-        r41 = re.compile(r'^nsf_ietf\.(?P<field_1>\w*)\.*'
-                         r'(?P<field_2>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # im_node.exist_registered                        : TRUE
-        # im_node.node_exists                             : TRUE
-        # im_node.state_registered                        : TRUE
-        # im_node.node_up                                 : TRUE
-        r42 = re.compile(r'^im_node\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>TRUE|FALSE)')
-
-        # snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
-        # snpa_info.snpa                                  : 00c1.641b.33d6
-        # snpa_info.is_snpa_ok                            : TRUE
-        r43 = re.compile(r'^snpa_info\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>[\w\.]+)')
-
-        # csnp_control.timer                              : 0x15768174
-        # csnp_control.next_lsp_id                        : 0000.0000.0000.00-00
-        # csnp_control.building_packets                   : FALSE
-        r44 = re.compile(r'^csnp_control\.*(?P<field>\w*)\s*\:\s*'
-                         r'(?P<value>[\w\.\-]+)')
-
-        # pri_label_stack_limit                             : 1
-        # bkp_label_stack_limit                             : 3
-        # srte_label_stack_limit                            : 10
-        # srat_label_stack_limit                            : 10
-        r45 = re.compile(r'^(?P<field>\w+)_stack_limit\s*\:\s*(?P<value>\d+)$')
-        
-        # hello_interval_msecs                            : (not set)
-        # hello_multiplier                                : (not set)
-        r46 = re.compile(r'^hello_(?P<field>\w+)\s*\:\s*'
-                         r'(?P<value>[\w\s\(\)]+)$')
-
-        # pme_avg_delay                                     : (not set)
-        # pme_min_delay                                     : (not set)
-        # pme_max_delay                                     : (not set)
-        # pme_delay_var                                     : (not set)
-        # pme_loss                                          : (not set)
-        # pme_total_bw                                      : (not set)
-        # pme_rsvp_te_bw                                    : (not set)
-        r47 = re.compile(r'^pme_(?P<field>\w+)\s*\:\s*(?P<value>[\w\s\(\)]+)$')
-
-        # mcast_state.is_mcast_group_member               : TRUE
-        # mcast_state.mcast_join_reason                   : 2
-        r48 = re.compile(r'mcast_state\.(?P<field>\w*)\s*\:\s*(?P<value>\w+)')
-
-        # csnp_count.in                                   : 4
-        # csnp_count.out                                  : 4
-        # psnp_count.in                                   : 168148
-        # psnp_count.out                                  : 98923
-        r49 = re.compile(r'(?P<field_1>(p|c)snp)_count\.(?P<field_2>\w+)'
-                         r'\s*\:\s*(?P<value>\d+)')
-
-        # rsvp_max_res_bw                                   : 0 kbits/sec
-        # rsvp_unres_prio_7                                 : 0 kbits/sec
-        r50 = re.compile(r'^rsvp_(?P<field>\w+)\s*\:\s*(?P<value>[\w\s\/]+)$')
-
-        # chkpt.objid                      : 0x0
-        r51 = re.compile(r'chkpt\.objid\s*\:\s*(?P<value>\w+)')
-
-        # RA-expected neighbor list:
-        r52 = re.compile(r'RA\-expected\s*neighbor\s*list\s*:')
-
-        # local_address                                   : 0.0.0.0    
-        r53 = re.compile(r'local_address\s*:\s*(?P<local_address>[\d\.]+)')
-
-        # Interface TenGigE0/0/1/2
-        r54 = re.compile(r'^Interface\s+(?P<interface>\w+[\d\/]+)')
-
-        # Address Family Table
-        r55 = re.compile(r'^Address\s+Family\s+Table$')
-
-        # Configuration:
-        r56 = re.compile(r'^Configuration\s*\:$')
-
-        # Standard (IPv4 Unicast)
-        r57 = re.compile(r'^(Standard \(IPv4 Unicast\))$')
-        
-        # IPv4 Unicast
-        r58 = re.compile(r'^IPv(4|6)\s*Unicast$')
-        
-        # Topology Table
-        r59 = re.compile(r'^Topology\s*Table$')
-
-        # Cross Levels
-        r60 = re.compile(r'^Cross\s+Levels$')
-
-        # Area Table
-        r61 = re.compile(r'^Area\s+Table$')
+        r3 = re.compile(r'^(?P<indent>\s*)IPv(4|6)$')
 
         # Link Topology Table
-        r62 = re.compile(r'Link\s+Topology\s+Table')
+        r4 = re.compile(r'^(?P<indent>\s*)Link +Topology +Table$')
+
+        # Standard (IPv4 Unicast)
+        r5 = re.compile(r'^(?P<indent>\s*)Standard +\(IPv4 +Unicast\)$')
+
+        # Topology Table
+        r6 = re.compile(r'^(?P<indent>\s*)Topology +Table$')
+
+        # IPv4 Unicast
+        r7 = re.compile(r'^(?P<indent>\s*)IPv(4|6) +Unicast$')
+
+        # Configuration:
+        r8 = re.compile(r'^(?P<indent>\s*)Configuration:$')
 
         # Area Configuration Table
-        r63 = re.compile(r'^Area\s+Configuration\s+Table$')
+        r9 = re.compile(r'^(?P<indent>\s*)Area +Configuration +Table$')
 
-        # is_mcast_intact_set                         : FALSE
-        r64 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>TRUE|FALSE)')
+        # Cross Levels
+        r10 = re.compile(r'^(?P<indent>\s*)Cross +Levels$')
 
-        # cfg_refcount                                      : 57
-        r65 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>\-*\d+)$')
+        # Level-1
+        r11 = re.compile(r'^(?P<indent>\s*)Level\-(?P<level>\d+)$')
 
-        # check_adjacencies                           : (not set)
-        r66 = re.compile(r'(?P<field>\w+)\s*\:\s*(?P<value>[\(\w\s\)\-]+)$')        
+        # Area Table
+        r12 = re.compile(r'^(?P<indent>\s*)Area +Table$')
 
-        parsed_dict = {}        
-        address_family_table_flag = False
-        link_topology_table_flag = False
-        topology_table_flag = False
-        configuration_flag = False
-        area_configuration_table_flag = False
-        area_configuration_table_per_topo_flag = False
-        area_configuration_table_topo_index_flag = False
-        area_table_flag = False
-        area_table_per_ltopo_flag = False
-        area_table_per_topo_flag = False
-        area_table_per_af_flag = False
+        # per_af[IPv4]
+        # per_topo[IPv4 Unicast]   :
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+        r13 = re.compile(r'^(?P<indent>\s*)(?P<key>\w+)\[(?P<type>.+)\]( *:)?'
+                         r'( +(?P<value>\w+))?$')
 
+        # [000] is_spf_prefix_priority_acl_names_set : FALSE
+        r14 = re.compile(r'^(?P<indent>\s*)\[(?P<idx>\d+)\] +(?P<key>\w+) *: +'
+                         r'(?P<value>\w+)$')
+
+
+        # ++++++++++++++++++++++ IS-IS Test Interface Private Data ++++++++++++++++++++++
+
+        # Interface TenGigE0/0/1/2
+        r15 = re.compile(r'^(?P<indent>\s*)Interface +(?P<interface>\S+)$')
+
+        #   media             : 0x440cc90
+        r16 = re.compile(r'^(?P<indent>\s*)media *: +(?P<media>\S+)$')
+
+        # cfg.cross_levels   :
+        # cfg.per_level[Level-1]    :
+        # cfg.per_level[Level-2]    :
+        r17 = re.compile(r'^(?P<indent>\s*)(?P<key>cfg\.(cross_levels|per_level\[.*\])) +:$')
+
+        # media_specific.p2p.nsf_ietf
+        # media_specific.p2p.p2p_over_lan
+        r18 = re.compile(r'^(?P<indent>\s*)(?P<key>[\w]+\.[\S]+)$')
+
+        #   lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+        r99 = re.compile(r'^(?P<indent>\s*)(?P<key>[\w\.]+) *: +(?P<value>.*)$')
 
         for line in output.splitlines():
-            line = line.strip()
+            line = line.rstrip()
+            if not line:
+                continue
 
-            # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
-            result = r1.match(line)
-            if result:
-                group = result.groupdict()
+            # ISIS TEST private data:
+            m = r1.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
                 instance = group['instance']
-                instance_dict = parsed_dict\
-                    .setdefault('instance', {})\
-                    .setdefault(instance, {})
+                inst_dict = result_dict.setdefault('instance', {}).setdefault(instance, {})
+                indent_map.update({indent: inst_dict})
+                area_table_flag = False
                 continue
 
-            # list_linkage.next                               : 0x0
-            # list_linkage.previous                           : 0x44b2534
-            result = r2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-
-                if area_table_flag:
-                    list_linkage_dict = area_table_dict\
-                        .setdefault('list_linkage', {})                
-                elif topology_table_flag:
-                    list_linkage_dict = topology_table_dict\
-                        .setdefault('list_linkage', {})
-                elif link_topology_table_flag:
-                    list_linkage_dict = link_topology_table_dict\
-                        .setdefault('list_linkage', {})
-
-                list_linkage_dict[field] = value
-                continue
-
-            # lsp_arrivaltime_parameter.backoff_cfg.initial_wait_msecs: 50
-            # lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
-            # lsp_arrivaltime_parameter.backoff_cfg.maximum_wait_msecs: 5000
-            # lsp_arrivaltime_parameter.max_count           : 0
-            # lsp_arrivaltime_parameter.max_window_size_msec: 120001
-            result = r3.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                value = int(group['value'])
-                back_off_dict = area_configuration_table_dict\
-                    .setdefault('lsp_arrivaltime_parameter', {})\
-                    .setdefault('backoff_cfg', {})
-                if field_2:
-                    back_off_dict[field_2] = value
-                elif field_1:
-                    back_off_dict[field_1] = value
-
-                continue
-
-            # lsp_gen_interval.initial_wait_msecs           : 50
-            # lsp_gen_interval.secondary_wait_msecs         : 200
-            # lsp_gen_interval.maximum_wait_msecs           : 5000
-            result = r4.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                lsp_gen_interval = area_configuration_table_dict\
-                    .setdefault('lsp_gen_interval', {})
-                lsp_gen_interval[field] = value
-                continue
-
-            # auth_cfg_ctx.alg                              : None
-            # auth_cfg_ctx.failure_mode                     : Drop
-            # auth_cfg_ctx.password                         : 0xdecafbad
-            # auth_cfg_ctx.accept_password                  : 0xdecafbad
-            result = r5.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                value = group['value']
-                if area_configuration_table_flag:
-                    auth_cfg_ctx_dict = area_configuration_table_dict\
-                        .setdefault('auth_cfg_ctx', {})
-                    auth_cfg_ctx_dict[field_1] = value
-
-                continue
-
-            # upd_db.tree_node_chunks.size                    : 28
-            # upd_db.tree_node_chunks.flags                   : 1297            
-            # upd_db.tree_node_chunks.num_allocated_elements  : 0 
-            result = r6.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                field_4 = group['field_4']
-                value = int(group['value'])
-                upd_db_dict = area_table_dict\
-                    .setdefault('upd_db', {})
-                if field_4:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    field_4 = re.sub(r'^_+', '', field_4)
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})\
-                        .setdefault(field_3, {})
-                    lock_dict[field_4] = value
-                elif field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    lock_dict[field_3] = value
-                elif field_2:
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})
-                    lock_dict[field_2] = value
-
-                continue
-
-            # upd_db.tree_node_chunks.chunk                   : 0x1543146c
-            # upd_db.tree.node_free_fn                        : 0x42fd08a
-            # upd_db.tree.data_to_str_fn                      : 0x42fd094
-            # upd_db.tree_node_chunks.name                    : 0x448764c
-            result = r6_2.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                field_4 = group['field_4']
-                value = group['value']
-                upd_db_dict = area_table_dict\
-                    .setdefault('upd_db', {})
-                if field_4:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    field_4 = re.sub(r'^_+', '', field_4)
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})\
-                        .setdefault(field_3, {})
-                    lock_dict[field_4] = value
-                elif field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    lock_dict[field_3] = value
-                elif field_2:
-                    lock_dict = upd_db_dict\
-                        .setdefault(field_1, {})
-                    lock_dict[field_2] = value
-                else:
-                    upd_db_dict[field_1] = value
-
-                continue
-
-            # spf_interval.initial_wait_msecs             : 50
-            # spf_interval.secondary_wait_msecs           : 200
-            # spf_interval.maximum_wait_msecs             : 5000
-            result = r7.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                spf_interval_dict = area_configuration_table_per_topo_dict\
-                    .setdefault('spf_interval', {})
-                spf_interval_dict[field] = value
-
-                continue
-            
-            # idb_list.sll_count                              : 8
-            # idb_list.sll_maximum                            : 0
-            result = r8.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                idb_list_dict = area_table_dict\
-                    .setdefault('idb_list', {})
-                idb_list_dict[field] = value
-                continue
-
-            # idb_list.sll_head                               : 0x151942e0
-            # idb_list.sll_tail                               : 0x15193fd4
-            result = r8_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                idb_list_dict = area_table_dict\
-                    .setdefault('idb_list', {})
-                idb_list_dict[field] = value
-                continue
-
-            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
-            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_HIGH]: 0x15604868
-            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_MED] : 0x156047dc
-            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_LOW] : 0x0
-            result = r9.match(line)
-            if result:
-                group = result.groupdict()
-                priority = self.priority_level[group['priority']]
-                value = group['value']
-                prefix_priority_acl_dict = area_table_per_topo_dict\
-                    .setdefault('prefix_priority_acl', {})
-                prefix_priority_acl_dict[priority] = value
-                continue
-
-            # roca_event.timer.num_execution_events         : 1
-            # roca_event.timer.postponed_schedule_time.tv_sec: 0
-            # roca_event.timer.postponed_schedule_time.tv_nsec: 0
-            result = r10.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                value = int(group['value'])
-                roca_event_dict = area_table_per_ltopo_dict\
-                    .setdefault('roca_event', {})
-                if field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    subfield_dict[field_3] = value
-                elif field_2:
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})
-                    subfield_dict[field_2] = value
-                elif field_1:
-                    roca_event_dict[field_1] = value
-
-                continue
-
-            # roca_event.timer.is_pending                   : FALSE
-            result = r10_2.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                value = self._get_boolean_value(group['value'])
-                roca_event_dict = area_table_per_ltopo_dict\
-                    .setdefault('roca_event', {})
-                if field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    subfield_dict[field_3] = value
-                elif field_2:
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})
-                    subfield_dict[field_2] = value
-                elif field_1:
-                    roca_event_dict[field_1] = value
-                
-                continue
-
-            # roca_event.timer.last_execution_time.tv_nsec  : 824108467
-            # roca_event.log                                : 0x15474024
-            # roca_event.class                              : <error>
-            result = r10_3.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                value = group['value']
-                roca_event_dict = area_table_per_ltopo_dict\
-                    .setdefault('roca_event', {})
-                if field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    subfield_dict[field_3] = value
-                elif field_2:
-                    subfield_dict = roca_event_dict\
-                        .setdefault(field_1, {})
-                    subfield_dict[field_2] = value
-                elif field_1:
-                    roca_event_dict[field_1] = value
-                continue
-
-            # stats.num_spfs                                : 5004
-            # stats.num_ispfs                               : 0
-            # stats.num_nhcs                                : 10
-            # stats.num_prcs                                : 1219
-            # stats.num_periodic_spfs                       : 3876
-            result = r11.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                if area_table_per_ltopo_flag:
-                    stats_dict = area_table_per_ltopo_dict\
-                        .setdefault('stats', {})
-                    stats_dict[field] = value
-                elif area_table_flag:
-                    stats_dict = area_table_dict.setdefault('stats', {})
-                    stats_dict[field] = value
-                continue
-
-            # trap_stats.isisSysStatManAddrDropFromAreas      : 0
-            # trap_stats.isisSysStatAttmptToExMaxSeqNums      : 0
-            # trap_stats.isisSysStatSeqNumSkips               : 1
-            # trap_stats.isisSysStatOwnLSPPurges              : 3
-            # trap_stats.isisSysStatIDFieldLenMismatches      : 0
-            # trap_stats.isisSysStatLSPErrors                 : 0
-            result = r12.match(line)
-            if result:
-                group = result.groupdict()
-                field = self.trap_stats_field[group['field']]
-                value = int(group['value'])
-                if area_table_flag:
-                    trap_stats_dict = area_table_dict\
-                        .setdefault('trap_stats', {})
-                    trap_stats_dict[field] = value
-                continue
-            
-            # dec_db.tree.key_size                            : 8
-            # dec_db.tree.size                                : 82
-            result = r13.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                field_4 = group['field_4']
-                value = int(group['value'])
-                dec_db_dict = area_table_dict\
-                    .setdefault('dec_db', {})
-                if field_4:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    field_4 = re.sub(r'^_+', '', field_4)
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})\
-                        .setdefault(field_3, {})
-                    lock_dict[field_4] = value
-                elif field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    lock_dict[field_3] = value
-                elif field_2:
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})
-                    lock_dict[field_2] = value
-                else:
-                    dec_db_dict[field_1] = value
-
-                continue
-
-            # dec_db.tree.node_alloc_data                     : 0x15394290
-            # dec_db.tree.node_alloc_fn                       : 0x42fd024
-            # dec_db.tree.node_free_fn                        : 0x42fd
-            # dec_db.name                                     : L2 Decision DB
-            result = r13_2.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                field_3 = group['field_3']
-                field_4 = group['field_4']
-                value = group['value']
-                dec_db_dict = area_table_dict\
-                    .setdefault('dec_db', {})
-                if field_4:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    field_4 = re.sub(r'^_+', '', field_4)
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})\
-                        .setdefault(field_3, {})
-                    lock_dict[field_4] = value
-                elif field_3:
-                    field_3 = re.sub(r'^_+', '', field_3)
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})\
-                        .setdefault(field_2, {})
-                    lock_dict[field_3] = value
-                elif field_2:
-                    lock_dict = dec_db_dict\
-                        .setdefault(field_1, {})
-                    lock_dict[field_2] = value
-                else:
-                    dec_db_dict[field_1] = value
-
-                continue
-            
-            # node_db.num_nodes                               : 64
-            result = r14.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                node_db_dict = area_table_dict.setdefault('node_db', {})
-                node_db_dict[field] = value
-                continue
-
-            
-            # node_db.node_created_fn                         : 0x424fd84
-            # node_db.node_destroyed_fn                       : 0x424ffa6
-            # node_db.node_ltopo_created_fn                   : 0x42500b6
-            # node_db.node_ltopo_destroyed_fn                 : 0x42503ba
-            # node_db.node_topo_created_fn                    : 0x4250536
-            # node_db.node_topo_destroyed_fn                  : 0x42506b4
-            # node_db.callback_context                        : 0x15393bfc
-            # node_db.root_element                            : 0x151fb9bc
-            result = r14_1.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                node_db_dict = area_table_dict.setdefault('node_db', {})
-                node_db_dict[field] = value
-                continue
-
-            # [001] is_spf_prefix_priority_acl_names_set : FALSE
-            # [001] is_spf_prefix_priority_tags_set      : FALSE
-            result = r15.match(line)
-            if result:
-                group = result.groupdict()
-                index = int(group['index'])
-                field = group['field']
-                value = self._get_boolean_value(group['value'])                
-                topo_index_dict = area_configuration_table_per_topo_dict\
-                    .setdefault('topo_index', {})\
-                    .setdefault(index, {})
-                topo_index_dict[field] = value
-                area_configuration_table_per_topo_flag = False
-                continue
-
-            # [000] spf_prefix_priority_tags             : 0
-            # [001] spf_prefix_priority_tags             : 0
-            # [002] spf_prefix_priority_tags             : 0
-            # [003] spf_prefix_priority_tags             : 0            
-            result = r16.match(line)
-            if result:
-                group = result.groupdict()
-                index = int(group['index'])
-                field = group['field']
-                value = int(group['value'])
-                topo_index_dict = area_configuration_table_per_topo_dict\
-                    .setdefault('topo_index', {})\
-                    .setdefault(index, {})
-                topo_index_dict[field] = value
-                area_configuration_table_per_topo_flag = False
-                continue
-
-            # [000] spf_prefix_priority_acl_names        : 0x0
-            # [001] spf_prefix_priority_acl_names        : 0x0
-            # [002] spf_prefix_priority_acl_names        : 0x0
-            # [003] spf_prefix_priority_acl_names        : 0x0
-            result = r16_1.match(line)
-            if result:
-                group = result.groupdict()
-                index = int(group['index'])
-                field = group['field']
-                value = group['value']                
-                topo_index_dict = area_configuration_table_per_topo_dict\
-                    .setdefault('topo_index', {})\
-                    .setdefault(index, {})
-                topo_index_dict[field] = value
-                area_configuration_table_per_topo_flag = False
-                continue
-
-            # te.is_pce_ready                               : FALSE            
-            result = r17.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                te_dict = area_table_per_topo_dict.setdefault('te', {})
-                te_dict[field] = value
-                continue
-
-            # te.tunnel_table                               : 0x153ab844
-            # te.info_from_te                               : 0x0
-            # te.pce_info_from_te                           : 0x0            
-            result = r17_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                te_dict = area_table_per_topo_dict.setdefault('te', {})
-                te_dict[field] = value
-                continue
-
-            # firsthopchanged.classification                : 0
-            # firsthopchanged.num_elements                  : 0
-            result = r18.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                firsthopchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('firsthopchanged', {})
-                firsthopchanged_dict[field] = value
-                continue
-
-            # firsthopchanged.is_sorted                     : TRUE
-            result = r18_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                firsthopchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('firsthopchanged', {})
-                firsthopchanged_dict[field] = value
-                continue
-
-            # firsthopchanged.array                         : 0x1540d4e0
-            result = r18_3.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                firsthopchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('firsthopchanged', {})
-                firsthopchanged_dict[field] = value
-                continue
-
-            # unreached.classification                      : 0
-            # unreached.num_elements                        : 0
-            result = r19.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                unreached_dict = area_table_per_ltopo_dict\
-                    .setdefault('unreached', {})
-                unreached_dict[field] = value
-
-                continue
-
-            # unreached.is_sorted                           : FALSE
-            result = r19_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                unreached_dict = area_table_per_ltopo_dict\
-                    .setdefault('unreached', {})
-                unreached_dict[field] = value
-                continue
-
-            # unreached.array                               : 0x1540d4b4
-            result = r19_3.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                unreached_dict = area_table_per_ltopo_dict\
-                    .setdefault('unreached', {})
-                unreached_dict[field] = value
-                continue
-
-            # paths.classification                          : 0
-            # paths.num_elements                            : 64
-            result = r20.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
-                paths_dict[field] = value
-                continue
-
-            # paths.is_sorted                               : FALSE
-            result = r20_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
-                paths_dict[field] = value
-                continue
-
-            # paths.array                                   : 0x1540d45c
-            result = r20_3.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                paths_dict = area_table_per_ltopo_dict.setdefault('paths', {})
-                paths_dict[field] = value
-                continue
-
-            # linkchanged.classification                    : 2                        
-            # linkchanged.num_elements                      : 0
-            result = r21.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                linkchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('linkchanged', {})
-                linkchanged_dict[field] = value
-                continue
-
-            # linkchanged.is_sorted                         : TRUE
-            result = r21_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                linkchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('linkchanged', {})
-                linkchanged_dict[field] = value
-                continue
-
-            # linkchanged.array                             : 0x1540d66c
-            result = r21_3.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                linkchanged_dict = area_table_per_ltopo_dict\
-                    .setdefault('linkchanged', {})
-                linkchanged_dict[field] = value
-                continue
-
-            # checksum_ptimer.tv_sec                          : 3657420
-            # checksum_ptimer.tv_nsec                         : 458761224
-            result = r22.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
-                checksum_ptimer_dict = area_table_dict\
-                    .setdefault('checksum_ptimer', {})
-                checksum_ptimer_dict[field] = value
-                continue
-
-            # is_lsp_gen_interval_set                       : FALSE
-            # is_lsp_arrivaltime_parameter_set              : FALSE
-            # is_lsp_checksum_interval_set                  : FALSE
-            result = r23.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                if area_configuration_table_flag:
-                    area_configuration_table_dict = instance_dict\
-                        .setdefault('area_configuration_table', {})\
-                        .setdefault(area_config_table_level, {})
-                    area_configuration_table_dict[field] = value
-                continue
-            
-            # lsp_pacing_interval_msecs                       : (not set)
-            # lsp_fast_flood_threshold                        : (not set)
-            # lsp_rexmit_interval_secs                        : (not set)
-            result = r24.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                value = group['value']
-                if area_configuration_table_flag:
-                    area_configuration_table_dict[field_1] = value
-
-            # lsp_checksum_interval_secs                    : 0
-            # lsp_refresh_interval_secs                     : 35000
-            # lsp_lifetime_secs                             : 65535
-            # lsp_mtu                                       : 0
-            # lsp_count.in                                    : 101725
-            # lsp_count.out                                   : 176736            
-            result = r24_2.match(line)
-            if result:
-                group = result.groupdict()
-                field_1 = group['field_1']
-                field_2 = group['field_2']
-                value = int(group['value'])
-
-                if area_configuration_table_flag:
-                    area_configuration_table_dict[field_1] = value
-
-                continue
-
-
-            # per_topo[IPv4 Unicast]                        :
-            result = r25.match(line)
-            if result:
-                group = result.groupdict()
-                topology = group['topology']
-                if area_table_flag:
-                    area_table_per_topo_flag = True
-                    area_table_per_topo_dict = area_table_dict\
-                        .setdefault('per_topo', {})\
-                        .setdefault(topology, {})
-                else:
-                    area_configuration_table_per_topo_dict = area_configuration_table_dict\
-                        .setdefault('per_topo', {})\
-                        .setdefault(topology, {})
-                    area_configuration_table_per_topo_flag = True
-                continue
-
-            # per_ltopo[Standard (IPv4 Unicast)]              :
-            result = r26.match(line)
-            if result:
-                group = result.groupdict()
-                topology = group['topology']
-                if area_table_flag:
-                    area_table_per_ltopo_dict = area_table_dict\
-                        .setdefault('per_ltopo', {})\
-                        .setdefault(topology, {})
-                area_table_per_ltopo_flag = True
+            # Address Family Table
+            m = r2.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                af_dict = inst_dict.setdefault('address_family_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: af_dict})
                 continue
 
             # IPv4
             # IPv6
-            result = r27.match(line)
-            if result:
-                if address_family_table_flag:
-                    address_family_table_dict = instance_dict\
-                        .setdefault('address_family_table', {})\
-                        .setdefault(line, {})
-
-                continue
-            
-            # overload_bit_trigger_expired                    : TRUE            
-            result = r28.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                if area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                elif area_table_flag:
-                    area_table_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-
+            m = r3.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                ip = line.strip()
+                ip_dict = af_dict.setdefault(ip, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: ip_dict})
                 continue
 
-            # overload_mode                                 : -1
-            result = r28_1.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                if not value:
-                    continue
-                value = int(group['value'])
-                if area_table_flag and value:
-                    area_table_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-
+            # Link Topology Table
+            m = r4.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                link_dict = inst_dict.setdefault('link_topology_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: link_dict})
                 continue
 
-            # overload_bit_on_startup_timer                   : 0x15017530
-            # overload_bit_forced_reasons                     :            
-            result = r28_2.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                if area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                elif area_table_flag and value:
-                    area_table_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-
+            # Standard (IPv4 unicast)
+            m = r5.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = line.strip()
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
                 continue
 
-            # postponed_added_first_hops                    : 0x0
-            # postponed_deleted_first_hops                  : 0x0
-            result = r29.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                area_table_per_topo_dict[field] = value
+            # Topology Table
+            m = r6.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                topo_dict = inst_dict.setdefault('topology_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: topo_dict})
                 continue
 
-            # max_redist_prefixes_exceeded                  : FALSE
-            # max_redist_prefixes_alarm_on                  : FALSE
-            result = r30.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
-                if area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                continue
-
-            # max_redist_prefixes                         : (not set)
-            result = r30_1.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                if area_configuration_table_per_topo_flag:
-                    area_configuration_table_per_topo_dict[field] = value
-                continue
-
-            # per_af[IPv6]                                    :
-            # per_af[IPv4]                                    :
-            result = r31.match(line)
-            if result:
-                group = result.groupdict()
-                address_family = group['address_family']
-                if area_table_flag:
-                    area_table_per_af_dict = area_table_dict\
-                        .setdefault('address_family', {})\
-                        .setdefault(address_family, {})
-
-                area_table_per_af_flag = True
-                continue
-
-            # Level-1
-            # Level-2
-            result = r32.match(line)
-            if result:
-                group = result.groupdict()
-                level = group['level']
-                if area_table_flag:
-                    area_table_level = int(level)
-                    area_table_dict = instance_dict\
-                        .setdefault('area_tables', {})\
-                        .setdefault('level-'+level, {})
-                elif area_configuration_table_flag:
-                    area_config_table_level = 'level-' + level
-                continue
-
-            # adj_db                                          : 0x1540cee4
-            # adj_log                                         : 0x1539b844
-            result = r33.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
-                if area_table_flag:
-                    area_table_dict[field] = value
-                continue
-
-            # cfg.refcount                                      : 7
-            # cfg.is_p2p                                        : TRUE
-            # cfg.enabled_mode                                  : Active
-            # cfg.circuit_type                                  : level-1-2
-            # cfg.ipv4_bfd_enabled                              : TRUE
-            # cfg.ipv6_bfd_enabled                              : FALSE
-            # cfg.bfd_interval                                  : 250
-            # cfg.bfd_multiplier                                : 3
-            # cfg.topos                                         : IPv4 Unicast
-            # cfg.cross_levels                                  :
-            result = r34.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # cfg.per_level[Level-1]                            :
-            # cfg.per_level[Level-2]                            :
-            result = r35.match(line)
-            if result:
-                level
-                continue
-
-            # media_specific.p2p.do_ietf_3way                   : TRUE
-            # media_specific.p2p.received_ietf_3way             : TRUE
-            # media_specific.p2p.neighbor_extended_circuit_number: 89
-            # media_specific.p2p.neighbor_system_id             : 0670.7021.9088
-            # media_specific.p2p.nsf_ietf
-            result = r36.match(line)
-            if result:
-                field_1
-                field_2
-                field_3
-                field_4
-                value
-                continue
-
-            # clns.im_node.state_registered                     : TRUE
-            # clns.im_node.node_up                              : TRUE
-            # clns.mtu                                          : 9199
-            result = r37.match(line)            
-            if result:
-                field_1
-                field_2
-                value
-                continue
-
-            # mpls_ldp_sync.im_attr_ldp_sync_info_notify_handle : 0
-            # mpls_ldp_sync.ldp_sync_info                       : FALSE
-            # mpls_ldp_sync.is_ldp_sync_info_ok                 : 0
-            result = r38.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # mpls_ldpv6_sync.im_attr_ldp_sync_info_notify_handle: 0x0
-            # mpls_ldpv6_sync.ldp_sync_info                     : FALSE
-            # mpls_ldpv6_sync.is_ldp_sync_info_ok               : 0
-            result = r39.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # per_area[Level-2]                                 :
-            result = r40.match(line)
-            if result:
-                level
-                continue
-
-            # nsf_ietf.full_csnp_set_rcvd                     : FALSE
-            # nsf_ietf.csnp_set_rcvd.list_head                : 0x0
-            # nsf_ietf.csnp_set_rcvd.list_size                : 0
-            result = r41.match(line)
-            if result:
-                field_1
-                field_2
-                value
-                continue
-
-            # im_node.exist_registered                        : TRUE
-            # im_node.node_exists                             : TRUE
-            # im_node.state_registered                        : TRUE
-            # im_node.node_up                                 : TRUE
-            result = r42.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
-            # snpa_info.snpa                                  : 00c1.641b.33d6
-            # snpa_info.is_snpa_ok                            : TRUE
-            result = r43.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # csnp_control.timer                              : 0x15768174
-            # csnp_control.next_lsp_id                        : 0000.0000.0000.00-00
-            # csnp_control.building_packets                   : FALSE
-            result = r44.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # pri_label_stack_limit                             : 1
-            # bkp_label_stack_limit                             : 3
-            # srte_label_stack_limit                            : 10
-            # srat_label_stack_limit                            : 10
-            result = r45.match(line)
-            if result:
-                field
-                value
-                continue
-            
-            # hello_interval_msecs                            : (not set)
-            # hello_multiplier                                : (not set)
-            result = r46.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # pme_avg_delay                                     : (not set)
-            # pme_min_delay                                     : (not set)
-            # pme_max_delay                                     : (not set)
-            # pme_delay_var                                     : (not set)
-            # pme_loss                                          : (not set)
-            # pme_total_bw                                      : (not set)
-            # pme_rsvp_te_bw                                    : (not set)
-            result = r47.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # mcast_state.is_mcast_group_member               : TRUE
-            # mcast_state.mcast_join_reason                   : 2
-            result = r48.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # csnp_count.in                                   : 4
-            # csnp_count.out                                  : 4
-            # psnp_count.in                                   : 168148
-            # psnp_count.out                                  : 98923
-            result = r49.match(line)
-            if result:
-                field_1
-                field_2
-                value
-                continue
-
-            # rsvp_max_res_bw                                   : 0 kbits/sec
-            # rsvp_unres_prio_7                                 : 0 kbits/sec
-            result = r50.match(line)
-            if result:
-                field
-                value
-                continue
-
-            # chkpt.objid                      : 0x0
-            result = r51.match(line)
-            if result:
-                value
-                continue
-
-            # RA-expected neighbor list:
-            result = r52.match(line)
-            if result:
-                continue
-
-            # local_address                          : 0.0.0.0    
-            result = r53.match(line)
-            if result:
-                local_address
-                continue
-
-            # Interface TenGigE0/0/1/2
-            result = r54.match(line)
-            if result:
-                interface
-                continue
-
-            # Address Family Table
-            result = r55.match(line)
-            if result:
-                address_family_table_flag = True
+            # IPv4 Unicast
+            m = r7.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = line.strip()
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
                 continue
 
             # Configuration:
-            result = r56.match(line)
-            if result:
-                configuration_flag = True
-                configuration_dict = topology_table_dict\
-                    .setdefault('configuration', {})
-                continue
-
-            # Standard (IPv4 Unicast)
-            result = r57.match(line)
-            if result:
-                if link_topology_table_flag:
-                    link_topology_table_dict = instance_dict\
-                        .setdefault('link_topology_table', {})\
-                        .setdefault(line, {})
-                continue
-            
-            # IPv4 Unicast
-            result = r58.match(line)
-            if result:
-                if topology_table_flag:
-                    topology_table_dict = instance_dict\
-                        .setdefault('topology_table', {})\
-                        .setdefault(line, {})
-                continue
-            
-            # Topology Table            
-            result = r59.match(line)
-            if result:
-                topology_table_flag = True
-                continue
-
-            # Cross Levels
-            result = r60.match(line)
-            if result:
-                if area_configuration_table_flag:
-                    area_config_table_level = 'cross_levels'
-                continue
-
-            # Area Table            
-            result = r61.match(line)
-            if result:
-                area_table_flag = True
-                area_configuration_table_topo_index_flag = False
-                area_configuration_table_per_topo_flag = False
-                area_configuration_table_flag = False
-                configuration_flag = False
-                continue
-
-            # Link Topology Table            
-            result = r62.match(line)
-            if result:
-                link_topology_table_flag = True
+            m = r8.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('configuration', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
                 continue
 
             # Area Configuration Table
-            result = r63.match(line)
-            if result:
-                area_configuration_table_flag = True
+            m = r9.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                config_dict = inst_dict.setdefault('area_configuration_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: config_dict})
                 continue
 
-            # is_mcast_intact_set                         : FALSE
-            result = r64.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = self._get_boolean_value(group['value'])
+            # Cross Levels
+            m = r10.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('cross_level', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
 
-                if area_table_per_af_flag:
-                    area_table_per_af_dict[field] = value
-                elif area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                elif area_table_per_ltopo_flag:
-                    area_table_per_ltopo_dict[field] = value
-                elif area_table_flag:
-                    area_table_dict[field] = value
-                elif area_configuration_table_topo_index_flag:
-                    area_configuration_table_topo_index_dict[field] = value
-                elif area_configuration_table_per_topo_flag:
-                    area_configuration_table_per_topo_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-                elif configuration_flag:
-                    configuration_dict[field] = value
-                elif topology_table_flag:
-                    topology_table_dict[field] = value
-                elif link_topology_table_flag:
-                    link_topology_table_dict[field] = value
-                elif address_family_table_flag:
-                    address_family_table_dict[field] = value
+            # Level-1
+            m = r11.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                level = group['level']
+                if area_table_flag:
+                    parent = area_dict
                 else:
-                    instance_dict[field] = value
+                    parent = config_dict
+
+                sub_dict = parent.setdefault('level-' + level, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
                 continue
 
-            # cfg_refcount                                      : 57
-            result = r65.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = int(group['value'])
+            # Area Table
+            m = r12.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                area_dict = inst_dict.setdefault('area_tables', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: area_dict})
+                area_table_flag = True
+                continue
 
+            # per_topo[IPv4 Unicast]   :
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+            m = r13.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = group['key']
+                stype = get_key(group['type'])
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
 
-                if field == 'ref_count':
-                    configuration_flag = False
-                if area_table_per_af_flag:
-                    area_table_per_af_dict[field] = value
-                elif area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                elif area_table_per_ltopo_flag:
-                    area_table_per_ltopo_dict[field] = value
-                elif area_table_flag:
-                    area_table_dict[field] = value
-                elif area_configuration_table_topo_index_flag:
-                    area_configuration_table_topo_index_dict[field] = value
-                elif area_configuration_table_per_topo_flag:
-                    area_configuration_table_per_topo_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-                elif configuration_flag:
-                    configuration_dict[field] = value
-                elif topology_table_flag:
-                    topology_table_dict[field] = value
-                elif link_topology_table_flag:
-                    link_topology_table_dict[field] = value
-                elif address_family_table_flag:
-                    address_family_table_dict[field] = value
+                if value:
+                    sub = parent.setdefault(key, {})
+                    sub.update({stype: value})
                 else:
-                    instance_dict[field] = value
-
+                    sub = parent.setdefault(key, {}).setdefault(stype, {})
+                    clear_indent_map(indent)
+                    indent_map.update({indent: sub})
                 continue
 
-            # check_adjacencies                           : (not set)
-            # isis_is_level                               : level-2-only
-            result = r66.match(line)
-            if result:
-                group = result.groupdict()
-                field = group['field']
-                value = group['value']
+            # [000] is_spf_prefix_priority_acl_names_set : FALSE
+            m = r14.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                idx = int(group['idx'])
+                key = group['key']
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
 
-                if area_table_per_af_flag:
-                    area_table_per_af_dict[field] = value
-                elif area_table_per_topo_flag:
-                    area_table_per_topo_dict[field] = value
-                elif area_table_per_ltopo_flag:
-                    area_table_per_ltopo_dict[field] = value
-                elif area_table_flag:
-                    area_table_dict[field] = value
-                elif area_configuration_table_topo_index_flag:
-                    area_configuration_table_topo_index_dict[field] = value
-                elif area_configuration_table_per_topo_flag:
-                    area_configuration_table_per_topo_dict[field] = value
-                elif area_configuration_table_flag:
-                    area_configuration_table_dict[field] = value
-                elif configuration_flag:
-                    configuration_dict[field] = value
-                elif topology_table_flag:
-                    topology_table_dict[field] = value
-                elif link_topology_table_flag:
-                    link_topology_table_dict[field] = value
-                elif address_family_table_flag:
-                    address_family_table_dict[field] = value
+                sub = parent.setdefault('topo_index', {}).setdefault(idx, {})
+                sub.update({key: value})
+                continue
+
+            # Interface TenGigE0/0/1/2
+            m = r15.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                interface = group['interface']
+                intf_dict = inst_dict.setdefault('interfaces', {}).\
+                                      setdefault(interface, {})
+
+                clear_indent_map(indent)
+                indent_map.update({indent: intf_dict})
+                continue
+
+            #   media             : 0x440cc90
+            m = r16.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                media = group['media']
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('media', {}).setdefault(media, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # cfg.cross_levels   :
+            # cfg.per_level[Level-1]    :
+            # cfg.per_level[Level-2]    :
+            m = r17.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].replace('[','.').replace(']','').split('.')
+                parent = get_parent_dict(indent)
+                sub_dict = parent
+                for key in keys:
+                    sub_dict = sub_dict.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # media_specific.p2p.nsf_ietf
+            # media_specific.p2p.p2p_over_lan
+            m = r18.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].split('.')
+                parent = get_parent_dict(indent)
+                sub_dict = parent
+                for key in keys:
+                    sub_dict = sub_dict.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            #   lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+            m = r99.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].split('.')
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
+
+                if len(keys) == 1:
+                    parent.update({keys[0]: value})
                 else:
-                    instance_dict[field] = value
-
+                    sub = parent
+                    for key in keys[:-1]:
+                        key = get_key(key)
+                        sub = sub.setdefault(key, {})
+                    sub.update({get_key(keys[-1]): value})
                 continue
 
-        return parsed_dict
+        return result_dict

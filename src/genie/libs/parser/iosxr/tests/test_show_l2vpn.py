@@ -120,7 +120,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                         },
                         'vfi': {
                             'num_vfi': 1,
-                            1: {
+                            '1': {
                                 'neighbor': {
                                     '10.1.1.1': {
                                         'pw_id': {
@@ -238,6 +238,144 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         List of Access VFIs:
     '''}
 
+    golden_parsed_output3 = {
+        'bridge_group': {
+            'SBC-service': {
+                'bridge_domain': {
+                    'bd100': {
+                        'id': 0,
+                        'state': 'up',
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'mac_aging_time': 300,
+                        'mac_limit': 4000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'filter_mac_address': 0,
+                        'ac': {
+                            'num_ac': 2,
+                            'num_ac_up': 2,
+                            'interfaces': {
+                                'BV100': {
+                                    'state': 'up',
+                                    'bvi_mac_address': 2,
+                                },
+                                'GigabitEthernet0/4/0/1.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 1,
+                            'vfi100': {
+                                'state': 'up',
+                                'neighbor': {
+                                    '10.229.11.11': {
+                                        'pw_id': {
+                                            100100: {
+                                                'state': 'up',
+                                                'static_mac_address': 0,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'num_pw': 1,
+                            'num_pw_up': 1,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                    },
+                },
+            },
+            'evpn_access': {
+                'bridge_domain': {
+                    '100_evpn_access': {
+                        'id': 1,
+                        'state': 'up',
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'mac_aging_time': 300,
+                        'mac_limit': 100,
+                        'mac_limit_action': 'limit, no-flood',
+                        'mac_limit_notification': 'syslog, trap',
+                        'filter_mac_address': 0,
+                        'ac': {
+                            'num_ac': 1,
+                            'num_ac_up': 1,
+                            'interfaces': {
+                                'GigabitEthernet0/4/0/6.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                    'mst_i': 5,
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 0,
+                        },
+                        'pw': {
+                            'num_pw': 0,
+                            'num_pw_up': 0,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                        'evpn': {
+                            'EVPN': {
+                                'state': 'up',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output3 = {'execute.return_value': '''
+        show l2vpn bridge-domain
+
+        Mon Oct 21 11:04:45.164 EDT
+        Legend: pp = Partially Programmed.
+        Bridge group: SBC-service, bridge-domain: bd100, id: 0, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+        Filter MAC addresses: 0
+        ACs: 2 (2 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of ACs:
+            BV100, state: up, BVI MAC addresses: 2
+            Gi0/4/0/1.100, state: up, Static MAC addresses: 0
+        List of Access PWs:
+        List of VFIs:
+            VFI vfi100 (up)
+            Neighbor 10.229.11.11 pw-id 100100, state: up, Static MAC addresses: 0
+        List of Access VFIs:
+        Bridge group: evpn_access, bridge-domain: 100_evpn_access, id: 1, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
+        Filter MAC addresses: 0
+        ACs: 1 (1 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of EVPNs:
+            EVPN, state: up
+        List of ACs:
+            Gi0/4/0/6.100, state: up, Static MAC addresses: 0, MSTi: 5
+        List of Access PWs:
+        List of VFIs:
+        List of Access VFIs:
+        
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomain(device=self.device)
@@ -257,6 +395,13 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowL2vpnBridgeDomain(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding bridge-domain mac-address location {location}'
@@ -2441,6 +2586,391 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         },
     }
 
+    golden_output6 = {'execute.return_value': '''
+      show l2vpn bridge-domain detail
+
+      Mon Oct 21 19:02:34.928 EDT
+      Legend: pp = Partially Programmed.
+      Bridge group: Genie-service, bridge-domain: genie100, id: 0, state: up, ShgId: 0, MSTi: 0
+        Coupled state: disabled
+        VINE state: BVI Resolved
+        MAC learning: enabled
+        MAC withdraw: enabled
+          MAC withdraw for Access PW: enabled
+          MAC withdraw sent on: bridge port up
+          MAC withdraw relaying (access to access): disabled
+        Flooding:
+          Broadcast & Multicast: enabled
+          Unknown unicast: enabled
+        MAC aging time: 300 s, Type: inactivity
+        MAC limit: 4000, Action: none, Notification: syslog
+        MAC limit reached: no, threshold: 75%
+        MAC port down flush: enabled
+        MAC Secure: disabled, Logging: disabled
+        Split Horizon Group: none
+        Dynamic ARP Inspection: disabled, Logging: disabled
+        IP Source Guard: disabled, Logging: disabled
+        DHCPv4 Snooping: disabled
+        DHCPv4 Snooping profile: none
+        IGMP Snooping: disabled
+        IGMP Snooping profile: none
+        MLD Snooping profile: none
+        Storm Control: disabled
+        Bridge MTU: 1500
+        MIB cvplsConfigIndex: 1
+        Filter MAC addresses:
+        P2MP PW: disabled
+        Create time: 12/06/2019 11:46:11 (18w5d ago)
+        No status change since creation
+        ACs: 2 (2 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of ACs:
+          AC: BVI100, state is up
+            Type Routed-Interface
+            MTU 1514; XC ID 0x800001ab; interworking none
+            BVI MAC address:
+              78ba.f96e.a1fe
+            Virtual MAC addresses:
+              0000.5e00.0101
+            Split Horizon Group: Access
+          AC: GigabitEthernet0/4/0/1.100, state is up
+            Type VLAN; Num Ranges: 1
+            Rewrite Tags: []
+            VLAN ranges: [100, 100]
+            MTU 1500; XC ID 0x32001a8; interworking none
+            MAC learning: enabled
+            Flooding:
+              Broadcast & Multicast: enabled
+              Unknown unicast: enabled
+            MAC aging time: 300 s, Type: inactivity
+            MAC limit: 4000, Action: none, Notification: syslog
+            MAC limit reached: no, threshold: 75%
+            MAC port down flush: enabled
+            MAC Secure: disabled, Logging: disabled
+            Split Horizon Group: none
+            Dynamic ARP Inspection: disabled, Logging: disabled
+            IP Source Guard: disabled, Logging: disabled
+            DHCPv4 Snooping: disabled
+            DHCPv4 Snooping profile: none
+            IGMP Snooping: disabled
+            IGMP Snooping profile: none
+            MLD Snooping profile: none
+            Storm Control: bridge-domain policer
+            Static MAC addresses:
+            Statistics:
+              packets: received 3894 (multicast 0, broadcast 29, unknown unicast 0, unicast 3865), sent 13809438
+              bytes: received 291930 (multicast 0, broadcast 1740, unknown unicast 0, unicast 290190), sent 798698446
+              MAC move: 0
+            Storm control drop counters: 
+              packets: broadcast 0, multicast 0, unknown unicast 0 
+              bytes: broadcast 0, multicast 0, unknown unicast 0 
+            Dynamic ARP inspection drop counters: 
+              packets: 0, bytes: 0
+            IP source guard drop counters: 
+              packets: 0, bytes: 0
+        List of Access PWs:
+        List of VFIs:
+          VFI vfi100 (up)
+            PW: neighbor 10.229.11.11, PW ID 100100, state is up ( established )
+              PW class link1, XC ID 0xa0000007
+              Encapsulation MPLS, protocol LDP
+              Source address 10.151.22.22
+              PW type Ethernet, control word disabled, interworking none
+              Sequencing not set
+
+              PW Status TLV in use
+                MPLS         Local                          Remote                        
+                ------------ ------------------------------ -------------------------
+                Label        100037                         100059                        
+                Group ID     0x0                            0xed                          
+                Interface    vfi100                         vfi100                        
+                MTU          1500                           1500                          
+                Control word disabled                       disabled                      
+                PW type      Ethernet                       Ethernet                      
+                VCCV CV type 0x2                            0x2                           
+                            (LSP ping verification)        (LSP ping verification)       
+                VCCV CC type 0x6                            0x6                           
+                            (router alert label)           (router alert label)          
+                            (TTL expiry)                   (TTL expiry)                  
+                ------------ ------------------------------ -------------------------
+              Incoming Status (PW Status TLV):
+                Status code: 0x0 (Up) in Notification message
+              MIB cpwVcIndex: 2684354567
+              Create time: 12/06/2019 11:46:11 (18w5d ago)
+              Last time status changed: 12/06/2019 12:08:57 (18w5d ago)
+              MAC withdraw messages: sent 0, received 0
+              Forward-class: 0
+              Static MAC addresses:
+              Statistics:
+                packets: received 759749 (unicast 3068), sent 13054472
+                bytes: received 48596976 (unicast 206670), sent 695167614
+                MAC move: 0
+              Storm control drop counters: 
+                packets: broadcast 0, multicast 0, unknown unicast 0 
+                bytes: broadcast 0, multicast 0, unknown unicast 0 
+            DHCPv4 Snooping: disabled
+            DHCPv4 Snooping profile: none
+            IGMP Snooping: disabled
+            IGMP Snooping profile: none
+            MLD Snooping profile: none
+            VFI Statistics:
+              drops: illegal VLAN 0, illegal length 0
+        List of Access VFIs:
+    '''}
+    
+    golden_parsed_output6 = {
+        'legend': 'pp = Partially Programmed.',
+        'bridge_group': {
+            'Genie-service': {
+                'bridge_domain': {
+                    'genie100': {
+                        'state': 'up',
+                        'id': 0,
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'coupled_state': 'disabled',
+                        'vine_state': 'BVI',
+                        'mac_learning': 'enabled',
+                        'mac_withdraw': 'enabled',
+                        'mac_withdraw_for_access_pw': 'enabled',
+                        'mac_withdraw_sent_on': 'bridge port up',
+                        'mac_withdraw_relaying': 'disabled',
+                        'flooding': {
+                            'broadcast_multicast': 'enabled',
+                            'unknown_unicast': 'enabled',
+                        },
+                        'mac_aging_time': 300,
+                        'mac_aging_type': 'inactivity',
+                        'mac_limit': 4000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'mac_limit_reached': 'no',
+                        'mac_limit_threshold': '75%',
+                        'mac_port_down_flush': 'enabled',
+                        'mac_secure': 'disabled',
+                        'mac_secure_logging': 'disabled',
+                        'split_horizon_group': 'none',
+                        'dynamic_arp_inspection': 'disabled',
+                        'dynamic_arp_logging': 'disabled',
+                        'ip_source_guard': 'disabled',
+                        'ip_source_logging': 'disabled',
+                        'dhcp_v4_snooping': 'disabled',
+                        'dhcp_v4_snooping_profile': 'none',
+                        'igmp_snooping': 'disabled',
+                        'igmp_snooping_profile': 'none',
+                        'mld_snooping_profile': 'none',
+                        'storm_control': 'bridge-domain policer',
+                        'bridge_mtu': '1500',
+                        'mid_cvpls_config_index': '1',
+                        'p2mp_pw': 'disabled',
+                        'create_time': '12/06/2019 11:46:11 (18w5d ago)',
+                        'status_changed_since_creation': 'No',
+                        'ac': {
+                            'num_ac': 2,
+                            'num_ac_up': 2,
+                            'interfaces': {
+                                'BVI100': {
+                                    'state': 'up',
+                                    'type': 'Routed-Interface',
+                                    'mtu': 1514,
+                                    'xc_id': '0x800001ab',
+                                    'interworking': 'none',
+                                    'bvi_mac_address': ['78ba.f96e.a1fe', '0000.5e00.0101'],
+                                    'split_horizon_group': 'Access',
+                                },
+                                'GigabitEthernet0/4/0/1.100': {
+                                    'state': 'up',
+                                    'type': 'VLAN',
+                                    'vlan_num_ranges': '1',
+                                    'rewrite_tags': '',
+                                    'vlan_ranges': ['100', '100'],
+                                    'mtu': 1500,
+                                    'xc_id': '0x32001a8',
+                                    'interworking': 'none',
+                                    'mac_learning': 'enabled',
+                                    'flooding': {
+                                        'broadcast_multicast': 'enabled',
+                                        'unknown_unicast': 'enabled',
+                                    },
+                                    'mac_aging_time': 300,
+                                    'mac_aging_type': 'inactivity',
+                                    'mac_limit': 4000,
+                                    'mac_limit_action': 'none',
+                                    'mac_limit_notification': 'syslog',
+                                    'mac_limit_reached': 'no',
+                                    'mac_limit_threshold': '75%',
+                                    'split_horizon_group': 'none',
+                                    'dhcp_v4_snooping': 'disabled',
+                                    'dhcp_v4_snooping_profile': 'none',
+                                    'igmp_snooping': 'disabled',
+                                    'igmp_snooping_profile': 'none',
+                                    'mld_snooping_profile': 'none',
+                                    'statistics': {
+                                        'packet_totals': {
+                                            'receive': 3894,
+                                            'send': 13809438,
+                                        },
+                                        'byte_totals': {
+                                            'receive': 291930,
+                                            'send': 798698446,
+                                        },
+                                        'mac_move': '0',
+                                    },
+                                    'storm_control_drop_counters': {
+                                        'packets': {
+                                            'broadcast': '0',
+                                            'multicast': '0',
+                                            'unknown_unicast': '0',
+                                        },
+                                        'bytes': {
+                                            'broadcast': '0',
+                                            'multicast': '0',
+                                            'unknown_unicast': '0',
+                                        },
+                                    },
+                                    'dynamic_arp_inspection_drop_counters': {
+                                        'packets': '0',
+                                        'bytes': '0',
+                                    },
+                                    'ip_source_guard_drop_counters': {
+                                        'packets': '0',
+                                        'bytes': '0',
+                                    },
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 1,
+                            'vfi100': {
+                                'state': 'up',
+                                'neighbor': {
+                                    '10.229.11.11': {
+                                        'pw_id': {
+                                            '100100': {
+                                                'state': 'up ( established )',
+                                                'pw_class': 'link1',
+                                                'xc_id': '0xa0000007',
+                                                'encapsulation': 'MPLS',
+                                                'protocol': 'LDP',
+                                                'source_address': '10.151.22.22',
+                                                'pw_type': 'Ethernet',
+                                                'control_word': 'disabled',
+                                                'interworking': 'none',
+                                                'sequencing': 'not set',
+                                                'mpls': {
+                                                    'label': {
+                                                        'local': '100037',
+                                                        'remote': '100059',
+                                                    },
+                                                    'group_id': {
+                                                        'local': '0x0',
+                                                        'remote': '0xed',
+                                                    },
+                                                    'interface': {
+                                                        'local': 'vfi100',
+                                                        'remote': 'vfi100',
+                                                    },
+                                                    'mtu': {
+                                                        'local': '1500',
+                                                        'remote': '1500',
+                                                    },
+                                                    'control_word': {
+                                                        'local': 'disabled',
+                                                        'remote': 'disabled',
+                                                    },
+                                                    'pw_type': {
+                                                        'local': 'Ethernet',
+                                                        'remote': 'Ethernet',
+                                                    },
+                                                    'vccv_cv_type': {
+                                                        'local': '0x2',
+                                                        'remote': '0x2',
+                                                        'local_type': ['LSP ping verification'],
+                                                        'remote_type': ['LSP ping verification'],
+                                                    },
+                                                    'vccv_cc_type': {
+                                                        'local': '0x6',
+                                                        'remote': '0x6',
+                                                        'local_type': ['router alert label', 'TTL expiry'],
+                                                        'remote_type': ['router alert label', 'TTL expiry'],
+                                                    },
+                                                    'incoming_status_(pw': {
+                                                        'local': 'Status',
+                                                        'remote': 'TLV):',
+                                                    },
+                                                    'status_code:_0x0_(up)_in': {
+                                                        'local': 'Notification',
+                                                        'remote': 'message',
+                                                    },
+                                                    'mib': {
+                                                        'local': 'cpwVcIndex:',
+                                                        'remote': '2684354567',
+                                                    },
+                                                },
+                                                'create_time': '12/06/2019 11:46:11 (18w5d ago)',
+                                                'last_time_status_changed': '12/06/2019 12:08:57 (18w5d ago)',
+                                                'mac_withdraw_message': {
+                                                    'send': 0,
+                                                    'receive': 0,
+                                                },
+                                                'forward_class': '0',
+                                                'statistics': {
+                                                    'packet_totals': {
+                                                        'receive': 759749,
+                                                        'send': 13054472,
+                                                    },
+                                                    'byte_totals': {
+                                                        'receive': 48596976,
+                                                        'send': 695167614,
+                                                    },
+                                                    'mac_move': '0',
+                                                },
+                                                'storm_control_drop_counters': {
+                                                    'packets': {
+                                                        'broadcast': '0',
+                                                        'multicast': '0',
+                                                        'unknown_unicast': '0',
+                                                    },
+                                                    'bytes': {
+                                                        'broadcast': '0',
+                                                        'multicast': '0',
+                                                        'unknown_unicast': '0',
+                                                    },
+                                                },
+                                                'dhcp_v4_snooping': 'disabled',
+                                                'dhcp_v4_snooping_profile': 'none',
+                                                'igmp_snooping': 'disabled',
+                                                'igmp_snooping_profile': 'none',
+                                                'mld_snooping_profile': 'none',
+                                            },
+                                        },
+                                    },
+                                },
+                                'statistics': {
+                                    'drop': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
+                                    },
+                                },
+                            },
+                        },
+                        'pw': {
+                            'num_pw': 1,
+                            'num_pw_up': 1,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
@@ -2481,6 +3011,13 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowL2vpnBridgeDomainDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
         
 if __name__ == '__main__':
     unittest.main()

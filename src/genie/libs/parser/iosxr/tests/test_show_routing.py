@@ -1040,11 +1040,11 @@ Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
 
 Gateway of last resort is not set
 
-O E2 11::/64
+O E2 2001:db8:121::/64
       [110/0] via fe80::200:ff:fe33:3a83, 20:03:53, GigabitEthernet0/0/0/0.501
-O E2 11:0:0:9::/64
+O E2 2001:db8:121:51::/64
       [110/0] via fe80::200:ff:fe33:3a83, 20:03:53, GigabitEthernet0/0/0/0.501
-L    2000:1::1/128 is directly connected,
+L    2001:db8:400:1::1/128 is directly connected,
       1d22h, Loopback501
 C    2001:1::/112 is directly connected,
       20:04:59, GigabitEthernet0/0/0/0.501
@@ -1066,13 +1066,13 @@ Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
 
 Gateway of last resort is not set
 
-B    12::/64
+B    2001:db8:144::/64
       [20/0] via fe80::200:ff:fe33:3a84, 19:39:47, GigabitEthernet0/0/0/0.502
-B    12:0:0:1::/64
+B    2001:db8:144:1::/64
       [20/0] via fe80::200:ff:fe33:3a84, 19:39:47, GigabitEthernet0/0/0/0.502
-B    12:0:0:9::/64
+B    2001:db8:144:51::/64
       [20/0] via fe80::200:ff:fe33:3a84, 19:39:47, GigabitEthernet0/0/0/0.502
-L    2000:2::1/128 is directly connected,
+L    2001:db8:400:4::1/128 is directly connected,
       1d22h, Loopback502
 C    2001:2::/112 is directly connected,
       20:05:00, GigabitEthernet0/0/0/0.502
@@ -1096,7 +1096,7 @@ Gateway of last resort is not set
 
 S    100::1/128
       [1/0] via 2001:3::2, 20:05:00
-L    2000:3::1/128 is directly connected,
+L    2001:db8:400:9::1/128 is directly connected,
       1d22h, Loopback503
 C    2001:3::/112 is directly connected,
       20:05:00, GigabitEthernet0/0/0/0.503
@@ -1114,8 +1114,8 @@ VRF: VRF505
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '11::/64': {
-                                'route': '11::/64',
+                            '2001:db8:121::/64': {
+                                'route': '2001:db8:121::/64',
                                 'active': True,
                                 'source_protocol_codes': 'O E2',
                                 'source_protocol': 'ospf',
@@ -1133,8 +1133,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '11:0:0:9::/64': {
-                                'route': '11:0:0:9::/64',
+                            '2001:db8:121:51::/64': {
+                                'route': '2001:db8:121:51::/64',
                                 'active': True,
                                 'source_protocol_codes': 'O E2',
                                 'source_protocol': 'ospf',
@@ -1152,8 +1152,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '2000:1::1/128': {
-                                'route': '2000:1::1/128',
+                            '2001:db8:400:1::1/128': {
+                                'route': '2001:db8:400:1::1/128',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -1203,8 +1203,8 @@ VRF: VRF505
                 'address_family': {
                     'ipv6': {
                         'routes': {
-                            '12::/64': {
-                                'route': '12::/64',
+                            '2001:db8:144::/64': {
+                                'route': '2001:db8:144::/64',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -1222,8 +1222,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '12:0:0:1::/64': {
-                                'route': '12:0:0:1::/64',
+                            '2001:db8:144:1::/64': {
+                                'route': '2001:db8:144:1::/64',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -1241,8 +1241,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '12:0:0:9::/64': {
-                                'route': '12:0:0:9::/64',
+                            '2001:db8:144:51::/64': {
+                                'route': '2001:db8:144:51::/64',
                                 'active': True,
                                 'source_protocol_codes': 'B',
                                 'source_protocol': 'bgp',
@@ -1260,8 +1260,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '2000:2::1/128': {
-                                'route': '2000:2::1/128',
+                            '2001:db8:400:4::1/128': {
+                                'route': '2001:db8:400:4::1/128',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -1329,8 +1329,8 @@ VRF: VRF505
                                     },
                                 },
                             },
-                            '2000:3::1/128': {
-                                'route': '2000:3::1/128',
+                            '2001:db8:400:9::1/128': {
+                                'route': '2001:db8:400:9::1/128',
                                 'active': True,
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -1379,6 +1379,76 @@ VRF: VRF505
         },
     }
 
+    device_output = {'execute.return_value': '''
+    10.64.219.128, 2d04h
+    B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
+    B    172.16.21.0/22 [200/0] via 10.154.219.128, 1w3d
+    B    172.16.16.0/24 [200/0] via 10.154.219.128, 1w3d
+    '''}
+
+    device_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '172.16.55.0/22': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.55.0/22',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                            '172.16.21.0/22': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.21.0/22',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                            '172.16.16.0/24': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.16.0/24',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv6(device=self.device)
@@ -1398,6 +1468,13 @@ VRF: VRF505
         obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowRouteIpv6(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.device_parsed_output)
 
 
 if __name__ == '__main__':

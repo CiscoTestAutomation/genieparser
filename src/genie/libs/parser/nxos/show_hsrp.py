@@ -111,8 +111,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                 hsrp_summary['stats']['v2_ipv6'] = int(m.groupdict()['v2_ipv6'])
                 continue
 
-            # State::     Active: 0       Standby: 0       Listen: 0
-            p5 = re.compile(r'\s*State:: +Active: +(?P<active>[0-9]+)'
+            # Stat2001:db8:c4::     Active: 0       Standby: 0       Listen: 0
+            p5 = re.compile(r'\s*Stat2001:db8:c4:: +Active: +(?P<active>[0-9]+)'
                              ' +Standby: +(?P<standby>[0-9]+) +Listen:'
                              ' +(?P<listen>[0-9]+)$')
             m = p5.match(line)
@@ -122,8 +122,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                 hsrp_summary['stats']['listen'] = int(m.groupdict()['listen'])
                 continue
 
-            # State::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0
-            p6 = re.compile(r'\s*State:: +V6-Active: +(?P<v6_active>[0-9]+)'
+            # Stat2001:db8:c4::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0
+            p6 = re.compile(r'\s*Stat2001:db8:c4:: +V6-Active: +(?P<v6_active>[0-9]+)'
                              ' +V6-Standby: +(?P<v6_standby>[0-9]+)'
                              ' +V6-Listen: +(?P<v6_listen>[0-9]+)$')
             m = p6.match(line)
@@ -375,7 +375,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         # Secondary VIP(s):
         p16 = re.compile(r'Secondary +VIP\(s\):$')
 
-        # 192:168::1
+        # 2001:db8:7746:fa41::1
         p17 = re.compile(r'(?P<vip>(\S+))$')
 
 
@@ -637,7 +637,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 secondary_vips = []
                 continue
 
-            # 192:168::1
+            # 2001:db8:7746:fa41::1
             # 10.1.1.253
             m = p17.match(line)
             if m and secondary_vip_exists:

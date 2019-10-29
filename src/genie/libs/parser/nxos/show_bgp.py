@@ -1831,7 +1831,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict['local_router_id'] = local_router_id
                 continue
 
-            #                     20:47::21a:1ff:fe00:161/128
+            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
             m = p3_4.match(line)
             if m:
                 # Get keys
@@ -1857,7 +1857,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # Network            Next Hop         Metric   LocPrf   Weight Path
             
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3_1.match(line)
             # *>i10.111.8.3/32     10.84.66.66           2000        100          0 200 i
             # *>i10.111.8.4/32     10.84.66.66           2000        100          0 200 i
@@ -3362,7 +3362,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 
             # Nexthop: 0.0.0.0, Refcount: 4, IGP cost: 0
             # Nexthop: 192.168.154.1, Flags: 0x41, Refcount: 1, IGP cost: 3
-            # Nexthop: 50:1::1:101, Flags: 0x5, Refcount: 3, IGP cost: 0, Multipath: No
+            # Nexthop: 2001:db8:1900:1::1:101, Flags: 0x5, Refcount: 3, IGP cost: 0, Multipath: No
             m = p3.match(line)
             if m:
                 nexthop = m.groupdict()['nh']
@@ -4667,7 +4667,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
         # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-        # *>iaaaa:1::/113       ::ffff:10.106.101.1
+        # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
 
         #                     0.0.0.0               100      32768 i
         #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
@@ -4743,7 +4743,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3.match(line)
             if m:
                 # New prefix, reset index count
@@ -5172,7 +5172,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3_1.match(line)
             if m:
                 # New prefix, reset index count
@@ -5618,7 +5618,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
             m = p3_1.match(line)
             if m:
                 # New prefix, reset index count
@@ -7718,7 +7718,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         except Exception:
                             pass
 
-                        # <ipv6peer>fec0::2002</ipv6peer>
+                        # <ipv6peer>2001:db8:8d82::2002</ipv6peer>
                         try:
                             sub_dict['network'][network]['peer'] = \
                                 prefix_root.find('{}ipv6peer'.format(namespace)).text
@@ -7870,7 +7870,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
                     except Exception:
                         pass
 
-                    # <ipv6nexthop-out>2000::3:1</ipv6nexthop-out>
+                    # <ipv6nexthop-out>2001:db8:400::3:1</ipv6nexthop-out>
                     try:
                         nexthop = nexthop_root.find('{}ipv6nexthop-out'.format(namespace)).text
                     except Exception:
@@ -9718,7 +9718,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
             # *>i                   10.121.1.0            nolabel/9100
             # a10.4.0.0/16        0.0.0.0             nolabel/nolabel
             # *>e10.85.0.0/24        10.76.1.101          492288/nolabel (VRF1)
-            # *>e88::/112           ::ffff:10.51.1.101
+            # *>2001:db8:2913::/112           ::ffff:10.51.1.101
             m = p3.match(line)
             if m:
                 prefix_cur = m.groupdict()['prefix']
@@ -9929,7 +9929,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                             try:
                                 prefix = prefix_root.find('{}ipprefix'.format(namespace)).text
                             except Exception:
-                                # <ipv6prefix>83::/112</ipv6prefix>
+                                # <ipv6prefix>2001:db8:4309::/112</ipv6prefix>
                                 try:
                                     prefix = prefix_root.find('{}ipv6prefix'.format(namespace)).text
                                 except Exception:
@@ -9996,7 +9996,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                     sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
                                         index_root.find('{}ipnexthop'.format(namespace)).text
                                 except Exception:
-                                    # <ipv6nexthop>50:1::1:101</ipv6nexthop>
+                                    # <ipv6nexthop>2001:db8:1900:1::1:101</ipv6nexthop>
                                     try:
                                         sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
                                             index_root.find('{}ipv6nexthop'.format(namespace)).text

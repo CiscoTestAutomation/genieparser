@@ -44,43 +44,43 @@ class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
         'vni': {
             20001: {
                 'ip': {
-                    '2018:1015::abcd:1234:3': {
+                    '2001:db8:646:a2bb:0:abcd:1234:3': {
                         'topo_id': 201,
                         'vni': 20001,
                         'prod_type': 'BGP',
-                        'ip_addr': '2018:1015::abcd:1234:3',
+                        'ip_addr': '2001:db8:646:a2bb:0:abcd:1234:3',
                         'eth_tag_id': 0,
                         'pmsi_flags': 0,
                         'flags': '-',
                         'type': 6,
                         'vni_label': 20001,
-                        'tunnel_id': '2018:1015::abcd:1234:3',
+                        'tunnel_id': '2001:db8:646:a2bb:0:abcd:1234:3',
                         'client_nfn': 32,
                         },
-                    '2018:1015::abcd:5678:5': {
+                    '2001:db8:646:a2bb:0:abcd:5678:5': {
                         'topo_id': 201,
                         'vni': 20001,
                         'prod_type': 'BGP',
-                        'ip_addr': '2018:1015::abcd:5678:5',
+                        'ip_addr': '2001:db8:646:a2bb:0:abcd:5678:5',
                         'eth_tag_id': 0,
                         'pmsi_flags': 0,
                         'flags': '-',
                         'type': 6,
                         'vni_label': 20001,
-                        'tunnel_id': '2018:1015::abcd:5678:5',
+                        'tunnel_id': '2001:db8:646:a2bb:0:abcd:5678:5',
                         'client_nfn': 32,
                         },
-                    '2018:1015::abcd:5678:1': {
+                    '2001:db8:646:a2bb:0:abcd:5678:1': {
                         'topo_id': 201,
                         'vni': 20001,
                         'prod_type': 'VXLAN',
-                        'ip_addr': '2018:1015::abcd:5678:1',
+                        'ip_addr': '2001:db8:646:a2bb:0:abcd:5678:1',
                         'eth_tag_id': 0,
                         'pmsi_flags': 0,
                         'flags': '-',
                         'type': 6,
                         'vni_label': 20001,
-                        'tunnel_id': '2018:1015::abcd:5678:1',
+                        'tunnel_id': '2001:db8:646:a2bb:0:abcd:5678:1',
                         'client_nfn': 64,
                         },
                     },
@@ -92,9 +92,9 @@ class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
     Leaf1# show l2route evpn imet all detail
     Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap
     -----------  ----------- ----- --------------------------------------- ------- ---------- ------- ---- ----------- --------------------------------------- ----------
-    201          20001       BGP   2018:1015::abcd:1234:3                  0       0          -       6    20001        2018:1015::abcd:1234:3                  32
-    201          20001       BGP   2018:1015::abcd:5678:5                  0       0          -       6    20001        2018:1015::abcd:5678:5                  32
-    201          20001       VXLAN 2018:1015::abcd:5678:1                  0       0          -       6    20001        2018:1015::abcd:5678:1                  64
+    201          20001       BGP   2001:db8:646:a2bb:0:abcd:1234:3                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:1234:3                  32
+    201          20001       BGP   2001:db8:646:a2bb:0:abcd:5678:5                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:5                  32
+    201          20001       VXLAN 2001:db8:646:a2bb:0:abcd:5678:1                  0       0          -       6    20001        2001:db8:646:a2bb:0:abcd:5678:1                  64
 
         '''}
 
@@ -137,13 +137,13 @@ class test_show_nve_peers(unittest.TestCase):
                     'uptime': '00:03:05',
                     'router_mac': '5e00.0002.0007',
                 },
-                "2018:1015::abcd:1234:3": {
+                "2001:db8:646:a2bb:0:abcd:1234:3": {
                     "learn_type": "CP",
                     "peer_state": "up",
                     "router_mac": "5254.0075.bada",
                     "uptime": "05:34:40"
                 },
-                "2018:1015::abcd:1234:5": {
+                "2001:db8:646:a2bb:0:abcd:1234:5": {
                     "learn_type": "CP",
                     "peer_state": "up",
                     "router_mac": "5254.00ae.a319",
@@ -159,8 +159,8 @@ class test_show_nve_peers(unittest.TestCase):
     --------- ---------------  ----- --------- -------- -----------------
     nve1      192.168.16.1      Up    CP        01:15:09 n/a
     nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
-    nve1      2018:1015::abcd:1234:3     Up    CP       05:34:40 5254.0075.bada   
-    nve1      2018:1015::abcd:1234:5     Up    CP       05:35:40 5254.00ae.a319
+    nve1      2001:db8:646:a2bb:0:abcd:1234:3     Up    CP       05:34:40 5254.0075.bada   
+    nve1      2001:db8:646:a2bb:0:abcd:1234:5     Up    CP       05:35:40 5254.00ae.a319
         '''}
 
     def test_show_nve_golden(self):

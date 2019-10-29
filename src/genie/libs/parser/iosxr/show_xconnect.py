@@ -269,15 +269,15 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                 'state': str
                             }
                         },
-                        'ac':{
+                        Optional('ac'):{
                             Any(): {
                                 'state': str,
-                                'type': str,
+                                Optional('type'): str,
                                 Optional('num_ranges'): int,
                                 Optional('rewrite_tags'): str,
-                                'mtu': int,
-                                'xc_id': str,
-                                'interworking': str,
+                                Optional('mtu'): int,
+                                Optional('xc_id'): str,
+                                Optional('interworking'): str,
                                 Optional('msti'): int,
                                 Optional('statistics'): {
                                     'packet_totals': {
@@ -302,11 +302,11 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                     'id': {
                                         Any(): {
                                             'state': str,
-                                            'pw_class': str,
-                                            'xc_id': str,
-                                            'encapsulation': str,
+                                            Optional('pw_class'): str,
+                                            Optional('xc_id'): str,
+                                            Optional('encapsulation'): str,
                                             Optional('auto_discovered'): str,
-                                            'protocol': str,
+                                            Optional('protocol'): str,
                                             Optional('source_address'): str,
                                             Optional('lsp'): str,
                                             Optional('type'): str,
@@ -315,7 +315,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('backup_disable_delay'): int,
                                             Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
-                                            'mpls': {
+                                            Optional('mpls'): {
                                                 Any(): {
                                                     'local': str,
                                                     'remote': str,
@@ -353,6 +353,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'encap_type': str,
                                             'control_word': str,
                                             'lsp': str,
+                                            Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'evpn': {
                                                 Any(): {
@@ -363,8 +364,8 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                                 }
                                             },
                                             'create_time': str,
-                                            'last_time_status_changed': str,
-                                            'statistics': {
+                                            Optional('last_time_status_changed'): str,
+                                            Optional('statistics'): {
                                                 'packet_totals': {
                                                     Optional('receive'): int,
                                                     Optional('send'): int
@@ -441,6 +442,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         current_dict = None
         pw_backup = False
         interface_found = False
+        label_found = False
         # Group siva_xc, XC siva_p2p, state is down; Interworking none
         p1 = re.compile(r'^Group +(?P<group>\S+), +XC +(?P<xc>\S+), +'
             'state +is +(?P<state>\S+); +Interworking +(?P<interworking>\S+)')
@@ -659,6 +661,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
                 xc_dict.update({'state': state})
                 xc_dict.update({'interworking': interworking})
+                label_found = False
                 continue
 
             # Group gr1, MP2MP mp1, state: up
@@ -675,6 +678,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault(mp2mp, {})
 
                 mp2mp_dict.update({'state': state})
+                label_found = False
                 continue
             
             # Monitor-Session: pw-span-test, state is configured
@@ -930,6 +934,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
                     mpls_pairs.update({m.start(): m.end() + 1})
+                label_found = not label_found
                 continue
 
             # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
@@ -1096,55 +1101,56 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # VCCV CV type 0x2                            0x0
             m = p15.match(line)
             if m:
-                mpls_items = list(mpls_pairs.items())
+                if label_found:
+                    mpls_items = list(mpls_pairs.items())
 
-                # Last index of MPLS label section
-                mpls_end_index = mpls_items[0][1]
+                    # Last index of MPLS label section
+                    mpls_end_index = mpls_items[0][1]
 
-                # Start and end index of Local section
-                local_start_index = mpls_items[1][0]
-                local_end_index = mpls_items[1][1]
-                
-                # Start and end index of Remote section
-                remote_start_index = mpls_items[2][0]
-                remote_end_index = mpls_items[2][1]
+                    # Start and end index of Local section
+                    local_start_index = mpls_items[1][0]
+                    local_end_index = mpls_items[1][1]
+                    
+                    # Start and end index of Remote section
+                    remote_start_index = mpls_items[2][0]
+                    remote_end_index = mpls_items[2][1]
 
-                mpls_value = original_line[:mpls_end_index]
-                mpls_value = (original_line[:mpls_end_index].strip().
-                                replace('-', '_').
-                                replace(' ', '_').
-                                lower())
-                
-                local_value = (original_line[local_start_index:local_end_index])
-                local_value = local_value.replace('(',''). \
+                    mpls_value = original_line[:mpls_end_index]
+                    mpls_value = (original_line[:mpls_end_index].strip().
+                                    replace('-', '_').
+                                    replace(' ', '_').
+                                    lower())
+                    
+                    local_value = (original_line[local_start_index:local_end_index])
+                    local_value = local_value.replace('(',''). \
+                                        replace(')', ''). \
+                                        strip()
+
+                    remote_value = (original_line[remote_start_index:remote_end_index])
+                    remote_value = remote_value.replace('(',''). \
                                     replace(')', ''). \
                                     strip()
-
-                remote_value = (original_line[remote_start_index:remote_end_index])
-                remote_value = remote_value.replace('(',''). \
-                                replace(')', ''). \
-                                strip()
-                # Any thing between () brackets will be added to Local or Remote based on position
-                if ')' not in line:
-                    if mpls_value == 'interface':
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                                setdefault('monitor_interface' if interface_found else mpls_value, {})
-                        if not interface_found:
-                            interface_found = True
+                    # Any thing between () brackets will be added to Local or Remote based on position
+                    if ')' not in line:
+                        if mpls_value == 'interface':
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                    setdefault('monitor_interface' if interface_found else mpls_value, {})
+                            if not interface_found:
+                                interface_found = True
+                        else:
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
+                                setdefault(mpls_value, {})
+                        mpls_dict.update({'local': local_value})
+                        mpls_dict.update({'remote': remote_value})
                     else:
-                        mpls_dict = current_dict.setdefault(label_name, {}). \
-                            setdefault(mpls_value, {})
-                    mpls_dict.update({'local': local_value})
-                    mpls_dict.update({'remote': remote_value})
-                else:
-                    local_type = mpls_dict.get('local_type', [])
-                    remote_type = mpls_dict.get('remote_type', [])
-                    if local_value:
-                        local_type.append(local_value)
-                    if remote_value:
-                        remote_type.append(remote_value)
-                    mpls_dict.update({'local_type': local_type})
-                    mpls_dict.update({'remote_type': remote_type})
+                        local_type = mpls_dict.get('local_type', [])
+                        remote_type = mpls_dict.get('remote_type', [])
+                        if local_value:
+                            local_type.append(local_value)
+                        if remote_value:
+                            remote_type.append(remote_value)
+                        mpls_dict.update({'local_type': local_type})
+                        mpls_dict.update({'remote_type': remote_type})
                 continue
         return ret_dict
 
@@ -1218,48 +1224,82 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
 
         #               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
         p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
-                        '+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_1>.*?) ' 
-                        '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_2>[\S ]+) '
-                        '+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+                        r'+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        r'+(?P<segment_1>.*?) ' 
+                        r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        r'+(?P<segment_2>[\S ]+) '
+                        r'+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
         #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100    UP  
         p3 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_1>.*?) ' 
-                        '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_2>[\S ]+) '
-                        '+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+                        r'+(?P<segment_1>.*?) ' 
+                        r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        r'+(?P<segment_2>[\S ]+) '
+                        r'+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
         #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100  
         p3_1 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_1>.*?) ' 
-                        '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
-                        '+(?P<segment_2>[\S ]+)$')
+                        r'+(?P<segment_1>.*?) ' 
+                        r'+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        r'+(?P<segment_2>[\S ]+)$')
+        
+        # T-0-5-0-0  UR   Te0/5/0/0              UR       10.154.219.75    4293089094
+        p3_2 = re.compile(r'^(?P<name>\S+) +(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +'
+                r'(?P<segment_1>.*?) +(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) +'
+                r'(?P<segment_2>[\S ]+)$')
+        
+        # CRS-CRS    T-0-5-0-8  UP   Te0/5/0/8              UP       10.19.196.51   9651100
+        p3_3 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+) +'
+                r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>.*?) +'
+                r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_2>[\S ]+)$')
+
+        # vpws       vpws       UR   Te0/2/1/0              UR       EVPN 302,302,0.0.0.0   DN
+        p3_4 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+) +'
+                r'(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>.*?) +'
+                r'(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_2>[\S ]+)'
+                r' +(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
         #                                                             UP  
-        p4 = re.compile(r'^(?P<status_segment2>[A-Z]+)$')
+        p4 = re.compile(r'^(?P<status_segment2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+
+        # UP       10.19.196.10   1152   DN
+        p5 = re.compile(r'^(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\)))'
+                r' +(?P<segment_2>[\S ]+) +(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+
+        # UR   10.154.219.75    2015030201
+        p6 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +(?P<segment_1>[\S ]+)$')
+
+        # T-0-4-0-2  UR   10.154.219.98    4293089094
+        p7 = re.compile(r'^(?P<name>\S+) +(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) +'
+                r'(?P<segment_1>[\S ]+)$')
 
         for line in out.splitlines():
             line = line.strip()
-
+            
             if '--------' in line:
                 continue
 
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                segment2_dict['status'] = str(group['status_segment2'])
+                flag_group = True
+                continue
+
             m = p1.match(line)
-            if m and not m3_1:
+            if m:
                 if flag_group:
                     group = m.groupdict()
                     group_dict = ret_dict.setdefault('groups', {}) \
                         .setdefault(str(group['group']), {})
                     flag_group = False
-                    continue
                 else:
                     group = m.groupdict()
                     name_dict = group_dict.setdefault('name', {}) \
                         .setdefault(str(group['group']), {})
                     flag_group = True
-                    continue
+                continue
+            
             m = p1_1.match(line)
             if m:
                 continue
@@ -1304,12 +1344,83 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment1_dict['status'] = str(group['status_seg1'])
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
                     .setdefault(str(group['segment_2'].strip()), {})
+            
+            # T-0-5-0-0  UR   Te0/5/0/0              UR       10.154.219.75    4293089094
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+                continue
 
-            m4 = p4.match(line)
-            if m4:
-                group = m4.groupdict()
+            # vpws       vpws       UR   Te0/2/1/0              UR       EVPN 302,302,0.0.0.0   DN
+            m = p3_4.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}). \
+                    setdefault(group['group'], {})
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
                 segment2_dict['status'] = str(group['status_segment2'])
+                continue
 
+            # CRS-CRS    T-0-5-0-8  UP   Te0/5/0/8              UP       10.19.196.51   9651100
+            m = p3_3.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}). \
+                    setdefault(group['group'], {})
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+                continue
+
+            # UR       Nonexistent            UR
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+                segment2_dict['status'] = str(group['status_seg2'])
+                continue
+            
+            # UR   10.154.219.75    2015030201
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
+                continue
+            
+            # T-0-4-0-2  UR   10.154.219.98    4293089094
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1'].strip()), {})
+                continue
         return ret_dict
 
 """Schema for 'show l2vpn xconnect summary'"""

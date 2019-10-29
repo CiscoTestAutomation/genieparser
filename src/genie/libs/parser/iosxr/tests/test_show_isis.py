@@ -903,92 +903,99 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     parsed_output_1 = {
-        "instance": {
-            "isp": {
-                "address_family": {
-                    "IPv4 Unicast": {
-                        "spf_log": {
+        'instance': {
+            'isp': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
                             1: {
-                                "type": "FSPF",
-                                "time_ms": 1,
-                                "level": 1,
-                                "total_nodes": 1,
-                                "trigger_count": 1,
-                                "first_trigger_lsp": "12a5.00-00",
-                                "triggers": "NEWLSP0",
-                                "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
-                                "delay_ms": 51, 
-                                "delay_info": "since first trigger",
-                                "spt_calculation": {
-                                    "cpu_time_ms": 0, 
-                                    "real_time_ms": 0},
-                                "prefix_update": {
-                                    "cpu_time_ms": 1, 
-                                    "real_time_ms": 1},
-                                "new_lsp_arrivals": 0,
-                                "next_wait_interval_ms": 200,
-                                "results": {
-                                    "nodes": {
-                                        "reach": 1, 
-                                        "unreach": 0, 
-                                        "total": 1},
-                                    "prefixes": {
-                                        "items": {
-                                            "critical_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                'type': 'FSPF',
+                                'time_ms': 1,
+                                'level': 1,
+                                'total_nodes': 1,
+                                'trigger_count': 1,
+                                'first_trigger_lsp': '12a5.00-00',
+                                'triggers': 'NEWLSP0',
+                                'start_timestamp': 'Mon Aug 16 2004 19:25:35.140',
+                                'delay': {
+                                    'since_first_trigger_ms': 51,
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 1,
+                                    'real_time_ms': 1,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'next_wait_interval_ms': 200,
+                                'results': {
+                                    'nodes': {
+                                        'reach': 1,
+                                        'unreach': 0,
+                                        'total': 1,
+                                    },
+                                    'prefixes': {
+                                        'items': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "high_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "medium_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "low_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "all_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                        },                                        
-                                        "routes": {
-                                            "critical_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "high_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "medium_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "low_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "all_priority": {
-                                                "reach": 0, 
-                                                "total": 0
+                                        },
+                                        'routes': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'total': 0,
                                             },
-                                        }
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                        },
                                     },
                                 },
                             },
-                        }
-                    }
-                }
-            }
-        }
+                        },
+                    },
+                },
+            },
+        },
     }
     
-
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
           
@@ -1025,6 +1032,169 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                All Priorities         0        -    0
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        show isis spf-log detail
+
+        Mon Oct 21 10:41:33.540 EDT
+
+        IS-IS Genie Level 2 IPv4 Unicast Route Calculation Log
+                            Time Total Trig.
+        Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        ------------ ----- ----- ----- ----- -------------------- -----------------------
+        --- Sun Oct 20 2019 ---
+        15:53:18.505 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:08:18.055  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:08:18.555 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+    '''}
+
+    parsed_output_2 = {
+        'instance': {
+            'Genie': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
+                            1: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Timestamp    Type    15:53:18.505',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                            2: {
+                                'type': 'FSPF',
+                                'time_ms': 0,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERIODIC',
+                                'start_timestamp': 'Real   CPU 16:08:18.055',
+                                'delay': {
+                                    'since_first_trigger_ms': 50,
+                                    'since_end_of_last_calculation': 899545,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 150,
+                                'rib_batches': {
+                                    'total': '0',
+                                    'critical': '0',
+                                    'high': '0',
+                                    'medium': '0',
+                                    'low': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                            },
+                            3: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Real   CPU 16:08:18.555',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                    'since_end_of_last_calculation': 500,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLogDetail(device=device)
@@ -1036,6 +1206,12 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
@@ -3343,6 +3519,366 @@ class TestShowIsisInterface(unittest.TestCase):
           Can send up to 9 back-to-back LSPs in the next 0 ms
     '''}
 
+    parsed_output_2 = {
+        'instance': {
+            'Genie': {
+                'interface': {
+                    'Bundle-Ether2': {
+                        'state': 'Enabled',
+                        'adjacency_formation': 'Enabled',
+                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
+                        'ipv4_bfd': False,
+                        'ipv6_bfd': False,
+                        'bfd_min_interval': 150,
+                        'bfd_multiplier': 3,
+                        'rsi_srlg': 'Registered',
+                        'bandwidth': 100000000,
+                        'circuit_type': 'level-2-only',
+                        'media_type': 'P2P',
+                        'circuit_number': 0,
+                        'extended_circuit_number': 113,
+                        'next_p2p_iih_in': 4,
+                        'lsp_rexmit_queue_size': 1,
+                        'level': {
+                            2: {
+                                'adjacency_count': 1,
+                                'lsp_pacing_interval_ms': 33,
+                                'psnp_entry_queue_size': 0,
+                                'hello_interval_sec': 10,
+                                'hello_multiplier': 3,
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': 'Up',
+                            'mtu': 9199,
+                            'snpa': '008a.960b.0c85',
+                            'layer2_mcast_groups_membership': {
+                                'all_level_1_iss': 'Yes',
+                                'all_level_2_iss': 'Yes',
+                            },
+                        },
+                        'topology': {
+                            'ipv4 unicast': {
+                                'state': 'Enabled',
+                                'adjacency_formation': 'Running',
+                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
+                                'metric': {
+                                    'level': {
+                                        1: 10,
+                                        2: 10,
+                                    },
+                                },
+                                'weight': {
+                                    'level': {
+                                        1: 0,
+                                        2: 0,
+                                    },
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
+                                    'ldp_sync': {
+                                        'level': {
+                                            1: 'Disabled',
+                                            2: 'Disabled',
+                                        },
+                                    },
+                                },
+                                'frr': {
+                                    'level': {
+                                        1: {
+                                            'state': 'Enabled',
+                                            'type': 'per-prefix',
+                                            'direct_lfa': {
+                                                'state': 'Enabled',
+                                            },
+                                            'remote_lfa': {
+                                                'state': 'Not Enabled',
+                                                'tie_breaker': 'Default',
+                                                'line_card_disjoint': '30',
+                                                'lowest_backup_metric': '20',
+                                                'node_protecting': '40',
+                                                'primary_path': '10',
+                                            },
+                                            'ti_lfa': {
+                                                'state': 'Enabled',
+                                                'tie_breaker': 'Default',
+                                                'link_protecting': 'Enabled',
+                                                'line_card_disjoint': '0',
+                                                'node_protecting': '100',
+                                                'srlg_disjoint': '0',
+                                            },
+                                        },
+                                        2: {
+                                            'state': 'Enabled',
+                                            'type': 'per-prefix',
+                                            'direct_lfa': {
+                                                'state': 'Enabled',
+                                            },
+                                            'remote_lfa': {
+                                                'state': 'Not Enabled',
+                                                'tie_breaker': 'Default',
+                                                'line_card_disjoint': '30',
+                                                'lowest_backup_metric': '20',
+                                                'node_protecting': '40',
+                                                'primary_path': '10',
+                                            },
+                                            'ti_lfa': {
+                                                'state': 'Enabled',
+                                                'tie_breaker': 'Default',
+                                                'link_protecting': 'Enabled',
+                                                'line_card_disjoint': '0',
+                                                'node_protecting': '100',
+                                                'srlg_disjoint': '0',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'address_family': {
+                            'IPv4': {
+                                'state': 'Enabled',
+                                'forwarding_address': ['172.18.0.1'],
+                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
+                            },
+                        },
+                        'lsp': {
+                            'transmit_timer_expires_ms': 0,
+                            'transmission_state': 'idle',
+                            'lsp_transmit_back_to_back_limit_window_msec': 0,
+                            'lsp_transmit_back_to_back_limit': 9,
+                        },
+                        'underlying_interface': {
+                            'HundredGigE0/0/0/1': {
+                                'index': '0x55',
+                            },
+                        },
+                    },
+                    'TenGigE0/0/0/0/0': {
+                        'state': 'Disabled',
+                    },
+                    'TenGigE0/0/0/4/0': {
+                        'state': 'Enabled',
+                        'adjacency_formation': 'Enabled',
+                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
+                        'ipv4_bfd': True,
+                        'ipv6_bfd': False,
+                        'bfd_min_interval': 250,
+                        'bfd_multiplier': 3,
+                        'rsi_srlg': 'Registered',
+                        'bandwidth': 10000000,
+                        'circuit_type': 'level-2-only',
+                        'media_type': 'P2P',
+                        'circuit_number': 0,
+                        'extended_circuit_number': 27,
+                        'next_p2p_iih_in': 5,
+                        'lsp_rexmit_queue_size': 0,
+                        'level': {
+                            2: {
+                                'adjacency_count': 1,
+                                'lsp_pacing_interval_ms': 33,
+                                'psnp_entry_queue_size': 0,
+                                'hello_interval_sec': 10,
+                                'hello_multiplier': 3,
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': 'Up',
+                            'mtu': 9199,
+                            'snpa': '008a.960b.0810',
+                            'layer2_mcast_groups_membership': {
+                                'all_level_1_iss': 'Yes',
+                                'all_level_2_iss': 'Yes',
+                            },
+                        },
+                        'topology': {
+                            'ipv4 unicast': {
+                                'state': 'Enabled',
+                                'adjacency_formation': 'Running',
+                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
+                                'metric': {
+                                    'level': {
+                                        1: 10,
+                                        2: 10,
+                                    },
+                                },
+                                'weight': {
+                                    'level': {
+                                        1: 0,
+                                        2: 0,
+                                    },
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
+                                    'ldp_sync': {
+                                        'level': {
+                                            1: 'Disabled',
+                                            2: 'Disabled',
+                                        },
+                                    },
+                                },
+                                'frr': {
+                                    'level': {
+                                        1: {
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
+                                        },
+                                        2: {
+                                            'state': 'Not Enabled',
+                                            'type': 'None',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'address_family': {
+                            'IPv4': {
+                                'state': 'Enabled',
+                                'forwarding_address': ['172.16.2.133'],
+                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
+                            },
+                        },
+                        'lsp': {
+                            'transmit_timer_expires_ms': 0,
+                            'transmission_state': 'idle',
+                            'lsp_transmit_back_to_back_limit_window_msec': 0,
+                            'lsp_transmit_back_to_back_limit': 9,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_parsed_output_2 = {'execute.return_value': '''
+        +++ genie-Router: executing command 'show isis interface' +++
+        show isis interface
+
+        Mon Oct 21 10:46:56.224 EDT
+
+        IS-IS Genie Interfaces
+        Bundle-Ether2               Enabled
+        Adjacency Formation:      Enabled
+        Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+        IPv4 BFD:                 Disabled
+        IPv6 BFD:                 Disabled
+        BFD Min Interval:         150
+        BFD Multiplier:           3
+        RSI SRLG:                 Registered
+        Bandwidth:                100000000
+        
+        Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+        Media Type:               P2P
+        Circuit Number:           0
+        Extended Circuit Number:  113
+        Next P2P IIH in:          4 s
+        LSP Rexmit Queue Size:    1
+        
+        Level-2                   
+            Adjacency Count:        1
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+        
+        CLNS I/O
+            Protocol State:         Up
+            MTU:                    9199
+            SNPA:                   008a.960b.0c85
+            Layer-2 MCast Groups Membership:
+            All ISs:              Yes
+        
+        IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Enabled         L2 Enabled     
+            FRR Type:             per-prefix         per-prefix     
+            Direct LFA:           Enabled            Enabled        
+            Remote LFA:           Not Enabled        Not Enabled    
+            Tie Breaker          Default            Default        
+            Line-card disjoint   30                 30             
+            Lowest backup metric 20                 20             
+            Node protecting      40                 40             
+            Primary path         10                 10             
+            TI LFA:               Enabled            Enabled        
+            Tie Breaker          Default            Default        
+            Link Protecting      Enabled            Enabled        
+            Line-card disjoint   0                  0              
+            Node protecting      100                100            
+            SRLG disjoint        0                  0              
+        
+        IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 172.18.0.1
+            Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+        
+        LSP transmit timer expires in 0 ms
+        LSP transmission is idle
+        Can send up to 9 back-to-back LSPs in the next 0 ms
+        
+        Underlying Interface List
+            IfName: Hu0/0/0/1 IfIndex: 0x55 
+            
+        
+        TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
+        TenGigE0/0/0/4/0            Enabled
+        Adjacency Formation:      Enabled
+        Prefix Advertisement:     Disabled (Suppressed in IS-IS cfg)
+        IPv4 BFD:                 Enabled
+        IPv6 BFD:                 Disabled
+        BFD Min Interval:         250
+        BFD Multiplier:           3
+        RSI SRLG:                 Registered
+        Bandwidth:                10000000
+        
+        Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+        Media Type:               P2P
+        Circuit Number:           0
+        Extended Circuit Number:  27
+        Next P2P IIH in:          5 s
+        LSP Rexmit Queue Size:    0
+        
+        Level-2                   
+            Adjacency Count:        1
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+        
+        CLNS I/O
+            Protocol State:         Up
+            MTU:                    9199
+            SNPA:                   008a.960b.0810
+            Layer-2 MCast Groups Membership:
+            All ISs:              Yes
+        
+        IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+            FRR Type:             None               None           
+        
+        IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 172.16.2.133
+            Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
+        
+        LSP transmit timer expires in 0 ms
+        LSP transmission is idle
+        Can send up to 9 back-to-back LSPs in the next 0 ms
+        
+        RP/0/RP0/CPU0:genie-Router#
+
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisInterface(device=self.device)
@@ -3354,6 +3890,12 @@ class TestShowIsisInterface(unittest.TestCase):
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_parsed_output_2)
+        obj = ShowIsisInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestShowIsisDatabaseDetail(unittest.TestCase):
     ''' Unit tests for commands/parser:
@@ -4880,6 +5422,173 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10    IS (MT-IPv6) cisco.03
     '''}
 
+    golden_parsed_output_4 = {
+        'instance': {
+            'Genie': {
+                'level': {
+                    2: {
+                        'lspid': {
+                            'core1-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a302',
+                                    'checksum': '0x1a0e',
+                                    'local_router': False,
+                                    'holdtime': 58285,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.57',
+                                'hostname': 'core1-genie',
+                                'router_cap': '10.154.219.57 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.57/32': {
+                                        'ip_prefix': '10.154.219.57',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core2-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'tcore4-genie.00': {
+                                        'metric': 250,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                },
+                            },
+                            'core2-genie.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x0000a15b',
+                                    'checksum': '0xfcfe',
+                                    'local_router': False,
+                                    'holdtime': 60939,
+                                    'received': 65534,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'nlpid': ['0xcc'],
+                                'ip_address': '10.154.219.58',
+                                'hostname': 'core2-genie',
+                                'router_cap': '10.154.219.58 D:0 S:0',
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.58/32': {
+                                        'ip_prefix': '10.154.219.58',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'extended_is_neighbor': {
+                                    'core1-genie.00': {
+                                        'metric': 50,
+                                    },
+                                    'bl2-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'bl1-genie.00': {
+                                        'metric': 1000,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 250,
+                                    },
+                                },
+                            },
+                            'dis17-genie_RE1.00-00': {
+                                'lsp': {
+                                    'seq_num': '0x00000215',
+                                    'checksum': '0xf5f4',
+                                    'local_router': False,
+                                    'holdtime': 32551,
+                                    'received': 65535,
+                                    'attach_bit': 0,
+                                    'p_bit': 0,
+                                    'overload_bit': 0,
+                                },
+                                'area_address': '49.0000',
+                                'tlv': 14,
+                                'tlv_length': 2,
+                                'nlpid': ['0xcc', '0x8e'],
+                                'router_id': '10.154.219.102',
+                                'ip_address': '10.154.219.102',
+                                'hostname': 'dis17-genie_RE1',
+                                'extended_is_neighbor': {
+                                    'tcore4-genie.00': {
+                                        'metric': 100,
+                                    },
+                                    'tcore3-genie.00': {
+                                        'metric': 100,
+                                    },
+                                },
+                                'extended_ipv4_reachability': {
+                                    '10.154.219.102/32': {
+                                        'ip_prefix': '10.154.219.102',
+                                        'prefix_length': '32',
+                                        'metric': 0,
+                                    },
+                                },
+                                'router_cap': '10.154.219.102 D:0 S:0',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show isis database detail
+
+        Mon Oct 22 10:40:56.529 EDT
+
+        IS-IS Genie (Level-2) Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd  ATT/P/OL
+        core1-genie.00-00  0x0000a302   0x1a0e        58285/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.57
+        Hostname:       core1-genie
+        Router Cap:     10.154.219.57 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.57/32
+        Metric: 50         IS-Extended core2-genie.00
+        Metric: 250        IS-Extended tcore4-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        core2-genie.00-00  0x0000a15b   0xfcfe        60939/65534        0/0/0
+        Area Address:   49.0000
+        NLPID:          0xcc
+        IP Address:     10.154.219.58
+        Hostname:       core2-genie
+        Router Cap:     10.154.219.58 D:0 S:0
+        Metric: 0          IP-Extended 10.154.219.58/32
+        Metric: 50         IS-Extended core1-genie.00
+        Metric: 1000       IS-Extended bl2-genie.00
+        Metric: 1000       IS-Extended bl1-genie.00
+        Metric: 250        IS-Extended tcore3-genie.00
+        dis17-genie_RE1.00-00  0x00000215   0xf5f4        32551/65535        0/0/0
+        Area Address:   49.0000
+        TLV 14:         Length: 2
+        NLPID:          0xcc
+        NLPID:          0x8e
+        Router ID:      10.154.219.102
+        IP Address:     10.154.219.102
+        Hostname:       dis17-genie_RE1
+        Metric: 100        IS-Extended tcore4-genie.00
+        Metric: 100        IS-Extended tcore3-genie.00
+        Metric: 0          IP-Extended 10.154.219.102/32
+        Router Cap:     10.154.219.102 D:0 S:0
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisDatabaseDetail(device=self.device)
@@ -4903,526 +5612,556 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_output_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class TestShowIsisPrivateAll(unittest.TestCase):
 
     maxDiff = None
-
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output_1 = {
-        "instance": {
-            "TEST": {
-                "cfg_refcount": 57,
-                "isis_is_level": "level-2-only",
-                "ignore_cksum_errs": True,
-                "cfg_log_drops": False,
-                "nsf_cfg_purgetime": 90,
-                "nsf2_t1_delay": 1,
-                "nsf2_t1_max_num_exp": 10,
-                "nsf_cfg_interval": 300,
-                "address_family_table": {
-                    "IPv4": {
-                        "ref_count": 1},
-                    "IPv6": {
-                        "ref_count": 0},
-                },
-                "link_topology_table": {
-                    "Standard (IPv4 Unicast)": {
-                        "ref_count": 1,
-                        "index": 0,
-                        "is_running": True,
-                        "list_linkage": {
-                            "next": "0x0", 
-                            "previous": "0x44b3f24"},
-                    }
-                },
-                "topology_table": {
-                    "IPv4 Unicast": {
-                        "configuration": {
-                            "check_adjacencies": "(not set)",
-                            "attached_bit": "(not set)",
-                            "max_paths": "(not set)",
-                            "is_mcast_intact_set": False,
-                            "mcast_intact": False,
-                            "is_igp_intact_set": False,
-                            "igp_intact": False,
-                            "is_first_hop_source_set": False,
-                            "first_hop_source": False,
-                        },
-                        "ref_count": 23,
-                        "index": 0,
-                        "ltopo_index": 0,
-                        "list_linkage": {
-                            "next": "0x0", 
-                            "previous": "0x44b51fc"},
-                    }
-                },
-                "area_configuration_table": {
-                    "cross_levels": {
-                        "is_lsp_gen_interval_set": True,
-                        "lsp_gen_interval": {
-                            "initial_wait_msecs": 20,
-                            "secondary_wait_msecs": 100,
-                            "maximum_wait_msecs": 5000,
-                        },
-                        "is_lsp_arrivaltime_parameter_set": False,
-                        "lsp_arrivaltime_parameter": {
-                            "backoff_cfg": {
-                                "initial_wait_msecs": 50,
-                                "secondary_wait_msecs": 200,
-                                "maximum_wait_msecs": 5000,
-                                "max_count": 0,
-                                "max_window_size_msec": 120001,
-                            }
-                        },
-                        "is_lsp_checksum_interval_set": False,
-                        "lsp_checksum_interval_secs": 0,
-                        "is_lsp_refresh_interval_set": True,
-                        "lsp_refresh_interval_secs": 35000,
-                        "is_lsp_lifetime_set": True,
-                        "lsp_lifetime_secs": 65535,
-                        "is_lsp_mtu_set": False,
-                        "lsp_mtu": 0,
-                        "is_auth_cfg_ctx_set": False,
-                        "auth_cfg_ctx": {
-                            "alg": "None",
-                            "failure_mode": "Drop",
-                            "password": "0xdecafbad",
-                            "accept_password": "0xdecafbad",
-                        },
-                        "is_snp_authentication_options_set": False,
-                        "snp_authentication_options": 0,
-                        "is_overload_set": False,
-                        "overload_mode": -1,
-                        "overload_on_startup_secs": 0,
-                        "per_topo": {
-                            "IPv4 Unicast": {
-                                "is_metric_style_set": True,
-                                "generate_metric_mask": 2,
-                                "accept_metric_mask": 2,
-                                "summary_table": "0x15431f50",
-                                "metric": 100000,
-                                "is_spf_interval_set": True,
-                                "spf_interval": {
-                                    "initial_wait_msecs": 50,
-                                    "secondary_wait_msecs": 150,
-                                    "maximum_wait_msecs": 5000,
-                                },
-                                "spf_periodic_interval_secs": "(not set)",
-                                "ispf_state": "(not set)",
-                                "max_redist_prefixes": "(not set)",
-                                "topo_index": {
-                                    0: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    1: {
-                                        "is_spf_prefix_priority_acl_names_set": True,
-                                        "spf_prefix_priority_acl_names": "0x154b92c4",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    2: {
-                                        "is_spf_prefix_priority_acl_names_set": True,
-                                        "spf_prefix_priority_acl_names": "0x155a0e3c",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    3: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                },
-                            }
-                        },
+    golden_parsed_output = {
+        'instance': {
+            'TEST': {
+                'cfg_refcount': 57,
+                'isis_is_level': 'level-2-only',
+                'ignore_cksum_errs': True,
+                'cfg_log_drops': False,
+                'nsf_cfg_purgetime': 90,
+                'nsf2_t1_delay': 1,
+                'nsf2_t1_max_num_exp': 10,
+                'nsf_cfg_interval': 300,
+                'address_family_table': {
+                    'IPv4': {
+                        'ref_count': 1,
                     },
-                    "level-1": {
-                        "is_lsp_gen_interval_set": False,
-                        "lsp_gen_interval": {
-                            "initial_wait_msecs": 50,
-                            "secondary_wait_msecs": 200,
-                            "maximum_wait_msecs": 5000,
-                        },
-                        "is_lsp_arrivaltime_parameter_set": False,
-                        "lsp_arrivaltime_parameter": {
-                            "backoff_cfg": {
-                                "initial_wait_msecs": 50,
-                                "secondary_wait_msecs": 200,
-                                "maximum_wait_msecs": 5000,
-                                "max_count": 0,
-                                "max_window_size_msec": 120001,
-                            }
-                        },
-                        "is_lsp_checksum_interval_set": False,
-                        "lsp_checksum_interval_secs": 0,
-                        "is_lsp_refresh_interval_set": False,
-                        "lsp_refresh_interval_secs": 0,
-                        "is_lsp_lifetime_set": False,
-                        "lsp_lifetime_secs": 0,
-                        "is_lsp_mtu_set": False,
-                        "lsp_mtu": 0,
-                        "is_auth_cfg_ctx_set": False,
-                        "auth_cfg_ctx": {
-                            "alg": "None",
-                            "failure_mode": "Drop",
-                            "password": "0xdecafbad",
-                            "accept_password": "0xdecafbad",
-                        },
-                        "is_snp_authentication_options_set": False,
-                        "snp_authentication_options": 0,
-                        "is_overload_set": False,
-                        "overload_mode": 0,
-                        "overload_on_startup_secs": 0,
-                        "per_topo": {
-                            "IPv4 Unicast": {
-                                "is_metric_style_set": False,
-                                "generate_metric_mask": 0,
-                                "accept_metric_mask": 0,
-                                "summary_table": "0x15431fac",
-                                "metric": "(not set)",
-                                "is_spf_interval_set": False,
-                                "spf_interval": {
-                                    "initial_wait_msecs": 50,
-                                    "secondary_wait_msecs": 200,
-                                    "maximum_wait_msecs": 5000,
-                                },
-                                "spf_periodic_interval_secs": "(not set)",
-                                "ispf_state": "(not set)",
-                                "max_redist_prefixes": "(not set)",
-                                "topo_index": {
-                                    0: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    1: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    2: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    3: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                },
-                            }
-                        },
+                    'IPv6': {
+                        'ref_count': 0,
                     },
-                    "level-2": {
-                        "is_lsp_gen_interval_set": False,
-                        "lsp_gen_interval": {
-                            "initial_wait_msecs": 50,
-                            "secondary_wait_msecs": 200,
-                            "maximum_wait_msecs": 5000,
-                        },
-                        "is_lsp_arrivaltime_parameter_set": False,
-                        "lsp_arrivaltime_parameter": {
-                            "backoff_cfg": {
-                                "initial_wait_msecs": 50,
-                                "secondary_wait_msecs": 200,
-                                "maximum_wait_msecs": 5000,
-                                "max_count": 0,
-                                "max_window_size_msec": 120001,
-                            }
-                        },
-                        "is_lsp_checksum_interval_set": False,
-                        "lsp_checksum_interval_secs": 0,
-                        "is_lsp_refresh_interval_set": False,
-                        "lsp_refresh_interval_secs": 0,
-                        "is_lsp_lifetime_set": False,
-                        "lsp_lifetime_secs": 0,
-                        "is_lsp_mtu_set": False,
-                        "lsp_mtu": 0,
-                        "is_auth_cfg_ctx_set": False,
-                        "auth_cfg_ctx": {
-                            "alg": "None",
-                            "failure_mode": "Drop",
-                            "password": "0xdecafbad",
-                            "accept_password": "0xdecafbad",
-                        },
-                        "is_snp_authentication_options_set": False,
-                        "snp_authentication_options": 0,
-                        "is_overload_set": False,
-                        "overload_mode": 0,
-                        "overload_on_startup_secs": 0,
-                        "per_topo": {
-                            "IPv4 Unicast": {
-                                "is_metric_style_set": False,
-                                "generate_metric_mask": 0,
-                                "accept_metric_mask": 0,
-                                "summary_table": "0x1539cef4",
-                                "metric": "(not set)",
-                                "is_spf_interval_set": False,
-                                "spf_interval": {
-                                    "initial_wait_msecs": 50,
-                                    "secondary_wait_msecs": 200,
-                                    "maximum_wait_msecs": 5000,
-                                },
-                                "spf_periodic_interval_secs": "(not set)",
-                                "ispf_state": "(not set)",
-                                "max_redist_prefixes": "(not set)",
-                                "topo_index": {
-                                    0: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    1: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    2: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                    3: {
-                                        "is_spf_prefix_priority_acl_names_set": False,
-                                        "spf_prefix_priority_acl_names": "0x0",
-                                        "is_spf_prefix_priority_tags_set": False,
-                                        "spf_prefix_priority_tags": 0,
-                                    },
-                                },
-                            }
+                },
+                'link_topology_table': {
+                    'Standard (IPv4 Unicast)': {
+                        'ref_count': 1,
+                        'index': 0,
+                        'is_running': True,
+                        'list_linkage': {
+                            'next': '0x0',
+                            'previous': '0x44b3f24',
                         },
                     },
                 },
-                "area_tables": {
-                    "level-2": {
-                        "index": 1,
-                        "idb_list": {
-                            "sll_head": "0x151942e0",
-                            "sll_tail": "0x15193fd4",
-                            "sll_count": 8,
-                            "sll_maximum": 0,
+                'topology_table': {
+                    'IPv4 Unicast': {
+                        'configuration': {
+                            'check_adjacencies': '(not set)',
+                            'attached_bit': '(not set)',
+                            'max_paths': '(not set)',
+                            'is_mcast_intact_set': False,
+                            'mcast_intact': False,
+                            'is_igp_intact_set': False,
+                            'igp_intact': False,
+                            'is_first_hop_source_set': False,
+                            'first_hop_source': False,
                         },
-                        "list_linkage": {"next": "0x0", "previous": "0x44b2534"},
-                        "adj_db": "0x1540cee4",
-                        "adj_log": "0x1539b844",
-                        "uni_db_log": "0x15411024",
-                        "upd_db": {
-                            "lock": {
-                                "rwlock": {
-                                    "active": 0,
-                                    "spare": "0x0",
-                                    "blockedwriters": 0,
-                                    "blockedreaders": 0,
-                                    "heavy": 0,
-                                    "lock": {"count": -2147483648, "owner": 0},
-                                    "owner": 4294967294,
+                        'ref_count': 23,
+                        'index': 0,
+                        'ltopo_index': 0,
+                        'list_linkage': {
+                            'next': '0x0',
+                            'previous': '0x44b51fc',
+                        },
+                    },
+                },
+                'area_configuration_table': {
+                    'cross_level': {
+                        'is_lsp_gen_interval_set': True,
+                        'lsp_gen_interval': {
+                            'initial_wait_msecs': 20,
+                            'secondary_wait_msecs': 100,
+                            'maximum_wait_msecs': 5000,
+                        },
+                        'is_lsp_arrivaltime_parameter_set': False,
+                        'lsp_arrivaltime_parameter': {
+                            'backoff_cfg': {
+                                'initial_wait_msecs': 50,
+                                'secondary_wait_msecs': 200,
+                                'maximum_wait_msecs': 5000,
+                            },
+                            'max_count': 0,
+                            'max_window_size_msec': 120001,
+                        },
+                        'is_lsp_checksum_interval_set': False,
+                        'lsp_checksum_interval_secs': 0,
+                        'is_lsp_refresh_interval_set': True,
+                        'lsp_refresh_interval_secs': 35000,
+                        'is_lsp_lifetime_set': True,
+                        'lsp_lifetime_secs': 65535,
+                        'is_lsp_mtu_set': False,
+                        'lsp_mtu': 0,
+                        'is_auth_cfg_ctx_set': False,
+                        'auth_cfg_ctx': {
+                            'alg': 'None',
+                            'failure_mode': 'Drop',
+                            'password': '0xdecafbad',
+                            'accept_password': '0xdecafbad',
+                        },
+                        'is_snp_authentication_options_set': False,
+                        'snp_authentication_options': 0,
+                        'is_overload_set': False,
+                        'overload_mode': -1,
+                        'overload_on_startup_secs': 0,
+                        'per_topo': {
+                            'IPv4 Unicast': {
+                                'is_metric_style_set': True,
+                                'generate_metric_mask': 2,
+                                'accept_metric_mask': 2,
+                                'summary_table': '0x15431f50',
+                                'metric': 100000,
+                                'is_spf_interval_set': True,
+                                'spf_interval': {
+                                    'initial_wait_msecs': 50,
+                                    'secondary_wait_msecs': 150,
+                                    'maximum_wait_msecs': 5000,
                                 },
-                                "description": "0x15393cf0",
-                            },
-                            "tree": {
-                                "root": "0x0",
-                                "key_size": 8,
-                                "size": 0,
-                                "node_alloc_data": "0x15393cd0",
-                                "node_alloc_fn": "0x42fd024",
-                                "node_free_fn": "0x42fd08a",
-                                "data_to_str_fn": "0x42fd094",
-                            },
-                            "tree_node_chunks": {
-                                "name": "0x448764c",
-                                "size": 28,
-                                "flags": 1297,
-                                "chunk": "0x1543146c",
-                                "num_allocated_elements": 0,
-                            },
-                            "area": "0x15393bfc",
-                            "log": "0x15432024",
-                            "name": "L2 Update DB",
-                        },
-                        "nsf_ietf_csnp_rcvd": False,
-                        "overload_bit_on_startup_timer": "0x15017530",
-                        "overload_bit_trigger_expired": True,
-                        "upd_periodic_timer": "0x150174d0",
-                        "checksum_ptimer": {"tv_sec": 3657420, "tv_nsec": 458761224},
-                        "dec_db": {
-                            "lock": {
-                                "rwlock": {
-                                    "active": 0,
-                                    "spare": "0x0",
-                                    "blockedwriters": 0,
-                                    "blockedreaders": 0,
-                                    "heavy": 0,
-                                    "lock": {"count": -2147483648, "owner": 0},
-                                    "owner": 4294967294,
-                                },
-                                "description": "0x153942b0",
-                            },
-                            "tree": {
-                                "root": "0x1539f9d4",
-                                "key_size": 8,
-                                "size": 82,
-                                "node_alloc_data": "0x15394290",
-                                "node_alloc_fn": "0x42fd024",
-                                "node_free_fn": "0x42fd08a",
-                                "data_to_str_fn": "0x42fd094",
-                            },
-                            "tree_node_chunks": {
-                                "name": "0x448764c",
-                                "size": 28,
-                                "flags": 1297,
-                                "chunk": "0x1539f844",
-                                "num_allocated_elements": 82,
-                            },
-                            "area": "0x15393bfc",
-                            "log": "0x15453024",
-                            "name": "L2 Decision DB",
-                        },
-                        "node_db": {
-                            "node_created_fn": "0x424fd84",
-                            "node_destroyed_fn": "0x424ffa6",
-                            "node_ltopo_created_fn": "0x42500b6",
-                            "node_ltopo_destroyed_fn": "0x42503ba",
-                            "node_topo_created_fn": "0x4250536",
-                            "node_topo_destroyed_fn": "0x42506b4",
-                            "callback_context": "0x15393bfc",
-                            "root_element": "0x151fb9bc",
-                            "num_nodes": 64,
-                        },
-                        "stats": {"ta_lsp_build": 850, "ta_lsp_refresh": 219},
-                        "trap_stats": {
-                            "corr_lsps": 0,
-                            "auth_type_fails": 0,
-                            "auth_fails": 0,
-                            "lsp_dbase_oloads": 4,
-                            "man_addr_drop_from_areas": 0,
-                            "attmpt_to_ex_max_seq_nums": 0,
-                            "seq_num_skips": 1,
-                            "own_lsp_purges": 3,
-                            "id_field_len_mismatches": 0,
-                            "lsp_errors": 0,
-                        },
-                        "per_ltopo": {
-                            "Standard (IPv4 Unicast)": {
-                                "area": "0x15393bfc",
-                                "ltopo_index": "Standard (IPv4 Unicast)",
-                                "roca_event": {
-                                    "mutex": {
-                                        "mutex": {"count": -2147483648, "owner": 0},
-                                        "description": "0x1500ee28",
+                                'spf_periodic_interval_secs': '(not set)',
+                                'ispf_state': '(not set)',
+                                'max_redist_prefixes': '(not set)',
+                                'topo_index': {
+                                    0: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
                                     },
-                                    "timer": {
-                                        "timer": "0x150179bc",
-                                        "num_execution_events": 1,
-                                        "is_pending": False,
-                                        "is_executing": False,
-                                        "postponed_schedule_time": {
-                                            "tv_sec": 0,
-                                            "tv_nsec": 0,
+                                    1: {
+                                        'is_spf_prefix_priority_acl_names_set': True,
+                                        'spf_prefix_priority_acl_names': '0x154b92c4',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    2: {
+                                        'is_spf_prefix_priority_acl_names_set': True,
+                                        'spf_prefix_priority_acl_names': '0x155a0e3c',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    3: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'level-1': {
+                        'is_lsp_gen_interval_set': False,
+                        'lsp_gen_interval': {
+                            'initial_wait_msecs': 50,
+                            'secondary_wait_msecs': 200,
+                            'maximum_wait_msecs': 5000,
+                        },
+                        'is_lsp_arrivaltime_parameter_set': False,
+                        'lsp_arrivaltime_parameter': {
+                            'backoff_cfg': {
+                                'initial_wait_msecs': 50,
+                                'secondary_wait_msecs': 200,
+                                'maximum_wait_msecs': 5000,
+                            },
+                            'max_count': 0,
+                            'max_window_size_msec': 120001,
+                        },
+                        'is_lsp_checksum_interval_set': False,
+                        'lsp_checksum_interval_secs': 0,
+                        'is_lsp_refresh_interval_set': False,
+                        'lsp_refresh_interval_secs': 0,
+                        'is_lsp_lifetime_set': False,
+                        'lsp_lifetime_secs': 0,
+                        'is_lsp_mtu_set': False,
+                        'lsp_mtu': 0,
+                        'is_auth_cfg_ctx_set': False,
+                        'auth_cfg_ctx': {
+                            'alg': 'None',
+                            'failure_mode': 'Drop',
+                            'password': '0xdecafbad',
+                            'accept_password': '0xdecafbad',
+                        },
+                        'is_snp_authentication_options_set': False,
+                        'snp_authentication_options': 0,
+                        'is_overload_set': False,
+                        'overload_mode': 0,
+                        'overload_on_startup_secs': 0,
+                        'per_topo': {
+                            'IPv4 Unicast': {
+                                'is_metric_style_set': False,
+                                'generate_metric_mask': 0,
+                                'accept_metric_mask': 0,
+                                'summary_table': '0x15431fac',
+                                'metric': '(not set)',
+                                'is_spf_interval_set': False,
+                                'spf_interval': {
+                                    'initial_wait_msecs': 50,
+                                    'secondary_wait_msecs': 200,
+                                    'maximum_wait_msecs': 5000,
+                                },
+                                'spf_periodic_interval_secs': '(not set)',
+                                'ispf_state': '(not set)',
+                                'max_redist_prefixes': '(not set)',
+                                'topo_index': {
+                                    0: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    1: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    2: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    3: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'level-2': {
+                        'is_lsp_gen_interval_set': False,
+                        'lsp_gen_interval': {
+                            'initial_wait_msecs': 50,
+                            'secondary_wait_msecs': 200,
+                            'maximum_wait_msecs': 5000,
+                        },
+                        'is_lsp_arrivaltime_parameter_set': False,
+                        'lsp_arrivaltime_parameter': {
+                            'backoff_cfg': {
+                                'initial_wait_msecs': 50,
+                                'secondary_wait_msecs': 200,
+                                'maximum_wait_msecs': 5000,
+                            },
+                            'max_count': 0,
+                            'max_window_size_msec': 120001,
+                        },
+                        'is_lsp_checksum_interval_set': False,
+                        'lsp_checksum_interval_secs': 0,
+                        'is_lsp_refresh_interval_set': False,
+                        'lsp_refresh_interval_secs': 0,
+                        'is_lsp_lifetime_set': False,
+                        'lsp_lifetime_secs': 0,
+                        'is_lsp_mtu_set': False,
+                        'lsp_mtu': 0,
+                        'is_auth_cfg_ctx_set': False,
+                        'auth_cfg_ctx': {
+                            'alg': 'None',
+                            'failure_mode': 'Drop',
+                            'password': '0xdecafbad',
+                            'accept_password': '0xdecafbad',
+                        },
+                        'is_snp_authentication_options_set': False,
+                        'snp_authentication_options': 0,
+                        'is_overload_set': False,
+                        'overload_mode': 0,
+                        'overload_on_startup_secs': 0,
+                        'per_topo': {
+                            'IPv4 Unicast': {
+                                'is_metric_style_set': False,
+                                'generate_metric_mask': 0,
+                                'accept_metric_mask': 0,
+                                'summary_table': '0x1539cef4',
+                                'metric': '(not set)',
+                                'is_spf_interval_set': False,
+                                'spf_interval': {
+                                    'initial_wait_msecs': 50,
+                                    'secondary_wait_msecs': 200,
+                                    'maximum_wait_msecs': 5000,
+                                },
+                                'spf_periodic_interval_secs': '(not set)',
+                                'ispf_state': '(not set)',
+                                'max_redist_prefixes': '(not set)',
+                                'topo_index': {
+                                    0: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    1: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    2: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                    3: {
+                                        'is_spf_prefix_priority_acl_names_set': False,
+                                        'spf_prefix_priority_acl_names': '0x0',
+                                        'is_spf_prefix_priority_tags_set': False,
+                                        'spf_prefix_priority_tags': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                'area_tables': {
+                    'level-2': {
+                        'index': 1,
+                        'idb_list': {
+                            'sll_head': '0x151942e0',
+                            'sll_tail': '0x15193fd4',
+                            'sll_count': 8,
+                            'sll_maximum': 0,
+                        },
+                        'list_linkage': {
+                            'next': '0x0',
+                            'previous': '0x44b2534',
+                        },
+                        'adj_db': '0x1540cee4',
+                        'adj_log': '0x1539b844',
+                        'uni_db_log': '0x15411024',
+                        'upd_db': {
+                            'lock': {
+                                'rwlock': {
+                                    'active': 0,
+                                    'spare': '0x0',
+                                    'blockedwriters': 0,
+                                    'blockedreaders': 0,
+                                    'heavy': 0,
+                                    'lock': {
+                                        'count': -2147483648,
+                                        'owner': 0,
+                                    },
+                                    'owner': 4294967294,
+                                },
+                                'description': '0x15393cf0',
+                            },
+                            'tree': {
+                                'root': '0x0',
+                                'key_size': 8,
+                                'size': 0,
+                                'node_alloc_data': '0x15393cd0',
+                                'node_alloc_fn': '0x42fd024',
+                                'node_free_fn': '0x42fd08a',
+                                'data_to_str_fn': '0x42fd094',
+                            },
+                            'tree_node_chunks': {
+                                'name': '0x448764c',
+                                'size': 28,
+                                'flags': 1297,
+                                'chunk': '0x1543146c',
+                                'num_allocated_elements': 0,
+                            },
+                            'area': '0x15393bfc',
+                            'log': '0x15432024',
+                            'name': 'L2 Update DB',
+                        },
+                        'nsf_ietf_csnp_rcvd': False,
+                        'overload_bit_on_startup_timer': '0x15017530',
+                        'overload_bit_trigger_expired': True,
+                        'upd_periodic_timer': '0x150174d0',
+                        'checksum_ptimer': {
+                            'tv_sec': 3657420,
+                            'tv_nsec': 458761224,
+                        },
+                        'dec_db': {
+                            'lock': {
+                                'rwlock': {
+                                    'active': 0,
+                                    'spare': '0x0',
+                                    'blockedwriters': 0,
+                                    'blockedreaders': 0,
+                                    'heavy': 0,
+                                    'lock': {
+                                        'count': -2147483648,
+                                        'owner': 0,
+                                    },
+                                    'owner': 4294967294,
+                                },
+                                'description': '0x153942b0',
+                            },
+                            'tree': {
+                                'root': '0x1539f9d4',
+                                'key_size': 8,
+                                'size': 82,
+                                'node_alloc_data': '0x15394290',
+                                'node_alloc_fn': '0x42fd024',
+                                'node_free_fn': '0x42fd08a',
+                                'data_to_str_fn': '0x42fd094',
+                            },
+                            'tree_node_chunks': {
+                                'name': '0x448764c',
+                                'size': 28,
+                                'flags': 1297,
+                                'chunk': '0x1539f844',
+                                'num_allocated_elements': 82,
+                            },
+                            'area': '0x15393bfc',
+                            'log': '0x15453024',
+                            'name': 'L2 Decision DB',
+                        },
+                        'node_db': {
+                            'node_created_fn': '0x424fd84',
+                            'node_destroyed_fn': '0x424ffa6',
+                            'node_ltopo_created_fn': '0x42500b6',
+                            'node_ltopo_destroyed_fn': '0x42503ba',
+                            'node_topo_created_fn': '0x4250536',
+                            'node_topo_destroyed_fn': '0x42506b4',
+                            'callback_context': '0x15393bfc',
+                            'root_element': '0x151fb9bc',
+                            'num_nodes': 64,
+                        },
+                        'stats': {
+                            'ta_lsp_build': 850,
+                            'ta_lsp_refresh': 219,
+                        },
+                        'trap_stats': {
+                            'corr_lsps': 0,
+                            'auth_type_fails': 0,
+                            'auth_fails': 0,
+                            'lsp_dbase_oloads': 4,
+                            'man_addr_drop_from_areas': 0,
+                            'attmpt_to_ex_max_seq_nums': 0,
+                            'seq_num_skips': 1,
+                            'own_lsp_purges': 3,
+                            'id_field_len_mismatches': 0,
+                            'lsp_errors': 0,
+                        },
+                        'per_ltopo': {
+                            'Standard (IPv4 Unicast)': {
+                                'area': '0x15393bfc',
+                                'ltopo_index': 'Standard (IPv4 Unicast)',
+                                'roca_event': {
+                                    'mutex': {
+                                        'mutex': {
+                                            'count': -2147483648,
+                                            'owner': 0,
                                         },
-                                        "last_execution_time": {
-                                            "tv_sec": 3657197,
-                                            "tv_nsec": 824108467,
+                                        'description': '0x1500ee28',
+                                    },
+                                    'timer': {
+                                        'timer': '0x150179bc',
+                                        'num_execution_events': 1,
+                                        'is_pending': False,
+                                        'is_executing': False,
+                                        'postponed_schedule_time': {
+                                            'tv_sec': 0,
+                                            'tv_nsec': 0,
+                                        },
+                                        'last_execution_time': {
+                                            'tv_sec': 3657197,
+                                            'tv_nsec': 824108467,
                                         },
                                     },
-                                    "log": "0x15474024",
-                                    "class": "<error>",
+                                    'log': '0x15474024',
+                                    'class': '<error>',
                                 },
-                                "spf_periodic_timer": "0x1501798c",
-                                "paths": {
-                                    "classification": 0,
-                                    "is_sorted": False,
-                                    "array": "0x1540d45c",
-                                    "num_elements": 64,
+                                'spf_periodic_timer': '0x1501798c',
+                                'paths': {
+                                    'classification': 0,
+                                    'is_sorted': False,
+                                    'array': '0x1540d45c',
+                                    'num_elements': 64,
                                 },
-                                "unreached": {
-                                    "classification": 0,
-                                    "is_sorted": False,
-                                    "array": "0x1540d4b4",
-                                    "num_elements": 0,
+                                'unreached': {
+                                    'classification': 0,
+                                    'is_sorted': False,
+                                    'array': '0x1540d4b4',
+                                    'num_elements': 0,
                                 },
-                                "firsthopchanged": {
-                                    "classification": 0,
-                                    "is_sorted": True,
-                                    "array": "0x1540d4e0",
-                                    "num_elements": 0,
+                                'firsthopchanged': {
+                                    'classification': 0,
+                                    'is_sorted': True,
+                                    'array': '0x1540d4e0',
+                                    'num_elements': 0,
                                 },
-                                "linkchanged": {
-                                    "classification": 2,
-                                    "is_sorted": True,
-                                    "array": "0x1540d66c",
-                                    "num_elements": 0,
+                                'linkchanged': {
+                                    'classification': 2,
+                                    'is_sorted': True,
+                                    'array': '0x1540d66c',
+                                    'num_elements': 0,
                                 },
-                                "reachable_area_addresses": "0x1540d430",
-                                "stats": {
-                                    "num_spfs": 5004,
-                                    "num_ispfs": 0,
-                                    "num_nhcs": 10,
-                                    "num_prcs": 1219,
-                                    "num_periodic_spfs": 3876,
+                                'reachable_area_addresses': '0x1540d430',
+                                'stats': {
+                                    'num_spfs': 5004,
+                                    'num_ispfs': 0,
+                                    'num_nhcs': 10,
+                                    'num_prcs': 1219,
+                                    'num_periodic_spfs': 3876,
                                 },
-                            }
+                            },
                         },
-                        "per_topo": {
-                            "IPv4 Unicast": {
-                                "area": "0x15393bfc",
-                                "topo_index": "IPv4 Unicast",
-                                "te": {
-                                    "link_holddown_timer": "0x150181cc",
-                                    "purge_link_info_timer": "0x1501819c",
-                                    "log": "0x153a8d24",
-                                    "tunnel_table": "0x153ab844",
-                                    "info_from_te": "0x0",
-                                    "pce_info_from_te": "0x0",
-                                    "is_pce_ready": False,
+                        'per_topo': {
+                            'IPv4 Unicast': {
+                                'area': '0x15393bfc',
+                                'topo_index': 'IPv4 Unicast',
+                                'te': {
+                                    'link_holddown_timer': '0x150181cc',
+                                    'purge_link_info_timer': '0x1501819c',
+                                    'log': '0x153a8d24',
+                                    'tunnel_table': '0x153ab844',
+                                    'info_from_te': '0x0',
+                                    'pce_info_from_te': '0x0',
+                                    'is_pce_ready': False,
                                 },
-                                "overloaded_count": 0,
-                                "overload_bit_trigger_running": False,
-                                "bgp_converged_notify_h": "0x0",
-                                "added_first_hops": "0x0",
-                                "deleted_first_hops": "0x0",
-                                "postponed_added_first_hops": "0x0",
-                                "postponed_deleted_first_hops": "0x0",
-                                "prefixeschanged": "0x0",
-                                "nodechanged": "0x0",
-                                "prefix_priority_acl": {
-                                    "critical": "0x0",
-                                    "high": "0x15604868",
-                                    "medium": "0x156047dc",
-                                    "low": "0x0",
+                                'overloaded_count': 0,
+                                'overload_bit_trigger_running': False,
+                                'bgp_converged_notify_h': '0x0',
+                                'added_first_hops': '0x0',
+                                'deleted_first_hops': '0x0',
+                                'postponed_added_first_hops': '0x0',
+                                'postponed_deleted_first_hops': '0x0',
+                                'prefixeschanged': '0x0',
+                                'nodechanged': '0x0',
+                                'prefix_priority_acl': {
+                                    'critical': '0x0',
+                                    'high': '0x15604868',
+                                    'medium': '0x156047dc',
+                                    'low': '0x0',
                                 },
-                                "num_redist_prefixes": 166,
-                                "max_redist_prefixes_exceeded": False,
-                                "max_redist_prefixes_alarm_on": False,
-                                "has_prefix_policy_changed": False,
-                            }
+                                'num_redist_prefixes': 166,
+                                'max_redist_prefixes_exceeded': False,
+                                'max_redist_prefixes_alarm_on': False,
+                                'has_prefix_policy_changed': False,
+                            },
                         },
-                        "address_family": {
-                            "IPv4": {"router_id": "0x15192388"},
-                            "IPv6": {"router_id": "0x0"},
+                        'per_af': {
+                            'IPv4': {
+                                'router_id': '0x15192388',
+                            },
+                            'IPv6': {
+                                'router_id': '0x0',
+                            },
                         },
-                    }
+                    },
                 },
-            }
-        }
+            },
+        },
     }
 
-    golden_output_1 = {'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         RP/0/RSP0/CPU0:bl1-tatooine#show isis private all
         Tue Oct  8 17:36:24.107 EDT
-
 
         +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
 
@@ -5797,8 +6536,6 @@ class TestShowIsisPrivateAll(unittest.TestCase):
               router_id                                     : 0x15192388
             per_af[IPv6]                                    :
               router_id                                     : 0x0
-
-
     '''}
 
     def test_empty_output(self):
@@ -5808,10 +6545,12 @@ class TestShowIsisPrivateAll(unittest.TestCase):
             obj.parse()
 
     def test_golden_output_1(self):
-        device = Mock(**self.golden_output_1)
+        device = Mock(**self.golden_output)
         obj = ShowIsisPrivateAll(device=device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

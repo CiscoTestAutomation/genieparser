@@ -231,7 +231,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                             {'Decaps6tunnel0': 
                                                 {'flags': 'NS DI',
                                                 'uptime': '00:04:40'}},
-                                        'rpf_nbr': '150::150:150:150:150',
+                                        'rpf_nbr': '2001:db8:b901:0:150:150:150:150',
                                         'uptime': '00:04:45'}}},
                             'ff02::/16': 
                                 {'source_address': 
@@ -250,23 +250,23 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'uptime': '00:04:45'}}},
                             'ff15::1:1': 
                                 {'source_address': 
-                                    {'1::1:1:1:2': 
+                                    {'2001:db8:1:0:1:1:1:2': 
                                         {'flags': 'L RPF MT',
                                         'incoming_interface_list': 
                                             {'GigabitEthernet150/0/0/6': 
                                                 {'flags': 'A',
                                                 'uptime': '00:02:53',
-                                                'rpf_nbr': '1::1:1:1:2'}},
+                                                'rpf_nbr': '2001:db8:1:0:1:1:1:2'}},
                                         'mt_slot': '0/2/CPU0',
                                         'outgoing_interface_list': 
                                             {'mdtvpn1': 
                                                 {'flags': 'F NS MI MT MA',
                                                 'uptime': '00:02:53'}},
-                                        'rpf_nbr': '1::1:1:1:2',
+                                        'rpf_nbr': '2001:db8:1:0:1:1:1:2',
                                         'uptime': '00:02:53'}}},
                             'ff15::2:1': 
                                 {'source_address': 
-                                    {'4::4:4:4:5': 
+                                    {'2001:db8:10:0:4:4:4:5': 
                                         {'flags': 'L RPF',
                                         'incoming_interface_list': 
                                             {'mdtvpn1': 
@@ -518,7 +518,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
             IRMI - IR MDT Interface
 
         (*,ff00::/8)
-          RPF nbr: 150::150:150:150:150 Flags: L C RPF P
+          RPF nbr: 2001:db8:b901:0:150:150:150:150 Flags: L C RPF P
           Up: 00:04:45
           Outgoing Interface List
             Decaps6tunnel0 Flags: NS DI, Up: 00:04:40
@@ -539,8 +539,8 @@ class test_show_mrib_vrf_route(unittest.TestCase):
           Flags: D P
           Up: 00:04:45
 
-        (1::1:1:1:2,ff15::1:1)
-          RPF nbr: 1::1:1:1:2 Flags: L RPF MT
+        (2001:db8:1:0:1:1:1:2,ff15::1:1)
+          RPF nbr: 2001:db8:1:0:1:1:1:2 Flags: L RPF MT
           MT Slot: 0/2/CPU0
           Up: 00:02:53
           Incoming Interface List
@@ -548,7 +548,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
           Outgoing Interface List
             mdtvpn1 Flags: F NS MI MT MA, Up: 00:02:53
 
-        (4::4:4:4:5,ff15::2:1)
+        (2001:db8:10:0:4:4:4:5,ff15::2:1)
           RPF nbr: ::ffff:192.168.195.200 Flags: L RPF
           Up: 00:03:59
           Incoming Interface List
