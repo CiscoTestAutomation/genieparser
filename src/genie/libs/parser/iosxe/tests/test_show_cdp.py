@@ -448,7 +448,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'device_id': 'device.cisco.com',
                     'duplex_mode': 'half',
                     'entry_addresses': {
-                        '4000::BC:0:0:C0A8:BC06': {'type': 'global unicast'},
+                        '2001:DB8:1000:8A10::C0A8:BC06': {'type': 'global unicast'},
                         'FE80::203:E3FF:FE6A:BF81': {'type': 'link-local'},
                     },
                     'hold_time': 160,
@@ -467,7 +467,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Device ID: device.cisco.com
         Entry address(es):
             IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
-            IPv6 address: 4000::BC:0:0:C0A8:BC06  (global unicast)
+            IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
         Platform: cisco 3640,  Capabilities: Router
         Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
         Holdtime : 160 sec

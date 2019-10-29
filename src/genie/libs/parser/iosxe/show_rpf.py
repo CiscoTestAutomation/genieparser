@@ -107,7 +107,7 @@ class ShowIpRpf(ShowIpRpfSchema):
 
         # RPF route/mask: 10.1.1.0/24
         # RPF route/mask: 172.16.0.0/255.255.0.0
-        # RPF route/mask:20::/64
+        # RPF route/mask:2001:db8:400::/64
         p4 = re.compile(r'^RPF +route\/mask:'
                          ' *(?P<route>[\w\/\:\.]+)\/(?P<mask>[\d\:\.]+)$')
 

@@ -2339,7 +2339,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #IPv6 virtual addresses configured:
-            #        fe80::5:73ff:fea0:2  192:168::1
+            #        fe80::5:73ff:fea0:2  2001:db8:7746:fa41::1
             p6_1 = re.compile(r'^\s*(IPv6 virtual *(?P<virtual_add>(addresses|address) configured:))$')
             m = p6_1.match(line)
             if m:

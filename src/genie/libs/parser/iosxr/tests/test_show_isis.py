@@ -902,92 +902,99 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     parsed_output_1 = {
-        "instance": {
-            "isp": {
-                "address_family": {
-                    "IPv4 Unicast": {
-                        "spf_log": {
+        'instance': {
+            'isp': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
                             1: {
-                                "type": "FSPF",
-                                "time_ms": 1,
-                                "level": 1,
-                                "total_nodes": 1,
-                                "trigger_count": 1,
-                                "first_trigger_lsp": "12a5.00-00",
-                                "triggers": "NEWLSP0",
-                                "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
-                                "delay_ms": 51, 
-                                "delay_info": "since first trigger",
-                                "spt_calculation": {
-                                    "cpu_time_ms": 0, 
-                                    "real_time_ms": 0},
-                                "prefix_update": {
-                                    "cpu_time_ms": 1, 
-                                    "real_time_ms": 1},
-                                "new_lsp_arrivals": 0,
-                                "next_wait_interval_ms": 200,
-                                "results": {
-                                    "nodes": {
-                                        "reach": 1, 
-                                        "unreach": 0, 
-                                        "total": 1},
-                                    "prefixes": {
-                                        "items": {
-                                            "critical_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                'type': 'FSPF',
+                                'time_ms': 1,
+                                'level': 1,
+                                'total_nodes': 1,
+                                'trigger_count': 1,
+                                'first_trigger_lsp': '12a5.00-00',
+                                'triggers': 'NEWLSP0',
+                                'start_timestamp': 'Mon Aug 16 2004 19:25:35.140',
+                                'delay': {
+                                    'since_first_trigger_ms': 51,
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 1,
+                                    'real_time_ms': 1,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'next_wait_interval_ms': 200,
+                                'results': {
+                                    'nodes': {
+                                        'reach': 1,
+                                        'unreach': 0,
+                                        'total': 1,
+                                    },
+                                    'prefixes': {
+                                        'items': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "high_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "medium_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "low_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                            "all_priority": {
-                                                "reach": 0,
-                                                "unreach": 0,
-                                                "total": 0,
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'unreach': 0,
+                                                'total': 0,
                                             },
-                                        },                                        
-                                        "routes": {
-                                            "critical_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "high_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "medium_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "low_priority": {
-                                                "reach": 0, 
-                                                "total": 0},
-                                            "all_priority": {
-                                                "reach": 0, 
-                                                "total": 0
+                                        },
+                                        'routes': {
+                                            'critical_priority': {
+                                                'reach': 0,
+                                                'total': 0,
                                             },
-                                        }
+                                            'high_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'medium_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'low_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                            'all_priority': {
+                                                'reach': 0,
+                                                'total': 0,
+                                            },
+                                        },
                                     },
                                 },
                             },
-                        }
-                    }
-                }
-            }
-        }
+                        },
+                    },
+                },
+            },
+        },
     }
     
-
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
           
@@ -1024,6 +1031,169 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                All Priorities         0        -    0
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        show isis spf-log detail
+
+        Mon Oct 21 10:41:33.540 EDT
+
+        IS-IS Genie Level 2 IPv4 Unicast Route Calculation Log
+                            Time Total Trig.
+        Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        ------------ ----- ----- ----- ----- -------------------- -----------------------
+        --- Sun Oct 20 2019 ---
+        15:53:18.505 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+        16:08:18.055  FSPF     0    71     1                      PERIODIC
+        Delay:                 50ms (since first trigger)
+                                899545ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    150ms
+        RIB Batches:           0 (0 critical, 0 high, 0 medium, 0 low)
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         0     0
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        0     0
+        16:08:18.555 PPFRR     5    71     1                      PERPREFIXFRR
+        Delay:                 0ms (since first trigger)
+                                500ms (since end of last calculation)
+        New LSP Arrivals:      0
+        SR uloop:              No
+        Next Wait Interval:    0ms
+        Interrupted:           No
+        RIB Batches:           0
+        Timings (ms):          +--Total--+
+                                Real   CPU
+            SPT Calculation:         5     5
+            Route Update:            0     0
+                                ----- -----
+            Full Calculation:        5     5
+    '''}
+
+    parsed_output_2 = {
+        'instance': {
+            'Genie': {
+                'address_family': {
+                    'IPv4 Unicast': {
+                        'spf_log': {
+                            1: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Timestamp    Type    15:53:18.505',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                            2: {
+                                'type': 'FSPF',
+                                'time_ms': 0,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERIODIC',
+                                'start_timestamp': 'Real   CPU 16:08:18.055',
+                                'delay': {
+                                    'since_first_trigger_ms': 50,
+                                    'since_end_of_last_calculation': 899545,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 150,
+                                'rib_batches': {
+                                    'total': '0',
+                                    'critical': '0',
+                                    'high': '0',
+                                    'medium': '0',
+                                    'low': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                            },
+                            3: {
+                                'type': 'PPFRR',
+                                'time_ms': 5,
+                                'level': 2,
+                                'total_nodes': 71,
+                                'trigger_count': 1,
+                                'triggers': 'PERPREFIXFRR',
+                                'start_timestamp': 'Real   CPU 16:08:18.555',
+                                'delay': {
+                                    'since_first_trigger_ms': 0,
+                                    'since_end_of_last_calculation': 500,
+                                },
+                                'new_lsp_arrivals': 0,
+                                'sr_uloop': 'No',
+                                'next_wait_interval_ms': 0,
+                                'interrupted': 'No',
+                                'rib_batches': {
+                                    'total': '0',
+                                },
+                                'spt_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': 0,
+                                    'real_time_ms': 0,
+                                },
+                                'full_calculation': {
+                                    'cpu_time_ms': 5,
+                                    'real_time_ms': 5,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLogDetail(device=device)
@@ -1035,6 +1205,12 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+    
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:

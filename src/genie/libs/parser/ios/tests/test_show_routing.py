@@ -143,13 +143,13 @@ class test_show_ipv6_route_word(test_show_ipv6_route_word_iosxe):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6RouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(route='2000:2::4:1')
+            parsed_output = obj.parse(route='2001:db8:400:4::4:1')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
         obj = ShowIpv6RouteDistributor(device=self.device)
-        parsed_output = obj.parse(route='2000:2::4:1')
+        parsed_output = obj.parse(route='2001:db8:400:4::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 

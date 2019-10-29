@@ -1678,8 +1678,19 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 Optional('first_trigger_lsp'): str,
                                 'triggers': str,
                                 'trigger_count': int,
-                                'delay_ms': int,
-                                'delay_info': str,
+                                Optional('sr_uloop'): str,
+                                'delay': {
+                                    'since_first_trigger_ms': int,
+                                    Optional('since_end_of_last_calculation'): int,
+                                },
+                                Optional('interrupted'): str,
+                                Optional('rib_batches'): {
+                                    'total': str,
+                                    Optional('critical'): str,
+                                    Optional('high'): str,
+                                    Optional('medium'): str,
+                                    Optional('low'): str,
+                                },
                                 'spt_calculation': {
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
@@ -1688,9 +1699,13 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
+                                Optional('full_calculation'):{
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
                                 'new_lsp_arrivals': int,
                                 'next_wait_interval_ms': int,
-                                'results': {
+                                Optional('results'): {
                                     'nodes': {
                                         'reach': int,
                                         'unreach': int,
@@ -1780,18 +1795,27 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
         # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
         r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
-                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
-                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+                r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                r'(\s+(?P<first_trigger_lsp>[\w\-\.]+))?\s+(?P<triggers>\w+)')
 
         # Delay:              51ms (since first trigger)
         r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
                         r'\((?P<delay_info>[\w\s]+)\)')
 
         # SPT Calculation
-        r4 = re.compile(r'SPT\s+Calculation')
+        r4 = re.compile(r'SPT\s+Calculation$')
 
+        # SPT Calculation:         5     5
+        r4_1 = re.compile(r'^SPT +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+        
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
+
+        # Route Update:            0     0
+        r5_1 = re.compile(r'^Route +Update: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
+
+        # Full Calculation:        0     0
+        r5_2 = re.compile(r'^Full +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
 
         # CPU Time:         1ms
         # CPU Time:         0ms
@@ -1826,9 +1850,24 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
                           '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
                           '(?P<total>\d+)')
+        
+        # SR uloop:              No
+        r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
+        
+        # Interrupted:           No
+        r14 = re.compile(r'^Interrupted: +(?P<interrupted>\w+)$')
+
+        # RIB Batches:           0
+        r15 = re.compile(r'^RIB +Batches: +(?P<total>\d+)( +\((?P<critical>\d+) '
+                r'critical, +(?P<high>\d+) +high, +(?P<medium>\d+) +medium, +'
+                r'(?P<low>\d+) +low\))?$')
+
+        # 899545ms (since end of last calculation)
+        r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since '
+                r'+end +of +last +calculation\)$')
 
         # Mon Aug 16 2004
-        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+        r17 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
 
         parsed_dict = {}
         log_index = 1
@@ -1872,11 +1911,12 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 spf_log_dict['level'] = level
                 spf_log_dict['total_nodes'] = nodes
                 spf_log_dict['trigger_count'] = trigger_count
-                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                if first_trigger_lsp:
+                    spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
                 spf_log_dict['triggers'] = triggers
                 spf_log_dict['start_timestamp'] = "{} {}"\
                     .format(timestamp_date, timestamp).strip()
-
+                log_index += 1
                 continue
 
             # Delay:              51ms (since first trigger)
@@ -1884,10 +1924,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 delay = int(group['delay'])
-                delay_info = group['delay_info']
-                spf_log_dict['delay_ms'] = delay
-                spf_log_dict['delay_info'] = delay_info
-
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_first_trigger_ms'] = delay
                 continue
 
             # SPT Calculation
@@ -1898,12 +1936,48 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
                 continue
 
+            # SPT Calculation:         5     5
+            result = r4_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
             # Prefix Updates
             result = r5.match(line)
             if result:
                 spt_prefix_dict = spf_log_dict\
                     .setdefault('prefix_update', {})
 
+                continue
+
+            # Route Update:            0     0
+            result = r5_1.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # Full Calculation:        0     0
+            result = r5_2.match(line)
+            if result:
+                group = result.groupdict()
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('full_calculation', {})
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # CPU Time:         1ms
@@ -2004,17 +2078,48 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                     priority_dict['total'] = int(total)
 
                 continue            
+            
+            # SR uloop:              No
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                sr_uloop = group['sr_uloop']
+                spf_log_dict['sr_uloop'] = sr_uloop
+                continue
+            
+            # Interrupted:           No
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                interrupted = group['interrupted']
+                spf_log_dict['interrupted'] = interrupted
+                continue
+
+            # RIB Batches:           0
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                rib_batches_dict = spf_log_dict.setdefault('rib_batches', {})
+                rib_batches_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # 899545ms (since end of last calculation)
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                delay = int(group['since_end_of_last_calculation_ms'])
+                delay_dict = spf_log_dict.setdefault('delay', {})
+                delay_dict['since_end_of_last_calculation'] = delay
+                continue
 
             # Mon Aug 16 2004
-            result = r13.match(line)
+            result = r17.match(line)
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
                 
                 continue
-        
         return parsed_dict
-
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
         * show isis lsp-log     
@@ -2171,7 +2276,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 Optional('next_lan_iih_sec'): int,
                                 Optional('lan_id'): str,
                                 Optional('hello_interval_sec'): int,
-                                'hello_multiplier': int,
+                                Optional('hello_multiplier'): int,
                                 Optional('priority'): {
                                     'local': str,
                                     'dis': str
@@ -2192,6 +2297,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'adjacency_formation': str,
                                 'state': str,
                                 'prefix_advertisement': str,
+                                Optional('protocol_state'): str,
                                 'metric': {
                                     'level': {
                                         Any(): int
@@ -2210,7 +2316,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                         }
                                     },
                                 },
-                                'frr': {
+                                Optional('frr'): {
                                     'level': {
                                         Any(): {
                                             'state': str,
@@ -2235,6 +2341,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'state': str,
                                 'forwarding_address': list,
                                 'global_prefix': list,
+                                Optional('protocol_state'): str,
                             },
                         }
                     }
@@ -2266,7 +2373,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Loopback0                   Enabled
         # GigabitEthernet0/0/0/0      Enabled
         # TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
-        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
+        r2 = re.compile(r'^(?P<interface>[\w\-\d+\/\.]+)\s+(?P<interface_state>Enabled|Disabled)( +[\S ]+)?$')
 
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
@@ -2328,7 +2435,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r18 = re.compile(r'CLNS\s+I\/O')
 
         # Protocol State:         Up
-        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>\w+)')
+        # Protocol State:         Down (Intf not up in CLNS proto stack)
+        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>[\S\s]+)')
 
         # MTU:                    1500
         r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
@@ -2347,7 +2455,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
-        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
+        # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
@@ -2464,6 +2573,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         parsed_output = {}
         interface_flag = False
         clns_flag = False
+        topology_falg = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -2660,6 +2770,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 protocol_state = group['protocol_state']
                 if clns_flag:
                     clns_dict['protocol_state'] = protocol_state
+                elif topology_falg:
+                    topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
 
@@ -2686,7 +2798,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault(topology, {})
                 topology_dict['state'] = topology_state
                 interface_flag = False
-
+                topology_falg = True
                 continue
 
             # Metric (L1/L2):         10/10
@@ -2722,10 +2834,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 continue
 
             # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
             result = r24.match(line)            
             if result:
                 group = result.groupdict()
-                mpls_stack = group['mpls_max_label_stack'].strip()
+                mpls_stack = group['mpls_max_label_stack'].replace(':', ' ').strip()
                 mpls_dict = topology_dict.setdefault('mpls', {})                
                 mpls_dict['mpls_max_label_stack'] = mpls_stack
 

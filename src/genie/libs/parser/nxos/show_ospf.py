@@ -227,7 +227,7 @@ class ShowIpOspf(ShowIpOspfSchema):
         p5 = re.compile(r'^Grace +period: +(?P<interval>\w+) +'
                         r'state: +(?P<state>\w+)$')
         p6 = re.compile(r'^Last +graceful +restart +exit +status: '
-                        r'+(?P<status>\w+)(?: +\([\w ]+\))?$')
+                        r'+(?P<status>\w+).*?$')
         p7 = re.compile(r'^Supports +only +single +TOS\(TOS0\) +routes$')
         p8 = re.compile(r'^Supports +opaque +LSA$')
         p9 = re.compile(r'^Administrative +distance +(?P<pref_all>\d+)$')
@@ -298,9 +298,9 @@ class ShowIpOspf(ShowIpOspfSchema):
         p42 = re.compile(r'(?P<authentication>No|Message\-digest|Simple)'
                          r'(?: +password)?(?: +authentication(?: +available)?)?$')
         
-        p43 = re.compile(r'^Generates +NSSA ?(?P<generate_nssa>[\S ]+)$')
+        p43 = re.compile(r'^Generates +NSSA +(?P<generate_nssa>[\S\s]+)$')
 
-        p44 = re.compile(r'^This +router +is +(?P<this_router_is>[\w ]+)(?:\.)?$')
+        p44 = re.compile(r'^This +router +is +(?P<this_router_is>[\w\s]+)(?:\.)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -832,6 +832,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
                 continue
 
+            # This router is an area border and autonomous system boundary.
+            # This router is an area border
             # This router is an autonomous system boundary
             m44 = p44.match(line)
             if m44:
