@@ -562,11 +562,11 @@ class TestShowMsdpSaCache(unittest.TestCase):
                         'peer_learned_from': '192.168.1.1',
                         'rpf_peer': '192.168.1.1',
                         'source_addr': '10.1.1.10',
+                        'flags': {
+                            'grp': ['PI'],
+                            'src': ['E', 'EA', 'PI'],
+                        },
                         'statistics': {
-                            'flags': {
-                                'grp': 'PI',
-                                'src': 'E, EA, PI',
-                            },
                             'received': {
                                 'encapsulated_data_received': 0,
                                 'sa': 2,
@@ -609,11 +609,11 @@ class TestShowMsdpSaCache(unittest.TestCase):
                         'peer_learned_from': '192.168.1.1',
                         'rpf_peer': '192.168.1.1',
                         'source_addr': '10.1.1.10',
+                        'flags': {
+                            'grp': ['PI'],
+                            'src': ['E', 'EA', 'PI'],
+                        },
                         'statistics': {
-                            'flags': {
-                                'grp': 'PI',
-                                'src': 'E, EA, PI',
-                            },
                             'received': {
                                 'encapsulated_data_received': 0,
                                 'sa': 2,
@@ -687,7 +687,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     expected_output_1 = {
         'vrf': {
             'VRF1': {
-                'peer_address': {
+                'peer': {
                     '1.1.1.1': {
                         'active_sa': 0,
                         'as': 0,
@@ -764,7 +764,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     expected_output_2 = {
         'vrf': {
             'default': {
-                'peer_address': {
+                'peer': {
                     '4.4.4.4': {
                         'active_sa': 0,
                         'as': 200,
