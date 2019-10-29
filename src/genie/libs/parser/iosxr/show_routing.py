@@ -620,8 +620,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             if m:
                 group = m.groupdict()
                 active = True
-                if line == cmd:
-                    continue
                 if group['code1']:
                     source_protocol_codes = group['code1'].strip()
                     for key, val in super().source_protocol_dict.items():
