@@ -3945,11 +3945,6 @@ class ShowIsisPrivateAllSchema(MetaParser):
     ''' Schema for commands:
        * show isis private all 
     '''
-    # schema = {
-    #     Any(): {
-    #         Any(): Any(),
-    #     },
-    # }
     schema = {
         'instance': {
             Any(): {
@@ -4301,8 +4296,10 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'ref_count': int,
                         'index': int,
                         'snmp_index': int,
-                        'chkpt_objid': str,
-                        'ltopos_ready_active': str,
+                        'chkpt': {
+                            'objid': str,
+                        },
+                        Optional('ltopos_ready_active'): str,
                         'nsf_waiting_for_running': bool,
                         'nsf_ietf_waiting_for_sent_rr': bool,
                         'is_media_ready': bool,
@@ -4320,12 +4317,12 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'lsp_send_requested': bool,
                         'lsp_send_in_progress': bool,
                         Optional('topos_enabled_passive'): str,
-                        'topos_enabled_active': str,
-                        'pri_label_stack_limit': int,
-                        'bkp_label_stack_limit': int,
-                        'srte_label_stack_limit': int,
-                        'srat_label_stack_limit': int,
-                        'bandwidth': int,
+                        Optional('topos_enabled_active'): str,
+                        'pri_label_stack_limit': Or(int, str),
+                        'bkp_label_stack_limit': Or(int, str),
+                        'srte_label_stack_limit': Or(int, str),
+                        'srat_label_stack_limit': Or(int, str),
+                        'bandwidth': Or(int, str),
                         'is_pme_delay_loss_set': bool,
                         'pme_avg_delay': str,
                         'pme_min_delay': str,
@@ -4349,7 +4346,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'cross_levels': {
                                 'per_topo': {
                                     Any(): {
-                                        'metric': str,
+                                        'metric': Or(int, str),
                                         'weight': str,
                                         'ldp_sync_cfg': str,
                                         'admin_tag': str,
@@ -4376,36 +4373,38 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'hello_padding': str,
                             },
                             'per_level': {
-                                'per_topo': {
-                                    Any(): {
-                                        'metric': str,
-                                        'weight': str,
-                                        'ldp_sync_cfg': str,
-                                        'admin_tag': str,
-                                        'frr_type': str,
-                                        'is_lkgp_set': int,
+                                Any(): {
+                                    'per_topo': {
+                                        Any(): {
+                                            'metric': str,
+                                            'weight': str,
+                                            'ldp_sync_cfg': str,
+                                            'admin_tag': str,
+                                            'frr_type': str,
+                                            'is_lkgp_set': int,
+                                        },
                                     },
+                                    'is_auth_cfg_ctx_set': bool,
+                                    'auth_cfg_ctx': {
+                                        'alg': str,
+                                        'failure_mode': str,
+                                        'password': str,
+                                        'accept_password': str,
+                                    },
+                                    'hello_interval_msecs': str,
+                                    'hello_multiplier': str,
+                                    'csnp_interval_secs': str,
+                                    'lsp_pacing_interval_msecs': str,
+                                    'lsp_fast_flood_threshold': str,
+                                    'lsp_rexmit_interval_secs': str,
+                                    'min_lsp_rexmit_interval_msecs': str,
+                                    'dr_priority': str,
+                                    'is_hello_padding_set': bool,
+                                    'hello_padding': str,
                                 },
-                                'is_auth_cfg_ctx_set': bool,
-                                'auth_cfg_ctx': {
-                                    'alg': str,
-                                    'failure_mode': str,
-                                    'password': str,
-                                    'accept_password': str,
-                                },
-                                'hello_interval_msecs': str,
-                                'hello_multiplier': str,
-                                'csnp_interval_secs': str,
-                                'lsp_pacing_interval_msecs': str,
-                                'lsp_fast_flood_threshold': str,
-                                'lsp_rexmit_interval_secs': str,
-                                'min_lsp_rexmit_interval_msecs': str,
-                                'dr_priority': str,
-                                'is_hello_padding_set': bool,
-                                'hello_padding': str,
                             },
                         },
-                        'per_area': {
+                        Optional('per_area'): {
                             Any(): {
                                 'area_linkage': str,
                                 'idb': str,
@@ -4453,16 +4452,18 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         },
                         'media': {
                             Any():{
-                                'caps_id': int,
-                                'media_class':  str,
-                                'encaps_overhead': int,
+                                Optional('caps_id'): int,
+                                Optional('media_class'):  str,
+                                Optional('encaps_overhead'): int,
                             },                            
                         },
-                        'media_specific': {
+                        Optional('media_specific'): {
                             Any(): {
                                 'hello_timer': str,
-                                'last_hello_tv_sec': int,
-                                'last_hello_tv_nsec': int,
+                                'last_hello': {
+                                    'tv_sec': int,
+                                    'tv_nsec': int,
+                                },
                                 'recent_hello_send_count': int,
                                 'adj_state': int,
                                 'do_ietf_3way': bool,
@@ -4494,8 +4495,8 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'sll_maximum': int,
                                 },
                                 'stats': {
-                                    'iih_count ': {
-                                        'in ': int,
+                                    'iih_count': {
+                                        'in': int,
                                         'out': int,
                                     },
                                     'iih_nomem': int,
@@ -4508,8 +4509,8 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'rr_sent': bool,
                                     'ra_rcvd': bool,
                                     'all_ra_seen': bool,
-                                    'ra_required_nbr_count': bool,
-                                    'ra_expected_neighbor_list': list,
+                                    'ra_required_nbr_count': int,
+                                    Optional('ra_expected_neighbor_list'): list,
                                 },
                                 'p2p_over_lan': {
                                     'mcast_state': {
@@ -4549,16 +4550,16 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         },
                         'per_topo': {
                             Any(): {
-                                'ref_count': int,
+                                'refcount': int,
                             },                            
                         },
                         'mpls_ldp_sync': {
-                            'im_attr_ldp_sync_info_notify_handle': int,
+                            'im_attr_ldp_sync_info_notify_handle': Or(int, str),
                             'ldp_sync_info': bool,
                             'is_ldp_sync_info_ok': int,
                         },
-                        'mplsv6_ldp_sync': {
-                            'im_attr_ldp_sync_info_notify_handle': int,
+                        'mpls_ldpv6_sync': {
+                            'im_attr_ldp_sync_info_notify_handle': Or(int, str),
                             'ldp_sync_info': bool,
                             'is_ldp_sync_info_ok': int,
                         },
