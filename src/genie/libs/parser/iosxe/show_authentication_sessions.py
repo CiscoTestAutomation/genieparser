@@ -264,7 +264,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # IPv6 Address: fe80::204:61ff:fe9d:f156
         # IPv6 Address: fe80::204:61ff
         # IPv6 Address: fe9d:f156::1
-        p11 = re.compile(r'^IPv6 +Address\: +(?P<ipv6>([[0-9a-f:A-F]+)(\:[0-9]+)?)$')
+        p11 = re.compile(r'^IPv6 +Address\: +(?P<ipv6>\S+?)$')
 
         # initial return dictionary
         ret_dict = {}
