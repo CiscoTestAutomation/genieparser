@@ -23,3 +23,10 @@
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
 
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* NXOS
+    * ShowIpOspf
+        * Added missing keys to schema
+        * Added regex to capture more outputs
