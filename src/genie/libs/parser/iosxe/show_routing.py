@@ -42,7 +42,7 @@ class ShowIpRouteDistributor(MetaParser):
         else:
             out = output
 
-        if not route:
+        if (route or protocol) in self.protocol_set or (not route and not protocol):
             parser = ShowIpRoute(self.device)
             self.schema = parser.schema
             return parser.parse(output=out)

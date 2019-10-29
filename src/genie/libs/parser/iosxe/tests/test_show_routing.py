@@ -1503,6 +1503,35 @@ class TestShowIpRouteWord(unittest.TestCase):
         'total_prefixes': 1
     }
 
+    golden_output_6 = {'execute.return_value': '''
+        show ip route 10.13.115.1
+        Routing entry for 10.13.115.1/32
+        Known via "connected", distance 0, metric 0 (connected)
+        Routing Descriptor Blocks:
+        * directly connected, via GigabitEthernet3.115
+            Route metric is 0, traffic share count is 1
+    '''}
+
+    golden_parsed_output_6 = {
+        'entry': {
+            '10.13.115.1/32': {
+                'ip': '10.13.115.1',
+                'mask': '32',
+                'known_via': 'connected',
+                'distance': '0',
+                'metric': '0',
+                'paths': {
+                    1: {
+                        'interface': 'GigabitEthernet3.115',
+                        'metric': '0',
+                        'share_count': '1',
+                    },
+                },
+            },
+        },
+        'total_prefixes': 1,
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteWord(device=self.device)
@@ -1550,6 +1579,13 @@ class TestShowIpRouteWord(unittest.TestCase):
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='192.168.4.10')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+    
+    def test_golden_customer(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='10.13.115.1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
         
 ###################################################
 # unit test for show ipv6 route <WROD>
