@@ -467,7 +467,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
     }
 
     golden_output_7 = {'execute.return_value': '''
-        c3850_NAC_SW#show authentication sessions interface GigabitEthernet1/0/1 details
+        Genie_SW#show authentication sessions interface GigabitEthernet1/0/1 details
         Interface: GigabitEthernet1/0/1
         IIF-ID: 0x156E4683
         MAC Address: 0050.b6d6.a8b0
