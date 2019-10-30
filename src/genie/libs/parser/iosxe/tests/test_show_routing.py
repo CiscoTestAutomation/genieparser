@@ -1640,8 +1640,8 @@ class TestShowIpv6RouteWord(unittest.TestCase):
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
-        obj = ShowIpv6RouteDistributor(device=self.device)
-        parsed_output = obj.parse(route='2001:db8:400:4::4:1')
+        obj = ShowIpv6RouteWord(device=self.device)
+        parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
