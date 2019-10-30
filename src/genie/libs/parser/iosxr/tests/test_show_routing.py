@@ -2375,6 +2375,41 @@ class test_show_route_ipv6(unittest.TestCase):
         },
     }
 
+    golden_output_7 = {'execute.return_value': '''
+        show route vrf VRF1 ipv6 2001:1:1:1::1
+        Tue Oct 29 19:31:30.848 UTC
+
+        Routing entry for 2001:1:1:1::1/128
+        Known via "eigrp 100", distance 90, metric 10880, type internal
+        Installed Oct 23 22:09:38.380 for 5d21h
+        Routing Descriptor Blocks
+            fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+            Route metric is 10880
+        No advertising protos.
+    '''}
+
+    golden_parsed_output_7 = {
+        'entry': {
+            '2001:1:1:1::1/128': {
+                'ip': '2001:1:1:1::1',
+                'mask': '128',
+                'known_via': 'eigrp 100',
+                'distance': '90',
+                'metric': '10880',
+                'type': 'internal',
+                'paths': {
+                    1: {
+                        'interface': 'GigabitEthernet0/0/0/0.390',
+                        'from': 'fe80::f816:3eff:fe76:b56d',
+                        'nexthop': 'fe80::f816:3eff:fe76:b56d',
+                        'metric': '10880',
+                    },
+                },
+            },
+        },
+        'total_prefixes': 1,
+    }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv6(device=self.device)
@@ -2422,6 +2457,13 @@ class test_show_route_ipv6(unittest.TestCase):
         obj = ShowRouteIpv6Distributor(device=self.device)
         parsed_output = obj.parse(protocol='local')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+    
+    def test_show_route_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowRouteIpv6Distributor(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', route='2001:1:1:1::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 if __name__ == '__main__':
     unittest.main()

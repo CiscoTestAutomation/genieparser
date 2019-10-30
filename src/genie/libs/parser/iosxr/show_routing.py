@@ -78,7 +78,7 @@ class ShowRouteIpv6Distributor(MetaParser):
                         protocol=protocol)
             elif vrf and route:
                 cmd = self.cli_command[5].format(vrf=vrf,
-                        protocol=protocol)
+                        route=route)
             elif protocol:
                 cmd = self.cli_command[3].format(protocol=protocol)
             elif route:
@@ -839,6 +839,8 @@ class ShowRouteIpWordSchema(MetaParser):
                 'metric': str,
                 'paths': {
                     Any(): {
+                        Optional('nexthop'): str,
+                        Optional('from'): str,
                         Optional('interface'): str,
                         Optional('metric'): str,
                         Optional('share_count'): str,
@@ -906,6 +908,11 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
         # eigrp/100 (protoid=5, clientid=22)
         p5 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
                         r', +clientid=(?P<clientid>\d+)\)$')
+
+        # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+        p6 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
+                        r'+via +(?P<interface>\S+)$')
+
         # initial variables
         ret_dict = {}
         index = 0
@@ -953,7 +960,8 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
                 path_dict.update({k:v for k,v in group.items() if v})
                 continue
-
+            
+            # # eigrp/100 (protoid=5, clientid=22)
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -964,6 +972,20 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
                                 setdefault(redist_advertiser, {})
                 redist_advertiser_dict.update({'protoid': protoid})
                 redist_advertiser_dict.update({'clientid': clientid})
+                continue
+            
+            # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop = group['nexthop']
+                _from = group['from']
+                interface = group['interface']
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'interface': interface})
+                path_dict.update({'from': _from})
+                path_dict.update({'nexthop': nexthop})
                 continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
@@ -982,8 +1004,11 @@ class ShowRouteIpv6WordSchema(MetaParser):
                 'known_via': str,
                 'distance': str,
                 'metric': str,
+                Optional('type'): str,
                 'paths': {
                     Any(): {
+                        Optional('nexthop'): str,
+                        Optional('from'): str,
                         Optional('interface'): str,
                         Optional('metric'): str,
                         Optional('share_count'): str,
