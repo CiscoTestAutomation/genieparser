@@ -836,6 +836,10 @@ class ShowRouteIpWordSchema(MetaParser):
                 'known_via': str,
                 'distance': str,
                 'metric': str,
+                Optional('installed'):{
+                    'date': str,
+                    'for': str,
+                },
                 'paths': {
                     Any(): {
                         Optional('nexthop'): str,
@@ -911,6 +915,10 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
         p6 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
                         r'+via +(?P<interface>\S+)$')
+        
+        # Installed Oct 23 22:09:38.380 for 5d21h
+        p7 = re.compile(r'^Installed +(?P<date>\S+ +\d+ +\d+:\d+:\d+\.\d+)'
+                        r' +for +(?P<for>\S+)$')
 
         # initial variables
         ret_dict = {}
@@ -986,6 +994,14 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
                 path_dict.update({'from': _from})
                 path_dict.update({'nexthop': nexthop})
                 continue
+            
+            # Installed Oct 23 22:09:38.380 for 5d21h
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                installed_dict = entry_dict.setdefault('installed', {})
+                installed_dict.update({k:v for k,v in group.items() if v})
+                continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict
@@ -1004,6 +1020,10 @@ class ShowRouteIpv6WordSchema(MetaParser):
                 'distance': str,
                 'metric': str,
                 Optional('type'): str,
+                Optional('installed'): {
+                    'for': str,
+                    'date': str,
+                },
                 'paths': {
                     Any(): {
                         Optional('nexthop'): str,

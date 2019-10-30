@@ -829,6 +829,10 @@ class test_show_route_ipv4(unittest.TestCase):
                 'known_via': 'connected',
                 'distance': '0',
                 'metric': '0',
+                'installed': {
+                    'date': 'Oct  4 15:47:45.390',
+                    'for': '3w4d',
+                },
                 'paths': {
                     1: {
                         'interface': 'GigabitEthernet0/0/0/1.90',
@@ -1058,6 +1062,10 @@ class test_show_route_ipv4(unittest.TestCase):
                 'known_via': 'local',
                 'distance': '0',
                 'metric': '0',
+                'installed': {
+                    'date': 'Oct  4 15:47:45.368',
+                    'for': '3w4d',
+                },
                 'paths': {
                     1: {
                         'interface': 'GigabitEthernet0/0/0/1.420',
@@ -2201,6 +2209,10 @@ class test_show_route_ipv6(unittest.TestCase):
                 'known_via': 'local',
                 'distance': '0',
                 'metric': '0',
+                'installed': {
+                    'date': 'Oct  4 15:47:46.727',
+                    'for': '3w4d',
+                },
                 'paths': {
                     1: {
                         'interface': 'GigabitEthernet0/0/0/1.120',
@@ -2397,6 +2409,10 @@ class test_show_route_ipv6(unittest.TestCase):
                 'distance': '90',
                 'metric': '10880',
                 'type': 'internal',
+                'installed': {
+                    'date': 'Oct 23 22:09:38.380',
+                    'for': '5d21h',
+                },
                 'paths': {
                     1: {
                         'interface': 'GigabitEthernet0/0/0/0.390',
