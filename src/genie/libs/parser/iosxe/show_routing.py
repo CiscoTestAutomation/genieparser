@@ -1068,7 +1068,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 'show ip route interface {interface}']
     IP_VER = 'ip'
 
-    def cli(self, route=None, vrf=None, output=None):
+    def cli(self, route=None, vrf=None, interface=None, output=None):
 
         if output is None:
             if vrf and route:
