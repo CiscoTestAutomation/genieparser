@@ -9,21 +9,19 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowMyShowCommand for commands;
-        * 'My show command'
-    * Added ShowRouteIpDistributor for commands:
-        * 'show route vrf {vrf} ipv4', 
-        * 'show route ipv4',
-        * 'show route ipv4 {route}',
-        * 'show route ipv4 {protocol}',
-        * 'show route vrf {vrf} ipv4 {protocol}',
+    * Added ShowRouteIpDistributor for commands;
+        * 'show route vrf {vrf} ipv4'
+        * 'show route ipv4'
+        * 'show route ipv4 {route}'
+        * 'show route ipv4 {protocol}'
+        * 'show route vrf {vrf} ipv4 {protocol}'
         * 'show route vrf {vrf} ipv4 {route}'
-    * Added ShowRouteIpv6Distributor for commands:
-        * 'show route vrf {vrf} ipv6', 
-        * 'show route ipv6',
-        * 'show route ipv6 {route}',
-        * 'show route ipv6 {protocol}',
-        * 'show route vrf {vrf} ipv6 {protocol}',
+    * Added ShowRouteIpv6Distributor for commands;
+        * 'show route vrf {vrf} ipv6'
+        * 'show route ipv6'
+        * 'show route ipv6 {route}'
+        * 'show route ipv6 {protocol}'
+        * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
 
 --------------------------------------------------------------------------------
