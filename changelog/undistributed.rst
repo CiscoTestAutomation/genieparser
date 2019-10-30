@@ -11,6 +11,9 @@
 * IOSXE
     * Added ShowMyShowCommand for commands;
         * 'My show command'
+* IOSXR
+    * Added ShowIsisPrivateAll for commands;
+        * 'show isis private all'
 
 --------------------------------------------------------------------------------
                                 Fix

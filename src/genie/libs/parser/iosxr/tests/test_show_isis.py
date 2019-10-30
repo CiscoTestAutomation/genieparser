@@ -7406,7 +7406,7 @@ class TestShowIsisPrivateAll(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
-    def test_golden_output_1(self):
+    def test_golden_output(self):
         device = Mock(**self.golden_output)
         obj = ShowIsisPrivateAll(device=device)
         parsed_output = obj.parse()

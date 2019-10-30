@@ -4578,7 +4578,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
 
 class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):    
     ''' Parser for commands:
-       * show isis private all 
+       * show isis private all
     '''
 
     priority_level = {
