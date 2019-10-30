@@ -307,7 +307,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "incoming_interface_list": {
                                                     "Tunnel5": {
-                                                         "rpf_nbr": "6:6:6::6"
+                                                         "rpf_nbr": "2001:db8:90:24::6"
                                                     }
                                                },
                                                "uptime": "00:04:45",
@@ -315,7 +315,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "flags": "S",
                                                'msdp_learned': False,
                                                'rp_bit': False,
-                                               "rpf_nbr": "6:6:6::6",
+                                               "rpf_nbr": "2001:db8:90:24::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
 
@@ -329,7 +329,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
         Interface state:Interface, State
         (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
           Incoming interface:Tunnel5
-          RPF nbr:6:6:6::6
+          RPF nbr:2001:db8:90:24::6
           Outgoing interface list:
             POS4/0, Forward, 00:04:45/00:02:47
         (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
@@ -377,7 +377,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "incoming_interface_list": {
                                                     "Tunnel5": {
-                                                         "rpf_nbr": "6:6:6::6"
+                                                         "rpf_nbr": "2001:db8:90:24::6"
                                                     }
                                                },
                                                "uptime": "00:04:45",
@@ -385,7 +385,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "flags": "S",
                                                'msdp_learned': False,
                                                'rp_bit': False,
-                                               "rpf_nbr": "6:6:6::6",
+                                               "rpf_nbr": "2001:db8:90:24::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
 
@@ -399,7 +399,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
         Interface state:Interface, State
         (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
           Incoming interface:Tunnel5
-          RPF nbr:6:6:6::6
+          RPF nbr:2001:db8:90:24::6
           Outgoing interface list:
             POS4/0, Forward, 00:04:45/00:02:47
         (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT

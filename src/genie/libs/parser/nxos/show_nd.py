@@ -115,7 +115,7 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         # Total number of entries: 11
         p3 = re.compile(r'^Total +number +of +entries: +(?P<total_number_of_entries>(\d+))$')
 
-        # Address :            2010:2:3::2
+        # Address :            2001:db8:c56d:4::2
         # Age :                00:09:27
         # MacAddr :            fa16.3e82.6320
         # Preference :         50
@@ -342,7 +342,7 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
                         ' +protocol-(?P<protocol_status>[\w]+)/link-(?P<link_status>[\w]+)/admin-(?P<admin_status>[\w]+)$')
         #   IPv6 address:
         p3 = re.compile(r'^\s*IPv6 address:$')
-        #     2010:2:3::3/64 [VALID]
+        #     2001:db8:c56d:4::3/64 [VALID]
         p4 = re.compile(r'^\s*(?P<ipv6_address>[\w\:\/]+)( +\[VALID\])?$')
         # IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         p5 = re.compile(r'^\s*IPv6 +link\-local +address: +(?P<link_address>[\w\:\/]+)( +\[VALID\])?$')
@@ -622,7 +622,7 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
 
         #  ICMPv6 Adjacency Table for all VRFs
         # Address         Age       MAC Address     State      Interface  Phy-Interface
-        # 2010:2:3::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
+        # 2001:db8:c56d:4::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
 
         # ICMPv6 Adjacency Table for all VRFs
         p1 = re.compile(r'^\s*ICMPv6 Adjacency Table for +(?P<vrf>[\w]+) +VRFs$')
@@ -751,8 +751,8 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         # Reachable time 0 msec, Retransmission time 0 msec
         p4 = re.compile(r'^Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
 
-        # Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
-        # Prefix 2010:2:3::/64onlink_flag 1 autonomous_flag 1
+        # Prefix 2001:db8:c56d:4::/64  onlink_flag 1 autonomous_flag 1
+        # Prefix 2001:db8:c56d:4::/64onlink_flag 1 autonomous_flag 1
         p5 = re.compile(r'^Prefix +(?P<prefix>[\w\:\/]+) *onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
 
         #   valid lifetime 2592000, preferred lifetime 604800
@@ -801,7 +801,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
                 neighbor_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
-            #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
+            #   Prefix 2001:db8:c56d:4::/64  onlink_flag 1 autonomous_flag 1
             m = p5.match(line)
             if m:
                 group = m.groupdict()

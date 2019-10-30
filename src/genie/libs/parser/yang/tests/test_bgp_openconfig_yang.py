@@ -522,7 +522,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'peer_group': 'None',
                         'remove_private_as': False,
                         'route_reflector_cluster_id': 3},
-                    'fec1::1002': 
+                    '2001:db8:8b05::1002': 
                         {'address_family': 
                             {'ipv4 unicast': 
                                 {'enabled': True,
@@ -535,7 +535,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': 'fec1::1002',
+                                'foreign_port': '2001:db8:8b05::1002',
                                 'local_host': '::',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -552,7 +552,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'route_reflector_client': True,
                         'route_reflector_cluster_id': 3,
                         'send_community': 'BOTH'},
-                    'fec1::2002': 
+                    '2001:db8:8b05::2002': 
                         {'address_family': 
                             {'ipv4 unicast': 
                                 {'enabled': True,
@@ -569,7 +569,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         'bgp_session_transport': 
                             {'transport': 
                                 {'foreign_host': 'unspecified',
-                                'foreign_port': 'fec1::2002',
+                                'foreign_port': '2001:db8:8b05::2002',
                                 'local_host': '::',
                                 'local_port': 'unspecified',
                                 'passive_mode': 'false'}},
@@ -1332,7 +1332,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>fec1::2002</neighbor-address>
+                                    <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1367,7 +1367,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>fec1::2002</neighbor-address>
+                                    <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1389,11 +1389,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>::</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::2002</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>fec1::2002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                             </neighbor>
                             <neighbor>
                                 <afi-safis>
@@ -1443,7 +1443,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>fec1::1002</neighbor-address>
+                                    <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                                 </config>
                                 <ebgp-multihop>
                                     <config>
@@ -1478,7 +1478,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                     <remove-private-as/>
                                     <send-community>BOTH</send-community>
                                     <peer-group/>
-                                    <neighbor-address>fec1::1002</neighbor-address>
+                                    <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                                 </state>
                                 <timers>
                                     <config>
@@ -1500,11 +1500,11 @@ class test_yang_bgp_nxos(unittest.TestCase):
                                         <local-address>::</local-address>
                                         <passive-mode>false</passive-mode>
                                         <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
+                                        <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::1002</remote-address>
                                         <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                     </state>
                                 </transport>
-                                <neighbor-address>fec1::1002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                             </neighbor>
                             <neighbor>
                                 <afi-safis>

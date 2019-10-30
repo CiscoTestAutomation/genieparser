@@ -198,7 +198,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'fec1::1002':
+                                            {'2001:db8:8b05::1002':
                                                 {'protocol':
                                                     {'bgp':
                                                         {'uptime': '15:57:39',
@@ -230,7 +230,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
         10.106.0.0/8, ubest/mbest: 1/0
             *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
         10.16.1.0/24, ubest/mbest: 1/0
-            *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+            *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
         10.106.0.5/8, ubest/mbest: 1/0
             *via Null0, [1/0], 18:47:42, static
 
@@ -710,7 +710,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                    "mbest_num": "0",
                                    "ubest_num": "1"
                               },
-                              "615:11:11::/64": {
+                              "2001:db8:cdc9:121::/64": {
                                    "mbest_num": "0",
                                    "ubest_num": "1",
                                    "best_route": {
@@ -747,7 +747,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                     "vpnv6 unicast": {
                          "bgp_distance_internal_as": 200,
                          "ip": {
-                              "615:11:11:1::/64": {
+                              "2001:db8:cdc9:144::/64": {
                                    "mbest_num": "0",
                                    "ubest_num": "1",
                                    "best_route": {
@@ -784,7 +784,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
             *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
         2001:db8:2:2::2/128, ubest/mbest: 1/0, attached
             *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, local, tag 222
-        615:11:11::/64, ubest/mbest: 1/0
+        2001:db8:cdc9:121::/64, ubest/mbest: 1/0
             *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls)
 
         IPv6 Routing Table for VRF "VRF1"
@@ -792,7 +792,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        615:11:11:1::/64, ubest/mbest: 1/0
+        2001:db8:cdc9:144::/64, ubest/mbest: 1/0
             *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)
         '''}
     golden_output_custom ={
@@ -802,7 +802,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         '**' denotes best mcast next-hop
         '[x/y]' denotes [preference/metric]
 
-        615:11:11:1::/64, ubest/mbest: 1/0
+        2001:db8:cdc9:144::/64, ubest/mbest: 1/0
             *via ::ffff:10.4.1.1%default:IPv4, [200/2219], 00:35:51, bgp-100, internal, tag 200  (mpls-vpn)
             '''}
 
@@ -812,7 +812,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                 "vpnv6 unicast": {
                     "bgp_distance_internal_as": 200,
                     "ip": {
-                        "615:11:11:1::/64": {
+                        "2001:db8:cdc9:144::/64": {
                             "mbest_num": "0",
                             "ubest_num": "1",
                             "best_route": {
@@ -1154,7 +1154,7 @@ class test_show_routing(unittest.TestCase):
                                 'best_route':
                                     {'unicast':
                                         {'nexthop':
-                                            {'fec1::1002':
+                                            {'2001:db8:8b05::1002':
                                                 {'protocol':
                                                     {'bgp':
                                                         {'uptime': '15:57:39',
@@ -1187,7 +1187,7 @@ class test_show_routing(unittest.TestCase):
         10.106.0.0/8, ubest/mbest: 1/0
             *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
         10.16.1.0/24, ubest/mbest: 1/0
-            *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+            *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
         10.106.0.5/8, ubest/mbest: 1/0
             *via Null0, [1/0], 18:47:42, static
 

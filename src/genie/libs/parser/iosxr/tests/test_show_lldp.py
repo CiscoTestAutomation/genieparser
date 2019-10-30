@@ -32,10 +32,10 @@ class test_show_lldp(unittest.TestCase):
 
     Mon Mar 19 18:23:08.490 UTC
     Global LLDP information:
-            Status: ACTIVE
-            LLDP advertisements are sent every 30 seconds
-            LLDP hold time advertised is 120 seconds
-            LLDP interface reinitialisation delay is 2 seconds
+            Status: ACTIVE
+            LLDP advertisements are sent every 30 seconds
+            LLDP hold time advertised is 120 seconds
+            LLDP interface reinitialisation delay is 2 seconds
     '''}
 
     def test_empty(self):
@@ -119,8 +119,8 @@ class TestShowLldpEntry(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Mon Mar 19 18:23:32.251 UTC
         Capability codes:
-                (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
-                (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+                (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+                (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
 
         ------------------------------------------------
         Local Interface: GigabitEthernet0/0/0/0
@@ -129,18 +129,18 @@ class TestShowLldpEntry(unittest.TestCase):
         Port Description: GigabitEthernet2
         System Name: Ge_nie1000v.openstacklocal
 
-        System Description: 
+        System Description:
         Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
         Technical Support: http://www.cisco.com/techsupport
         Copyright (c) 1986-2017 by Cisco Systems, Inc.
-        Compiled Sat 22-Jul-17 05:51 by 
+        Compiled Sat 22-Jul-17 05:51 by
 
         Time remaining: 117 seconds
         Hold Time: 120 seconds
         System Capabilities: B,R
         Enabled Capabilities: R
         Management Addresses:
-          IPv4 address: 10.1.2.1
+         IPv4 address: 10.1.2.1
 
 
 
@@ -151,7 +151,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Port Description: Ethernet1/2
         System Name: G1_n9ie
 
-        System Description: 
+        System Description:
         Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
         TAC support: http://www.cisco.com/tac
         Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
@@ -553,8 +553,8 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     Mon Mar 19 18:24:29.512 UTC
     Capability codes:
-            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
-            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+			(R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+			(W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
 
     ------------------------------------------------
     Local Interface: GigabitEthernet0/0/0/0
@@ -563,18 +563,18 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     Port Description: GigabitEthernet2
     System Name: Ge_nie1000v.openstacklocal
 
-    System Description: 
+    System Description:
     Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
     Technical Support: http://www.cisco.com/techsupport
     Copyright (c) 1986-2017 by Cisco Systems, Inc.
-    Compiled Sat 22-Jul-17 05:51 by 
+    Compiled Sat 22-Jul-17 05:51 by
 
     Time remaining: 90 seconds
     Hold Time: 120 seconds
     System Capabilities: B,R
     Enabled Capabilities: R
     Management Addresses:
-      IPv4 address: 10.1.2.1
+     IPv4 address: 10.1.2.1
 
 
 
@@ -585,7 +585,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     Port Description: Ethernet1/2
     System Name: G1_n9ie
 
-    System Description: 
+    System Description:
     Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
     TAC support: http://www.cisco.com/tac
     Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
@@ -932,17 +932,17 @@ class test_show_lldp_interface(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
     GigabitEthernet0/0/0/0:
-            Tx: enabled
-            Rx: enabled
-            Tx state: IDLE
-            Rx state: WAIT FOR FRAME
+			Tx: enabled
+			Rx: enabled
+			Tx state: IDLE
+			Rx state: WAIT FOR FRAME
 
 
     GigabitEthernet0/0/0/1:
-            Tx: enabled
-            Rx: enabled
-            Tx state: IDLE
-            Rx state: WAIT FOR FRAME
+			Tx: enabled
+			Rx: enabled
+			Tx state: IDLE
+			Rx state: WAIT FOR FRAME
     '''}
 
     def test_empty(self):
