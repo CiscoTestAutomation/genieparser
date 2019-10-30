@@ -136,42 +136,42 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
             'GigabitEthernet3/0/2': {
                 'mac_address': {
                     '0010.0010.0001': {
-                    'iif_id': '0x1055240000001F6',
-                    'ipv6_address': 'Unknown',
-                    'ipv4_address': '192.0.2.1',
-                    'user_name': 'genie123',
-                    'status': 'Authorized',
-                    'domain': 'DATA',
-                    'current_policy': 'dot1x_dvlan_reauth_hm', 
-                    'oper_host_mode': 'single-host',
-                    'oper_control_dir': 'both',
-                    'session_timeout': {
-                        'type': 'N/A',
-                    },
-                    'common_session_id': 'AC14FC0A0000101200E28D62',
-                    'acct_session_id': 'Unknown',
-                    'handle': '0xDB003227',
-                    'local_policies': {
-                        'template': {
-                            'CRITICAL_VLAN': {
-                                'priority': 150,
-                            }
+                        'iif_id': '0x1055240000001F6',
+                        'ipv6_address': 'Unknown',
+                        'ipv4_address': '192.0.2.1',
+                        'user_name': 'genie123',
+                        'status': 'Authorized',
+                        'domain': 'DATA',
+                        'current_policy': 'dot1x_dvlan_reauth_hm', 
+                        'oper_host_mode': 'single-host',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A',
                         },
+                        'common_session_id': 'AC14FC0A0000101200E28D62',
+                        'acct_session_id': 'Unknown',
+                        'handle': '0xDB003227',
+                        'local_policies': {
+                            'template': {
+                                'CRITICAL_VLAN': {
+                                    'priority': 150,
+                                }
+                            },
                             'vlan_group': {
-                                'vlan': 130,
-                            }
-                        },
-                        'method_status': {
-                            'dot1x': {
-                                'method': 'dot1x',
-                                'state': 'Authc Failed',
-                            }
-                        },
+                                    'vlan': 130,
+                                }
+                            },
+                            'method_status': {
+                                'dot1x': {
+                                    'method': 'dot1x',
+                                    'state': 'Authc Failed',
+                                }
+                            },
+                        }
                     }
                 }
             }
         }
-    }
 
     golden_output_3 = {'execute.return_value': '''\
         show authentication sessions interface GigabitEthernet3/0/2 details
@@ -466,6 +466,49 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         }
     }
 
+    golden_output_7 = {'execute.return_value': '''
+        Genie_SW#show authentication sessions interface GigabitEthernet1/0/1 details
+        Interface: GigabitEthernet1/0/1
+        IIF-ID: 0x156E4683
+        MAC Address: 0050.b6d6.a8b0
+        IPv6 Address: fe80::2119:3248:786b:40db
+        IPv4 Address: 192.168.1.5
+        User-Name: 00-50-B6-D6-A8-B0
+        Status: Authorized
+        Domain: DATA
+        Oper host mode: multi-auth
+        Oper control dir: both
+        Session timeout: N/A
+        Common Session ID: 0A76060A00000018DD109536
+        Acct Session ID: 0x0000000f
+        Handle: 0x0f00000e
+        Current Policy: POLICY_Gi1/0/1    
+    '''}
+
+    golden_parsed_output_7 = {
+        'interfaces': {
+            'GigabitEthernet1/0/1': {
+                'mac_address': {
+                    '0050.b6d6.a8b0': {
+                        'acct_session_id': '0x0000000f',
+                        'common_session_id': '0A76060A00000018DD109536',
+                        'current_policy': 'POLICY_Gi1/0/1',
+                        'domain': 'DATA',
+                        'handle': '0x0f00000e',
+                        'iif_id': '0x156E4683',
+                        'ipv4_address': '192.168.1.5',
+                        'ipv6_address': 'fe80::2119:3248:786b:40db',
+                        'oper_control_dir': 'both',
+                        'oper_host_mode': 'multi-auth',
+                        'session_timeout': {'type': 'N/A'},
+                        'status': 'Authorized',
+                        'user_name': '00-50-B6-D6-A8-B0'
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
@@ -499,6 +542,13 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet2/0/47')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+    
+    def test_golden_8(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_7)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 if __name__ == '__main__':
     unittest.main()
