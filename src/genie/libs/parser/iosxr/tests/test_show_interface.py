@@ -5205,22 +5205,12 @@ class test_show_interfaces_description(unittest.TestCase):
 
     golden_parsed_output = {
         "interfaces": {
-            "Ethernet0/0": {
+            "Bundle-Ether12": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
             },
-            "Ethernet0/1": {
-                "description": "",
-                "protocol": "up",
-                "status": "up"
-            },
-            "Ethernet0/2": {
-                "description": "",
-                "protocol": "up",
-                "status": "up"
-            },
-            "Ethernet0/3": {
+            "Bundle-Ether23": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
@@ -5228,10 +5218,45 @@ class test_show_interfaces_description(unittest.TestCase):
             "Loopback0": {
                 "description": "",
                 "protocol": "up",
+                "status": "up"
+            },
+            "Loopback300": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Nu0": {
+                "description": "",
+                "protocol": "up",
                 "status" :"up"
             },
-            "Vlan1": {
-                "description": ""   ,
+            "Mg0/RP0/CPU0/0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/0.90": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/1": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/1.90": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/2": {
+                "description": "",
                 "protocol": "up",
                 "status": "up"
             }
@@ -5239,18 +5264,24 @@ class test_show_interfaces_description(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-        Interface Status Protocol Description
-        Et0/0 		up	 up
-        Et0/1 		up   up
-        Et0/2 		up   up
-        Et0/3 		up   up
-        Lo0 		up   up
-        Vl1 		up   up
+        Interface          Status      Protocol    Description
+        --------------------------------------------------------------------------------
+        BE12               up          up
+        BE23               up          up
+        Lo0                up          up
+        Lo300              up          up
+        Nu0                up          up
+        Mg0/RP0/CPU0/0     up          up
+        Gi0/0/0/0          up          up
+        Gi0/0/0/0.90       up          up
+        Gi0/0/0/1          up          up
+        Gi0/0/0/1.90       up          up
+        Gi0/0/0/2          up          up
     '''}
 
     golden_parsed_interface_output = {
         "interfaces": {
-            "Ethernet0/0": {
+            "Bundle-Ether12": {
                 "description": "",
                 "protocol": "up",
                 "status": "up"
@@ -5259,8 +5290,9 @@ class test_show_interfaces_description(unittest.TestCase):
     }
 
     golden_interface_output = {'execute.return_value': '''
-        Interface Status Protocol Description
-        Et0/0 		up	 up
+        Interface          Status      Protocol    Description
+        --------------------------------------------------------------------------------
+        BE12 		up	 up
     '''}
 
 
@@ -5280,7 +5312,7 @@ class test_show_interfaces_description(unittest.TestCase):
     def test_golden_interface(self):
         self.device = Mock(**self.golden_interface_output)
         obj = ShowInterfacesDescription(device=self.device)
-        parsed_output = obj.parse(interface='Et0/0')
+        parsed_output = obj.parse(interface='BE12')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 

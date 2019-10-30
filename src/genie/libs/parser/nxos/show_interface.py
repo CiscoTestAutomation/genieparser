@@ -3292,10 +3292,7 @@ class ShowInterfaceDescription(ShowInterfaceDescriptionSchema):
                     intf_dict['type'] = str(group['type'])
                 if group['speed'] is not None:
                     intf_dict['speed'] = str(group['speed'])
-                if group['description'] == '--':
-                    intf_dict['description'] = ''
-                else:
-                    intf_dict['description'] = str(group['description'])
+                intf_dict['description'] = str(group['description'])
                 index += 1                
                 continue
 

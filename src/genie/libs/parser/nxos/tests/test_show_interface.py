@@ -4037,104 +4037,104 @@ class test_show_interface_description(unittest.TestCase):
     golden_parsed_output = {
         "interfaces": {
             "Ethernet1/1.110": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.115": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.120": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.390": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.410": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.415": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.420": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/1.90": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.90": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.110": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.115": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.120": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.390": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.410": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.415": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Ethernet1/2.420": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             },
             "Port-channel13": {
-                "description": ""
+                "description": "--"
             },
             "Port-channel23": {
-                "description": ""
+                "description": "--"
             },
             "Loopback0": {
-                "description": ""
+                "description": "--"
             },
             "Loopback300": {
-                "description": ""
+                "description": "--"
             },
             "mgmt0": {
-                "description": ""
+                "description": "--"
             }
         }
     }
@@ -4182,7 +4182,7 @@ class test_show_interface_description(unittest.TestCase):
     golden_parsed_interface_output = {
         "interfaces": {
             "Ethernet1/1": {
-                "description": "",
+                "description": "--",
                 "speed": "10G",
                 "type": "eth"
             }
