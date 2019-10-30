@@ -108,7 +108,7 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
         p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<interface_status>[\w\s]+), '
                         r'+line +protocol +is +(?P<line_protocol>[\w\s]+)$') 
 
-        # Internet address is 2.2.2.2/32
+        # Internet address is 10.16.2.2/32
         p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ip_address>[\d\.\/]+)$')
 
         # IGMP is enabled on interface
@@ -132,7 +132,7 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
         # IGMP activity: 6 joins, 0 leaves
         p9 = re.compile(r'^IGMP +activity: +(?P<joins>[\d]+) +joins, +(?P<leaves>[\d]+) +leaves$')
         
-        # IGMP querying router is 2.2.2.2 (this system)
+        # IGMP querying router is 10.16.2.2 (this system)
         p10 = re.compile(r'^IGMP +querying +router +is +(?P<igmp_querying_router>[\d\.]+)+([\s*]+\(+(?P<igmp_querying_router_info>[\S\s*]+)+\))?$')
         
         # Time elapsed since last query sent 00:00:53
@@ -163,7 +163,7 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
                     intf_dict['oper_status'] = line_protocol
                 continue
 
-            # Internet address is 2.2.2.2/32
+            # Internet address is 10.16.2.2/32
             m = p2.match(line)
             if m:
                 ip_address = m.groupdict()['ip_address']
@@ -222,7 +222,7 @@ class ShowIgmpInterface(ShowIgmpInterfaceSchema):
                 igmp_activity_dict['leaves'] = int(leaves)
                 continue
                 
-            # IGMP querying router is 2.2.2.2 (this system)
+            # IGMP querying router is 10.16.2.2 (this system)
             m = p10.match(line)
             if m:
                 igmp_querying_router = m.groupdict()['igmp_querying_router']
@@ -512,7 +512,7 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
         # Host mode:	EXCLUDE
         p5 = re.compile(r'^Host mode:+[\s*]+(?P<host_mode>[\S]+)$')
         
-        # Last reporter:	2.2.2.2
+        # Last reporter:	10.16.2.2
         p6 = re.compile(r'^Last reporter:+[\s*]+(?P<last_reporter>[\d\.]+)$')
         
         # Suppress:	0
@@ -562,7 +562,7 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
                 group_dict['host_mode'] = host_mode.lower()
                 continue
             
-            # Last reporter:	2.2.2.2
+            # Last reporter:	10.16.2.2
             m = p6.match(line)
             if m:
                 last_reporter = m.groupdict()['last_reporter']

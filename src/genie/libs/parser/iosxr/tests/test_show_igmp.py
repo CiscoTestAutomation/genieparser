@@ -115,14 +115,14 @@ class TestShowIgmpInterface(unittest.TestCase):
                         'igmp_querier_timeout': 125,
                         'igmp_query_interval': 60,
                         'last_member_query_response_interval': 1,
-                        'igmp_querying_router': '2.2.2.2',
+                        'igmp_querying_router': '10.16.2.2',
                         'igmp_querying_router_info': 'this system',
                         'igmp_state': 'enabled',
                         'time_elapsed_since_last_query_sent': '00:00:53',
                         'time_elapsed_since_last_report_received': '00:00:51',
                         'time_elapsed_since_router_enabled': '02:46:41',
                         'igmp_version': 3,
-                        'ip_address': '2.2.2.2/32',
+                        'ip_address': '10.16.2.2/32',
                         'line_protocol': 'up',
                         'oper_status': 'up'
                     }
@@ -134,7 +134,7 @@ class TestShowIgmpInterface(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         R2_xr# show igmp interface
         Loopback0 is up, line protocol is up
-            Internet address is 2.2.2.2/32
+            Internet address is 10.16.2.2/32
             IGMP is enabled on interface
             Current IGMP version is 3
             IGMP query interval is 60 seconds
@@ -142,7 +142,7 @@ class TestShowIgmpInterface(unittest.TestCase):
             IGMP max query response time is 10 seconds
             Last member query response interval is 1 seconds
             IGMP activity: 6 joins, 0 leaves
-            IGMP querying router is 2.2.2.2 (this system)
+            IGMP querying router is 10.16.2.2 (this system)
             Time elapsed since last query sent 00:00:53
             Time elapsed since IGMP router enabled 02:46:41
             Time elapsed since last report received 00:00:51
@@ -222,14 +222,14 @@ class TestShowIgmpInterface(unittest.TestCase):
                         'igmp_querier_timeout': 125,
                         'igmp_query_interval': 60,
                         'last_member_query_response_interval': 1,
-                        'igmp_querying_router': '2.2.2.2',
+                        'igmp_querying_router': '10.16.2.2',
                         'igmp_querying_router_info': 'this system',
                         'igmp_state': 'enabled',
                         'time_elapsed_since_last_query_sent': '00:00:53',
                         'time_elapsed_since_last_report_received': '00:00:51',
                         'time_elapsed_since_router_enabled': '02:46:41',
                         'igmp_version': 3,
-                        'ip_address': '2.2.2.2/32',
+                        'ip_address': '10.16.2.2/32',
                         'line_protocol': 'up',
                         'oper_status': 'up'
                     }
@@ -248,7 +248,7 @@ class TestShowIgmpInterface(unittest.TestCase):
     golden_interface_output1={'execute.return_value':'''
         R2_xr# show igmp vrf VRF1 interface
         Loopback0 is up, line protocol is up
-            Internet address is 2.2.2.2/32
+            Internet address is 10.16.2.2/32
             IGMP is enabled on interface
             Current IGMP version is 3
             IGMP query interval is 60 seconds
@@ -256,7 +256,7 @@ class TestShowIgmpInterface(unittest.TestCase):
             IGMP max query response time is 10 seconds
             Last member query response interval is 1 seconds
             IGMP activity: 6 joins, 0 leaves
-            IGMP querying router is 2.2.2.2 (this system)
+            IGMP querying router is 10.16.2.2 (this system)
             Time elapsed since last query sent 00:00:53
             Time elapsed since IGMP router enabled 02:46:41
             Time elapsed since last report received 00:00:51
@@ -276,14 +276,14 @@ class TestShowIgmpInterface(unittest.TestCase):
                         'igmp_querier_timeout': 125,
                         'igmp_query_interval': 60,
                         'last_member_query_response_interval': 1,
-                        'igmp_querying_router': '2.2.2.2',
+                        'igmp_querying_router': '10.16.2.2',
                         'igmp_querying_router_info': 'this system',
                         'igmp_state': 'enabled',
                         'time_elapsed_since_last_query_sent': '00:00:53',
                         'time_elapsed_since_last_report_received': '00:00:51',
                         'time_elapsed_since_router_enabled': '02:46:41',
                         'igmp_version': 3,
-                        'ip_address': '2.2.2.2/32',
+                        'ip_address': '10.16.2.2/32',
                         'line_protocol': 'up',
                         'oper_status': 'up'
                     }
@@ -295,7 +295,7 @@ class TestShowIgmpInterface(unittest.TestCase):
     golden_interface_output2={'execute.return_value':'''
         R2_xr# show igmp vrf VRF1 interface Loopback0
         Loopback0 is up, line protocol is up
-            Internet address is 2.2.2.2/32
+            Internet address is 10.16.2.2/32
             IGMP is enabled on interface
             Current IGMP version is 3
             IGMP query interval is 60 seconds
@@ -303,7 +303,7 @@ class TestShowIgmpInterface(unittest.TestCase):
             IGMP max query response time is 10 seconds
             Last member query response interval is 1 seconds
             IGMP activity: 6 joins, 0 leaves
-            IGMP querying router is 2.2.2.2 (this system)
+            IGMP querying router is 10.16.2.2 (this system)
             Time elapsed since last query sent 00:00:53
             Time elapsed since IGMP router enabled 02:46:41
             Time elapsed since last report received 00:00:51
@@ -546,7 +546,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                         "group": {
                             "224.0.0.2": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -555,7 +555,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.9": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -564,7 +564,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.13": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -573,7 +573,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.22": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -582,7 +582,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.1.39": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -591,7 +591,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.1.40": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -709,7 +709,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:44:55
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback0
@@ -717,7 +717,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		09:47:23
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback0
@@ -725,7 +725,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:44:55
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback0
@@ -733,7 +733,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:44:55
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback0
@@ -741,7 +741,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:19:56
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback0
@@ -749,7 +749,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:44:55
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	GigabitEthernet0/0/0/0.90
@@ -834,7 +834,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                         "group": {
                             "224.0.0.2": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -843,7 +843,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.9": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -852,7 +852,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.13": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -861,7 +861,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                             },
                             "224.0.0.22": {
                                 "host_mode": "exclude",
-                                "last_reporter": "2.2.2.2",
+                                "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
                                 "source_list": "empty",
@@ -1001,7 +1001,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:43:30
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback300
@@ -1009,7 +1009,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		09:48:07
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback300
@@ -1017,7 +1017,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:43:30
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	Loopback300
@@ -1025,7 +1025,7 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Uptime:		02:43:30
         Router mode:	EXCLUDE (Expires: never)
         Host mode:	EXCLUDE
-        Last reporter:	2.2.2.2
+        Last reporter:	10.16.2.2
         Suppress:	0
         Source list is empty
         Interface:	GigabitEthernet0/0/0/0.390
