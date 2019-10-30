@@ -836,6 +836,7 @@ class ShowRouteIpWordSchema(MetaParser):
                 'known_via': str,
                 'distance': str,
                 'metric': str,
+                Optional('type'): str,
                 Optional('installed'):{
                     'date': str,
                     'for': str,
