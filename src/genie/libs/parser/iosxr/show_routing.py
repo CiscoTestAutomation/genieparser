@@ -14,12 +14,11 @@ from genie.metaparser.util.schemaengine import Schema, \
 class ShowRouteIpDistributor(MetaParser):
     """distributor class for show ip route"""
     cli_command = ['show route vrf {vrf} ipv4', 
-                    'show route ipv4',
-                    'show route ipv4 {route}',
-                    'show route ipv4 {protocol}',
-                    'show route vrf {vrf} ipv4 {protocol}',
-                    'show route vrf {vrf} ipv4 {route}'
-                    ]
+                   'show route ipv4',
+                   'show route ipv4 {route}',
+                   'show route ipv4 {protocol}',
+                   'show route vrf {vrf} ipv4 {protocol}',
+                   'show route vrf {vrf} ipv4 {route}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
@@ -61,11 +60,11 @@ class ShowRouteIpDistributor(MetaParser):
 class ShowRouteIpv6Distributor(MetaParser):
     """distributor class for show ipv6 route"""
     cli_command = ['show route vrf {vrf} ipv6', 
-                    'show route ipv6',
-                    'show route ipv6 {route}',
-                    'show route ipv6 {protocol}',
-                    'show route vrf {vrf} ipv6 {protocol}',
-                    'show route vrf {vrf} ipv6 {route}']
+                   'show route ipv6',
+                   'show route ipv6 {route}',
+                   'show route ipv6 {protocol}',
+                   'show route vrf {vrf} ipv6 {protocol}',
+                   'show route vrf {vrf} ipv6 {route}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
