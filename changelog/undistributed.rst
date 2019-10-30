@@ -58,6 +58,7 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowInterface
         * Fixed parser ShowInterface to match duplex and speed line
+    * Added parser for ShowInterfacesDescription
 --------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
