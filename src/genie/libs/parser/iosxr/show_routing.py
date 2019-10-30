@@ -918,8 +918,7 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
                         r'+via +(?P<interface>\S+)$')
         
         # Installed Oct 23 22:09:38.380 for 5d21h
-        p7 = re.compile(r'^Installed +(?P<date>\S+ +\d+ +\d+:\d+:\d+\.\d+)'
-                        r' +for +(?P<for>\S+)$')
+        p7 = re.compile(r'^^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$$')
 
         # initial variables
         ret_dict = {}
@@ -969,7 +968,7 @@ class ShowRouteIpWord(ShowRouteIpWordSchema):
                 path_dict.update({k:v for k,v in group.items() if v})
                 continue
             
-            # # eigrp/100 (protoid=5, clientid=22)
+            # eigrp/100 (protoid=5, clientid=22)
             m = p5.match(line)
             if m:
                 group = m.groupdict()
