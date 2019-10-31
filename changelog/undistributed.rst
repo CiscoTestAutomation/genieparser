@@ -46,6 +46,8 @@
     * Enhanced ShowBgpInstanceSummary;
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
+    * Enhanced ShowRouteIpv6:
+        * Updated regex to support various outputs
 
 --------------------------------------------------------------------------------
                                 Fix
