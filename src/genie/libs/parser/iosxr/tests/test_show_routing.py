@@ -7,11 +7,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
     SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_routing import (ShowRouteIpv4, 
-                                                  ShowRouteIpv6,
-                                                  ShowRouteIpWord,
-                                                  ShowRouteIpDistributor,
-                                                  ShowRouteIpv6Distributor)
+from genie.libs.parser.iosxr.show_routing import (ShowRouteIpv4,
+                                                  ShowRouteIpv6)
 
 
 # ============================================
@@ -26,32 +23,32 @@ class test_show_route_ipv4(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_1 = {'execute.return_value': '''
-    RP/0/0/CPU0:R2_xrv#show route ipv4
-    Wed Dec  6 15:18:18.928 UTC
+        RP/0/0/CPU0:R2_xrv#show route ipv4
+        Wed Dec  6 15:18:18.928 UTC
 
-    Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
-           D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-           N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-           E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
-           i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
-           ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
-           U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
-           A - access/subscriber, a - Application route
-           M - mobile route, r - RPL, (!) - FRR Backup path
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+            D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+            N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+            E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+            i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+            ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+            U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+            A - access/subscriber, a - Application route
+            M - mobile route, r - RPL, (!) - FRR Backup path
 
-    Gateway of last resort is not set
+        Gateway of last resort is not set
 
-    S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-                    is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-    L    10.16.2.2/32 is directly connected, 01:51:14, Loopback0
-    S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
-                    [1/0] via 10.229.3.3, 01:51:13, GigabitEthernet0/0/0/2
-    C    10.1.2.0/24 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-    i L1 10.234.21.21/32 [115/20] via 10.186.2.1, 01:50:50, GigabitEthernet0/0/0/0
-                        [115/20] via 10.1.2.1, 01:50:50, GigabitEthernet0/0/0/3
-    B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
-    L    10.16.32.32/32 is directly connected, 01:51:14, Loopback3
-    B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
+        S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
+                        is directly connected, 01:51:13, GigabitEthernet0/0/0/3
+        L    10.16.2.2/32 is directly connected, 01:51:14, Loopback0
+        S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
+                        [1/0] via 10.229.3.3, 01:51:13, GigabitEthernet0/0/0/2
+        C    10.1.2.0/24 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
+        i L1 10.234.21.21/32 [115/20] via 10.186.2.1, 01:50:50, GigabitEthernet0/0/0/0
+                            [115/20] via 10.1.2.1, 01:50:50, GigabitEthernet0/0/0/3
+        B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
+        L    10.16.32.32/32 is directly connected, 01:51:14, Loopback3
+        B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
     '''
                        }
     golden_parsed_output_1 = {
@@ -556,126 +553,127 @@ class test_show_route_ipv4(unittest.TestCase):
     '''}
 
     golden_parsed_output_3_with_vrf = {
-        "vrf": {
-            "VRF1": {
-                "address_family": {
-                    "ipv4": {
-                        "routes": {
-                            "0.0.0.0/0": {
-                                "route": "0.0.0.0/0",
-                                "active": True,
-                                "metric": 0,
-                                "route_preference": 200,
-                                "source_protocol_codes": "B*",
-                                "source_protocol": "bgp",
-                                "next_hop": {
-                                    "next_hop_list": {
+        'vrf': {
+            'VRF1': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '0.0.0.0/0': {
+                                'route': '0.0.0.0/0',
+                                'active': True,
+                                'route_preference': 200,
+                                'metric': 0,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B*',
+                                'next_hop': {
+                                    'next_hop_list': {
                                         1: {
-                                            "index": 1,
-                                            "next_hop": "192.168.4.4",
-                                            "updated": "08:11:19",
-                                        }
-                                    }
+                                            'index': 1,
+                                            'next_hop': '192.168.4.4',
+                                            'updated': '08:11:19',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.2/18": {
-                                "route": "192.168.1.2/18",
-                                "active": True,
-                                "metric": 0,
-                                "route_preference": 200,
-                                "source_protocol_codes": "B",
-                                "source_protocol": "bgp",
-                                "next_hop": {
-                                    "next_hop_list": {
+                            '192.168.1.2/18': {
+                                'route': '192.168.1.2/18',
+                                'active': True,
+                                'route_preference': 200,
+                                'metric': 0,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                                'next_hop': {
+                                    'next_hop_list': {
                                         1: {
-                                            "index": 1,
-                                            "next_hop": "192.168.4.5",
-                                            "updated": "1w5d",
-                                        }
-                                    }
+                                            'index': 1,
+                                            'next_hop': '192.168.4.5',
+                                            'updated': '1w5d',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.3/27": {
-                                "route": "192.168.1.3/27",
-                                "active": True,
-                                "metric": 0,
-                                "route_preference": 20,
-                                "source_protocol_codes": "B",
-                                "source_protocol": "bgp",
-                                "next_hop": {
-                                    "next_hop_list": {
+                            '192.168.1.3/27': {
+                                'route': '192.168.1.3/27',
+                                'active': True,
+                                'route_preference': 20,
+                                'metric': 0,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                                'next_hop': {
+                                    'next_hop_list': {
                                         1: {
-                                            "index": 1,
-                                            "next_hop": "192.168.4.6",
-                                            "updated": "5d13h",
-                                        }
-                                    }
+                                            'index': 1,
+                                            'next_hop': '192.168.4.6',
+                                            'updated': '5d13h',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.4/32": {
-                                "route": "192.168.1.4/32",
-                                "active": True,
-                                "source_protocol_codes": "L",
-                                "source_protocol": "local",
-                                "next_hop": {
-                                    "outgoing_interface": {
-                                        "GigabitEthernet0/0/1/8": {
-                                            "outgoing_interface": "GigabitEthernet0/0/1/8",
-                                            "updated": "36w5d",
-                                        }
-                                    }
+                            '192.168.1.4/32': {
+                                'route': '192.168.1.4/32',
+                                'active': True,
+                                'source_protocol': 'local',
+                                'source_protocol_codes': 'L',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/0/1/8': {
+                                            'outgoing_interface': 'GigabitEthernet0/0/1/8',
+                                            'updated': '36w5d',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.5/29": {
-                                "route": "192.168.1.5/29",
-                                "active": True,
-                                "source_protocol_codes": "C",
-                                "source_protocol": "connected",
-                                "next_hop": {
-                                    "outgoing_interface": {
-                                        "BVI3001": {
-                                            "outgoing_interface": "BVI3001",
-                                            "updated": "36w5d",
-                                        }
-                                    }
+                            '192.168.1.5/29': {
+                                'route': '192.168.1.5/29',
+                                'active': True,
+                                'source_protocol': 'connected',
+                                'source_protocol_codes': 'C',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'BVI3001': {
+                                            'outgoing_interface': 'BVI3001',
+                                            'updated': '36w5d',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.6/32": {
-                                "route": "192.168.1.6/32",
-                                "active": True,
-                                "metric": 0,
-                                "source_protocol_codes": "L",
-                                "source_protocol": "local",
-                                "next_hop": {
-                                    "next_hop_list": {
+                            '192.168.1.6/32': {
+                                'route': '192.168.1.6/32',
+                                'active': True,
+                                'route_preference': 0,
+                                'metric': 0,
+                                'source_protocol': 'local',
+                                'source_protocol_codes': 'L',
+                                'next_hop': {
+                                    'next_hop_list': {
                                         1: {
-                                            "index": 1,
-                                            "next_hop": "192.168.4.7",
-                                            "updated": "36w5d",
-                                            "outgoing_interface": "BVI3001",
-                                        }
-                                    }
+                                            'index': 1,
+                                            'next_hop': '192.168.4.7',
+                                            'outgoing_interface': 'BVI3001',
+                                            'updated': '36w5d',
+                                        },
+                                    },
                                 },
                             },
-                            "192.168.1.7/32": {
-                                "route": "192.168.1.7/32",
-                                "active": True,
-                                "source_protocol_codes": "L",
-                                "source_protocol": "local",
-                                "next_hop": {
-                                    "outgoing_interface": {
-                                        "BVI3001": {
-                                            "outgoing_interface": "BVI3001",
-                                            "updated": "36w5d",
-                                        }
-                                    }
+                            '192.168.1.7/32': {
+                                'route': '192.168.1.7/32',
+                                'active': True,
+                                'source_protocol': 'local',
+                                'source_protocol_codes': 'L',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'BVI3001': {
+                                            'outgoing_interface': 'BVI3001',
+                                            'updated': '36w5d',
+                                        },
+                                    },
                                 },
                             },
-                        }
-                    }
-                }
-            }
-        }
+                        },
+                    },
+                },
+            },
+        },
     }
 
     device_output = {'execute.return_value': '''
@@ -822,32 +820,43 @@ class test_show_route_ipv4(unittest.TestCase):
     '''}
 
     golden_parsed_output_5 = {
-        'entry': {
-            '10.23.90.0/24': {
-                'ip': '10.23.90.0',
-                'mask': '24',
-                'known_via': 'connected',
-                'distance': '0',
-                'metric': '0',
-                'installed': {
-                    'date': 'Oct  4 15:47:45.390',
-                    'for': '3w4d',
-                },
-                'paths': {
-                    1: {
-                        'interface': 'GigabitEthernet0/0/0/1.90',
-                        'metric': '0',
-                    },
-                },
-                'redist_advertisers': {
-                    'eigrp/100': {
-                        'protoid': 5,
-                        'clientid': 22,
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.23.90.0/24': {
+                                'route': '10.23.90.0/24',
+                                'ip': '10.23.90.0',
+                                'mask': '24',
+                                'active': True,
+                                'known_via': 'connected',
+                                'metric': 0,
+                                'distance': 0,
+                                'installed': {
+                                    'date': 'Oct  4 15:47:45.390',
+                                    'for': '3w4d',
+                                },
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/0/0/1.90': {
+                                            'outgoing_interface': 'GigabitEthernet0/0/0/1.90',
+                                            'metric': 0,
+                                        },
+                                    },
+                                },
+                                'redist_advertisers': {
+                                    'eigrp/100': {
+                                        'protoid': 5,
+                                        'clientid': 22,
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
         },
-        'total_prefixes': 1,
     }
 
     golden_output_6 = {'execute.return_value': '''
@@ -1055,26 +1064,37 @@ class test_show_route_ipv4(unittest.TestCase):
     '''}
 
     golden_parsed_output_8 = {
-        'entry': {
-            '10.23.120.2/32': {
-                'ip': '10.23.120.2',
-                'mask': '32',
-                'known_via': 'local',
-                'distance': '0',
-                'metric': '0',
-                'installed': {
-                    'date': 'Oct  4 15:47:45.368',
-                    'for': '3w4d',
-                },
-                'paths': {
-                    1: {
-                        'interface': 'GigabitEthernet0/0/0/1.420',
-                        'metric': '0',
+        'vrf': {
+            'VRF1': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.23.120.2/32': {
+                                'route': '10.23.120.2/32',
+                                'ip': '10.23.120.2',
+                                'mask': '32',
+                                'active': True,
+                                'known_via': 'local',
+                                'metric': 0,
+                                'distance': 0,
+                                'installed': {
+                                    'date': 'Oct  4 15:47:45.368',
+                                    'for': '3w4d',
+                                },
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/0/0/1.420': {
+                                            'outgoing_interface': 'GigabitEthernet0/0/0/1.420',
+                                            'metric': 0,
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
         },
-        'total_prefixes': 1,
     }
 
     def test_empty_1(self):
@@ -1121,29 +1141,30 @@ class test_show_route_ipv4(unittest.TestCase):
     def test_show_route_5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
-        obj = ShowRouteIpDistributor(device=self.device)
+        obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(route='10.23.90.0/24')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
     
     def test_show_route_6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
-        obj = ShowRouteIpDistributor(device=self.device)
+        obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(protocol='ospf')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
     
     def test_show_route_7(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_7)
-        obj = ShowRouteIpDistributor(device=self.device)
+        obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(protocol='local', vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_show_route_8(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_8)
-        obj = ShowRouteIpDistributor(device=self.device)
+        obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(route='10.23.120.2/32', vrf='VRF1')
+        from genie.libs.parser.utils.common import format_output
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 # ============================================
@@ -1679,94 +1700,8 @@ class test_show_route_ipv6(unittest.TestCase):
         },
     }
 
-    device_output = {'execute.return_value': '''
-        10.64.219.128, 2d04h
-        B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
-        B    172.16.21.0/22 [200/0] via 10.154.219.128, 1w3d
-        B    172.16.16.0/24 [200/0] via 10.154.219.128, 1w3d
-    '''}
-
-    device_parsed_output = {
-        'vrf': {
-            'default': {
-                'address_family': {
-                    'ipv6': {
-                        'routes': {
-                            '172.16.55.0/22': {
-                                'active': True,
-                                'metric': 0,
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'index': 1,
-                                            'next_hop': '10.154.219.128',
-                                            'updated': '1w3d',
-                                        },
-                                    },
-                                },
-                                'route': '172.16.55.0/22',
-                                'route_preference': 200,
-                                'source_protocol': 'bgp',
-                                'source_protocol_codes': 'B',
-                            },
-                            '172.16.21.0/22': {
-                                'active': True,
-                                'metric': 0,
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'index': 1,
-                                            'next_hop': '10.154.219.128',
-                                            'updated': '1w3d',
-                                        },
-                                    },
-                                },
-                                'route': '172.16.21.0/22',
-                                'route_preference': 200,
-                                'source_protocol': 'bgp',
-                                'source_protocol_codes': 'B',
-                            },
-                            '172.16.16.0/24': {
-                                'active': True,
-                                'metric': 0,
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'index': 1,
-                                            'next_hop': '10.154.219.128',
-                                            'updated': '1w3d',
-                                        },
-                                    },
-                                },
-                                'route': '172.16.16.0/24',
-                                'route_preference': 200,
-                                'source_protocol': 'bgp',
-                                'source_protocol_codes': 'B',
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    }
-
     golden_output_4 = {'execute.return_value': '''
-        show route vrf VRF1 ipv4 10.23.120.2/32
-        Tue Oct 29 21:45:11.042 UTC
-
-        Routing entry for 10.23.120.2/32
-        Known via "local", distance 0, metric 0 (connected)
-        Installed Oct  4 15:47:45.368 for 3w4d
-        Routing Descriptor Blocks
-            directly connected, via GigabitEthernet0/0/0/1.420
-            Route metric is 0
-        No advertising protos.
-        RP/0/RP0/CPU0:R2_xr#
-        RP/0/RP0/CPU0:R2_xr#
-        RP/0/RP0/CPU0:R2_xr#
-        RP/0/RP0/CPU0:R2_xr#
-        RP/0/RP0/CPU0:R2_xr#
-        RP/0/RP0/CPU0:R2_xr#show route vrf VRF1 ipv6
+        #show route vrf VRF1 ipv6
         Tue Oct 29 22:01:28.796 UTC
 
         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
@@ -2202,26 +2137,37 @@ class test_show_route_ipv6(unittest.TestCase):
     '''}
 
     golden_parsed_output_5 = {
-        'entry': {
-            '2001:10:23:120::2/128': {
-                'ip': '2001:10:23:120::2',
-                'mask': '128',
-                'known_via': 'local',
-                'distance': '0',
-                'metric': '0',
-                'installed': {
-                    'date': 'Oct  4 15:47:46.727',
-                    'for': '3w4d',
-                },
-                'paths': {
-                    1: {
-                        'interface': 'GigabitEthernet0/0/0/1.120',
-                        'metric': '0',
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:10:23:120::2/128': {
+                                'route': '2001:10:23:120::2/128',
+                                'ip': '2001:10:23:120::2',
+                                'mask': '128',
+                                'active': True,
+                                'known_via': 'local',
+                                'metric': 0,
+                                'distance': 0,
+                                'installed': {
+                                    'date': 'Oct  4 15:47:46.727',
+                                    'for': '3w4d',
+                                },
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/0/0/1.120': {
+                                            'outgoing_interface': 'GigabitEthernet0/0/0/1.120',
+                                            'metric': 0,
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
         },
-        'total_prefixes': 1,
     }
 
     golden_output_6 = {'execute.return_value': '''
@@ -2401,31 +2347,42 @@ class test_show_route_ipv6(unittest.TestCase):
     '''}
 
     golden_parsed_output_7 = {
-        'entry': {
-            '2001:1:1:1::1/128': {
-                'ip': '2001:1:1:1::1',
-                'mask': '128',
-                'known_via': 'eigrp 100',
-                'distance': '90',
-                'metric': '10880',
-                'type': 'internal',
-                'installed': {
-                    'date': 'Oct 23 22:09:38.380',
-                    'for': '5d21h',
-                },
-                'paths': {
-                    1: {
-                        'interface': 'GigabitEthernet0/0/0/0.390',
-                        'from': 'fe80::f816:3eff:fe76:b56d',
-                        'nexthop': 'fe80::f816:3eff:fe76:b56d',
-                        'metric': '10880',
+        'vrf': {
+            'VRF1': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:1:1:1::1/128': {
+                                'route': '2001:1:1:1::1/128',
+                                'ip': '2001:1:1:1::1',
+                                'mask': '128',
+                                'active': True,
+                                'known_via': 'eigrp 100',
+                                'metric': 10880,
+                                'distance': 90,
+                                'type': 'internal',
+                                'installed': {
+                                    'date': 'Oct 23 22:09:38.380',
+                                    'for': '5d21h',
+                                },
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'outgoing_interface': 'GigabitEthernet0/0/0/0.390',
+                                            'from': 'fe80::f816:3eff:fe76:b56d',
+                                            'next_hop': 'fe80::f816:3eff:fe76:b56d',
+                                            'metric': 10880,
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
         },
-        'total_prefixes': 1,
     }
-
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv6(device=self.device)
@@ -2445,39 +2402,32 @@ class test_show_route_ipv6(unittest.TestCase):
         obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
-    def test_3(self):
-        self.maxDiff = None
-        self.device = Mock(**self.device_output)
-        obj = ShowRouteIpv6(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.device_parsed_output)
     
     def test_show_route_4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
-        obj = ShowRouteIpv6Distributor(device=self.device)
+        obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_show_route_5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
-        obj = ShowRouteIpv6Distributor(device=self.device)
+        obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(route='2001:10:23:120::2/128')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_show_route_6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
-        obj = ShowRouteIpv6Distributor(device=self.device)
+        obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(protocol='local')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
     
     def test_show_route_7(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_7)
-        obj = ShowRouteIpv6Distributor(device=self.device)
+        obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse(vrf='VRF1', route='2001:1:1:1::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
