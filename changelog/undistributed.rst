@@ -23,6 +23,14 @@
         * 'show route ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
+* IOSXR
+    * Added ShowIgmp for commands;
+        * 'show igmp interface'
+        * 'show igmp vrf {vrf} interface'
+        * 'show igmp summary'
+        * 'show igmp vrf {vrf} summary'
+        * 'show igmp groups detail'
+        * 'show igmp vrf {vrf} groups detail'
 
 * IOSXR
     * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
