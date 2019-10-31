@@ -8,6 +8,100 @@ from genie.metaparser.util.schemaengine import Schema, \
     Any, \
     Optional
 
+# ====================================================
+#  distributor class for show ip route
+# ====================================================
+class ShowRouteIpDistributor(MetaParser):
+    """distributor class for show ip route"""
+    cli_command = ['show route vrf {vrf} ipv4', 
+                   'show route ipv4',
+                   'show route ipv4 {route}',
+                   'show route ipv4 {protocol}',
+                   'show route vrf {vrf} ipv4 {protocol}',
+                   'show route vrf {vrf} ipv4 {route}']
+
+    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+
+    def cli(self, vrf=None, route=None, protocol=None, output=None):
+
+        if output is None:
+            if vrf and protocol:
+                cmd = self.cli_command[4].format(vrf=vrf,
+                        protocol=protocol)
+            elif vrf and route:
+                cmd = self.cli_command[5].format(vrf=vrf,
+                        route=route)
+            elif protocol:
+                cmd = self.cli_command[3].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[2].format(route=route)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if (route or protocol) in self.protocol_set or (not route and not protocol):
+            parser = ShowRouteIpv4(self.device)
+            self.schema = parser.schema
+            return parser.parse(vrf=vrf, output=out)
+
+        else:
+            parser = ShowRouteIpWord(self.device)
+            self.schema=parser.schema
+            return parser.parse(vrf=vrf, route=route, output=out)
+
+# ====================================================
+#  distributor class for show ipv6 route
+# ====================================================
+class ShowRouteIpv6Distributor(MetaParser):
+    """distributor class for show ipv6 route"""
+    cli_command = ['show route vrf {vrf} ipv6', 
+                   'show route ipv6',
+                   'show route ipv6 {route}',
+                   'show route ipv6 {protocol}',
+                   'show route vrf {vrf} ipv6 {protocol}',
+                   'show route vrf {vrf} ipv6 {route}']
+
+    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+
+    def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
+        
+        if output is None:
+            if vrf and protocol:
+                cmd = self.cli_command[4].format(vrf=vrf,
+                        protocol=protocol)
+            elif vrf and route:
+                cmd = self.cli_command[5].format(vrf=vrf,
+                        route=route)
+            elif protocol:
+                cmd = self.cli_command[3].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[2].format(route=route)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        if not vrf:
+            vrf = 'default'
+
+        if (route or protocol) in self.protocol_set or (not route and not protocol):
+            parser = ShowRouteIpv6(self.device)
+            self.schema = parser.schema
+            return parser.parse(vrf=vrf, protocol=protocol, output=out)
+
+        else:
+            parser = ShowRouteIpv6Word(self.device)
+            self.schema=parser.schema
+            return parser.parse(vrf=vrf, route=route, output=out)
 
 # ====================================================
 #  schema for show route ipv4
@@ -83,7 +177,6 @@ class ShowRouteIpv4Schema(MetaParser):
         'traffic engineering': ['t'],
     }
 
-
 # ====================================================
 #  parser for show ip route
 # ====================================================
@@ -91,15 +184,24 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv4
        show route vrf <vrf> ipv4"""
-    cli_command = ['show route vrf {vrf} ipv4', 'show route ipv4']
+    command = [
+        'show route vrf {vrf} ipv4', 
+        'show route ipv4',
+        'show route ipv4 {protocol}',
+        'show route vrf {vrf} ipv4 {protocol}']
     exclude = ['updated']
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf=None, protocol=None, output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[3].format(vrf=vrf,
+                        protocol=protocol)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[2].format(protocol=protocol)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.command[1]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -163,8 +265,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             if m and not p4.match(line):
 
                 group = m.groupdict()
-                if line == cmd:
-                    continue
                 active = True
                 updated = ""
                 if group['code1']:
@@ -401,7 +501,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         return result_dict
 
-
 # ====================================================
 #  parser for show route ipv6
 # ====================================================
@@ -410,14 +509,28 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv6
        show route vrf <vrf> ipv6"""
-    cli_command = ['show route vrf {vrf} ipv6', 'show route ipv6']
+    command = [
+        'show route vrf {vrf} ipv6', 
+        'show route ipv6',
+        'show route ipv6 {protocol}',
+        'show route vrf {vrf} ipv6 {protocol}']
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf=None, protocol=None, output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[3].format(
+                    vrf=vrf,
+                    protocol=protocol)
+            elif protocol:
+                cmd = self.command[2].format(
+                    protocol=protocol
+                )
+            elif vrf:
+                cmd = self.command[0].format(
+                    vrf=vrf
+                )
             else:
-                cmd = self.cli_command[1]
+                cmd = self.command[1]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -440,66 +553,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
 
-            # S    2001:1:1:1::1/128
-            # L    2001:2:2:2::2/128 is directly connected,
-            # i L1 2001:23:23:23::23/128
-            # R*   ::/128 
-            # L    ::ffff:192.168.1.1/10
-            p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +'
-                            r'(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
-                            r'( +is +directly +connected,)?$')
-            m = p2.match(line)
-
-            if m:
-                group = m.groupdict()
-                active = True
-                if line == cmd:
-                    continue
-                if group['code1']:
-                    source_protocol_codes = group['code1'].strip()
-                    for key, val in super().source_protocol_dict.items():
-                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)', source_protocol_codes)[0].strip()
-                        if source_protocol_replaced in val:
-                            source_protocol = key
-
-                if group['code2']:
-                    source_protocol_codes = '{} {}'.format(source_protocol_codes, group['code2'])
-
-                if group['route']:
-                    route = group['route']
-
-                index = 1
-
-                if vrf:
-                    if 'vrf' not in result_dict:
-                        result_dict['vrf'] = {}
-
-                    if vrf not in result_dict['vrf']:
-                        result_dict['vrf'][vrf] = {}
-
-                    if 'address_family' not in result_dict['vrf'][vrf]:
-                        result_dict['vrf'][vrf]['address_family'] = {}
-                        addr_dict = result_dict['vrf'][vrf]['address_family']
-
-                    if af and af not in addr_dict:
-                        addr_dict[af] = {}
-
-                    if 'routes' not in addr_dict[af]:
-                        addr_dict[af]['routes'] = {}
-                    if route not in addr_dict[af]['routes']:
-                        addr_dict[af]['routes'][route] = {}
-
-                    addr_dict[af]['routes'][route]['route'] = route
-
-                    addr_dict[af]['routes'][route]['active'] = active
-
-                    if source_protocol_codes:
-                        addr_dict[af]['routes'][route] \
-                            ['source_protocol_codes'] = source_protocol_codes
-                        addr_dict[af]['routes'][route] \
-                            ['source_protocol'] = source_protocol
-                continue
-
             #   B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
             p2_1 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)'
                               r'( +(?P<code2>[\w\*\(\>\)\!]+))?'
@@ -508,8 +561,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             if m:
                 group = m.groupdict()
                 active = True
-                if line == cmd:
-                    continue
                 if group['code1']:
                     source_protocol_codes = group['code1'].strip()
                     for key, val in super().source_protocol_dict.items():
@@ -705,5 +756,316 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                         ['next_hop']['outgoing_interface'][interface]['updated'] = updated
 
                 continue
+            
+            # Routing Descriptor Blocks
+            p5 = re.compile(r'^(Routing +Descriptor +Blocks)|(No +advertising +protos\.)$')
+            m = p5.match(line)
+            if m:
+                continue
+
+            # S    2001:1:1:1::1/128
+            # L    2001:2:2:2::2/128 is directly connected,
+            # i L1 2001:23:23:23::23/128
+            # R*   ::/128 
+            # L    ::ffff:192.168.1.1/10
+            p6 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +'
+                            r'(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
+                            r'( +is +directly +connected,)?$')
+            m = p6.match(line)
+
+            if m:
+                group = m.groupdict()
+                active = True
+                if group['code1']:
+                    source_protocol_codes = group['code1'].strip()
+                    for key, val in super().source_protocol_dict.items():
+                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)', source_protocol_codes)[0].strip()
+                        if source_protocol_replaced in val:
+                            source_protocol = key
+
+                if group['code2']:
+                    source_protocol_codes = '{} {}'.format(source_protocol_codes, group['code2'])
+
+                if group['route']:
+                    route = group['route']
+
+                index = 1
+
+                if vrf:
+                    if 'vrf' not in result_dict:
+                        result_dict['vrf'] = {}
+
+                    if vrf not in result_dict['vrf']:
+                        result_dict['vrf'][vrf] = {}
+
+                    if 'address_family' not in result_dict['vrf'][vrf]:
+                        result_dict['vrf'][vrf]['address_family'] = {}
+                        addr_dict = result_dict['vrf'][vrf]['address_family']
+
+                    if af and af not in addr_dict:
+                        addr_dict[af] = {}
+
+                    if 'routes' not in addr_dict[af]:
+                        addr_dict[af]['routes'] = {}
+                    if route not in addr_dict[af]['routes']:
+                        addr_dict[af]['routes'][route] = {}
+
+                    addr_dict[af]['routes'][route]['route'] = route
+
+                    addr_dict[af]['routes'][route]['active'] = active
+                    if source_protocol_codes:
+                        addr_dict[af]['routes'][route] \
+                            ['source_protocol_codes'] = source_protocol_codes
+                        addr_dict[af]['routes'][route] \
+                            ['source_protocol'] = source_protocol
+                continue
 
         return result_dict
+
+
+# ====================================================
+#  schema for show ip route <WORD>
+# ====================================================
+class ShowRouteIpWordSchema(MetaParser):
+    """Schema for show ip route <WORD>"""
+    schema = {
+        'entry': {
+            Any(): {
+                'ip': str,
+                'mask': str,
+                'known_via': str,
+                'distance': str,
+                'metric': str,
+                Optional('type'): str,
+                Optional('installed'):{
+                    'date': str,
+                    'for': str,
+                },
+                'paths': {
+                    Any(): {
+                        Optional('nexthop'): str,
+                        Optional('from'): str,
+                        Optional('interface'): str,
+                        Optional('metric'): str,
+                        Optional('share_count'): str,
+                    }
+                },
+                Optional('redist_advertisers'):{
+                    Any(): {
+                        'protoid': int,
+                        'clientid': int,
+                    }
+                }
+            }
+        },
+        'total_prefixes': int,
+    }
+
+# ====================================================
+#  parser for show ip route <WORD>
+# ====================================================
+class ShowRouteIpWord(ShowRouteIpWordSchema):
+    """Parser for :
+       show route ipv4 <Hostname or A.B.C.D>
+       show route ipv4 vrf <vrf> <Hostname or A.B.C.D>"""
+    command = ['show route ipv4 {route}',
+                'show route vrf {vrf} ipv4 {route}']
+    IP_VER = 'ip'
+
+    def cli(self, route, vrf=None, output=None):
+
+        if output is None:
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf,
+                        route=route)
+            else:
+                cmd = self.command[0].format(route=route)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
+
+        # initial regexp pattern
+        # Routing entry for 10.151.0.0/24, 1 known subnets
+        # Routing entry for 0.0.0.0/0, supernet
+        # Routing entry for 192.168.154.0/24
+        p1 = re.compile(r'^Routing +entry +for +(?P<entry>(?P<ip>[\w\:\.]+)'
+                        r'\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
+
+        # Known via "connected", distance 0, metric 0 (connected)
+        # Known via "eigrp 1", distance 130, metric 10880, type internal
+        # Known via "bgp 65161", distance 20, metric 0, candidate default path
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", '
+                        r'+distance +(?P<distance>\d+), +metric '
+                        r'+(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- '
+                        r']+))?,? *.*$')
+
+        # * directly connected, via GigabitEthernet1.120
+        p3 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
+        
+        # Route metric is 10880, traffic share count is 1
+        p4 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
+                        r'traffic +share +count +is +(?P<share_count>\d+))?$')
+
+        # eigrp/100 (protoid=5, clientid=22)
+        p5 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
+                        r', +clientid=(?P<clientid>\d+)\)$')
+
+        # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+        p6 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
+                        r'+via +(?P<interface>\S+)$')
+        
+        # Installed Oct 23 22:09:38.380 for 5d21h
+        p7 = re.compile(r'^^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$$')
+
+        # initial variables
+        ret_dict = {}
+        index = 0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing entry for 10.151.0.0/24, 1 known subnets
+            # Routing entry for 0.0.0.0/0, supernet
+            # Routing entry for 192.168.154.0/24
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = group.pop('entry')
+                entry_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Known via "static", distance 1, metric 0, candidate default path
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
+            # Known via "rip", distance 120, metric 2
+            # Known via "connected", distance 0, metric 0 (connected)
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
+            # Known via "bgp 65161", distance 20, metric 0, candidate default path
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # * directly connected, via GigabitEthernet1.120
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                if group['interface']:
+                    path_dict.update({'interface': group['interface']})
+                continue
+
+            # Route metric is 10880, traffic share count is 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({k:v for k,v in group.items() if v})
+                continue
+            
+            # eigrp/100 (protoid=5, clientid=22)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                redist_advertiser = group['redist_advertiser']
+                protoid = int(group['protoid'])
+                clientid = int(group['clientid'])
+                redist_advertiser_dict = entry_dict.setdefault('redist_advertisers', {}). \
+                                setdefault(redist_advertiser, {})
+                redist_advertiser_dict.update({'protoid': protoid})
+                redist_advertiser_dict.update({'clientid': clientid})
+                continue
+            
+            # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop = group['nexthop']
+                _from = group['from']
+                interface = group['interface']
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'interface': interface})
+                path_dict.update({'from': _from})
+                path_dict.update({'nexthop': nexthop})
+                continue
+            
+            # Installed Oct 23 22:09:38.380 for 5d21h
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                installed_dict = entry_dict.setdefault('installed', {})
+                installed_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+        ret_dict.update({'total_prefixes': index}) if ret_dict else None
+        return ret_dict
+
+# ====================================================
+#  schema for show route ipv6 <WORD>
+# ====================================================
+class ShowRouteIpv6WordSchema(MetaParser):
+    """Schema for show route ipv6 <WORD>"""
+    schema = {
+        'entry': {
+            Any(): {
+                'ip': str,
+                'mask': str,
+                'known_via': str,
+                'distance': str,
+                'metric': str,
+                Optional('type'): str,
+                Optional('installed'): {
+                    'for': str,
+                    'date': str,
+                },
+                'paths': {
+                    Any(): {
+                        Optional('nexthop'): str,
+                        Optional('from'): str,
+                        Optional('interface'): str,
+                        Optional('metric'): str,
+                        Optional('share_count'): str,
+                    }
+                },
+                Optional('redist_advertisers'):{
+                    Any(): {
+                        'protoid': int,
+                        'clientid': int,
+                    }
+                }
+            }
+        },
+        'total_prefixes': int,
+    }
+
+# ====================================================
+#  parser for show ipv6 route <WORD>
+# ====================================================
+class ShowRouteIpv6Word(ShowRouteIpv6WordSchema, ShowRouteIpWord):
+    """Parser for :
+       show route ipv6 <Hostname or A.B.C.D>
+       show route ipv6 vrf <vrf> <Hostname or A.B.C.D>"""
+    command = ['show route ipv6 {route}',
+                'show route vrf {vrf} ipv6 {route}']
+    IP_VER = 'ipv6'
+
+    def cli(self, route, vrf=None, interface=None, output=None):
+        
+        if output is None:
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf,
+                        route=route)
+            else:
+                cmd = self.command[0].format(route=route)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        if not vrf:
+            vrf = 'default'
+        return super().cli(route=route, vrf=vrf, output=out)
