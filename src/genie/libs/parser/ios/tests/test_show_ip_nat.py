@@ -197,47 +197,52 @@ class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
 
     golden_parsed_output = {
         'active_translations': {
-            3: {
-                'dynamic': 3, 
-                'extended': 3, 
-                'static': 0
-            },
-            'cef_punted_pkts': 0,
-            'cef_translated_pkts': 0,
-            'dynamic_mappings': {
-                'inside_source': {
-                    '1': {
-                        'access_method': 'access-list',
-                        'id': 1,
+            'dynamic': 3, 
+            'extended': 3, 
+            'static': 0, 
+            'total': 3
+        },
+        'cef_punted_pkts': 0,
+        'cef_translated_pkts': 0,
+        'dynamic_mappings': {
+            'inside_source': {
+                'id': {
+                    1: {
+                        'access_list': '1',
+                        'match': 'access-list 1 '
+                        'pool pool1',
                         'pool': {
                             'pool1': {
                                 'addr_hash': 0,
-                                'allocated': '0 (0%)',
+                                'allocated': 0,
+                                'allocated_percentage': 0,
                                 'average_len': 0,
                                 'chains': '0/256',
                                 'end': '198.168.254.254',
-                                'misses': '0',
+                                'misses': 0,
                                 'netmask': '255.255.255.0',
                                 'start': '198.168.1.1',
-                                'total': '254',
+                                'total_addresses': 254,
                                 'type': 'generic'
                             }
                         },
                         'refcount': 3
                     }
                 }
-            },
-            'expired_translations': 0,
-            'hits': 3228980,
-            'inside_interfaces': ['GigabitEthernet0/3/1'],
-            'ip_alias_add_fail': 0,
-            'limit_entry_add_fail': 0,
-            'mapping_stats_drop': 0,
-            'misses': 3,
-            'outside_interfaces': ['GigabitEthernet0/3/0'],
-            'pool_stats_drop': 0,
-            'port_block_alloc_fail': 0
-        }
+            }
+        },
+        'expired_translations': 0,
+        'hits': 3228980,
+        'interfaces': {
+            'inside': ['GigabitEthernet0/3/1'],
+            'outside': ['GigabitEthernet0/3/0']
+        },
+        'ip_alias_add_fail': 0,
+        'limit_entry_add_fail': 0,
+        'mapping_stats_drop': 0,
+        'misses': 3,
+        'pool_stats_drop': 0,
+        'port_block_alloc_fail': 0
     }
 
     golden_output_1 = {'execute.return_value': '''
@@ -258,38 +263,42 @@ class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
 
     golden_parsed_output_1 = {
         'active_translations': {
-            2: {
-                'dynamic': 2, 
-                'extended': 0, 
-                'static': 0
-            },
-            'dynamic_mappings': {
-                'inside_source': {
-                    '1': {
-                        'access_method': 'access-list',
+            'dynamic': 2, 
+            'extended': 0, 
+            'static': 0, 
+            'total': 2
+        },
+        'dynamic_mappings': {
+            'inside_source': {
+                'id': {
+                    1: {
+                        'access_list': '1',
+                        'match': 'access-list 1 pool net-208',
                         'pool': {
                             'net-208': {
-                                'allocated': '2 (14%)',
+                                'allocated': 2,
+                                'allocated_percentage': 14,
                                 'end': '172.16.233.221',
-                                'misses': '0',
+                                'misses': 0,
                                 'netmask': '255.255.255.240',
                                 'start': '172.16.233.208',
-                                'total': '14',
+                                'total_addresses': 14,
                                 'type': 'generic'
                             }
                         },
                         'refcount': 2
                     }
                 }
-            },
-            'expired_translations': 2,
-            'hits': 135,
-            'inside_interfaces': ['Ethernet1'],
-            'misses': 5,
-            'outside_interfaces': ['Serial0']
-        }
+            }
+        },
+        'expired_translations': 2,
+        'hits': 135,
+        'interfaces': {
+            'inside': ['Ethernet1'],
+            'outside': ['Serial0']
+        },
+        'misses': 5
     }
-
 
     def test_empty(self):
         self.dev_empty = Mock(**self.empty_output)
@@ -311,6 +320,6 @@ class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+
 if __name__ == '__main__':
     unittest.main()
-    

@@ -317,21 +317,25 @@ class ShowIpNatStatisticsSchema(MetaParser):
 
     schema = {
         'active_translations': {
-            Any(): {  # Total active translations
-                'static': int,
-                'dynamic': int,
-                'extended': int,
-            },
-            Optional('outside_interfaces'): list,
-            Optional('inside_interfaces'): list,
-            'hits': int,
-            'misses': int,
-            Optional('dynamic_mappings'): {
-                Any(): {  # 'Inside source'
-                    Any(): {  # name of access method
-                        Optional('access_method'): str, #access-list, route-map
+            'total': int,
+            'static': int,
+            'dynamic': int,
+            'extended': int,
+        },
+        'interfaces': {
+            Optional('outside'): list,
+            Optional('inside'): list,
+        },
+        'hits': int,
+        'misses': int,
+        Optional('dynamic_mappings'): {
+            Any(): {  # 'Inside source'
+                'id': {
+                    Any(): {  # 0, 1, 2 or 1, 2, 3
+                        Optional('match'): str,  # 'access-list 1 pool poo1'
+                        Optional('access_list'): str,
+                        Optional('route_map'): str,
                         Optional('refcount'): int,
-                        Optional('id'): int,
                         Optional('interface'): str,
                         Optional('pool'): {
                             Any(): {  # mypool test-pool
@@ -339,42 +343,43 @@ class ShowIpNatStatisticsSchema(MetaParser):
                                 'start': str,
                                 'end': str,
                                 'type': str,
-                                'total': str,
-                                'allocated': str,
-                                'misses': str,
+                                'total_addresses': int,
+                                'allocated': int,
+                                'allocated_percentage': int,
+                                'misses': int,
                                 Optional('addr_hash'): int,
                                 Optional('average_len'): int,
                                 Optional('chains'): str,
-                                Optional('pool_id'): int,
+                                Optional('id'): int,
                             }
-                        },
-                    },
+                        }
+                    }
                 }
-            },
-            Optional('nat_limit_statistics'): {
-                'max_entry': {
-                    'max_allowed': int,
-                    'used': int,
-                    'missed': int,
-                }
-            },
-            Optional('cef_translated_pkts'): int,
-            Optional('in_to_out_drops'): int,
-            Optional('out_to_in_drops'): int,
-            Optional('cef_punted_pkts'): int,
-            Optional('expired_translations'): int,
-            Optional('pool_stats_drop'): int,
-            Optional('mapping_stats_drop'): int,
-            Optional('port_block_alloc_fail'): int,
-            Optional('ip_alias_add_fail'): int,
-            Optional('limit_entry_add_fail'): int,
-            Optional('queued_pkts'): int,
-            Optional('peak_translations'): int,
-            Optional('occurred'): str,
-            Optional('total_doors'): int,
-            Optional('appl_doors'): int,
-            Optional('normal_doors'): int,
-        }
+            }
+        },
+        Optional('nat_limit_statistics'): {
+            'max_entry': {
+                'max_allowed': int,
+                'used': int,
+                'missed': int,
+            }
+        },
+        Optional('cef_translated_pkts'): int,
+        Optional('in_to_out_drops'): int,
+        Optional('out_to_in_drops'): int,
+        Optional('cef_punted_pkts'): int,
+        Optional('expired_translations'): int,
+        Optional('pool_stats_drop'): int,
+        Optional('mapping_stats_drop'): int,
+        Optional('port_block_alloc_fail'): int,
+        Optional('ip_alias_add_fail'): int,
+        Optional('limit_entry_add_fail'): int,
+        Optional('queued_pkts'): int,
+        Optional('peak_translations'): int,
+        Optional('occurred'): str,
+        Optional('total_doors'): int,
+        Optional('appl_doors'): int,
+        Optional('normal_doors'): int,
     }
     
 
@@ -475,12 +480,12 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         # start 10.5.5.1 end 10.5.5.5
         p7_1 = re.compile(r'^start +(?P<start>[\d\.]+) +end +(?P<end>[\d\.]+)$')
 
-        # type generic, total addresses 5, allocated 1 (20 %), misses 0
-        # type generic, total addresses 1, allocated 0 (0 % ), misses 0
+        # type generic, total addresses 5, allocated 1 (20%), misses 0
+        # type generic, total addresses 1, allocated 0 (0%), misses 0
         p7_2 = re.compile(r'^type +(?P<type>\w+)\, +total +addresses '
                           r'+(?P<total_addresses>\d+)\, +allocated '
-                          r'+(?P<allocated>\d+ +\(\w+\%\))\, '
-                          r'+misses +(?P<misses>\d+)$')
+                          r'+(?P<allocated>\d+) +\((?P<allocated_percentage>\d+)'
+                          r'+\%\)\, +misses +(?P<misses>\d+)$')
                            
         # max entry: max allowed 2147483647, used 3, missed 0
         p8 = re.compile(r'^max +entry\: +max +allowed +(?P<max_allowed>\d+)\, '
@@ -493,6 +498,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                         r'(?P<average_len>\d+)\,+chains +(?P<chains>\S+)$')
 
         parsed_dict = {}
+        index = 1
         on_the_outside = False
         on_the_inside = False
 
@@ -505,12 +511,11 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
-                total = int(group['total_translations'])
                 active_dict = parsed_dict.setdefault('active_translations', {})
-                total_stats = active_dict.setdefault(total, {})
-                total_stats['static'] = int(group['static'])
-                total_stats['dynamic'] = int(group['dynamic'])
-                total_stats['extended'] = int(group['extended'])
+                active_dict['total'] = int(group['total_translations'])
+                active_dict['static'] = int(group['static'])
+                active_dict['dynamic'] = int(group['dynamic'])
+                active_dict['extended'] = int(group['extended'])
 
                 continue
 
@@ -522,6 +527,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
+                intf_dict = parsed_dict.setdefault('interfaces', {})
                 if group['in_out_interfaces'] == 'Outside':
                     on_the_outside = True
                     on_the_inside = False
@@ -532,10 +538,10 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                         for item in outside_list:
                             olist.append(item)
 
-                        if 'outside_interfaces' in active_dict:
-                            active_dict['outside_interfaces'] += olist
+                        if 'outside' in intf_dict:
+                            intf_dict['outside'] += olist
                         else:
-                            active_dict['outside_interfaces'] = olist
+                            intf_dict['outside'] = olist
                 else:
                     on_the_inside = True
                     on_the_outside = False
@@ -546,10 +552,10 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                         for item in inside_list:
                             ilist.append(item)
 
-                        if 'inside_interfaces' in active_dict:
-                            active_dict['inside_interfaces'] += ilist
+                        if 'inside' in intf_dict:
+                            intf_dict['inside'] += ilist
                         else:
-                            active_dict['inside_interfaces'] = ilist
+                            intf_dict['inside'] = ilist
                 continue
 
             # TenGigabitEthernet1/0/0, TenGigabitEthernet1/1/0, TenGigabitEthernet1/2/0, TenGigabitEthernet1/3/0
@@ -564,10 +570,10 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                     for item in outside_list:
                         olist.append(item)
                     
-                    if 'outside_interfaces' in active_dict:
-                        active_dict['outside_interfaces'] += olist
+                    if 'outside' in intf_dict:
+                        intf_dict['outside'] += olist
                     else:
-                        active_dict['outside_interfaces'] = olist
+                        intf_dict['outside'] = olist
 
                 elif on_the_inside:
                     inside_list = group['direction_interfaces'].split()
@@ -575,10 +581,10 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                     for item in inside_list:
                         ilist.append(item)
 
-                    if 'inside_interfaces' in active_dict:
-                        active_dict['inside_interfaces'] += ilist
+                    if 'inside' in intf_dict:
+                        intf_dict['inside'] += ilist
                     else:
-                        active_dict['inside_interfaces'] = ilist
+                        intf_dict['inside'] = ilist
 
                 continue
 
@@ -595,22 +601,21 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
-
                 if group['name_1']:
                     if self.INT_MAPPING.get(group['name_1']):
                         name_1 = self.INT_MAPPING.get(group['name_1'])
-                        active_dict[name_1] = int(group['number_1'])
+                        parsed_dict[name_1] = int(group['number_1'])
                     else:
                         name_1 = self.STR_MAPPING.get(group['name_1'])
-                        active_dict[name_1] = int(group['number_1'])
+                        parsed_dict[name_1] = int(group['number_1'])
 
                 if group['name_2']:
                     if self.INT_MAPPING.get(group['name_2']):
                         name_2 = self.INT_MAPPING.get(group['name_2'])
-                        active_dict[name_2] = int(group['number_2'])
+                        parsed_dict[name_2] = int(group['number_2'])
                     else:
                         name_2 = self.STR_MAPPING.get(group['name_2'])
-                        active_dict[name_2] = group['number_2']
+                        parsed_dict[name_2] = group['number_2']
 
                 continue
 
@@ -621,7 +626,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m5_1 = p5_1.match(line)
             if m5 or m5_1:
                 if m5:
-                    dynamic_dict = active_dict.setdefault('dynamic_mappings', {})
+                    dynamic_dict = parsed_dict.setdefault('dynamic_mappings', {})
                 
                 if m5_1:
                     source = m5_1.groupdict()['source'].lower() + '_source'
@@ -640,13 +645,30 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             m6 = p6.match(line)
             if m6:
                 group = m6.groupdict()
-                access_name = group['access_list']
-                name_dict = source_dict.setdefault(access_name, {})
 
-                name_dict.update({'access_method': group['access_method']})
+                access_name1 = group['access_method'] + ' ' + group['access_list']
+
+                if group['method'] and group['pool']:
+                    access_name2 = group['method'] + ' ' + group['pool']
+                    access_name = access_name1 + ' ' + access_name2
+                else:
+                    access_name = access_name1
+
                 if group['id']:
-                    name_dict.update({'id': int(group['id'])})
+                    id_dict = source_dict.setdefault('id', {})
+                    name_dict = id_dict.setdefault(int(group['id']), {})
+                else:
+                    id_dict = source_dict.setdefault('id', {})
+                    name_dict = id_dict.setdefault(index, {})
+                    index += 1
+
+                name_dict.update({'match': access_name})
+                if 'access-list' == group['access_method']:
+                    name_dict.update({'access_list': group['access_list']})
                 
+                elif 'route-map' == group['access_method']:
+                    name_dict.update({'route_map': group['access_list']})
+
                 if group['method'] == 'interface':
                     name_dict.update({'interface': group['pool']})
 
@@ -676,7 +698,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                     mypool_dict.update({'netmask': group['netmask']})
 
                     if group['id']:
-                        mypool_dict.update({'pool_id': int(group['id'])})
+                        mypool_dict.update({'id': int(group['id'])})
 
                 if m7_1:
                     group = m7_1.groupdict()
@@ -686,11 +708,11 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 
                 if m7_2:
                     group = m7_2.groupdict()
-
                     mypool_dict.update({'type': group['type']})
-                    mypool_dict.update({'total': group['total_addresses']})
-                    mypool_dict.update({'allocated': group['allocated']})
-                    mypool_dict.update({'misses': group['misses']})
+                    mypool_dict.update({'total_addresses': int(group['total_addresses'])})
+                    mypool_dict.update({'allocated': int(group['allocated'])})
+                    mypool_dict.update({'allocated_percentage': int(group['allocated_percentage'])})
+                    mypool_dict.update({'misses': int(group['misses'])})
 
                 continue
                 
@@ -699,7 +721,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             if m8:
                 group = m8.groupdict()
 
-                max_dict = active_dict.setdefault('nat_limit_statistics', {})
+                max_dict = parsed_dict.setdefault('nat_limit_statistics', {})
                 nat_limit_dict = max_dict.setdefault('max_entry', {})
                 nat_limit_dict.update({'max_allowed': int(group['max_allowed'])})
                 nat_limit_dict.update({'used': int(group['used'])})
@@ -718,12 +740,5 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
                 mypool_dict.update({'chains': group['chains']})
 
                 continue
-
+        
         return parsed_dict
-                    
-                
-
-                    
-
-                    
-
