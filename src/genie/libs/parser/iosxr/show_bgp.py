@@ -5241,7 +5241,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
-            '(?P<nbr_state>\w+) +(?P<nsr_state>\w+)$')
+            '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
         
         # BGP instance 0: 'default'
         p2 = re.compile(r'^BGP +instance +\d+: +\'(?P<instance>\S+)\'$')
