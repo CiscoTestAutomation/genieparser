@@ -70,9 +70,9 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
     """
 
     cli_command = ['show ip nat translation',
-                   'show ip nat translations {verbose}',
+                   'show ip nat translations verbose',
                    'show ip nat translations vrf {vrf}',
-                   'show ip nat translations vrf {vrf} {verbose}']
+                   'show ip nat translations vrf {vrf} verbose']
 
     def cli(self, vrf=None, option=None, output=None):
         if output is None:
@@ -239,7 +239,6 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 if protocol_dict:
                     details_dict.update(group)
-
                 else:
                     tmp_details_dict.update(group)
 
@@ -457,7 +456,7 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         p5 = re.compile(r'^(?P<dynamic>\w+) +mappings\:$')
         
         # -- Inside Source
-        p5_1 = re.compile(r'^\-\- +(?P<source>\S+) +Source$')
+        p6 = re.compile(r'^\-\- +(?P<source>\S+) +Source$')
 
         # [Id: 1] access-list 102 pool mypool refcount 3
         # access-list 1 pool net-208 refcount 2
@@ -467,33 +466,33 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
         # [Id: 3] access-list 99 interface Serial0/0 refcount 1
         # [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
         # [Id: 0] route-map STATIC-MAP
-        p6 = re.compile(r'^(?:\[Id\: +(?P<id>\d+)\] )?(?P<access_method>'
+        p7 = re.compile(r'^(?:\[Id\: +(?P<id>\d+)\] )?(?P<access_method>'
                         r'access\-+list|route\-map) +(?P<access_list>[\w\-]+)'
                         r'(?: +(?P<method>pool|interface) +(?P<pool>[\w\/-]+) '
                         r'+refcount +(?P<refcount>\d+))?$')
 
         # pool mypool: netmask 255.255.255.0
         # pool inside-pool: id 1, netmask 255.255.255.0
-        p7 = re.compile(r'^pool +(?P<pool>\S+)\:(?: +(id +(?P<id>\d+))\,)?'
+        p8 = re.compile(r'^pool +(?P<pool>\S+)\:(?: +(id +(?P<id>\d+))\,)?'
                         r'(?:( +netmask +(?P<netmask>[\d+\.]+))?)$')
 
         # start 10.5.5.1 end 10.5.5.5
-        p7_1 = re.compile(r'^start +(?P<start>[\d\.]+) +end +(?P<end>[\d\.]+)$')
+        p9 = re.compile(r'^start +(?P<start>[\d\.]+) +end +(?P<end>[\d\.]+)$')
 
         # type generic, total addresses 5, allocated 1 (20%), misses 0
         # type generic, total addresses 1, allocated 0 (0%), misses 0
-        p7_2 = re.compile(r'^type +(?P<type>\w+)\, +total +addresses '
+        p10 = re.compile(r'^type +(?P<type>\w+)\, +total +addresses '
                           r'+(?P<total_addresses>\d+)\, +allocated '
                           r'+(?P<allocated>\d+) +\((?P<allocated_percentage>\d+)'
                           r'+\%\)\, +misses +(?P<misses>\d+)$')
                            
         # max entry: max allowed 2147483647, used 3, missed 0
-        p8 = re.compile(r'^max +entry\: +max +allowed +(?P<max_allowed>\d+)\, '
+        p11 = re.compile(r'^max +entry\: +max +allowed +(?P<max_allowed>\d+)\, '
                         r'+used +(?P<used>\d+)\, +missed +(?P<missed>\d+)$')
         
         # longest chain in pool: pool1's addr-hash: 0, average len 0,chains 0/256
         # longest chain in pool: test-pool1's addr-hash: 0, average len 0,chains 0/256
-        p9 = re.compile(r'^longest +chain +in +pool\: +(?P<pool_name>\S+)\'s '
+        p12 = re.compile(r'^longest +chain +in +pool\: +(?P<pool_name>\S+)\'s '
                         r'+addr\-hash\: +(?P<addr_hash>\d+)\, +average +len '
                         r'(?P<average_len>\d+)\,+chains +(?P<chains>\S+)$')
 
@@ -621,17 +620,15 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
 
             # Dynamic mappings:
             m5 = p5.match(line)
+            if m5:
+                dynamic_dict = parsed_dict.setdefault('dynamic_mappings', {})
+                continue
 
             # -- Inside Source
-            m5_1 = p5_1.match(line)
-            if m5 or m5_1:
-                if m5:
-                    dynamic_dict = parsed_dict.setdefault('dynamic_mappings', {})
-                
-                if m5_1:
-                    source = m5_1.groupdict()['source'].lower() + '_source'
-                    source_dict = dynamic_dict.setdefault(source, {})
-
+            m6 = p6.match(line)
+            if m6:
+                source = m6.groupdict()['source'].lower() + '_source'
+                source_dict = dynamic_dict.setdefault(source, {})
                 continue
 
             # [Id: 1] access-list 102 pool mypool refcount 3
@@ -642,9 +639,9 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             # [Id: 3] access-list 99 interface Serial0/0 refcount 1
             # [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
             # [Id: 0] route-map STATIC-MAP
-            m6 = p6.match(line)
-            if m6:
-                group = m6.groupdict()
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
 
                 access_name1 = group['access_method'] + ' ' + group['access_list']
 
@@ -682,44 +679,47 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
             
             # pool mypool: netmask 255.255.255.0
             # pool inside-pool: id 1, netmask 255.255.255.0
-            m7 = p7.match(line)
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                mypool_dict = pool_dict.setdefault(group['pool'], {})
+                mypool_dict.update({'netmask': group['netmask']})
 
+                if group['id']:
+                    mypool_dict.update({'id': int(group['id'])})
+                
+                continue
             # start 10.5.5.1 end 10.5.5.5
-            m7_1 = p7_1.match(line)
+            m9 = p9.match(line)
+
+            if m9:
+                group = m9.groupdict()
+
+                mypool_dict.update({'start': group['start']})
+                mypool_dict.update({'end': group['end']})
+
+                continue
 
             # type generic, total addresses 5, allocated 1 (20 %), misses 0
             # type generic, total addresses 1, allocated 0 (0 % ), misses 0
-            m7_2 = p7_2.match(line)
+            m10 = p10.match(line)
 
-            if m7 or m7_1 or m7_2:
-                if m7:
-                    group = m7.groupdict()
-                    mypool_dict = pool_dict.setdefault(group['pool'], {})
-                    mypool_dict.update({'netmask': group['netmask']})
-
-                    if group['id']:
-                        mypool_dict.update({'id': int(group['id'])})
-
-                if m7_1:
-                    group = m7_1.groupdict()
-
-                    mypool_dict.update({'start': group['start']})
-                    mypool_dict.update({'end': group['end']})
-                
-                if m7_2:
-                    group = m7_2.groupdict()
-                    mypool_dict.update({'type': group['type']})
-                    mypool_dict.update({'total_addresses': int(group['total_addresses'])})
-                    mypool_dict.update({'allocated': int(group['allocated'])})
-                    mypool_dict.update({'allocated_percentage': int(group['allocated_percentage'])})
-                    mypool_dict.update({'misses': int(group['misses'])})
+            if m10:
+                group = m10.groupdict()
+                mypool_dict.update({'type': group['type']})
+                mypool_dict.update(
+                    {'total_addresses': int(group['total_addresses'])})
+                mypool_dict.update({'allocated': int(group['allocated'])})
+                mypool_dict.update(
+                    {'allocated_percentage': int(group['allocated_percentage'])})
+                mypool_dict.update({'misses': int(group['misses'])})
 
                 continue
                 
             # max entry: max allowed 2147483647, used 3, missed 0
-            m8 = p8.match(line)
-            if m8:
-                group = m8.groupdict()
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
 
                 max_dict = parsed_dict.setdefault('nat_limit_statistics', {})
                 nat_limit_dict = max_dict.setdefault('max_entry', {})
@@ -731,9 +731,9 @@ class ShowIpNatStatistics(ShowIpNatStatisticsSchema):
 
             # longest chain in pool: pool1's addr-hash: 0, average len 0,chains 0/256
             # longest chain in pool: test-pool1's addr-hash: 0, average len 0,chains 0/256
-            m9 = p9.match(line)
-            if m9:
-                group = m9.groupdict()
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
 
                 mypool_dict.update({'addr_hash': int(group['addr_hash'])})
                 mypool_dict.update({'average_len': int(group['average_len'])})
