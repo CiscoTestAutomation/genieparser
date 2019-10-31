@@ -21,6 +21,7 @@ class ShowMsdpPeerSchema(MetaParser):
             Any(): {
                 'peer': {
                     Any(): {
+                        'peer_name': str,
                         'peer_as': int,
                         Optional('description'): str,
                         'session_state': str,
@@ -99,7 +100,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
 
         # MSDP Peer 192.168.229.3 (?), AS 65109
         # MSDP Peer 10.1.1.1 (R1.cisco.com), AS 65109
-        r1 = re.compile(r'MSDP +Peer +(?P<peer>\S+) \(\S+\), +'
+        r1 = re.compile(r'MSDP +Peer +(?P<peer>\S+) \((?P<peer_name>\S+)\), +'
                         r'AS (?P<peer_as>\d+)')
 
         # Description: R1
@@ -196,6 +197,7 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
                     group_dict['peer'], {})
 
                 peer_dict['peer_as'] = int(group_dict['peer_as'])
+                peer_dict['peer_name'] = group_dict['peer_name']
 
                 continue
 

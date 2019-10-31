@@ -35,6 +35,7 @@ class TestShowMsdpPeer(unittest.TestCase):
                             'up_down_time': '1d02h'},
                         'password': 'None',
                         'peer_as': 65109,
+                        'peer_name': '?',
                         'reset': '999',
                         'sa_filter': {
                             'in': {
@@ -111,6 +112,7 @@ class TestShowMsdpPeer(unittest.TestCase):
                             'up_down_time': '22:46:31'},
                         'password': 'None',
                         'peer_as': 0,
+                        'peer_name': '?',
                         'reset': '0',
                         'sa_filter': {
                             'in': {
