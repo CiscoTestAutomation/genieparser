@@ -608,10 +608,11 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             #   [200/0] via ::ffff:10.229.11.11 (nexthop in vrf default), 00:55:12
             #   B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
+            #   [0/0] via ::, 5w2d
             p3 = re.compile(r'.*\[(?P<route_preference>[\d\/]+)\]'
                             r' +via +(?P<next_hop>[\w\:\.\)]+)?( \(nexthop in '
-                            r'vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +'
-                            r'(?P<interface>[\S]+))?$')
+                            r'vrf default\))?,? +(?P<date>[0-9][\w\:]+)?(?:,?( +'
+                            r'(?P<interface>[\S]+))?$)?')
 
             m = p3.match(line)
 
