@@ -182,6 +182,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Installed Oct 23 22:09:38.380 for 5d21h
         p10 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
+        # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
+        p11 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
+                        r'+via +(?P<interface>\S+)$')
 
         # initial variables
         ret_dict = {}
@@ -437,6 +440,24 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 group = m.groupdict()
                 installed_dict = route_dict.setdefault('installed', {})
                 installed_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop = group['nexthop']
+                _from = group['from']
+                interface = group['interface']
+
+                index += 1
+                outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
+                    setdefault('next_hop_list', {}). \
+                    setdefault(index, {})
+                outgoing_interface_dict.update({'index': index})
+                outgoing_interface_dict.update({'outgoing_interface': interface})
+                outgoing_interface_dict.update({'from': _from})
+                outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
 
         return ret_dict
