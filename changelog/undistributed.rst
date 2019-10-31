@@ -26,7 +26,9 @@
 * IOSXR
     * Added ShowIgmp for commands;
         * 'show igmp interface'
+        * 'show igmp interface {interface}'
         * 'show igmp vrf {vrf} interface'
+        * 'show igmp vrf {vrf} interface {interface}'
         * 'show igmp summary'
         * 'show igmp vrf {vrf} summary'
         * 'show igmp groups detail'
