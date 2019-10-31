@@ -31,7 +31,7 @@ class test_show_interfaces_terse(unittest.TestCase):
                                          '172.16.64.1/2': {'local': '172.16.64.1/2'},
                                          '172.16.64.4/2': {'local': '172.16.64.4/2'}},
                                 'inet6': {'fe80::250:56ff:fe82:ba52/64': {'local': 'fe80::250:56ff:fe82:ba52/64'},
-                                          'fec0::a:0:0:4/64': {'local': 'fec0::a:0:0:4/64'}},
+                                          '2001:db8:8d82:0:a::4/64': {'local': '2001:db8:8d82:0:a::4/64'}},
                                 'tnp': {'0x4': {'local': '0x4'}}}},
          'fxp0': {'admin_state': 'up',
                   'enabled': True,
@@ -142,7 +142,7 @@ class test_show_interfaces_terse(unittest.TestCase):
                                                     172.16.64.1/2     
                                                     172.16.64.4/2     
                                            inet6    fe80::250:56ff:fe82:ba52/64
-                                                    fec0::a:0:0:4/64
+                                                    2001:db8:8d82:0:a::4/64
                                            tnp      0x4  
         fxp0                    up    up
         fxp0.0                  up    up   inet     172.25.192.114/24

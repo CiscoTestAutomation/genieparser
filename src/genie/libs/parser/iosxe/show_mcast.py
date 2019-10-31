@@ -229,7 +229,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['incoming_interface_list'][incoming_interface] = {}
                 continue
 
-            # RPF nbr:6:6:6::6
+            # RPF nbr:2001:db8:90:24::6
             p3_2 = re.compile(r'^RPF +nbr: *(?P<rpf_nbr>[\w\:\.]+)$')
             m = p3_2.match(line)
             if m:
@@ -421,18 +421,18 @@ class ShowIpMulticastSchema(MetaParser):
         show ip multicast
         show ip multicast vrf <vrf>
     """
-    schema = {'vrf': 
-                {Any():
-                    {
-                    'enable': bool,
-                    'multipath': bool,
-                    'route_limit': str,
-                    'fallback_group_mode': str,
-                    'multicast_bound_with_filter_autorp': int,
-                    'mo_frr': bool,
-                    },
-                },
-            }
+    schema = {
+        'vrf': {
+            Any(): {
+                'enable': bool,
+                'multipath': bool,
+                'route_limit': str,
+                'fallback_group_mode': str,
+                'multicast_bound_with_filter_autorp': int,
+                Optional('mo_frr'): bool,
+            },
+        },
+    }
 
 class ShowIpMulticast(ShowIpMulticastSchema):
     """Parser for:

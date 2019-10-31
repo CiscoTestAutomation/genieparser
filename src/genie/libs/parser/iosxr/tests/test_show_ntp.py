@@ -342,7 +342,7 @@ class test_show_ntp_associations(unittest.TestCase):
                         'stratum': 2}
                 }
             },
-            'dead:beef::2': {
+            '2001:db8:429a:3189::2': {
                 'local_mode': {
                     'client': {
                         'configured': True,
@@ -355,7 +355,7 @@ class test_show_ntp_associations(unittest.TestCase):
                         'reach': 377,
                         'receive_time': 20,
                         'refid': '172.16.36.80',
-                        'remote': 'dead:beef::2',
+                        'remote': '2001:db8:429a:3189::2',
                         'stratum': 3}
                 }
             }
@@ -380,15 +380,15 @@ class test_show_ntp_associations(unittest.TestCase):
             },
             'testAA': {
                 'address': {
-                    'dead:beef::2': {
+                    '2001:db8:429a:3189::2': {
                         'isconfigured': {
                             True: {
-                                'address': 'dead:beef::2',
+                                'address': '2001:db8:429a:3189::2',
                                 'isconfigured': True}
                         },
                         'type': {
                             'peer': {
-                                'address': 'dead:beef::2',
+                                'address': '2001:db8:429a:3189::2',
                                 'type': 'peer',
                                 'vrf': 'testAA'}
                         }
@@ -405,7 +405,7 @@ class test_show_ntp_associations(unittest.TestCase):
            
               address         ref clock     st  when  poll reach  delay  offset    disp
         *~192.168.128.5    10.81.254.131     2     1    64  377    7.98  -0.560   0.108
-        +~dead:beef::2 vrf testAA
+        +~2001:db8:429a:3189::2 vrf testAA
                            172.16.36.80      3    20    64  377    6.00  -2.832   0.046
         * sys_peer, # selected, + candidate, - outlayer, x falseticker, ~ configured
     '''
@@ -587,30 +587,29 @@ class test_show_run_ntp(unittest.TestCase):
     golden_parsed_output = {
         'vrf': {
             'default': {
-                'source': 'Loopback0',
                 'address': {
                     '10.4.1.1': {
-                        'type': 'server'},
-                    '10.16.2.2': {
-                        'type': 'peer'},
-                    '10.36.3.3': {
-                        'type': 'peer'},
-                    '10.64.4.4': {
-                        'type': 'peer'},
-                    }
+                        'type': 'server'}
+                }
+            },
+            'management': {
+                'address': {
+                    '10.4.1.1': {
+                        'type': 'server'}
                 }
             }
         }
+    }
+
 
     golden_output = {'execute.return_value': '''\
-        RP/0/RP0/CPU0:iosxrv9000-1#sh run ntp
-        Thu Dec 20 23:56:57.618 EST
+        +++ dev: executing command 'show running-config ntp' +++
+        show running-config ntp
+
+        Thu Sep 26 18:20:16.484 EDT
         ntp
          server 10.4.1.1
-         peer 10.16.2.2
-         peer 10.36.3.3
-         peer 10.64.4.4
-         source Loopback0
+         server vrf management 10.4.1.1
         !
     '''
     }

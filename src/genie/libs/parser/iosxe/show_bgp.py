@@ -225,66 +225,62 @@ class ShowBgpSuperParser(ShowBgpSchema):
 
         # For address family: IPv4 Unicast
         p1 = re.compile(r'^\s*For +address +family:'
-                        ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
+                        r' +(?P<address_family>[\S\s]+)$')
 
         # BGP table version is 25, Local Router ID is 10.186.101.1
         p2 = re.compile(r'^\s*BGP +table +version +is'
-                        ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
-                        ' +ID +is +(?P<local_router_id>(\S+))$')
+                        r' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
+                        r' +ID +is +(?P<local_router_id>(\S+))$')
 
         #     Network          Next Hop            Metric LocPrf Weight Path
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?'
-                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
-                          '(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
+                          r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
         #     Network          Next Hop            Metric LocPrf Weight Path
         # * i                  10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         #                      0.0.0.0                  0         32768 ?
         # *>                    0.0.0.0                 0         32768 ?
+        # r>                    0.0.0.0                 0         32768 ?
+        # *m                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
-                          '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                          ' +(?P<metric>[0-9]+)?'
-                            '(?P<space>\s{1,4})'
-                          ' +(?P<local_prf>[0-9]+)?'
-                            '(?P<space1>\s{1,6})'
-                          ' +(?P<weight>[0-9]+)'
-                          '(?P<termination>[\s\S]+)$')
+        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|m|r|\s)+)?'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
+                          r'(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          r' +(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +(?P<weight>\d+)'
+                          r'(?P<termination>[\s\S]+)$')
 
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
         # *>   10.1.1.0/24     0.0.0.0                  0         32768 ?
         # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
-        # *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+        # *m 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
+        # *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         # *>  100:2051:VEID-2:Blk-1/136
-        p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
-                        '(?P<path_type>(i|e|c|l|a|r|I))?'
-                        ' +(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+)'
-                        ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                        '(?P<space1>\s{5,18})'
-                        '(?P<metric>[0-9]+)?'
-                        '(?P<space2>\s{4,8}?)'
-                        '(?P<local_prf>[0-9]+)?'
-                        '(?P<space3>\s{1,12})'
-                        '(?P<weight>[0-9]+)'
-                        '(?P<path>[0-9\s\S\{\}]+)$')
+        # *>i10.1.1.0/24   0.0.0.0                   0    100      0 1234 60000 ?
+        p4 = re.compile(r'^\s*(?P<status_codes>(?:s|x|S|d|h|m|r|\*|\>|\s)+)?'
+                        r'(?P<path_type>(?:i|e|c|l|a|r|I))? *'
+                        r'(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+) +'
+                        r'(?P<next_hop>[a-zA-Z0-9\.\:]+) +'
+                        r'(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +'
+                        r'(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +'
+                        r'(?P<weight>\d+)(?P<path>[0-9 \S\{\}]+)$')
 
         # AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
         p5 = re.compile(r'^\s*AF-Private +Import +to +Address-Family:'
-                        ' +(?P<af_private_import_to_address_family>[\s\S]+),'
-                        ' +Pfx +Count/Limit:'
-                        ' +(?P<pfx_count>[\d]+)\/+(?P<pfx_limit>[\d]+)$')
+                        r' +(?P<af_private_import_to_address_family>[\s\S]+),'
+                        r' +Pfx +Count/Limit:'
+                        r' +(?P<pfx_count>[\d]+)\/+(?P<pfx_limit>[\d]+)$')
 
         # Route Distinguisher: 200:1
         # Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
         p6 = re.compile(r'^\s*Route +Distinguisher *: '
-                        '+(?P<route_distinguisher>(\S+))'
-                        '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
-                        '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
+                        r'+(?P<route_distinguisher>(\S+))'
+                        r'( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
+                        r'( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
 
         for line in output.splitlines():
             line = line.rstrip()
@@ -322,6 +318,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
                 if m.groupdict()['prefix']:
                     prefix = str(m.groupdict()['prefix'])
                 index = 0
+                continue
 
             #     Network          Next Hop            Metric LocPrf Weight Path
             # * i                  10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
@@ -412,7 +409,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
             # *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
             # *>   10.1.1.0/24     0.0.0.0                  0         32768 ?
             # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
-            # *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+            # *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
             # *>  100:2051:VEID-2:Blk-1/136
             m = p4.match(line)
             if m:
@@ -435,7 +432,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
 
                 if m.groupdict()['path']:
                     path_1 = m.groupdict()['path']
-                    m3 = re.compile(r'(?: *(?P<path_inner>[0-9\{\}\s]+))?'
+                    m3 = re.compile(r'(?: *(?P<path_inner>[0-9\{\}\s\,]+))?'
                                     ' +(?P<origin_codes_inner>(i|e|\?|\|))$').match(path_1)
                     if m3:
                         path_data = m3.groupdict()['path_inner']
@@ -564,7 +561,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
                 # Init routes dict
                 if 'routes' not in af_dict:
                     del af_dict
-                    continue
+
+                continue
 
         return route_dict
 
@@ -995,7 +993,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Local, imported path from base
         # 200 33299 51178 47751 {27016}
         # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
-        # 400 33299 51178 47751 {27016}, imported path from [400:1]646:22:22:4::/64 (VRF2)
+        # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
         # 62000, (Received from a RR-client)
         p17 = re.compile(r'^\s*(?P<route_info>[a-zA-Z0-9\-\.\,\{\}\s\(\)\.\/\:\[\]]+)$')
 
@@ -1444,7 +1442,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Local, imported path from base
             # 200 33299 51178 47751 {27016}
             # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
-            # 400 33299 51178 47751 {27016}, imported path from [400:1]646:22:22:4::/64 (VRF2)
+            # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
             # 62000, (Received from a RR-client)
             m = p17.match(line)
             if m and refresh_epoch_flag:
@@ -2538,9 +2536,9 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             },
                         Optional('bgp_session_transport'):
                             {'min_time_between_advertisement_runs': int,
-                            'address_tracking_status': str,
+                            Optional('address_tracking_status'): str,
                             Optional('rib_route_ip'): str,
-                            'tcp_path_mtu_discovery': str,
+                            Optional('tcp_path_mtu_discovery'): str,
                             'connection':
                                 {'established': int,
                                 'dropped': int,
@@ -4252,8 +4250,10 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
 
     def cli(self, neighbor, address_family='', output=None):
 
+        # BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+        # BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
         p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                        '(, +vrf +(?P<vrf>[0-9A-Za-z]+))?, +remote AS '
+                        '(, +vrf +(?P<vrf>\S+))?, +remote AS '
                         '+(?P<remote_as_id>[0-9]+), '
                         '+(?P<internal_external_link>[a-z\s]+)$')
 
@@ -4330,8 +4330,8 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
         # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-        # *>iaaaa:1::/113       ::ffff:10.106.101.1
-        # *>  646:22:22::/64   2001:DB8:20:4:6::6
+        # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
+        # *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
 
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
@@ -4411,8 +4411,8 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             # Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            # *>  646:22:22::/64   2001:DB8:20:4:6::6
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
+            # *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
             m = p3_1.match(line)
             if m:
                 # New prefix, reset index count
@@ -5033,8 +5033,8 @@ class ShowBgpNeighborsReceivedRoutesSuperParser(ShowBgpNeighborsReceivedRoutesSc
             # RPKI validation codes: V valid, I invalid, N Not found
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            # *>  646:22:22::/64   2001:DB8:20:4:6::6
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
+            # *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
             m = p3_1.match(line)
             if m:
                 # New prefix, reset index count
@@ -5558,8 +5558,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                          ' +ID +is +(?P<local_router_id>(\S+))$')
 
         # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-        # *>iaaaa:1::/113       ::ffff:10.106.101.1
-        # *>i  20::/64          ::FFFF:192.168.51.1
+        # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
+        # *>i  2001:db8:400::/64          ::FFFF:192.168.51.1
         # r>i  2001:2:2:2::2/128
         p3 = re.compile(r'^\s*(?P<status_codes>(b|s|x|S|d|h|r|\*|\>|\s)+)?'
                          '(?P<path_type>(i|e|c|l|a|r|I))? *'
@@ -5660,8 +5660,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
                 continue
 
             # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
-            # *>iaaaa:1::/113       ::ffff:10.106.101.1
-            # *>i  20::/64          ::FFFF:192.168.51.1
+            # *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
+            # *>i  2001:db8:400::/64          ::FFFF:192.168.51.1
             m = p3.match(line)
             if m:
                 # New prefix, reset index count

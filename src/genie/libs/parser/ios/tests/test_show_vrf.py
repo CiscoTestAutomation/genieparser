@@ -13,13 +13,13 @@ from genie.libs.parser.ios.show_vrf import ShowVrfDetail, ShowVrf
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 #iosxe unit test
-from genie.libs.parser.iosxe.tests.test_show_vrf import test_show_vrf as test_show_vrf_xe
+from genie.libs.parser.iosxe.tests.test_show_vrf import TestShowVrf as TestShowVrfIosxe
  
 # ================================
 #  Unit test for 'show vrf detail'
 # ================================
 
-class test_show_vrf_detail(unittest.TestCase):
+class TestShowVrfDetail(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -125,7 +125,7 @@ class test_show_vrf_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-class test_show_vrf(test_show_vrf_xe):
+class TestShowVrf(TestShowVrfIosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

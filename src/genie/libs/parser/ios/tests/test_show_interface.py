@@ -13,7 +13,6 @@ with patch.dict('sys.modules',
     from genie.parsergen import oper_fill
     from genie.parsergen import oper_check
     from genie.parsergen import oper_fill_tabular
-    from genie.parsergen.examples.parsergen.pyAts import parsergen_demo_mkpg
 
 import xml.etree.ElementTree as ET
 
@@ -33,12 +32,12 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesStats
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
-                test_show_interfaces_counters as test_show_interfaces_counters_iosxe,\
-                test_show_interfaces_switchport as test_show_interfaces_switchport_iosxe,\
-                test_show_interfaces_trunk as test_show_interfaces_trunk_iosxe,\
-                test_show_interfaces_stats as test_show_interfaces_stats_iosxe
+                TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
+                TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
+                TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
+                TestShowInterfacesStats as TestShowInterfacesStats_iosxe
 
-class test_show_interface_parsergen(unittest.TestCase):
+class TestShowInterfaceParsergen(unittest.TestCase):
 
     def test_tabular_parser(self):
         self.showCommandOutput='''
@@ -101,7 +100,7 @@ class test_show_interface_parsergen(unittest.TestCase):
 #############################################################################
 # unitest For Show ip interface | include <word>
 #############################################################################
-class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
+class TestShowIpInterfacesBriefPipeIp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface':
@@ -132,7 +131,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #############################################################################
 # unitest For Show Interfaces
 #############################################################################
-class test_show_interfaces(unittest.TestCase):
+class TestShowInterfaces(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -512,7 +511,7 @@ class test_show_interfaces(unittest.TestCase):
 #############################################################################
 # unitest For Show ip interface
 #############################################################################
-class test_show_ip_interface(unittest.TestCase):
+class TestShowIpInterface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -726,7 +725,7 @@ class test_show_ip_interface(unittest.TestCase):
 #############################################################################
 # unitest For show ipv6 interface
 #############################################################################
-class test_show_ipv6_interface(unittest.TestCase):
+class TestShowIpv6Interface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -745,9 +744,9 @@ class test_show_ipv6_interface(unittest.TestCase):
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
                "enabled": True,
-               "201::1:1/112": {
+               "2001:db8:405::1:1/112": {
                     "status": "valid",
-                    "ip": "201::1:1",
+                    "ip": "2001:db8:405::1:1",
                     "prefix_length": "112"
                },
                "FE80::F816:3EFF:FE4B:55FD": {
@@ -755,12 +754,13 @@ class test_show_ipv6_interface(unittest.TestCase):
                     "ip": "FE80::F816:3EFF:FE4B:55FD",
                     "origin": "link_layer"
                },
-               "201::5:2/112": {
+               "2001:db8:405::5:2/112": {
                     "status": "valid",
-                    "ip": "201::5:2",
+                    "ip": "2001:db8:405::5:2",
                     "prefix_length": "112"
                },
                "nd": {
+                    "suppress": False,
                     "dad_enabled": True,
                     "advertised_default_router_preference": "Medium",
                     "advertised_retransmit_interval": 0,
@@ -793,13 +793,14 @@ class test_show_ipv6_interface(unittest.TestCase):
             "enabled": True,
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
-               "100:1::1:1/112": {
+               "2001:db8:1:1::1:1/112": {
                     "status": "valid",
-                    "ip": "100:1::1:1",
+                    "ip": "2001:db8:1:1::1:1",
                     "prefix_length": "112"
                },
                "enabled": True,
                "nd": {
+                    "suppress": True,
                     "advertised_default_router_preference": "Medium",
                     "advertised_retransmit_interval": 0,
                     "advertised_retransmit_interval_unspecified": True,
@@ -829,8 +830,8 @@ class test_show_ipv6_interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::F816:3EFF:FE4B:55FD 
           No Virtual link-local address(es):
           Global unicast address(es):
-            201::1:1, subnet is 201::1:0/112 
-            201::5:2, subnet is 201::5:0/112 
+            2001:db8:405::1:1, subnet is 2001:db8:405::1:0/112 
+            2001:db8:405::5:2, subnet is 2001:db8:405::5:0/112 
           Joined group address(es):
             FF02::1
             FF02::2
@@ -855,7 +856,7 @@ class test_show_ipv6_interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::5C00:C0FF:FE00:0 
           No Virtual link-local address(es):
           Global unicast address(es):
-            100:1::1:1, subnet is 100:1::1:0/112 
+            2001:db8:1:1::1:1, subnet is 2001:db8:1:1::1:0/112 
           Joined group address(es):
             FF02::1
             FF02::2
@@ -894,7 +895,7 @@ class test_show_ipv6_interface(unittest.TestCase):
 # unitest For show interfaces <interface> accounting
 #############################################################################
 
-class test_show_interfaces_accounting(unittest.TestCase):
+class TestShowInterfacesAccounting(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -987,7 +988,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
 #############################################################################
 # unitest For show interfaces <WORD> counters
 #############################################################################
-class test_show_interfaces_counters(test_show_interfaces_counters_iosxe):
+class TestShowInterfacesCounters(TestShowInterfacesCounters_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1005,7 +1006,7 @@ class test_show_interfaces_counters(test_show_interfaces_counters_iosxe):
 #############################################################################
 # unitest For Show Interfaces switchport
 #############################################################################
-class test_show_interfaces_switchport(test_show_interfaces_switchport_iosxe):
+class TestShowInterfacesSwitchport(TestShowInterfacesSwitchport_iosxe):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
@@ -1024,7 +1025,7 @@ class test_show_interfaces_switchport(test_show_interfaces_switchport_iosxe):
 #############################################################################
 # unitest For show interfaces trunk
 #############################################################################
-class test_show_interfaces_trunk(test_show_interfaces_trunk_iosxe):
+class TestShowInterfacesTrunk(TestShowInterfacesTrunk_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1042,7 +1043,7 @@ class test_show_interfaces_trunk(test_show_interfaces_trunk_iosxe):
 ###################################################
 # unit test for show interfaces stats
 ####################################################
-class test_show_interfaces_stats(test_show_interfaces_stats_iosxe):
+class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

@@ -284,7 +284,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     'Interface\s*address\s*\(\w+\)\s*\:\s*')        
 
         # IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
-        # IPv6 address: 4000::BC:0:0:C0A8:BC06  (global unicast)
+        # IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
         ipv6_address_re = re.compile('IPv6\s*Address\s*:\s*(?P<ip_address>\S+)'
                                     '\s*\((?P<type>[\s\w\-]+)\)')
         # IPv4 address: 172.16.1.204

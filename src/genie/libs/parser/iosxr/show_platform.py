@@ -66,14 +66,44 @@ class ShowVersion(ShowVersionSchema):
         
         # Init vars
         show_version_dict = {}
+
+        # regex patterns
+
+        # Cisco IOS XR Software, Version 6.3.1.15I
+        # Cisco IOS XR Software, Version 6.1.4.10I[Default]
+        p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
+                        ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?$')
+
+        # System uptime is 1 week, 1 day, 5 hours, 47 minutes
+        # PE1 uptime is 3 hours, 11 minutes
+        p2 = re.compile(r'\s*.* +uptime +is +(?P<uptime>[a-zA-Z0-9\s\,]+)$')
+
+        # System image file is "disk0:asr9k-os-mbi-6.1.4.10I/0x100305/mbiasr9k-rsp3.vm"
+        p3 = re.compile(r'\s*System +image +file +is'
+                        ' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
+
+        # cisco IOS-XRv 9000 () processor
+        p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
+                        r' +\(\) +processor$')
+
+        # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
+        # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+        p5 = re.compile(r'^cisco +(?P<device_family>[a-zA-Z0-9\/\-\s]+)'
+                        r'(?:( +Series))? +\((?P<processor>[a-zA-Z0-9\s]+)\)'
+                        r' +processor +with +(?P<processor_memory_bytes>[0-9A-Z]+)'
+                        r' +bytes +of +memory.$')
+
+        # Configuration register on node 0/RSP0/CPU0 is 0x1922
+        p6 = re.compile(r'\s*Configuration +register +on +node'
+                        ' +(?P<node>[A-Z0-9\/]+) +is'
+                        ' +(?P<config_register>[x0-9]+)$')
+
+        # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
+        p7 = re.compile(r'\s*.*Chassis.*$')
         
         for line in out.splitlines():
-            line = line.rstrip()
-            
-            # Cisco IOS XR Software, Version 6.3.1.15I
-            # Cisco IOS XR Software, Version 6.1.4.10I[Default]
-            p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
-                             ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?$')
+            line = line.strip()
+
             m = p1.match(line)
             if m:
                 show_version_dict['operating_system'] = 'IOSXR'
@@ -81,51 +111,33 @@ class ShowVersion(ShowVersionSchema):
                     str(m.groupdict()['software_version'])
                 continue
 
-            # System uptime is 1 week, 1 day, 5 hours, 47 minutes
-            # PE1 uptime is 3 hours, 11 minutes
-            p2 = re.compile(r'\s*.* +uptime +is +(?P<uptime>[a-zA-Z0-9\s\,]+)$')
             m = p2.match(line)
             if m:
                 show_version_dict['uptime'] = str(m.groupdict()['uptime'])
                 continue
 
-            # System image file is "disk0:asr9k-os-mbi-6.1.4.10I/0x100305/mbiasr9k-rsp3.vm"
-            p3 = re.compile(r'\s*System +image +file +is'
-                             ' +\"(?P<image>[a-zA-Z0-9\:\/\.\-]+)\"$')
             m = p3.match(line)
             if m:
                 show_version_dict['image'] = str(m.groupdict()['image'])
                 continue
 
-            # cisco IOS-XRv 9000 () processor
-            p4 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\-\s]+)'
-                               ' +\(\) +processor$')
             m = p4.match(line)
+
             if m:
                 show_version_dict['device_family'] = \
                     str(m.groupdict()['device_family'])
                 continue
 
-            # cisco ASR9K Series (Intel 686 F6M14S4) processor with 6291456K bytes of memory.
-            p5 = re.compile(r'\s*cisco +(?P<device_family>[a-zA-Z0-9\s]+)'
-                               ' +Series +\((?P<processor>[a-zA-Z0-9\s]+)\)'
-                               ' +processor +with'
-                               ' +(?P<processor_memory_bytes>[0-9A-Z]+) +bytes'
-                               ' +of +memory.$')
             m = p5.match(line)
             if m:
                 show_version_dict['device_family'] = \
-                    str(m.groupdict()['device_family'])
-                show_version_dict['processor'] = str(m.groupdict()['processor'])
+                    m.groupdict()['device_family']
+                show_version_dict['processor'] = m.groupdict()['processor']
                 show_version_dict['processor_memory_bytes'] = \
-                    str(m.groupdict()['processor_memory_bytes'])
-                show_version_dict['main_mem'] = str(line).strip()
+                    m.groupdict()['processor_memory_bytes']
+                show_version_dict['main_mem'] = line
                 continue
 
-            # Configuration register on node 0/RSP0/CPU0 is 0x1922
-            p6 = re.compile(r'\s*Configuration +register +on +node'
-                             ' +(?P<node>[A-Z0-9\/]+) +is'
-                             ' +(?P<config_register>[x0-9]+)$')
             m = p6.match(line)
             if m:
                 show_version_dict['config_register'] = \
@@ -136,8 +148,6 @@ class ShowVersion(ShowVersionSchema):
                         str(m.groupdict()['config_register'])
                 continue
 
-            # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p7 = re.compile(r'\s*.*Chassis.*$')
             m = p7.match(line)
             if m:
                 show_version_dict['chassis_detail'] = str(line.strip())
@@ -466,7 +476,7 @@ class ShowPlatformVm(ShowPlatformVmSchema):
             # 0/RP0/CPU0      RP (ACTIVE)     NONE            FINAL Band      192.0.0.4
             # 0/0/CPU0        LC (ACTIVE)     NONE            FINAL Band      192.0.0.6
             # 0/RSP0/CPU0     RP(ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
-            # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+            # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4
 
             p1 = re.compile(r'^(?P<node>[\S\/]+) +(?P<type>[(RP|LC)\s*\((ACTIVE|STANDBY)\)]+)'
                              ' +(?P<partner_name>[NONE|(?:\S)]+) +(?P<sw_status>[a-zA-Z\s]+)'
@@ -718,7 +728,7 @@ class ShowInventorySchema(MetaParser):
                 {'descr': str,
                  'pid': str,
                  'vid': str,
-                 'sn': str,
+                 Optional('sn'): str,
                 },
             },
         }
@@ -743,13 +753,14 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
         # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
         p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
-                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
+                         r' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
-                         ' +VID: +(?P<vid>[\S\s]*),'
-                         ' +SN: +(?P<sn>[\S\s]*)$')
+        # PID: N/A, VID: N/A, SN: 
+        p2 = re.compile(r'^PID: *(?P<pid>[\S\s]*),'
+                         r' +VID: *(?P<vid>[\S\s]*),'
+                         r' SN: *(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -780,7 +791,6 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['module_name'][module_name]['sn'] = \
                     str(m.groupdict()['sn']).strip()
                 continue
-
         return inventory_dict
             
 # ====================================
@@ -790,18 +800,26 @@ class ShowInventory(ShowInventorySchema):
 class AdminShowDiagChassisSchema(MetaParser):
     """Schema for admin show diag chassis"""
     schema = {
-        'device_family': str,
-        'device_series': int,
-        'num_line_cards': int,
-        'chassis_feature': str,
+        Optional('device_family'): str,
+        Optional('device_series'): str,
+        Optional('num_line_cards'): int,
+        Optional('chassis_feature'): str,
         'rack_num': int,
-        'sn': str,
+        Optional('sn'): str,
         'pid': str,
         'vid': str,
-        'desc': str,
+        Optional('desc'): str,
         'clei': str,
-        'top_assy_num': str,
+        Optional('eci'): str,
+        Optional('pca'): str,
+        Optional('top_assy_num'): str,
+        Optional('main'): {
+            'board_type': str,
+            'part': str,
+            'dev': str,
+            'serial_number': str,
         }
+    }
 
 class AdminShowDiagChassis(AdminShowDiagChassisSchema):
     """Parser for admin show diag chassis"""
@@ -817,27 +835,44 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
         admin_show_diag_dict = {}
         
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # Rack 0 - ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p1 = re.compile(r'\s*Rack +(?P<rack_num>[0-9]+)'
-                            ' +\- +(?P<device_family>[a-zA-Z]+)'
-                            ' +(?P<device_series>[0-9]+)'
-                            ' +(?P<num_line_cards>[0-9]+)'
-                            ' +Line +Card +Slot +Chassis +with'
-                            ' +(?P<chassis_feature>[a-zA-Z0-9\s]+)$')
+            # Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+            # Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
+            p1 = re.compile(r'Rack +(?P<rack_num>\d+) +-'
+                            r' +(?P<device_group>[a-zA-Z0-9\s]+)'
+                            r' +(?P<num_line_cards>\d+)'
+                            r' +((Line +Card +Slot +Chassis +with *)|'
+                            r'Slots +Line +Card +Chassis(?:( +for))? *)'
+                            r'(?P<chassis_feature>[\S ]+)?$')
+
             m = p1.match(line)
             if m:
                 admin_show_diag_dict['rack_num'] = \
                     int(m.groupdict()['rack_num'])
-                admin_show_diag_dict['device_family'] = \
-                    str(m.groupdict()['device_family'])
-                admin_show_diag_dict['device_series'] = \
-                    int(m.groupdict()['device_series'])
+
+                # ASR 9006
+                # Cisco CRS Series
+                # CRS
+                device_group = m.group(2)
+                split_device_group = re.split('\s', device_group)
+                if len(split_device_group)>1:
+                    admin_show_diag_dict['device_family'] = \
+                        split_device_group[0]
+                    device_series = ' '.join(split_device_group[1:])
+                else:
+                    device_series = split_device_group[0]
+                admin_show_diag_dict['device_series'] = device_series
+
                 admin_show_diag_dict['num_line_cards'] = \
                     int(m.groupdict()['num_line_cards'])
-                admin_show_diag_dict['chassis_feature'] = \
-                    str(m.groupdict()['chassis_feature'])
+                if m.groupdict()['chassis_feature']:
+                    admin_show_diag_dict['chassis_feature'] = \
+                        str(m.groupdict()['chassis_feature'])
+
+                description = line[8:]
+                admin_show_diag_dict['desc'] = description
                 continue
 
             # RACK NUM: 0
@@ -880,7 +915,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['desc'] = \
                     str(m.groupdict()['desc'])
                 continue
-            
+
             # CLEI:  IPMUP00BRB
             p7 = re.compile(r'\s*CLEI: *(?P<clei>[a-zA-Z0-9\-]+)$')
             m = p7.match(line)
@@ -896,6 +931,57 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             if m:
                 admin_show_diag_dict['top_assy_num'] = \
                     str(m.groupdict()['top_assy_num'])
+                continue
+            
+            # PCA:   73-7806-01 rev B0
+            p9 = re.compile(r'^\s*PCA: +(?P<pca>[\S ]+)$')
+            m = p9.match(line)
+            if m:
+                admin_show_diag_dict['pca'] = \
+                    str(m.groupdict()['pca'])
+                continue
+
+            # ECI:   459651
+            p10 = re.compile(r'^\s*ECI: +(?P<eci>[\S ]+)$')
+            m = p10.match(line)
+            if m:
+                admin_show_diag_dict['eci'] = \
+                    str(m.groupdict()['eci'])
+                continue
+
+            # MAIN: board type 500060
+            p11 = re.compile(r'^\s*MAIN: +board +type +(?P<board_type>[\S ]+)$')
+            m = p11.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['board_type'] = \
+                    str(m.groupdict()['board_type'])
+                continue
+
+            # 800-25021-05 rev B0
+            p12 = re.compile(r'^\s*\S+ +rev +\S+')
+            m = p12.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['part'] = line.strip()
+                continue
+
+            # dev 080366, 080181
+            p13 = re.compile(r'\s*dev +(?P<dev>[\S ]+)')
+            m = p13.match(line)
+            if m:
+                dev = m.groupdict()['dev']
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['dev'] = dev
+                continue
+
+            # S/N SAD093507J8
+            p14 = re.compile(r'\s*S\/N +(?P<serial_number>\S+)$')
+            m = p14.match(line)
+            if m:
+                main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_dict['serial_number'] = \
+                    str(m.groupdict()['serial_number'])
                 continue
 
         return admin_show_diag_dict

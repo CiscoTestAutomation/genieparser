@@ -142,7 +142,7 @@ class ShowVlan(ShowVlanSchema):
             m = p3.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
-                type = m.groupdict()['type']
+                type_ = m.groupdict()['type']
                 said = m.groupdict()['said']
                 mtu = m.groupdict()['mtu']
                 parent = m.groupdict()['parent']
@@ -159,7 +159,7 @@ class ShowVlan(ShowVlanSchema):
                 if vlan_id not in vlan_dict['vlans']:
                     vlan_dict['vlans'][vlan_id] = {}
 
-                vlan_dict['vlans'][vlan_id]['type'] = type
+                vlan_dict['vlans'][vlan_id]['type'] = type_
                 vlan_dict['vlans'][vlan_id]['said'] = int(said)
                 vlan_dict['vlans'][vlan_id]['mtu'] = int(mtu)
                 if '-' not in parent.strip():

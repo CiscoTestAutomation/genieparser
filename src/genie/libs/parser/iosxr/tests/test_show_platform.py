@@ -35,7 +35,7 @@ class test_show_version(unittest.TestCase):
         'operating_system': 'IOSXR',
         'processor': 'Intel 686 F6M14S4',
         'processor_memory_bytes': '6291456K',
-        'device_family': 'ASR9K',
+        'device_family': 'ASR9K Series',
         'rp_config_register': '0x1922',
         'software_version': '6.1.4.10I',
         'uptime': '5 hours, 14 minutes'}
@@ -75,7 +75,7 @@ class test_show_version(unittest.TestCase):
         'operating_system': 'IOSXR',
         'processor': 'Pentium Celeron Stepping 3',
         'processor_memory_bytes': '4193911K',
-        'device_family': 'IOS XRv',
+        'device_family': 'IOS XRv Series',
         'rp_config_register': '0x1',
         'software_version': '6.2.1.23I',
         'uptime': '5 days, 25 minutes'}
@@ -126,6 +126,58 @@ class test_show_version(unittest.TestCase):
         System uptime is 1 week, 1 day, 5 hours, 47 minutes
         '''}
 
+    device_output = {'execute.return_value': '''
+        Mon Oct 14 17:44:22.298 EDT
+        
+        Cisco IOS XR Software, Version 6.4.2[Default]
+        Copyright (c) 2019 by Cisco Systems, Inc.
+        
+        ROM: System Bootstrap, Version 2.12(20170128:070504) [CRS ROMMON],  
+        
+        
+        tcore3-rohan uptime is 4 days, 5 hours, 46 minutes
+        System image file is "disk0:hfr-os-mbi-6.4.2.CSCvm85739-1.0.0/0x100008/mbihfr-rp-x86e.vm"
+        
+        cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+        Intel 686 F6M14S4 processor at 2127Mhz, Revision 2.174
+        CRS 16 Slots Line Card Chassis for CRS-16/S-B
+        
+        2 Management Ethernet
+        54 TenGigE
+        59 DWDM controller(s)
+        54 WANPHY controller(s)
+        5 HundredGigE
+        5 GigabitEthernet
+        4 SONET/SDH
+        4 Packet over SONET/SDH
+        1019k bytes of non-volatile configuration memory.
+        16726M bytes of hard disk.
+        11881456k bytes of disk0: (Sector size 512 bytes).
+        11881456k bytes of disk1: (Sector size 512 bytes).
+        
+        Boot device on node 0/0/CPU0 is lcdisk0:
+        Package active on node 0/0/CPU0:
+        iosxr-mpls-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:iosxr-mpls-6.4.2.CSCvr26601-1.0.0
+            Built on Fri Oct  4 05:07:32 EDT 2019
+            By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie
+        
+        hfr-px-6.4.2.CSCvr26601, V 1.0.0[SMU], Cisco Systems, at disk0:hfr-px-6.4.2.CSCvr26601-1.0.0
+            Built on Fri Oct  4 05:07:38 EDT 2019
+            By iox-lnx-smu2 in /san2/EFR/smu_r64x_6_4_2/workspace for pie
+    '''}
+
+    device_parsed_output = {
+        'chassis_detail': 'CRS 16 Slots Line Card Chassis for CRS-16/S-B',
+        'device_family': 'CRS-16/S-B',
+        'image': 'disk0:hfr-os-mbi-6.4.2.CSCvm85739-1.0.0/0x100008/mbihfr-rp-x86e.vm',
+        'main_mem': 'cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.',
+        'operating_system': 'IOSXR',
+        'processor': 'Intel 686 F6M14S4',
+        'processor_memory_bytes': '12582912K',
+        'software_version': '6.4.2',
+        'uptime': '4 days, 5 hours, 46 minutes',
+    }
+
     def test_show_version_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -152,6 +204,13 @@ class test_show_version(unittest.TestCase):
         show_version_obj = ShowVersion(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_version_obj.parse()
+
+    def test(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        show_version_obj = ShowVersion(device=self.device)
+        parsed_output = show_version_obj.parse()
+        self.assertEqual(parsed_output,self.device_parsed_output)
 
 
 # ================================
@@ -573,7 +632,7 @@ class test_show_platform_vm(unittest.TestCase):
         Node name       Node type       Partner name    SW status       IP address
         --------------- --------------- --------------- --------------- ---------------
         0/RSP0/CPU0     RP (ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
-        0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+        0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4
     '''
     }
 
@@ -586,7 +645,7 @@ class test_show_platform_vm(unittest.TestCase):
                 'type': 'RP (ACTIVE)'
             },
             '0/RSP1/CPU0': {
-                'ip_address': '192.0.4.4',
+                'ip_address': '192.168.166.4',
                 'partner_name': '0/RSP0/CPU0',
                 'sw_status': 'FINAL Band',
                 'type': 'RP (STANDBY)'
@@ -678,7 +737,7 @@ class test_show_inventory(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-
+    maxDiff = None
     golden_parsed_output1 = {
         "module_name": {
           "module 0/RSP0/CPU0": {
@@ -794,19 +853,331 @@ class test_show_inventory(unittest.TestCase):
         PID: R-IOSXRV9000-CC   , VID: V01, SN: E289E87566C
         '''}
 
+    golden_output3 = {'execute.return_value': '''
+        show inventory
+
+        Mon Oct 14 17:55:59.530 EDT
+        NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
+        PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFV5
+
+        NAME: "module 0/RSP1/CPU0", DESCR: "ASR9K Route Switch Processor with 880G/slot Fabric and 32GB"
+        PID: A9K-RSP880-SE, VID: V02, SN: FOC2027NFVR
+
+        NAME: "module 0/0/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
+        PID: A9K-MOD80-SE, VID: V08, SN: FOC1941N335
+
+        NAME: "module 0/0/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+        PID: A9K-MPA-20X1GE, VID: V03, SN: FOC1946N2X9
+
+        NAME: "GigabitEthernet0/0/0/1", DESCR: "Non-Cisco Methode Elec. SFP 1G Pluggable Optics Module"
+        PID: SP7041-M1-JN, VID: -, SN: 9420172         
+
+        NAME: "GigabitEthernet0/0/0/2", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L257       
+
+        NAME: "module mau 0/0/0/4", DESCR: "GE T"
+        PID: N/A, VID: N/A, SN: MTC17180BJ4     
+
+        NAME: "GigabitEthernet0/0/0/8", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP-GE-T, VID: 1.0, SN: ECI80T012       
+
+        NAME: "GigabitEthernet0/0/0/19", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L003       
+
+        NAME: "module 0/0/1", DESCR: "ASR 9000 4-port 10GE Modular Port Adapter"
+        PID: A9K-MPA-4X10GE, VID: V05, SN: FOC1935NCBZ
+
+        NAME: "module mau 0/0/1/1", DESCR: "Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF"
+        PID: XFP-10GLR-OC192SR   , VID: V04 , SN: SPC191402P5     
+
+        NAME: "TenGigE0/0/1/2", DESCR: "Non-Cisco ECINETWORKS XFP 10G Pluggable Optics Module"
+        PID: EN-XFP10G-LR-CO, VID: N, SN: B31160520008    
+
+        NAME: "TenGigE0/0/1/3", DESCR: "Non-Cisco XFP 10G Pluggable Optics Module"
+        PID: N/A, VID: N/A, SN: 
+
+        NAME: "module 0/1/CPU0", DESCR: "80G Modular Linecard, Service Edge Optimized"
+        PID: A9K-MOD80-SE, VID: V11, SN: FOC2242P17S
+
+        NAME: "module 0/1/0", DESCR: "ASR 9000 20-port 1GE Modular Port Adapter"
+        PID: A9K-MPA-20X1GE, VID: V06, SN: FOC2244NCSA
+
+        NAME: "module mau 0/1/0/2", DESCR: "1000BASE-SX SFP transceiver module, MMF, 850nm, DOM"
+        PID: GLC-SX-MMD          , VID: V01 , SN: AGJ1821REPB     
+
+        NAME: "GigabitEthernet0/1/0/12", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1.0, SN: ECI50L252       
+
+        NAME: "module 0/2/CPU0", DESCR: "Cisco ASR 9000 Series SPA Interface Processor-700"
+        PID: A9K-SIP-700, VID: V02, SN: FOC1748N0B7
+
+        NAME: "module 0/2/0", DESCR: "3-port OC3c SFP Optics ATM Shared Port Adapter"
+        PID: SPA-3XOC3-ATM-V2, VID: V03, SN: JP614240083
+
+        NAME: "module mau 0/2/0/2", DESCR: "OC3 SR-1/STM1 MM"
+        PID: SFP-OC3-MM          , VID: V01 , SN: OCP10310921     
+
+        NAME: "module 0/4/CPU0", DESCR: "24X10G/1G  Service Edge Optimized LC"
+        PID: A9K-24X10GE-1G-SE, VID: V01, SN: FOC2237N3Y0
+
+        NAME: "module mau GigabitEthernet0/4/CPU0/0", DESCR: "Unknown or Unsupported SFP Module"
+        PID: GLC-T              , VID: V04, SN: MTC191108UW     
+
+        NAME: "module mau GigabitEthernet0/4/CPU0/1", DESCR: "Unknown pluggable optics"
+        PID: N/A, VID: N/A, SN: FNS13441EZE     
+
+        NAME: "GigabitEthernet0/4/0/5", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-LX-CO, VID: 1., SN: ECI50L009       
+
+        NAME: "GigabitEthernet0/4/0/6", DESCR: "Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module"
+        PID: EN-SFP1G-SX-CO, VID: 1., SN: ECI32M012       
+
+        NAME: "TenGigE0/4/0/12", DESCR: "Non-Cisco LambdaGain SFP+ 10G Pluggable Optics Module"
+        PID: L04D-10GE-ER, VID: N/A, SN: FXLG021112310001
+
+        NAME: "TenGigE0/4/0/13", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
+        PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL037       
+
+        NAME: "module mau TenGigE0/4/CPU0/14", DESCR: "10GBASE-SR SFP+ Module for MMF"
+        PID: SFP-10G-SR         , VID: V03 , SN: JUR184402WK     
+
+        NAME: "module mau TenGigE0/4/CPU0/16", DESCR: "10GBASE-LR SFP+ Module for SMF"
+        PID: SFP-10G-LR         , VID: V02 , SN: FNS16201FK4     
+
+        NAME: "TenGigE0/4/0/20", DESCR: "Non-Cisco FINISAR CORP. SFP+ 10G Pluggable Optics Module"
+        PID: FTLX1471D3BNL-J1, VID: A, SN: APG0MX8         
+
+        NAME: "module mau TenGigE0/4/CPU0/21", DESCR: "10GBASE-LR SFP+ Module for SMF"
+        PID: SFP-10G-LR         , VID: V02 , SN: ONT174402HM     
+
+        NAME: "TenGigE0/4/0/22", DESCR: "Non-Cisco SumitomoElectric SFP+ 10G Pluggable Optics Module"
+        PID: SPP5200LR-J6-M, VID: A, SN: 163627A01776    
+
+        NAME: "TenGigE0/4/0/23", DESCR: "Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module"
+        PID: EN-SFP10G-LR-CO, VID: 1., SN: ECIXPL233       
+
+    '''}
+
+    golden_parsed_output3 = {
+        'module_name': {
+            'module 0/RSP0/CPU0': {
+                'descr': 'ASR9K Route Switch Processor with 880G/slot Fabric and 32GB',
+                'pid': 'A9K-RSP880-SE',
+                'vid': 'V02',
+                'sn': 'FOC2027NFV5',
+            },
+            'module 0/RSP1/CPU0': {
+                'descr': 'ASR9K Route Switch Processor with 880G/slot Fabric and 32GB',
+                'pid': 'A9K-RSP880-SE',
+                'vid': 'V02',
+                'sn': 'FOC2027NFVR',
+            },
+            'module 0/0/CPU0': {
+                'descr': '80G Modular Linecard, Service Edge Optimized',
+                'pid': 'A9K-MOD80-SE',
+                'vid': 'V08',
+                'sn': 'FOC1941N335',
+            },
+            'module 0/0/0': {
+                'descr': 'ASR 9000 20-port 1GE Modular Port Adapter',
+                'pid': 'A9K-MPA-20X1GE',
+                'vid': 'V03',
+                'sn': 'FOC1946N2X9',
+            },
+            'GigabitEthernet0/0/0/1': {
+                'descr': 'Non-Cisco Methode Elec. SFP 1G Pluggable Optics Module',
+                'pid': 'SP7041-M1-JN',
+                'vid': '-',
+                'sn': '9420172',
+            },
+            'GigabitEthernet0/0/0/2': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP1G-LX-CO',
+                'vid': '1.0',
+                'sn': 'ECI50L257',
+            },
+            'module mau 0/0/0/4': {
+                'descr': 'GE T',
+                'pid': 'N/A',
+                'vid': 'N/A',
+                'sn': 'MTC17180BJ4',
+            },
+            'GigabitEthernet0/0/0/8': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP-GE-T',
+                'vid': '1.0',
+                'sn': 'ECI80T012',
+            },
+            'GigabitEthernet0/0/0/19': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP1G-LX-CO',
+                'vid': '1.0',
+                'sn': 'ECI50L003',
+            },
+            'module 0/0/1': {
+                'descr': 'ASR 9000 4-port 10GE Modular Port Adapter',
+                'pid': 'A9K-MPA-4X10GE',
+                'vid': 'V05',
+                'sn': 'FOC1935NCBZ',
+            },
+            'module mau 0/0/1/1': {
+                'descr': 'Multirate 10GBASE-LR and OC-192/STM-64 SR-1 XFP, SMF',
+                'pid': 'XFP-10GLR-OC192SR',
+                'vid': 'V04',
+                'sn': 'SPC191402P5',
+            },
+            'TenGigE0/0/1/2': {
+                'descr': 'Non-Cisco ECINETWORKS XFP 10G Pluggable Optics Module',
+                'pid': 'EN-XFP10G-LR-CO',
+                'vid': 'N',
+                'sn': 'B31160520008',
+            },
+            'TenGigE0/0/1/3': {
+                'descr': 'Non-Cisco XFP 10G Pluggable Optics Module',
+                'pid': 'N/A',
+                'vid': 'N/A',
+                'sn': '',
+            },
+            'module 0/1/CPU0': {
+                'descr': '80G Modular Linecard, Service Edge Optimized',
+                'pid': 'A9K-MOD80-SE',
+                'vid': 'V11',
+                'sn': 'FOC2242P17S',
+            },
+            'module 0/1/0': {
+                'descr': 'ASR 9000 20-port 1GE Modular Port Adapter',
+                'pid': 'A9K-MPA-20X1GE',
+                'vid': 'V06',
+                'sn': 'FOC2244NCSA',
+            },
+            'module mau 0/1/0/2': {
+                'descr': '1000BASE-SX SFP transceiver module, MMF, 850nm, DOM',
+                'pid': 'GLC-SX-MMD',
+                'vid': 'V01',
+                'sn': 'AGJ1821REPB',
+            },
+            'GigabitEthernet0/1/0/12': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP1G-LX-CO',
+                'vid': '1.0',
+                'sn': 'ECI50L252',
+            },
+            'module 0/2/CPU0': {
+                'descr': 'Cisco ASR 9000 Series SPA Interface Processor-700',
+                'pid': 'A9K-SIP-700',
+                'vid': 'V02',
+                'sn': 'FOC1748N0B7',
+            },
+            'module 0/2/0': {
+                'descr': '3-port OC3c SFP Optics ATM Shared Port Adapter',
+                'pid': 'SPA-3XOC3-ATM-V2',
+                'vid': 'V03',
+                'sn': 'JP614240083',
+            },
+            'module mau 0/2/0/2': {
+                'descr': 'OC3 SR-1/STM1 MM',
+                'pid': 'SFP-OC3-MM',
+                'vid': 'V01',
+                'sn': 'OCP10310921',
+            },
+            'module 0/4/CPU0': {
+                'descr': '24X10G/1G  Service Edge Optimized LC',
+                'pid': 'A9K-24X10GE-1G-SE',
+                'vid': 'V01',
+                'sn': 'FOC2237N3Y0',
+            },
+            'module mau GigabitEthernet0/4/CPU0/0': {
+                'descr': 'Unknown or Unsupported SFP Module',
+                'pid': 'GLC-T',
+                'vid': 'V04',
+                'sn': 'MTC191108UW',
+            },
+            'module mau GigabitEthernet0/4/CPU0/1': {
+                'descr': 'Unknown pluggable optics',
+                'pid': 'N/A',
+                'vid': 'N/A',
+                'sn': 'FNS13441EZE',
+            },
+            'GigabitEthernet0/4/0/5': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP1G-LX-CO',
+                'vid': '1.',
+                'sn': 'ECI50L009',
+            },
+            'GigabitEthernet0/4/0/6': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP 1G Pluggable Optics Module',
+                'pid': 'EN-SFP1G-SX-CO',
+                'vid': '1.',
+                'sn': 'ECI32M012',
+            },
+            'TenGigE0/4/0/12': {
+                'descr': 'Non-Cisco LambdaGain SFP+ 10G Pluggable Optics Module',
+                'pid': 'L04D-10GE-ER',
+                'vid': 'N/A',
+                'sn': 'FXLG021112310001',
+            },
+            'TenGigE0/4/0/13': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module',
+                'pid': 'EN-SFP10G-LR-CO',
+                'vid': '1.',
+                'sn': 'ECIXPL037',
+            },
+            'module mau TenGigE0/4/CPU0/14': {
+                'descr': '10GBASE-SR SFP+ Module for MMF',
+                'pid': 'SFP-10G-SR',
+                'vid': 'V03',
+                'sn': 'JUR184402WK',
+            },
+            'module mau TenGigE0/4/CPU0/16': {
+                'descr': '10GBASE-LR SFP+ Module for SMF',
+                'pid': 'SFP-10G-LR',
+                'vid': 'V02',
+                'sn': 'FNS16201FK4',
+            },
+            'TenGigE0/4/0/20': {
+                'descr': 'Non-Cisco FINISAR CORP. SFP+ 10G Pluggable Optics Module',
+                'pid': 'FTLX1471D3BNL-J1',
+                'vid': 'A',
+                'sn': 'APG0MX8',
+            },
+            'module mau TenGigE0/4/CPU0/21': {
+                'descr': '10GBASE-LR SFP+ Module for SMF',
+                'pid': 'SFP-10G-LR',
+                'vid': 'V02',
+                'sn': 'ONT174402HM',
+            },
+            'TenGigE0/4/0/22': {
+                'descr': 'Non-Cisco SumitomoElectric SFP+ 10G Pluggable Optics Module',
+                'pid': 'SPP5200LR-J6-M',
+                'vid': 'A',
+                'sn': '163627A01776',
+            },
+            'TenGigE0/4/0/23': {
+                'descr': 'Non-Cisco E.C.I.NETWORKS SFP+ 10G Pluggable Optics Module',
+                'pid': 'EN-SFP10G-LR-CO',
+                'vid': '1.',
+                'sn': 'ECIXPL233',
+            },
+        },
+    }
+
     def test_show_inventory_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         invetory_obj1 = ShowInventory(device=self.device)
         parsed_output1 = invetory_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
 
     def test_show_inventory_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         invetory_obj2 = ShowInventory(device=self.device)
         parsed_output2 = invetory_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
+    
+    def test_show_inventory_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        invetory_obj2 = ShowInventory(device=self.device)
+        parsed_output2 = invetory_obj2.parse()
+        self.assertEqual(parsed_output2,self.golden_parsed_output3)
 
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
@@ -818,7 +1189,7 @@ class test_show_inventory(unittest.TestCase):
 #  Unit test for admin show diag chassis'       
 # =======================================
 
-class test_admin_show_diag_chassis(unittest.TestCase):
+class TestAdminShowDiagChassis(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -828,7 +1199,7 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         'clei': 'IPMUP00BRB',
         'desc': 'ASR 9006 4 Line Card Slot Chassis with V2 AC PEM',
         'device_family': 'ASR',
-        'device_series': 9006,
+        'device_series': '9006',
         'num_line_cards': 4,
         'pid': 'ASR-9006-AC-V2',
         'rack_num': 0,
@@ -846,6 +1217,86 @@ class test_admin_show_diag_chassis(unittest.TestCase):
           CLEI:  IPMUP00BRB
           Top Assy. Number:   68-4235-02
         '''}
+    
+    golden_parsed_output2 = {
+        'rack_num': 0,
+        'desc': ' Cisco CRS Series 16 Slots Line Card Chassis',
+        'device_family': 'Cisco',
+        'device_series': 'CRS Series',
+        'num_line_cards': 16,
+        'main': {
+            'board_type': '500060',
+            'part': '800-25021-05 rev B0',
+            'dev': '079239',
+            'serial_number': 'SAD0925050J',
+        },
+        'pca': '73-7648-08 rev B0',
+        'pid': 'CRS-MSC',
+        'vid': 'V02',
+        'clei': 'IPUCAC1BAA',
+        'eci': '132502',
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        admin show diag chassis
+
+        Mon Oct 14 17:45:40.649 EDT
+
+        Rack 0 - Cisco CRS Series 16 Slots Line Card Chassis
+        MAIN:  board type 500060
+                800-25021-05 rev B0
+                dev 079239
+                S/N SAD0925050J
+        PCA:   73-7648-08 rev B0
+        PID:   CRS-MSC
+        VID:   V02
+        CLEI:  IPUCAC1BAA
+        ECI:   132502
+        RACK NUM: 0
+        '''}
+
+    device_output = {'execute.return_value': '''
+        admin show diag chassis
+
+        Mon Oct 21 10:54:18.093 EDT
+
+        Rack 0 - CRS 16 Slots Line Card Chassis for CRS-16/S-B
+          MAIN:  board type 0001ee
+                 800-35128-03 rev B1
+                 dev N/A
+                 S/N FXS1752Q3AU
+          PCA:   73-13062-02 rev A0
+          PID:   CRS-16-LCC-B
+          VID:   V03
+          CLEI:  IPMS110DRC
+          ECI:   465887
+          RACK NUM: 0
+        '''}
+
+    device_parsed_output = {
+        'clei': 'IPMS110DRC',
+        'desc': ' CRS 16 Slots Line Card Chassis for CRS-16/S-B',
+        'device_series': 'CRS',
+        'eci': '465887',
+        'main': {
+            'board_type': '0001ee',
+            'dev': 'N/A',
+            'part': '800-35128-03 rev B1',
+            'serial_number': 'FXS1752Q3AU',
+        },
+        'num_line_cards': 16,
+        'pca': '73-13062-02 rev A0',
+        'pid': 'CRS-16-LCC-B',
+        'rack_num': 0,
+        'vid': 'V03',
+        'chassis_feature': 'CRS-16/S-B'
+    }
+
+    def test_show_inventory_empty(self):
+        self.device = Mock(**self.empty_output)
+        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = diag_chassis_obj.parse()
 
     def test_admin_show_diag_chassis_golden1(self):
         self.maxDiff = None
@@ -853,12 +1304,20 @@ class test_admin_show_diag_chassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
+    
+    def test_admin_show_diag_chassis_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
+        parsed_output1 = diag_chassis_obj1.parse()
+        self.assertEqual(parsed_output1,self.golden_parsed_output2)
 
-    def test_show_inventory_empty(self):
-        self.device = Mock(**self.empty_output)
-        diag_chassis_obj = AdminShowDiagChassis(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = diag_chassis_obj.parse()
+    def test_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
+        parsed_output = diag_chassis_obj1.parse()
+        self.assertEqual(parsed_output, self.device_parsed_output)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       

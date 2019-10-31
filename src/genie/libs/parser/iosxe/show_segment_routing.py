@@ -520,7 +520,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                 "area_id": int,
                 "domain_id": int,
                 "asn": int,
-                "prefix_sid": {
+                Optional("prefix_sid"): {
                     "prefix": str,
                     "label": int,
                     "label_type": str,
@@ -549,7 +549,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                         "bandwidth_total": int,
                         "bandwidth_reservable": int,
                         "admin_groups": str,
-                        "adj_sid": {
+                        Optional("adj_sid"): {
                             Any(): str,
                         },
                     },
@@ -758,21 +758,13 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                 },
             },
             "candidate_paths": {
-                Any(): {
-                    "preference": int,
-                    Optional("dynamic"): str,
-                    Optional("explicit"): str,
-                    "weight": int,
-                    "metric_type": str,
-                    Optional("path_accumulated_metric"): int,
-                    Optional("prefix_sid"): {
-                         Any(): str,
-                    },
-                },
-            },
-            "candidate_paths": {
                 "preference": {
                     Any(): {
+                        Optional("constraints"): {
+                            "affinity": {
+                                Any(): list
+                            }
+                        },
                         "path_type": {
                             Optional("dynamic"): {
                                 "status": str,
@@ -834,6 +826,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
         },
     }
 
+
 class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchema):
     """ Parser for 
         'show segment-routing traffic-eng policy all'
@@ -854,7 +847,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         else:
             out = output
 
-        # Name: test1 (Color: 100 End-point: 106.162.196.241)
+        # Name: test1 (Color: 100 End-point: 10.169.196.241)
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
                          '+End-point: +(?P<end_point>\S+)\)$')
 
@@ -879,8 +872,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated '
                          '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
 
-        #         16063 [Prefix-SID, 106.162.196.241]
-        #         16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+        #         16063 [Prefix-SID, 10.169.196.241]
+        #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
                          '( +- +(?P<remote_address>[\S]+))?\]$')
 
@@ -911,7 +904,20 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+) +(?P<client>(?:[\S]+ )+) '
                           '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
 
+        # Affinity:
+        p15 = re.compile(r'^Affinity:$')
+
+        # exclude-any
+        # include-all
+        # include-any
+        p16 = re.compile(r'^(?P<affinity_type>exclude-any|include-all|include-any):$')
+
+        # blue
+        # green
+        p17 = re.compile(r'^(?P<affinity>\w+)$')
+
         # initial variables
+        aff_flag=False
         ret_dict = {}
 
         for line in out.splitlines():
@@ -920,9 +926,10 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             if not line:
                 continue
 
-            # Name: test1 (Color: 100 End-point: 106.162.196.241)
+            # Name: test1 (Color: 100 End-point: 10.169.196.241)
             m = p1.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 name = group['name']
                 policy_dict = ret_dict.setdefault(name, {})
@@ -937,6 +944,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
             m = p2.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 status_dict = policy_dict.setdefault('status', {})
                 status_dict.update({'admin': group['admin']})
@@ -951,6 +959,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Preference 400:
             m = p3.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 pref = int(group['preference'])
                 pref_dict = policy_dict.setdefault("candidate_paths", {}).\
@@ -961,6 +970,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Dynamic (pce) (inactive)
             m = p4.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict = pref_dict.setdefault('path_type', {}).setdefault('dynamic', {})
                 path_dict.update({'status': group['status']})
@@ -971,6 +981,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Weight: 0, Metric Type: TE
             m = p5.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict.update({'weight': int(group['weight'])})
                 path_dict.update({'metric_type': group['metric_type']})
@@ -979,6 +990,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Metric Type: IGP, Path Accumulated Metric: 2200
             m = p6.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 path_dict.update({'metric_type': group['metric_type']})
 
@@ -986,9 +998,10 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 path_dict.update({'path_accumulated_metric': metric})
                 continue
 
-            #   16063 [Prefix-SID, 106.162.196.241]
+            #   16063 [Prefix-SID, 10.169.196.241]
             m = p7.match(line)
             if m:
+                aff_flag = False
                 hop_index += 1
                 group = m.groupdict()
                 hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
@@ -1003,6 +1016,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Explicit: segment-list test1 (inactive)
             m = p8.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 category = group['category'].replace('-', '_')
                 name = group['name']
@@ -1018,6 +1032,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Binding SID: 15000
             m = p9.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 sid = int(group['binding_sid'])
                 bind_dict = policy_dict.setdefault("attributes", {}).\
@@ -1027,6 +1042,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Allocation mode: explicit
             m = p10.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 bind_dict.update({'allocation_mode': group['allocation_mode'].lower()})
                 continue
@@ -1034,6 +1050,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   State: Programmed
             m = p11.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 bind_dict.update({'state': group['state'].lower()})
                 continue
@@ -1041,6 +1058,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Forwarding-ID: 65536 (0x18)
             m = p12.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 policy_dict.update({'forwarding_id': group['id']})
                 continue
@@ -1048,6 +1066,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             #   Packets: 44         Bytes: 1748
             m = p13.match(line)
             if m:
+                aff_flag = False
                 group = m.groupdict()
                 stats = policy_dict.setdefault('stats', {})
                 stats.update({k: int(v) for k, v in group.items()})
@@ -1057,13 +1076,41 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             # 08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
             m = p14.match(line)
             if m:
+                aff_flag = False
                 event_index += 1
                 group = m.groupdict()
                 event = policy_dict.setdefault('event_history', {}).setdefault(event_index, {})
                 event.update({k: v.strip() for k, v in group.items()})
                 continue
 
+            # Affinity:
+            m = p15.match(line)
+            if m:
+                aff_flag = True
+                aff_dict = pref_dict.setdefault('constraints', {}).setdefault('affinity', {})
+                continue
+
+            if aff_flag:
+                # exclude-any
+                # include-all
+                # include-any
+                m = p16.match(line)
+                if m:
+                    aff_type = m.groupdict()['affinity_type']
+                    aff_dict.update({aff_type: []})
+                    continue
+
+            if aff_flag:
+                # blue
+                m = p17.match(line)
+                if m:
+                    temp_list = aff_dict.get(aff_type)
+                    if temp_list is not None:
+                        temp_list.append(m.groupdict()['affinity'])
+                        aff_dict.update({aff_type: temp_list})
+
         return ret_dict
+
 
 class ShowSegmentRoutingTrafficEngPolicyDetail(ShowSegmentRoutingTrafficEngPolicy):
     """ Parser for 

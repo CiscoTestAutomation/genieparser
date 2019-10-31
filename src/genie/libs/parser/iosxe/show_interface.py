@@ -84,6 +84,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('last_input'): str,
                 Optional('last_output'): str,
                 Optional('output_hang'): str, 
+                Optional('autostate'): bool,
                 Optional('queues'): {             
                     Optional('input_queue_size'): int,
                     Optional('input_queue_max'): int,
@@ -92,7 +93,9 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('total_output_drop'): int,
                     Optional('queue_strategy'): str,
                     Optional('output_queue_size'): int,
-                    Optional('output_queue_max'): int
+                    Optional('output_queue_max'): int,
+                    Optional('threshold'): int,
+                    Optional('drops'): int,
                 },
                 Optional('flow_control'):
                     {Optional('receive'): bool,
@@ -201,6 +204,215 @@ class ShowInterfaces(ShowInterfacesSchema):
         else:
             out = output
 
+        # GigabitEthernet1 is up, line protocol is up 
+        # Port-channel12 is up, line protocol is up (connected)
+        # Vlan1 is administratively down, line protocol is down , Autostate Enabled
+        # Dialer1 is up (spoofing), line protocol is up (spoofing)
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
+                        r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
+                        r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
+        p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+                           r' +(?P<enabled>[\w\s]+),'
+                           r' +line +protocol +is +(?P<line_protocol>\w+)'
+                           r'( *, *(?P<attribute>[\w\s]+))?$')
+
+        # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+        # Hardware is Loopback
+        p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
+                        r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
+                        r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
+
+        # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
+        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)'
+                          r'(?P<mac_address>.*)(?P<phys_address>.*)')
+
+        # Description: desc
+        # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
+        p3 = re.compile(r'^Description: *(?P<description>.*)$')
+
+        # Secondary address 10.2.2.2/24
+        p4 = re.compile(r'^Secondary +Address +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
+                        r'\/(?P<prefix_length>[0-9]+))$')
+
+        # Internet address is 10.4.4.4/24
+        p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
+                        r'\/(?P<prefix_length>[0-9]+))$')
+
+        # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
+        # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
+        p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
+                        r' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
+                        r' +(?P<delay>[0-9]+) +usec,$')
+
+        # reliability 255/255, txload 1/255, rxload 1/255
+        p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
+                        r' +txload +(?P<txload>[\d\/]+), +rxload'
+                        r' +(?P<rxload>[\d\/]+)$')
+
+        # Encapsulation LOOPBACK, loopback not set
+        # Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
+        # Encapsulation ARPA, medium is broadcast
+        # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
+        # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+        # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+        p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
+                        r' +(?P<rest>.*)$')
+            
+        # Keepalive set (10 sec)
+        p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
+                        r' +sec\)$')
+
+
+        # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
+        # Full-duplex, 1000Mb/s, link type is auto, media type is
+        # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
+        # Full Duplex, Auto Speed, link type is auto, media type is RJ45
+        # Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+        # full-duplex, 1000 Mb/s
+        # auto-duplex, auto-speed
+        # auto-duplex, 10 Gb/s, media type is 10G
+        # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+        # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
+        p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
+                         r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
+                         r'(S|s)peed)(?:(?:\, +link +type +is '
+                         r'+(?P<link_type>\S+))?(?:\, *media +type +is '
+                         r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
+
+        # input flow-control is off, output flow-control is unsupported
+        p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
+                          '(output|input) +flow-control +is +(?P<send>\w+)$')
+
+        # ARP type: ARPA, ARP Timeout 04:00:00
+        p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'
+                          'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
+
+        # Last input never, output 00:01:05, output hang never
+        p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
+                          'output +(?P<last_output>[\w\.\:]+), '
+                          'output +hang +(?P<output_hang>[\w\.\:]+)$')
+
+        # Members in this channel: Gi1/0/2
+        # Members in this channel: Fo1/0/2 Fo1/0/4
+        p15 = re.compile(r'^Members +in +this +channel: +'
+                          '(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')   
+
+        # No. of active members in this channel: 12 
+        p15_1 = re.compile(r'^No\. +of +active +members +in +this +'
+                            'channel: +(?P<active_members>\d+)$')
+
+        # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
+        p15_2 = re.compile(r'^Member +\d+ +: +(?P<interface>\S+) +,'
+                            ' +\S+, +\S+$')
+
+        # No. of PF_JUMBO supported members in this channel : 0
+        p15_3 = re.compile(r'^No\. +of +PF_JUMBO +supported +members +'
+                            'in +this +channel +: +(?P<number>\d+)$')
+
+        # Last clearing of "show interface" counters 1d02h
+        p16 = re.compile(r'^Last +clearing +of +\"show +interface\" +counters +'
+                          '(?P<last_clear>[\w\:\.]+)$')
+
+        # Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        p17 = re.compile(r'^Input +queue: +(?P<size>\d+)\/(?P<max>\d+)\/'
+                          '(?P<drops>\d+)\/(?P<flushes>\d+) +'
+                          '\(size\/max\/drops\/flushes\); +'
+                          'Total +output +drops: +(?P<output_drop>\d+)$')
+
+        # Queueing strategy: fifo
+        # Queueing strategy: Class-based queueing
+        p18 = re.compile(r'^Queueing +strategy: +(?P<queue_strategy>\S+).*$')
+
+        # Output queue: 0/0 (size/max)
+        # Output queue: 0/1000/64/0 (size/max total/threshold/drops)
+        p19 = re.compile(r'^Output +queue: +(?P<size>\d+)\/(?P<max>\d+)'
+                          '(?:\/(?P<threshold>\d+)\/(?P<drops>\d+))? '
+                          '+\(size\/max(?: +total\/threshold\/drops\))?.*$')
+
+        # 5 minute input rate 0 bits/sec, 0 packets/sec
+        p20 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
+                          ' *(?P<unit>(minute|second|minutes|seconds)) *input *rate'
+                          ' *(?P<in_rate>[0-9]+) *bits/sec,'
+                          ' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
+
+        # 5 minute output rate 0 bits/sec, 0 packets/sec
+        p21 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
+                          ' *(minute|second|minutes|seconds) *output *rate'
+                          ' *(?P<out_rate>[0-9]+) *bits/sec,'
+                          ' *(?P<out_rate_pkts>[0-9]+) *packets/sec$')
+
+        # 0 packets input, 0 bytes, 0 no buffer
+        # 13350 packets input, 2513375 bytes
+        p22 = re.compile(r'^(?P<in_pkts>[0-9]+) +packets +input, +(?P<in_octets>[0-9]+) '
+                          '+bytes(?:, +(?P<in_no_buffer>[0-9]+) +no +buffer)?$')
+
+        # Received 4173 broadcasts (0 IP multicasts)
+        # Received 535996 broadcasts (535961 multicasts)
+        p23 = re.compile(r'^Received +(?P<in_broadcast_pkts>\d+) +broadcasts +'
+                          '\((?P<in_multicast_pkts>\d+) *(IP)? *multicasts\)$')
+
+        # 0 runts, 0 giants, 0 throttles
+        p24 = re.compile(r'^(?P<in_runts>[0-9]+) *runts,'
+                          ' *(?P<in_giants>[0-9]+) *giants,'
+                          ' *(?P<in_throttles>[0-9]+) *throttles$')
+
+        # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+        # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+        p25 = re.compile(r'^(?P<in_errors>[0-9]+) +input +errors, +'
+                          '(?P<in_crc_errors>[0-9]+) +CRC, +'
+                          '(?P<in_frame>[0-9]+) +frame, +'
+                          '(?P<in_overrun>[0-9]+) +overrun, +'
+                          '(?P<in_ignored>[0-9]+) +ignored'
+                          '(, *(?P<in_abort>[0-9]+) +abort)?$')
+
+        # 0 watchdog, 535961 multicast, 0 pause input
+        p26 = re.compile(r'^(?P<in_watchdog>[0-9]+) +watchdog, +'
+                          '(?P<in_multicast_pkts>[0-9]+) +multicast, +'
+                          '(?P<in_pause_input>[0-9]+) +pause +input$')
+
+        # 0 input packets with dribble condition detected
+        p27 = re.compile(r'^(?P<in_with_dribble>[0-9]+) +input +packets +with +'
+                          'dribble +condition +detected$')
+
+        # 23376 packets output, 3642296 bytes, 0 underruns
+        # 13781 packets output, 2169851 bytes
+        p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output, +(?P<out_octets>[0-9]+) '
+                          '+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
+
+        # Received 4173 broadcasts (0 IP multicasts)
+        # Received 535996 broadcasts (535961 multicasts)
+        p29 = re.compile(r'^Received +(?P<out_broadcast_pkts>\d+) +broadcasts +'
+                          '\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
+
+        # 0 output errors, 0 collisions, 2 interface resets
+        # 0 output errors, 0 interface resets
+        p30 = re.compile(r'^(?P<out_errors>[0-9]+) +output +errors,'
+                          '( *(?P<out_collision>[0-9]+) +collisions,)? +'
+                          '(?P<out_interface_resets>[0-9]+) +interface +resets$')
+
+        # 0 unknown protocol drops
+        p31 = re.compile(r'^(?P<out_unknown_protocl_drops>[0-9]+) +'
+                          'unknown +protocol +drops$')
+
+        # 0 babbles, 0 late collision, 0 deferred
+        p32 = re.compile(r'^(?P<out_babble>[0-9]+) +babbles, +'
+                          '(?P<out_late_collision>[0-9]+) +late +collision, +'
+                          '(?P<out_deferred>[0-9]+) +deferred$')
+
+        # 0 lost carrier, 0 no carrier, 0 pause output
+        p33 = re.compile(r'^(?P<out_lost_carrier>[0-9]+) +lost +carrier, +'
+                          '(?P<out_no_carrier>[0-9]+) +no +carrier, +'
+                          '(?P<out_pause_output>[0-9]+) +pause +output$')
+
+        # 0 output buffer failures, 0 output buffers swapped out
+        p34 = re.compile(r'^(?P<out_buffer_failure>[0-9]+) +output +buffer +failures, +'
+                          '(?P<out_buffers_swapped>[0-9]+) +output +buffers +swapped +out$')
+
+        # Interface is unnumbered. Using address of Loopback0 (10.4.1.1)
+        # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
+        p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
+                          '(?P<unnumbered_intf>[\w\/\.]+) +'
+                          '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
@@ -209,14 +421,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
-            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<line_protocol>\w+)'
-                              '( *\((?P<attribute>\S+)\))?$')
-            p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<line_protocol>\w+)'
-                              '( *, *(?P<attribute>[\w\s]+))?$')
+            # Dialer1 is up (spoofing), line protocol is up (spoofing)
+
             m = p1.match(line)
             m1 = p1_1.match(line)
             m = m if m else m1
@@ -225,6 +431,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
+                
+                if m.groupdict()['autostate']:
+                    autostate = m.groupdict()['autostate'].lower()
+                else:
+                    autostate = None
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
@@ -244,20 +455,18 @@ class ShowInterfaces(ShowInterfacesSchema):
                                 ['oper_status'] = line_protocol
 
                 if connected:
-                    if connected == 'connected':
-                        interface_dict[interface]['connected'] = True
-                    else:
-                        interface_dict[interface]['connected'] = False
+                    interface_dict[interface]['connected'] = True if connected == 'connected' else False
+
+                if autostate:
+                    interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
+
                 continue
 
             # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
             # Hardware is Loopback
-            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
-                            '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
-                            ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
-            # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
-            p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)(?P<mac_address>.*)(?P<phys_address>.*)')
             m = p2.match(line)
+
+            # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
             m1 = p2_2.match(line)
             m = m if m else m1
             if m:
@@ -270,10 +479,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if phys_address:
                     interface_dict[interface]['phys_address'] = phys_address
                 continue
-
             # Description: desc
             # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
-            p3 = re.compile(r'^Description: *(?P<description>.*)$')
             m = p3.match(line)
             if m:
                 description = m.groupdict()['description']
@@ -282,8 +489,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Secondary address 10.2.2.2/24
-            p4 = re.compile(r'^Secondary +Address +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             '\/(?P<prefix_length>[0-9]+))$')
             m = p4.match(line)
             if m:
                 ip_sec = m.groupdict()['ip']
@@ -304,9 +509,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Internet Address is 10.4.4.4/24
-            # Internet address is 10.4.4.4/24
-            p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             '\/(?P<prefix_length>[0-9]+))$')
             m = p5.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -326,9 +528,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             
             # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
             # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
-            p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                             ' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
-                             ' +(?P<delay>[0-9]+) +usec,$')
             m = p6.match(line)
             if m:
                 mtu = m.groupdict()['mtu']
@@ -342,9 +541,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
-            p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
-                             ' +txload +(?P<txload>[\d\/]+), +rxload'
-                             ' +(?P<rxload>[\d\/]+)$')
             m = p7.match(line)
             if m:
                 reliability = m.groupdict()['reliability']
@@ -361,8 +557,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
-            p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
-                             ' +(?P<rest>.*)$')
             m = p8.match(line)
             if m:
                 encapsulation = m.groupdict()['encapsulation']
@@ -411,23 +605,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
                 continue
 
-            # reliability 255/255, txload 1/255, rxload 1/255
-            p9 = re.compile(r'^reliability +(?P<reliability>[0-9]+),'
-                             ' +txload +(?P<txload>[0-9]+), +rxload'
-                             ' +(?P<rxload>[0-9]+)$')
-            m = p9.match(line)
-            if m:
-                reliability = m.groupdict()['reliability']
-                txload = m.groupdict()['txload']
-                rxload = m.groupdict()['rxload']
-                interface_dict[interface]['reliability'] = reliability
-                interface_dict[interface]['txload'] = txload
-                interface_dict[interface]['rxload'] = rxload
-                continue
-
             # Keepalive set (10 sec)
-            p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
-                             ' +sec\)$')
             m = p10.match(line)
             if m:
                 keepalive = m.groupdict()['keepalive']
@@ -439,10 +617,12 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
             # Full Duplex, Auto Speed, link type is auto, media type is RJ45
-            p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                              '(?P<port_speed>\d+|Auto-(S|s)peed|Auto (S|s)peed)(?: *(Mbps|Mb/s))?,'
-                              '( *link +type +is +(?P<link_type>\w+),)?'
-                              ' *media +type +is *(?P<media_type>[\w\/]+)?$')
+            # Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+            # full-duplex, 1000 Mb/s
+            # auto-duplex, auto-speed
+            # auto-duplex, 10 Gb/s, media type is 10G
+            # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+            # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
@@ -451,6 +631,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['duplex_mode'] = duplex_mode
                 interface_dict[interface]['port_speed'] = port_speed
+
                 if link_type:
                     interface_dict[interface]['link_type'] = link_type
                     if 'auto' in link_type:
@@ -458,12 +639,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                     else:
                         interface_dict[interface]['auto_negotiate'] = False
                 if media_type:
-                    interface_dict[interface]['media_type'] = media_type
+                    unknown = re.search(r'[U|u]nknown',media_type)
+                    if unknown:
+                        interface_dict[interface]['media_type'] = 'unknown'
+                    else:
+                        interface_dict[interface]['media_type'] = media_type
                 continue
 
             # input flow-control is off, output flow-control is unsupported
-            p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
-                              '(output|input) +flow-control +is +(?P<send>\w+)$')
             m = p12.match(line)
             if m:
                 receive = m.groupdict()['receive'].lower()
@@ -504,8 +687,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                     sub_dict['carrier_delay_down'] = int(group['carrier_delay'])
 
             # ARP type: ARPA, ARP Timeout 04:00:00
-            p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'
-                              'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
             m = p13.match(line)
             if m:
                 arp_type = m.groupdict()['arp_type'].lower()
@@ -515,9 +696,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Last input never, output 00:01:05, output hang never
-            p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
-                              'output +(?P<last_output>[\w\.\:]+), '
-                              'output +hang +(?P<output_hang>[\w\.\:]+)$')
             m = p14.match(line)
             if m:
                 last_input = m.groupdict()['last_input']
@@ -530,8 +708,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Members in this channel: Gi1/0/2
             # Members in this channel: Fo1/0/2 Fo1/0/4
-            p15 = re.compile(r'^Members +in +this +channel: +'
-                              '(?P<port_channel_member_intfs>[\w\/\.\s\,]+)$')
             m = p15.match(line)
             if m:
                 interface_dict[interface]['port_channel']\
@@ -552,8 +728,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # No. of active members in this channel: 12 
-            p15_1 = re.compile(r'^No\. +of +active +members +in +this +'
-                'channel: +(?P<active_members>\d+)$')
             m = p15_1.match(line)
             if m:
                 group = m.groupdict()
@@ -565,8 +739,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
-            p15_2 = re.compile(r'^Member +\d+ +: +(?P<interface>\S+) +,'
-                ' +\S+, +\S+$')
             m = p15_2.match(line)
             if m:
                 group = m.groupdict()
@@ -581,8 +753,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # No. of PF_JUMBO supported members in this channel : 0
-            p15_3 = re.compile(r'^No\. +of +PF_JUMBO +supported +members +'
-                'in +this +channel +: +(?P<number>\d+)$')
             m = p15_3.match(line)
             if m:
                 group = m.groupdict()
@@ -592,18 +762,12 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Last clearing of "show interface" counters 1d02h
-            p16 = re.compile(r'^Last +clearing +of +\"show +interface\" +counters +'
-                              '(?P<last_clear>[\w\:\.]+)$')
             m = p16.match(line)
             if m:                
                 last_clear = m.groupdict()['last_clear']
                 continue
 
             # Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
-            p17 = re.compile(r'^Input +queue: +(?P<size>\d+)\/(?P<max>\d+)\/'
-                              '(?P<drops>\d+)\/(?P<flushes>\d+) +'
-                              '\(size\/max\/drops\/flushes\); +'
-                              'Total +output +drops: +(?P<output_drop>\d+)$')
             m = p17.match(line)
             if m:
                 if 'queues' not in interface_dict[interface]:
@@ -622,7 +786,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Queueing strategy: fifo
-            p18 = re.compile(r'^Queueing +strategy: +(?P<queue_strategy>\w+)$')
+            # Queueing strategy: Class-based queueing
             m = p18.match(line)
             if m:
                 if 'queues' not in interface_dict[interface]:
@@ -632,8 +796,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Output queue: 0/0 (size/max)
-            p19 = re.compile(r'^Output +queue: +(?P<size>\d+)\/(?P<max>\d+)'
-                              ' +\(size\/max\)$')
+            # Output queue: 0/1000/64/0 (size/max total/threshold/drops)
             m = p19.match(line)
             if m:
                 if 'queues' not in interface_dict[interface]:
@@ -642,13 +805,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['size'])
                 interface_dict[interface]['queues']['output_queue_max'] = \
                     int(m.groupdict()['max'])
+                if m.groupdict()['threshold'] and m.groupdict()['drops']:
+                    interface_dict[interface]['queues']['threshold'] = \
+                        int(m.groupdict()['threshold'])
+                    interface_dict[interface]['queues']['drops'] = \
+                        int(m.groupdict()['drops'])
                 continue
 
             # 5 minute input rate 0 bits/sec, 0 packets/sec
-            p20 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                              ' *(?P<unit>(minute|second|minutes|seconds)) *input *rate'
-                              ' *(?P<in_rate>[0-9]+) *bits/sec,'
-                              ' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
             m = p20.match(line)
             if m:
                 load_interval = int(m.groupdict()['load_interval'])
@@ -683,10 +847,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 5 minute output rate 0 bits/sec, 0 packets/sec
-            p21 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                              ' *(minute|second|minutes|seconds) *output *rate'
-                              ' *(?P<out_rate>[0-9]+) *bits/sec,'
-                              ' *(?P<out_rate_pkts>[0-9]+) *packets/sec$')
             m = p21.match(line)
             if m:
                 out_rate = int(m.groupdict()['out_rate'])
@@ -699,9 +859,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 packets input, 0 bytes, 0 no buffer
-            p22 = re.compile(r'^(?P<in_pkts>[0-9]+) +packets +input,'
-                              ' +(?P<in_octets>[0-9]+) +bytes,'
-                              ' +(?P<in_no_buffer>[0-9]+) +no +buffer$')
             m = p22.match(line)
             if m:
                 if 'counters' not in interface_dict[interface]:
@@ -711,14 +868,13 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['in_pkts'])
                 interface_dict[interface]['counters']['in_octets'] = \
                     int(m.groupdict()['in_octets'])
-                interface_dict[interface]['counters']['in_no_buffer'] = \
-                    int(m.groupdict()['in_no_buffer'])
+                if m.groupdict()['in_no_buffer']:
+                    interface_dict[interface]['counters']['in_no_buffer'] = \
+                        int(m.groupdict()['in_no_buffer'])
                 continue
 
             # Received 4173 broadcasts (0 IP multicasts)
             # Received 535996 broadcasts (535961 multicasts)
-            p23 = re.compile(r'^Received +(?P<in_broadcast_pkts>\d+) +broadcasts +'
-                              '\((?P<in_multicast_pkts>\d+) *(IP)? *multicasts\)$')
             m = p23.match(line)
             if m:
                 interface_dict[interface]['counters']['in_multicast_pkts'] = \
@@ -728,9 +884,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 runts, 0 giants, 0 throttles
-            p24 = re.compile(r'^(?P<in_runts>[0-9]+) *runts,'
-                              ' *(?P<in_giants>[0-9]+) *giants,'
-                              ' *(?P<in_throttles>[0-9]+) *throttles$')
             m = p24.match(line)
             if m:
                 interface_dict[interface]['counters']['in_runts'] = \
@@ -743,12 +896,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
             # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
-            p25 = re.compile(r'^(?P<in_errors>[0-9]+) +input +errors, +'
-                              '(?P<in_crc_errors>[0-9]+) +CRC, +'
-                              '(?P<in_frame>[0-9]+) +frame, +'
-                              '(?P<in_overrun>[0-9]+) +overrun, +'
-                              '(?P<in_ignored>[0-9]+) +ignored'
-                              '(, *(?P<in_abort>[0-9]+) +abort)?$')
             m = p25.match(line)
             if m:
                 interface_dict[interface]['counters']['in_errors'] = \
@@ -767,9 +914,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 watchdog, 535961 multicast, 0 pause input
-            p26 = re.compile(r'^(?P<in_watchdog>[0-9]+) +watchdog, +'
-                              '(?P<in_multicast_pkts>[0-9]+) +multicast, +'
-                              '(?P<in_pause_input>[0-9]+) +pause +input$')
             m = p26.match(line)
             if m:
                 interface_dict[interface]['counters']['in_watchdog'] = \
@@ -781,8 +925,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 input packets with dribble condition detected
-            p27 = re.compile(r'^(?P<in_with_dribble>[0-9]+) +input +packets +with +'
-                              'dribble +condition +detected$')
             m = p27.match(line)
             if m:
                 interface_dict[interface]['counters']['in_with_dribble'] = \
@@ -790,23 +932,19 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 23376 packets output, 3642296 bytes, 0 underruns
-            p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output,'
-                              ' +(?P<out_octets>[0-9]+) +bytes,'
-                              ' +(?P<out_underruns>[0-9]+) +underruns$')
             m = p28.match(line)
             if m:
                 interface_dict[interface]['counters']['out_pkts'] = \
                     int(m.groupdict()['out_pkts'])
                 interface_dict[interface]['counters']['out_octets'] = \
                     int(m.groupdict()['out_octets'])
-                interface_dict[interface]['counters']['out_underruns'] = \
-                    int(m.groupdict()['out_underruns'])
+                if m.groupdict()['out_underruns']:
+                    interface_dict[interface]['counters']['out_underruns'] = \
+                        int(m.groupdict()['out_underruns'])
                 continue
 
             # Received 4173 broadcasts (0 IP multicasts)
             # Received 535996 broadcasts (535961 multicasts)
-            p29 = re.compile(r'^Received +(?P<out_broadcast_pkts>\d+) +broadcasts +'
-                              '\((?P<out_multicast_pkts>\d+) *(IP)? *multicasts\)$')
             m = p29.match(line)
             if m:
                 interface_dict[interface]['counters']['out_broadcast_pkts'] = \
@@ -817,9 +955,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # 0 output errors, 0 collisions, 2 interface resets
             # 0 output errors, 0 interface resets
-            p30 = re.compile(r'^(?P<out_errors>[0-9]+) +output +errors,'
-                              '( *(?P<out_collision>[0-9]+) +collisions,)? +'
-                              '(?P<out_interface_resets>[0-9]+) +interface +resets$')
             m = p30.match(line)
             if m:
                 interface_dict[interface]['counters']['out_errors'] = \
@@ -832,8 +967,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 unknown protocol drops
-            p31 = re.compile(r'^(?P<out_unknown_protocl_drops>[0-9]+) +'
-                              'unknown +protocol +drops$')
             m = p31.match(line)
             if m:
                 interface_dict[interface]['counters']['out_unknown_protocl_drops'] = \
@@ -841,9 +974,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 babbles, 0 late collision, 0 deferred
-            p32 = re.compile(r'^(?P<out_babble>[0-9]+) +babbles, +'
-                              '(?P<out_late_collision>[0-9]+) +late +collision, +'
-                              '(?P<out_deferred>[0-9]+) +deferred$')
             m = p32.match(line)
             if m:
                 interface_dict[interface]['counters']['out_babble'] = \
@@ -855,9 +985,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 lost carrier, 0 no carrier, 0 pause output
-            p33 = re.compile(r'^(?P<out_lost_carrier>[0-9]+) +lost +carrier, +'
-                              '(?P<out_no_carrier>[0-9]+) +no +carrier, +'
-                              '(?P<out_pause_output>[0-9]+) +pause +output$')
             m = p33.match(line)
             if m:
                 interface_dict[interface]['counters']['out_lost_carrier'] = \
@@ -869,8 +996,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # 0 output buffer failures, 0 output buffers swapped out
-            p34 = re.compile(r'^(?P<out_buffer_failure>[0-9]+) +output +buffer +failures, +'
-                              '(?P<out_buffers_swapped>[0-9]+) +output +buffers +swapped +out$')
             m = p34.match(line)
             if m:
                 interface_dict[interface]['counters']['out_buffer_failure'] = \
@@ -881,9 +1006,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Interface is unnumbered. Using address of Loopback0 (10.4.1.1)
             # Interface is unnumbered. Using address of GigabitEthernet0/2.1 (192.168.154.1)
-            p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
-                              '(?P<unnumbered_intf>[\w\/\.]+) +'
-                              '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
             m = p35.match(line)
             if m:
                 unnumbered_dict[interface] = {}
@@ -2270,6 +2392,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                             Optional('unreachables'): str,
                         },
                         Optional('nd'): {
+                            Optional('suppress'): bool,
                             Optional('dad_enabled'): bool,
                             Optional('dad_attempts'): int,
                             Optional('reachable_time'): int,
@@ -2344,9 +2467,9 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
-            p2 =  re.compile(r'^IPv6 +is +(?P<status>\w+), +'
-                              'link-local +address +is +(?P<link_local>[\w\:]+)'
-                              '( *\[(?P<type>[\w\/]+)\])?$')
+            p2 = re.compile(r'^IPv6 +is +(?P<status>\w+), +'
+                             'link-local +address +is +(?P<link_local>[\w\:]+)'
+                             '( *\[(?P<type>[\w\/]+)\])?$')
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -2372,14 +2495,14 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # No Virtual link-local address(es):
             # Virtual link-local address(es):
             # FE80::5:73FF:FEA0:16 [UNA/OOD]
-            p21 =  re.compile(r'^Virtual +link\-local +address\(es\)\:$')
+            p21 = re.compile(r'^Virtual +link\-local +address\(es\)\:$')
             m = p21.match(line)
             if m:
                 ipv6 = True
                 continue
 
-            p21_1 =  re.compile(r'^(?P<ipv6>[\w\:]+)'
-                             '( *\[(?P<type>[\w\/]+)\])?$')
+            p21_1 = re.compile(r'^(?P<ipv6>[\w\:]+)'
+                                '( *\[(?P<type>[\w\/]+)\])?$')
             m = p21_1.match(line)
             if m and ipv6:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2404,7 +2527,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # Stateless address autoconfig enabled
-            p3 =  re.compile(r'^Stateless +address +autoconfig +enabled$')
+            p3 = re.compile(r'^Stateless +address +autoconfig +enabled$')
             m = p3.match(line)
             if m:
                 ret_dict[intf]['autoconf'] = True
@@ -2413,15 +2536,15 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # Global unicast address(es):
             #   2001:10::14:1, subnet is 2001:10::14:0/112 
             #   2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
-            p4 =  re.compile(r'^Global +unicast +address\(es\):$')
+            p4 = re.compile(r'^Global +unicast +address\(es\):$')
             m = p4.match(line)
             if m:
                 ipv6 = True
                 continue
 
-            p4_1 =  re.compile(r'^(?P<ipv6>[\w\:]+), +subnet +is +(?P<dum1>(?P<dum2>[\w\:]+)'
-                             '\/(?P<prefix_length>[0-9]+))'
-                             '( *\[(?P<type>[\w\/]+)\])?$')
+            p4_1 = re.compile(r'^(?P<ipv6>[\w\:]+), +subnet +is +(?P<dum1>(?P<dum2>[\w\:]+)'
+                               '\/(?P<prefix_length>[0-9]+))'
+                               '( *\[(?P<type>[\w\/]+)\])?$')
             m = p4_1.match(line)
             if m and ipv6:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2462,8 +2585,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             #     valid lifetime 2591911 preferred lifetime 604711
-            p4_2 =  re.compile(r'^valid +lifetime +(?P<valid>\d+) +'
-                                'preferred +lifetime +(?P<preferred>\d+)$')
+            p4_2 = re.compile(r'^valid +lifetime +(?P<valid>\d+) +'
+                               'preferred +lifetime +(?P<preferred>\d+)$')
             m = p4_2.match(line)
             if m and ipv6:
                 try:
@@ -2483,13 +2606,13 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             #   FF02::1
             #   FF02::1:FF14:1
             #   FF02::1:FF28:1A71
-            p5 =  re.compile(r'^Joined +group +address\(es\):$')
+            p5 = re.compile(r'^Joined +group +address\(es\):$')
             m = p5.match(line)
             if m:
                 ipv6 = False
                 continue
 
-            p5_1 =  re.compile(r'^(?P<address>[\w\:]+)$')
+            p5_1 = re.compile(r'^(?P<address>[\w\:]+)$')
             m = p5_1.match(line)
             if m and not ipv6:
                 joined_group.append(m.groupdict()['address'])
@@ -2497,22 +2620,22 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # MTU is 1500 bytes
-            p6 =  re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
+            p6 = re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
             m = p6.match(line)
             if m:
                 ret_dict[intf]['mtu'] = int(m.groupdict()['mtu'])                    
                 continue
 
             # VPN Routing/Forwarding "VRF1"
-            p6 =  re.compile(r'^VPN +Routing\/Forwarding +\"(?P<vrf>[\w\-]+)\"$')
+            p6 = re.compile(r'^VPN +Routing\/Forwarding +\"(?P<vrf>[\w\-]+)\"$')
             m = p6.match(line)
             if m:
                 ret_dict[intf]['vrf'] = m.groupdict()['vrf']
                 continue
 
             # ICMP error messages limited to one every 100 milliseconds
-            p7 =  re.compile(r'^ICMP +error +messages +limited +to +one +'
-                              'every +(?P<limited>\d+) +milliseconds$')
+            p7 = re.compile(r'^ICMP +error +messages +limited +to +one +'
+                             'every +(?P<limited>\d+) +milliseconds$')
             m = p7.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2524,7 +2647,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ICMP redirects are enabled
-            p8 =  re.compile(r'^ICMP +redirects +are +(?P<status>\w+)$')
+            p8 = re.compile(r'^ICMP +redirects +are +(?P<status>\w+)$')
             m = p8.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2538,7 +2661,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ICMP unreachables are sent
-            p9 =  re.compile(r'^ICMP +unreachables +are +(?P<status>[\w\s]+)$')
+            p9 = re.compile(r'^ICMP +unreachables +are +(?P<status>[\w\s]+)$')
             m = p9.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2550,127 +2673,110 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ND DAD is enabled, number of DAD attempts: 1
-            p10 =  re.compile(r'^ND +DAD +is +(?P<status>\w+), +'
-                               'number +of +DAD +attempts: +(?P<attempts>\d+)$')
+            p10 = re.compile(r'^ND +DAD +is +(?P<status>\w+), +'
+                              'number +of +DAD +attempts: +(?P<attempts>\d+)$')
             m = p10.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                
                 if 'enabled' in m.groupdict()['status']:
-                    ret_dict[intf]['ipv6']['nd']['dad_enabled'] = True
+                    nd_dict['dad_enabled'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']['dad_enabled'] = False
+                    nd_dict['dad_enabled'] = False
 
-                ret_dict[intf]['ipv6']['nd']['dad_attempts'] = int(m.groupdict()['attempts'])
+                nd_dict['dad_attempts'] = int(m.groupdict()['attempts'])
                 continue
 
             # ND reachable time is 30000 milliseconds (using 30000)
-            p11 =  re.compile(r'^ND +reachable +time +is (?P<time>\d+) +milliseconds'
-                               ' +\(using +(?P<use>\d+)\)$')
+            p11 = re.compile(r'^ND +reachable +time +is (?P<time>\d+) +milliseconds'
+                              ' +\(using +(?P<use>\d+)\)$')
             m = p11.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['reachable_time'] = int(m.groupdict()['time'])
-                ret_dict[intf]['ipv6']['nd']['using_time'] = int(m.groupdict()['use'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['reachable_time'] = int(m.groupdict()['time'])
+                nd_dict['using_time'] = int(m.groupdict()['use'])
                 continue
 
             # ND NS retransmit interval is 1000 milliseconds
-            p12 =  re.compile(r'^ND +NS +retransmit +interval +is'
-                               ' +(?P<interval>\d+) +milliseconds$')
+            p12 = re.compile(r'^ND +NS +retransmit +interval +is'
+                              ' +(?P<interval>\d+) +milliseconds$')
             m = p12.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['ns_retransmit_interval'] = \
-                    int(m.groupdict()['interval'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['ns_retransmit_interval'] = int(m.groupdict()['interval'])
                 continue
 
             # ND advertised reachable time is 0 (unspecified)
-            p13 =  re.compile(r'^ND +advertised +reachable +time +is +(?P<time>\d+)'
-                               ' +\((?P<dummy>\S+)\)$')
+            p13 = re.compile(r'^ND +advertised +reachable +time +is +(?P<time>\d+)'
+                              ' +\((?P<dummy>\S+)\)$')
             m = p13.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_reachable_time'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_reachable_time'] = int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = True
+                    nd_dict['advertised_reachable_time_unspecified'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = False
+                    nd_dict['advertised_reachable_time_unspecified'] = False
                 continue
 
             # ND advertised retransmit interval is 0 (unspecified)
-            p14 =  re.compile(r'^ND +advertised +retransmit +interval +is +(?P<time>\d+)'
-                               ' +\((?P<dummy>\S+)\)$')
+            p14 = re.compile(r'^ND +advertised +retransmit +interval +is +(?P<time>\d+)'
+                              ' +\((?P<dummy>\S+)\)$')
             m = p14.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_retransmit_interval'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_retransmit_interval'] = int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = True
+                    nd_dict['advertised_retransmit_interval_unspecified'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = False
+                    nd_dict['advertised_retransmit_interval_unspecified'] = False
                 continue
 
             # ND router advertisements are sent every 200 seconds
-            p15 =  re.compile(r'^ND +router +advertisements +are +sent +'
-                               'every +(?P<time>\d+) +seconds$')
+            p15 = re.compile(r'^ND +router +advertisements +are +sent +'
+                              'every +(?P<time>\d+) +seconds$')
             m = p15.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['router_advertisements_interval'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['router_advertisements_interval'] = int(m.groupdict()['time'])
                 continue
 
             # ND router advertisements live for 1800 seconds
-            p16 =  re.compile(r'^ND +router +advertisements +live +for +'
-                               '(?P<time>\d+) +seconds$')
+            p16 = re.compile(r'^ND +router +advertisements +live +for +'
+                              '(?P<time>\d+) +seconds$')
             m = p16.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['router_advertisements_live'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['router_advertisements_live'] = int(m.groupdict()['time'])
                 continue
 
             # ND advertised default router preference is Medium
-            p17 =  re.compile(r'^ND +advertised +default +router +preference +'
-                               'is +(?P<prefer>\w+)$')
+            p17 = re.compile(r'^ND +advertised +default +router +preference +'
+                              'is +(?P<prefer>\w+)$')
             m = p17.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_default_router_preference'] = \
-                    m.groupdict()['prefer']
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_default_router_preference'] = m.groupdict()['prefer']
+                continue
+
+            # ND RAs are suppressed (periodic)
+            p17_1 = re.compile(r'^ND +RAs +are +suppressed.*$')
+            m = p17_1.match(line)
+            if m:
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.update({'suppress': True})
                 continue
 
             # Hosts use stateless autoconfig for addresses.
-            p18 =  re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +for +addresses.$')
+            p18 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +for +addresses.$')
             m = p18.match(line)
             if m:
                 ret_dict[intf]['addresses_config_method'] = \
@@ -2678,8 +2784,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # Interface is unnumbered. Using address of Loopback0
-            p19 =  re.compile(r'^Interface +is +unnumbered. +Using +address +of'
-                               ' +(?P<unnumbered_intf>[\w\/\.]+)$')
+            p19 = re.compile(r'^Interface +is +unnumbered. +Using +address +of'
+                              ' +(?P<unnumbered_intf>[\w\/\.]+)$')
             m = p19.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2691,7 +2797,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # No global unicast address is configured
-            p20 =  re.compile(r'^No +global +unicast +address +is +configured$')
+            p20 = re.compile(r'^No +global +unicast +address +is +configured$')
             m = p20.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2865,15 +2971,15 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces accounting
         show interfaces <interface> accounting
     """
-    cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
+    cli_command = ['show interfaces {interface} accounting','show interfaces accounting']
     exclude = ['pkts_in', 'pkts_out', 'chars_in', 'chars_out']
 
-    def cli(self, intf=None,output=None):
+    def cli(self, interface=None,output=None):
         if output is None:
-            if not intf:
+            if not interface:
                 cmd = self.cli_command[1]
             else:
-                cmd = self.cli_command[0].format(intf=intf)
+                cmd = self.cli_command[0].format(interface=interface)
             out = self.device.execute(cmd)
         else:
             out = output

@@ -77,8 +77,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:05:18",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1::1/64": {
-                                     "ip": "2001:db1:1::1",
+                                "2001:db8:8404:751c::1/64": {
+                                     "ip": "2001:db8:8404:751c::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -146,8 +146,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:03:01",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1:1::1/64": {
-                                     "ip": "2001:db1:1:1::1",
+                                "2001:db8:8404:907f::1/64": {
+                                     "ip": "2001:db8:8404:907f::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -172,7 +172,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "VRF1"
         Ethernet2/2, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1::1/64 [VALID]
+            2001:db8:8404:751c::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -204,7 +204,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "default"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1:1::1/64 [VALID]
+            2001:db8:8404:907f::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -289,8 +289,8 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
                            "next_query_sent_in": "00:03:01",
                            "querier_timeout": 2570,
                            "ipv6": {
-                                "2001:db1:1:1::1/64": {
-                                     "ip": "2001:db1:1:1::1",
+                                "2001:db8:8404:907f::1/64": {
+                                     "ip": "2001:db8:8404:907f::1",
                                      "prefix_length": "64",
                                      "status": "valid"
                                 }
@@ -315,7 +315,7 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         ICMPv6 MLD Interfaces for VRF "default"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up
           IPv6 address: 
-            2001:db1:1:1::1/64 [VALID]
+            2001:db8:8404:907f::1/64 [VALID]
           Link Local Address : fe80::5054:ff:fed7:c01f(VALID)
           IPv6 Link-local Address: fe80::5054:ff:fed7:c01f
           ICMPv6 MLD parameters:
@@ -345,6 +345,327 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
           V2 Reports:        191/1775      
           V1 Leaves :          0/0
     '''}
+
+    golden_parsed_output_2 = {
+        'vrfs': {
+            'VRF1': {
+                'count': 4,
+                'interface': {
+                    'Ethernet1/1.11': {'configured_group_timeout': 260,
+                                        'configured_querier_timeout': 255,
+                                        'configured_query_interval': 125,
+                                        'configured_query_max_response_time': 10,
+                                        'configured_robustness_variable': 2,
+                                        'enable': True,
+                                        'enable_refcount': 1,
+                                        'group_timeout': 260,
+                                        'host_version': 2,
+                                        'ipv6': {'2001:10:3:5::5/64': {'ip': '2001:10:3:5::5',
+                                                                       'prefix_length': '64',
+                                                                       'status': 'valid'}},
+                                        'last_member': {'mrt': 1,
+                                                        'query_count': 2},
+                                        'link_local_groups_reporting': False,
+                                        'link_status': 'up',
+                                        'oper_status': 'up',
+                                        'querier_timeout': 255,
+                                        'query_interval': 125,
+                                        'query_max_response_time': 10,
+                                        'robustness_variable': 2,
+                                        'startup_query': {'configured_interval': 31,
+                                                          'count': 2,
+                                                          'interval': 31},
+                                        'unsolicited_report_interval': 10,
+                                        'version': 2},
+                    'Ethernet1/2.11': {'configured_group_timeout': 260,
+                                        'configured_querier_timeout': 255,
+                                        'configured_query_interval': 125,
+                                        'configured_query_max_response_time': 10,
+                                        'configured_robustness_variable': 2,
+                                        'enable': True,
+                                        'enable_refcount': 1,
+                                        'group_timeout': 260,
+                                        'host_version': 2,
+                                        'ipv6': {'2001:20:5:5::5/64': {'ip': '2001:20:5:5::5',
+                                                                       'prefix_length': '64',
+                                                                       'status': 'valid'}},
+                                        'last_member': {'mrt': 1,
+                                                        'query_count': 2},
+                                        'link_local_groups_reporting': False,
+                                        'link_status': 'up',
+                                        'oper_status': 'up',
+                                        'querier_timeout': 255,
+                                        'query_interval': 125,
+                                        'query_max_response_time': 10,
+                                        'robustness_variable': 2,
+                                        'startup_query': {'configured_interval': 31,
+                                                          'count': 2,
+                                                          'interval': 31},
+                                        'unsolicited_report_interval': 10,
+                                        'version': 2}
+                }
+            },
+            'default': {
+                'count': 6,
+                'interface': {
+                    'Ethernet1/1.10': {'configured_group_timeout': 260,
+                                       'configured_querier_timeout': 255,
+                                       'configured_query_interval': 125,
+                                       'configured_query_max_response_time': 10,
+                                       'configured_robustness_variable': 2,
+                                       'enable': True,
+                                       'enable_refcount': 1,
+                                       'group_timeout': 260,
+                                       'host_version': 2,
+                                       'ipv6': {'2001:10:3:5::5/64': {'ip': '2001:10:3:5::5',
+                                                                      'prefix_length': '64',
+                                                                      'status': 'valid'}},
+                                       'last_member': {'mrt': 1,
+                                                       'query_count': 2},
+                                       'link_local_groups_reporting': False,
+                                       'link_status': 'up',
+                                       'oper_status': 'up',
+                                       'querier_timeout': 255,
+                                       'query_interval': 125,
+                                       'query_max_response_time': 10,
+                                       'robustness_variable': 2,
+                                       'startup_query': {'configured_interval': 31,
+                                                         'count': 2,
+                                                         'interval': 31},
+                                       'unsolicited_report_interval': 10,
+                                       'version': 2},
+                    'Ethernet1/2.10': {'configured_group_timeout': 260,
+                                       'configured_querier_timeout': 255,
+                                       'configured_query_interval': 125,
+                                       'configured_query_max_response_time': 10,
+                                       'configured_robustness_variable': 2,
+                                       'enable': True,
+                                       'enable_refcount': 1,
+                                       'group_timeout': 260,
+                                       'host_version': 2,
+                                       'ipv6': {'2001:20:5:5::5/64': {'ip': '2001:20:5:5::5',
+                                                                      'prefix_length': '64',
+                                                                      'status': 'valid'}},
+                                       'last_member': {'mrt': 1,
+                                                       'query_count': 2},
+                                       'link_local_groups_reporting': False,
+                                       'link_status': 'up',
+                                       'oper_status': 'up',
+                                       'querier_timeout': 255,
+                                       'query_interval': 125,
+                                       'query_max_response_time': 10,
+                                       'robustness_variable': 2,
+                                       'startup_query': {'configured_interval': 31,
+                                                         'count': 2,
+                                                         'interval': 31},
+                                       'unsolicited_report_interval': 10,
+                                       'version': 2}
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+MLD Interfaces for VRF "default", count: 6
+Ethernet1/1.10, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:10:3:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:33
+  Membership count: 0
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name default (id 1)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/6
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:1
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: No
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+Ethernet1/2.10, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:20:5:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:11
+  Membership count: 2
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name default (id 1)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/36
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:0
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+MLD Interfaces for VRF "VRF1", count: 4
+Ethernet1/1.11, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:10:3:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:24
+  Membership count: 0
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name VRF1 (id 3)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/6
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:1
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: No
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+Ethernet1/2.11, Interface status: protocol-up/link-up/admin-up
+  IPv6 address: 
+    2001:20:5:5::5/64 [VALID]
+  Active querier: fe80::282:49ff:fe9d:1b08, version: 2, next query sent in: 00:01:20
+  Membership count: 2
+  Old Membership count 0
+  MLD version: 2, host version: 2
+  MLD query interval: 125 secs, configured value: 125 secs
+  MLD max response time: 10 secs, configured value: 10 secs
+  MLD startup query interval: 31 secs, configured value: 31 secs
+  MLD startup query count: 2
+  MLD last member mrt: 1 secs
+  MLD last member query count: 2
+  MLD group timeout: 260 secs, configured value: 260 secs
+  MLD querier timeout: 255 secs, configured value: 255 secs
+  MLD unsolicited report interval: 10 secs
+  MLD robustness variable: 2, configured value: 2
+  MLD reporting for link-local groups: disabled
+  MLD interface enable refcount: 1
+  MLD interface immediate leave: disabled
+  MLD interface suppress v2-gsq: disabled
+  MLD VRF name VRF1 (id 3)
+  MLD Report Policy: None
+  MLD Host Proxy: Disabled
+  MLD State Limit: None
+  MLD interface statistics: (only non-zero values displayed)
+    General (sent/received):
+      v1-queries: 0/0, v1-reports: 0/0, v1-leaves: 0/0
+      v2-queries: 12/12, v2-reports: 0/36
+    Errors:
+      General Queries received with invalid destination address; v1: 0, v2: 0
+      Checksum errors: 0, Packet length errors: 0
+      Packets with Local IP as source: 0, Source subnet check failures: 0 
+      Query from non-querier:0
+      Report version mismatch: 0, Query version mismatch: 0
+      Unknown MLD message type: 0
+      Invalid v1 reports: 0, Invalid v2 reports: 0
+      v2 reports with invalid auxillary length: 0
+      Packets dropped due to router-alert check: 0
+      Packets dropped due to invalid TTL: 0
+  Interface PIM DR: Yes
+  Interface vPC SVI: No
+  Interface vPC CFS statistics:
+    DR queries sent: 0
+    DR queries rcvd: 0
+    DR queries fail: 0
+    DR updates sent: 0
+    DR updates rcvd: 0
+    DR updates fail: 0
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6MldInterface(device=self.device)
@@ -363,6 +684,11 @@ class test_show_ipv6_mld_interface(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpv6MldInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 # ==============================================
 # Unit test for 'show ipv6 mld groups'
@@ -384,7 +710,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1:1::1",
+                                               "last_reporter": "2001:db8:8404:907f::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:26:28"
@@ -392,7 +718,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1:1::1",
+                                     "last_reporter": "2001:db8:8404:907f::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:26:05"
@@ -409,7 +735,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1::1",
+                                               "last_reporter": "2001:db8:8404:751c::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:25:49"
@@ -417,7 +743,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1::1",
+                                     "last_reporter": "2001:db8:8404:751c::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:25:49"
@@ -433,20 +759,20 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         MLD Connected Group Membership for VRF "default" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
 
         MLD Connected Group Membership for VRF "VRF1" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/2
-          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db1:1::1
+          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/2
-          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db1:1::1
+          Uptime/Expires: 00:25:49/never, Last Reporter: 2001:db8:8404:751c::1
     '''}
 
     golden_parsed_output_1 = {
@@ -459,7 +785,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                 "ff30::2": {
                                      "source": {
                                           "2001:db8:0:abcd::2": {
-                                               "last_reporter": "2001:db1:1:1::1",
+                                               "last_reporter": "2001:db8:8404:907f::1",
                                                "expire": "never",
                                                "type": "static",
                                                "up_time": "00:26:28"
@@ -467,7 +793,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      }
                                 },
                                 "fffe::2": {
-                                     "last_reporter": "2001:db1:1:1::1",
+                                     "last_reporter": "2001:db8:8404:907f::1",
                                      "expire": "never",
                                      "type": "static",
                                      "up_time": "00:26:05"
@@ -483,11 +809,11 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         MLD Connected Group Membership for VRF "default" - 2 total entries
         (2001:db8:0:abcd::2, ff30::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
 
         (*, fffe::2)
           Type: Static, Interface: Ethernet2/1
-          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db1:1:1::1
+          Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
     '''}
 
     def test_empty(self):

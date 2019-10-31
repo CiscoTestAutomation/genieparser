@@ -1,89 +1,125 @@
 ''' show_controllers.py
-    IOSXR parsers for the following show commands:
-    * show controllers fia diagshell <diagshell_unit> "l2 show" location <location>
-    * show controllers coherentDSP <port>
-    * show controllers optics <port>
+
+IOSXR parsers for the following show commands:
+
+    * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
+    * show controllers coherentDSP {port}
+    * show controllers optics {port}
 '''
 
+# Python
 import re
 import logging
-from netaddr import EUI
 
+# Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional
 
-from genie.libs.parser.base import *
 
-logger = logging.getLogger(__name__)
+# ==========================================================================================
+# Schema for 'show controller fia diagshell {diagshell_unit} 'l2 show' location {location}'
+# ==========================================================================================
+class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
+    '''Schema for:
+        * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
+    '''
 
-class ShowControllersFiaDiagshellL2show(MetaParser):
-    """Parser class for show controllers fia diagshell 0 'l2 show' """
-
-    # TODO schema
-    cli_command = 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
-
-    def __init__(self, diagshell_unit=0, location='all', **kwargs):
-        self.diagshell_unit = diagshell_unit
-        self.location = location
-        super().__init__(**kwargs)
-
-    def cli(self):
-        cmd = self.cli_command.format(
-            diagshell_unit=self.diagshell_unit,
-            location=self.location)
-
-        # Fix bug in csccon (1.0.0) where Tcl command is not correctly quoted.
-        cmd = cmd.replace('"', r'\"')
-
-        out = self.device.execute(cmd)
-
-        result = {
-            'nodes': {},
+    schema = {
+        'nodes':
+            {Any():
+                {'vlan':
+                    {Any():
+                        {'mac': 
+                            {Any():
+                                {'encap_id': str,
+                                'gport': str,
+                                Optional('trunk'): int,
+                                Optional('static'): bool
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }
 
-        node_id = None
+
+# ==========================================================================================
+# Parser for 'show controller fia diagshell {diagshell_unit} 'l2 show' location {location}'
+# ==========================================================================================
+class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2showLocationSchema):
+    '''Parser for:
+        * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
+    '''
+
+    cli_command = "show controller fia diagshell {diagshell_unit} 'l2 show' location {location}"
+
+
+    def cli(self, diagshell_unit=0, location='all', output=None):
+
+        # Execute command
+        if output is None:
+            out = self.device.execute(self.cli_command.format(location=location,
+                                        diagshell_unit=diagshell_unit))
+        else:
+            out = output
+
+        # Init
+        parsed_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>(\S+))$')
+
+        # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
+        # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
+        # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+        # mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
+        p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
+                         ' +GPORT\=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
+                         '(?: +Trunk\=(?P<trunk>\d+))?'
+                         '(?: +(?P<b_static>(Static)))?'
+                         ' +encap_id\=(?P<encap_id>\d+|0x[[A-Fa-f0-9\']+)$')
+
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
+
             # Node ID: 0/0/CPU0
-            m = re.match(r'^Node ID: (\S+)$', line)
+            m = p1.match(line)
             if m:
-                node_id = m.group(1)
-                result['nodes'].setdefault(node_id, {
-                    'entries': [],
-                })
+                nodes_dict = parsed_dict.setdefault('nodes', {}).\
+                                         setdefault(m.groupdict()['node_id'], {})
                 continue
+
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
             # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
             # mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
-            m = re.match(r'^mac=(?P<mac>[A-Fa-f0-9:]+)'
-                         r' +vlan=(?P<vlan>\d+)'
-                         r' +GPORT=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
-                         r'(?: +Trunk=(?P<trunk>\d+))?'
-                         r'(?P<b_static> +Static)?'
-                         r' +encap_id=(?P<encap_id>\d+|0x[[A-Fa-f0-9]+)$', line)
+            m = p2.match(line)
             if m:
-                entry = {
-                    'mac': EUI(m.group('mac')),
-                    'vlan': int(m.group('vlan')),
-                    'gport': eval(m.group('gport')),
-                    'static': bool(m.group('b_static')),
-                    'trunk': m.group('trunk') and eval(m.group('trunk')),
-                    'encap_id': eval(m.group('encap_id')),
-                }
-                result['nodes'][node_id]['entries'].append(entry)
+                group = m.groupdict()
+                mac_dict = nodes_dict.setdefault('vlan', {}).\
+                                      setdefault(int(group['vlan']), {}).\
+                                      setdefault('mac', {}).\
+                                      setdefault(group['mac'], {})
+                mac_dict['gport'] = group['gport']
+                if group['b_static']:
+                    mac_dict['static'] = bool(group['b_static'])
+                if group['trunk']:
+                    mac_dict['trunk'] = int(group['trunk'])
+                mac_dict['encap_id'] = group['encap_id']
                 continue
 
-            if line.startswith('mac='):
-                logger.warning('Unrecognized MAC line in %r: %r', cmd, line)
-
-        return result
-
-# vim: ft=python ts=8 sw=4 et
+        return parsed_dict
 
 
+# ================================================
+# Schema for 'show controllers coherentDSP {port}'
+# ================================================
 class ShowControllersCoherentDSPSchema(MetaParser):
-    """Schema for show controllers coherentDSP {port}"""
+    '''Schema for:
+        * show controllers coherentDSP {port}
+    '''
+
     schema = {
         Any(): {
             'port': str,
@@ -122,8 +158,13 @@ class ShowControllersCoherentDSPSchema(MetaParser):
     }
 
 
+# ================================================
+# Parser for 'show controllers coherentDSP {port}'
+# ================================================
 class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
-    """Parser for show controllers coherentDSP {port}"""
+    '''Parser for:
+        * show controllers coherentDSP {port}
+    '''
 
     cli_command = 'show controllers coherentDSP {port}'
     exclude = []
@@ -338,8 +379,14 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
         return result_dict
 
 
+# ===========================================
+# Schema for 'show controllers optics {port}'
+# ===========================================
 class ShowControllersOpticsSchema(MetaParser):
-    """Schema for show controllers optics {port}"""
+    '''Schema for:
+        * show controllers optics {port}
+    '''
+
     schema = {
         Any(): {
             'name': str,
@@ -416,8 +463,13 @@ class ShowControllersOpticsSchema(MetaParser):
     }
 
 
+# ===========================================
+# Parser for 'show controllers optics {port}'
+# ===========================================
 class ShowControllersOptics(ShowControllersOpticsSchema):
-    """Parser for show controllers optics {port}"""
+    '''Parser for:
+        * show controllers optics {port}
+    '''
 
     cli_command = 'show controllers optics {port}'
     exclude = ['laser_bias_current', 'actual_tx_power', 'rx_power', 'chromatic_dispersion']
@@ -922,3 +974,5 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
         return result_dict
+
+# vim: ft=python ts=8 sw=4 et

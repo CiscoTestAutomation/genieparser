@@ -596,6 +596,230 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                 Adj SID: 19 (protected)
     '''}
 
+    golden_parsed_output_2 = {
+        'nodes': {
+            1: {
+                'ospf_router_id': '10.19.198.239',
+                'area_id': 8,
+                'domain_id': 0,
+                'asn': 65109,
+                'links': {
+                    0: {
+                        'local_address': '10.19.198.26',
+                        'remote_address': '10.19.198.25',
+                        'local_node': {
+                            'ospf_router_id': '10.19.198.239',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'remote_node': {
+                            'ospf_router_id': '10.189.5.252',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'metric': {
+                            'igp': 1000,
+                            'te': 1000,
+                            'delay': 1000,
+                        },
+                        'bandwidth_total': 125000000,
+                        'bandwidth_reservable': 0,
+                        'admin_groups': '0x00000000',
+                        'adj_sid': {
+                            '18': 'unprotected',
+                            '36': 'protected',
+                        },
+                    },
+                    1: {
+                        'local_address': '10.19.198.30',
+                        'remote_address': '10.19.198.29',
+                        'local_node': {
+                            'ospf_router_id': '10.19.198.239',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'remote_node': {
+                            'ospf_router_id': '10.189.5.253',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'metric': {
+                            'igp': 1000,
+                            'te': 1000,
+                            'delay': 1000,
+                        },
+                        'bandwidth_total': 125000000,
+                        'bandwidth_reservable': 0,
+                        'admin_groups': '0x00000000',
+                        'adj_sid': {
+                            '37': 'unprotected',
+                            '38': 'protected',
+                        },
+                    },
+                },
+            },
+            2: {
+                'ospf_router_id': '10.189.5.252',
+                'area_id': 8,
+                'domain_id': 0,
+                'asn': 65109,
+                'prefix_sid': {
+                    'prefix': '10.189.5.252',
+                    'label': 16071,
+                    'label_type': 'regular',
+                    'domain_id': 0,
+                    'flags': 'N',
+                },
+                'links': {
+                    0: {
+                        'local_address': '10.19.198.25',
+                        'remote_address': '10.19.198.26',
+                        'local_node': {
+                            'ospf_router_id': '10.189.5.252',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'remote_node': {
+                            'ospf_router_id': '10.19.198.239',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'metric': {
+                            'igp': 1000,
+                            'te': 1000,
+                            'delay': 1000,
+                        },
+                        'bandwidth_total': 125000000,
+                        'bandwidth_reservable': 125000000,
+                        'admin_groups': '0x00000000',
+                    },
+                    1: {
+                        'local_address': '10.169.14.122',
+                        'remote_address': '10.169.14.121',
+                        'local_node': {
+                            'ospf_router_id': '10.189.5.252',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'remote_node': {
+                            'ospf_router_id': '10.169.14.240',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'metric': {
+                            'igp': 100,
+                            'te': 100,
+                            'delay': 100,
+                        },
+                        'bandwidth_total': 125000000,
+                        'bandwidth_reservable': 125000000,
+                        'admin_groups': '0x00000000',
+                        'adj_sid': {
+                            '16': 'protected',
+                        },
+                    },
+                    2: {
+                        'local_address': '10.189.5.93',
+                        'remote_address': '10.189.5.94',
+                        'local_node': {
+                            'ospf_router_id': '10.189.5.252',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'remote_node': {
+                            'ospf_router_id': '10.189.5.253',
+                            'area_id': 8,
+                            'domain_id': 0,
+                            'asn': 65109,
+                        },
+                        'metric': {
+                            'igp': 5,
+                            'te': 5,
+                            'delay': 5,
+                        },
+                        'bandwidth_total': 125000000,
+                        'bandwidth_reservable': 125000000,
+                        'admin_groups': '0x00000000',
+                        'adj_sid': {
+                            '19': 'protected',
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+            show segment-routing traffic-eng topology ipv4
+            Node 1:
+                TE router ID: 10.19.198.239
+                OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
+                Link[0]: local address 10.19.198.26, remote address 10.19.198.25
+                    Local node:
+                    OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
+                    Remote node:
+                    TE router ID: 10.189.5.252
+                    OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
+                    Metric: IGP 1000, TE 1000, Delay 1000
+                    Bandwidth: Total 125000000, Reservable 0
+                    Admin-groups: 0x00000000
+                    Adj SID: 18 (unprotected)  36 (protected)
+                Link[1]: local address 10.19.198.30, remote address 10.19.198.29
+                    Local node:
+                    OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
+                    Remote node:
+                    TE router ID: 10.189.5.253
+                    OSPF router ID: 10.189.5.253 area ID: 8 domain ID: 0 ASN: 65109
+                    Metric: IGP 1000, TE 1000, Delay 1000
+                    Bandwidth: Total 125000000, Reservable 0
+                    Admin-groups: 0x00000000
+                    Adj SID: 37 (unprotected)  38 (protected)
+
+            Node 2:
+                TE router ID: 10.189.5.252
+                OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
+                Prefix SID:
+                    Prefix 10.189.5.252, label 16071 (regular), domain ID 0, flags: N
+                Link[0]: local address 10.19.198.25, remote address 10.19.198.26
+                    Local node:
+                    OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
+                    Remote node:
+                    TE router ID: 10.19.198.239
+                    OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
+                    Metric: IGP 1000, TE 1000, Delay 1000
+                    Bandwidth: Total 125000000, Reservable 125000000
+                    Admin-groups: 0x00000000
+                Link[1]: local address 10.169.14.122, remote address 10.169.14.121
+                    Local node:
+                    OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
+                    Remote node:
+                    TE router ID: 10.169.14.240
+                    OSPF router ID: 10.169.14.240 area ID: 8 domain ID: 0 ASN: 65109
+                    Metric: IGP 100, TE 100, Delay 100
+                    Bandwidth: Total 125000000, Reservable 125000000
+                    Admin-groups: 0x00000000
+                    Adj SID: 16 (protected)
+                Link[2]: local address 10.189.5.93, remote address 10.189.5.94
+                    Local node:
+                    OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
+                    Remote node:
+                    TE router ID: 10.189.5.253
+                    OSPF router ID: 10.189.5.253 area ID: 8 domain ID: 0 ASN: 65109
+                    Metric: IGP 5, TE 5, Delay 5
+                    Bandwidth: Total 125000000, Reservable 125000000
+                    Admin-groups: 0x00000000
+                    Adj SID: 19 (protected)
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowSegmentRoutingTrafficEngTopology(device=self.device)
@@ -608,6 +832,13 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
         obj = ShowSegmentRoutingTrafficEngTopology(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowSegmentRoutingTrafficEngTopology(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ====================================================================
@@ -624,7 +855,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
         'test1': {
             'name': 'test1',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -656,13 +887,13 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                     1: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                     2: {
                                         'sid': 16072,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '111.87.5.253',
-                                        'remote_address': '111.87.6.253',
+                                        'local_address': '10.189.5.253',
+                                        'remote_address': '10.189.6.253',
                                     },
                                 },
                             },
@@ -680,23 +911,23 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
-                                                'remote_address': '111.87.6.253',
+                                                'local_address': '10.189.5.253',
+                                                'remote_address': '10.189.6.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -715,7 +946,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                     1: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -736,7 +967,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         show segment-routing traffic-eng policy all
-        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Name: test1 (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
         Candidate-paths:
@@ -747,25 +978,97 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
             Dynamic (active)
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 106.162.196.241]
-                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+                16063 [Prefix-SID, 10.169.196.241]
+                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
             Preference 200:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Dynamic (inactive)
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 106.162.196.241]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15000
             Allocation mode: explicit
             State: Programmed
     '''}
+
+    golden_parsed_output_affinity = {
+        'test1': {
+            'name': 'test1',
+            'color': 100,
+            'end_point': '10.169.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '09:38:18',
+                    'since': '08-28 20:56:55.275',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    100: {
+                        'constraints': {
+                            'affinity': {
+                                'include-all': ['green', 'blue']
+                            }
+                        },
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '10.169.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15000: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_affinity = {'execute.return_value': '''
+            show segment-routing traffic-eng policy all
+            Name: test1 (Color: 100 End-point: 10.169.196.241)
+            Status:
+                Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+            Candidate-paths:
+                Preference 100:
+                    Constraints:
+                        Affinity:
+                            include-all:
+                                green
+                                blue
+                    Dynamic (inactive)
+                        Weight: 0, Metric Type: IGP
+                        Metric Type: IGP, Path Accumulated Metric: 2200
+                        16063 [Prefix-SID, 10.169.196.241]
+            Attributes:
+                Binding SID: 15000
+                Allocation mode: explicit
+                State: Programmed
+        '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -787,6 +1090,13 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
         parsed_output = obj.parse(name='test1')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden_affinity(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_affinity)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_affinity)
+
 
 # ====================================================================
 # Unittest for:
@@ -802,7 +1112,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'maxsid': {
             'name': 'maxsid',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -825,67 +1135,67 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             2: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             3: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             4: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             5: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             6: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             7: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             8: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             9: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             10: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             11: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             12: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             13: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -905,22 +1215,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -960,7 +1270,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     'timestamp': '09-09 20:16:09.573',
                     'client': 'CLI AGENT',
                     'event_type': 'Set end point',
-                    'context': 'End-point: 106.162.196.241',
+                    'context': 'End-point: 10.169.196.241',
                 },
                 4: {
                     'timestamp': '09-09 20:16:23.728',
@@ -1033,7 +1343,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'test1': {
             'name': 'test1',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -1065,18 +1375,18 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                     1: {
                                         'sid': 16052,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.187.14.241',
+                                        'local_address': '10.169.14.241',
                                     },
                                     2: {
                                         'sid': 24,
                                         'sid_type': 'Adjacency-SID',
-                                        'local_address': '106.187.14.33',
-                                        'remote_address': '106.187.14.34',
+                                        'local_address': '10.169.14.33',
+                                        'remote_address': '10.169.14.34',
                                     },
                                     3: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -1094,22 +1404,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1128,18 +1438,18 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                     1: {
                                         'sid': 16052,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.187.14.241',
+                                        'local_address': '10.169.14.241',
                                     },
                                     2: {
                                         'sid': 24,
                                         'sid_type': 'Adjacency-SID',
-                                        'local_address': '106.187.14.33',
-                                        'remote_address': '106.187.14.34',
+                                        'local_address': '10.169.14.33',
+                                        'remote_address': '10.169.14.34',
                                     },
                                     3: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -1468,33 +1778,33 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         sr_ve-hkgasr01#show segment-routing traffic-eng policy all detail
 
-        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Name: maxsid (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 04:54:31 (since 09-09 20:19:30.195)
         Candidate-paths:
             Preference 200:
             Explicit: segment-list maxsid (active)
                 Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16063 [Prefix-SID, 106.162.196.241]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15001
             Allocation mode: explicit
@@ -1508,7 +1818,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             ---------                   ------                  ----------              -------: -----
             09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
             09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
             09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
             09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
             09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
@@ -1521,7 +1831,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
             09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
 
-        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Name: test1 (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 03:48:03 (since 09-09 21:25:58.933)
         Candidate-paths:
@@ -1532,23 +1842,23 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             Dynamic (active)
                 Weight: 0, Metric Type: TE
                 Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 106.187.14.241]
-                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
-                16063 [Prefix-SID, 106.162.196.241]
+                16052 [Prefix-SID, 10.169.14.241]
+                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 200:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Dynamic (inactive)
                 Weight: 0, Metric Type: TE
                 Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 106.187.14.241]
-                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
-                16063 [Prefix-SID, 106.162.196.241]
+                16052 [Prefix-SID, 10.169.14.241]
+                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15000
             Allocation mode: explicit
@@ -1617,7 +1927,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'maxsid': {
             'name': 'maxsid',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -1640,67 +1950,67 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             2: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             3: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             4: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             5: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             6: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             7: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             8: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             9: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             10: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             11: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             12: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             13: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1720,22 +2030,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1775,7 +2085,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     'timestamp': '09-09 20:16:09.573',
                     'client': 'CLI AGENT',
                     'event_type': 'Set end point',
-                    'context': 'End-point: 106.162.196.241',
+                    'context': 'End-point: 10.169.196.241',
                 },
                 4: {
                     'timestamp': '09-09 20:16:23.728',
@@ -1850,33 +2160,33 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
     golden_output_name = {'execute.return_value': '''
         sr_ve-hkgasr01#show segment-routing traffic-eng policy name maxsid detail
 
-        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Name: maxsid (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 06:35:58 (since 09-09 20:19:30.195)
         Candidate-paths:
             Preference 200:
             Explicit: segment-list maxsid (active)
                 Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16063 [Prefix-SID, 106.162.196.241]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15001
             Allocation mode: explicit
@@ -1890,7 +2200,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             ---------                   ------                  ----------              -------: -----
             09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
             09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
             09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
             09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
             09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED

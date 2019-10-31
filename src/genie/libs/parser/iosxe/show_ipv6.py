@@ -4,6 +4,7 @@
 
     * show ipv6 neighbors
     * show ipv6 neighbors vrf <vrf>
+    * show ipv6 neighbors <interface>
     * show ipv6 neighbors detail
     * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
@@ -38,7 +39,7 @@ class ShowIpv6NeighborsSchema(MetaParser):
                 'interface': str,
                 'neighbors': {
                     Any(): {
-                        'ip': str,  # Conf/Ops Str '2010:1:2::1'
+                        'ip': str,  # Conf/Ops Str '2001:db8:8548:1::1'
                         'link_layer_address': str,  # Conf/Ops Str 'aaaa.beef.cccc'
                         'age': str,
                         'neighbor_state': str,
@@ -54,18 +55,25 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
     """
        Parser for 'show ipv6 neighbors'
                   'show ipv6 neighbors vrf <vrf>'
+                  'show ipv6 neighbors <interface>'
     """
 
-    cli_command = ['show ipv6 neighbors vrf {vrf}',
-                   'show ipv6 neighbors']
+    cli_command = ['show ipv6 neighbors vrf {vrf} {interface}',
+                   'show ipv6 neighbors {interface}',
+                   'show ipv6 neighbors vrf {vrf}',
+                   'show ipv6 neighbors',]
     exclude = ['age' , 'neighbor_state']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if output is None:
-            if vrf:
-               cmd = self.cli_command[0].format(vrf=vrf)
+            if vrf and interface:
+                cmd = self.cli_command[0].format(vrf=vrf, interface=interface)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[3]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -74,7 +82,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         ret_dict = {}
 
         # IPv6 Address                              Age Link-layer Addr State Interface
-        # 2010:1:2::2                                 0 fa16.3eca.3efd  REACH Gi2
+        # 2001:db8:8548:1::2                                 0 fa16.3eca.3efd  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
                         '\s+(?P<interface>\S+)$')
@@ -82,7 +90,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2010:1:2::2                                 0 fa16.3eca.3efd  REACH Gi2
+            # 2001:db8:8548:1::2                                 0 fa16.3eca.3efd  REACH Gi2
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']

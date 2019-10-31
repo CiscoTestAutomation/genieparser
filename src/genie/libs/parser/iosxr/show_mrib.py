@@ -86,7 +86,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
 
             # (192.168.0.12,227.1.1.1) RPF nbr: 192.168.0.12 Flags: RPF ME MH
             # (*,ff00::/8)
-            # (1::1:1:1:2,ff15::1:1)
+            # (2001:db8:1:0:1:1:1:2,ff15::1:1)
             p1 = re.compile(r'^\s*\((?P<source_address>(\S+))\,'
                              '(?P<multicast_group>(\S+))\)'
                              '(?: *RPF +nbr: +(?P<rpf_nbr>(\S+)))?'
@@ -137,7 +137,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
                     sub_dict['flags'] = flags
                 continue
 
-            # RPF nbr: 150::150:150:150:150 Flags: L C RPF P
+            # RPF nbr: 2001:db8:b901:0:150:150:150:150 Flags: L C RPF P
             p2 = re.compile(r'^\s*RPF +nbr: +(?P<rpf_nbr>(\S+))'
                              ' +Flags: (?P<flags>[a-zA-Z\s]+)$')
             m = p2.match(line)

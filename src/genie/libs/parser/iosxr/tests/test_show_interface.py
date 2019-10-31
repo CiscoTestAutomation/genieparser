@@ -1250,10 +1250,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             'enabled': True,
             'int_status': 'up',
             'ipv6': {
-                '2010:1:2::2/64': {
-                    'ipv6': '2010:1:2::2',
+                '2001:db8:8548:1::2/64': {
+                    'ipv6': '2001:db8:8548:1::2',
                     'ipv6_prefix_length': '64',
-                    'ipv6_subnet': '2010:1:2::'},
+                    'ipv6_subnet': '2001:db8:8548:1::'},
                 'complete_glean_adj': '1',
                 'complete_protocol_adj': '1',
                 'dad_attempts': '1',
@@ -1286,10 +1286,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             'enabled': True,
             'int_status': 'up',
             'ipv6': {
-                '2020:1:2::2/64': {
-                    'ipv6': '2020:1:2::2',
+                '2001:db8:888c:1::2/64': {
+                    'ipv6': '2001:db8:888c:1::2',
                     'ipv6_prefix_length': '64',
-                    'ipv6_subnet': '2020:1:2::'},
+                    'ipv6_subnet': '2001:db8:888c:1::'},
                 'complete_glean_adj': '2',
                 'complete_protocol_adj': '0',
                 'dad_attempts': '1',
@@ -1324,10 +1324,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             'enabled': True,
             'int_status': 'up',
             'ipv6': {
-                '2010:2:3::2/64': {
-                    'ipv6': '2010:2:3::2',
+                '2001:db8:c56d:4::2/64': {
+                    'ipv6': '2001:db8:c56d:4::2',
                     'ipv6_prefix_length': '64',
-                    'ipv6_subnet': '2010:2:3::'},
+                    'ipv6_subnet': '2001:db8:c56d:4::'},
                 'complete_glean_adj': '1',
                 'complete_protocol_adj': '1',
                 'dad_attempts': '1',
@@ -1362,10 +1362,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             'enabled': True,
             'int_status': 'up',
             'ipv6': {
-                '2020:2:3::2/64': {
-                    'ipv6': '2020:2:3::2',
+                '2001:db8:c8d1:4::2/64': {
+                    'ipv6': '2001:db8:c8d1:4::2',
                     'ipv6_prefix_length': '64',
-                    'ipv6_subnet': '2020:2:3::'},
+                    'ipv6_subnet': '2001:db8:c8d1:4::'},
                 'complete_glean_adj': '1',
                 'complete_protocol_adj': '1',
                 'dad_attempts': '1',
@@ -1525,7 +1525,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
                 IPv6 is enabled, link-local address is fe80::f816:3eff:feca:3efd 
                 Global unicast address(es):
-                    2010:1:2::2, subnet is 2010:1:2::/64 
+                    2001:db8:8548:1::2, subnet is 2001:db8:8548:1::/64 
                 Joined group address(es): ff02::1:ff00:2 ff02::1:ffca:3efd ff02::2
                     ff02::1 ff02::5 ff02::6
                 MTU is 1514 (1500 is available to IPv6)
@@ -1548,7 +1548,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             GigabitEthernet0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is vrf1 (0x60000001)
                 IPv6 is enabled, link-local address is fe80::f816:3eff:fe20:fa5b 
                 Global unicast address(es):
-                  2020:1:2::2, subnet is 2020:1:2::/64 
+                  2001:db8:888c:1::2, subnet is 2001:db8:888c:1::/64 
                 Joined group address(es): ff02::1:ff00:2 ff02::1:ff20:fa5b ff02::2
                     ff02::1 ff02::5 ff02::6
                 MTU is 1514 (1500 is available to IPv6)
@@ -1573,7 +1573,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             GigabitEthernet0/0/0/2 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
                 IPv6 is enabled, link-local address is fe80::f816:3eff:fe82:6320 
                 Global unicast address(es):
-                  2010:2:3::2, subnet is 2010:2:3::/64 
+                  2001:db8:c56d:4::2, subnet is 2001:db8:c56d:4::/64 
                 Joined group address(es): ff02::1:ff00:2 ff02::1:ff82:6320 ff02::2
                     ff02::1 ff02::5 ff02::6
                 MTU is 1514 (1500 is available to IPv6)
@@ -1598,7 +1598,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             GigabitEthernet0/0/0/3 is Up, ipv6 protocol is Up, Vrfid is vrf1 (0x60000001)
                 IPv6 is enabled, link-local address is fe80::f816:3eff:fe8b:59c9 
                 Global unicast address(es):
-                  2020:2:3::2, subnet is 2020:2:3::/64 
+                  2001:db8:c8d1:4::2, subnet is 2001:db8:c8d1:4::/64 
                 Joined group address(es): ff02::1:ff00:2 ff02::1:ff8b:59c9 ff02::2
                     ff02::1 ff02::5 ff02::6
                 MTU is 1514 (1500 is available to IPv6)
@@ -1688,7 +1688,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         +++ XR1: executing command 'show ipv6 vrf all interface' +++d.parse()
         show ipv6 vrf all interface
 
-        Fri Sep  6 09:50:49.892 JST
+        Fri Sep  6 09:50:49.892 EST
         BVI100 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is disabled, link-local address unassigned
         No global unicast address is configured
@@ -1814,7 +1814,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Bundle-Ether1 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is enabled, link-local address is fe80::2bc:60ff:fe38:a8dc 
         Global unicast address(es):
-            2001:db80:910::10, subnet is 2001:db80:910::/64 
+            2001:db8:79b7:fc34::10, subnet is 2001:db8:79b7:fc34::/64 
         Joined group address(es): ff02::1:ff00:10 ff02::1:ff38:a8dc ff02::2
             ff02::1
         MTU is 1514 (1500 is available to IPv6)
@@ -1872,7 +1872,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Loopback0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is enabled, link-local address is fe80::d121:1bff:fea4:a9f7 
         Global unicast address(es):
-            1000::10, subnet is 1000::10/128 
+            2001:db8:100::10, subnet is 2001:db8:100::10/128 
         Joined group address(es): ff02::1:ff00:10 ff02::1:ffa4:a9f7 ff02::2
             ff02::1
         MTU is 1500 (1500 is available to IPv6)
@@ -1898,7 +1898,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         TenGigE0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is enabled, link-local address is fe80::2bc:60ff:fe38:a800 
         Global unicast address(es):
-            2001:db80:410::10, subnet is 2001:db80:410::/64 
+            2001:db8:ce35:fc34::10, subnet is 2001:db8:ce35:fc34::/64 
         Joined group address(es): ff02::1:ff00:10 ff02::1:ff38:a800 ff02::2
             ff02::1
         MTU is 1514 (1500 is available to IPv6)
@@ -2249,10 +2249,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 'vrf_id': '0x60000000',
                 'enabled': True,
                 'ipv6': {
-                    '2001:db80:910::10/64': {
-                        'ipv6': '2001:db80:910::10',
+                    '2001:db8:79b7:fc34::10/64': {
+                        'ipv6': '2001:db8:79b7:fc34::10',
                         'ipv6_prefix_length': '64',
-                        'ipv6_subnet': '2001:db80:910::',
+                        'ipv6_subnet': '2001:db8:79b7:fc34::',
                     },
                     'ipv6_link_local': 'fe80::2bc:60ff:fe38:a8dc',
                     'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ff38:a8dc', 'ff02::2', 'ff02::1'],
@@ -2373,10 +2373,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 'vrf_id': '0x60000000',
                 'enabled': True,
                 'ipv6': {
-                    '1000::10/128': {
-                        'ipv6': '1000::10',
+                    '2001:db8:100::10/128': {
+                        'ipv6': '2001:db8:100::10',
                         'ipv6_prefix_length': '128',
-                        'ipv6_subnet': '1000::10',
+                        'ipv6_subnet': '2001:db8:100::10',
                     },
                     'ipv6_link_local': 'fe80::d121:1bff:fea4:a9f7',
                     'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ffa4:a9f7', 'ff02::2', 'ff02::1'],
@@ -2414,10 +2414,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 'vrf_id': '0x60000000',
                 'enabled': True,
                 'ipv6': {
-                    '2001:db80:410::10/64': {
-                        'ipv6': '2001:db80:410::10',
+                    '2001:db8:ce35:fc34::10/64': {
+                        'ipv6': '2001:db8:ce35:fc34::10',
                         'ipv6_prefix_length': '64',
-                        'ipv6_subnet': '2001:db80:410::',
+                        'ipv6_subnet': '2001:db8:ce35:fc34::',
                     },
                     'ipv6_link_local': 'fe80::2bc:60ff:fe38:a800',
                     'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ff38:a800', 'ff02::2', 'ff02::1'],

@@ -736,7 +736,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   },
                                              },
                                         },
-                                   '615:11:11::/64':
+                                   '2001:db8:cdc9:121::/64':
                                        {'index':
                                             {1:
                                                  {'metric': 2219,
@@ -758,7 +758,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   },
                                              },
                                         },
-                                   '615:11:11:1::/64':
+                                   '2001:db8:cdc9:144::/64':
                                        {'index':
                                             {1:
                                                  {'metric': 2219,
@@ -835,9 +835,9 @@ class test_show_bgp_all(unittest.TestCase):
         *>  10.9.4.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
         *>  10.9.5.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
         *>  10.9.6.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-        * i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
+        * i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
         *>i                  ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
-        * i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
+        * i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
         *>i                  ::FFFF:10.4.1.1        2219    100      0 400 33299 51178 47751 {27016} e
 
 
@@ -1245,127 +1245,127 @@ class test_show_ip_bgp_all(unittest.TestCase):
                         'default_vrf': 'L3VPN-0050',
                         'route_distinguisher': '5918:50',
                         'route_identifier': '10.169.197.254',
-                        'routes': {'172.16.200.1/32': {'index': {1: {'metric': 100,
+                        'routes': {'172.16.200.1/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.10/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.10/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.11/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.11/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.12/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.12/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.13/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.13/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.14/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.14/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.15/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.15/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.16/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.16/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.17/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.17/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.18/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.18/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.19/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.19/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.2/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.2/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.20/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.20/32': {'index': {1: {'localpref': 100,
                                                                       'next_hop': '10.13.202.64',
                                                                       'origin_codes': 'i',
                                                                       'path': '60000',
                                                                       'status_codes': '*>i',
                                                                       'weight': 0}}},
-                                   '172.16.200.3/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.3/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.4/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.4/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.5/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.5/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.6/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.6/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.7/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.7/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.8/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.8/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   '172.16.200.9/32': {'index': {1: {'metric': 100,
+                                   '172.16.200.9/32': {'index': {1: {'localpref': 100,
                                                                      'next_hop': '10.13.202.64',
                                                                      'origin_codes': 'i',
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   'i': {'index': {1: {'metric': 100,
+                                   'i': {'index': {1: {'localpref': 100,
                                                        'next_hop': '10.13.202.64',
                                                        'origin_codes': 'i',
                                                        'path': '60000',
@@ -5271,7 +5271,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                 'tbl_ver': 1,
                                 'up_down': '01:07:38',
                                 'version': 4}}},
-                    '2000::1:1': 
+                    '2001:db8:400::1:1': 
                         {'address_family': 
                             {'ipv6 unicast': 
                                 {'as': 100,
@@ -5287,7 +5287,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                 'tbl_ver': 1,
                                 'up_down': '01:07:38',
                                 'version': 4}}},
-                    '2000::4:1': 
+                    '2001:db8:400::4:1': 
                         {'address_family': 
                             {'ipv6 unicast': 
                                 {'as': 100,
@@ -5397,8 +5397,8 @@ class test_show_bgp_all_summary(unittest.TestCase):
         BGP table version is 1, main routing table version 1
 
         Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        2000::1:1       4          100       0       0        1    0    0 01:07:38 Idle
-        2000::4:1       4          100       0       0        1    0    0 01:07:38 Idle
+        2001:db8:400::1:1       4          100       0       0        1    0    0 01:07:38 Idle
+        2001:db8:400::4:1       4          100       0       0        1    0    0 01:07:38 Idle
         2001::14:4      4          200       0       0        1    0    0 never    Idle
         2001::26:2      4          300       0       0        1    0    0 01:07:38 Idle
 
@@ -15672,6 +15672,142 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output5 = {
+        'list_of_neighbors': ['192.168.10.254'],
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '192.168.10.254': {
+                        'remote_as': 65109,
+                        'link': 'external',
+                        'shutdown': False,
+                        'bgp_version': 4,
+                        'router_id': '0.0.0.0',
+                        'session_state': 'Idle',
+                        'bgp_negotiated_keepalive_timers': {
+                            'hold_time': 90,
+                            'keepalive_interval': 30,
+                            'min_holdtime': 15,
+                        },
+                        'bgp_neighbor_counters': {
+                            'messages': {
+                                'sent': {
+                                    'opens': 0,
+                                    'notifications': 0,
+                                    'updates': 0,
+                                    'keepalives': 0,
+                                    'route_refresh': 0,
+                                    'total': 0,
+                                },
+                                'received': {
+                                    'opens': 0,
+                                    'notifications': 0,
+                                    'updates': 0,
+                                    'keepalives': 0,
+                                    'route_refresh': 0,
+                                    'total': 0,
+                                },
+                                'in_queue_depth': 0,
+                                'out_queue_depth': 0,
+                            },
+                        },
+                        'bgp_session_transport': {
+                            'min_time_between_advertisement_runs': 30,
+                            'connection': {
+                                'established': 0,
+                                'dropped': 0,
+                                'last_reset': 'never',
+                            },
+                            'tcp_connection': False,
+                        },
+                        'address_family': {
+                            'ipv4 unicast': {
+                                'bgp_table_version': 1,
+                                'neighbor_version': '0/0',
+                                'output_queue_size': 0,
+                                'update_group_member': 0,
+                                'community_attribute_sent': True,
+                                'prefix_activity_counters': {
+                                    'sent': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 'n/a',
+                                        'used_as_multipath': 'n/a',
+                                    },
+                                    'received': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 0,
+                                        'used_as_multipath': 0,
+                                    },
+                                },
+                                'local_policy_denied_prefixes_counters': {
+                                    'outbound': {
+                                        'total': 0,
+                                    },
+                                    'inbound': {
+                                        'total': 0,
+                                    },
+                                },
+                                'max_nlri': 0,
+                                'min_nlri': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output5 = {'execute.return_value': '''
+        show ip bgp neighbors 192.168.10.254
+        BGP neighbor is 192.168.10.254,  remote AS 65109, external link
+        BGP version 4, remote router ID 0.0.0.0
+        BGP state = Idle
+        Last read 00:00:00, last write 00:00:00, hold time is 180, keepalive interval is 60 seconds
+        Configured hold time is 90, keepalive interval is 30 seconds
+        Minimum holdtime from neighbor is 15 seconds
+        Message statistics:
+            InQ depth is 0
+            OutQ depth is 0
+                                Sent       Rcvd
+            Opens:                  0          0
+            Notifications:          0          0
+            Updates:                0          0
+            Keepalives:             0          0
+            Route Refresh:          0          0
+            Total:                  0          0
+        Default minimum time between advertisement runs is 30 seconds
+
+        For address family: IPv4 Unicast
+        BGP table version 1, neighbor version 0/0
+        Output queue size: 0
+        0 update-group member
+        Community attribute sent to this neighbor
+        Scheduled for new neighbor index allocation
+                                        Sent       Rcvd
+        Prefix activity:               ----       ----
+          Prefixes Current:               0          0
+          Prefixes Total:                 0          0
+          Implicit Withdraw:              0          0
+          Explicit Withdraw:              0          0
+          Used as bestpath:             n/a          0
+          Used as multipath:            n/a          0
+
+                                        Outbound    Inbound
+        Local Policy Denied Prefixes:    --------    -------
+          Total:                                0          0
+        Number of NLRIs in the update sent: max 0, min 0
+
+        Connections established 0; dropped 0
+        Last reset never
+        External BGP neighbor not directly connected.
+        No active TCP connection
+    '''}
+
     def test_show_ip_bgp_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpNeighbors(device=self.device)
@@ -15705,6 +15841,13 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         obj = ShowIpBgpNeighbors(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', vrf='CE1test')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_ip_bgp_neighbors_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowIpBgpNeighbors(device=self.device)
+        parsed_output = obj.parse(neighbor='192.168.10.254')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # ===========================================
@@ -17285,7 +17428,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                    'local_router_id': '10.64.4.4'},
                 'vpnv6 unicast RD 300:1':
                   {'advertised':
-                    {'646:11:11:1::/64':
+                    {'2001:db8:31b9:144::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17298,7 +17441,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:2::/64':
+                    '2001:db8:31b9:169::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17311,7 +17454,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:3::/64':
+                    '2001:db8:31b9:190::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17324,7 +17467,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11:4::/64':
+                    '2001:db8:31b9:1b9::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17337,7 +17480,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:11:11::/64':
+                    '2001:db8:31b9:121::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17356,7 +17499,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                  'route_distinguisher': '300:1'},
                 'vpnv6 unicast RD 400:1':
                   {'advertised':
-                    {'646:22:22:1::/64':
+                    {'2001:db8:a69:4c9::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17369,7 +17512,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:2::/64':
+                    '2001:db8:a69:510::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17382,7 +17525,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:3::/64':
+                    '2001:db8:a69:559::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17395,7 +17538,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22:4::/64':
+                    '2001:db8:a69:5a4::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17408,7 +17551,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                    '{27016}',
                            'status_codes': '*>',
                            'weight': 0}}},
-                    '646:22:22::/64':
+                    '2001:db8:a69:484::/64':
                       {'index':
                         {1:
                           {'metric': 2219,
@@ -17462,21 +17605,21 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
 
              Network          Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         *>  646:11:11::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:1::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:2::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:3::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  646:11:11:4::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:121::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:144::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:169::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:190::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+         *>  2001:db8:31b9:1b9::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
-         *>  646:22:22::/64   2001:DB8:20:4:6::6
+         *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:1::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:4c9::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:2::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:510::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:3::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:559::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
-         *>  646:22:22:4::/64 2001:DB8:20:4:6::6
+         *>  2001:db8:a69:5a4::/64 2001:DB8:20:4:6::6
                                                      2219             0 400 33299 51178 47751 {27016} e
 
         Total number of prefixes 10
@@ -18477,6 +18620,154 @@ class test_show_ip_bgp_neighbors_advertised_routes(unittest.TestCase):
                 rd='65000:100', neighbor='172.16.1.1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_golden(self):
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            show bgp all neighbors | i BGP neighbor
+            BGP neighbor is 10.120.202.189,  remote AS 65109, internal link
+            BGP neighbor is 192.168.0.6,  remote AS 2516, external link
+            BGP neighbor is 10.225.10.253,  vrf CE1test,  remote AS 60000, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+            BGP neighbor is 192.168.0.254,  vrf L3VPN_1001,  remote AS 60001, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+            BGP neighbor is 192.168.1.254,  vrf L3VPN_1002,  remote AS 60002, external link
+            External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        '''
+
+        golden_output = '''\
+            show ip bgp vpnv4 vrf L3VPN_1001 neighbors 192.168.0.254 advertised-routes
+            Load for five secs: 100%/4%; one minute: 80%; five minutes: 75%
+            Time source is NTP, 21:20:51.739 EST Wed Oct 16 2019
+
+            BGP table version is 6173717, local router ID is 192.168.0.253
+            Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                        r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                        x best-external, a additional-path, c RIB-compressed, 
+                        t secondary path, L long-lived-stale,
+            Origin codes: i - IGP, e - EGP, ? - incomplete
+            RPKI validation codes: V valid, I invalid, N Not found
+
+                Network          Next Hop            Metric LocPrf Weight Path
+            Route Distinguisher: 65109:1001 (default for vrf L3VPN_1001) VRF Router ID 192.168.0.253
+            *>i  10.1.0.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.1.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.2.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.3.0/24     10.19.198.238            0    100      0 65000 i
+            *>i  10.1.4.0/24     10.19.198.238            0    100      0 65000 i
+
+            Total number of prefixes 5
+        '''
+
+        golden_parsed_output = {
+            'vrf': {
+                'L3VPN_1001': {
+                    'neighbor': {
+                        '192.168.0.254': {
+                            'address_family': {
+                                'vpnv4': {
+                                    'advertised': {
+                                    },
+                                    'bgp_table_version': 6173717,
+                                    'local_router_id': '192.168.0.253',
+                                },
+                                'vpnv4 RD 65109:1001': {
+                                    'bgp_table_version': 6173717,
+                                    'local_router_id': '192.168.0.253',
+                                    'route_distinguisher': '65109:1001',
+                                    'default_vrf': 'L3VPN_1001',
+                                    'advertised': {
+                                        '10.1.0.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.1.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.2.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.3.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                        '10.1.4.0/24': {
+                                            'index': {
+                                                1: {
+                                                    'status_codes': '*>',
+                                                    'path_type': 'i',
+                                                    'next_hop': '10.19.198.238',
+                                                    'origin_codes': 'i',
+                                                    'metric': 0,
+                                                    'localprf': 100,
+                                                    'weight': 0,
+                                                    'path': '65000',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+        self.outputs = {}
+        self.maxDiff = None 
+        self.outputs['show ip bgp vpnv4 vrf L3VPN_1001 neighbors 192.168.0.254 advertised-routes'] = golden_output
+        self.outputs['show bgp all neighbors | i BGP neighbor'] = raw1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+
+        obj = ShowIpBgpNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN_1001', neighbor='192.168.0.254')
+        self.assertEqual(parsed_output, golden_parsed_output)
 
 #-------------------------------------------------------------------------------
 
@@ -18810,7 +19101,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'received_routes': 
-                                    {'aaaa:1::/113': 
+                                    {'2001:db8:aaaa:1::/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -18819,7 +19110,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
+                                    '2001:db8:2001:db8:aaaa:1::8000/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -18896,9 +19187,9 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
@@ -19276,7 +19567,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '200:1',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19291,7 +19582,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19306,7 +19597,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19321,7 +19612,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19336,7 +19627,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19356,7 +19647,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '200:2',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19371,7 +19662,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19386,7 +19677,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19401,7 +19692,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19416,7 +19707,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*>',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19437,7 +19728,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                             'local_router_id': '10.64.4.4',
                             'route_distinguisher': '300:1',
                             'routes': 
-                                {'615:11:11:1::/64': 
+                                {'2001:db8:cdc9:144::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19465,7 +19756,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:2::/64': 
+                                '2001:db8:cdc9:169::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19493,7 +19784,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:3::/64': 
+                                '2001:db8:cdc9:190::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19521,7 +19812,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11:4::/64': 
+                                '2001:db8:cdc9:1b9::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19549,7 +19840,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                             'path_type': 'i',
                                             'status_codes': '*',
                                             'weight': 0}}},
-                                '615:11:11::/64': 
+                                '2001:db8:cdc9:121::/64': 
                                     {'index': 
                                         {1: 
                                             {'localprf': 100,
@@ -19625,27 +19916,27 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
 
              Network          Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1
-         *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2
-         *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         *>i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         *>i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         * i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:121::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:1::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:144::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:2::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:169::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:3::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:190::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-         * i 615:11:11:4::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+         * i 2001:db8:cdc9:1b9::/64 ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
          *>i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
 
         Total number of prefixes 20
@@ -19866,7 +20157,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'routes': 
-                                    {'aaaa:1::/113': 
+                                    {'2001:db8:aaaa:1::/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -19875,7 +20166,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113': 
+                                    '2001:db8:2001:db8:aaaa:1::8000/113': 
                                         {'index': 
                                             {1: 
                                                 {'localprf': 100,
@@ -19952,9 +20243,9 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
@@ -21791,6 +22082,328 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+class test_show_ip_bgp(unittest.TestCase):
+    ''' unit test for show ip bgp '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        #show ip bgp
+        BGP table version is 569861, local router ID is 10.150.0.5
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                      x best-external, a additional-path, c RIB-compressed, 
+                      t secondary path, 
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+             Network          Next Hop            Metric LocPrf Weight Path
+         * i  192.168.0.1/21     10.0.0.5          134430 233451 123450 20450 65500 3549 i
+         * i  192.168.0.2/21     10.0.0.5                   1000      0 20450 65500 3549 i
+         * i  192.168.0.3/21     10.0.0.5               0             0 20450 65500 3549 i
+         * i  192.168.0.4/21     10.0.0.5                             0 20450 65500 3549 i
+         *m 10.1.2.0/24      10.4.1.1               2219    100      0 20450 65500 3549 {27016} e
+         *rm 10.1.3.0/24      10.4.1.1               2219    100      0 20450 65500 3549 {27016} e
+    '''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    '': {
+                        'routes': {
+                            '192.168.0.1/21': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '* i',
+                                        'path': '20450 65500 3549',
+                                        'next_hop': '10.0.0.5',
+                                        'localpref': 233451,
+                                        'weight': 123450,
+                                        'metric': 134430,
+                                        'origin_codes': 'i'
+                                    }
+                                }
+                            },
+                            '192.168.0.2/21': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '* i',
+                                        'path': '20450 65500 3549',
+                                        'next_hop': '10.0.0.5',
+                                        'localpref': 1000,
+                                        'weight': 0,
+                                        'origin_codes': 'i'
+                                    }
+                                }
+                            },
+                            '192.168.0.3/21': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '* i',
+                                        'path': '20450 65500 3549',
+                                        'next_hop': '10.0.0.5',
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': 'i'
+                                    }
+                                }
+                            },
+                            '192.168.0.4/21': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '* i',
+                                        'path': '20450 65500 3549',
+                                        'next_hop': '10.0.0.5',
+                                        'weight': 0,
+                                        'origin_codes': 'i'
+                                    }
+                                }
+                            },
+                            '10.1.2.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*m',
+                                        'path': '20450 65500 3549 {27016}',
+                                        'next_hop': '10.4.1.1',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 2219,
+                                        'origin_codes': 'e'
+                                    }
+                                }
+                            },
+                            '10.1.3.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*rm',
+                                        'path': '20450 65500 3549 {27016}',
+                                        'next_hop': '10.4.1.1',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 2219,
+                                        'origin_codes': 'e'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'vpnv4 RD 65109:10000': {
+                        'bgp_table_version': 94705143,
+                        'route_identifier': '192.168.9.250',
+                        'route_distinguisher': '65109:10000',
+                        'default_vrf': 'default',
+                        'routes': {
+                            '10.229.11.11/32': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '1234 60000',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '1234 60000',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '10.225.10.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '172.16.0.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '1234 60000',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '1234 60000',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '172.16.1.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '1234 60000',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '1234 60000',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '172.16.51.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '65000 1234',
+                                        'next_hop': '10.19.198.238',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': 'i',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.238',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '65000 1234',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '172.16.205.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '65000 1234',
+                                        'next_hop': '10.19.198.238',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': 'i',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.238',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '65000 1234',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '192.168.136.0/22': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>i',
+                                        'path': '1234 60000',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                    },
+                                    2: {
+                                        'status_codes': '* i',
+                                        'next_hop': '10.19.198.239',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 0,
+                                        'path': '1234 60000',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''
+        show ip bgp vpnv4 rd 65109:10000
+        Load for five secs: 21%/0%; one minute: 23%; five minutes: 32%
+        Time source is NTP, 19:37:31.828 EST Wed Oct 16 2019
+
+        BGP table version is 94705143, local router ID is 192.168.9.250
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                    r RIB-failure, S Stale
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+
+        Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65109:10000
+        *>i10.229.11.11/32   10.19.198.239            0    100      0 1234 60000 ?
+        * i                 10.19.198.239            0    100      0 1234 60000 ?
+        *>i10.225.10.0/24  10.19.198.239            0    100      0 ?
+        * i                 10.19.198.239            0    100      0 ?
+        *>i172.16.0.0/24    10.19.198.239            0    100      0 1234 60000 ?
+        * i                 10.19.198.239            0    100      0 1234 60000 ?
+        *>i172.16.1.0/24    10.19.198.239            0    100      0 1234 60000 ?
+        * i                 10.19.198.239            0    100      0 1234 60000 ?
+        *>i172.16.51.0/24    10.19.198.238            0    100      0 65000 1234 i
+        * i                 10.19.198.238            0    100      0 65000 1234 i
+        *>i172.16.205.0/24    10.19.198.238            0    100      0 65000 1234 i
+        * i                 10.19.198.238            0    100      0 65000 1234 i
+        *>i192.168.136.0/22 10.19.198.239            0    100      0 1234 60000 ?
+        * i                 10.19.198.239            0    100      0 1234 60000 ?
+    '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='65109:10000')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 #-------------------------------------------------------------------------------

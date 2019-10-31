@@ -495,7 +495,7 @@ class test_show_version(unittest.TestCase):
             'processor_type': '2RU',
             'rom': 'IOS-XE ROMMON',
             'rtr_type': 'ISR4451-X/K9',
-            'system_image': 'bootflash:isr4400-universalk9.16.06.05.SPA.bin',
+            'system_image': 'bootflash:isr4400-universalk10.115.6.5.SPA.bin',
             'system_restarted_at': '07:19:15 UTC Fri Feb 1 2019',
             'uptime': '2 days, 3 hours, 18 minutes',
             'uptime_this_cp': '2 days, 3 hours, 19 minutes',
@@ -529,7 +529,7 @@ class test_show_version(unittest.TestCase):
         Uptime for this control processor is 2 days, 3 hours, 19 minutes
         System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
         System restarted at 07:19:15 UTC Fri Feb 1 2019
-        System image file is "bootflash:isr4400-universalk9.16.06.05.SPA.bin"
+        System image file is "bootflash:isr4400-universalk10.115.6.5.SPA.bin"
         Last reload reason: Reload Command
 
 
@@ -1215,7 +1215,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         },
         'slot': {
             'slot 6': {
-                'boot': 'bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
+                'boot': 'bootflash:asr1002x-universalk10.144.1.1.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
                 'config_register': '0x1000',
                 'curr_sw_state': 'ACTIVE',
                 'image_ver': 'Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)',
@@ -1249,7 +1249,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
     Technical Support: http://www.cisco.com/techsupport
     Copyright (c) 1986-2018 by Cisco Systems, Inc.
     Compiled Mon 26-Feb-18 10:00 by mcpre
-                              BOOT = bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
+                              BOOT = bootflash:asr1002x-universalk10.144.1.1.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
             Configuration register = 0x1000
 
     Peer (slot: 7) information is not available because it is in 'DISABLED' state
@@ -1975,8 +1975,19 @@ class test_show_inventory(unittest.TestCase):
                         },
                     },
                 },
+            'Fan_Tray': {
+                'other': {
+                    'ACS-4330-FANASSY': {
+                        'descr': 'Cisco ISR4330 Fan Assembly',
+                        'name': 'Fan Tray',
+                        'pid': 'ACS-4330-FANASSY',
+                        'sn': '',
+                        'vid': '',
+                    }
+                }
+            },
             'R0': 
-                {'lc': 
+                {'rp': 
                     {'ISR4331/K9': 
                         {'sn': 'FDO21520TGH',
                         'pid': 'ISR4331/K9',
@@ -2076,6 +2087,14 @@ class test_show_inventory(unittest.TestCase):
                                     'pid': 'ONS-SI-622-I1',
                                     'sn': 'ECL133706C3',
                                     'vid': 'A'}}},
+                        'vid': 'V01'}}},
+            'Fan_Tray': {
+                'other': {
+                    'ASR-920-FAN-M': {
+                        'descr': 'ASR 920 Fan tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR-920-FAN-M',
+                        'sn': 'CAT1903V028',
                         'vid': 'V01'}}},
             'P0': 
                 {'other': 
@@ -2216,7 +2235,7 @@ class test_show_inventory(unittest.TestCase):
                 }
             },
             'R0': {
-                'lc': {
+                'rp': {
                     'ASR1002-X': {
                         'descr': 'Cisco ASR1002-X Route Processor',
                         'name': 'module R0',
@@ -2267,6 +2286,221 @@ class test_show_inventory(unittest.TestCase):
         PID: ASR1002-X         , VID:    , SN:         
         '''}
 
+    golden_parsed_output = {
+        'main': {
+            'chassis': {
+                'ASR1002-HX': {
+                    'name': 'Chassis',
+                    'descr': 'Cisco ASR1002-HX Chassis',
+                    'pid': 'ASR1002-HX',
+                    'vid': 'V01',
+                    'sn': 'FXS2049Q1P2',
+                },
+            },
+        },
+        'slot': {
+            'P0': {
+                'other': {
+                    'ASR1000X-AC-750W': {
+                        'name': 'Power Supply Module 0',
+                        'descr': 'Cisco 750 Watt AC power supply',
+                        'pid': 'ASR1000X-AC-750W',
+                        'vid': 'V01',
+                        'sn': 'POG20517XAE',
+                    },
+                },
+            },
+            'P1': {
+                'other': {
+                    'ASR1000X-AC-750W': {
+                        'name': 'Power Supply Module 1',
+                        'descr': 'Cisco 750 Watt AC power supply',
+                        'pid': 'ASR1000X-AC-750W',
+                        'vid': 'V01',
+                        'sn': 'POG20517X06',
+                    },
+                },
+            },
+            'Fan_Tray': {
+                'other': {
+                    'ASR1002HX-FAN': {
+                        'descr': 'Cisco ASR1002-HX Fan Tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR1002HX-FAN',
+                        'sn': '',
+                        'vid': ''
+                    }
+                }
+            },
+            '0': {
+                'lc': {
+                    'ASR1002-HX': {
+                        'name': 'module 0',
+                        'descr': 'Cisco ASR1002-HX Modular Interface Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': '',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                'BUILT-IN-EPA-8x1G': {
+                                    'name': 'SPA subslot 0/0',
+                                    'descr': '8-port Built-in Gigabit Ethernet Port Adapter',
+                                    'pid': 'BUILT-IN-EPA-8x1G',
+                                    'vid': 'N/A',
+                                    'sn': 'JAE12345678',
+                                },
+                            },
+                            '0 transceiver 0': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 0',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124049',
+                                },
+                            },
+                            '0 transceiver 1': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 1',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124050',
+                                },
+                            },
+                            '0 transceiver 2': {
+                                '': {
+                                    'descr': 'GE LX',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': '',
+                                    'sn': '1162722191',
+                                    'vid': '1.0'
+                                }
+                            },
+                            '0 transceiver 3': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 3',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124052',
+                                },
+                            },
+                            '1': {
+                                'BUILT-IN-EPA-8x10G': {
+                                    'name': 'SPA subslot 0/1',
+                                    'descr': '8-port Built-in 10-Gigabit Ethernet Port Adapter',
+                                    'pid': 'BUILT-IN-EPA-8x10G',
+                                    'vid': 'N/A',
+                                    'sn': 'JAE87654321',
+                                },
+                            },
+                            '1 transceiver 0': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 0',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3162917828',
+                                },
+                            },
+                            '1 transceiver 1': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 1',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3170330174',
+                                },
+                            },
+                            '1 transceiver 2': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 2',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3170330172',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'R0': {
+                'rp': {
+                    'ASR1002-HX': {
+                        'name': 'module R0',
+                        'descr': 'Cisco ASR1002-HX Route Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': 'V01',
+                        'sn': 'JAE21050044',
+                    },
+                },
+            },
+            'F0': {
+                'lc': {
+                    'ASR1002-HX': {
+                        'name': 'module F0',
+                        'descr': 'Cisco ASR1002-HX Embedded Services Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': '',
+                        'sn': '',
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''
+        show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
+        PID: ASR1002-HX        , VID: V01  , SN: FXS2049Q1P2
+
+        NAME: "Power Supply Module 0", DESCR: "Cisco 750 Watt AC power supply"
+        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517XAE
+
+        NAME: "Power Supply Module 1", DESCR: "Cisco 750 Watt AC power supply"
+        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517X06
+
+        NAME: "Fan Tray", DESCR: "Cisco ASR1002-HX Fan Tray"
+        PID: ASR1002HX-FAN     , VID:      , SN:
+
+        NAME: "module 0", DESCR: "Cisco ASR1002-HX Modular Interface Processor"
+        PID: ASR1002-HX        , VID:      , SN:
+
+        NAME: "SPA subslot 0/0", DESCR: "8-port Built-in Gigabit Ethernet Port Adapter"
+        PID: BUILT-IN-EPA-8x1G , VID: N/A  , SN: JAE12345678
+
+        NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124049
+
+        NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124050
+
+        NAME: "subslot 0/0 transceiver 2", DESCR: "GE LX"
+        PID: , VID: 1.0  , SN: 1162722191
+
+        NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124052
+
+        NAME: "SPA subslot 0/1", DESCR: "8-port Built-in 10-Gigabit Ethernet Port Adapter"
+        PID: BUILT-IN-EPA-8x10G, VID: N/A  , SN: JAE87654321
+
+        NAME: "subslot 0/1 transceiver 0", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3162917828
+
+        NAME: "subslot 0/1 transceiver 1", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3170330174
+
+        NAME: "subslot 0/1 transceiver 2", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3170330172
+
+        NAME: "module R0", DESCR: "Cisco ASR1002-HX Route Processor"
+        PID: ASR1002-HX        , VID: V01  , SN: JAE21050044
+
+        NAME: "module F0", DESCR: "Cisco ASR1002-HX Embedded Services Processor"
+        PID: ASR1002-HX        , VID:      , SN:
+    '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2308,6 +2542,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_platform(unittest.TestCase):
@@ -3137,6 +3378,7 @@ class test_show_switch_detail(unittest.TestCase):
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
+        show switch detail
         Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
@@ -3157,6 +3399,46 @@ class test_show_switch_detail(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output1 = {
+        "switch": {
+            "mac_address": "00d6.fe70.3c80",
+            "mac_persistency_wait_time": "indefinite",
+            "stack": {
+                "1": {
+                    "role": "active",
+                    "state": "ready",
+                    "mac_address": "00d6.fe70.3c80",
+                    "priority": "1",
+                    "hw_ver": "V02",
+                    "ports": {
+                        "1": {
+                            "stack_port_status": "down",
+                            "neighbors_num": "None"
+                        },
+                        "2": {
+                            "stack_port_status": "down",
+                            "neighbors_num": "None"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output1 = {'execute.return_value': '''\
+        show switch detail
+        Switch/Stack Mac Address : 00d6.fe70.3c80 - Local Mac Address
+        Mac persistency wait time: Indefinite
+                                                    H/W   Current
+        Switch#   Role    Mac Address     Priority Version  State
+        ------------------------------------------------------------
+        *1       Active   00d6.fe70.3c80     1      V02     Ready
+
+                Stack Port Status             Neighbors
+        Switch#  Port 1     Port 2           Port 1   Port 2
+        --------------------------------------------------------
+        1       DOWN       DOWN             None     None
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitchDetail(device=self.dev1)
@@ -3169,6 +3451,13 @@ class test_show_switch_detail(unittest.TestCase):
         platform_obj = ShowSwitchDetail(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output1)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 class test_show_switch(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -15214,6 +15503,76 @@ class test_show_platform_hardware(unittest.TestCase):
                           (bytes): 0                   ,          (packets): 0     
     '''}
 
+    golden_parsed_output = {
+        'TenGigabitEthernet0/0/0': {
+            'if_h': 7,
+            'index': {
+                '0': {
+                    'queue_id': '0xcc8',
+                    'name': 'TenGigabitEthernet0/0/0',
+                    'software_control_info': {
+                        'cache_queue_id': '0x00000cc8',
+                        'wred': '0x5218622c',
+                        'qlimit_bytes': 65625002,
+                        'parent_sid': '0x28194',
+                        'debug_name': 'TenGigabitEthernet0/0/0',
+                        'sw_flags': '0x08000011',
+                        'sw_state': '0x00000801',
+                        'port_uidb': 262137,
+                        'orig_min': 0,
+                        'min': 1050000000,
+                        'min_qos': 0,
+                        'min_dflt': 0,
+                        'orig_max': 0,
+                        'max': 0,
+                        'max_qos': 0,
+                        'max_dflt': 0,
+                        'share': 1,
+                        'plevel': 0,
+                        'priority': 65535,
+                        'defer_obj_refcnt': 0,
+                        'cp_ppe_addr': '0x00000000',
+                    },
+                    'statistics': {
+                        'tail_drops_bytes': 0,
+                        'tail_drops_packets': 0,
+                        'total_enqs_bytes': 19215977960,
+                        'total_enqs_packets': 82176494,
+                        'queue_depth_bytes': 0,
+                        'lic_throughput_oversub_drops_bytes': 0,
+                        'lic_throughput_oversub_drops_packets': 0,
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''
+        show platform hardware qfp active infrastructure bqs queue output default interface TenGigabitEthernet0/0/0
+        Load for five secs: 91%/1%; one minute: 83%; five minutes: 65%
+        Time source is NTP, 18:30:46.284 EST Wed Oct 16 2019
+        
+        Interface: TenGigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
+        Queue specifics:
+            Index 0 (Queue ID:0xcc8, Name: TenGigabitEthernet0/0/0)
+            Software Control Info:
+            (cache) queue id: 0x00000cc8, wred: 0x5218622c, qlimit (bytes): 65625002
+            parent_sid: 0x28194, debug_name: TenGigabitEthernet0/0/0
+            sw_flags: 0x08000011, sw_state: 0x00000801, port_uidb: 262137
+            orig_min  : 0                   ,      min: 1050000000         
+            min_qos   : 0                   , min_dflt: 0                  
+            orig_max  : 0                   ,      max: 0                  
+            max_qos   : 0                   , max_dflt: 0                  
+            share     : 1
+            plevel    : 0, priority: 65535
+            defer_obj_refcnt: 0, cp_ppe_addr: 0x00000000
+            Statistics:
+            tail drops  (bytes): 0                   ,          (packets): 0                  
+            total enqs  (bytes): 19215977960         ,          (packets): 82176494           
+            queue_depth (bytes): 0                  
+            licensed throughput oversubscription drops:
+                        (bytes): 0                   ,          (packets): 0    
+    '''}
+
     def test_golden_active(self):
         self.device = Mock(**self.golden_output_active)
         obj = ShowPlatformHardware(device=self.device)
@@ -15233,6 +15592,13 @@ class test_show_platform_hardware(unittest.TestCase):
         obj = ShowPlatformHardware(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardware(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_platform_hardware_plim(unittest.TestCase):

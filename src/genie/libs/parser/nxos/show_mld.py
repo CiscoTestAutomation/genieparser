@@ -38,6 +38,7 @@ class ShowIpv6MldInterfaceSchema(MetaParser):
 
     schema = {'vrfs': {
                 Any(): {
+                    Optional('count'): int,
                     Optional('interface'): {
                         Any(): {
                             'enable': bool,
@@ -137,6 +138,16 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
+                count = None
+                continue
+
+            # MLD Interfaces for VRF "VRF1", count: 4
+            p1_1 = re.compile(r'^MLD +Interfaces +for +VRF +\"(?P<vrf>\S+)\", '
+                               'count: +(?P<count>\d+)$')
+            m = p1_1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                count = int(m.groupdict()['count'])
                 continue
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up
@@ -152,6 +163,8 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
                     ret_dict['vrfs'] = {}
                 if vrf not in ret_dict['vrfs']:
                     ret_dict['vrfs'][vrf] = {}
+                    if count:
+                        ret_dict['vrfs'][vrf]['count'] = count
 
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
@@ -165,7 +178,7 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
                     m.groupdict()['admin_status'].lower() == 'up' else False
                 continue
 
-            # 2001:db1:1::1/64 [VALID]
+            # 2001:db8:8404:751c::1/64 [VALID]
             p3 = re.compile(r'^(?P<address>(?P<ip>[a-z0-9\:]+)'
                              '\/(?P<prefix_length>[0-9]+))'
                              ' *\[(?P<status>[a-zA-Z]+)\]$')
@@ -553,7 +566,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 sub_dict['type'] = m.groupdict()['type'].lower()
                 continue
 
-            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db1:1:1::1
+            # Uptime/Expires: 00:26:28/never, Last Reporter: 2001:db8:8404:907f::1
             p4 = re.compile(r'^Uptime\/Expires *: +(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+), +'
                              'Last +Reporter *: +(?P<last_reporter>[\w\.\:]+)$')
             m = p4.match(line)

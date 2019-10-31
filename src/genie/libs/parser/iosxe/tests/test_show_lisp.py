@@ -1819,7 +1819,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                         'locator_address': 
                                                             {'address_type': 'ipv6-afi',
                                                             'ipv6': 
-                                                                {'ipv6': '2001:468:D01:9C::80DF:9C86'},
+                                                                {'ipv6': '2001:DB8:BBED:2829::80DF:9C86'},
                                                             'virtual_network_id': '101'}}}},
                                             'creation_time': '00:00:00',
                                             'via': 'map-reply, complete'},
@@ -1877,7 +1877,7 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
           Locator                     Uptime    State      Pri/Wgt
           172.16.156.134              00:00:00  up           1/50
           192.168.65.94               00:00:00  up           1/50
-          2001:468:D01:9C::80DF:9C86  00:00:00  up           2/100
+          2001:DB8:BBED:2829::80DF:9C86  00:00:00  up           2/100
         '''}
 
     golden_parsed_output3 = {
