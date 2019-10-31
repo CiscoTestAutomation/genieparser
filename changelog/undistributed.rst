@@ -23,6 +23,24 @@
         * 'show route ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+		
+* IOSXR
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+		
+* NXOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interface description'
+        * 'show interface {interface} description'
+		
+* IOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
 
 * IOSXR
     * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
