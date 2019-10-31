@@ -166,10 +166,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", '
-                        r'+distance +(?P<distance>\d+), +metric '
-                        r'+(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- '
-                        r']+))?,? *.*$')
+        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -183,7 +180,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         r', +clientid=(?P<clientid>\d+)\)$')
         
         # Installed Oct 23 22:09:38.380 for 5d21h
-        p10 = re.compile(r'^^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
+        p10 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
 
         # initial variables
@@ -554,10 +551,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", '
-                        r'+distance +(?P<distance>\d+), +metric '
-                        r'+(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- '
-                        r']+))?,? *.*$')
+        p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p8 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -571,7 +565,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                         r', +clientid=(?P<clientid>\d+)\)$')
         
         # Installed Oct 23 22:09:38.380 for 5d21h
-        p11 = re.compile(r'^^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
+        p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
         p12 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
