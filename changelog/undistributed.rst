@@ -79,6 +79,8 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+    * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
+        * changed backup_nexthop and backup_nexthop to optional
 
 * IOSXR
     * Updated ShowBgpSessions
