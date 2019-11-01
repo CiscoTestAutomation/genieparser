@@ -6415,4 +6415,24 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpInstanceNeighborsDetail):
 
         return result_dict
 
+
+class ShowBgpNeighbors(ShowBgpInstanceNeighborsDetail):
+
+    """Parser for show bgp neighbors
+                  show bgp neighbors <neighbor>
+    """
+
+    cli_command = ['show bgp neighbors', 'show bgp neighbors {neighbor}']
+
+    def cli(self, neighbor='', output=None):
+
+        if neighbor:
+            cmd = self.cli_command[1].format(neighbor=neighbor)
+        else:
+            cmd = self.cli_command[0]
+
+        out = output or self.device.execute(cmd)
+
+        return super().cli(output=out)
+
 # vim: ft=python ts=8 sw=4 et

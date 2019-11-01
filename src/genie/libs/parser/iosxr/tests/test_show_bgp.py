@@ -28,7 +28,8 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
                                               ShowBgpVrfDbVrfAll,
                                               ShowBgpL2vpnEvpnAdvertised,
                                               ShowBgpSessions,
-                                              ShowBgpInstanceAllSessions)
+                                              ShowBgpInstanceAllSessions,
+                                              ShowBgpNeighbors)
 
 
 # ==================================
@@ -6495,62 +6496,63 @@ class TestShowBgpInstanceAllAllAllSummary(unittest.TestCase):
         '''}
 
     golden_parsed_output_1 = {
-    "instance": {
-        "default": {
-            "vrf": {
-                "HI-TST": {
-                    "address_family": {
-                        "vpnv4 unicast": {
-                            "route_distinguisher": "10.16.2.2:0",
-                            "vrf_id": "0x60000001",
-                            "router_id": "10.4.1.1",
-                            "local_as": 64577,
-                            "non_stop_routing": "enabled",
-                            "table_state": "active",
-                            "table_id": "0xe0011110",
-                            "rd_version": 19,
-                            "bgp_table_version": 1,
-                            "nsr_initial_initsync_version": 18,
-                            "nsr_initial_init_ver_status": "reached",
-                            "nsr_issu_sync_group_versions": "0/0",
-                            "operation_mode": "standalone",
-                            "process": {
-                                "Speaker": {
-                                    "rcvtblver": 1,
-                                    "brib_rib": 1,
-                                    "labelver": 1,
-                                    "importver": 1,
-                                    "sendtblver": 1,
-                                    "standbyver": 0
+        "instance": {
+            "default": {
+                "vrf": {
+                    "HI-TST": {
+                        "address_family": {
+                            "vpnv4 unicast": {
+                                "route_distinguisher": "10.16.2.2:0",
+                                "vrf_id": "0x60000001",
+                                "router_id": "10.4.1.1",
+                                "local_as": 64577,
+                                "non_stop_routing": "enabled",
+                                "table_state": "active",
+                                "table_id": "0xe0011110",
+                                "rd_version": 19,
+                                "bgp_table_version": 1,
+                                "nsr_initial_initsync_version": 18,
+                                "nsr_initial_init_ver_status": "reached",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "operation_mode": "standalone",
+                                "process": {
+                                    "Speaker": {
+                                        "rcvtblver": 1,
+                                        "brib_rib": 1,
+                                        "labelver": 1,
+                                        "importver": 1,
+                                        "sendtblver": 1,
+                                        "standbyver": 0
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-                "CTV-BG-JYI": {
-                    "address_family": {
-                        "vpnv4 unicast": {
-                            "route_distinguisher": "10.25.4.5:1",
-                            "vrf_id": "0x60000004",
-                            "router_id": "10.4.1.1",
-                            "local_as": 12345,
-                            "non_stop_routing": "enabled",
-                            "table_state": "active",
-                            "table_id": "0xe0011114",
-                            "rd_version": 1,
-                            "bgp_table_version": 1,
-                            "nsr_initial_initsync_version": 18,
-                            "nsr_initial_init_ver_status": "reached",
-                            "nsr_issu_sync_group_versions": "0/0",
-                            "operation_mode": "standalone",
-                            "process": {
-                                "Speaker": {
-                                    "rcvtblver": 1,
-                                    "brib_rib": 1,
-                                    "labelver": 1,
-                                    "importver": 1,
-                                    "sendtblver": 1,
-                                    "standbyver": 0
+                    },
+                    "CTV-BG-JYI": {
+                        "address_family": {
+                            "vpnv4 unicast": {
+                                "route_distinguisher": "10.25.4.5:1",
+                                "vrf_id": "0x60000004",
+                                "router_id": "10.4.1.1",
+                                "local_as": 12345,
+                                "non_stop_routing": "enabled",
+                                "table_state": "active",
+                                "table_id": "0xe0011114",
+                                "rd_version": 1,
+                                "bgp_table_version": 1,
+                                "nsr_initial_initsync_version": 18,
+                                "nsr_initial_init_ver_status": "reached",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "operation_mode": "standalone",
+                                "process": {
+                                    "Speaker": {
+                                        "rcvtblver": 1,
+                                        "brib_rib": 1,
+                                        "labelver": 1,
+                                        "importver": 1,
+                                        "sendtblver": 1,
+                                        "standbyver": 0
+                                    }
                                 }
                             }
                         }
@@ -6559,7 +6561,6 @@ class TestShowBgpInstanceAllAllAllSummary(unittest.TestCase):
             }
         }
     }
-}
 
     golden_output_1 = {'execute.return_value': '''
         show bgp instance all vrf all ipv4 unicast summary
@@ -29758,6 +29759,177 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpInstanceAllSessions(device=self.dev)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# ===============================================
+#  Unit test for 'show bgp instance all sessions'
+# ===============================================
+class TestShowBgpNeighbors(unittest.TestCase):
+    dev = Device(name='aDevice')
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "instance": {
+            "all": {
+                "vrf": {
+                    "default": {
+                        "neighbor": {
+                            "1.1.1.1": {
+                                "remote_as": 65000,
+                                "link_state": "internal link",
+                                "local_as_as_no": 65000,
+                                "local_as_no_prepend": False,
+                                "local_as_replace_as": False,
+                                "local_as_dual_as": False,
+                                "router_id": "1.1.1.1",
+                                "session_state": "established",
+                                "up_time": "1w1d",
+                                "nsr_state": "None",
+                                "holdtime": 180,
+                                "keepalive_interval": 60,
+                                "min_acceptable_hold_time": 3,
+                                "last_write": "00:00:03",
+                                "attempted": 19,
+                                "written": 19,
+                                "second_last_write": "00:01:03",
+                                "second_attempted": 19,
+                                "second_written": 19,
+                                "last_write_pulse_rcvd": "Nov  1 21:31:48.334 ",
+                                "last_full_not_set_pulse_count": 85322,
+                                "last_ka_error_before_reset": "00:00:00",
+                                "last_ka_error_ka_not_sent": "00:00:00",
+                                "precedence": "internet",
+                                "non_stop_routing": True,
+                                "multiprotocol_capability": "received",
+                                "minimum_time_between_adv_runs": 0,
+                                "inbound_message": "3",
+                                "outbound_message": "3",
+                                "address_family": {
+                                    "ipv4 unicast": {
+                                        "neighbor_version": 7,
+                                        "update_group": "0.2",
+                                        "filter_group": "0.1",
+                                        "refresh_request_status": "No Refresh request being processed",
+                                        "route_refresh_request_received": 0,
+                                        "route_refresh_request_sent": 0,
+                                        "accepted_prefixes": 1,
+                                        "best_paths": 1,
+                                        "exact_no_prefixes_denied": 0,
+                                        "cummulative_no_prefixes_denied": 0,
+                                        "prefix_advertised": 1,
+                                        "prefix_suppressed": 0,
+                                        "prefix_withdrawn": 0,
+                                        "maximum_prefix_max_prefix_no": 1048576,
+                                        "maximum_prefix_warning_only": True,
+                                        "maximum_prefix_threshold": "75%",
+                                        "maximum_prefix_restart": 0,
+                                        "eor_status": "was received during read-only mode",
+                                        "last_synced_ack_version": 0,
+                                        "last_ack_version": 7,
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True,
+                                        "additional_routes_local_label": "Unicast SAFI"
+                                    }
+                                },
+                                "bgp_session_transport": {
+                                    "connection": {
+                                        "state": "established",
+                                        "connections_established": 2,
+                                        "connections_dropped": 1
+                                    },
+                                    "transport": {
+                                        "local_host": "2.2.2.2",
+                                        "local_port": "179",
+                                        "if_handle": "0x00000000",
+                                        "foreign_host": "1.1.1.1",
+                                        "foreign_port": "27104"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:R2_xr#show bgp neighbors 1.1.1.1
+        Fri Nov  1 21:31:51.172 UTC
+
+        BGP neighbor is 1.1.1.1
+        Remote AS 65000, local AS 65000, internal link
+        Remote router ID 1.1.1.1
+        BGP state = Established, up for 1w1d
+        NSR State: None
+        Last read 00:00:37, Last read before reset 1w1d
+        Hold time is 180, keepalive interval is 60 seconds
+        Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+        Last write 00:00:03, attempted 19, written 19
+        Second last write 00:01:03, attempted 19, written 19
+        Last write before reset 1w1d, attempted 19, written 19
+        Second last write before reset 1w1d, attempted 19, written 19
+        Last write pulse rcvd  Nov  1 21:31:48.334 last full not set pulse count 85322
+        Last write pulse rcvd before reset 1w1d
+        Socket not armed for io, armed for read, armed for write
+        Last write thread event before reset 1w1d, second last 1w1d
+        Last KA expiry before reset 1w1d, second last 1w1d
+        Last KA error before reset 00:00:00, KA not sent 00:00:00
+        Last KA start before reset 1w1d, second last 1w1d
+        Precedence: internet
+        Non-stop routing is enabled
+        Multi-protocol capability received
+        Neighbor capabilities:
+            Route refresh: advertised (old + new) and received (old + new)
+            4-byte AS: advertised and received
+            Address family IPv4 Unicast: advertised and received
+        Received 44766 messages, 0 notifications, 0 in queue
+        Sent 40667 messages, 1 notifications, 0 in queue
+        Minimum time between advertisement runs is 0 secs
+        Inbound message logging enabled, 3 messages buffered
+        Outbound message logging enabled, 3 messages buffered
+
+        For Address Family: IPv4 Unicast
+        BGP neighbor version 7
+        Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+            Extended Nexthop Encoding: advertised
+        Route refresh request: received 0, sent 0
+        1 accepted prefixes, 1 are bestpaths
+        Exact no. of prefixes denied : 0.
+        Cumulative no. of prefixes denied: 0.
+        Prefix advertised 1, suppressed 0, withdrawn 0
+        Maximum prefixes allowed 1048576
+        Threshold for warning message 75%, restart interval 0 min
+        AIGP is enabled
+        An EoR was received during read-only mode
+        Last ack version 7, Last synced ack version 0
+        Outstanding version objects: current 0, max 1, refresh 0
+        Additional-paths operation: None
+        Send Multicast Attributes
+        Advertise routes with local-label via Unicast SAFI
+
+        Connections established 2; dropped 1
+        Local host: 2.2.2.2, Local port: 179, IF Handle: 0x00000000
+        Foreign host: 1.1.1.1, Foreign port: 27104
+        Last reset 1w1d, due to BGP Notification sent: hold time expired
+        Time since last notification sent to neighbor: 1w1d
+        Error Code: hold time expired
+        Notification data sent:
+            None
+        RP/0/RP0/CPU0:R2_xr#
+    '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpNeighbors(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpNeighbors(device=self.dev)
+        parsed_output = obj.parse(neighbor='1.1.1.1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
