@@ -27,11 +27,6 @@
         * 'show interfaces description'
         * 'show interfaces {interface} description'
 		
-* IOSXR
-    * Added ShowInterfacesDescription for commands;
-        * 'show interfaces description'
-        * 'show interfaces {interface} description'
-		
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
@@ -63,6 +58,9 @@
         * 'show igmp vrf {vrf} summary'
         * 'show igmp groups detail'
         * 'show igmp vrf {vrf} groups detail'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
 		
 --------------------------------------------------------------------------------
                                 Fix
