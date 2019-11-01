@@ -365,8 +365,13 @@ class test_show_vpc(unittest.TestCase):
         'vpc_role': 'secondary',
         'num_of_vpcs': 13,
         'peer_gateway': 'Enabled',
+        'peer_gateway_exculded_vlans': '-',
+        'peer_gateway_exculded_bridge_domains': '-',
+        'dual_active_excluded_vlans_and_bds': '-',
         'vpc_graceful_consistency_check_status': 'Enabled',
         'vpc_auto_recovery_status': 'Enabled, timer is off.(timeout = 240s)',
+        'timer': 'off',
+        'timeout': 0,
         'operational_l3_peer_router': 'Enabled',
         'peer_link': {
             1: {

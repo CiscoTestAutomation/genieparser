@@ -33,6 +33,11 @@ class ShowVpcSchema(MetaParser):
         Optional('vpc_role'): str,
         'num_of_vpcs': int,
         Optional('peer_gateway'): str,
+        Optional('peer_gateway_exculded_bridge_domains'): str,
+        Optional('timeout'): int,
+        Optional('dual_active_excluded_vlans_and_bds'): str,
+        Optional('peer_gateway_exculded_vlans'): str,
+        Optional('timer'): str,
         Optional('dual_active_excluded_vlans'): str,
         Optional('vpc_graceful_consistency_check_status'): str,
         Optional('vpc_auto_recovery_status'): str,
@@ -183,9 +188,22 @@ class ShowVpc(ShowVpcSchema):
         # Active Vlans   : 65,67-68,401-402,1199
         p27 = re.compile(r'^Active +Vlans +: +(?P<up_vlan_bitset>\S+)$')
 
+        # Peer gateway excluded VLANs            : -
+        p28 = re.compile(r'^Peer +gateway +excluded +VLANs +: +(?P<peer_gateway_exculded_vlans>\S+)$')
+
+        # Peer gateway excluded bridge-domains   : -
+        p29 = re.compile(r'^Peer +gateway +excluded +bridge-domains +: +(?P<peer_gateway_exculded_bridge_domains>\S+)$')
+
+        # Dual-active excluded VLANs and BDs     : -
+        p30 = re.compile(r'^Dual-active +excluded +VLANs +and +BDs +: +(?P<dual_active_excluded_vlans_and_bds>\S+)$')
+
+        # Delay-restore orphan ports status      : Timer is off.(timeout = 0s)
+        p31 = re.compile(r'Delay-restore +orphan +ports +status +: +(Timer +is +(?P<timer>\w+))\.\(timeout += +(?P<timeout>\d+)s\)$')
+
         # 200
         # 300-330, 350, 400-500
-        p28 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
+        p32 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
+        
 
         for line in output.splitlines():
             line = line.strip()
@@ -422,10 +440,40 @@ class ShowVpc(ShowVpcSchema):
                 up_vlan_bitset = group['up_vlan_bitset']
                 vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
+            
+            # Peer gateway excluded VLANs            : -
+            match = p28.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'peer_gateway_exculded_vlans': group['peer_gateway_exculded_vlans']})
+                continue
+
+            # Peer gateway excluded bridge-domains   : -
+            p29 = re.compile(r'^Peer +gateway +excluded +bridge-domains +: +(?P<peer_gateway_exculded_bridge_domains>\S+)$')
+            match = p29.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'peer_gateway_exculded_bridge_domains': group['peer_gateway_exculded_bridge_domains']})
+                continue
+
+            # Dual-active excluded VLANs and BDs     : -
+            match = p30.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'dual_active_excluded_vlans_and_bds': group['dual_active_excluded_vlans_and_bds']})
+                continue
+
+            # Delay-restore orphan ports status      : Timer is off.(timeout = 0s)
+            match = p31.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'timer': group['timer']})
+                ret_dict.update({'timeout': int(group['timeout'])})
+                continue
 
             # 200
             # 202,300-350
-            match = p28.match(line)
+            match = p32.match(line)
             if match:
                 group = match.groupdict()
                 if vlan_type == 'vpc_peer_link_status':
