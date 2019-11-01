@@ -61,6 +61,8 @@
     * Added ShowInterfacesDescription for commands;
         * 'show interfaces description'
         * 'show interfaces {interface} description'
+    * Added ShowIsisPrivateAll for commands;
+        * 'show isis private all'
 		
 --------------------------------------------------------------------------------
                                 Fix
