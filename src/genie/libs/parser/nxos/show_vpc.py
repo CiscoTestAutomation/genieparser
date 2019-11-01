@@ -36,7 +36,7 @@ class ShowVpcSchema(MetaParser):
         Optional('peer_gateway_exculded_bridge_domains'): str,
         Optional('delay_restore_orphan_ports_status'): {
             'timer': str,
-            'timeout': int,
+            'timeout_sec': int,
         },
         Optional('dual_active_excluded_vlans_and_bds'): str,
         Optional('peer_gateway_exculded_vlans'): str,
@@ -476,7 +476,7 @@ class ShowVpc(ShowVpcSchema):
                 group = match.groupdict()
                 delay_restore_orphan_ports_status_dict = ret_dict.setdefault('delay_restore_orphan_ports_status', {})
                 delay_restore_orphan_ports_status_dict.update({'timer': group['timer']})
-                delay_restore_orphan_ports_status_dict.update({'timeout': int(group['timeout'])})
+                delay_restore_orphan_ports_status_dict.update({'timeout_sec': int(group['timeout'])})
                 continue
             
             # Self-isolation                         : Disabled
