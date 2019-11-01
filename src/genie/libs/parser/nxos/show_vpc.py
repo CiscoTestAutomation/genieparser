@@ -427,16 +427,13 @@ class ShowVpc(ShowVpcSchema):
             # 202,300-350
             match = p28.match(line)
             if match:
-                try:
-                    group = match.groupdict()
-                    if vlan_type == 'vpc_peer_link_status':
-                        peer_up_vlan_bitset += group['additional_vlan']
-                        peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})                    
-                    else:
-                        up_vlan_bitset += group['additional_vlan']
-                        vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
-                except Exception:
-                    import pdb; pdb.set_trace()
+                group = match.groupdict()
+                if vlan_type == 'vpc_peer_link_status':
+                    peer_up_vlan_bitset += group['additional_vlan']
+                    peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})                    
+                else:
+                    up_vlan_bitset += group['additional_vlan']
+                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
         
         return ret_dict
