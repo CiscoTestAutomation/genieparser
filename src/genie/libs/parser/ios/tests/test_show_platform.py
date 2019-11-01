@@ -989,310 +989,139 @@ class TestShowInventory(unittest.TestCase):
     '''}
 
     golden_output_4 = {'execute.return_value': '''
-    NAME: "1", DESCR: "WS-C3750X-48"
-    PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511R12W
+    NAME: "1", DESCR: "WS-C8888X-88"
+    PID: WS-C0123X-45T-S   , VID: V00  , SN: FDO123R12W
     
-    NAME: "Switch 1 - Power Supply 1", DESCR: "FRU Power Supply"
+    NAME: "Switch 1 - Power Supply 1", DESCR: "ABC Power Supply"
     PID: C3KX-PWR-350WAC   , VID: V01D , SN: DTN1504L0E9
-    
-    NAME: "Switch 1 - Power Supply 2", DESCR: "FRU Power Supply"
-    PID: C3KX-PWR-350WAC   , VID: V01D , SN: DTN1505L19E
-    
-    NAME: "Switch 1 - FRULink Slot 1 - FRULink Module", DESCR: "FRULink 10G ST Module"
-    PID: C3KX-NM-10G       , VID: V01  , SN: FDO15130G2Z
     
     NAME: "TenGigabitEthernet1/1/1", DESCR: "SFP-10GBase-SR"
     PID: SFP-10G-SR          , VID: V03  , SN: SPC1519005V
 
-    NAME: "2", DESCR: "WS-C3750X-48"
-    PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511Z11P
+    NAME: "2", DESCR: "WS-C3210X-48"
+    PID: WS-C3210X-48T-S   , VID: V02  , SN: FD5678Z90P
     
-    NAME: "Switch 2 - Power Supply 1", DESCR: "FRU Power Supply"
-    PID: C3KX-PWR-350WAC   , VID: V01L , SN: LIT15130A3F
+    NAME: "Switch 2 - Power Supply 1", DESCR: "BCA Power Supply"
+    PID: C3KX-PWR-007CBA   , VID: V01L , SN: LTP13579L3R
     
-    NAME: "Switch 2 - Power Supply 2", DESCR: "FRU Power Supply"
-    PID: C3KX-PWR-350WAC   , VID: V01D , SN: DTN1505L11Q
-    
-    NAME: "Switch 2 - FRULink Slot 1 - FRULink Module", DESCR: "FRULink 10G ST Module"
-    PID: C3KX-NM-10G       , VID: V01  , SN: FDO15131L8J
     
     NAME: "TenGigabitEthernet2/1/1", DESCR: "SFP-10GBase-LR"
-    PID: SFP-10G-LR          , VID: V02  , SN: ONT151303GZ
+    PID: SFP-10G-LR          , VID: V02  , SN: ONT182746GZ
+    
+    NAME: "1", DESCR: "WS-C1010XR-48FPS-I"
+    PID: WS-C1010XR-48FPS-I, VID: V05  , SN: FD2043B0K3
+    
+    NAME: "Switch 1 - Power Supply 1", DESCR: "LLL Power Supply"
+    PID: PWR-C2-2929WAC    , VID: V02L , SN: LIT03728KKK
+    
+    NAME: "Switch 1 - FlexStackPlus Module", DESCR: "Stacking Module"
+    PID: C1010X-STACK      , VID: V02  , SN: FD232323XXZ
+    
+    NAME: "GigabitEthernet1/0/49", DESCR: "1000BaseSX SFP"
+    PID: GLC-SX-MMD          , VID: V01  , SN: ACW102938VS  
     '''}
 
     golden_parsed_output_4 = {
-        'slot': {
-            '1': {
-                'rp': {
-                    'WS-C3750X-48T-S': {
-                        'descr': 'WS-C3750X-48',
-                        'name': '1',
-                        'pid': 'WS-C3750X-48T-S',
-                        'sn': 'FDO1511R12W',
-                        'subslot': {
-                            '1': {
-                                'C3KX-NM-10G': {
-                                    'descr': 'FRULink 10G ST Module',
-                                    'name': 'Switch 1 - FRULink Slot 1 - FRULink Module',
-                                    'pid': 'C3KX-NM-10G',
-                                    'sn': 'FDO15130G2Z',
-                                    'vid': 'V01  ',
-                                },
-                                'C3KX-PWR-350WAC': {
-                                    'descr': 'FRU Power Supply',
-                                    'name': 'Switch 1 - Power Supply 2',
-                                    'pid': 'C3KX-PWR-350WAC',
-                                    'sn': 'DTN1505L19E',
-                                    'vid': 'V01D ',
-                                },
-                            },
-                            '1/1/1': {
-                                'SFP-10G-SR': {
-                                    'descr': 'SFP-10GBase-SR',
-                                    'name': 'TenGigabitEthernet1/1/1',
-                                    'pid': 'SFP-10G-SR',
-                                    'sn': 'SPC1519005V',
-                                    'vid': 'V03  ',
-                                },
+    'slot': {
+        '1': {
+            'rp': {
+                'WS-C0123X-45T-S': {
+                    'descr': 'WS-C8888X-88',
+                    'name': '1',
+                    'pid': 'WS-C0123X-45T-S',
+                    'sn': 'FDO123R12W',
+                    'subslot': {
+                        '1': {
+                            'C3KX-PWR-350WAC': {
+                                'descr': 'ABC Power Supply',
+                                'name': 'Switch 1 - Power Supply 1',
+                                'pid': 'C3KX-PWR-350WAC',
+                                'sn': 'DTN1504L0E9',
+                                'vid': 'V01D ',
                             },
                         },
-                        'vid': 'V02  ',
+                        '1/1/1': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP-10GBase-SR',
+                                'name': 'TenGigabitEthernet1/1/1',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'SPC1519005V',
+                                'vid': 'V03  ',
+                            },
+                        },
                     },
+                    'vid': 'V00  ',
                 },
-            },
-            '2': {
-                'rp': {
-                    'WS-C3750X-48T-S': {
-                        'descr': 'WS-C3750X-48',
-                        'name': '2',
-                        'pid': 'WS-C3750X-48T-S',
-                        'sn': 'FDO1511Z11P',
-                        'subslot': {
-                            '2': {
-                                'C3KX-NM-10G': {
-                                    'descr': 'FRULink 10G ST Module',
-                                    'name': 'Switch 2 - FRULink Slot 1 - FRULink Module',
-                                    'pid': 'C3KX-NM-10G',
-                                    'sn': 'FDO15131L8J',
-                                    'vid': 'V01  ',
-                                },
-                                'C3KX-PWR-350WAC': {
-                                    'descr': 'FRU Power Supply',
-                                    'name': 'Switch 2 - Power Supply 2',
-                                    'pid': 'C3KX-PWR-350WAC',
-                                    'sn': 'DTN1505L11Q',
-                                    'vid': 'V01D ',
-                                },
+                'WS-C1010XR-48FPS-I': {
+                    'descr': 'WS-C1010XR-48FPS-I',
+                    'name': '1',
+                    'pid': 'WS-C1010XR-48FPS-I',
+                    'sn': 'FD2043B0K3',
+                    'subslot': {
+                        '1': {
+                            'C1010X-STACK': {
+                                'descr': 'Stacking Module',
+                                'name': 'Switch 1 - FlexStackPlus Module',
+                                'pid': 'C1010X-STACK',
+                                'sn': 'FD232323XXZ',
+                                'vid': 'V02  ',
                             },
-                            '2/1/1': {
-                                'SFP-10G-LR': {
-                                    'descr': 'SFP-10GBase-LR',
-                                    'name': 'TenGigabitEthernet2/1/1',
-                                    'pid': 'SFP-10G-LR',
-                                    'sn': 'ONT151303GZ',
-                                    'vid': 'V02  ',
-                                },
+                            'PWR-C2-2929WAC': {
+                                'descr': 'LLL Power Supply',
+                                'name': 'Switch 1 - Power Supply 1',
+                                'pid': 'PWR-C2-2929WAC',
+                                'sn': 'LIT03728KKK',
+                                'vid': 'V02L ',
                             },
                         },
-                        'vid': 'V02  ',
+                        '1/0/49': {
+                            'GLC-SX-MMD': {
+                                'descr': '1000BaseSX SFP',
+                                'name': 'GigabitEthernet1/0/49',
+                                'pid': 'GLC-SX-MMD',
+                                'sn': 'ACW102938VS',
+                                'vid': 'V01  ',
+                            },
+                        },
                     },
+                    'vid': 'V05  ',
                 },
             },
         },
-    }
-
-    golden_output_5 = {'execute.return_value': '''
-    Show command-05#show inventory 
-    NAME: "1", DESCR: "WS-C2960XR-48FPS-I"
-    PID: WS-C2960XR-48FPS-I, VID: V05  , SN: FDO2121B0K3
-    
-    NAME: "Switch 1 - Power Supply 1", DESCR: "FRU Power Supply"
-    PID: PWR-C2-1025WAC    , VID: V02L , SN: LIT21162TEF
-    
-    NAME: "Switch 1 - FlexStackPlus Module", DESCR: "Stacking Module"
-    PID: C2960X-STACK      , VID: V02  , SN: FDO21132HYZ
-    
-    NAME: "GigabitEthernet1/0/49", DESCR: "1000BaseSX SFP"
-    PID: GLC-SX-MMD          , VID: V01  , SN: ACW212105VS     
-    
-    NAME: "GigabitEthernet1/0/51", DESCR: "1000BaseSX SFP"
-    PID: GLC-SX-MMD          , VID: V01  , SN: ACW212106HN     
-    
-    NAME: "2", DESCR: "WS-C2960XR-48FPS-I"
-    PID: WS-C2960XR-48FPS-I, VID: V05  , SN: FDO2121B0RL
-    
-    NAME: "Switch 2 - Power Supply 1", DESCR: "FRU Power Supply"
-    PID: PWR-C2-1025WAC    , VID: V02D , SN: DCB2116C3D8
-    
-    NAME: "Switch 2 - FlexStackPlus Module", DESCR: "Stacking Module"
-    PID: C2960X-STACK      , VID: V02  , SN: FDO21132J9Y
-    
-    NAME: "GigabitEthernet2/0/50", DESCR: "1000BaseSX SFP"
-    PID: GLC-SX-MMD          , VID: V01  , SN: ACW21210ARE     
-    
-    NAME: "GigabitEthernet2/0/52", DESCR: "1000BaseSX SFP"
-    PID: GLC-SX-MMD          , VID: V01  , SN: ACW21210B3X     
-    
-    NAME: "3", DESCR: "WS-C2960XR-48FPS-I"
-    PID: WS-C2960XR-48FPS-I, VID: V05  , SN: FDO2121B0RB
-    
-    NAME: "Switch 3 - Power Supply 1", DESCR: "FRU Power Supply"
-    PID: PWR-C2-1025WAC    , VID: V02D , SN: DCB2116C3EB
-    
-    NAME: "Switch 3 - FlexStackPlus Module", DESCR: "Stacking Module"
-    PID: C2960X-STACK      , VID: V02  , SN: FDO21132JA8
-    
-    NAME: "GigabitEthernet3/0/50", DESCR: "1000BaseLX SFP"
-    PID: GLC-LH-SMD          , VID: V01  , SN: OPM21200S70     
-    
-    NAME: "GigabitEthernet3/0/52", DESCR: "1000BaseLX SFP"
-    PID: GLC-LH-SMD          , VID: V01  , SN: OPM21200RB8   '''}
-
-    golden_parsed_output_5 = {
-        'slot': {
-            '1': {
-                'rp': {
-                    'WS-C2960XR-48FPS-I': {
-                        'descr': 'WS-C2960XR-48FPS-I',
-                        'name': '1',
-                        'pid': 'WS-C2960XR-48FPS-I',
-                        'sn': 'FDO2121B0K3',
-                        'subslot': {
-                            '1': {
-                                'C2960X-STACK': {
-                                    'descr': 'Stacking Module',
-                                    'name': 'Switch 1 - FlexStackPlus Module',
-                                    'pid': 'C2960X-STACK',
-                                    'sn': 'FDO21132HYZ',
-                                    'vid': 'V02  ',
-                                },
-                                'PWR-C2-1025WAC': {
-                                    'descr': 'FRU Power Supply',
-                                    'name': 'Switch 1 - Power Supply 1',
-                                    'pid': 'PWR-C2-1025WAC',
-                                    'sn': 'LIT21162TEF',
-                                    'vid': 'V02L ',
-                                },
-                            },
-                            '1/0/49': {
-                                'GLC-SX-MMD': {
-                                    'descr': '1000BaseSX SFP',
-                                    'name': 'GigabitEthernet1/0/49',
-                                    'pid': 'GLC-SX-MMD',
-                                    'sn': 'ACW212105VS',
-                                    'vid': 'V01  ',
-                                },
-                            },
-                            '1/0/51': {
-                                'GLC-SX-MMD': {
-                                    'descr': '1000BaseSX SFP',
-                                    'name': 'GigabitEthernet1/0/51',
-                                    'pid': 'GLC-SX-MMD',
-                                    'sn': 'ACW212106HN',
-                                    'vid': 'V01  ',
-                                },
+        '2': {
+            'rp': {
+                'WS-C3210X-48T-S': {
+                    'descr': 'WS-C3210X-48',
+                    'name': '2',
+                    'pid': 'WS-C3210X-48T-S',
+                    'sn': 'FD5678Z90P',
+                    'subslot': {
+                        '2': {
+                            'C3KX-PWR-007CBA': {
+                                'descr': 'BCA Power Supply',
+                                'name': 'Switch 2 - Power Supply 1',
+                                'pid': 'C3KX-PWR-007CBA',
+                                'sn': 'LTP13579L3R',
+                                'vid': 'V01L ',
                             },
                         },
-                        'vid': 'V05  ',
-                    },
-                },
-            },
-            '2': {
-                'rp': {
-                    'WS-C2960XR-48FPS-I': {
-                        'descr': 'WS-C2960XR-48FPS-I',
-                        'name': '2',
-                        'pid': 'WS-C2960XR-48FPS-I',
-                        'sn': 'FDO2121B0RL',
-                        'subslot': {
-                            '2': {
-                                'C2960X-STACK': {
-                                    'descr': 'Stacking Module',
-                                    'name': 'Switch 2 - FlexStackPlus Module',
-                                    'pid': 'C2960X-STACK',
-                                    'sn': 'FDO21132J9Y',
-                                    'vid': 'V02  ',
-                                },
-                                'PWR-C2-1025WAC': {
-                                    'descr': 'FRU Power Supply',
-                                    'name': 'Switch 2 - Power Supply 1',
-                                    'pid': 'PWR-C2-1025WAC',
-                                    'sn': 'DCB2116C3D8',
-                                    'vid': 'V02D ',
-                                },
-                            },
-                            '2/0/50': {
-                                'GLC-SX-MMD': {
-                                    'descr': '1000BaseSX SFP',
-                                    'name': 'GigabitEthernet2/0/50',
-                                    'pid': 'GLC-SX-MMD',
-                                    'sn': 'ACW21210ARE',
-                                    'vid': 'V01  ',
-                                },
-                            },
-                            '2/0/52': {
-                                'GLC-SX-MMD': {
-                                    'descr': '1000BaseSX SFP',
-                                    'name': 'GigabitEthernet2/0/52',
-                                    'pid': 'GLC-SX-MMD',
-                                    'sn': 'ACW21210B3X',
-                                    'vid': 'V01  ',
-                                },
+                        '2/1/1': {
+                            'SFP-10G-LR': {
+                                'descr': 'SFP-10GBase-LR',
+                                'name': 'TenGigabitEthernet2/1/1',
+                                'pid': 'SFP-10G-LR',
+                                'sn': 'ONT182746GZ',
+                                'vid': 'V02  ',
                             },
                         },
-                        'vid': 'V05  ',
                     },
-                },
-            },
-            '3': {
-                'rp': {
-                    'WS-C2960XR-48FPS-I': {
-                        'descr': 'WS-C2960XR-48FPS-I',
-                        'name': '3',
-                        'pid': 'WS-C2960XR-48FPS-I',
-                        'sn': 'FDO2121B0RB',
-                        'subslot': {
-                            '3': {
-                                'C2960X-STACK': {
-                                    'descr': 'Stacking Module',
-                                    'name': 'Switch 3 - FlexStackPlus Module',
-                                    'pid': 'C2960X-STACK',
-                                    'sn': 'FDO21132JA8',
-                                    'vid': 'V02  ',
-                                },
-                                'PWR-C2-1025WAC': {
-                                    'descr': 'FRU Power Supply',
-                                    'name': 'Switch 3 - Power Supply 1',
-                                    'pid': 'PWR-C2-1025WAC',
-                                    'sn': 'DCB2116C3EB',
-                                    'vid': 'V02D ',
-                                },
-                            },
-                            '3/0/50': {
-                                'GLC-LH-SMD': {
-                                    'descr': '1000BaseLX SFP',
-                                    'name': 'GigabitEthernet3/0/50',
-                                    'pid': 'GLC-LH-SMD',
-                                    'sn': 'OPM21200S70',
-                                    'vid': 'V01  ',
-                                },
-                            },
-                            '3/0/52': {
-                                'GLC-LH-SMD': {
-                                    'descr': '1000BaseLX SFP',
-                                    'name': 'GigabitEthernet3/0/52',
-                                    'pid': 'GLC-LH-SMD',
-                                    'sn': 'OPM21200RB8',
-                                    'vid': 'V01  ',
-                                },
-                            },
-                        },
-                        'vid': 'V05  ',
-                    },
+                    'vid': 'V02  ',
                 },
             },
         },
-    }
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1326,13 +1155,6 @@ class TestShowInventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
-
-    def test_golden_output_5(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_5)
-        obj = ShowInventory(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 class test_show_bootvar(unittest.TestCase):
