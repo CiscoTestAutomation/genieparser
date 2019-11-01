@@ -36,6 +36,16 @@
         * 'show msdp vrf {vrf} sa-cache'
         * 'show msdp statistics peer'
         * 'show msdp vrf {vrf} statistics peer'
+    * Added ShowIgmp for commands;
+        * 'show igmp interface'
+        * 'show igmp interface {interface}'
+        * 'show igmp vrf {vrf} interface'
+        * 'show igmp vrf {vrf} interface {interface}'
+        * 'show igmp summary'
+        * 'show igmp vrf {vrf} summary'
+        * 'show igmp groups detail'
+        * 'show igmp vrf {vrf} groups detail'
+		
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -79,9 +89,11 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+
     * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
         * changed backup_nexthop and backup_nexthop to optional
 
 * IOSXR
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+
