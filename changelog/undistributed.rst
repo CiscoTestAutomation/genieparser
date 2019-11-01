@@ -82,6 +82,8 @@
     * ShowIpOspf
         * Added missing keys to schema
         * Added regex to capture more outputs
+    * Updated ShowVpc for:
+        * Parser schema and regex to support more output
 
 --------------------------------------------------------------------------------
                                 Fix

@@ -45,7 +45,8 @@ class ShowVpcSchema(MetaParser):
                 'peer_link_id': int,
                 'peer_link_ifindex': str,
                 'peer_link_port_state': str,
-                'peer_up_vlan_bitset': str
+                'peer_up_vlan_bitset': str,
+                Optional('vlan_bds'): str,
             }
         },
         Optional('vpc'): {
@@ -68,14 +69,14 @@ class ShowVpc(ShowVpcSchema):
     """Parser for show vpc"""
 
     cli_command = "show vpc"
-
+    
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        ret_dict = vpc_dict = peer_link_dict = {}
+        ret_dict = {}
         up_vlan_bitset = peer_up_vlan_bitset = ''
-
+        vlan_type = None
         # vPC domain id                     : 1
         # vPC domain id                     : Not configured
         p1 = re.compile(r'^vPC +domain +id\s*: +(?P<domain_id>[\w\s]+)$')
@@ -139,10 +140,15 @@ class ShowVpc(ShowVpcSchema):
         # Track object : 12
         p17 = re.compile(r'^Track +object\s*: +(?P<track_object>\d+)$')
 
-        # 1     Po101  up     1,100-102,200-202
+        # 1 Po10 up 1-100
+        # 1     Po101  up     1,100-102,200-
+        # 1 Po10 up 1-100
         # 1 Po100 down -
-        p18 = re.compile(r'^(?P<peer_link_id>\d+) +(?P<peer_link_ifindex>\S+) '
-            '+(?P<peer_link_port_state>\S+) +(?P<peer_up_vlan_bitset>[\d\,\-]+)$')
+        # 1    Po1    up     1,8,17,60-62,65,67-68,92-93,11 -
+        # 1     Po101  up     1,100-102,200-202
+        p18 = re.compile(r'^(?P<peer_link_id>\d+) +(?P<peer_link_ifindex>\S+) +'
+                r'(?P<peer_link_port_state>\S+) +(?P<peer_up_vlan_bitset>-|\S+)'
+                r'( +(?P<vlan_bds>-|\S+))?$')
 
         # 1     Po1           up     success     success               1,100-102,200-
         # 20 Po20 up failed vPC type-1 configuration -
@@ -150,13 +156,36 @@ class ShowVpc(ShowVpcSchema):
         p19 = re.compile(r'^(?P<vpc_id>\d+) +(?P<vpc_ifindex>\S+) '
             '+(?P<vpc_port_state>\S+) +(?P<vpc_consistency>\S+) '
             '+(?P<vpc_consistency_status>success|[\S\s]+) '
-            '+(?P<up_vlan_bitset>[\d\,\-]+)$')
+            '+(?P<up_vlan_bitset>[\d\,\-]+)$')        
+
+        # vPC Peer-link status
+        p20 = re.compile(r'^vPC +(p|P)eer-link +status$')
+
+        # vPC status
+        p21 = re.compile(r'^vPC +status$')
+
+        # Id               : 4
+        p22 = re.compile(r'^Id +: +(?P<vpc_id>\d+)$')
+
+        # Port           : Po4
+        p23 = re.compile(r'^Port +: +(?P<vpc_ifindex>\S+)$')
+
+        # Status         : up
+        p24 = re.compile(r'^Status +: +(?P<vpc_port_state>\S+)$')
+
+        # Consistency    : success
+        p25 = re.compile(r'^Consistency +: +(?P<vpc_consistency>\S+)$')
+
+        # Reason         : success
+        # Reason         : Compatibility check failed for speed
+        p26 = re.compile(r'^Reason +: +(?P<vpc_consistency_status>[\S ]+)$')
+
+        # Active Vlans   : 65,67-68,401-402,1199
+        p27 = re.compile(r'^Active +Vlans +: +(?P<up_vlan_bitset>\S+)$')
 
         # 200
         # 300-330, 350, 400-500
-        p19_1 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')        
-
-
+        p28 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -287,23 +316,28 @@ class ShowVpc(ShowVpcSchema):
                 group = match.groupdict()
                 ret_dict.update({'track_object': int(group['track_object'])})
                 continue            
-
+            
             # 1     Po101  up     1,100-102,200-202
             # 1 Po100 down -
+            # 1    Po1    up     1,8,17,60-62,65,67-68,92-93,11 -
             match = p18.match(line)
             if match:
                 group = match.groupdict()
-                vpc_dict = {}
+                vlan_type = 'vpc_peer_link_status'
                 peer_link_id = int(group['peer_link_id'])
-                peer_up_vlan_bitset = group['peer_up_vlan_bitset']
-                peer_link_dict = ret_dict.setdefault('peer_link', {}) \
-                                            .setdefault(peer_link_id, {})
-                peer_link_dict.update({'peer_link_id': peer_link_id})
                 peer_link_ifindex = Common.convert_intf_name(group['peer_link_ifindex'])
+                peer_link_port_state = group['peer_link_port_state']
+                peer_up_vlan_bitset = group['peer_up_vlan_bitset']
+                vlan_bds = group.get('vlan_bds', None)
+                peer_link_dict = ret_dict.setdefault('peer_link', {}). \
+                    setdefault(peer_link_id, {})
+
+                peer_link_dict.update({'peer_link_id': peer_link_id})
                 peer_link_dict.update({'peer_link_ifindex': peer_link_ifindex})
-                peer_link_dict \
-                .update({'peer_link_port_state': group['peer_link_port_state']})
+                peer_link_dict.update({'peer_link_port_state': peer_link_port_state})
                 peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})
+                if vlan_bds:
+                    peer_link_dict.update({'vlan_bds': vlan_bds})
                 continue
 
             # 1     Po1           up     success     success               1,100-102,200-
@@ -312,6 +346,7 @@ class ShowVpc(ShowVpcSchema):
             match = p19.match(line)
             if match:
                 group = match.groupdict()
+                vlan_type = 'vpc_status'
                 vpc_id = int(group['vpc_id'])
                 up_vlan_bitset = group['up_vlan_bitset']
                 vpc_dict = ret_dict.setdefault('vpc', {}).setdefault(vpc_id, {})
@@ -324,18 +359,84 @@ class ShowVpc(ShowVpcSchema):
                 update({'vpc_consistency_status': group['vpc_consistency_status'].strip()})
                 vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
+            
+            # vPC peer-link status
+            m = p20.match(line)
+            if m:
+                vlan_type = 'vpc_peer_link_status'
+                continue
+            
+            # vPC status
+            m = p21.match(line)
+            if m:
+                vlan_type = 'vpc_status'
+                continue
+
+            # Id               : 4
+            match = p22.match(line)
+            if match:
+                group = match.groupdict()
+                vlan_type = 'vpc_status'
+                vpc_id = int(group['vpc_id'])
+                vpc_dict = ret_dict.setdefault('vpc', {}).setdefault(vpc_id, {})
+                vpc_dict.update({'vpc_id': vpc_id})
+                continue
+            
+            # Port           : Po4
+            match = p23.match(line)
+            if match:
+                group = match.groupdict()
+                vpc_ifindex = Common.convert_intf_name(group['vpc_ifindex'])
+                vpc_dict.update({'vpc_ifindex': vpc_ifindex})
+                continue
+
+            # Status         : up
+            match = p24.match(line)
+            if match:
+                group = match.groupdict()
+                vpc_port_state = group['vpc_port_state']
+                vpc_dict.update({'vpc_port_state': vpc_port_state})
+                continue
+
+            # Consistency    : success
+            match = p25.match(line)
+            if match:
+                group = match.groupdict()
+                vpc_consistency = group['vpc_consistency']
+                vpc_dict.update({'vpc_consistency': vpc_consistency})
+                continue
+
+            # Reason         : success
+            # Reason         : Compatibility check failed for speed
+            match = p26.match(line)
+            if match:
+                group = match.groupdict()
+                vpc_consistency_status = group['vpc_consistency_status']
+                vpc_dict.update({'vpc_consistency_status': vpc_consistency_status})
+                continue
+
+            # Active Vlans   : 65,67-68,401-402,1199
+            match = p27.match(line)
+            if match:
+                group = match.groupdict()
+                up_vlan_bitset = group['up_vlan_bitset']
+                vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
+                continue
 
             # 200
             # 202,300-350
-            match = p19_1.match(line)
+            match = p28.match(line)
             if match:
-                group = match.groupdict()
-                if vpc_dict == {}:
-                    peer_up_vlan_bitset += group['additional_vlan']
-                    peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})                    
-                else:
-                    up_vlan_bitset += group['additional_vlan']
-                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
+                try:
+                    group = match.groupdict()
+                    if vlan_type == 'vpc_peer_link_status':
+                        peer_up_vlan_bitset += group['additional_vlan']
+                        peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})                    
+                    else:
+                        up_vlan_bitset += group['additional_vlan']
+                        vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
+                except Exception:
+                    import pdb; pdb.set_trace()
                 continue
-
+        
         return ret_dict
