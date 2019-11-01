@@ -111,6 +111,11 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
     def cli(self, vrf=None, route=None, protocol=None, output=None):
+        
+        # Check if argument from device.parse is protocol or route
+        if protocol not in self.protocol_set:
+            route = protocol
+            protocol = None
 
         if output is None:
             if vrf and route:
@@ -517,6 +522,11 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
     def cli(self, vrf=None, route=None, protocol=None, output=None):
+        
+        # Check if argument from device.parse is protocol or route
+        if protocol not in self.protocol_set:
+            route = protocol
+            protocol = None
 
         if output is None:
             if vrf and route:
