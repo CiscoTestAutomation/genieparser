@@ -64,8 +64,8 @@ class TestShowIpNatTranslations(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''\
         Router#show ip nat translations
         Pro Inside global      Inside local       Outside local      Outside global
-        --- 171.69.233.209     192.168.1.95       ---                ---
-        --- 171.69.233.210     192.168.1.89       ---                --
+        --- 10.1.7.2     192.168.1.95       ---                ---
+        --- 10.1.7.200     192.168.1.89       ---                --
         Total number of translations: 2
     '''
     }
@@ -75,14 +75,14 @@ class TestShowIpNatTranslations(unittest.TestCase):
             'default': { 
                 'index': {
                     1: {
-                        'inside_global': '171.69.233.209',
+                        'inside_global': '10.1.7.2',
                         'inside_local': '192.168.1.95',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     2: {
-                        'inside_global': '171.69.233.210',
+                        'inside_global': '10.1.7.200',
                         'inside_local': '192.168.1.89',
                         'outside_global': '--',
                         'outside_local': '---',
@@ -96,9 +96,9 @@ class TestShowIpNatTranslations(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''\
         Router#show ip nat translations
         Pro Inside global        Inside local       Outside local      Outside global
-        udp 171.69.233.209:1220  192.168.1.95:1220  171.69.2.132:53    171.69.2.132:53
-        tcp 171.69.233.209:11012 192.168.1.89:11012 171.69.1.220:23    171.69.1.220:23
-        tcp 171.69.233.209:1067  192.168.1.95:1067  171.69.1.161:23    171.69.1.161:23
+        udp 10.1.7.2:1220  192.168.1.95:1220  10.100.20.100:53    10.100.20.100:53
+        tcp 10.1.7.2:11012 192.168.1.89:11012 10.26.102.100:23    10.26.102.100:23
+        tcp 10.1.7.2:1067  192.168.1.95:1067  100.100.2.25:23    100.100.2.25:23
         Total number of translations: 3
     '''
     }
@@ -108,24 +108,24 @@ class TestShowIpNatTranslations(unittest.TestCase):
             'default': {
                 'index': {
                     1: {
-                        'inside_global': '171.69.233.209:1220',
+                        'inside_global': '10.1.7.2:1220',
                         'inside_local': '192.168.1.95:1220',
-                        'outside_global': '171.69.2.132:53',
-                        'outside_local': '171.69.2.132:53',
+                        'outside_global': '10.100.20.100:53',
+                        'outside_local': '10.100.20.100:53',
                         'protocol': 'udp'
                     },
                     2: {
-                        'inside_global': '171.69.233.209:11012',
+                        'inside_global': '10.1.7.2:11012',
                         'inside_local': '192.168.1.89:11012',
-                        'outside_global': '171.69.1.220:23',
-                        'outside_local': '171.69.1.220:23',
+                        'outside_global': '10.26.102.100:23',
+                        'outside_local': '10.26.102.100:23',
                         'protocol': 'tcp'
                     },
                     3: {
-                        'inside_global': '171.69.233.209:1067',
+                        'inside_global': '10.1.7.2:1067',
                         'inside_local': '192.168.1.95:1067',
-                        'outside_global': '171.69.1.161:23',
-                        'outside_local': '171.69.1.161:23',
+                        'outside_global': '100.100.2.25:23',
+                        'outside_local': '100.100.2.25:23',
                         'protocol': 'tcp'
                     }
                 }
@@ -577,13 +577,13 @@ class TestShowIpNatStatistics(unittest.TestCase):
         'hits': 59230465,
         'interfaces': {
             'inside': ['TenGigabitEthernet1/0/0,',
-                                'TenGigabitEthernet1/1/0,',
-                                'TenGigabitEthernet1/2/0',
-                                'TenGigabitEthernet1/3/0'],
+                        'TenGigabitEthernet1/1/0,',
+                        'TenGigabitEthernet1/2/0',
+                        'TenGigabitEthernet1/3/0'],
             'outside': ['TenGigabitEthernet2/0/0,',
-                                    'TenGigabitEthernet2/1/0,',
-                                    'TenGigabitEthernet2/2/0',
-                                    'TenGigabitEthernet2/3/0']
+                        'TenGigabitEthernet2/1/0,',
+                        'TenGigabitEthernet2/2/0',
+                        'TenGigabitEthernet2/3/0']
         },
         'ip_alias_add_fail': 0,
         'limit_entry_add_fail': 0,
