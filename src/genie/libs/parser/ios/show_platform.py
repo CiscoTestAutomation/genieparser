@@ -105,7 +105,7 @@ class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
 class ShowInventory(ShowInventorySchema_iosxe):
     """
     Parser for:
-        * show Inventory
+        * show inventory
     """
     cli_command = 'show inventory'
 
@@ -131,10 +131,19 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
         r1_2 = re.compile(r'.*module of (?P<slot>\d+).*')
 
+        # Switch 1 - Power Supply 1
+        r1_2_2 = re.compile(r'Switch +(?P<subslot>\d+).*')
+
         # Transceiver Te2/1
         # Transceiver Te2/15
         # Transceiver Te5/1
         r1_3 = re.compile(r'Transceiver\s+Te(?P<slot>\d+)\/(?P<subslot>\d+)')
+
+        # TenGigabitEthernet2 / 1 / 1
+        r1_3_2 = re.compile(r'TenGigabitEthernet(?P<subslot>[\S\s]+)')
+
+        # GigabitEthernet3 / 0 / 50
+        r1_3_3 = re.compile(r'GigabitEthernet(?P<subslot>[\S\s]+)')
 
         # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
         # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
@@ -194,7 +203,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
                     # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
-                    if r1_4.match(descr):
+                    # PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511R12W
+                    if r1_4.match(descr) or 'WS-C' in pid:
                         slot_code = 'rp'
 
                     # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
@@ -219,6 +229,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # msfc sub-module of 1
                 # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
                 result = r1_2.match(name)
+
                 if result:
                     group = result.groupdict()
                     slot = group['slot']
@@ -236,6 +247,33 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['sn'] = sn
                     subslot_dict['vid'] = vid
 
+                    continue
+
+                # Switch 1 - Power Supply 1
+                # TenGigabitEthernet2 / 1 / 1
+                # GigabitEthernet3/0/50
+                result = r1_2_2.match(name)
+                result_2 = r1_3_2.match(name)
+                result_3 = r1_3_3.match(name)
+                if result or result_2 or result_3:
+                    if result:
+                        group = result.groupdict()
+                    elif result_2:
+                        group = result_2.groupdict()
+                    else:
+                        group = result_3.groupdict()
+                    subslot = group['subslot']
+
+                    subslot_dict = slot_dict \
+                        .setdefault('subslot', {}) \
+                        .setdefault(subslot, {}) \
+                        .setdefault(pid, {})
+
+                    subslot_dict['descr'] = descr
+                    subslot_dict['name'] = name
+                    subslot_dict['pid'] = pid
+                    subslot_dict['sn'] = sn
+                    subslot_dict['vid'] = vid
                     continue
 
                 # Transceiver Te2/1

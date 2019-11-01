@@ -77,3 +77,10 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowInventory
+        * Added regex to support various outputs
