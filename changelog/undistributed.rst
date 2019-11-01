@@ -25,17 +25,30 @@
         * 'show route vrf {vrf} ipv6 {route}'
 
 * IOSXR
-    * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
+    * Added ShowMsdpPeer for commands:
         * 'show msdp peer'
         * 'show msdp vrf {vrf} peer'
+    * Added ShowMsdpContext for commands:
         * 'show msdp context'
         * 'show msdp vrf {vrf} context'
+    * Added ShowMsdpSummary for commands:
         * 'show msdp summary'
         * 'show msdp vrf {vrf} summary'
+    * Added ShowMsdpSaCache for commands:
         * 'show msdp sa-cache'
         * 'show msdp vrf {vrf} sa-cache'
+    * Added ShowMsdpStatisticsPeer for commands:
         * 'show msdp statistics peer'
         * 'show msdp vrf {vrf} statistics peer'
+
+* JUNOS
+    * Added ShowOspfInterface for commands:
+        * 'show ospf interface'
+        * 'show ospf interface {interface}'
+    * Added ShowOspfInterfaceDetail for commands:
+        * 'show ospf interface detail'
+        * 'show ospf interface {interface} detail'
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -47,17 +60,11 @@
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * NXOS
     * ShowIpOspf
         * Added missing keys to schema
         * Added regex to capture more outputs
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowAuthenticationSessions
         * Changed keyword to Optional
@@ -77,3 +84,7 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+
+* JUNOS
+    * Enhanced ShowOspfInterfaceBrief:
+        * Added command 'show ospf interface {interface} brief'
