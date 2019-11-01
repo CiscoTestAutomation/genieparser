@@ -34,10 +34,12 @@ class ShowVpcSchema(MetaParser):
         'num_of_vpcs': int,
         Optional('peer_gateway'): str,
         Optional('peer_gateway_exculded_bridge_domains'): str,
-        Optional('timeout'): int,
+        Optional('delay_restore_orphan_ports_status'): {
+            'timer': str,
+            'timeout': int,
+        },
         Optional('dual_active_excluded_vlans_and_bds'): str,
         Optional('peer_gateway_exculded_vlans'): str,
-        Optional('timer'): str,
         Optional('self_isolation'): str,
         Optional('dual_active_excluded_vlans'): str,
         Optional('vpc_graceful_consistency_check_status'): str,
@@ -199,7 +201,7 @@ class ShowVpc(ShowVpcSchema):
         p30 = re.compile(r'^Dual-active +excluded +VLANs +and +BDs +: +(?P<dual_active_excluded_vlans_and_bds>\S+)$')
 
         # Delay-restore orphan ports status      : Timer is off.(timeout = 0s)
-        p31 = re.compile(r'5Delay-restore +orphan +ports +status +: +(Timer +is +(?P<timer>\w+))\.\(timeout += +(?P<timeout>\d+)s\)$')
+        p31 = re.compile(r'^Delay-restore +orphan +ports +status +: +(Timer +is +(?P<timer>\w+))\.\(timeout += +(?P<timeout>\d+)s\)$')
 
         # Self-isolation                         : Disabled
         p32 = re.compile(r'^Self-isolation +: +(?P<self_isolation>\S+)$')
@@ -472,8 +474,9 @@ class ShowVpc(ShowVpcSchema):
             match = p31.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'timer': group['timer']})
-                ret_dict.update({'timeout': int(group['timeout'])})
+                delay_restore_orphan_ports_status_dict = ret_dict.setdefault('delay_restore_orphan_ports_status', {})
+                delay_restore_orphan_ports_status_dict.update({'timer': group['timer']})
+                delay_restore_orphan_ports_status_dict.update({'timeout': int(group['timeout'])})
                 continue
             
             # Self-isolation                         : Disabled

@@ -370,6 +370,10 @@ class test_show_vpc(unittest.TestCase):
         'dual_active_excluded_vlans_and_bds': '-',
         'vpc_graceful_consistency_check_status': 'Enabled',
         'vpc_auto_recovery_status': 'Enabled, timer is off.(timeout = 240s)',
+        'delay_restore_orphan_ports_status': {
+            'timer': 'off',
+            'timeout': 0,
+        },
         'operational_l3_peer_router': 'Enabled',
         'self_isolation': 'Disabled',
         'peer_link': {
