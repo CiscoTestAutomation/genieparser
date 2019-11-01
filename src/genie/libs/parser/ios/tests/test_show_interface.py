@@ -29,13 +29,15 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesCounters, \
                                         ShowInterfacesSwitchport, \
                                         ShowInterfacesTrunk, \
-                                        ShowInterfacesStats
+                                        ShowInterfacesStats,\
+                                        ShowInterfacesDescription
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
                 TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
                 TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
-                TestShowInterfacesStats as TestShowInterfacesStats_iosxe
+                TestShowInterfacesStats as TestShowInterfacesStats_iosxe,\
+                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe
 
 class TestShowInterfaceParsergen(unittest.TestCase):
 
@@ -1064,6 +1066,29 @@ class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
         obj = ShowInterfacesStats(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+
+class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
+    """unit test for show interfaces description """
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+        
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse(interface='Gi0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':

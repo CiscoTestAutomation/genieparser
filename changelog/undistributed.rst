@@ -23,6 +23,19 @@
         * 'show route ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+		
+* NXOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interface description'
+        * 'show interface {interface} description'
+		
+* IOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
 
 * IOSXR
     * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
@@ -45,6 +58,9 @@
         * 'show igmp vrf {vrf} summary'
         * 'show igmp groups detail'
         * 'show igmp vrf {vrf} groups detail'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
 		
 --------------------------------------------------------------------------------
                                 Fix
@@ -90,10 +106,12 @@
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
 
+
     * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
         * changed backup_nexthop and backup_nexthop to optional
 
 * IOSXR
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+
 
