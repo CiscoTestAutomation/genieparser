@@ -1,6 +1,7 @@
 
 # Python
 import unittest
+
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
@@ -33,7 +34,7 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
 # ==================================
 # Unit test for 'show bgp instances'
 # ==================================
-class test_show_bgp_instances(unittest.TestCase):
+class TestShowBgpInstances(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -101,7 +102,7 @@ class test_show_bgp_instances(unittest.TestCase):
 # ==========================================
 # Unit test for 'show placement program all'
 # ==========================================
-class test_show_placement_program_all(unittest.TestCase):
+class TestShowPlacementProgramAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -644,7 +645,7 @@ class test_show_placement_program_all(unittest.TestCase):
 # ======================================================================
 # Unit test for 'show bgp instance <WORD> af-group <WORD> configuration'
 # ======================================================================
-class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
+class TestShowBgpInstanceAfGroupConfiguration(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -719,7 +720,7 @@ class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
 # ===========================================================================
 # Unit test for 'show bgp instance <WORD> session-group <WORD> configuration'
 # ===========================================================================
-class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
+class TestShowBgpInstanceSessionGroupConfiguration(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -863,7 +864,7 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all vrf all process detail'
 # ============================================================
-class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2481,7 +2482,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all all all process detail'
 # ============================================================
-class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -3568,7 +3569,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'
 # ==============================================================
-class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
 
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -4071,7 +4072,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
 # ==============================================================
 # Unit test for 'show bgp instance all vrf all neighbors detail'
 # ==============================================================
-class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
 
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -5276,7 +5277,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
 # ================================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
 # ================================================================================
-class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllNeighborsAdvertisedRoutes(unittest.TestCase):
         
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -5382,7 +5383,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
 # ================================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> advertised-routes'
 # ================================================================================
-class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllNeighborsAdvertisedRoutes(unittest.TestCase):
         
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -5496,7 +5497,7 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 # ==============================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> received routes'
 # ==============================================================================
-class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllNeighborsReceivedRoutes(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -5599,11 +5600,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         parsed_output = obj.parse(vrf_type='vrf', neighbor='10.186.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
 # ==============================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> received routes'
 # ==============================================================================
-class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -5832,7 +5832,7 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
 # =====================================================================
 # Unit test for 'show bgp instance all vrf all neighbors <WORD> routes'
 # =====================================================================
-class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllNeighborsRoutes(unittest.TestCase):
     
     dev = Device(name='Device')
     empty_output = {'execute.return_value': ''}
@@ -5938,7 +5938,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
 # =====================================================================
 # Unit test for 'show bgp instance all all all neighbors <WORD> routes'
 # =====================================================================
-class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -6210,6 +6210,130 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         Processed 1 prefixes, 1 paths
         '''}
 
+    golden_parsed_output_2 = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "l2vpn evpn": {
+                            "router_identifier": "10.4.1.1",
+                            "local_as": 12354,
+                            "generic_scan_interval": 60,
+                            "non_stop_routing": True,
+                            "table_state": "active",
+                            "table_id": "0x0",
+                            "rd_version": 11111,
+                            "routing_table_version": 11111,
+                            "nsr_initial_initsync_version": "1",
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "scan_interval": 60,
+                            "routes": {
+                                "[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "10.4.1.1",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[V][L2][I2x2][N[c5678][b0.0.0.0][s10.100.5.5]]/328": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "10.16.2.2",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "10.36.3.3",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                },
+                                "[T][L2][I4x4][N[c4567][b0.0.0.0][s10.144.6.0]][P[p10.154.219.57/32]]/400": {
+                                    "index": {
+                                        1: {
+                                            "next_hop": "10.64.4.4",
+                                            "status_codes": "*>i",
+                                            "locprf": "100",
+                                            "weight": "0",
+                                            "path": "i"
+                                        }
+                                    }
+                                }
+                            },
+                            "processed_prefixes": 4,
+                            "processed_paths": 2
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output_2 = {'execute.return_value': '''
+        Fri Oct 25 18:08:45.287 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: IPv4 Unicast
+        ----------------------------
+
+
+        Address Family: L2VPN EVPN
+        --------------------------
+
+
+        Address Family: Link-state Link-state
+        ------------------------------------
+
+        BGP router identifier 10.4.1.1, local AS number 12354
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 11111
+        BGP main routing table version 11111
+        BGP NSR Initial initsync version 1 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Prefix codes: E link, V node, T IP reacheable route, u/U unknown
+                      I Identifier, N local node, R remote node, L link, P prefix
+                      L1/L2 ISIS level-1/level-2, O OSPF, D direct, S static/peer-node
+                      a area-ID, l link-ID, t topology-ID, s ISO-ID,
+                      c confed-ID/ASN, b bgp-identifier, r router-ID,
+                      i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+                      d designated router address
+           Network            Next Hop            Metric LocPrf Weight Path
+        *>i[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328
+                              10.4.1.1                  100      0 i
+        *>i[V][L2][I2x2][N[c5678][b0.0.0.0][s10.100.5.5]]/328
+                              10.16.2.2                  100      0 i
+        *>i[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696
+                              10.36.3.3                  100      0 i
+        *>i[T][L2][I4x4][N[c4567][b0.0.0.0][s10.144.6.0]][P[p10.154.219.57/32]]/400
+                              10.64.4.4                  100      0 i
+        Processed 4 prefixes, 2 paths
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
@@ -6230,10 +6354,17 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf_type='all', neighbor='192.168.0.4')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
+        parsed_output = obj.parse(vrf_type='all', neighbor='10.4.1.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
 # =====================================================
 # Unit test for 'show bgp instance all all all summary'
 # =====================================================
-class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
+class TestShowBgpInstanceAllAllAllSummary(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -6363,6 +6494,122 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         10.36.3.3           0   100      68      58       43    0    0 00:47:11         10
         '''}
 
+    golden_parsed_output_1 = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "HI-TST": {
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "route_distinguisher": "10.16.2.2:0",
+                            "vrf_id": "0x60000001",
+                            "router_id": "10.4.1.1",
+                            "local_as": 64577,
+                            "non_stop_routing": "enabled",
+                            "table_state": "active",
+                            "table_id": "0xe0011110",
+                            "rd_version": 19,
+                            "bgp_table_version": 1,
+                            "nsr_initial_initsync_version": 18,
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "operation_mode": "standalone",
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 1,
+                                    "brib_rib": 1,
+                                    "labelver": 1,
+                                    "importver": 1,
+                                    "sendtblver": 1,
+                                    "standbyver": 0
+                                }
+                            }
+                        }
+                    }
+                },
+                "CTV-BG-JYI": {
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "route_distinguisher": "10.25.4.5:1",
+                            "vrf_id": "0x60000004",
+                            "router_id": "10.4.1.1",
+                            "local_as": 12345,
+                            "non_stop_routing": "enabled",
+                            "table_state": "active",
+                            "table_id": "0xe0011114",
+                            "rd_version": 1,
+                            "bgp_table_version": 1,
+                            "nsr_initial_initsync_version": 18,
+                            "nsr_initial_init_ver_status": "reached",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "operation_mode": "standalone",
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 1,
+                                    "brib_rib": 1,
+                                    "labelver": 1,
+                                    "importver": 1,
+                                    "sendtblver": 1,
+                                    "standbyver": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output_1 = {'execute.return_value': '''
+        show bgp instance all vrf all ipv4 unicast summary
+
+        Fri Oct 25 18:08:37.602 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: HI-TST
+        -----------
+        BGP VRF HI-TST, state: Active
+        BGP Route Distinguisher: 10.16.2.2:0
+        VRF ID: 0x60000001
+        BGP router identifier 10.4.1.1, local AS number 64577
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011110  RD version: 19
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0
+
+
+        VRF: CTV-BG-JYI
+        ---------------
+        BGP VRF CTV-BG-JYI, state: Active
+        BGP Route Distinguisher: 10.25.4.5:1
+        VRF ID: 0x60000004
+        BGP router identifier 10.4.1.1, local AS number 12345
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011114   RD version: 1
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0
+
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
@@ -6376,11 +6623,17 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
        self.maxDiff = None
        self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_1(self):
+       self.device = Mock(**self.golden_output_1)
+       bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+       parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', address_family='ipv4 unicast')
+       self.maxDiff = None
+       self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 # =====================================================
 # Unit test for 'show bgp instance all vrf all summary'
 # =====================================================
-class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
+class TestShowBgpInstanceAllVrfAllSummary(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -28296,7 +28549,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 # =============================================
 # Unit test for 'show bgp l2vpn evpn neighbors'
 # =============================================
-class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
+class TestShowBgpL2vpnEvpnAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -29323,6 +29576,53 @@ class TestShowBgpSessions(unittest.TestCase):
         2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
         '''}
 
+    golden_output_1 = {'execute.return_value': '''
+        show bgp sessions
+        Thu Oct 31 11:45:49.940 AST
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
+        10.1.7.29     default                 0 10396     0     0  Established  NSR Ready
+        10.1.7.110    default                 0 10396     0     0  Established  NSR Ready
+        RP/0/RSP0/CPU0:GENIE-ASR9K#
+    '''}
+
+    golden_parsed_output_1 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '10.1.7.110': {
+                                'as_number': 10396,
+                                'in_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'NSR Ready',
+                                'out_q': 0,
+                                'spk': 0
+                            },
+                            '10.1.7.212': {
+                                'as_number': 10396,
+                                'in_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'NSR Ready',
+                                'out_q': 0,
+                                'spk': 0
+                            },
+                            '10.1.7.29': {
+                                'as_number': 10396,
+                                'in_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'NSR Ready',
+                                'out_q': 0,
+                                'spk': 0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowBgpSessions(device=self.dev)
@@ -29334,6 +29634,12 @@ class TestShowBgpSessions(unittest.TestCase):
         obj = ShowBgpSessions(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.dev = Mock(**self.golden_output_1)
+        obj = ShowBgpSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 
 # ===============================================

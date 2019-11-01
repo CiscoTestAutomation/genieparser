@@ -19,7 +19,8 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowInterfaceBrief,
                                                    ShowRunningConfigInterface,
                                                    ShowNveInterface,
-                                                   ShowIpInterfaceBriefVrfAll)
+                                                   ShowIpInterfaceBriefVrfAll,
+                                                   ShowInterfaceDescription)
 
 #############################################################################
 # unitest For Show Interface
@@ -4025,6 +4026,196 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
         obj = ShowIpInterfaceBriefVrfAll(device=self.device)
         parsed_output = obj.parse(ip='10.255.5.169')
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
+
+#############################################################################
+# unitest For show interface description
+#############################################################################
+class test_show_interface_description(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Ethernet1/1.110": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.115": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.120": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.390": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.410": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.415": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.420": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/1.90": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.90": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.110": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.115": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.120": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.390": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.410": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.415": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Ethernet1/2.420": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            },
+            "Port-channel13": {
+                "description": "--"
+            },
+            "Port-channel23": {
+                "description": "--"
+            },
+            "Loopback0": {
+                "description": "--"
+            },
+            "Loopback300": {
+                "description": "--"
+            },
+            "mgmt0": {
+                "description": "--"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        -------------------------------------------------------------------------------
+        Interface                Description
+        -------------------------------------------------------------------------------
+        mgmt0                    --
+        
+        -------------------------------------------------------------------------------
+        Port          Type   Speed   Description
+        -------------------------------------------------------------------------------
+        Eth1/1.90     eth    10G     --
+        Eth1/1.110    eth    10G     --
+        Eth1/1.115    eth    10G     --
+        Eth1/1.120    eth    10G     --
+        Eth1/1.390    eth    10G     --
+        Eth1/1.410    eth    10G     --
+        Eth1/1.415    eth    10G     --
+        Eth1/1.420    eth    10G     --
+        Eth1/2        eth    10G     --
+        Eth1/2.90     eth    10G     --
+        Eth1/2.110    eth    10G     --
+        Eth1/2.115    eth    10G     --
+        Eth1/2.120    eth    10G     --
+        Eth1/2.390    eth    10G     --
+        Eth1/2.410    eth    10G     --
+        Eth1/2.415    eth    10G     --
+        Eth1/2.420    eth    10G     --
+        
+        -------------------------------------------------------------------------------
+        Interface                Description
+        -------------------------------------------------------------------------------
+        Po13                     --
+        Po23                     --
+        
+        -------------------------------------------------------------------------------
+        Interface                Description
+        -------------------------------------------------------------------------------
+        Lo0                      --
+        Lo300                    --
+    '''}
+
+    golden_parsed_interface_output = {
+        "interfaces": {
+            "Ethernet1/1": {
+                "description": "--",
+                "speed": "10G",
+                "type": "eth"
+            }
+        }
+    }
+
+    golden_interface_output = {'execute.return_value': '''
+        -------------------------------------------------------------------------------
+        Port          Type   Speed   Description
+        -------------------------------------------------------------------------------
+        Eth1/1        eth    10G     --
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+        
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfaceDescription(device=self.device)
+        parsed_output = obj.parse(interface='Eth1/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':
