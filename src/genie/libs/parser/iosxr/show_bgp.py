@@ -3475,16 +3475,26 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p12 = re.compile(r'^Route +Distinguisher: *(?P<route_distinguisher>\S+) *'
                             '(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
-                            '(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+))? +'
+                            '(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
                             '(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
-                            '(?: *(?P<origin_codes>(i|e|\?)))?$')
+                            '(?: *(?P<origin_codes>(i|e|\?)))?)?$')
         p13_1 = re.compile(r'(?P<path>[\d\s]+)'
                         ' *(?P<origin_codes>(i|e|\?))?$')
+
         p14 = re.compile(r'^Processed *(?P<processed_prefixes>[0-9]+) *'
                             'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
+        #    Network            Next Hop            Metric LocPrf Weight Path
+        #                       10.4.1.1                    100      0    i
+        p17 = re.compile(r'^(?P<next_hop>[\w\.\:]+) +((?P<metric>[0-9]+))? +'
+                            '(?P<locprf>[0-9]+) +(?P<weight>[0-9]+) '
+                            '*(?P<path>[\S]+)$')
+
         for line in out.splitlines():
             line = line.strip()
+
+            if not line:
+                continue
 
             # BGP instance 0: 'default'
 
@@ -3527,6 +3537,24 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 vrf_id = m.groupdict()['vrf_id']
                 continue
 
+            # Network            Next Hop            Metric LocPrf Weight Path
+            #                    10.4.1.1                    300      1    i
+
+            m = p17.match(line)
+            if m:
+                if m.groupdict()['metric']:
+                    sub_dict[routes][prefix]['index'][index]['metric'] = \
+                        m.groupdict()['metric']
+
+                sub_dict[routes][prefix]['index'][index]['next_hop'] = \
+                    m.groupdict()['next_hop']
+                sub_dict[routes][prefix]['index'][index]['locprf'] = \
+                    m.groupdict()['locprf']
+                sub_dict[routes][prefix]['index'][index]['weight'] = \
+                    m.groupdict()['weight']
+                sub_dict[routes][prefix]['index'][index]['path'] = \
+                    m.groupdict()['path'].strip()
+                continue
 
             # Address Family: VPNv4 Unicast
 
@@ -3694,8 +3722,9 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
                 continue
                     
-           # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+            # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *> 2001:db8:cdc9:121::/64     2001:db8:20:1:5::5
+            # *>i[T][L15][L1x1][N[c12365][b10.4.1.1][s10.16.2.2]][P[p10.4.1.1/32]]/800
 
             m = p13.match(line)
             if m:
@@ -3834,7 +3863,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     m3 = re.compile(r'^(?P<weight>[0-9]+) '
                                  '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
                                .match(group_num)
-    
+
                     if m1:
                         sub_dict[routes][prefix]['index'][index]['metric'] = \
                             m1.groupdict()['metric']
@@ -4345,7 +4374,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             out = output
         p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
                         ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
-        p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
+        p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
                         ' *(?P<address_family>[a-zA-Z0-9\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
@@ -4869,7 +4898,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
         # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
-        # *> [1][1.1.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
+        # *> [1][10.4.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                            r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))'
                            r'(?: +(?P<next_hop>\S+))?$')
@@ -5209,10 +5238,10 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
         # 10.36.3.3         default                 0 65000     0     0  Established  None
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
-
+        # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
-            '(?P<nbr_state>\w+) +(?P<nsr_state>\w+)$')
+            '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
         
         # BGP instance 0: 'default'
         p2 = re.compile(r'^BGP +instance +\d+: +\'(?P<instance>\S+)\'$')
@@ -5222,7 +5251,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
             # 10.36.3.3         default                 0 65000     0     0  Established  None
             # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
-
+            # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
             m = p1.match(line)
             if m:
                 group = m.groupdict()

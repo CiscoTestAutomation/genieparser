@@ -495,7 +495,7 @@ class test_show_redundancy(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_iosv)
 
 
-class test_show_inventory(unittest.TestCase):
+class TestShowInventory(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_iosv = Device(name='iosv')
     empty_output = {'execute.return_value': ''}
@@ -988,6 +988,140 @@ class test_show_inventory(unittest.TestCase):
         PID: PWR-1400-AC       , VID: V01, SN: ABC0830J127
     '''}
 
+    golden_output_4 = {'execute.return_value': '''
+    NAME: "1", DESCR: "WS-C8888X-88"
+    PID: WS-C0123X-45T-S   , VID: V00  , SN: FDO123R12W
+    
+    NAME: "Switch 1 - Power Supply 1", DESCR: "ABC Power Supply"
+    PID: C3KX-PWR-350WAC   , VID: V01D , SN: DTN1504L0E9
+    
+    NAME: "TenGigabitEthernet1/1/1", DESCR: "SFP-10GBase-SR"
+    PID: SFP-10G-SR          , VID: V03  , SN: SPC1519005V
+
+    NAME: "2", DESCR: "WS-C3210X-48"
+    PID: WS-C3210X-48T-S   , VID: V02  , SN: FD5678Z90P
+    
+    NAME: "Switch 2 - Power Supply 1", DESCR: "BCA Power Supply"
+    PID: C3KX-PWR-007CBA   , VID: V01L , SN: LTP13579L3R
+    
+    
+    NAME: "TenGigabitEthernet2/1/1", DESCR: "SFP-10GBase-LR"
+    PID: SFP-10G-LR          , VID: V02  , SN: ONT182746GZ
+    
+    NAME: "1", DESCR: "WS-C1010XR-48FPS-I"
+    PID: WS-C1010XR-48FPS-I, VID: V05  , SN: FD2043B0K3
+    
+    NAME: "Switch 1 - Power Supply 1", DESCR: "LLL Power Supply"
+    PID: PWR-C2-2929WAC    , VID: V02L , SN: LIT03728KKK
+    
+    NAME: "Switch 1 - FlexStackPlus Module", DESCR: "Stacking Module"
+    PID: C1010X-STACK      , VID: V02  , SN: FD232323XXZ
+    
+    NAME: "GigabitEthernet1/0/49", DESCR: "1000BaseSX SFP"
+    PID: GLC-SX-MMD          , VID: V01  , SN: ACW102938VS  
+    '''}
+
+    golden_parsed_output_4 = {
+    'slot': {
+        '1': {
+            'rp': {
+                'WS-C0123X-45T-S': {
+                    'descr': 'WS-C8888X-88',
+                    'name': '1',
+                    'pid': 'WS-C0123X-45T-S',
+                    'sn': 'FDO123R12W',
+                    'subslot': {
+                        '1': {
+                            'C3KX-PWR-350WAC': {
+                                'descr': 'ABC Power Supply',
+                                'name': 'Switch 1 - Power Supply 1',
+                                'pid': 'C3KX-PWR-350WAC',
+                                'sn': 'DTN1504L0E9',
+                                'vid': 'V01D ',
+                            },
+                        },
+                        '1/1/1': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP-10GBase-SR',
+                                'name': 'TenGigabitEthernet1/1/1',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'SPC1519005V',
+                                'vid': 'V03  ',
+                            },
+                        },
+                    },
+                    'vid': 'V00  ',
+                },
+                'WS-C1010XR-48FPS-I': {
+                    'descr': 'WS-C1010XR-48FPS-I',
+                    'name': '1',
+                    'pid': 'WS-C1010XR-48FPS-I',
+                    'sn': 'FD2043B0K3',
+                    'subslot': {
+                        '1': {
+                            'C1010X-STACK': {
+                                'descr': 'Stacking Module',
+                                'name': 'Switch 1 - FlexStackPlus Module',
+                                'pid': 'C1010X-STACK',
+                                'sn': 'FD232323XXZ',
+                                'vid': 'V02  ',
+                            },
+                            'PWR-C2-2929WAC': {
+                                'descr': 'LLL Power Supply',
+                                'name': 'Switch 1 - Power Supply 1',
+                                'pid': 'PWR-C2-2929WAC',
+                                'sn': 'LIT03728KKK',
+                                'vid': 'V02L ',
+                            },
+                        },
+                        '1/0/49': {
+                            'GLC-SX-MMD': {
+                                'descr': '1000BaseSX SFP',
+                                'name': 'GigabitEthernet1/0/49',
+                                'pid': 'GLC-SX-MMD',
+                                'sn': 'ACW102938VS',
+                                'vid': 'V01  ',
+                            },
+                        },
+                    },
+                    'vid': 'V05  ',
+                },
+            },
+        },
+        '2': {
+            'rp': {
+                'WS-C3210X-48T-S': {
+                    'descr': 'WS-C3210X-48',
+                    'name': '2',
+                    'pid': 'WS-C3210X-48T-S',
+                    'sn': 'FD5678Z90P',
+                    'subslot': {
+                        '2': {
+                            'C3KX-PWR-007CBA': {
+                                'descr': 'BCA Power Supply',
+                                'name': 'Switch 2 - Power Supply 1',
+                                'pid': 'C3KX-PWR-007CBA',
+                                'sn': 'LTP13579L3R',
+                                'vid': 'V01L ',
+                            },
+                        },
+                        '2/1/1': {
+                            'SFP-10G-LR': {
+                                'descr': 'SFP-10GBase-LR',
+                                'name': 'TenGigabitEthernet2/1/1',
+                                'pid': 'SFP-10G-LR',
+                                'sn': 'ONT182746GZ',
+                                'vid': 'V02  ',
+                            },
+                        },
+                    },
+                    'vid': 'V02  ',
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1014,6 +1148,13 @@ class test_show_inventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_output_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 class test_show_bootvar(unittest.TestCase):
