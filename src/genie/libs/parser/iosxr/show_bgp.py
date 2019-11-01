@@ -4355,7 +4355,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
+        # assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
@@ -4532,8 +4532,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             if m:
                 router_id = str(m.groupdict()['router_id'])
                 local_as = int(m.groupdict()['local_as'])
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['router_id'] = router_id
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['local_as'] = local_as
+                sub = bgp_instance_summary_dict.setdefault('instance', {}).setdefault(instance, {})\
+                        .setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {})\
+                        .setdefault(address_family, {})
+                sub['router_id'] = router_id
+                sub['local_as'] = local_as
                 continue
 
             # BGP generic scan interval 60 secs
@@ -6434,5 +6437,30 @@ class ShowBgpNeighbors(ShowBgpInstanceNeighborsDetail):
         out = output or self.device.execute(cmd)
 
         return super().cli(output=out)
+
+
+class ShowBgpSummary(ShowBgpInstanceSummary):
+
+    ''' Parser for:
+        * 'show bgp summary'
+        * 'show bgp {address_family} summary'
+    '''
+
+    cli_command = ['show bgp {address_family} summary',
+                   'show bgp summary']
+
+    def cli(self, address_family='', output=None):
+
+        if address_family:
+            cmd = self.cli_command[0].format(address_family=address_family)
+        else:
+            cmd = self.cli_command[1]
+
+        out = output or self.device.execute(cmd)
+        if not address_family:
+            address_family = 'ipv4 unicast'
+
+        # Call super
+        return super().cli(output=out, address_family=address_family)
 
 # vim: ft=python ts=8 sw=4 et

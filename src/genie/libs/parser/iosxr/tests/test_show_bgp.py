@@ -29,7 +29,8 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
                                               ShowBgpL2vpnEvpnAdvertised,
                                               ShowBgpSessions,
                                               ShowBgpInstanceAllSessions,
-                                              ShowBgpNeighbors)
+                                              ShowBgpNeighbors,
+                                              ShowBgpSummary)
 
 
 # ==================================
@@ -29763,7 +29764,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
 
 
 # ===============================================
-#  Unit test for 'show bgp instance all sessions'
+#  Unit test for 'show bgp neighbors'
 # ===============================================
 class TestShowBgpNeighbors(unittest.TestCase):
     dev = Device(name='aDevice')
@@ -29930,6 +29931,121 @@ class TestShowBgpNeighbors(unittest.TestCase):
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpNeighbors(device=self.dev)
         parsed_output = obj.parse(neighbor='1.1.1.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# ===============================================
+#  Unit test for 'show bgp summary'
+# ===============================================
+class TestShowBgpSummary(unittest.TestCase):
+    dev = Device(name='aDevice')
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "instance": {
+            "all": {
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv4 unicast": {
+                                "router_id": "2.2.2.2",
+                                "local_as": 65000,
+                                "generic_scan_interval": 60,
+                                "non_stop_routing": "enabled",
+                                "table_state": "active",
+                                "table_id": "0xe0000000",
+                                "rd_version": 7,
+                                "bgp_table_version": 7,
+                                "nsr_initial_initsync_version": 2,
+                                "nsr_initial_init_ver_status": "reached",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "operation_mode": "standalone",
+                                "process": {
+                                    "Speaker": {
+                                        "rcvtblver": 7,
+                                        "brib_rib": 7,
+                                        "labelver": 7,
+                                        "importver": 7,
+                                        "sendtblver": 7,
+                                        "standbyver": 0
+                                    }
+                                }
+                            }
+                        },
+                        "neighbor": {
+                            "1.1.1.1": {
+                                "address_family": {
+                                    "ipv4 unicast": {
+                                        "spk": 0,
+                                        "msg_rcvd": 44813,
+                                        "msg_sent": 40709,
+                                        "tbl_ver": 7,
+                                        "input_queue": 0,
+                                        "output_queue": 0,
+                                        "up_down": "1w2d",
+                                        "state_pfxrcd": "1"
+                                    }
+                                },
+                                "remote_as": 65000
+                            },
+                            "3.3.3.3": {
+                                "address_family": {
+                                    "ipv4 unicast": {
+                                        "spk": 0,
+                                        "msg_rcvd": 40706,
+                                        "msg_sent": 40708,
+                                        "tbl_ver": 7,
+                                        "input_queue": 0,
+                                        "output_queue": 0,
+                                        "up_down": "4w0d",
+                                        "state_pfxrcd": "1"
+                                    }
+                                },
+                                "remote_as": 65000
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''\
+        RP/0/RP0/CPU0:R2_xr#show bgp summary
+        Fri Nov  1 22:14:22.804 UTC
+        BGP router identifier 2.2.2.2, local AS number 65000
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000000   RD version: 7
+        BGP main routing table version 7
+        BGP NSR Initial initsync version 2 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker               7          7          7          7           7           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        1.1.1.1           0 65000   44813   40709        7    0    0     1w2d          1
+        3.3.3.3           0 65000   40706   40708        7    0    0     4w0d          1
+
+        RP/0/RP0/CPU0:R2_xr#
+    '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpSummary(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpSummary(device=self.dev)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
