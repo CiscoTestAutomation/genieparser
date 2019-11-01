@@ -38,6 +38,7 @@ class ShowVpcSchema(MetaParser):
         Optional('dual_active_excluded_vlans_and_bds'): str,
         Optional('peer_gateway_exculded_vlans'): str,
         Optional('timer'): str,
+        Optional('self_isolation'): str,
         Optional('dual_active_excluded_vlans'): str,
         Optional('vpc_graceful_consistency_check_status'): str,
         Optional('vpc_auto_recovery_status'): str,
@@ -198,11 +199,15 @@ class ShowVpc(ShowVpcSchema):
         p30 = re.compile(r'^Dual-active +excluded +VLANs +and +BDs +: +(?P<dual_active_excluded_vlans_and_bds>\S+)$')
 
         # Delay-restore orphan ports status      : Timer is off.(timeout = 0s)
-        p31 = re.compile(r'Delay-restore +orphan +ports +status +: +(Timer +is +(?P<timer>\w+))\.\(timeout += +(?P<timeout>\d+)s\)$')
+        p31 = re.compile(r'5Delay-restore +orphan +ports +status +: +(Timer +is +(?P<timer>\w+))\.\(timeout += +(?P<timeout>\d+)s\)$')
+
+        # Self-isolation                         : Disabled
+        p32 = re.compile(r'^Self-isolation +: +(?P<self_isolation>\S+)$')
 
         # 200
         # 300-330, 350, 400-500
-        p32 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
+        
+        p33 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
         
 
         for line in output.splitlines():
@@ -470,10 +475,17 @@ class ShowVpc(ShowVpcSchema):
                 ret_dict.update({'timer': group['timer']})
                 ret_dict.update({'timeout': int(group['timeout'])})
                 continue
+            
+            # Self-isolation                         : Disabled
+            match = p32.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'self_isolation': group['self_isolation']})
+                continue
 
             # 200
             # 202,300-350
-            match = p32.match(line)
+            match = p33.match(line)
             if match:
                 group = match.groupdict()
                 if vlan_type == 'vpc_peer_link_status':
