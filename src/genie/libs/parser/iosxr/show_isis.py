@@ -4693,7 +4693,8 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         r6 = re.compile(r'^(?P<indent>\s*)Topology +Table$')
 
         # IPv4 Unicast
-        r7 = re.compile(r'^(?P<indent>\s*)IPv(4|6) +Unicast$')
+        # IPv4 Unicast VRF VRF1
+        r7 = re.compile(r'^(?P<indent>\s*)IPv(4|6) +Unicast( +VRF +\S+)?$')
 
         # Configuration:
         r8 = re.compile(r'^(?P<indent>\s*)Configuration:$')
@@ -4714,11 +4715,11 @@ class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
         # per_topo[IPv4 Unicast]   :
         # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
         r13 = re.compile(r'^(?P<indent>\s*)(?P<key>\w+)\[(?P<type>.+)\]( *:)?'
-                         r'( +(?P<value>\w+))?$')
+                         r'( +(?P<value>.*))?$')
 
         # [000] is_spf_prefix_priority_acl_names_set : FALSE
         r14 = re.compile(r'^(?P<indent>\s*)\[(?P<idx>\d+)\] +(?P<key>\w+) *: +'
-                         r'(?P<value>\w+)$')
+                         r'(?P<value>.*)$')
 
 
         # ++++++++++++++++++++++ IS-IS Test Interface Private Data ++++++++++++++++++++++
