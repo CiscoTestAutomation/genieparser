@@ -140,10 +140,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
         r1_3 = re.compile(r'Transceiver\s+Te(?P<slot>\d+)\/(?P<subslot>\d+)')
 
         # TenGigabitEthernet2 / 1 / 1
-        r1_3_2 = re.compile(r'TenGigabitEthernet(?P<subslot>[\S\s]+)')
-
         # GigabitEthernet3 / 0 / 50
-        r1_3_3 = re.compile(r'GigabitEthernet(?P<subslot>[\S\s]+)')
+        r1_3_2 = re.compile(r'(?:Ten)?GigabitEthernet(?P<subslot>[\d\s\/]+)$')
 
         # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
         # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
@@ -254,14 +252,12 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # GigabitEthernet3/0/50
                 result = r1_2_2.match(name)
                 result_2 = r1_3_2.match(name)
-                result_3 = r1_3_3.match(name)
-                if result or result_2 or result_3:
+
+                if result or result_2:
                     if result:
                         group = result.groupdict()
                     elif result_2:
                         group = result_2.groupdict()
-                    else:
-                        group = result_3.groupdict()
                     subslot = group['subslot']
 
                     subslot_dict = slot_dict \
