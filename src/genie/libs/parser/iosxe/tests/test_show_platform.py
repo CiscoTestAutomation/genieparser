@@ -3236,7 +3236,7 @@ Switch#   Role        Priority      State
         self.assertEqual(parsed_output_3,self.golden_parsed_output_3)
 
 
-class test_show_boot(unittest.TestCase):
+class TestShowBoot(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
@@ -3291,6 +3291,87 @@ class test_show_boot(unittest.TestCase):
     '''
     }
 
+    golden_output_2900 = {'execute.return_value': '''
+        SW-GENIE#sho boot
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : yes
+        Auto upgrade path   : 
+        Boot optimization   : disabled
+        NVRAM/Config file
+            buffer size:   524288
+        Timeout for Config
+                Download:    0 seconds
+        Config Download 
+            via DHCP:       disabled (next boot: disabled)
+        -------------------
+        Switch 2
+        -------------------
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : no
+        Auto upgrade path   : 
+        -------------------
+        Switch 3
+        -------------------
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : no
+        Auto upgrade path   : 
+        SW-GENIE# 
+    '''}
+
+    golden_parsed_output_2900 = {
+        'switches': {
+            1: {
+                'allow_dev_key': True,
+                'auto_upgrade': True,
+                'boot_optimization': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_download_via_dhcp': False,
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'next_boot': False,
+                'nvram_buffer_size': 524288,
+                'private_config_file': 'flash:/private-config.text',
+                'timeout_config_download': '0 seconds'
+            },
+            2: {
+                'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
+            },
+            3: {
+                'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
+            }
+        }
+    }
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowBoot(device=self.dev1)
@@ -3310,6 +3391,13 @@ class test_show_boot(unittest.TestCase):
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+    
+    def test_golden_2900(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2900)
+        obj = ShowBoot(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
 
 class test_show_switch_detail(unittest.TestCase):

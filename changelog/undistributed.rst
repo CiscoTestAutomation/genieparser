@@ -123,5 +123,7 @@
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
 
-
-
+* IOSXE
+    * Updated ShowBoot
+        * Added schema to accommodate new output formats
+        * Added regex to for new outputs
