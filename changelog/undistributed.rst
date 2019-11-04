@@ -45,9 +45,12 @@
     * Added ShowOspfInterface for commands:
         * 'show ospf interface'
         * 'show ospf interface {interface}'
+        * 'show ospf interface instance {instance}'
     * Added ShowOspfInterfaceDetail for commands:
         * 'show ospf interface detail'
         * 'show ospf interface {interface} detail'
+        * 'show ospf interface detail instance {instance}'
+        * 'show ospf interface {interface} detail instance {instance}'
 
 --------------------------------------------------------------------------------
                                 Fix

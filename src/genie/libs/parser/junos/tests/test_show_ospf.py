@@ -83,6 +83,38 @@ class test_show_ospf_interface(unittest.TestCase):
         }
     }
 
+    golden_output_instance = {'execute.return_value': '''
+        show ospf interface instance master
+        Interface           State   Area            DR ID           BDR ID          Nbrs
+        ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
+        ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
+        '''}
+
+    golden_parsed_output_instance = {
+        'instance': {
+            'master': {
+                'areas': {
+                    '0.0.0.1': {
+                        'interfaces': {
+                            'ge-0/0/0.0': {
+                                'state': 'PtToPt',
+                                'dr_id': '0.0.0.0',
+                                'bdr_id': '0.0.0.0',
+                                'nbrs_count': 1
+                            },
+                            'ge-0/0/1.0': {
+                                'state': 'PtToPt',
+                                'dr_id': '0.0.0.0',
+                                'bdr_id': '0.0.0.0',
+                                'nbrs_count': 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_show_ospf_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspfInterface(device=self.device)
@@ -100,6 +132,12 @@ class test_show_ospf_interface(unittest.TestCase):
         obj = ShowOspfInterface(device=self.device)
         parsed_output = obj.parse(interface='ge-0/0/1.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
+
+    def test_show_ospf_interface_instance(self):
+        self.device = Mock(**self.golden_output_instance)
+        obj = ShowOspfInterface(device=self.device)
+        parsed_output = obj.parse(instance='master')
+        self.assertEqual(parsed_output, self.golden_parsed_output_instance)
 
 
 class test_show_ospf_interface_brief(unittest.TestCase):
@@ -276,21 +314,17 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'dr_id': '0.0.0.0',
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
-                                'interface_type': 'P2P',
+                                'type': 'P2P',
                                 'address': '169.0.4.1',
-                                'address_mask': '255.255.255.0',
+                                'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 50,
                                 'adj_count': 1,
-                                'hello_interval': 10,
-                                'dead_interval': 20,
-                                'retransmit_interval': 10,
+                                'hello': 10,
+                                'dead': 20,
+                                'rexmit': 10,
                                 'ospf_stub_type': 'Not Stub',
-                                'authentication': {
-                                    'auth_trailer_key': {
-                                        'crypto_algorithm': 'None'
-                                    }
-                                },
+                                'authentication_type': 'None',
                                 'ospf_interface': {
                                     'protection_type': 'Post Convergence',
                                     'tilfa': {
@@ -300,9 +334,10 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                         'prot_node': 50
                                     },
                                     'topology': {
-                                        'name': 'default',
-                                        'id': 0,
-                                        'metric': 50
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 50
+                                        }
                                     }
                                 }
                             },
@@ -311,21 +346,17 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'dr_id': '0.0.0.0',
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
-                                'interface_type': 'P2P',
+                                'type': 'P2P',
                                 'address': '169.0.4.1',
-                                'address_mask': '255.255.255.0',
+                                'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,
                                 'adj_count': 1,
-                                'hello_interval': 10,
-                                'dead_interval': 10,
-                                'retransmit_interval': 5,
+                                'hello': 10,
+                                'dead': 10,
+                                'rexmit': 5,
                                 'ospf_stub_type': 'Not Stub',
-                                'authentication': {
-                                    'auth_trailer_key': {
-                                        'crypto_algorithm': 'None'
-                                    }
-                                },
+                                'authentication_type': 'None',
                                 'ospf_interface': {
                                     'protection_type': 'Post Convergence',
                                     'tilfa': {
@@ -335,9 +366,10 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                         'prot_node': 100
                                     },
                                     'topology': {
-                                        'name': 'default',
-                                        'id': 0,
-                                        'metric': 100
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 100
+                                        }
                                     }
                                 }
                             }
@@ -372,21 +404,17 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'dr_id': '0.0.0.0',
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
-                                'interface_type': 'P2P',
+                                'type': 'P2P',
                                 'address': '169.0.4.1',
-                                'address_mask': '255.255.255.0',
+                                'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,
                                 'adj_count': 1,
-                                'hello_interval': 10,
-                                'dead_interval': 10,
-                                'retransmit_interval': 5,
+                                'hello': 10,
+                                'dead': 10,
+                                'rexmit': 5,
                                 'ospf_stub_type': 'Not Stub',
-                                'authentication': {
-                                    'auth_trailer_key': {
-                                        'crypto_algorithm': 'None'
-                                    }
-                                },
+                                'authentication_type': 'None',
                                 'ospf_interface': {
                                     'protection_type': 'Post Convergence',
                                     'tilfa': {
@@ -396,9 +424,166 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                         'prot_node': 100
                                     },
                                     'topology': {
-                                        'name': 'default',
-                                        'id': 0,
-                                        'metric': 100
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 100
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_instance = {'execute.return_value': '''
+        show ospf interface detail instance master
+        Interface           State   Area            DR ID           BDR ID          Nbrs
+        ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
+          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 50
+          Adj count: 1
+          Hello: 10, Dead: 20, ReXmit: 10, Not Stub
+          Auth type: None
+          Protection type: Post Convergence
+          Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 50
+          Topology default (ID 0) -> Cost: 50
+        ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
+          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+          Adj count: 1
+          Hello: 10, Dead: 10, ReXmit: 5, Not Stub
+          Auth type: None
+          Protection type: Post Convergence
+          Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+          Topology default (ID 0) -> Cost: 100
+        '''}
+
+    golden_parsed_output_instance = {
+        'instance': {
+            'master': {
+                'areas': {
+                    '0.0.0.1': {
+                        'interfaces': {
+                            'ge-0/0/0.0': {
+                                'state': 'PtToPt',
+                                'dr_id': '0.0.0.0',
+                                'bdr_id': '0.0.0.0',
+                                'nbrs_count': 1,
+                                'type': 'P2P',
+                                'address': '169.0.4.1',
+                                'mask': '255.255.255.0',
+                                'mtu': 500,
+                                'cost': 50,
+                                'adj_count': 1,
+                                'hello': 10,
+                                'dead': 20,
+                                'rexmit': 10,
+                                'ospf_stub_type': 'Not Stub',
+                                'authentication_type': 'None',
+                                'ospf_interface': {
+                                    'protection_type': 'Post Convergence',
+                                    'tilfa': {
+                                        'prot_link': 'Enabled',
+                                        'prot_fate': 'No',
+                                        'prot_srlg': 'No',
+                                        'prot_node': 50
+                                    },
+                                    'topology': {
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 50
+                                        }
+                                    }
+                                }
+                            },
+                            'ge-0/0/1.0': {
+                                'state': 'PtToPt',
+                                'dr_id': '0.0.0.0',
+                                'bdr_id': '0.0.0.0',
+                                'nbrs_count': 1,
+                                'type': 'P2P',
+                                'address': '169.0.4.1',
+                                'mask': '255.255.255.0',
+                                'mtu': 500,
+                                'cost': 100,
+                                'adj_count': 1,
+                                'hello': 10,
+                                'dead': 10,
+                                'rexmit': 5,
+                                'ospf_stub_type': 'Not Stub',
+                                'authentication_type': 'None',
+                                'ospf_interface': {
+                                    'protection_type': 'Post Convergence',
+                                    'tilfa': {
+                                        'prot_link': 'Enabled',
+                                        'prot_fate': 'No',
+                                        'prot_srlg': 'No',
+                                        'prot_node': 100
+                                    },
+                                    'topology': {
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 100
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_interface_instance = {'execute.return_value': '''
+        show ospf interface ge-0/0/1.0 detail instance master
+        Interface           State   Area            DR ID           BDR ID          Nbrs
+        ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
+          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+          Adj count: 1
+          Hello: 10, Dead: 10, ReXmit: 5, Not Stub
+          Auth type: None
+          Protection type: Post Convergence
+          Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+          Topology default (ID 0) -> Cost: 100
+        '''}
+
+    golden_parsed_output_interface_instance = {
+        'instance': {
+            'master': {
+                'areas': {
+                    '0.0.0.1': {
+                        'interfaces': {
+                            'ge-0/0/1.0': {
+                                'state': 'PtToPt',
+                                'dr_id': '0.0.0.0',
+                                'bdr_id': '0.0.0.0',
+                                'nbrs_count': 1,
+                                'type': 'P2P',
+                                'address': '169.0.4.1',
+                                'mask': '255.255.255.0',
+                                'mtu': 500,
+                                'cost': 100,
+                                'adj_count': 1,
+                                'hello': 10,
+                                'dead': 10,
+                                'rexmit': 5,
+                                'ospf_stub_type': 'Not Stub',
+                                'authentication_type': 'None',
+                                'ospf_interface': {
+                                    'protection_type': 'Post Convergence',
+                                    'tilfa': {
+                                        'prot_link': 'Enabled',
+                                        'prot_fate': 'No',
+                                        'prot_srlg': 'No',
+                                        'prot_node': 100
+                                    },
+                                    'topology': {
+                                        'default': {
+                                            'id': 0,
+                                            'metric': 100
+                                        }
                                     }
                                 }
                             }
@@ -426,6 +611,18 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         obj = ShowOspfInterfaceDetail(device=self.device)
         parsed_output = obj.parse(interface='ge-0/0/1.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
+
+    def test_show_ospf_interface_detail_instance(self):
+        self.device = Mock(**self.golden_output_instance)
+        obj = ShowOspfInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(instance='master')
+        self.assertEqual(parsed_output, self.golden_parsed_output_instance)
+
+    def test_show_ospf_interface_detail_interface_instance(self):
+        self.device = Mock(**self.golden_output_interface_instance)
+        obj = ShowOspfInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(interface='ge-0/0/1.0', instance='master')
+        self.assertEqual(parsed_output, self.golden_parsed_output_interface_instance)
 
 
 if __name__ == '__main__':

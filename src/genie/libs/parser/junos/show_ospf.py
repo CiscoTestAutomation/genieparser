@@ -2,13 +2,15 @@
 
 IOSXE parsers for the following show commands:
     * show ospf interface brief
-    * show ospf interface brief instance master
     * show ospf interface {interface} brief
+    * show ospf interface brief instance {instance}
     * show ospf interface
     * show ospf interface {interface}
     * show ospf interface detail
     * show ospf interface {interface} detail
-
+    * show ospf interface instance {instance}
+    * show ospf interface detail instance {instance}
+    * show ospf interface {interface} detail instance {instance}
 """
 
 # Python
@@ -22,8 +24,11 @@ from genie.metaparser.util.schemaengine import Any, Optional
 class ShowOspfInterfaceBriefSchema(MetaParser):
     """ Schema for:
             * show ospf interface brief
-            * show ospf interface brief instance master
+            * show ospf interface brief instance {instance}
             * show ospf interface {interface} brief
+            * show ospf interface
+            * show ospf interface instance {instance}
+            * show ospf interface {interface}
     """
 
     schema = {
@@ -49,14 +54,14 @@ class ShowOspfInterfaceBriefSchema(MetaParser):
 class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
     """ Parser for:
             * show ospf interface brief
-            * show ospf interface brief instance master
+            * show ospf interface brief instance {instance}
             * show ospf interface {interface} brief
     """
 
     cli_command = [
         'show ospf interface {interface} brief',
         'show ospf interface brief',
-        'show ospf interface brief instance {instance}',
+        'show ospf interface brief instance {instance}'
     ]
 
     def cli(self, interface=None, instance=None, output=None):
@@ -106,17 +111,21 @@ class ShowOspfInterface(ShowOspfInterfaceBrief):
     """ Parser for:
             * show ospf interface
             * show ospf interface {interface}
+            * show ospf interface instance {instance}
     """
 
     cli_command = [
         'show ospf interface',
-        'show ospf interface {interface}'
+        'show ospf interface {interface}',
+        'show ospf interface instance {instance}'
     ]
 
-    def cli(self, interface=None, output=None):
+    def cli(self, interface=None, instance=None, output=None):
         if output is None:
             if interface:
                 out = self.device.execute(self.cli_command[1].format(interface=interface))
+            elif instance:
+                out = self.device.execute(self.cli_command[2].format(instance=instance))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -129,6 +138,8 @@ class ShowOspfInterfaceDetailSchema(MetaParser):
     """ Schema for:
            * show ospf interface detail
            * show ospf interface {interface} detail
+           * show ospf interface detail instance {instance}
+           * show ospf interface {interface} detail instance {instance}
     """
 
     schema = {
@@ -142,23 +153,19 @@ class ShowOspfInterfaceDetailSchema(MetaParser):
                                 'dr_id': str,
                                 'bdr_id': str,
                                 'nbrs_count': int,
-                                'interface_type': str,
+                                'type': str,
                                 'address': str,
-                                'address_mask': str,
+                                'mask': str,
                                 'mtu': int,
                                 Optional('dr_ip_addr'): str,
                                 Optional('priority'): int,
                                 'cost': int,
                                 'adj_count': int,
-                                'hello_interval': int,
-                                'dead_interval': int,
-                                'retransmit_interval': int,
+                                'hello': int,
+                                'dead': int,
+                                'rexmit': int,
                                 'ospf_stub_type': str,
-                                'authentication': {
-                                    'auth_trailer_key': {
-                                        'crypto_algorithm': str
-                                    }
-                                },
+                                'authentication_type': str,
                                 'ospf_interface': {
                                     'protection_type': str,
                                     Optional('tilfa'): {
@@ -168,9 +175,10 @@ class ShowOspfInterfaceDetailSchema(MetaParser):
                                         'prot_node': int
                                     },
                                     'topology': {
-                                        'name': str,
-                                        'id': int,
-                                        'metric': int
+                                        Any(): {
+                                            'id': int,
+                                            'metric': int
+                                        }
                                     }
                                 }
                             }
@@ -186,17 +194,25 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
     """ Parser for:
            * show ospf interface detail
            * show ospf interface {interface} detail
+           * show ospf interface detail instance {instance}
+           * show ospf interface {interface} detail instance {instance}
     """
 
     cli_command = [
         'show ospf interface detail',
         'show ospf interface {interface} detail',
+        'show ospf interface detail instance {instance}',
+        'show ospf interface {interface} detail instance {instance}'
     ]
 
-    def cli(self, interface=None, output=None):
+    def cli(self, interface=None, instance=None, output=None):
         if output is None:
-            if interface:
+            if interface and instance:
+                out = self.device.execute(self.cli_command[3].format(interface=interface, instance=instance))
+            elif interface:
                 out = self.device.execute(self.cli_command[1].format(interface=interface))
+            elif instance:
+                out = self.device.execute(self.cli_command[2].format(instance=instance))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -262,9 +278,9 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'interface_type': group['interface_type']})
+                intf_dict.update({'type': group['interface_type']})
                 intf_dict.update({'address': group['interface_address']})
-                intf_dict.update({'address_mask': group['address_mask']})
+                intf_dict.update({'mask': group['address_mask']})
                 intf_dict.update({'mtu': int(group['mtu'])})
                 intf_dict.update({'cost': int(group['interface_cost'])})
                 continue
@@ -280,9 +296,9 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({'hello_interval': int(group['hello_interval'])})
-                intf_dict.update({'dead_interval': int(group['dead_interval'])})
-                intf_dict.update({'retransmit_interval': int(group['retransmit_interval'])})
+                intf_dict.update({'hello': int(group['hello_interval'])})
+                intf_dict.update({'dead': int(group['dead_interval'])})
+                intf_dict.update({'rexmit': int(group['retransmit_interval'])})
                 intf_dict.update({'ospf_stub_type': group['ospf_stub_type']})
                 continue
 
@@ -290,8 +306,7 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                auth_dict = intf_dict.setdefault('authentication', {}).setdefault('auth_trailer_key', {})
-                auth_dict.update({'crypto_algorithm': group['authentication_type']})
+                intf_dict.update({'authentication_type': group['authentication_type']})
                 continue
 
             # Protection type: Post Convergence
@@ -317,8 +332,7 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                topology_dict = ospf_intf_dict.setdefault('topology', {})
-                topology_dict.update({'name': group['name']})
+                topology_dict = ospf_intf_dict.setdefault('topology', {}).setdefault(group['name'], {})
                 topology_dict.update({'id': int(group['id'])})
                 topology_dict.update({'metric': int(group['metric'])})
                 continue
