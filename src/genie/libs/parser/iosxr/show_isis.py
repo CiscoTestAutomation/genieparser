@@ -11,8 +11,9 @@ IOSXR parsers for the following show commands:
     * show isis neighbors    
     * show isis interface
     * show isis statistics
+    * show isis private all
     * show isis spf-log detail
-    * show isis database detail 
+    * show isis database detail
     * show isis instance {instance} hostname
 """
 
@@ -333,6 +334,7 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 
         return isis_dict
 
+
 class ShowIsisSchema(MetaParser):
     ''' Schema for commands:
         * show isis
@@ -391,7 +393,7 @@ class ShowIsisSchema(MetaParser):
             }
         }
     }
-    
+
 
 class ShowIsis(ShowIsisSchema):
     ''' Parser for commands:
@@ -783,6 +785,7 @@ class ShowIsis(ShowIsisSchema):
 
         return parsed_output
 
+
 class ShowIsisProtocol(ShowIsis):
     ''' Parser for commands:
         * show isis protocol
@@ -794,6 +797,7 @@ class ShowIsisProtocol(ShowIsis):
             output = self.device.execute(self.cli_command)
 
         return super().cli(output=output)
+
 
 class ShowIsisHostnameSchema(MetaParser):
     ''' Schema for commands:
@@ -821,6 +825,7 @@ class ShowIsisHostnameSchema(MetaParser):
             }
         }
     }    
+
 
 class ShowIsisHostname(ShowIsisHostnameSchema):
     ''' Parser for commands:
@@ -895,6 +900,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                 continue
 
         return parsed_output
+
 
 class ShowIsisStatisticsSchema(MetaParser):
     ''' Schema for commands:
@@ -1543,6 +1549,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         return parsed_dict
 
+
 class ShowIsisSpfLogSchema(MetaParser):
     ''' Schema for command
         * show isis spf-log
@@ -1569,6 +1576,7 @@ class ShowIsisSpfLogSchema(MetaParser):
             }
         }
     }
+
 
 class ShowIsisSpfLog(ShowIsisSpfLogSchema):
     ''' Parser for commands:
@@ -1658,6 +1666,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 continue
 
         return parsed_output
+
 
 class ShowIsisSpfLogDetailSchema(MetaParser):
     ''' Schema for command
@@ -1775,6 +1784,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
             }
         }
     }    
+
 
 class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
     ''' Parser for command
@@ -2120,6 +2130,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 
                 continue
         return parsed_dict
+
+
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
         * show isis lsp-log     
@@ -2140,6 +2152,7 @@ class ShowIsisLspLogSchema(MetaParser):
             }
         }
     }
+
 
 class ShowIsisLspLog(ShowIsisLspLogSchema):
     ''' Parser for commands:
@@ -2231,6 +2244,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                 continue
 
         return parsed_output
+
 
 class ShowIsisInterfaceSchema(MetaParser):
     ''' Schema for commands:
@@ -2349,7 +2363,8 @@ class ShowIsisInterfaceSchema(MetaParser):
             }
         }
     }
-    
+
+
 class ShowIsisInterface(ShowIsisInterfaceSchema):
     ''' Parser for commands:
         * show isis interface
@@ -3274,6 +3289,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         return parsed_output
 
+
 class ShowIsisDatabaseDetailSchema(MetaParser):
     ''' Schema for commands:
         * show isis database detail
@@ -3394,6 +3410,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
             }
         }
     }
+
 
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     ''' Parser for commands:
@@ -3922,3 +3939,1057 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 continue
 
         return parsed_output
+
+
+class ShowIsisPrivateAllSchema(MetaParser):
+    ''' Schema for commands:
+       * show isis private all 
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'cfg_refcount': int,
+                'isis_is_level': str,
+                'ignore_cksum_errs': bool,
+                'cfg_log_drops': bool,
+                'nsf_cfg_purgetime': int,
+                'nsf2_t1_delay': int,
+                'nsf2_t1_max_num_exp': int,
+                'nsf_cfg_interval': int,
+                'address_family_table': {
+                    Any():{
+                        'ref_count': int,
+                    },
+                },
+                'link_topology_table': {
+                    Any(): {
+                        'ref_count': int,
+                        'index': int,
+                        'is_running': bool,
+                        'list_linkage': {
+                            'next':str,
+                            'previous': str,
+                        },
+                    },
+                },
+                'topology_table': {
+                    Any(): {
+                        'configuration': {
+                            'check_adjacencies': str,
+                            'attached_bit': str,
+                            'max_paths': str,
+                            'is_mcast_intact_set': bool,
+                            'mcast_intact': bool,
+                            'is_igp_intact_set': bool,
+                            'igp_intact': bool,
+                            'is_first_hop_source_set': bool,
+                            'first_hop_source': bool,                            
+                        },
+                        'index': int,
+                        'ref_count': int,
+                        'ltopo_index': int,
+                        'list_linkage': {
+                            'next':str,
+                            'previous': str,
+                        },
+                    },
+                },
+                'area_configuration_table': {
+                    Any(): {
+                        'is_lsp_gen_interval_set': bool,
+                        'lsp_gen_interval': {
+                            'initial_wait_msecs': int,
+                            'secondary_wait_msecs': int,
+                            'maximum_wait_msecs': int,
+                        },
+                        'is_lsp_arrivaltime_parameter_set': bool,
+                        'lsp_arrivaltime_parameter': {
+                            'backoff_cfg': {
+                                'initial_wait_msecs': int,
+                                'secondary_wait_msecs': int,
+                                'maximum_wait_msecs': int, 
+                            },
+                            'max_count': int,
+                            'max_window_size_msec': int,
+                        },
+                        'is_lsp_checksum_interval_set': bool,
+                        'lsp_checksum_interval_secs': int,
+                        'is_lsp_refresh_interval_set': bool,
+                        'lsp_refresh_interval_secs': int,
+                        'is_lsp_lifetime_set': bool,
+                        'lsp_lifetime_secs': int,
+                        'is_lsp_mtu_set': bool,
+                        'lsp_mtu': int,
+                        'is_auth_cfg_ctx_set': bool,
+                        'auth_cfg_ctx': {
+                            'alg': str,
+                            'failure_mode': str,
+                            'password':  str,
+                            'accept_password': str,
+                        },
+                        'is_snp_authentication_options_set': bool,
+                        'snp_authentication_options': int,
+                        'is_overload_set': bool,
+                        'overload_mode': int,
+                        'overload_on_startup_secs': int,
+                        'per_topo': {
+                            Any(): {
+                                'is_metric_style_set': bool,
+                                'generate_metric_mask': int,
+                                'accept_metric_mask': int,
+                                'summary_table': str,
+                                'metric': Any(),
+                                'is_spf_interval_set': bool,
+                                'spf_interval': {
+                                    'initial_wait_msecs': int,
+                                    'secondary_wait_msecs': int,
+                                    'maximum_wait_msecs': int,
+                                },
+                                'spf_periodic_interval_secs': str,
+                                'ispf_state': str,
+                                'max_redist_prefixes': str,
+                                'topo_index': {
+                                    Any(): {
+                                        'is_spf_prefix_priority_acl_names_set': bool,
+                                        'spf_prefix_priority_acl_names': str,
+                                        'is_spf_prefix_priority_tags_set': bool,
+                                        'spf_prefix_priority_tags': int,
+                                    },
+                                },
+                            },
+                        },                    
+                    },
+                },
+                'area_tables': {
+                    Any(): {
+                        'index': int,
+                        'nsf_ietf_csnp_rcvd': bool,
+                        'overload_bit_on_startup_timer': str,
+                        'overload_bit_trigger_expired': bool,
+                        Optional('overload_bit_forced_reasons'): str,
+                        'upd_periodic_timer': str,
+                        'checksum_ptimer': {
+                            'tv_sec': int,
+                            'tv_nsec': int,
+                        },
+                        'idb_list': {
+                            'sll_head': str,
+                            'sll_tail': str,
+                            'sll_count': int,
+                            'sll_maximum': int,
+                        },
+                        'list_linkage': {
+                            'next': str,
+                            'previous': str,
+                        },
+                        'adj_db': str,
+                        'adj_log': str,
+                        'uni_db_log': str,
+                        'upd_db': {
+                            'area': str,
+                            'log': str,
+                            'name': str,
+                            'lock': {
+                                'description': str,
+                                'rwlock': {
+                                    'active': int,
+                                    'spare': str,
+                                    'blockedwriters': int,
+                                    'blockedreaders': int,
+                                    'heavy': int,
+                                    'owner': int,
+                                    Optional('lock'): {
+                                        'count': int,
+                                        'owner': int,
+                                    },
+                                },                            
+                            },
+                            'tree': {
+                                'root': str,
+                                'key_size': int,
+                                'size': int,
+                                'node_alloc_data': str,
+                                'node_alloc_fn': str,
+                                'node_free_fn': str,
+                                'data_to_str_fn': str,
+                            },
+                            'tree_node_chunks': {
+                                'name': str,
+                                'size': int,
+                                'flags': int,
+                                'chunk': str,
+                                'num_allocated_elements': int
+                            },
+                        },
+                        'dec_db': {
+                            'area': str,
+                            'log': str,
+                            'name': str,
+                            'lock': {
+                                'description': str,
+                                'rwlock': {
+                                    'active': int,
+                                    'spare': str,
+                                    'blockedwriters': int,
+                                    'blockedreaders': int,
+                                    'heavy': int,
+                                    'lock': {
+                                        'count': int,
+                                        'owner': int,
+                                    },
+                                    'owner': int,
+                                }
+                            },
+                            'tree': {
+                                'root': str,
+                                'key_size':  int,
+                                'size': int,
+                                'node_alloc_data': str,
+                                'node_alloc_fn': str,
+                                'node_free_fn': str,
+                                'data_to_str_fn': str,
+                            },
+                            'tree_node_chunks': {
+                                'name': str,
+                                'size': int,
+                                'flags': int,
+                                'chunk': str,
+                                'num_allocated_elements': int,
+                            },
+                        },
+                        'node_db': {
+                            'node_created_fn': str,
+                            'node_destroyed_fn': str,
+                            'node_ltopo_created_fn': str,
+                            'node_ltopo_destroyed_fn': str,
+                            'node_topo_created_fn': str,
+                            'node_topo_destroyed_fn': str,
+                            'callback_context': str,
+                            'root_element': str,
+                            'num_nodes': int,
+                        },
+                        'stats': {
+                            'ta_lsp_build': int,
+                            'ta_lsp_refresh': int,
+                        },
+                        'trap_stats': {
+                            'corr_lsps': int,
+                            'auth_type_fails': int,
+                            'auth_fails': int,
+                            'lsp_dbase_oloads': int,
+                            'man_addr_drop_from_areas': int,
+                            'attmpt_to_ex_max_seq_nums': int,
+                            'seq_num_skips': int,
+                            'own_lsp_purges': int,
+                            'id_field_len_mismatches': int,
+                            'lsp_errors': int,
+                        },
+                        'per_ltopo': {
+                            Any(): {
+                                'area': str,
+                                'ltopo_index': str,
+                                'spf_periodic_timer': str,
+                                'reachable_area_addresses': str,
+                                'stats': {
+                                    'num_spfs': int,
+                                    'num_ispfs': int,
+                                    'num_nhcs': int,
+                                    'num_prcs': int,
+                                    'num_periodic_spfs': int,
+                                },
+                                'paths':{
+                                    'classification': int,
+                                    'is_sorted': bool,
+                                    'array': str,
+                                    'num_elements': int,
+                                },
+                                'unreached': {
+                                    'classification': int,
+                                    'is_sorted': bool,
+                                    'array': str,
+                                    'num_elements': int,
+                                },
+                                'firsthopchanged': {
+                                    'classification': int,
+                                    'is_sorted': bool,
+                                    'array': str,
+                                    'num_elements': int,
+                                },
+                                'linkchanged': {
+                                    'classification': int,
+                                    'is_sorted': bool,
+                                    'array': str,
+                                    'num_elements': int,
+                                },
+                                'roca_event': {
+                                    'log': str, 
+                                    'class': str, 
+                                    'mutex': {
+                                        'mutex': {
+                                            'count': int,
+                                            'owner': int,
+                                        },                                        
+                                        'description': str,
+                                    },
+                                    'timer': {
+                                        'timer': str,
+                                        'num_execution_events': int,
+                                        'is_pending': bool,
+                                        'is_executing': bool,
+                                        'postponed_schedule_time': {
+                                            'tv_sec': int,
+                                            'tv_nsec': int,
+                                        },                                        
+                                        'last_execution_time': {
+                                            'tv_sec': int,
+                                            'tv_nsec': int,
+                                        },                                        
+                                    },
+                                }                            
+                            },
+                        },
+                        'per_topo': {
+                            Any(): {
+                                'area': str,
+                                'topo_index': str,
+                                'te': {
+                                    'link_holddown_timer': str,
+                                    'purge_link_info_timer': str,
+                                    'log': str,
+                                    'tunnel_table': str,
+                                    'info_from_te': str,
+                                    'pce_info_from_te': str,
+                                    'is_pce_ready': bool,
+                                },
+                                'overloaded_count': int,
+                                'overload_bit_trigger_running': bool,
+                                'bgp_converged_notify_h': str,
+                                'added_first_hops': str,
+                                'deleted_first_hops': str,
+                                'postponed_added_first_hops': str,
+                                'postponed_deleted_first_hops': str,
+                                'prefixeschanged': str,
+                                'nodechanged': str,
+                                'prefix_priority_acl': {
+                                    'critical': str,
+                                    'high': str,
+                                    'medium': str,
+                                    'low': str,
+                                },
+                                'num_redist_prefixes': int,
+                                'max_redist_prefixes_exceeded': bool,
+                                'max_redist_prefixes_alarm_on': bool,
+                                'has_prefix_policy_changed': bool,
+                            },
+                        },
+                        'per_af': {
+                            Any(): {
+                                'router_id': str,
+                            },
+                        },
+                    },
+                },
+                Optional('interfaces'): {
+                    Any(): {
+                        'im_handle': str,
+                        'name': str,
+                        'ref_count': int,
+                        'index': int,
+                        'snmp_index': int,
+                        'chkpt': {
+                            'objid': str,
+                        },
+                        Optional('ltopos_ready_active'): str,
+                        'nsf_waiting_for_running': bool,
+                        'nsf_ietf_waiting_for_sent_rr': bool,
+                        'is_media_ready': bool,
+                        'im_base_caps_exist_registered': bool,
+                        'tmrs_active': bool,
+                        'lsp_pacing_timer': str,
+                        'lsp_sent_last_id': str,
+                        'lsp_sent_last_area': int,
+                        'lsp_send_b2b_limit':int,
+                        'lsp_send_b2b_limit_window_end': {
+                            'tv_sec': int,
+                            'tv_nsec': int,
+                        },
+                        'mesh_group': str,
+                        'lsp_send_requested': bool,
+                        'lsp_send_in_progress': bool,
+                        Optional('topos_enabled_passive'): str,
+                        Optional('topos_enabled_active'): str,
+                        'pri_label_stack_limit': Or(int, str),
+                        'bkp_label_stack_limit': Or(int, str),
+                        'srte_label_stack_limit': Or(int, str),
+                        'srat_label_stack_limit': Or(int, str),
+                        'bandwidth': Or(int, str),
+                        'is_pme_delay_loss_set': bool,
+                        'pme_avg_delay': str,
+                        'pme_min_delay': str,
+                        'pme_max_delay': str,
+                        'pme_delay_var': str,
+                        'pme_loss': str,
+                        'pme_total_bw': str,
+                        'pme_rsvp_te_bw': str,
+                        'rsvp_max_res_bw': str,
+                        'rsvp_unres_prio_7': str,
+                        'cfg': {
+                            'refcount': int,
+                            'is_p2p': bool,
+                            'enabled_mode': str,
+                            'circuit_type': str,
+                            'ipv4_bfd_enabled': bool,
+                            'ipv6_bfd_enabled': bool,
+                            'bfd_interval': int,
+                            'bfd_multiplier': int,
+                            'topos': str,
+                            'cross_levels': {
+                                'per_topo': {
+                                    Any(): {
+                                        'metric': Or(int, str),
+                                        'weight': str,
+                                        'ldp_sync_cfg': str,
+                                        'admin_tag': str,
+                                        'frr_type': str,
+                                        'is_lkgp_set': int,
+                                    },
+                                },
+                                'is_auth_cfg_ctx_set': bool,
+                                'auth_cfg_ctx': {
+                                    'alg': str,
+                                    'failure_mode': str,
+                                    'password': str,
+                                    'accept_password': str,
+                                },
+                                'hello_interval_msecs': str,
+                                'hello_multiplier': str,
+                                'csnp_interval_secs': str,
+                                'lsp_pacing_interval_msecs': str,
+                                'lsp_fast_flood_threshold': str,
+                                'lsp_rexmit_interval_secs': str,
+                                'min_lsp_rexmit_interval_msecs': str,
+                                'dr_priority': str,
+                                'is_hello_padding_set': bool,
+                                'hello_padding': str,
+                            },
+                            'per_level': {
+                                Any(): {
+                                    'per_topo': {
+                                        Any(): {
+                                            'metric': str,
+                                            'weight': str,
+                                            'ldp_sync_cfg': str,
+                                            'admin_tag': str,
+                                            'frr_type': str,
+                                            'is_lkgp_set': int,
+                                        },
+                                    },
+                                    'is_auth_cfg_ctx_set': bool,
+                                    'auth_cfg_ctx': {
+                                        'alg': str,
+                                        'failure_mode': str,
+                                        'password': str,
+                                        'accept_password': str,
+                                    },
+                                    'hello_interval_msecs': str,
+                                    'hello_multiplier': str,
+                                    'csnp_interval_secs': str,
+                                    'lsp_pacing_interval_msecs': str,
+                                    'lsp_fast_flood_threshold': str,
+                                    'lsp_rexmit_interval_secs': str,
+                                    'min_lsp_rexmit_interval_msecs': str,
+                                    'dr_priority': str,
+                                    'is_hello_padding_set': bool,
+                                    'hello_padding': str,
+                                },
+                            },
+                        },
+                        Optional('per_area'): {
+                            Any(): {
+                                'area_linkage': str,
+                                'idb': str,
+                                'area': str,
+                                'adj_filter': str,
+                                'csnp_control': {
+                                    'timer': str,
+                                    'next_lsp_id': str,
+                                    'building_packets': bool,
+                                },
+                                'psnp_timer': str,
+                                'nsf_ietf': {
+                                    'full_csnp_set_rcvd': bool,
+                                    'csnp_set_rcvd': {
+                                        'list_head': str,
+                                        'list_size': int,
+                                    },
+                                },
+                                'adj_up_count': int,
+                                'lan_adj_up_count': int,
+                                'adj_list': str,
+                                'per_ltopo': {
+                                    Any(): {
+                                        'num_requested_adjs': int,
+                                        'num_adjs': int,
+                                    },
+                                },
+                                'tmrs_active': bool,
+                                'adj_filter_match_all': bool,
+                                'lsp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },
+                                'csnp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },
+                                'psnp_count': {
+                                    'in': int,
+                                    'out': int,
+                                },                                
+                                'lsp_flooding_dup_count': int,
+                                'lsp_drop_count': int,
+                            },
+                        },
+                        'media': {
+                            Any():{
+                                Optional('caps_id'): int,
+                                Optional('media_class'):  str,
+                                Optional('encaps_overhead'): int,
+                            },                            
+                        },
+                        Optional('media_specific'): {
+                            Any(): {
+                                'hello_timer': str,
+                                'last_hello': {
+                                    'tv_sec': int,
+                                    'tv_nsec': int,
+                                },
+                                'recent_hello_send_count': int,
+                                'adj_state': int,
+                                'do_ietf_3way': bool,
+                                'received_ietf_3way': bool,
+                                'neighbor_extended_circuit_number': int,
+                                'neighbor_system_id': str,
+                                'lsp_rexmit_timer': str,
+                                'mib_counters': {
+                                    'circuit_type': int,
+                                    'adj_changes': int,
+                                    'num_adj': int,
+                                    'init_fails': int,
+                                    'rej_adjs': int,
+                                    'id_field_len_mismatches': int,
+                                    'max_area_addr_mismatches': int,
+                                    'auth_type_fails': int,
+                                    'auth_fails': int,
+                                    'lan_des_is_canges': int,
+                                    'index':int,
+                                },
+                                'init_csnp_wait': {
+                                    'tv_sec': int,
+                                    'tv_nsec': int,
+                                },
+                                'lsp_rexmit_queue': {
+                                    'sll_head': str,
+                                    'sll_tail': str,
+                                    'sll_count': int,
+                                    'sll_maximum': int,
+                                },
+                                'stats': {
+                                    'iih_count': {
+                                        'in': int,
+                                        'out': int,
+                                    },
+                                    'iih_nomem': int,
+                                    'lsp_retransmits': int,
+                                },
+                                'nsf_ietf': {
+                                    't1_timer': str,
+                                    'num_t1_expiries': int,
+                                    'first_t1_expiry_seen': bool,
+                                    'rr_sent': bool,
+                                    'ra_rcvd': bool,
+                                    'all_ra_seen': bool,
+                                    'ra_required_nbr_count': int,
+                                    Optional('ra_expected_neighbor_list'): list,
+                                },
+                                'p2p_over_lan': {
+                                    'mcast_state': {
+                                        'is_mcast_group_member': bool,
+                                        'mcast_join_reason':  int,
+                                    },
+                                    'snpa_info': {
+                                        'im_attr_macaddr_notify_handle':  str,
+                                        'snpa': str,
+                                        'is_snpa_ok': bool,
+                                    },
+                                },
+                            },
+                        },
+                        'clns': {
+                            'im_node': {
+                                'exist_registered': bool,
+                                'node_exists': bool,
+                                'state_registered': bool,
+                                'node_up': bool,
+                            },
+                            'mtu': int,
+                        },
+                        'per_af': {
+                            Any(): {
+                                'im_node': {
+                                    'exist_registered': bool,
+                                    'node_exists': bool,
+                                    'state_registered': bool,
+                                    'node_up': bool,
+                                },
+                                'local_address': str,
+                                'is_nexthop_addr_registered': bool,
+                                'is_global_prefix_registered': bool,
+                                'is_running_passive': bool,
+                            },
+                        },
+                        'per_topo': {
+                            Any(): {
+                                'refcount': int,
+                            },                            
+                        },
+                        'mpls_ldp_sync': {
+                            'im_attr_ldp_sync_info_notify_handle': Or(int, str),
+                            'ldp_sync_info': bool,
+                            'is_ldp_sync_info_ok': int,
+                        },
+                        'mpls_ldpv6_sync': {
+                            'im_attr_ldp_sync_info_notify_handle': Or(int, str),
+                            'ldp_sync_info': bool,
+                            'is_ldp_sync_info_ok': int,
+                        },
+                        'stats': {
+                            'ish_recv_count': int,
+                            'esh_recv_count': int,
+                            'unk_recv_count': int,
+                        },
+
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):    
+    ''' Parser for commands:
+       * show isis private all
+    '''
+
+    priority_level = {
+        'ISIS_PREFIX_PRIORITY_CRITICAL': 'critical',
+        'ISIS_PREFIX_PRIORITY_HIGH': 'high',
+        'ISIS_PREFIX_PRIORITY_MED': 'medium',
+        'ISIS_PREFIX_PRIORITY_LOW': 'low',
+    }
+
+    trap_stats_field = {
+        'isisSysStatCorrLSPs': 'corr_lsps',
+        'isisSysStatAuthTypeFails': 'auth_type_fails',
+        'isisSysStatAuthFails':'auth_fails',
+        'isisSysStatLSPDbaseOloads':'lsp_dbase_oloads',
+        'isisSysStatManAddrDropFromAreas':'man_addr_drop_from_areas',
+        'isisSysStatAttmptToExMaxSeqNums':'attmpt_to_ex_max_seq_nums',
+        'isisSysStatSeqNumSkips':'seq_num_skips',
+        'isisSysStatOwnLSPPurges':'own_lsp_purges',
+        'isisSysStatIDFieldLenMismatches':'id_field_len_mismatches',
+        'isisSysStatLSPErrors':'lsp_errors',
+    }
+
+    mib_counters_field = {
+        'isisCircuitType': 'circuit_type',
+        'isisCircAdjChanges': 'adj_changes',
+        'isisCircNumAdj': 'num_adj',
+        'isisCircInitFails': 'init_fails',
+        'isisCircRejAdjs': 'rej_adjs',
+        'isisCircIDFieldLenMismatches': 'id_field_len_mismatches',
+        'isisCircMaxAreaAddrMismatches': 'max_area_addr_mismatches',
+        'isisCircAuthTypeFails': 'auth_type_fails',
+        'isisCircAuthFails': 'auth_fails',
+        'isisCircLANDesISChanges': 'lan_des_is_canges',
+        'isisCircIndex': 'index',
+    }
+
+    cli_command = 'show isis private all'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # initial variables
+        result_dict = {}
+        indent_map = {}
+        area_table_flag = False
+
+        def get_parent_dict(indent):
+            while indent > 0:
+                indent -= 1
+                parent = indent_map.get(indent)
+                if parent is not None:
+                    return parent
+
+        def clear_indent_map(indent):
+            for idx in list(indent_map):
+                if idx >= indent:
+                    indent_map.pop(idx)
+
+        def get_key(key):
+            if key.startswith('__'):
+                return key.replace('__', '')
+
+            if key in self.priority_level:
+                return self.priority_level[key]
+
+            if key in self.trap_stats_field:
+                return self.trap_stats_field[key]
+
+            if key in self.mib_counters_field:
+                return self.mib_counters_field[key]
+
+            return key
+
+        def get_value(value):
+            if not value:
+                return None
+
+            try:
+                return int(value)
+            except Exception:
+                pass
+
+            if value.lower() == 'true':
+                return True
+
+            if value.lower() == 'false':
+                return False
+
+            return value
+
+        # +++++++++++++++++++++++ IS-IS TEST Global Private Data ++++++++++++++++++++++++
+
+        # ISIS Test private data:
+        r1 = re.compile(r'^(?P<indent>\s*)ISIS +(?P<instance>\w+) +private +data:$')
+
+        # Address Family Table
+        r2 = re.compile(r'^(?P<indent>\s*)Address +Family +Table$')
+
+        # IPv4
+        # IPv6
+        r3 = re.compile(r'^(?P<indent>\s*)IPv(4|6)$')
+
+        # Link Topology Table
+        r4 = re.compile(r'^(?P<indent>\s*)Link +Topology +Table$')
+
+        # Standard (IPv4 Unicast)
+        r5 = re.compile(r'^(?P<indent>\s*)Standard +\(IPv4 +Unicast\)$')
+
+        # Topology Table
+        r6 = re.compile(r'^(?P<indent>\s*)Topology +Table$')
+
+        # IPv4 Unicast
+        # IPv4 Unicast VRF VRF1
+        r7 = re.compile(r'^(?P<indent>\s*)IPv(4|6) +Unicast( +VRF +\S+)?$')
+
+        # Configuration:
+        r8 = re.compile(r'^(?P<indent>\s*)Configuration:$')
+
+        # Area Configuration Table
+        r9 = re.compile(r'^(?P<indent>\s*)Area +Configuration +Table$')
+
+        # Cross Levels
+        r10 = re.compile(r'^(?P<indent>\s*)Cross +Levels$')
+
+        # Level-1
+        r11 = re.compile(r'^(?P<indent>\s*)Level\-(?P<level>\d+)$')
+
+        # Area Table
+        r12 = re.compile(r'^(?P<indent>\s*)Area +Table$')
+
+        # per_af[IPv4]
+        # per_topo[IPv4 Unicast]   :
+        # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+        r13 = re.compile(r'^(?P<indent>\s*)(?P<key>\w+)\[(?P<type>.+)\]( *:)?'
+                         r'( +(?P<value>.*))?$')
+
+        # [000] is_spf_prefix_priority_acl_names_set : FALSE
+        r14 = re.compile(r'^(?P<indent>\s*)\[(?P<idx>\d+)\] +(?P<key>\w+) *: +'
+                         r'(?P<value>.*)$')
+
+
+        # ++++++++++++++++++++++ IS-IS Test Interface Private Data ++++++++++++++++++++++
+
+        # Interface TenGigE0/0/1/2
+        r15 = re.compile(r'^(?P<indent>\s*)Interface +(?P<interface>\S+)$')
+
+        #   media             : 0x440cc90
+        r16 = re.compile(r'^(?P<indent>\s*)media *: +(?P<media>\S+)$')
+
+        # cfg.cross_levels   :
+        # cfg.per_level[Level-1]    :
+        # cfg.per_level[Level-2]    :
+        r17 = re.compile(r'^(?P<indent>\s*)(?P<key>cfg\.(cross_levels|per_level\[.*\])) +:$')
+
+        # media_specific.p2p.nsf_ietf
+        # media_specific.p2p.p2p_over_lan
+        r18 = re.compile(r'^(?P<indent>\s*)(?P<key>[\w]+\.[\S]+)$')
+
+        #   lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+        r99 = re.compile(r'^(?P<indent>\s*)(?P<key>[\w\.]+) *: +(?P<value>.*)$')
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # ISIS TEST private data:
+            m = r1.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                instance = group['instance']
+                inst_dict = result_dict.setdefault('instance', {}).setdefault(instance, {})
+                indent_map.update({indent: inst_dict})
+                area_table_flag = False
+                continue
+
+            # Address Family Table
+            m = r2.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                af_dict = inst_dict.setdefault('address_family_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: af_dict})
+                continue
+
+            # IPv4
+            # IPv6
+            m = r3.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                ip = line.strip()
+                ip_dict = af_dict.setdefault(ip, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: ip_dict})
+                continue
+
+            # Link Topology Table
+            m = r4.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                link_dict = inst_dict.setdefault('link_topology_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: link_dict})
+                continue
+
+            # Standard (IPv4 unicast)
+            m = r5.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = line.strip()
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # Topology Table
+            m = r6.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                topo_dict = inst_dict.setdefault('topology_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: topo_dict})
+                continue
+
+            # IPv4 Unicast
+            m = r7.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = line.strip()
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # Configuration:
+            m = r8.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('configuration', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # Area Configuration Table
+            m = r9.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                config_dict = inst_dict.setdefault('area_configuration_table', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: config_dict})
+                continue
+
+            # Cross Levels
+            m = r10.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('cross_level', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # Level-1
+            m = r11.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                level = group['level']
+                if area_table_flag:
+                    parent = area_dict
+                else:
+                    parent = config_dict
+
+                sub_dict = parent.setdefault('level-' + level, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # Area Table
+            m = r12.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                area_dict = inst_dict.setdefault('area_tables', {})
+                clear_indent_map(indent)
+                indent_map.update({indent: area_dict})
+                area_table_flag = True
+                continue
+
+            # per_topo[IPv4 Unicast]   :
+            # prefix_priority_acl[ISIS_PREFIX_PRIORITY_CRITICAL]: 0x0
+            m = r13.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                key = group['key']
+                stype = get_key(group['type'])
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
+
+                if value:
+                    sub = parent.setdefault(key, {})
+                    sub.update({stype: value})
+                else:
+                    sub = parent.setdefault(key, {}).setdefault(stype, {})
+                    clear_indent_map(indent)
+                    indent_map.update({indent: sub})
+                continue
+
+            # [000] is_spf_prefix_priority_acl_names_set : FALSE
+            m = r14.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                idx = int(group['idx'])
+                key = group['key']
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
+
+                sub = parent.setdefault('topo_index', {}).setdefault(idx, {})
+                sub.update({key: value})
+                continue
+
+            # Interface TenGigE0/0/1/2
+            m = r15.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                interface = group['interface']
+                intf_dict = inst_dict.setdefault('interfaces', {}).\
+                                      setdefault(interface, {})
+
+                clear_indent_map(indent)
+                indent_map.update({indent: intf_dict})
+                continue
+
+            #   media             : 0x440cc90
+            m = r16.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                media = group['media']
+                parent = get_parent_dict(indent)
+                sub_dict = parent.setdefault('media', {}).setdefault(media, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # cfg.cross_levels   :
+            # cfg.per_level[Level-1]    :
+            # cfg.per_level[Level-2]    :
+            m = r17.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].replace('[','.').replace(']','').split('.')
+                parent = get_parent_dict(indent)
+                sub_dict = parent
+                for key in keys:
+                    sub_dict = sub_dict.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            # media_specific.p2p.nsf_ietf
+            # media_specific.p2p.p2p_over_lan
+            m = r18.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].split('.')
+                parent = get_parent_dict(indent)
+                sub_dict = parent
+                for key in keys:
+                    sub_dict = sub_dict.setdefault(key, {})
+                clear_indent_map(indent)
+                indent_map.update({indent: sub_dict})
+                continue
+
+            #   lsp_arrivaltime_parameter.backoff_cfg.secondary_wait_msecs: 200
+            m = r99.match(line)
+            if m:
+                group = m.groupdict()
+                indent = len(group['indent'])
+                keys = group['key'].split('.')
+                value = get_value(group['value'])
+                parent = get_parent_dict(indent)
+
+                if len(keys) == 1:
+                    parent.update({keys[0]: value})
+                else:
+                    sub = parent
+                    for key in keys[:-1]:
+                        key = get_key(key)
+                        sub = sub.setdefault(key, {})
+                    sub.update({get_key(keys[-1]): value})
+                continue
+
+        return result_dict

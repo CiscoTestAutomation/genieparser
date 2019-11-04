@@ -23,6 +23,19 @@
         * 'show route ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+		
+* NXOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interface description'
+        * 'show interface {interface} description'
+		
+* IOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
 
 * IOSXR
     * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
@@ -55,6 +68,21 @@
     * Added ShowIpNatStatistics
         * show ip nat statistics
         
+    * Added ShowIgmp for commands;
+        * 'show igmp interface'
+        * 'show igmp interface {interface}'
+        * 'show igmp vrf {vrf} interface'
+        * 'show igmp vrf {vrf} interface {interface}'
+        * 'show igmp summary'
+        * 'show igmp vrf {vrf} summary'
+        * 'show igmp groups detail'
+        * 'show igmp vrf {vrf} groups detail'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+    * Added ShowIsisPrivateAll for commands;
+        * 'show isis private all'
+		
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -75,6 +103,8 @@
     * ShowIpOspf
         * Added missing keys to schema
         * Added regex to capture more outputs
+    * Updated ShowVpc for:
+        * Parser schema and regex to support more output
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -98,3 +128,19 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowInventory
+        * Added regex to support various outputs
+    * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
+        * changed backup_nexthop and backup_nexthop to optional
+
+* IOSXR
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
+
+
+
