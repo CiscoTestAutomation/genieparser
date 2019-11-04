@@ -49,6 +49,25 @@
         * 'show msdp vrf {vrf} sa-cache'
         * 'show msdp statistics peer'
         * 'show msdp vrf {vrf} statistics peer'
+
+* IOSXE
+    * Added ShowIpNatTranslations
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+
+* IOS
+    * Added ShowIpNatTranslations
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+        
     * Added ShowIgmp for commands;
         * 'show igmp interface'
         * 'show igmp interface {interface}'
