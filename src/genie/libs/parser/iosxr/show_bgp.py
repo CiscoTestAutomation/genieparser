@@ -3485,7 +3485,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                             'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
         #    Network            Next Hop            Metric LocPrf Weight Path
-        #                       1.1.1.1                    100      0    i
+        #                       10.4.1.1                    100      0    i
         p17 = re.compile(r'^(?P<next_hop>[\w\.\:]+) +((?P<metric>[0-9]+))? +'
                             '(?P<locprf>[0-9]+) +(?P<weight>[0-9]+) '
                             '*(?P<path>[\S]+)$')
@@ -3538,7 +3538,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 continue
 
             # Network            Next Hop            Metric LocPrf Weight Path
-            #                    1.1.1.1                    300      1    i
+            #                    10.4.1.1                    300      1    i
 
             m = p17.match(line)
             if m:
@@ -3724,7 +3724,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     
             # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *> 2001:db8:cdc9:121::/64     2001:db8:20:1:5::5
-            # *>i[T][L15][L1x1][N[c12365][b1.1.1.1][s02.2.2.2]][P[p1.1.1.1/32]]/800
+            # *>i[T][L15][L1x1][N[c12365][b10.4.1.1][s10.16.2.2]][P[p10.4.1.1/32]]/800
 
             m = p13.match(line)
             if m:
@@ -4898,7 +4898,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
         # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
-        # *> [1][1.1.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
+        # *> [1][10.4.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                            r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))'
                            r'(?: +(?P<next_hop>\S+))?$')
@@ -5238,10 +5238,10 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
         # 10.36.3.3         default                 0 65000     0     0  Established  None
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
-
+        # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
-            '(?P<nbr_state>\w+) +(?P<nsr_state>\w+)$')
+            '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
         
         # BGP instance 0: 'default'
         p2 = re.compile(r'^BGP +instance +\d+: +\'(?P<instance>\S+)\'$')
@@ -5251,7 +5251,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
             # 10.36.3.3         default                 0 65000     0     0  Established  None
             # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
-
+            # 10.1.7.212     default                 0 10396     0     0  Established  NSR Ready
             m = p1.match(line)
             if m:
                 group = m.groupdict()

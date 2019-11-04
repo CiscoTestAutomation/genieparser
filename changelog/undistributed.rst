@@ -23,6 +23,47 @@
         * 'show route ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {protocol}'
         * 'show route vrf {vrf} ipv6 {route}'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+    * Added ShowIpNatTranslations
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+
+* NXOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interface description'
+        * 'show interface {interface} description'
+
+* IOS
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+    * Added ShowIpNatTranslations for commands:
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+    * Added ShowIgmp for commands:
+        * 'show igmp interface'
+        * 'show igmp interface {interface}'
+        * 'show igmp vrf {vrf} interface'
+        * 'show igmp vrf {vrf} interface {interface}'
+        * 'show igmp summary'
+        * 'show igmp vrf {vrf} summary'
+        * 'show igmp groups detail'
+        * 'show igmp vrf {vrf} groups detail'
+    * Added ShowInterfacesDescription for commands;
+        * 'show interfaces description'
+        * 'show interfaces {interface} description'
+    * Added ShowIsisPrivateAll for commands;
+        * 'show isis private all'
 
 * IOSXR
     * Added ShowMsdpPeer for commands:
@@ -62,11 +103,17 @@
     * Enhanced ShowBgpInstanceSummary;
         * Updated code to support various outputs
         * Added unittest corresponding to the new supported output
+    * Enhanced ShowRouteIpv6:
+        * Updated regex to support various outputs
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
 
 * NXOS
     * ShowIpOspf
         * Added missing keys to schema
         * Added regex to capture more outputs
+    * Updated ShowVpc for:
+        * Parser schema and regex to support more output
 
 * IOSXE
     * Updated ShowAuthenticationSessions
@@ -87,6 +134,12 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+
+* IOS
+    * Updated ShowInventory
+        * Added regex to support various outputs
+    * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
+        * changed backup_nexthop and backup_nexthop to optional
 
 * JUNOS
     * Enhanced ShowOspfInterfaceBrief:

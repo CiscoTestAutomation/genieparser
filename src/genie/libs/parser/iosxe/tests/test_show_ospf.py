@@ -12252,6 +12252,29 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
             }
         }
     }
+    golden_output_3 = {'execute.return_value':'''
+    show ip ospf segment-routing protected-adjacencies
+    Load for five secs: 0%/0%; one minute: 1%; five minutes: 1%
+    Time source is NTP, 15:31:18.236 JST Thu Oct 31 2019
+                OSPF Router with ID (2.2.2.2) (Process ID 9996)
+                              Area with ID (8)
+    Neighbor ID     Interface          Address         Adj-Sid      Backup Nexthop  Backup Interface  
+    --------------- ------------------ --------------- ------------ --------------- ------------------
+    1.1.1.1         Gi0/1/6            2.2.2.2          17          
+    '''}
+
+    parsed_output_3 = {
+        'process_id': {
+            9996: {
+                'router_id': '2.2.2.2',
+                'areas': {
+                    '0.0.0.8': {
+                        'neighbors': {
+                            '1.1.1.1': {
+                                'interfaces': {
+                                    'GigabitEthernet0/1/6': {
+                                        'address': '2.2.2.2',
+                                        'adj_sid': 17}}}}}}}}}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -12270,6 +12293,12 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
         obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_3)
 
 class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
     """ Test case for command:
