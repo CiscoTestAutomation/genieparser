@@ -1933,3 +1933,317 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
         return ret_dict
+
+
+# =========================================
+#  Parser for 'show ip cef internal'
+# =========================================
+class ShowIpCefInternalSchema(MetaParser):
+    """Schema for show ip cef internal
+                  show ip cef <ip> internal"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'prefix': {
+                            Any(): {
+                                Optional('epoch'): int,
+                                Optional('per_destination_sharing'): bool,
+                                Optional('rib'): str,
+                                Optional('refcnt'): int,
+                                Optional('sr_local_label_info'): str,
+                                Optional('dflt_local_label_info'): str,
+                                Optional('flags'): list,
+                                Optional('sources'): list,
+                                Optional('path_list'): {
+                                    Any(): {
+                                        'locks': int,
+                                        'path': {
+                                            Any(): {
+                                                Optional('nexthop'): {
+                                                    Any(): {
+                                                        Optional('outgoing_interface'): {
+                                                            Any(): {
+                                                                Optional('local_label'): int,
+                                                                Optional('outgoing_label'): list,
+                                                                Optional('outgoing_label_backup'): str,
+                                                                Optional('outgoing_label_info'): str,
+                                                                Optional('repair'): str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'output_chain': {
+                                    Optional('label'): list,
+                                    Optional('primary'): {
+                                        'tag_adj': {
+                                            'interface': str,
+                                            'addr': str,
+                                        },
+                                    },
+                                    Optional('repair'): {
+                                        Optional('tag_midchain'): {
+                                            'interface': str,
+                                        },
+                                        Optional('label'): list,
+                                        Optional('tag_adj'): {
+                                            'interface': str,
+                                            'addr': str,
+                                        },
+                                    },
+                                    Optional('action'): str,
+                                }
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpCefInternal(ShowIpCefInternalSchema):
+    ''' Parser for:
+        * 'show ip cef internal'
+        * 'show ip cef <ip> internal'
+    '''
+
+    cli_command = ['show ip cef {ip} internal',
+                   'show ip cef internal']
+
+    def cli(self, ip="", vrf="", output=None):
+
+        if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1].format(ip=ip)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
+
+        result_dict = {}
+
+        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+        # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+        p1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch'
+                        r' +(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)?'
+                        r' +refcnt +(?P<refcnt>\d+),'
+                        r' +(?P<sharing>(per-destination sharing))$')
+
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+        # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+        p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
+                          r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
+                          r'+RIB+(?P<rib>\S+),)? +refcnt +(?P<refcnt>\d+), '
+                          r'+(?P<sharing>(per-destination sharing))$')
+
+        #   sources: RIB, RR, LTE
+        p2 = re.compile(r'^sources: +(?P<sources>[a-zA-Z, ]+)$')
+
+        # dflt local label info: global/28 [0x3]
+        p3 = re.compile(r'^dflt +local +label +info: +(?P<dflt_local_label_info>(.*))$')
+
+        # sr local label info: global/16073 [0x1B]
+        p4 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
+
+        # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+        p5 = re.compile(r'path +list +(?P<path_list_id>[A-Z0-9]+), +(?P<locks>\d+) +locks, .*')
+
+        # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), .*')
+
+        # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+        p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
+                        r'(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
+                        r'\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)(.*)$')
+
+        # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+        p7_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
+                          r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
+                          r'(-\(local:(?P<local_label>\w+)\))?)?,.*$')
+
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
+        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr +(?P<addr>[\d.]+).*')
+
+        # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+        p9 = re.compile(r'^(?:<repair: +)?TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), +addr +(?P<addr>[\d.]+).*$')
+
+        # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
+        p9_1 = re.compile(r'^<repair: +TAG +midchain +out +of +(?P<interface>[a-zA-Z\d\/-]+).*$')
+
+        # label 98
+        # label implicit-null
+        # label [16073|16073]
+        p10 = re.compile(r'^label +(?P<label>[\d\w\-\[\]\|]+)$')
+
+        label_list = []
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+            # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+            m1 = p1.match(line)
+
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+            # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+            m1_1 = p1_1.match(line)
+            if m1 or m1_1:
+                if m1:
+                    group = m1.groupdict()
+                elif m1_1:
+                    group = m1_1.groupdict()
+
+                if ':' in group['prefix']:
+                    address_family = 'ipv6'
+                else:
+                    address_family = 'ipv4'
+
+                prefix_dict = result_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('prefix', {}). \
+                    setdefault(group['prefix'], {})
+                output_chain_dict = prefix_dict.setdefault('output_chain', {})
+                if group['epoch']:
+                    prefix_dict['epoch'] = int(group['epoch'])
+                if group['sharing']:
+                    prefix_dict['per_destination_sharing'] = True
+                if 'rib' in group and group['rib']:
+                    prefix_dict['rib'] = group['rib']
+                if 'refcnt' in group and group['refcnt']:
+                    prefix_dict['refcnt'] = int(group['refcnt'])
+                if 'flags' in group and group['flags']:
+                    prefix_dict['flags'] = group['flags'].split(', ')
+
+                continue
+
+            #   sources: RIB, RR, LTE
+            m2 = p2.match(line)
+            if m2:
+                prefix_dict['sources'] = m2.groupdict()['sources'].split()
+
+                continue
+
+            # dflt local label info: global/28 [0x3]
+            m3 = p3.match(line)
+            if m3:
+                prefix_dict['dflt_local_label_info'] = m3.groupdict()['dflt_local_label_info']
+
+                continue
+
+            # sr local label info: global/16073 [0x1B]
+            m4 = p4.match(line)
+            if m4:
+                prefix_dict['sr_local_label_info'] = m4.groupdict()['sr_local_label_info']
+
+                continue
+
+            # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                pathlist_dict = prefix_dict.setdefault('path_list', {}). \
+                    setdefault(group['path_list_id'], {})
+                if group['locks']:
+                    pathlist_dict['locks'] = int(group['locks'])
+
+                continue
+
+            # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+            m6 = p6.match(line)
+            if m6:
+                path_dict = pathlist_dict.setdefault('path', {}). \
+                    setdefault(m6.groupdict()['path_id'], {})
+
+                continue
+
+            # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+            m7 = p7.match(line)
+            # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+            m7_1 = p7_1.match(line)
+            if m7 or m7_1:
+                if m7:
+                    group = m7.groupdict()
+                elif m7_1:
+                    group = m7_1.groupdict()
+                nexthop_dict = path_dict.setdefault('nexthop', {}). \
+                    setdefault(group['nexthop'], {}). \
+                    setdefault('outgoing_interface', {}). \
+                    setdefault(group['interface'], {})
+
+                if group['local_label']:
+                    nexthop_dict['local_label'] = int(group['local_label'])
+
+                if 'outgoing_label' in group and group['outgoing_label']:
+                    nexthop_dict['outgoing_label'] = group['outgoing_label'].split()
+
+                if 'outgoing_label_backup' in group and group['outgoing_label_backup']:
+                    nexthop_dict['outgoing_label_backup'] = group['outgoing_label_backup']
+
+                if 'outgoing_label_info' in group and group['outgoing_label_info']:
+                    nexthop_dict['outgoing_label_info'] = group['outgoing_label_info']
+
+                continue
+
+            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
+            m8 = p8.match(line)
+            if m8:
+                if 'path_list' in prefix_dict:
+                    group = m8.groupdict()
+                    pre_dict = output_chain_dict.setdefault('primary', {}). \
+                        setdefault('tag_adj', {})
+                    pre_dict['interface'] = group['interface']
+                    pre_dict['addr'] = group['addr']
+                continue
+
+            # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if 'repair' not in output_chain_dict:
+                    rep_dict = output_chain_dict.setdefault('repair', {})
+                rep_adj_dict = rep_dict.setdefault('tag_adj', {})
+
+                rep_adj_dict['interface'] = group['interface']
+                rep_adj_dict['addr'] = group['addr']
+                continue
+
+            # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
+            m9_1 = p9_1.match(line)
+            if m9_1:
+                group = m9_1.groupdict()
+                if 'repair' not in output_chain_dict:
+                    rep_dict = output_chain_dict.setdefault('repair', {})
+                    rep_mid_dict = rep_dict.setdefault('tag_midchain', {})
+
+                rep_mid_dict['interface'] = group['interface']
+
+                continue
+
+            # label 98
+            # label implicit-null
+            # label [16073|16073]
+            m10 = p10.match(line)
+            if m10:
+                label_val = m10.groupdict()['label']
+                if 'output_chain' in prefix_dict:
+                    if 'repair' in output_chain_dict:
+                        output_chain_dict.setdefault('repair', {}). \
+                            setdefault('label', label_val.split())
+                continue
+
+        return result_dict

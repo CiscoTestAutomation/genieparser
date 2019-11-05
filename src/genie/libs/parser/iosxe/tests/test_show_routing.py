@@ -14,7 +14,9 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRoute,\
                                                  ShowIpCefDetail,\
                                                  ShowIpRouteSummary, \
                                                  ShowIpv6Route, \
-                                                 ShowIpv6RouteWord
+                                                 ShowIpv6RouteWord, \
+                                                 ShowIpCefInternal
+
 
 # ============================================
 # unit test for 'show ip route'
@@ -2484,6 +2486,352 @@ Total           4           23          0           2688        9932
         obj = ShowIpRouteSummary(device=self.device)
         parsed_output = obj.parse(vrf='VRF-1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+# ==========================================
+# Unittest for 'show ip cef internal'
+# ==========================================
+class TestShowIpCefInternal(unittest.TestCase):
+    '''Unittest for:
+        * 'show ip cef <ip> internal'
+        * 'show ip cef internal'
+    '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+    sr_ve-laasr01#show ip cef 10.19.198.239 internal 
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
+
+10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+  sources: RIB, RR, LTE 
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 1st priority
+    LFD: 10.19.198.239/32 2 local labels
+    dflt local label info: global/28 [0x3]
+    sr local label info: global/16073 [0x1B]
+        contains path extension list
+        dflt disposition chain 0x7F0FF19606C0
+          label 51885
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213>
+        dflt label switch chain 0x7F0FF19606C0
+          label 51885
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213>
+        sr disposition chain 0x7F0FF1960590
+          label 16073
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213>
+        sr label switch chain 0x7F0FF1960590
+          label 16073
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213>
+  subblocks:
+    1 RR source [non-eos indirection, heavily shared]
+      non-eos chain loadinfo 7F0FF16E6F38, per-session, flags 0111, 8 locks
+  ifnums:
+    GigabitEthernet0/1/6(15): 10.169.196.213
+    MPLS-SR-Tunnel1(29)
+  path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+    path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+      MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x2020 label 51885
+      nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+  output chain:
+label [51885|16073]-(local:28)
+FRR Primary (0x80007F0FF094DD88)
+  <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
+  <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
+            label 98
+            TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+    '''}
+
+    golden_parsed_output_1 = {
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'prefix': {
+                        '10.19.198.239/32': {
+                            'dflt_local_label_info': 'global/28 [0x3]',
+                            'epoch': 2,
+                            'output_chain': {
+                                'primary': {
+                                    'tag_adj': {
+                                        'addr': '10.169.196.213',
+                                        'interface': 'GigabitEthernet0/1/6',
+                                    },
+                                },
+                                'repair': {
+                                    'label': ['98'],
+                                    'tag_midchain': {
+                                        'interface': 'MPLS-SR-Tunnel1',
+                                    },
+                                    'tag_adj': {
+                                        'addr': '10.169.196.217',
+                                        'interface': 'GigabitEthernet0/1/7'},
+                                },
+                            },
+                            'path_list': {
+                                '7F0FEC884768': {
+                                    'locks': 19,
+                                    'path': {
+                                        '7F0FF11E0AE0': {
+                                            'nexthop': {
+                                                '10.169.196.213': {
+                                                    'outgoing_interface': {
+                                                        'GigabitEthernet0/1/6': {
+                                                            'local_label': 28,
+                                                            'outgoing_label': ['51885'],
+                                                            'outgoing_label_backup': '16073',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'per_destination_sharing': True,
+                            'refcnt': 7,
+                            'rib': '[I]',
+                            'sources': ['RIB,', 'RR,', 'LTE'],
+                            'sr_local_label_info': 'global/16073 [0x1B]',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+    golden_output_2 = {'execute.return_value': '''
+    sr_ve-hkgasr01#show ip cef 10.100.5.5 internal
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 1%
+Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
+
+10.100.5.5/32, epoch 3, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE 
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.100.5.5/32 2 local labels
+    dflt local label info: global/25 [0x23]
+    sr local label info: global/17000 [0x1B]
+        contains path extension list
+        dflt disposition chain 0x7F2B22651570
+          label 63300
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        dflt label switch chain 0x7F2B22651570
+          label 63300
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        sr disposition chain 0x7F2B22651440
+          label 17000
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        sr label switch chain 0x7F2B22651440
+          label 17000
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+  ifnums:
+    GigabitEthernet0/1/6(15): 10.19.198.25
+    GigabitEthernet0/1/7(16): 10.19.198.29
+  path list 7F2B22A8B0A0, 477 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+    path 7F2B22A6C220, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+      MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x420 label 63300
+      nexthop 10.19.198.25 GigabitEthernet0/1/6 label [63300|68544](elc)-(local:25), IP adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B247D8
+        repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/7 (7F2B22A6C3C0)
+    path 7F2B22A6C3C0, share 1/1, type attached nexthop, for IPv4, flags [rpr, rpr-only]
+      MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x1 label 17000
+      nexthop 10.19.198.29 GigabitEthernet0/1/7 label 17000-(local:17000), repair, IP adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24378
+  output chain:
+    label [63300|68544](elc)-(local:25)
+    FRR Primary (0x80007F2B146ED518)
+      <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B245A8>
+      <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>'''}
+
+    golden_parsed_output_2 = {
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'prefix': {
+                        '10.100.5.5/32': {
+                            'dflt_local_label_info': 'global/25 [0x23]',
+                            'epoch': 3,
+                            'output_chain': {
+                                'primary': {
+                                    'tag_adj': {
+                                        'addr': '10.19.198.25',
+                                        'interface': 'GigabitEthernet0/1/6',
+                                    },
+                                },
+                                'repair': {
+                                    'tag_adj': {
+                                        'addr': '10.19.198.29',
+                                        'interface': 'GigabitEthernet0/1/7',
+                                    },
+                                },
+                            },
+                            'path_list': {
+                                '7F2B22A8B0A0': {
+                                    'locks': 477,
+                                    'path': {
+                                        '7F2B22A6C220': {
+                                            'nexthop': {
+                                                '10.19.198.25': {
+                                                    'outgoing_interface': {
+                                                        'GigabitEthernet0/1/6': {
+                                                            'local_label': 25,
+                                                            'outgoing_label': ['63300'],
+                                                            'outgoing_label_backup': '68544',
+                                                            'outgoing_label_info': 'elc',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        '7F2B22A6C3C0': {
+                                            'nexthop': {
+                                                '10.19.198.29': {
+                                                    'outgoing_interface': {
+                                                        'GigabitEthernet0/1/7': {
+                                                            'local_label': 17000,
+                                                            'outgoing_label': ['17000'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'per_destination_sharing': True,
+                            'refcnt': 6,
+                            'rib': '[I]',
+                            'sources': ['RIB,', 'LTE'],
+                            'sr_local_label_info': 'global/17000 [0x1B]',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
+    golden_output_3 = {'execute.return_value': '''
+                sr_ve-laasr01#show ip cef vrf MG501 10.55.50.1 internal
+            Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+            Time source is NTP, 11:56:14.594 UTC Tue Nov 5 2019
+
+            10.55.50.1/32, epoch 0, flags [rlbls], RIB[B], refcnt 6, per-destination sharing
+            sources: RIB
+            feature space:
+                IPRM: 0x00018000
+                Broker: linked, distributed at 3rd priority
+                LFD: 10.55.50.1/32 0 local labels
+                    contains path extension list
+            ifnums: (none)
+            path list 7F4F8A142848, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
+                path 7F4F89512770, share 1/1, type recursive, for IPv4, flags [must-be-lbld]
+                MPLS short path extensions: [rib] MOI flags = 0x0 label 262
+                recursive via 15010[Binding-Sid Label:Default] label 262, fib 7F4F89318CD0, 1 terminal fib, bslbl:Default:15010
+                path list 7F4F8A1428E8, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
+                    path 7F4F89512430, share 1/1, type attached prefix, for Binding-Sid Label
+                        MPLS short path extensions: [rib | lblmrg | srlbl] MOI flags = 0x0 label implicit-null
+                        attached to Tunnel65537, TAG midchain out of Tunnel65537 7F4F881C0718
+            output chain:
+                label 262
+                label implicit-null
+                TAG midchain out of Tunnel65537 7F4F881C0718   <--- Below here 
+                label [16073|16073]
+                label [90|90]
+                label [95|95]
+                label [90|90]
+                FRR Primary (0x80007F4F894B79F0)
+                <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F4F881C1898>
+                <repair:  label 16061
+                            TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F4F881C1CF8>
+            sr_ve-laasr01#'''}
+    golden_parsed_output_3 = {
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'prefix': {
+                        '10.55.50.1/32': {
+                            'epoch': 0,
+                            'flags': ['rlbls'],
+                            'output_chain': {
+                                'primary': {
+                                    'tag_adj': {
+                                        'addr': '10.169.196.213',
+                                        'interface': 'GigabitEthernet0/1/6',
+                                    },
+                                },
+                                'repair': {
+                                    'tag_adj': {
+                                        'addr': '10.169.196.217',
+                                        'interface': 'GigabitEthernet0/1/7',
+                                    },
+                                },
+                            },
+                            'path_list': {
+                                '7F4F8A142848': {
+                                    'locks': 3,
+                                    'path': {
+                                        '7F4F89512770': {
+                                        },
+                                    },
+                                },
+                                '7F4F8A1428E8': {
+                                    'locks': 3,
+                                    'path': {
+                                        '7F4F89512430': {
+                                        },
+                                    },
+                                },
+                            },
+                            'per_destination_sharing': True,
+                            'refcnt': 6,
+                            'rib': '[B]',
+                            'sources': ['RIB'],
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpCefInternal(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpCefInternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpCefInternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpCefInternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
 
 if __name__ == '__main__':
     unittest.main()
