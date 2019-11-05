@@ -83,3 +83,8 @@
 * IOSXR
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+
+* IOSXE
+    * Updated ShowVersion
+        * Added keywords to schema
+        * Added regex for unparsed outputs
