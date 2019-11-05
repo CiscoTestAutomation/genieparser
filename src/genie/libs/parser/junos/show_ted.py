@@ -1,7 +1,8 @@
 """show_ted.py
 
 JunOS parsers for the following show commands:
-
+    - 'show ted database extensive'
+    - 'show ted database extensive {node_id}'
 """
 
 # python

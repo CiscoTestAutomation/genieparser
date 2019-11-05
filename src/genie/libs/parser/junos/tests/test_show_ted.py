@@ -11,13 +11,11 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_ted import ShowTedDatabaseExtensive
 
 '''
-Unit test for:
-    * show route table {table}
-    * show route table {table} {prefix}
+Unit tests for:
+    * 'show ted database extensive'
+    * 'show ted database extensive {node_id}'
 '''
-
-
-class test_show_route_table(unittest.TestCase):
+class test_show_ted_database(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
