@@ -25,61 +25,73 @@ class ShowTedDatabaseExtensiveSchema(MetaParser):
         'isis_nodes': int,
         'inet_nodes': int,
         'node': {
-            Any(): {
+            Any(): {  # '169.0.0.1'
                 'type': str,
                 'age': int,
                 'link_in': int,
                 'link_out': int,
                 Optional('protocol'): {
-                    Any(): {  # ospf
-                        Any(): {  # to_local_remote
-                            'to': str,
-                            'local': str,
-                            'remote': str,
-                            'local_interface_index': int,
-                            'remote_interface_index': int,
-                            Optional('color'): str,
-                            'metric': int,
-                            Optional('static_bw'): str,
-                            Optional('reservable_bw'): str,
-                            Optional('available_bw'): {
-                                Any(): {  # priority
-                                    'bw': str
-                                }
-                            },
-                            'interface_switching': {
-                                'switching_type': str,
-                                'encoding_type': str,
-                                'maximum_lsp_bw': {
-                                    Any(): {
-                                        'bw': str
+                    Any(): {  # 'ospf(0.0.0.1)'
+                        'to': {
+                            Any(): {  # '169.0.0.1'
+                                'local': {
+                                    Any(): {  # '169.0.0.1'
+                                        'remote': {
+                                            Any(): {  # '169.0.0.1'
+                                                'local_interface_index': int,
+                                                'remote_interface_index': int,
+                                                Optional('color'): str,
+                                                'metric': int,
+                                                Optional('static_bw'): str,
+                                                Optional('reservable_bw'): str,
+                                                Optional('available_bw'): {
+                                                    Any(): {  # priority
+                                                        'bw': str
+                                                    }
+                                                },
+                                                'interface_switching_capability_descriptor': {
+                                                    Any(): {  # from Interface Switching Capability Descriptor(1):
+                                                        'switching_type': str,
+                                                        'encoding_type': str,
+                                                        'maximum_lsp_bw': {
+                                                            Any(): {  # 1, 2, 3, ...
+                                                                'bw': str
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                'p2p_adj_sid': {
+                                                    'sid': {
+                                                        Any(): {
+                                                            'address_family': str,
+                                                            'flags': str,
+                                                            'weight': int
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                            },
-                            'p2p_adj_sid': {
-                                'sid': {
-                                    Any(): {
-                                        'address_family': str,
-                                        'flags': str,
-                                        'weight': int
-                                    }
-                                }
-                            },
+                            }
                         },
                         'prefixes': {
                             Any(): {  # prefix
                                 'flags': str,
                                 'prefix_sid': {
-                                    'sid': int,
-                                    'flags': str,
-                                    'algo': int
+                                    Any(): {  # sid
+                                        'flags': str,
+                                        'algo': int
+                                    }
                                 }
                             }
                         },
                         'spring_capabilities': {
-                            'srgb_start': int,
-                            'srgb_range': int,
-                            'srgb_flags': str
+                            'srgb_block': {
+                                'start': int,
+                                'range': int,
+                                'flags': str
+                            }
                         },
                         'spring_algorithms': list
                     }
