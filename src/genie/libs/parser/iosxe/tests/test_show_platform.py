@@ -31,7 +31,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowProcessesCpuHistory
+                                                  ShowProcessesCpuHistory, \
+                                                  ShowProcessesMemory
 
 
 class test_show_version(unittest.TestCase):
@@ -18216,6 +18217,111 @@ Time source is NTP, 15:54:30.599 EST Tue Oct 18 2016
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
+class TestShowProcessMemory(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'processor_pool': {
+            'total': 10147887840,
+            'used': 485435960,
+            'free': 9662451880,
+        },
+        'reserve_p_pool': {
+            'total': 102404,
+            'used': 88,
+            'free': 102316,
+        },
+        'lsmi_io_pool': {
+            'total': 6295128,
+            'used': 6294296,
+            'free': 832,
+        },
+        'pid': {
+            0: {
+                'pid': 0,
+                'tty': 0,
+                'allocated': 0,
+                'freed': 0,
+                'holding': 4070880,
+                'getbufs': 0,
+                'retbufs': 0,
+                'process': '*MallocLite*',
+            },
+            1: {
+                'pid': 1,
+                'tty': 0,
+                'allocated': 3415536,
+                'freed': 879912,
+                'holding': 2565568,
+                'getbufs': 0,
+                'retbufs': 0,
+                'process': 'Chunk Manager',
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
+        Time source is NTP, 21:28:35.662 JST Mon May 11 2020
+
+        Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+
+        PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+        0   0  678985440  347855496  304892096        428    2134314 *Init*
+        0   0        800 4965889216        800         17         17 *Sched*
+        0   0 2675774192 2559881512   43465512       2111        351 *Dead*
+        0   0          0          0    4070880          0          0 *MallocLite*
+        1   0    3415536     879912    2565568          0          0 Chunk Manager
+    '''}
+
+    golden_parsed_output2 = {
+        'processor_pool': {
+            'total': 10147887840,
+            'used': 487331816,
+            'free': 9660556024,
+        },
+        'reserve_p_pool': {
+            'total': 102404,
+            'used': 88,
+            'free': 102316,
+        },
+        'lsmi_io_pool': {
+            'total': 6295128,
+            'used': 6294296,
+            'free': 832,
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''\
+        Processor Pool Total: 10147887840 Used:  487331816 Free: 9660556024
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
