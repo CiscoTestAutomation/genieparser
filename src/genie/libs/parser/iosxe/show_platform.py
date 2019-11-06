@@ -1820,24 +1820,40 @@ class ShowBootSchema(MetaParser):
             Optional('configuration_register'): str,
             Optional('boot_variable'): str,
         },
-        Optional('switches'): {
-            Any(): { # 1, 2, 3
-                Optional('boot_path_list'): str,
-                Optional('config_file'): str,
-                Optional('private_config_file'): str,
-                Optional('enable_break'): bool,
-                Optional('manual_boot'): bool,
-                Optional('helper_path_list'): str,
-                Optional('auto_upgrade'): bool,
-                Optional('auto_upgrade_path'): str,
-                Optional('boot_optimization'): bool,
-                Optional('nvram_buffer_size'): int,
-                Optional('timeout_config_download'): str,
-                Optional('config_download_via_dhcp'): bool,
-                Optional('next_boot'): bool,
-                Optional('allow_dev_key'): bool,
-            }
-        }
+        Optional('main_switch'): {
+            'boot_path_list': str,
+            'config_file': str,
+            'private_config_file': str,
+            'enable_break': bool,
+            'manual_boot': bool,
+            Optional('helper_path_list'): str,
+            'auto_upgrade': bool,
+            Optional('auto_upgrade_path'): str,
+            Optional('boot_optimization'): bool,
+            Optional('nvram_buffer_size'): int,
+            Optional('timeout_config_download'): str,
+            Optional('config_download_via_dhcp'): bool,
+            Optional('next_boot'): bool,
+            Optional('allow_dev_key'): bool,
+            Optional('switches'): {
+                Any(): { # 1, 2, 3
+                    'boot_path_list': str,
+                    'config_file': str,
+                    'private_config_file': str,
+                    'enable_break': bool,
+                    'manual_boot': bool,
+                    Optional('helper_path_list'): str,
+                    'auto_upgrade': bool,
+                    Optional('auto_upgrade_path'): str,
+                    Optional('boot_optimization'): bool,
+                    Optional('nvram_buffer_size'): int,
+                    Optional('timeout_config_download'): str,
+                    Optional('config_download_via_dhcp'): bool,
+                    Optional('next_boot'): bool,
+                    Optional('allow_dev_key'): bool,
+                },
+            },
+        },
     }
 
 class ShowBoot(ShowBootSchema):
@@ -1875,7 +1891,7 @@ class ShowBoot(ShowBootSchema):
 
         boot_dict = {}
         boot_variable = None
-        index = 1
+        switch_number = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -1981,10 +1997,16 @@ class ShowBoot(ShowBootSchema):
             if m7:
                 group = m7.groupdict()
                 if 'BOOT' in group['key']:
-                    sw_dict = boot_dict.setdefault('switches', {})
-                    index_dict = sw_dict.setdefault(index, {})
-                    index_dict.update({'boot_path_list': m7.groupdict()['value']})
-                    index += 1
+                    sw_dict = boot_dict.setdefault('main_switch', {})
+                    if switch_number >= 2:
+                        switches_dict = sw_dict.setdefault('switches', {})
+                        index_dict = switches_dict.setdefault(switch_number, {})
+                        index_dict.update({'boot_path_list': m7.groupdict()['value']})
+                    else:
+                        index_dict = sw_dict
+                        index_dict.update(
+                            {'boot_path_list': m7.groupdict()['value']})
+
                 elif 'HELPER' in group['key']:
                     index_dict.update({'helper_path_list': m7.groupdict()['value']})
 
@@ -2001,7 +2023,6 @@ class ShowBoot(ShowBootSchema):
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
-                #import pdb;pdb.set_trace()
                 
                 key = self.SW_MAPPING.get(group['key'].strip())
                 true_false = self.TRUE_FALSE.get(group['value'])
@@ -2039,6 +2060,17 @@ class ShowBoot(ShowBootSchema):
                 index_dict.update({'config_download_via_dhcp': value})
                 index_dict.update({'next_boot': next_boot})
 
+                continue
+
+            # Switch 2
+            # switch 2
+            # Switch 3
+            # switch 3
+            p12 = re.compile(r'^[Ss]witch +(?P<switch_number>\d+)$')
+            m12 = p12.match(line)
+            if m12:
+                switch_number = int(m12.groupdict()['switch_number'])
+                
                 continue
 
         return boot_dict

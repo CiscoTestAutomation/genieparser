@@ -3337,39 +3337,39 @@ class TestShowBoot(unittest.TestCase):
     '''}
 
     golden_parsed_output_2900 = {
-        'switches': {
-            1: {
-                'allow_dev_key': True,
-                'auto_upgrade': True,
-                'boot_optimization': False,
-                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-                'config_download_via_dhcp': False,
-                'config_file': 'flash:/config.text',
-                'enable_break': True,
-                'manual_boot': False,
-                'next_boot': False,
-                'nvram_buffer_size': 524288,
-                'private_config_file': 'flash:/private-config.text',
-                'timeout_config_download': '0 seconds'
+        'main_switch': {
+            'allow_dev_key': True,
+            'auto_upgrade': True,
+            'boot_optimization': False,
+            'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+            'config_download_via_dhcp': False,
+            'config_file': 'flash:/config.text',
+            'enable_break': True,
+            'manual_boot': False,
+            'next_boot': False,
+            'nvram_buffer_size': 524288,
+            'private_config_file': 'flash:/private-config.text',
+            'switches': {
+                2: {
+                    'allow_dev_key': True,
+                    'auto_upgrade': False,
+                    'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                    'config_file': 'flash:/config.text',
+                    'enable_break': True,
+                    'manual_boot': False,
+                    'private_config_file': 'flash:/private-config.text'
+                },
+                3: {
+                    'allow_dev_key': True,
+                    'auto_upgrade': False,
+                    'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                    'config_file': 'flash:/config.text',
+                    'enable_break': True,
+                    'manual_boot': False,
+                    'private_config_file': 'flash:/private-config.text'
+                }
             },
-            2: {
-                'allow_dev_key': True,
-                'auto_upgrade': False,
-                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-                'config_file': 'flash:/config.text',
-                'enable_break': True,
-                'manual_boot': False,
-                'private_config_file': 'flash:/private-config.text'
-            },
-            3: {
-                'allow_dev_key': True,
-                'auto_upgrade': False,
-                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-                'config_file': 'flash:/config.text',
-                'enable_break': True,
-                'manual_boot': False,
-                'private_config_file': 'flash:/private-config.text'
-            }
+            'timeout_config_download': '0 seconds'
         }
     }
     def test_empty(self):
@@ -3397,6 +3397,8 @@ class TestShowBoot(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_2900)
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
 
