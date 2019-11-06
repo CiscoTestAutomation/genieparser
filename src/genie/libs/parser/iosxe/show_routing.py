@@ -2079,15 +2079,15 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         result_dict = {}
 
-        # 27.86.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
         # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch'
                         r' +(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)?'
                         r' +refcnt +(?P<refcnt>\d+),'
                         r' +(?P<sharing>(per-destination sharing))$')
 
-        # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
-        # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
         # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
         p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
                           r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
@@ -2109,12 +2109,12 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
         p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), .*')
 
-        # nexthop 106.162.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D4900
+        # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
         p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
                         r'(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
                         r'\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)(.*)$')
 
-        # nexthop 106.187.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+        # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
         p7_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
                           r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
                           r'(-\(local:(?P<local_label>\w+)\))?)?,.*$')
@@ -2125,12 +2125,12 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # TAG midchain out of Tunnel65537 7F4F881C0718
         p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
 
-        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D46D0>
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
         p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr'
                         r' +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
 
-        # TAG adj out of GigabitEthernet0/1/7, addr 106.162.196.217 7F0FF0AFB2F8>
-        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F2B21B24148>
+        # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
         p9 = re.compile(r'^(?:<repair: +)?TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), '
                         r'+addr +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
 
@@ -2151,12 +2151,12 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 27.86.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+            # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
             # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
             m1 = p1.match(line)
 
-            # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
-            # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
             # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
             m1_1 = p1_1.match(line)
             if m1 or m1_1:
@@ -2230,9 +2230,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
                 continue
 
-            # nexthop 106.162.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D4900
+            # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
             m7 = p7.match(line)
-            # nexthop 106.187.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+            # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
             m7_1 = p7_1.match(line)
             if m7 or m7_1:
                 if m7:
@@ -2284,7 +2284,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     tag_midchain_dict['tag_midchain_info'] = group['info']
                 continue
 
-            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D46D0>
+            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
@@ -2303,8 +2303,8 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
                 continue
 
-            # TAG adj out of GigabitEthernet0/1/7, addr 106.162.196.217 7F0FF0AFB2F8>
-            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F2B21B24148>
+            # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
             m9 = p9.match(line)
             if m9:
                 group = m9.groupdict()
