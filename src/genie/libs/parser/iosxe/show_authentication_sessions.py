@@ -58,7 +58,8 @@ class ShowAuthenticationSessionsSchema(MetaParser):
                     }
                 }
             }
-        }
+        },
+        Optional('session_count'): int,
     }
 
 
@@ -103,6 +104,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
                         '(?P<status>\w+(?: +\w+)?) +'
                         '(?P<session>\w+)$')
 
+        # *Session count = 2*
+        p5 = re.compile(r'(?:\*)?Session +[Cc]ount +\= '
+                        r'+(?P<session_count>\d+)(?:\*)?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -129,6 +134,14 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
                 session = group['session']
                 client_dict.setdefault('session', {}).setdefault(session, {}) \
                     .setdefault('session_id', session)
+                continue
+            
+            # *Session count = 2*
+            m5 = p5.match(line)
+            if m5:
+                count = int(m5.groupdict()['session_count'])
+                ret_dict.update({'session_count': count})
+
                 continue
 
         return ret_dict

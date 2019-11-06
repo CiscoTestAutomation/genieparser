@@ -151,3 +151,7 @@
     * Updated ShowAuthenticationSessionsInterfaceDetails
         * Added keywords to schema
         * Added and changed regex to accommodate different outputs
+    
+    * Updated ShowAuthenticationSessions
+        * Added keyword to schema
+        * Added regex to support new output

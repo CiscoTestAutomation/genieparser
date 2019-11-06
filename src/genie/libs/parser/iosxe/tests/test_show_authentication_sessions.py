@@ -106,6 +106,54 @@ class TestShowAuthenticationSessions(unittest.TestCase):
     '''
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        NAC_c3850_SW#show authentication sessions
+        Interface                MAC Address    Method  Domain  Status Fg  Session
+        ID
+        --------------------------------------------------------------------------------------------
+        Gi1/0/1                  0050.b6d6.a8b0 mab     DATA    Auth     0A76060A00000018DD109536
+        Gi1/0/2                  b4a8.b968.f35b mab     VOICE   Auth     0A76060A0000000D5323681F
+
+        *Session count = 2*    
+    '''}
+
+    golden_parsed_output_3 = {
+        'interfaces': {
+            'GigabitEthernet1/0/1': {
+                'client': {
+                    '0050.b6d6.a8b0': {
+                        'client': '0050.b6d6.a8b0',
+                        'domain': 'DATA',
+                        'method': 'mab',
+                        'session': {
+                            '0A76060A00000018DD109536': {
+                                'session_id': '0A76060A00000018DD109536'
+                            }
+                        },
+                        'status': 'Auth'
+                    }
+                },
+                'interface': 'GigabitEthernet1/0/1'
+            },
+            'GigabitEthernet1/0/2': {
+                'client': {
+                    'b4a8.b968.f35b': {
+                        'client': 'b4a8.b968.f35b',
+                        'domain': 'VOICE',
+                        'method': 'mab',
+                        'session': {
+                            '0A76060A0000000D5323681F': {
+                                'session_id': '0A76060A0000000D5323681F'
+                            }
+                        },
+                        'status': 'Auth'
+                    }
+                },
+                'interface': 'GigabitEthernet1/0/2'
+            }
+        },
+        'session_count': 2
+    }
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessions(device=self.dev1)
@@ -125,6 +173,13 @@ class TestShowAuthenticationSessions(unittest.TestCase):
         obj = ShowAuthenticationSessions(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/7/35')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_3)
+        obj = ShowAuthenticationSessions(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
     dev1 = Device(name='empty')
