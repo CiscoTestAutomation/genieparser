@@ -1980,23 +1980,70 @@ class ShowIpCefInternalSchema(MetaParser):
                                 },
                                 'output_chain': {
                                     Optional('label'): list,
-                                    Optional('primary'): {
-                                        'tag_adj': {
-                                            'interface': str,
-                                            'addr': str,
-                                        },
+                                    Optional('tag_midchain'): {
+                                        Any(): { # tag_midchain_dict
+                                            'tag_midchain_info': str,
+                                            'label': list,
+                                            'frr': { # frr_dict
+                                                'Primary': { # frr_primary_dict
+                                                    'info': str,
+                                                    'primary': {
+                                                        Optional('tag_adj'): {
+                                                            Any(): {
+                                                                'addr': str,
+                                                                'addr_info': str,
+                                                            }
+                                                        }
+                                                    },
+                                                    'repair': {
+                                                        Optional('tag_midchain'): {
+                                                            'interface': str,
+                                                        },
+                                                        Optional('label'): list,
+                                                        Optional('tag_adj'): {
+                                                            Any(): {
+                                                                'addr': str,
+                                                                'addr_info': str,
+                                                            }
+                                                        },
+                                                    },
+                                                }
+                                            },
+                                        }
                                     },
-                                    Optional('repair'): {
-                                        Optional('tag_midchain'): {
-                                            'interface': str,
+                                    Optional('frr'): {
+                                            'Primary': {
+                                                'info': str,
+                                                'primary': {
+                                                    Optional('tag_adj'): {
+                                                        Any(): {
+                                                            'addr': str,
+                                                            'addr_info': str,
+                                                        }
+                                                    }
+                                                },
+                                                'repair': {
+                                                    Optional('tag_midchain'): {
+                                                        Any(): {
+                                                            Optional('tag_midchain_info'): str,
+                                                            Optional('label'): list,
+                                                            Optional('tag_adj'): {
+                                                                Any(): {
+                                                                    'addr': str,
+                                                                    'addr_info': str,
+                                                                }
+                                                            },
+                                                        }
+                                                    },
+                                                    Optional('tag_adj'): {
+                                                        Any(): {
+                                                            'addr': str,
+                                                            'addr_info': str,
+                                                        },
+                                                    },
+                                                },
+                                            }
                                         },
-                                        Optional('label'): list,
-                                        Optional('tag_adj'): {
-                                            'interface': str,
-                                            'addr': str,
-                                        },
-                                    },
-                                    Optional('action'): str,
                                 }
                             },
                         },
@@ -2032,15 +2079,15 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         result_dict = {}
 
-        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+        # 27.86.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
         # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch'
                         r' +(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)?'
                         r' +refcnt +(?P<refcnt>\d+),'
                         r' +(?P<sharing>(per-destination sharing))$')
 
-        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
-        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+        # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+        # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
         # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
         p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
                           r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
@@ -2062,41 +2109,54 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
         p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), .*')
 
-        # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+        # nexthop 106.162.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D4900
         p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
                         r'(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
                         r'\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)(.*)$')
 
-        # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+        # nexthop 106.187.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
         p7_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
                           r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
                           r'(-\(local:(?P<local_label>\w+)\))?)?,.*$')
 
-        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
-        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr +(?P<addr>[\d.]+).*')
+        # FRR Primary (0x80007F0FF094DD88)
+        p8_0 = re.compile(r'^FRR +Primary +\((?P<info>\S+)\)$')
 
-        # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
-        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
-        p9 = re.compile(r'^(?:<repair: +)?TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), +addr +(?P<addr>[\d.]+).*$')
+        # TAG midchain out of Tunnel65537 7F4F881C0718
+        p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
+
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D46D0>
+        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr'
+                        r' +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
+
+        # TAG adj out of GigabitEthernet0/1/7, addr 106.162.196.217 7F0FF0AFB2F8>
+        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F2B21B24148>
+        p9 = re.compile(r'^(?:<repair: +)?TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), '
+                        r'+addr +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
 
         # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
-        p9_1 = re.compile(r'^<repair: +TAG +midchain +out +of +(?P<interface>[a-zA-Z\d\/-]+).*$')
+        p9_1 = re.compile(r'^<repair: +TAG +midchain +out +of +(?P<interface>[a-zA-Z\d\/-]+) +(?P<addr_info>[A-Z\d]+)$')
 
         # label 98
         # label implicit-null
         # label [16073|16073]
-        p10 = re.compile(r'^label +(?P<label>[\d\w\-\[\]\|]+)$')
+        # label [51885|16073]-(local:28)
+        p10 = re.compile(r'^label +(?P<label>.*)$')
+
+        # <repair:  label 16061
+        p11 = re.compile(r'<repair: +label +(?P<label>.*)')
 
         label_list = []
+        label_list2 = []
         for line in out.splitlines():
             line = line.strip()
 
-            # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+            # 27.86.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
             # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
             m1 = p1.match(line)
 
-            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
-            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+            # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+            # 1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
             # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
             m1_1 = p1_1.match(line)
             if m1 or m1_1:
@@ -2170,9 +2230,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
                 continue
 
-            # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+            # nexthop 106.162.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D4900
             m7 = p7.match(line)
-            # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+            # nexthop 106.187.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
             m7_1 = p7_1.match(line)
             if m7 or m7_1:
                 if m7:
@@ -2198,52 +2258,136 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
                 continue
 
-            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
-            m8 = p8.match(line)
-            if m8:
-                if 'path_list' in prefix_dict:
-                    group = m8.groupdict()
-                    pre_dict = output_chain_dict.setdefault('primary', {}). \
-                        setdefault('tag_adj', {})
-                    pre_dict['interface'] = group['interface']
-                    pre_dict['addr'] = group['addr']
+            # FRR Primary (0x80007F0FF094DD88)
+            m8_0 = p8_0.match(line)
+            if m8_0:
+                group = m8_0.groupdict()
+                empty_dict = {}
+                frr_dict = empty_dict.setdefault('frr', {})
+                frr_primary_dict = frr_dict.setdefault('Primary', {})
+                frr_primary_dict['info'] = group['info']
+
+                if 'tag_midchain' in output_chain_dict:
+                    tag_midchain_dict.setdefault('frr', frr_dict)
+                else:
+                    output_chain_dict.setdefault('frr', frr_dict)
+
                 continue
 
-            # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
-            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+            # TAG midchain out of Tunnel65537 7F4F881C0718
+            m8_1 = p8_1.match(line)
+            if m8_1:
+                group = m8_1.groupdict()
+                if 'output_chain' in prefix_dict:
+                    tag_midchain_dict = output_chain_dict.setdefault('tag_midchain', {}). \
+                        setdefault(group['tunnel'], {})
+                    tag_midchain_dict['tag_midchain_info'] = group['info']
+                continue
+
+            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 106.162.196.213 7F0FF08D46D0>
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        primary_dict = tag_midchain_dict['frr']['Primary'].setdefault('primary', {}). \
+                                                    setdefault('tag_adj', {}). \
+                                                    setdefault(group['interface'], {})
+                    else:
+                        primary_dict = output_chain_dict['frr']['Primary'].setdefault('primary', {}). \
+                                                    setdefault('tag_adj', {}). \
+                                                    setdefault(group['interface'], {})
+
+                    primary_dict['addr'] = group['addr']
+                    primary_dict['addr_info'] = group['addr_info']
+
+                continue
+
+            # TAG adj out of GigabitEthernet0/1/7, addr 106.162.196.217 7F0FF0AFB2F8>
+            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F2B21B24148>
             m9 = p9.match(line)
             if m9:
                 group = m9.groupdict()
-                if 'repair' not in output_chain_dict:
-                    rep_dict = output_chain_dict.setdefault('repair', {})
-                rep_adj_dict = rep_dict.setdefault('tag_adj', {})
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        repair_adj_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                                                       setdefault('tag_adj', {}). \
+                                                       setdefault(group['interface'], {})
+                    elif 'frr' in output_chain_dict:
+                        if 'repair' in output_chain_dict['frr']['Primary']:
+                            if 'tag_midchain' in output_chain_dict['frr']['Primary']['repair']:
+                                temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                                temp_key = list(temp_tag_dict.keys())[0]
+                                repair_adj_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]. \
+                                    setdefault('tag_adj', {}). \
+                                    setdefault(group['interface'], {})
+                        else:
+                            repair_adj_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                                setdefault('tag_adj', {}). \
+                                setdefault(group['interface'], {})
 
-                rep_adj_dict['interface'] = group['interface']
-                rep_adj_dict['addr'] = group['addr']
+                    repair_adj_dict['addr'] = group['addr']
+                    repair_adj_dict['addr_info'] = group['addr_info']
+
                 continue
 
             # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
             m9_1 = p9_1.match(line)
             if m9_1:
                 group = m9_1.groupdict()
-                if 'repair' not in output_chain_dict:
-                    rep_dict = output_chain_dict.setdefault('repair', {})
-                    rep_mid_dict = rep_dict.setdefault('tag_midchain', {})
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        repair_mid_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                            setdefault('tag_midchain', {}).setdefault(group['interface'], {})
 
-                rep_mid_dict['interface'] = group['interface']
+                    else:
+                        repair_mid_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                            setdefault('tag_midchain', {}).setdefault(group['interface'], {})
+
+                    repair_mid_dict['tag_midchain_info'] = group['addr_info']
 
                 continue
 
             # label 98
             # label implicit-null
             # label [16073|16073]
+            # label [51885|16073]-(local:28)
             m10 = p10.match(line)
+
             if m10:
                 label_val = m10.groupdict()['label']
-                if 'output_chain' in prefix_dict:
-                    if 'repair' in output_chain_dict:
-                        output_chain_dict.setdefault('repair', {}). \
-                            setdefault('label', label_val.split())
+                if 'path_list' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+
+                        if 'frr' in tag_midchain_dict:
+                            temp_tag_dict = tag_midchain_dict['frr']['Primary']['repair']['tag_adj']
+                            temp_key = list(temp_tag_dict.keys())[0]
+                            tag_midchain_dict['frr']['Primary']['repair']['tag_adj'][temp_key]['label'] = label_val.split()
+
+                        else:
+                            for i in label_val.split():
+                                label_list2.append(i)
+                            tag_midchain_dict['label'] = label_list2
+
+                    elif 'frr' in output_chain_dict:
+                        temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                        temp_key = list(temp_tag_dict.keys())[0]
+                        output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]['label'] = label_val.split()
+
+                    else:
+                        for i in label_val.split():
+                            label_list.append(i)
+                        output_chain_dict['label'] = label_list
+                continue
+
+            # <repair:  label 16061
+            m11 = p11.match(line)
+            if m11:
+                label_val = m11.groupdict()['label']
+                if 'tag_midchain' in output_chain_dict:
+                    if 'frr' in tag_midchain_dict:
+                        temp_tag_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {})
+                        temp_tag_dict['label'] = label_val.split()
                 continue
 
         return result_dict
