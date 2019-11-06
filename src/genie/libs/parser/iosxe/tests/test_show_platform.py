@@ -3397,8 +3397,6 @@ class TestShowBoot(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_2900)
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
 
