@@ -1124,7 +1124,7 @@ class ShowMsdpStatisticsPeerSchema(MetaParser):
 class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
 
     cli_command = ['show msdp statistics peer',
-                   'show msdp vrf <vrf> statistics peer']
+                   'show msdp vrf {vrf} statistics peer']
 
     def cli(self, vrf='', output=None):
         if output is None:
