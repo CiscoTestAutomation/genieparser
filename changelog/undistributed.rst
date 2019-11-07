@@ -33,6 +33,9 @@
         * show ip nat translations vrf {vrf} verbose
     * Added ShowIpNatStatistics
         * show ip nat statistics
+    * Added ShowIpCefInternal
+        * show ip cef {ip} internal
+        * show ip cef internal
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
