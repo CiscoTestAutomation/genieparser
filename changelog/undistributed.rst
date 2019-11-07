@@ -95,6 +95,9 @@
         * 'show ospf interface {interface} detail'
         * 'show ospf interface detail instance {instance}'
         * 'show ospf interface {interface} detail instance {instance}'
+    * Added ShowTedDatabaseExtensive for commands:
+        * 'show ted database extensive'
+        * 'show ted database extensive {node_id}'
 
 --------------------------------------------------------------------------------
                                 Fix
