@@ -1129,9 +1129,9 @@ class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
     def cli(self, vrf='', output=None):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
