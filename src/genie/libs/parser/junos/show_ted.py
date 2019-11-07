@@ -128,7 +128,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +(?P<inet_nodes>\d+) +INET +nodes$')
 
         # NodeID: 169.0.0.1
-        p2 = re.compile(r'^NodeID: +(?P<node_id>[\d.-]+)$')
+        p2 = re.compile(r'^NodeID: +(?P<node_id>\S+)$')
 
         # Type: Rtr, Age: 1000 secs, LinkIn: 0, LinkOut: 0
         p3 = re.compile(r'^Type: +(?P<type>[\w-]+), +Age: +(?P<age>\d+) +secs, +LinkIn: '
@@ -138,7 +138,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p4 = re.compile(r'^Protocol: +(?P<protocol>[\w().]+)$')
 
         # To: 169.0.0.1, Local: 4.0.0.1, Remote: 4.0.0.2
-        p5 = re.compile(r'^To: +(?P<to>[\d.]+), +Local: +(?P<local>[\d.]+), +Remote: +(?P<remote>[\d.]+)$')
+        p5 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +(?P<remote>\S+)$')
 
         # Local interface index: 0, Remote interface index: 0
         p6 = re.compile(r'^Local +interface +index: +(?P<local_interface_index>\d+), +'
@@ -176,7 +176,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
                          r'(?P<flags>\w+), +Weight: +(?P<weight>\d+)$')
 
         # 169.0.0.1/32
-        p16 = re.compile(r'^(?P<prefix>[\d.]+/\d+)$')
+        p16 = re.compile(r'^(?P<prefix>\S+/\d+)$')
 
         # Flags: 0x60
         p17 = re.compile(r'^Flags: +(?P<flags>\w+)$')
