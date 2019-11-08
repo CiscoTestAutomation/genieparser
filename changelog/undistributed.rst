@@ -152,3 +152,7 @@
         * Added command 'show ospf interface {interface} brief'
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
+
+* NXOS
+    * Updated ShowIpOspfInterfaceVrfAll
+        * Changed keywords schema to optional
