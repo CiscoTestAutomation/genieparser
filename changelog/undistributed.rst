@@ -140,6 +140,10 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+    * Updated ShowMplsForwardingTable for:
+        * show mpls forwarding-table
+        * show mpls forwarding-table {prefix}
+        * show mpls forwarding-table vrf {vrf}
 
 * IOS
     * Updated ShowInventory
