@@ -588,7 +588,7 @@ class TestShowIpArpStatisticsVrfAll(unittest.TestCase):
 	}
 
 	golden_output_customer = {'execute.return_value': '''
-
+		# show ip arp statistics
 		ARP packet statistics for context default
 		Sent:
 		Total 125449722, Requests 41815694, Replies 83633906, Requests on L2 0, Replies on L2 0,
