@@ -13,6 +13,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
 
+# Common
+from genie.libs.parser.utils.common import Common
+
 # =========================================================
 # Schema for 'show flow monitor {name} cache format table'
 # =========================================================
@@ -179,8 +182,16 @@ class ShowFlowMonitorCacheSchema(MetaParser):
         'current_entries': int,
         Optional('high_water_mark'): int,
         'flows_added': int,
-        'flows_aged': int,
-        Optional('inactive_timeout'): int,
+        'flows_aged': {
+            'total': int,
+            Optional('active_timeout_secs'): int,
+            Optional('active_timeout'): int,
+            Optional('inactive_timeout_secs'): int,
+            Optional('inactive_timeout'): int,
+            Optional('event_aged'): int,
+            Optional('watermark_aged'): int,
+            Optional('emergency_aged'): int,
+        },
         Optional('entries'): {
             Any(): {
                 'ip_vrf_id_input': str,
@@ -233,7 +244,10 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
 
         # - Inactive timeout    (    15 secs)         15
-        p7 = re.compile(r'^- +Inactive +timeout +\(.*\) +(?P<inactive_timeout>\d+)$')
+        # - Event aged                                 0
+        # - Watermark aged                             6
+        # - Emergency aged                             0
+        p7 = re.compile(r'^- +(?P<key>[\S\s]+?)( +\( +(?P<secs>\d+) +secs\))? +(?P<value>\d+)$')
 
         # 0   (DEFAULT)   193.168.2.254    193.168.2.253    Null   Te0/0/0.1003     2
         p8 = re.compile(r'^(?P<ip_vrf_id_input>\d+ +\(\S+\)) +(?P<ipv4_src_addr>\S+) '
@@ -300,14 +314,20 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'flows_aged': int(group['flows_aged'])})
+                aged_dict = ret_dict.setdefault('flows_aged', {})
+                aged_dict.update({'total': int(group['flows_aged'])})
                 continue
 
             # - Inactive timeout    (    15 secs)         15
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'inactive_timeout': int(group['inactive_timeout'])})
+                key = group['key'].lower().replace(' ', '_')
+                aged_dict.update({key: int(group['value'])})
+
+                secs = group['secs']
+                if secs:
+                    aged_dict.update({key + '_secs': int(secs)})
                 continue
 
             # 0   (DEFAULT)   193.168.2.254    193.168.2.253    Null   Te0/0/0.1003     2
@@ -320,8 +340,8 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 entry_dict.update({'ip_vrf_id_input': group['ip_vrf_id_input']})
                 entry_dict.update({'ipv4_src_addr': group['ipv4_src_addr']})
                 entry_dict.update({'ipv4_dst_addr': group['ipv4_dst_addr']})
-                entry_dict.update({'intf_input': group['intf_input']})
-                entry_dict.update({'intf_output': group['intf_output']})
+                entry_dict.update({'intf_input': Common.convert_intf_name(group['intf_input'])})
+                entry_dict.update({'intf_output': Common.convert_intf_name(group['intf_output'])})
                 entry_dict.update({'pkts': int(group['pkts'])})
                 continue
             
@@ -352,14 +372,14 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict.update({'intf_input': group['input']})
+                entry_dict.update({'intf_input': Common.convert_intf_name(group['input'])})
                 continue
 
             # interface output:          Te0/0/0.1003
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict.update({'intf_output': group['output']})
+                entry_dict.update({'intf_output': Common.convert_intf_name(group['output'])})
                 continue
 
             # counter packets:           3
