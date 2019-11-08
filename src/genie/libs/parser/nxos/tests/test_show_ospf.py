@@ -233,7 +233,7 @@ class TestShowIpOspf(unittest.TestCase):
                                         'all': 110
                                     }
                                 },
-                                'router_id': '10.16.2.2',
+                                'router_id': '10.100.2.2',
                                 'single_tos_routes_enable': True,
                                 'spf_control': {
                                     'paths': 8,
@@ -276,7 +276,7 @@ class TestShowIpOspf(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-        Routing Process 1 with ID 10.16.2.2 VRF default
+        Routing Process 1 with ID 10.100.2.2 VRF default
         Routing Process Instance Number 1
         Stateful High Availability enabled
         Graceful-restart is configured
@@ -413,7 +413,7 @@ class TestShowIpOspf(unittest.TestCase):
                                 'preference':
                                     {'single_value':
                                         {'all': 110}},
-                                'router_id': '10.16.2.2',
+                                'router_id': '10.100.2.2',
                                 'single_tos_routes_enable': True,
                                 'spf_control':
                                     {'paths': 8,
@@ -437,7 +437,7 @@ class TestShowIpOspf(unittest.TestCase):
                                             'start': 200}}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
-        Routing Process 1 with ID 10.16.2.2 VRF default
+        Routing Process 1 with ID 10.100.2.2 VRF default
         Routing Process Instance Number 1
         Stateful High Availability enabled
         Graceful-restart is configured
@@ -773,7 +773,7 @@ class TestShowIpOspf(unittest.TestCase):
         show ip ospf vrf all
 
 
-        Routing Process 2000 with ID 10.16.0.11 VRF default
+        Routing Process 2000 with ID 10.100.0.11 VRF default
         Routing Process Instance Number 2
         Stateful High Availability enabled
         Graceful-restart is configured
@@ -812,7 +812,7 @@ class TestShowIpOspf(unittest.TestCase):
                 Area ranges are
                 Number of LSAs: 2702, checksum sum 0x54707bc
 
-        Routing Process 1000 with ID 10.16.0.13 VRF default
+        Routing Process 1000 with ID 10.100.0.13 VRF default
         Routing Process Instance Number 1
         Stateful High Availability enabled
         Graceful-restart is configured
@@ -839,7 +839,7 @@ class TestShowIpOspf(unittest.TestCase):
         Install discard route for summarized external routes.
         Install discard route for summarized internal routes.
 
-        Routing Process 1000 with ID 10.16.0.13 VRF LAN-GENIE
+        Routing Process 1000 with ID 10.100.0.13 VRF LAN-GENIE
         Routing Process Instance Number 1
         Stateful High Availability enabled
         Graceful-restart is configured
@@ -944,7 +944,7 @@ class TestShowIpOspf(unittest.TestCase):
                                         'all': 110
                                     }
                                 },
-                                'router_id': '10.16.0.13',
+                                'router_id': '10.100.0.13',
                                 'single_tos_routes_enable': True,
                                 'spf_control': {
                                     'paths': 8,
@@ -1024,7 +1024,7 @@ class TestShowIpOspf(unittest.TestCase):
                                         'all': 110
                                     }
                                 },
-                                'router_id': '10.16.0.13',
+                                'router_id': '10.100.0.13',
                                 'single_tos_routes_enable': True,
                                 'spf_control': {
                                     'paths': 8,
@@ -1123,7 +1123,7 @@ class TestShowIpOspf(unittest.TestCase):
                                         'enabled': True
                                     }
                                 },
-                                'router_id': '10.16.0.11',
+                                'router_id': '10.100.0.11',
                                 'single_tos_routes_enable': True,
                                 'spf_control': {
                                     'paths': 8,
@@ -2125,7 +2125,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                         {'interfaces':
                                             {'Ethernet2/2':
                                                 {'bdr_ip_addr': '10.2.3.2',
-                                                'bdr_router_id': '10.16.2.2',
+                                                'bdr_router_id': '10.100.2.2',
                                                 'bfd':
                                                     {'enable': False},
                                                 'cost': 1,
@@ -2155,7 +2155,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'wait_interval': 40},
                                             'Ethernet2/3':
                                                 {'bdr_ip_addr': '10.2.4.2',
-                                                'bdr_router_id': '10.16.2.2',
+                                                'bdr_router_id': '10.100.2.2',
                                                 'bfd':
                                                     {'enable': False},
                                                 'cost': 1,
@@ -2185,7 +2185,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'wait_interval': 40},
                                             'Ethernet2/4':
                                                 {'bdr_ip_addr': '10.1.2.2',
-                                                'bdr_router_id': '10.16.2.2',
+                                                'bdr_router_id': '10.100.2.2',
                                                 'bfd':
                                                     {'enable': False},
                                                 'cost': 1,
@@ -2221,7 +2221,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 1,
                                                 'interface_type': 'loopback',
-                                                'ip_address': '10.16.2.2/32',
+                                                'ip_address': '10.100.2.2/32',
                                                 'line_protocol': 'up',
                                                 'name': 'loopback0',
                                                 'state': 'loopback'}}}}}}}}}}}
@@ -2235,7 +2235,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             State BDR, Network type BROADCAST, cost 1
             Index 3, Transmit delay 1 sec, Router Priority 1
             Designated Router ID: 10.36.3.3, address: 10.2.3.3
-            Backup Designated Router ID: 10.16.2.2, address: 10.2.3.2
+            Backup Designated Router ID: 10.100.2.2, address: 10.2.3.2
             1 Neighbors, flooding to 1, adjacent with 1
             Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
               Hello timer due in 00:00:02
@@ -2248,7 +2248,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             State BDR, Network type BROADCAST, cost 1
             Index 4, Transmit delay 1 sec, Router Priority 1
             Designated Router ID: 10.64.4.4, address: 10.2.4.4
-            Backup Designated Router ID: 10.16.2.2, address: 10.2.4.2
+            Backup Designated Router ID: 10.100.2.2, address: 10.2.4.2
             1 Neighbors, flooding to 1, adjacent with 1
             Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
               Hello timer due in 00:00:00
@@ -2261,14 +2261,14 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             State BDR, Network type BROADCAST, cost 1
             Index 5, Transmit delay 1 sec, Router Priority 1
             Designated Router ID: 10.4.1.1, address: 10.1.2.1
-            Backup Designated Router ID: 10.16.2.2, address: 10.1.2.2
+            Backup Designated Router ID: 10.100.2.2, address: 10.1.2.2
             1 Neighbors, flooding to 1, adjacent with 1
             Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
               Hello timer due in 00:00:00
             No authentication
             Number of opaque link LSAs: 0, checksum sum 0
          loopback0 is up, line protocol is up
-            IP address 10.16.2.2/32
+            IP address 10.100.2.2/32
             Process ID UNDERLAY VRF default, area 0.0.0.0
             Enabled by interface configuration
             State LOOPBACK, Network type LOOPBACK, cost 1
@@ -2478,55 +2478,55 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
         show ip ospf interface vrf all
 
         Vlan3030 is up, line protocol is up
-            IP address 10.31.128.4/24
+            IP address 100.10.128.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 118, Passive interface
         Vlan3021 is up, line protocol is up
-            IP address 10.31.127.4/24
+            IP address 100.10.127.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 115, Passive interface
         Vlan3020 is up, line protocol is up
-            IP address 10.31.96.4/24
+            IP address 100.10.96.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 114, Passive interface
         Vlan3015 is up, line protocol is up
-            IP address 10.31.95.4/24
+            IP address 100.10.95.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 111, Passive interface
         Vlan3014 is up, line protocol is up
-            IP address 10.31.65.4/24
+            IP address 100.10.65.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 109, Passive interface
         Vlan1854 is up, line protocol is up
-            IP address 10.28.240.4/24
+            IP address 192.168.10.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 31, Passive interface
         Vlan1853 is up, line protocol is up
-            IP address 10.31.225.4/24
+            IP address 100.10.225.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 30, Passive interface
         Vlan1852 is up, line protocol is up
-            IP address 10.28.224.4/24
+            IP address 192.168.224.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 29, Passive interface
         Vlan997 is up, line protocol is up
-            IP address 10.16.17.81/30
+            IP address 10.100.17.81/30
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
@@ -2537,158 +2537,158 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             No authentication
             Number of opaque link LSAs: 1, checksum sum 0xe038
         Vlan986 is up, line protocol is up
-            IP address 10.16.17.51/29
+            IP address 10.100.17.51/29
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 122, Passive interface
         Vlan738 is up, line protocol is up
-            IP address 10.225.38.4/24
+            IP address 192.128.38.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 131, Passive interface
         Vlan601 is up, line protocol is up
-            IP address 10.31.201.4/24
+            IP address 100.10.201.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 41, Passive interface
         Vlan600 is up, line protocol is up
-            IP address 10.31.200.4/24
+            IP address 100.10.200.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State BDR, Network type BROADCAST, cost 1000
             Index 40, Transmit delay 1 sec, Router Priority 240
-            Designated Router ID: 10.16.0.12, address: 10.31.200.5
-            Backup Designated Router ID: 10.16.0.11, address: 10.31.200.4
+            Designated Router ID: 10.100.0.12, address: 100.10.200.5
+            Backup Designated Router ID: 10.100.0.11, address: 100.10.200.4
             3 Neighbors, flooding to 3, adjacent with 2
             Timer intervals: Hello 2, Dead 6, Wait 6, Retransmit 5
             Hello timer due in 00:00:01
             Message-digest authentication, using key id 1
             Number of opaque link LSAs: 1, checksum sum 0x5f3f
         Vlan243 is up, line protocol is up
-            IP address 10.17.243.4/24
+            IP address 192.168.243.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 147, Passive interface
         Vlan242 is up, line protocol is up
-            IP address 10.17.242.4/24
+            IP address 192.168.242.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 146, Passive interface
         Vlan241 is up, line protocol is up
-            IP address 10.17.241.4/24
+            IP address 192.168.241.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 145, Passive interface
         Vlan240 is up, line protocol is up
-            IP address 10.17.240.4/24
+            IP address 192.168.240.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 144, Passive interface
         Vlan238 is up, line protocol is up
-            IP address 10.17.238.4/24
+            IP address 192.168.238.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 143, Passive interface
         Vlan156 is up, line protocol is up
-            IP address 10.17.156.4/24
+            IP address 192.168.156.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 86, Passive interface
         Vlan152 is up, line protocol is up
-            IP address 10.17.152.4/24
+            IP address 192.168.152.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 85, Passive interface
         Vlan110 is up, line protocol is up
-            IP address 10.17.110.2/24
+            IP address 192.168.110.2/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 54, Passive interface
         Vlan67 is up, line protocol is up
-            IP address 10.17.67.4/24
+            IP address 192.168.67.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 34, Passive interface
         Vlan66 is up, line protocol is up
-            IP address 10.17.66.4/24
+            IP address 192.168.66.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 33, Passive interface
         Vlan45 is up, line protocol is up
-            IP address 10.17.45.4/24
+            IP address 192.168.45.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 27, Passive interface
         Vlan44 is up, line protocol is up
-            IP address 10.17.44.2/24
+            IP address 192.168.44.2/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 26, Passive interface
         Vlan43 is up, line protocol is up
-            IP address 10.17.43.2/24
+            IP address 192.168.43.2/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 25, Passive interface
         Vlan42 is up, line protocol is up
-            IP address 10.17.42.4/24
+            IP address 192.168.42.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 24, Passive interface
         Vlan41 is up, line protocol is up
-            IP address 10.17.41.4/24
+            IP address 192.168.41.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 23, Passive interface
         Vlan40 is up, line protocol is up
-            IP address 10.17.40.4/24
+            IP address 192.168.40.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 22, Passive interface
         Vlan39 is up, line protocol is up
-            IP address 10.17.39.4/24
+            IP address 192.168.39.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 21, Passive interface
         Vlan38 is up, line protocol is up
-            IP address 10.17.38.4/24
+            IP address 192.168.38.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 20, Passive interface
         Vlan37 is up, line protocol is up
-            IP address 10.17.37.4/24
+            IP address 192.168.37.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 19, Passive interface
         Vlan36 is up, line protocol is up
-            IP address 10.17.36.4/24
+            IP address 192.168.36.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 18, Passive interface
         port-channel1002 is up, line protocol is up
-            IP address 10.16.31.198/30
+            IP address 10.100.31.198/30
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
@@ -2700,13 +2700,13 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             No authentication
             Number of opaque link LSAs: 0, checksum sum 0
         loopback100 is up, line protocol is up
-            IP address 10.16.0.11/32
+            IP address 10.100.0.11/32
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State LOOPBACK, Network type LOOPBACK, cost 1
             Index 50
         Ethernet1/31 is up, line protocol is up
-            IP address 10.16.31.252/31
+            IP address 10.100.31.252/31
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 100
@@ -2727,7 +2727,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
 
         Vlan959 is up, line protocol is up
-            IP address 10.16.31.217/30
+            IP address 10.100.31.217/30
             Process ID 1000 VRF LAN-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
@@ -2738,7 +2738,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             No authentication
             Number of opaque link LSAs: 0, checksum sum 0
         port-channel1001 is up, line protocol is up
-            IP address 10.16.31.197/30
+            IP address 10.100.31.197/30
             Process ID 1000 VRF LAN-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
@@ -2750,13 +2750,13 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             No authentication
             Number of opaque link LSAs: 0, checksum sum 0
         loopback110 is up, line protocol is up
-            IP address 10.16.0.13/32
+            IP address 10.100.0.13/32
             Process ID 1000 VRF LAN-CORE, area 0.0.0.1
             Enabled by interface configuration
             State LOOPBACK, Network type LOOPBACK, cost 1
             Index 3
         Ethernet1/2 is up, line protocol is up
-            IP address 10.16.31.27/31
+            IP address 10.100.31.27/31
             Process ID 1000 VRF LAN-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 20
@@ -2767,7 +2767,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Message-digest authentication, using key id 1
             Number of opaque link LSAs: 0, checksum sum 0
         Ethernet2/2 is up, line protocol is up
-            IP address 10.16.31.61/31
+            IP address 10.100.31.61/31
             Process ID 1000 VRF LAN-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 20
@@ -2801,7 +2801,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 1,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.27/31',
+                                                'ip_address': '10.100.31.27/31',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet1/2',
                                                 'passive': False,
@@ -2829,7 +2829,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 2,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.61/31',
+                                                'ip_address': '10.100.31.61/31',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet2/2',
                                                 'passive': False,
@@ -2857,7 +2857,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 4,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.217/30',
+                                                'ip_address': '10.100.31.217/30',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan959',
                                                 'passive': False,
@@ -2882,7 +2882,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 3,
                                                 'interface_type': 'loopback',
-                                                'ip_address': '10.16.0.13/32',
+                                                'ip_address': '10.100.0.13/32',
                                                 'line_protocol': 'up',
                                                 'name': 'loopback110',
                                                 'state': 'loopback'
@@ -2899,7 +2899,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 5,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.197/30',
+                                                'ip_address': '10.100.31.197/30',
                                                 'line_protocol': 'up',
                                                 'name': 'port-channel1001',
                                                 'passive': False,
@@ -2943,7 +2943,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 3,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.252/31',
+                                                'ip_address': '10.100.31.252/31',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet1/31',
                                                 'passive': False,
@@ -2993,7 +2993,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 54,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.110.2/24',
+                                                'ip_address': '192.168.110.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan110',
                                                 'passive': True,
@@ -3008,7 +3008,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 85,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.152.4/24',
+                                                'ip_address': '192.168.152.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan152',
                                                 'passive': True,
@@ -3023,7 +3023,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 86,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.156.4/24',
+                                                'ip_address': '192.168.156.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan156',
                                                 'passive': True,
@@ -3038,7 +3038,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 29,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.28.224.4/24',
+                                                'ip_address': '192.168.224.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan1852',
                                                 'passive': True,
@@ -3053,7 +3053,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 30,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.225.4/24',
+                                                'ip_address': '100.10.225.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan1853',
                                                 'passive': True,
@@ -3068,7 +3068,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 31,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.28.240.4/24',
+                                                'ip_address': '192.168.10.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan1854',
                                                 'passive': True,
@@ -3083,7 +3083,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 143,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.238.4/24',
+                                                'ip_address': '192.168.238.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan238',
                                                 'passive': True,
@@ -3098,7 +3098,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 144,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.240.4/24',
+                                                'ip_address': '192.168.240.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan240',
                                                 'passive': True,
@@ -3113,7 +3113,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 145,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.241.4/24',
+                                                'ip_address': '192.168.241.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan241',
                                                 'passive': True,
@@ -3128,7 +3128,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 146,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.242.4/24',
+                                                'ip_address': '192.168.242.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan242',
                                                 'passive': True,
@@ -3143,7 +3143,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 147,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.243.4/24',
+                                                'ip_address': '192.168.243.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan243',
                                                 'passive': True,
@@ -3158,7 +3158,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 109,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.65.4/24',
+                                                'ip_address': '100.10.65.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3014',
                                                 'passive': True,
@@ -3173,7 +3173,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 111,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.95.4/24',
+                                                'ip_address': '100.10.95.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3015',
                                                 'passive': True,
@@ -3188,7 +3188,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 114,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.96.4/24',
+                                                'ip_address': '100.10.96.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3020',
                                                 'passive': True,
@@ -3203,7 +3203,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 115,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.127.4/24',
+                                                'ip_address': '100.10.127.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3021',
                                                 'passive': True,
@@ -3218,7 +3218,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 118,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.128.4/24',
+                                                'ip_address': '100.10.128.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3030',
                                                 'passive': True,
@@ -3233,7 +3233,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 18,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.36.4/24',
+                                                'ip_address': '192.168.36.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan36',
                                                 'passive': True,
@@ -3248,7 +3248,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 19,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.37.4/24',
+                                                'ip_address': '192.168.37.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan37',
                                                 'passive': True,
@@ -3263,7 +3263,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 20,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.38.4/24',
+                                                'ip_address': '192.168.38.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan38',
                                                 'passive': True,
@@ -3278,7 +3278,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 21,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.39.4/24',
+                                                'ip_address': '192.168.39.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan39',
                                                 'passive': True,
@@ -3293,7 +3293,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 22,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.40.4/24',
+                                                'ip_address': '192.168.40.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan40',
                                                 'passive': True,
@@ -3308,7 +3308,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 23,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.41.4/24',
+                                                'ip_address': '192.168.41.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan41',
                                                 'passive': True,
@@ -3323,7 +3323,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 24,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.42.4/24',
+                                                'ip_address': '192.168.42.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan42',
                                                 'passive': True,
@@ -3338,7 +3338,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 25,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.43.2/24',
+                                                'ip_address': '192.168.43.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan43',
                                                 'passive': True,
@@ -3353,7 +3353,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 26,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.44.2/24',
+                                                'ip_address': '192.168.44.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan44',
                                                 'passive': True,
@@ -3368,29 +3368,29 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 27,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.45.4/24',
+                                                'ip_address': '192.168.45.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan45',
                                                 'passive': True,
                                                 'state': 'dr'
                                             },
                                             'Vlan600': {
-                                                'bdr_ip_addr': '10.31.200.4',
-                                                'bdr_router_id': '10.16.0.11',
+                                                'bdr_ip_addr': '100.10.200.4',
+                                                'bdr_router_id': '10.100.0.11',
                                                 'bfd': {
                                                     'enable': False
                                                 },
                                                 'cost': 1000,
                                                 'dead_interval': 6,
-                                                'dr_ip_addr': '10.31.200.5',
-                                                'dr_router_id': '10.16.0.12',
+                                                'dr_ip_addr': '100.10.200.5',
+                                                'dr_router_id': '10.100.0.12',
                                                 'enable': True,
                                                 'hello_interval': 2,
                                                 'hello_timer': '00:00:01',
                                                 'if_cfg': True,
                                                 'index': 40,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.200.4/24',
+                                                'ip_address': '100.10.200.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan600',
                                                 'passive': False,
@@ -3414,7 +3414,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 41,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.31.201.4/24',
+                                                'ip_address': '100.10.201.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan601',
                                                 'passive': True,
@@ -3429,7 +3429,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 33,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.66.4/24',
+                                                'ip_address': '192.168.66.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan66',
                                                 'passive': True,
@@ -3444,7 +3444,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 34,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.17.67.4/24',
+                                                'ip_address': '192.168.67.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan67',
                                                 'passive': True,
@@ -3459,7 +3459,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 131,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.225.38.4/24',
+                                                'ip_address': '192.128.38.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan738',
                                                 'passive': True,
@@ -3474,7 +3474,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 122,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '10.16.17.51/29',
+                                                'ip_address': '10.100.17.51/29',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan986',
                                                 'passive': True,
@@ -3492,7 +3492,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 137,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.17.81/30',
+                                                'ip_address': '10.100.17.81/30',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan997',
                                                 'passive': False,
@@ -3515,7 +3515,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 50,
                                                 'interface_type': 'loopback',
-                                                'ip_address': '10.16.0.11/32',
+                                                'ip_address': '10.100.0.11/32',
                                                 'line_protocol': 'up',
                                                 'name': 'loopback100',
                                                 'state': 'loopback'
@@ -3532,7 +3532,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 138,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '10.16.31.198/30',
+                                                'ip_address': '10.100.31.198/30',
                                                 'line_protocol': 'up',
                                                 'name': 'port-channel1002',
                                                 'passive': False,
@@ -3726,7 +3726,7 @@ class TestShowIpOspfNeighborsDetailVrfAll(unittest.TestCase):
                                         {'interfaces':
                                             {'Ethernet1/3':
                                                 {'neighbors':
-                                                    {'10.16.2.2':
+                                                    {'10.100.2.2':
                                                         {'address': '10.229.3.2',
                                                         'bdr_ip_addr': '10.229.3.3',
                                                         'dbd_options': '0x52',
@@ -3736,7 +3736,7 @@ class TestShowIpOspfNeighborsDetailVrfAll(unittest.TestCase):
                                                         'last_non_hello_packet_received': '00:00:18',
                                                         'last_state_change': '11:04:25',
                                                         'priority': 1,
-                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'neighbor_router_id': '10.100.2.2',
                                                         'state': 'full',
                                                         'statistics':
                                                             {'nbr_event_count': 5}}}},
@@ -3813,7 +3813,7 @@ class TestShowIpOspfNeighborsDetailVrfAll(unittest.TestCase):
             Hello options 0x12, dbd options 0x52
             Last non-hello packet received 00:00:15
               Dead timer due in 00:00:36
-          Neighbor 10.16.2.2, interface address 10.229.3.2
+          Neighbor 10.100.2.2, interface address 10.229.3.2
             Process ID 1 VRF default, in area 0.0.0.1 via interface Ethernet1/3
             State is FULL, 5 state changes, last change 11:04:25
             Neighbor priority is 1
@@ -3898,7 +3898,7 @@ class TestShowIpOspfDatabaseExternalDetailVrfAll(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database external detail vrf all
-        OSPF Router with ID (10.16.2.2) (Process ID UNDERLAY VRF default)
+        OSPF Router with ID (10.100.2.2) (Process ID UNDERLAY VRF default)
 
                 Type-5 AS External Link States
 
@@ -4077,7 +4077,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
                                                                     {'network':
                                                                         {'attached_routers':
                                                                             {'10.4.1.1': {},
-                                                                            '10.16.2.2': {}},
+                                                                            '10.100.2.2': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header':
                                                                     {'adv_router': '10.4.1.1',
@@ -4116,7 +4116,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
                                                                 {'body':
                                                                     {'network':
                                                                         {'attached_routers':
-                                                                            {'10.16.2.2': {},
+                                                                            {'10.100.2.2': {},
                                                                             '10.36.3.3': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header':
@@ -4136,7 +4136,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
                                                                 {'body':
                                                                     {'network':
                                                                         {'attached_routers':
-                                                                            {'10.16.2.2': {},
+                                                                            {'10.100.2.2': {},
                                                                             '10.64.4.4': {}},
                                                                         'network_mask': '255.255.255.0'}},
                                                                 'header':
@@ -4172,7 +4172,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database network detail vrf all
-        OSPF Router with ID (10.16.2.2) (Process ID 1 VRF default)
+        OSPF Router with ID (10.100.2.2) (Process ID 1 VRF default)
 
                 Network Link States (Area 0.0.0.0)
 
@@ -4186,7 +4186,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
         Length: 32
         Network Mask: /24
              Attached Router: 10.4.1.1
-             Attached Router: 10.16.2.2
+             Attached Router: 10.100.2.2
 
         LS age: 1482
         Options: 0x22 (No TOS-capability, DC)
@@ -4209,7 +4209,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
         Checksum: 0x28d0
         Length: 32
         Network Mask: /24
-             Attached Router: 10.16.2.2
+             Attached Router: 10.100.2.2
              Attached Router: 10.36.3.3
 
         LS age: 724
@@ -4222,7 +4222,7 @@ class TestShowIpOspfDatabaseNetworkDetailVrfAll(unittest.TestCase):
         Length: 32
         Network Mask: /24
              Attached Router: 10.64.4.4
-             Attached Router: 10.16.2.2
+             Attached Router: 10.100.2.2
 
         LS age: 987
         Options: 0x22 (No TOS-capability, DC)
@@ -4341,9 +4341,9 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                 {3:
                                                     {'lsa_type': 3,
                                                     'lsas':
-                                                        {'10.1.2.0 10.16.2.2':
+                                                        {'10.1.2.0 10.100.2.2':
                                                             {'lsa_id': '10.1.2.0',
-                                                            'adv_router': '10.16.2.2',
+                                                            'adv_router': '10.100.2.2',
                                                             'ospfv2':
                                                                 {'body':
                                                                     {'summary':
@@ -4354,7 +4354,7 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 788,
                                                                     'checksum': '0xfc54',
                                                                     'length': 28,
@@ -4407,9 +4407,9 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, No DC',
                                                                    'seq_num': '0x80000002',
                                                                    'type': 3}}},
-                                                        '10.2.3.0 10.16.2.2':
+                                                        '10.2.3.0 10.100.2.2':
                                                             {'lsa_id': '10.2.3.0',
-                                                            'adv_router': '10.16.2.2',
+                                                            'adv_router': '10.100.2.2',
                                                             'ospfv2':
                                                                 {'body':
                                                                     {'summary':
@@ -4420,7 +4420,7 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 788,
                                                                     'checksum': '0x4601',
                                                                     'length': 28,
@@ -4451,9 +4451,9 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 3}}},
-                                                        '10.16.2.2 10.16.2.2':
-                                                            {'lsa_id': '10.16.2.2',
-                                                            'adv_router': '10.16.2.2',
+                                                        '10.100.2.2 10.100.2.2':
+                                                            {'lsa_id': '10.100.2.2',
+                                                            'adv_router': '10.100.2.2',
                                                             'ospfv2':
                                                                 {'body':
                                                                     {'summary':
@@ -4464,11 +4464,11 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
                                                                                 'mt_id': 0,
                                                                                 'tos': 0}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 789,
                                                                     'checksum': '0xfa31',
                                                                     'length': 28,
-                                                                    'lsa_id': '10.16.2.2',
+                                                                    'lsa_id': '10.100.2.2',
                                                                     'option': '0x22',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000001',
@@ -4734,8 +4734,8 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
         LS age: 789
         Options: 0x22 (No TOS-capability, DC)
         LS Type: Network Summary
-        Link State ID: 10.16.2.2 (Network address)
-        Advertising Router: 10.16.2.2
+        Link State ID: 10.100.2.2 (Network address)
+        Advertising Router: 10.100.2.2
         LS Seq Number: 0x80000001
         Checksum: 0xfa31
         Length: 28
@@ -4757,7 +4757,7 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
         Options: 0x22 (No TOS-capability, DC)
         LS Type: Network Summary
         Link State ID: 10.1.2.0 (Network address)
-        Advertising Router: 10.16.2.2
+        Advertising Router: 10.100.2.2
         LS Seq Number: 0x80000001
         Checksum: 0xfc54
         Length: 28
@@ -4790,7 +4790,7 @@ class TestShowIpOspfDatabaseSummaryDetailVrfAll(unittest.TestCase):
         Options: 0x22 (No TOS-capability, DC)
         LS Type: Network Summary
         Link State ID: 10.2.3.0 (Network address)
-        Advertising Router: 10.16.2.2
+        Advertising Router: 10.100.2.2
         LS Seq Number: 0x80000001
         Checksum: 0x4601
         Length: 28
@@ -5177,9 +5177,9 @@ class TestShowIpOspfDatabaseRouterDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000003e',
                                                                     'type': 1}}},
-                                                        '10.16.2.2 10.16.2.2':
-                                                            {'adv_router': '10.16.2.2',
-                                                            'lsa_id': '10.16.2.2',
+                                                        '10.100.2.2 10.100.2.2':
+                                                            {'adv_router': '10.100.2.2',
+                                                            'lsa_id': '10.100.2.2',
                                                             'ospfv2':
                                                                 {'body':
                                                                     {'router':
@@ -5214,9 +5214,9 @@ class TestShowIpOspfDatabaseRouterDetailVrfAll(unittest.TestCase):
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
                                                                                         'type': 'transit network'},
-                                                                            '10.16.2.2':
+                                                                            '10.100.2.2':
                                                                                 {'link_data': '255.255.255.255',
-                                                                                'link_id': '10.16.2.2',
+                                                                                'link_id': '10.100.2.2',
                                                                                 'num_tos_metrics': 0,
                                                                                 'topologies':
                                                                                     {0:
@@ -5226,11 +5226,11 @@ class TestShowIpOspfDatabaseRouterDetailVrfAll(unittest.TestCase):
                                                                                     'type': 'stub network'}},
                                                                         'num_of_links': 4}},
                                                             'header':
-                                                                {'adv_router': '10.16.2.2',
+                                                                {'adv_router': '10.100.2.2',
                                                                 'age': 1683,
                                                                 'checksum': '0x652b',
                                                                 'length': 72,
-                                                                'lsa_id': '10.16.2.2',
+                                                                'lsa_id': '10.100.2.2',
                                                                 'option': '0x2',
                                                                 'option_desc': 'No TOS-capability, No DC',
                                                                 'seq_num': '0x80000014',
@@ -5348,7 +5348,7 @@ class TestShowIpOspfDatabaseRouterDetailVrfAll(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database router detail vrf all
-        OSPF Router with ID (10.16.2.2) (Process ID 1 VRF default)
+        OSPF Router with ID (10.100.2.2) (Process ID 1 VRF default)
 
                 Router Link States (Area 0.0.0.0)
 
@@ -5383,15 +5383,15 @@ class TestShowIpOspfDatabaseRouterDetailVrfAll(unittest.TestCase):
         LS age: 1683
         Options: 0x2 (No TOS-capability, No DC)
         LS Type: Router Links
-        Link State ID: 10.16.2.2
-        Advertising Router: 10.16.2.2
+        Link State ID: 10.100.2.2
+        Advertising Router: 10.100.2.2
         LS Seq Number: 0x80000014
         Checksum: 0x652b
         Length: 72
         Number of links: 4
 
          Link connected to: a Stub Network
-          (Link ID) Network/Subnet Number: 10.16.2.2
+          (Link ID) Network/Subnet Number: 10.100.2.2
           (Link Data) Network Mask: 255.255.255.255
            Number of TOS metrics: 0
              TOS   0 Metric: 1
@@ -6037,20 +6037,20 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 10}}},
-                                                        '10.1.0.0 10.16.2.2':
-                                                            {'adv_router': '10.16.2.2',
+                                                        '10.1.0.0 10.100.2.2':
+                                                            {'adv_router': '10.100.2.2',
                                                             'lsa_id': '10.1.0.0',
                                                             'ospfv2':
                                                                 {'body':
                                                                     {'opaque': {}},
                                                             'header':
-                                                                {'adv_router': '10.16.2.2',
+                                                                {'adv_router': '10.100.2.2',
                                                                 'age': 1612,
                                                                 'checksum': '0x1c22',
                                                                 'fragment_number': 0,
                                                                 'length': 28,
                                                                 'lsa_id': '10.1.0.0',
-                                                                'mpls_te_router_id': '10.16.2.2',
+                                                                'mpls_te_router_id': '10.100.2.2',
                                                                 'num_links': 0,
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
@@ -6204,8 +6204,8 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 10}}},
-                                                        '10.1.0.37 10.16.2.2':
-                                                            {'adv_router': '10.16.2.2',
+                                                        '10.1.0.37 10.100.2.2':
+                                                            {'adv_router': '10.100.2.2',
                                                             'lsa_id': '10.1.0.37',
                                                             'ospfv2':
                                                                 {'body':
@@ -6249,7 +6249,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                                         {'priority': 7,
                                                                                         'unreserved_bandwidth': 93750000}}}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 1202,
                                                                     'checksum': '0xe492',
                                                                     'fragment_number': 37,
@@ -6262,8 +6262,8 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 10}}},
-                                                        '10.1.0.38 10.16.2.2':
-                                                            {'adv_router': '10.16.2.2',
+                                                        '10.1.0.38 10.100.2.2':
+                                                            {'adv_router': '10.100.2.2',
                                                             'lsa_id': '10.1.0.38',
                                                             'ospfv2':
                                                                 {'body':
@@ -6307,7 +6307,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                                         {'priority': 7,
                                                                                         'unreserved_bandwidth': 93750000}}}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 1191,
                                                                     'checksum': '0x2350',
                                                                     'fragment_number': 38,
@@ -6320,8 +6320,8 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                     'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 10}}},
-                                                        '10.1.0.39 10.16.2.2':
-                                                            {'adv_router': '10.16.2.2',
+                                                        '10.1.0.39 10.100.2.2':
+                                                            {'adv_router': '10.100.2.2',
                                                             'lsa_id': '10.1.0.39',
                                                             'ospfv2':
                                                                 {'body':
@@ -6365,7 +6365,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
                                                                                         {'priority': 7,
                                                                                         'unreserved_bandwidth': 93750000}}}}}},
                                                                 'header':
-                                                                    {'adv_router': '10.16.2.2',
+                                                                    {'adv_router': '10.100.2.2',
                                                                     'age': 1191,
                                                                     'checksum': '0x4239',
                                                                     'fragment_number': 39,
@@ -6513,7 +6513,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database opaque-area detail vrf all
-        OSPF Router with ID (10.16.2.2) (Process ID 1 VRF default)
+        OSPF Router with ID (10.100.2.2) (Process ID 1 VRF default)
 
                 Opaque Area Link States (Area 0.0.0.0)
 
@@ -6539,13 +6539,13 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
        Link State ID: 10.1.0.0
        Opaque Type: 1
        Opaque ID: 0
-       Advertising Router: 10.16.2.2
+       Advertising Router: 10.100.2.2
        LS Seq Number: 0x80000003
        Checksum: 0x1c22
        Length: 28
        Fragment number: 0
 
-         MPLS TE router ID : 10.16.2.2
+         MPLS TE router ID : 10.100.2.2
 
          Number of Links : 0
 
@@ -6689,7 +6689,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
        Link State ID: 10.1.0.37
        Opaque Type: 1
        Opaque ID: 37
-       Advertising Router: 10.16.2.2
+       Advertising Router: 10.100.2.2
        LS Seq Number: 0x80000004
        Checksum: 0xe492
        Length: 116
@@ -6716,7 +6716,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
        Link State ID: 10.1.0.38
        Opaque Type: 1
        Opaque ID: 38
-       Advertising Router: 10.16.2.2
+       Advertising Router: 10.100.2.2
        LS Seq Number: 0x80000004
        Checksum: 0x2350
        Length: 116
@@ -6743,7 +6743,7 @@ class TestShowIpOspfDatabaseOpaqueAreaDetailVrfAll(unittest.TestCase):
        Link State ID: 10.1.0.39
        Opaque Type: 1
        Opaque ID: 39
-       Advertising Router: 10.16.2.2
+       Advertising Router: 10.100.2.2
        LS Seq Number: 0x80000004
        Checksum: 0x4239
        Length: 116
