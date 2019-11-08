@@ -195,8 +195,6 @@ class TestShowFlowMonitorCache(unittest.TestCase):
         Flows added:                                  16
         Flows aged:                                   15
             - Inactive timeout    (    15 secs)         15
-        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
-        Time source is NTP, 16:04:38.707 UTC Wed Nov 6 2019
 
         IP VRF ID INPUT                IPV4 SRC ADDR    IPV4 DST ADDR    intf input            intf output                 pkts
         =============================  ===============  ===============  ====================  ====================  ==========
@@ -222,7 +220,7 @@ class TestShowFlowMonitorCache(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class TestShowFlowMonitorCache(unittest.TestCase):
+class TestShowFlowMonitorCacheRecord(unittest.TestCase):
     '''Unit test for "show flow monitor {name} cache format table"
     '''
 
@@ -278,8 +276,6 @@ class TestShowFlowMonitorCache(unittest.TestCase):
         Flows added:                                  18
         Flows aged:                                   15
             - Inactive timeout    (    15 secs)         15
-        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
-        Time source is NTP, 16:04:45.277 UTC Wed Nov 6 2019
 
         IP VRF ID INPUT:           0          (DEFAULT)
         IPV4 SOURCE ADDRESS:       193.168.2.254
