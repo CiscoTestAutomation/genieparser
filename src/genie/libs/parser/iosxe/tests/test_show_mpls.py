@@ -2513,10 +2513,10 @@ class TestShowMplsForwardingTable(unittest.TestCase):
     golden_output_7 = {'execute.return_value': '''
     Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
     Label      Label      or Tunnel Id     Switched      interface              
-    39    [M]  16052      106.187.14.241/32   \
-                                           0             Gi0/1/7    106.162.196.217
-    16052 [M]  16052      106.187.14.241/32   \
-                                           0             Gi0/1/7    106.162.196.217
+    39    [M]  16052      10.169.14.241/32   \
+                                           0             Gi0/1/7    10.169.196.217
+    16052 [M]  16052      10.169.14.241/32   \
+                                           0             Gi0/1/7    10.169.196.217
     '''}
 
     golden_parsed_output_7 = {
@@ -2527,12 +2527,12 @@ class TestShowMplsForwardingTable(unittest.TestCase):
                     'outgoing_label_or_vc': {
                         '16052': {
                             'prefix_or_tunnel_id': {
-                                '106.187.14.241/32': {
+                                '10.169.14.241/32': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/1/7': {
                                             'bytes_label_switched': 0,
                                             'merged': True,
-                                            'next_hop': '106.162.196.217',
+                                            'next_hop': '10.169.196.217',
                                         },
                                     },
                                 },
@@ -2544,12 +2544,12 @@ class TestShowMplsForwardingTable(unittest.TestCase):
                     'outgoing_label_or_vc': {
                         '16052': {
                             'prefix_or_tunnel_id': {
-                                '106.187.14.241/32': {
+                                '10.169.14.241/32': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/1/7': {
                                             'bytes_label_switched': 0,
                                             'merged': True,
-                                            'next_hop': '106.162.196.217',
+                                            'next_hop': '10.169.196.217',
                                         },
                                     },
                                 },
