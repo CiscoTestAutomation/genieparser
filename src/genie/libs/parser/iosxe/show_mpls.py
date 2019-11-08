@@ -1797,8 +1797,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                         feature_dict.update({'merged': True})
                 if group['t1']:
                     feature_dict.update({'tsp_tunnel': True})
-                bytes_label_switched_str = group['bytes_label_switched']
-
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
                 continue
 
