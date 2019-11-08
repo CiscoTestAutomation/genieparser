@@ -11,12 +11,14 @@ from ats.topology import loader
 
 # iosxe show_flow
 from genie.libs.parser.iosxe.show_flow import (ShowFlowMonitor,
+                                               ShowFlowMonitorCache,
+                                               ShowFlowMonitorCacheRecord,
                                                ShowFlowExporterStatistics)
 
 # ==============================================================
 # Unit test for 'show flow monitor {name} cache format table'
 # ==============================================================
-class test_show_monitor(unittest.TestCase):
+class TestShowFlowMonitor(unittest.TestCase):
     '''Unit test for "show flow monitor {name} cache format table"
     '''
 
@@ -136,7 +138,188 @@ class test_show_monitor(unittest.TestCase):
         parsed_output = obj.parse(name='FLOW-MONITOR-1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-class test_show_flow_exporter_statistics(unittest.TestCase):
+
+class TestShowFlowMonitorCache(unittest.TestCase):
+    '''Unit test for "show flow monitor {name} cache format table"
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'cache_type': 'Normal (Platform cache)',
+        'cache_size': 200000,
+        'current_entries': 1,
+        'high_water_mark': 3,
+        'flows_added': 16,
+        'flows_aged': 15,
+        'inactive_timeout': 15,
+        'entries': {
+            1: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.2.254',
+                'ipv4_dst_addr': '193.168.2.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1003',
+                'pkts': 2,
+            },
+            2: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.0.254',
+                'ipv4_dst_addr': '193.168.0.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1001',
+                'pkts': 3,
+            },
+            3: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.1.254',
+                'ipv4_dst_addr': '193.168.1.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1002',
+                'pkts': 3,
+            },
+        },
+    }
+
+    golden_output ={'execute.return_value':'''
+        Device#show flow monitor mon_vrf_1 cache
+        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+        Time source is NTP, 16:04:38.706 UTC Wed Nov 6 2019
+
+        Cache type:                               Normal (Platform cache)
+        Cache size:                               200000
+        Current entries:                               1
+        High Watermark:                                3
+
+        Flows added:                                  16
+        Flows aged:                                   15
+            - Inactive timeout    (    15 secs)         15
+        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+        Time source is NTP, 16:04:38.707 UTC Wed Nov 6 2019
+
+        IP VRF ID INPUT                IPV4 SRC ADDR    IPV4 DST ADDR    intf input            intf output                 pkts
+        =============================  ===============  ===============  ====================  ====================  ==========
+        0          (DEFAULT)           193.168.2.254    193.168.2.253    Null                  Te0/0/0.1003                   2
+        0          (DEFAULT)           193.168.0.254    193.168.0.253    Null                  Te0/0/0.1001                   3
+        0          (DEFAULT)           193.168.1.254    193.168.1.253    Null                  Te0/0/0.1002                   3
+        
+        Device#
+    '''}
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowFlowMonitorCache(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(name='mon_vrf_1')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFlowMonitorCache(device=self.device)
+        parsed_output = obj.parse(name='mon_vrf_1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowFlowMonitorCache(unittest.TestCase):
+    '''Unit test for "show flow monitor {name} cache format table"
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'cache_type': 'Normal (Platform cache)',
+        'cache_size': 200000,
+        'current_entries': 3,
+        'high_water_mark': 3,
+        'flows_added': 18,
+        'flows_aged': 15,
+        'inactive_timeout': 15,
+        'entries': {
+            1: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.2.254',
+                'ipv4_dst_addr': '193.168.2.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1003',
+                'pkts': 3,
+            },
+            2: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.0.254',
+                'ipv4_dst_addr': '193.168.0.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1001',
+                'pkts': 4,
+            },
+            3: {
+                'ip_vrf_id_input': '0          (DEFAULT)',
+                'ipv4_src_addr': '193.168.1.254',
+                'ipv4_dst_addr': '193.168.1.253',
+                'intf_input': 'Null',
+                'intf_output': 'Te0/0/0.1002',
+                'pkts': 4,
+            },
+        },
+    }
+
+    golden_output ={'execute.return_value':'''
+        Device#show flow monitor mon_vrf_1 cache format record
+        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+        Time source is NTP, 16:04:45.275 UTC Wed Nov 6 2019
+
+        Cache type:                               Normal (Platform cache)
+        Cache size:                               200000
+        Current entries:                               3
+        High Watermark:                                3
+
+        Flows added:                                  18
+        Flows aged:                                   15
+            - Inactive timeout    (    15 secs)         15
+        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+        Time source is NTP, 16:04:45.277 UTC Wed Nov 6 2019
+
+        IP VRF ID INPUT:           0          (DEFAULT)
+        IPV4 SOURCE ADDRESS:       193.168.2.254
+        IPV4 DESTINATION ADDRESS:  193.168.2.253
+        interface input:           Null
+        interface output:          Te0/0/0.1003
+        counter packets:           3
+
+        IP VRF ID INPUT:           0          (DEFAULT)
+        IPV4 SOURCE ADDRESS:       193.168.0.254
+        IPV4 DESTINATION ADDRESS:  193.168.0.253
+        interface input:           Null
+        interface output:          Te0/0/0.1001
+        counter packets:           4
+
+        IP VRF ID INPUT:           0          (DEFAULT)
+        IPV4 SOURCE ADDRESS:       193.168.1.254
+        IPV4 DESTINATION ADDRESS:  193.168.1.253
+        interface input:           Null
+        interface output:          Te0/0/0.1002
+        counter packets:           4
+        Device#
+    '''}
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowFlowMonitorCacheRecord(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(name='mon_vrf_1')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFlowMonitorCacheRecord(device=self.device)
+        parsed_output = obj.parse(name='mon_vrf_1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowFlowExporterStatistics(unittest.TestCase):
     """ Unit tests for:
             * show flow exporter statistics
             * show flow exporter {exporter} statistics
@@ -300,6 +483,7 @@ class test_show_flow_exporter_statistics(unittest.TestCase):
         obj = ShowFlowExporterStatistics(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_partial)
+
 
 if __name__ == '__main__':
     unittest.main()

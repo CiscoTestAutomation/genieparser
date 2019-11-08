@@ -36,6 +36,10 @@
     * Added ShowIpCefInternal
         * show ip cef {ip} internal
         * show ip cef internal
+    * Added ShowFlowMonitorCache for command;
+        * show flow monitor {name} cache
+    * Added ShowFlowMonitorCacheRecord for command;
+        * show flow monitor {name} cache format record
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
