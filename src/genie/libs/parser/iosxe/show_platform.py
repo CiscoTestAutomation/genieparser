@@ -48,7 +48,7 @@ class ShowVersionSchema(MetaParser):
                     Optional('uptime_this_cp'): str,
                     Optional('jawa_revision'): str,
                     Optional('snowtrooper_revision'): str,
-                    Optional('running_software'): str,
+                    Optional('running_default_software'): bool,
                     Optional('processor_board_flash'): str,
                     Optional('last_reload_type'): str,
                     Optional('returned_to_rom_by'):  str,
@@ -208,6 +208,7 @@ class ShowVersion(ShowVersionSchema):
                          r'+(?P<system_restarted_at>.+)$')
 
         # system_image
+        # System restarted at 09:57:20 GMT Tue Oct 15 2013
         p12 = re.compile(r'^[Ss]ystem +image +file +is '
                          r'+\"(?P<system_image>.+)\"')
 
@@ -321,8 +322,7 @@ class ShowVersion(ShowVersionSchema):
                          r'+Command)?)(?: +at +(?P<returned_to_rom_at>[\w\s\:]+))?$')
 
         # Last reload type: Normal Reload
-        p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>\S+)'
-                         r' +[Rr]eload$')
+        p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>[\S ]+)$')
         
         # P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
         p39 = re.compile(r'^(?P<cpu_name>\S+) +(CPU|cpu|Cpu) +at '
@@ -334,7 +334,8 @@ class ShowVersion(ShowVersionSchema):
         p40 = re.compile(r'^(?P<processor_board_flash>\S+) +bytes .+$')
         
         # Running default software
-        p41 = re.compile(r'^Running +(?P<running_software>\S+) +software$')
+        p41 = re.compile(
+            r'^Running +(?P<running_default_software>\S+) +software$')
 
         # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
         p42 = re.compile(r'^Jawa +Revision +(?P<jawa_revision>\S+)\, '
@@ -462,6 +463,7 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # system_image
+            # System restarted at 07:19:15 UTC Fri Feb 1 2019
             m = p12.match(line)
             if m:
                 version_dict['version']['system_image'] = \
@@ -781,7 +783,7 @@ class ShowVersion(ShowVersionSchema):
             # Running default software
             m41 = p41.match(line)
             if m41:
-                version_dict['version']['running_software'] = m41.groupdict()['running_software']
+                version_dict['version']['running_default_software'] = True
 
                 continue
 
