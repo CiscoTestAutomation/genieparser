@@ -208,7 +208,8 @@ class ShowVersion(ShowVersionSchema):
                          r'+(?P<system_restarted_at>.+)$')
 
         # system_image
-        # System restarted at 09:57:20 GMT Tue Oct 15 2013
+        # System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
+        # System image file is "harddisk:test-image-PE1-13113029"
         p12 = re.compile(r'^[Ss]ystem +image +file +is '
                          r'+\"(?P<system_image>.+)\"')
 
@@ -317,9 +318,11 @@ class ShowVersion(ShowVersionSchema):
         # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
         # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
         # System returned to ROM by reload
+        # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
+        # System returned to ROM by power-on
         p37 = re.compile(r'^System +returned +to +ROM +by '
-                         r'+(?P<returned_to_rom_by>[Rr]eload(?: '
-                         r'+Command)?)(?: +at +(?P<returned_to_rom_at>[\w\s\:]+))?$')
+                         r'+(?P<returned_to_rom_by>[\w\s\-]+)(?: +at '
+                         r'+(?P<returned_to_rom_at>[\w\s\:]+))?(?: +\(.*\))?$')
 
         # Last reload type: Normal Reload
         p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>[\S ]+)$')
@@ -463,7 +466,8 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # system_image
-            # System restarted at 07:19:15 UTC Fri Feb 1 2019
+            # System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
+            # System image file is "harddisk:test-image-PE1-13113029"
             m = p12.match(line)
             if m:
                 version_dict['version']['system_image'] = \
@@ -734,6 +738,8 @@ class ShowVersion(ShowVersionSchema):
             # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
             # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
             # System returned to ROM by reload
+            # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
+            # System returned to ROM by power-on
             m37 = p37.match(line)
             if m37:
                 group = m37.groupdict()
