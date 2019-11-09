@@ -243,8 +243,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
-
-        #p1 = re.compile(r'^(?P<argument>[\w\s\-]+): +(?P<value>[\w\s\-\.\./]+)$')
         p1 = re.compile(r'(?:\*)?(?P<argument>[\w\s\-]+)\: '
                         r'+(?P<value>[\w\s\-\.\./]+|\S+)(?:\*)?$')
 
@@ -397,6 +395,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                         intf_dict = value_dict.setdefault('mac_address', {})
 
                 elif (key not in known_list) and policies_flag:
+                    policies_dict = mac_dict.setdefault('server_policies', {})
                     index_dict = policies_dict.setdefault(index, {})
                     index_dict.update({'name': group['argument']})
                     index_dict.update({'policies': group['value']})
@@ -448,7 +447,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # Server Policies:
             m12 = p12.match(line)
             if m12:
-                policies_dict = mac_dict.setdefault('server_policies', {})
                 policies_flag = True
 
                 continue

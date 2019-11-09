@@ -107,7 +107,7 @@ class TestShowAuthenticationSessions(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value': '''
-        NAC_c3850_SW#show authentication sessions
+        GENIE_c3850_SW#show authentication sessions
         Interface                MAC Address    Method  Domain  Status Fg  Session
         ID
         --------------------------------------------------------------------------------------------
@@ -379,7 +379,6 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'handle': '0x3F000FC8',
                         'ipv4_address': '10.1.2.102',
                         'ipv6_address': 'Unknown',
-                        'server_policies': {},
                         'local_policies': {
                             'security_policy': 'Should Secure',
                             'security_status': 'Link Unsecure',
