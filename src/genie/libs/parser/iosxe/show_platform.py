@@ -1820,38 +1820,36 @@ class ShowBootSchema(MetaParser):
             Optional('configuration_register'): str,
             Optional('boot_variable'): str,
         },
-        Optional('main_switch'): {
-            'boot_path_list': str,
-            'config_file': str,
-            'private_config_file': str,
-            'enable_break': bool,
-            'manual_boot': bool,
-            Optional('helper_path_list'): str,
-            'auto_upgrade': bool,
-            Optional('auto_upgrade_path'): str,
-            Optional('boot_optimization'): bool,
-            Optional('nvram_buffer_size'): int,
-            Optional('timeout_config_download'): str,
-            Optional('config_download_via_dhcp'): bool,
-            Optional('next_boot'): bool,
-            Optional('allow_dev_key'): bool,
-            Optional('switches'): {
-                Any(): { # 1, 2, 3
-                    'boot_path_list': str,
-                    'config_file': str,
-                    'private_config_file': str,
-                    'enable_break': bool,
-                    'manual_boot': bool,
-                    Optional('helper_path_list'): str,
-                    'auto_upgrade': bool,
-                    Optional('auto_upgrade_path'): str,
-                    Optional('boot_optimization'): bool,
-                    Optional('nvram_buffer_size'): int,
-                    Optional('timeout_config_download'): str,
-                    Optional('config_download_via_dhcp'): bool,
-                    Optional('next_boot'): bool,
-                    Optional('allow_dev_key'): bool,
-                },
+        Optional('boot_path_list'): str,
+        Optional('config_file'): str,
+        Optional('private_config_file'): str,
+        Optional('enable_break'): bool,
+        Optional('manual_boot'): bool,
+        Optional('helper_path_list'): str,
+        Optional('auto_upgrade'): bool,
+        Optional('auto_upgrade_path'): str,
+        Optional('boot_optimization'): bool,
+        Optional('nvram_buffer_size'): int,
+        Optional('timeout_config_download'): str,
+        Optional('config_download_via_dhcp'): bool,
+        Optional('next_boot'): bool,
+        Optional('allow_dev_key'): bool,
+        Optional('switches'): {
+            Any(): { 
+                'boot_path_list': str,
+                'config_file': str,
+                'private_config_file': str,
+                'enable_break': bool,
+                'manual_boot': bool,
+                Optional('helper_path_list'): str,
+                'auto_upgrade': bool,
+                Optional('auto_upgrade_path'): str,
+                Optional('boot_optimization'): bool,
+                Optional('nvram_buffer_size'): int,
+                Optional('timeout_config_download'): str,
+                Optional('config_download_via_dhcp'): bool,
+                Optional('next_boot'): bool,
+                Optional('allow_dev_key'): bool,
             },
         },
     }
@@ -1997,7 +1995,7 @@ class ShowBoot(ShowBootSchema):
             if m7:
                 group = m7.groupdict()
                 if 'BOOT' in group['key']:
-                    sw_dict = boot_dict.setdefault('main_switch', {})
+                    sw_dict = boot_dict
                     if switch_number >= 2:
                         switches_dict = sw_dict.setdefault('switches', {})
                         index_dict = switches_dict.setdefault(switch_number, {})

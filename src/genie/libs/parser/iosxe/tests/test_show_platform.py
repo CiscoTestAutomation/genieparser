@@ -3337,40 +3337,37 @@ class TestShowBoot(unittest.TestCase):
     '''}
 
     golden_parsed_output_2900 = {
-        'main_switch': {
-            'allow_dev_key': True,
-            'auto_upgrade': True,
-            'boot_optimization': False,
-            'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-            'config_download_via_dhcp': False,
-            'config_file': 'flash:/config.text',
-            'enable_break': True,
-            'manual_boot': False,
-            'next_boot': False,
-            'nvram_buffer_size': 524288,
-            'private_config_file': 'flash:/private-config.text',
-            'switches': {
-                2: {
-                    'allow_dev_key': True,
-                    'auto_upgrade': False,
-                    'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-                    'config_file': 'flash:/config.text',
-                    'enable_break': True,
-                    'manual_boot': False,
-                    'private_config_file': 'flash:/private-config.text'
-                },
-                3: {
-                    'allow_dev_key': True,
-                    'auto_upgrade': False,
-                    'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
-                    'config_file': 'flash:/config.text',
-                    'enable_break': True,
-                    'manual_boot': False,
-                    'private_config_file': 'flash:/private-config.text'
-                }
+        'allow_dev_key': True,
+        'auto_upgrade': True,
+        'boot_optimization': False,
+        'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+        'config_download_via_dhcp': False,
+        'config_file': 'flash:/config.text',
+        'enable_break': True,
+        'manual_boot': False,
+        'next_boot': False,
+        'nvram_buffer_size': 524288,
+        'private_config_file': 'flash:/private-config.text',
+        'switches': {
+            2: {
+                'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
             },
-            'timeout_config_download': '0 seconds'
-        }
+            3: {'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
+            }
+        },
+        'timeout_config_download': '0 seconds'
     }
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
