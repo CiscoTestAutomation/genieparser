@@ -4302,7 +4302,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::2002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                             </config>
                             <ebgp-multihop>
                                 <config>
@@ -4337,7 +4337,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::2002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                             </state>
                             <timers>
                                 <config>
@@ -4359,11 +4359,11 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                     <local-address>::</local-address>
                                     <passive-mode>false</passive-mode>
                                     <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::2002</remote-address>
                                     <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                 </state>
                             </transport>
-                            <neighbor-address>fec1::2002</neighbor-address>
+                            <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                         </neighbor>
                         <neighbor>
                             <afi-safis>
@@ -4413,7 +4413,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::1002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                             </config>
                             <ebgp-multihop>
                                 <config>
@@ -4448,7 +4448,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::1002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                             </state>
                             <timers>
                                 <config>
@@ -4470,11 +4470,11 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                     <local-address>::</local-address>
                                     <passive-mode>false</passive-mode>
                                     <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::1002</remote-address>
                                     <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                 </state>
                             </transport>
-                            <neighbor-address>fec1::1002</neighbor-address>
+                            <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                         </neighbor>
                         <neighbor>
                             <afi-safis>
@@ -5203,7 +5203,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         {'bgp_table_version': 28,
                         'local_router_id': '10.229.11.11',
                         'prefixes':
-                            {'2000::/8':
+                            {'2001:db8:400::/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
@@ -5242,7 +5242,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '*>',
                                         'weight': 0}}}},
                         'v6_aggregate_address_as_set': True,
-                        'v6_aggregate_address_ipv6_address': '2000::/8',
+                        'v6_aggregate_address_ipv6_address': '2001:db8:400::/8',
                         'v6_aggregate_address_summary_only': True}}},
             'default':
                 {'address_family':
@@ -5314,7 +5314,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'default_vrf': 'VRF1',
                         'local_router_id': '10.4.1.1',
                         'prefixes':
-                            {'2000::/8':
+                            {'2001:db8:400::/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
@@ -5354,7 +5354,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 0}}}},
                         'route_distinguisher': '100:100',
                         'v6_aggregate_address_as_set': True,
-                        'v6_aggregate_address_ipv6_address': '2000::/8',
+                        'v6_aggregate_address_ipv6_address': '2001:db8:400::/8',
                         'v6_aggregate_address_summary_only': True}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -5381,7 +5381,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath
 
            Network            Next Hop            Metric     LocPrf     Weight Path
-        *>a2000::/8           0::                               100      32768 i
+        *>a2001:db8:400::/8           0::                               100      32768 i
         *>r2001::11/128       0::                      0        100      32768 ?
         *>i2001::33/128       ::ffff:10.36.3.3           0        100          0 ?
           l2001:111:222::/64  0::                               100      32768 i
@@ -5408,7 +5408,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:100     (VRF VRF1)
-        *>a2000::/8           0::                               100      32768 i
+        *>a2001:db8:400::/8           0::                               100      32768 i
         *>r2001::11/128       0::                      0        100      32768 ?
         *>i2001::33/128       ::ffff:10.36.3.3           0        100          0 ?
           l2001:111:222::/64  0::                               100      32768 i
@@ -5446,7 +5446,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         }
                                    }
                               },
-                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2004:ab4:123:20::44]/368": {
+                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2001:db8:183c:4005::44]/368": {
                                    "index": {
                                         1: {
                                              "weight": 32768,
@@ -5484,7 +5484,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                               10.9.1.1                           100      32768 i
         *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[10.220.20.44]/272
                               10.9.1.1                           100      32768 i
-        *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2004:ab4:123:20::44]/368
+        *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2001:db8:183c:4005::44]/368
                               10.9.1.1                           100      32768 i
         '''}
 
@@ -5544,7 +5544,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '* ',
                                         'weight': 0},
                                     3:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -5570,7 +5570,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '* ',
                                         'weight': 0},
                                     3:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -5588,7 +5588,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '*>',
                                         'weight': 0},
                                     2:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -5738,7 +5738,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '* ',
                                         'weight': 0},
                                     3:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -5764,7 +5764,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '* ',
                                         'weight': 0},
                                     3:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -5782,7 +5782,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '*>',
                                         'weight': 0},
                                     2:
-                                        {'next_hop': 'fec1::112',
+                                        {'next_hop': '2001:db8:8b05::112',
                                         'localprf': 100,
                                         'metric': 0,
                                         'origin_codes': '?',
@@ -6149,12 +6149,12 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         * i                   0.0.0.0                           100      32768 i
         *>r10.16.1.0/24       0.0.0.0               4444        100      32768 ?
         *>r10.16.2.0/24       0.0.0.0               4444        100      32768 ?
-        * i10.16.0.0/8        fec1::112                0        100          0 ?
+        * i10.16.0.0/8        2001:db8:8b05::112                0        100          0 ?
         *>i                   10.186.0.2               0        100          0 ?
-        * i10.106.0.0/8       fec1::112                0        100          0 ?
+        * i10.106.0.0/8       2001:db8:8b05::112                0        100          0 ?
         * i                   10.186.0.2               0        100          0 ?
         *>r                   0.0.0.0               4444        100      32768 ?
-        * i192.168.51.0/8     fec1::112                0        100          0 ?
+        * i192.168.51.0/8     2001:db8:8b05::112                0        100          0 ?
         * i                   10.186.0.2               0        100          0 ?
         *>r                   0.0.0.0               4444        100      32768 ?
 
@@ -6227,12 +6227,12 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         *>l10.4.1.0/24        0.0.0.0                           100      32768 i
         *>r10.16.1.0/24       0.0.0.0               4444        100      32768 ?
         *>r10.16.2.0/24       0.0.0.0               4444        100      32768 ?
-        * i10.16.0.0/8        fec1::112                0        100          0 ?
+        * i10.16.0.0/8        2001:db8:8b05::112                0        100          0 ?
         *>i                   10.186.0.2               0        100          0 ?
-        * i10.106.0.0/8       fec1::112                0        100          0 ?
+        * i10.106.0.0/8       2001:db8:8b05::112                0        100          0 ?
         * i                   10.186.0.2               0        100          0 ?
         *>r                   0.0.0.0               4444        100      32768 ?
-        * i192.168.51.0/8     fec1::112                0        100          0 ?
+        * i192.168.51.0/8     2001:db8:8b05::112                0        100          0 ?
         * i                   10.186.0.2               0        100          0 ?
         *>r                   0.0.0.0               4444        100      32768 ?
 
@@ -6474,21 +6474,21 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                'weight': 0}}}}},
                     'ipv6 multicast': {'bgp_table_version': 6,
                                                            'local_router_id': '10.145.0.6',
-                                                           'prefixes': {'eeee::/113': {'index': {1: {'localprf': 100,
-                                                                                                     'next_hop': 'fec0::1002',
+                                                           'prefixes': {'2001:db8:4444::/113': {'index': {1: {'localprf': 100,
+                                                                                                     'next_hop': '2001:db8:8d82::1002',
                                                                                                      'origin_codes': 'i',
                                                                                                      'path_type': 'i',
                                                                                                      'status_codes': '*>',
                                                                                                      'weight': 0}}},
-                                                                        'eeee::8000/113': {'index': {1: {'localprf': 100,
-                                                                                                         'next_hop': 'fec0::1002',
+                                                                        '2001:db8:4444::8000/113': {'index': {1: {'localprf': 100,
+                                                                                                         'next_hop': '2001:db8:8d82::1002',
                                                                                                          'origin_codes': 'i',
                                                                                                          'path_type': 'i',
                                                                                                          'status_codes': '*>',
                                                                                                          'weight': 0}}}}},
                     'ipv6 unicast': {'bgp_table_version': 173,
                                                          'local_router_id': '10.145.0.6',
-                                                         'prefixes': {'2001::/112': {'index': {1: {'next_hop': 'fec0::2002',
+                                                         'prefixes': {'2001::/112': {'index': {1: {'next_hop': '2001:db8:8d82::2002',
                                                                                                    'origin_codes': 'i',
                                                                                                    'path': '888 '
                                                                                                            '10 '
@@ -6503,7 +6503,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                    'path_type': 'e',
                                                                                                    'status_codes': 'd ',
                                                                                                    'weight': 0}}},
-                                                                      '2001::1:0/112': {'index': {1: {'next_hop': 'fec0::2002',
+                                                                      '2001::1:0/112': {'index': {1: {'next_hop': '2001:db8:8d82::2002',
                                                                                                       'origin_codes': 'i',
                                                                                                       'path': '888 '
                                                                                                               '10 '
@@ -6518,8 +6518,8 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                       'path_type': 'e',
                                                                                                       'status_codes': 'd ',
                                                                                                       'weight': 0}}},
-                                                                      'abcd::/112': {'index': {1: {'localprf': 100,
-                                                                                                   'next_hop': 'fec0::1002',
+                                                                      '2001:db8:f574::/112': {'index': {1: {'localprf': 100,
+                                                                                                   'next_hop': '2001:db8:8d82::1002',
                                                                                                    'origin_codes': 'i',
                                                                                                    'path': '3 '
                                                                                                            '10 '
@@ -6534,9 +6534,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                    'path_type': 'i',
                                                                                                    'status_codes': '*>',
                                                                                                    'weight': 0}}},
-                                                                      'dddd::/113': {'index': {1: {'localprf': 100,
+                                                                      '2001:db8:1111::/113': {'index': {1: {'localprf': 100,
                                                                                                    'metric': 4444,
-                                                                                                   'next_hop': 'fec0::1002',
+                                                                                                   'next_hop': '2001:db8:8d82::1002',
                                                                                                    'origin_codes': 'i',
                                                                                                    'path': '38050 '
                                                                                                            '9430 '
@@ -6546,9 +6546,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                    'path_type': 'i',
                                                                                                    'status_codes': '*>',
                                                                                                    'weight': 0}}},
-                                                                      'dddd::8000/113': {'index': {1: {'localprf': 100,
+                                                                      '2001:db8:1111::8000/113': {'index': {1: {'localprf': 100,
                                                                                                        'metric': 4444,
-                                                                                                       'next_hop': 'fec0::1002',
+                                                                                                       'next_hop': '2001:db8:8d82::1002',
                                                                                                        'origin_codes': 'i',
                                                                                                        'path': '38050 '
                                                                                                                '9430 '
@@ -6755,7 +6755,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'local_router_id': '10.145.0.6'},
                     'vpnv6 unicast RD 0xbb00010000000000': {'bgp_table_version': 13,
                                                                                 'local_router_id': '10.145.0.6',
-                                                                                'prefixes': {'0:0:80::/41': {'index': {1: {'next_hop': '0',
+                                                                                'prefixes': {'2001:db8:4000::/41': {'index': {1: {'next_hop': '0',
                                                                                                                            'origin_codes': 'i',
                                                                                                                            'path': '10 '
                                                                                                                                    '20 '
@@ -6769,7 +6769,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                            'path_type': 'e',
                                                                                                                            'status_codes': '*>',
                                                                                                                            'weight': 888}}},
-                                                                                             '0::/41': {'index': {1: {'next_hop': '0',
+                                                                                             '2001:db8:c400::/41': {'index': {1: {'next_hop': '0',
                                                                                                                       'origin_codes': 'i',
                                                                                                                       'path': '10 '
                                                                                                                               '20 '
@@ -6786,13 +6786,13 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                 'route_distinguisher': '0xbb00010000000000'},
                     'vpnv6 unicast RD 100:200': {'bgp_table_version': 13,
                                                                      'local_router_id': '10.145.0.6',
-                                                                     'prefixes': {'aaaa:1::/113': {'index': {1: {'localprf': 100,
+                                                                     'prefixes': {'2001:db8:aaaa:1::/113': {'index': {1: {'localprf': 100,
                                                                                                                  'next_hop': '4444',
                                                                                                                  'origin_codes': 'i',
                                                                                                                  'path_type': 'i',
                                                                                                                  'status_codes': '*>',
                                                                                                                  'weight': 0}}},
-                                                                                  'aaaa:1::8000/113': {'index': {1: {'localprf': 100,
+                                                                                  '2001:db8:2001:db8:aaaa:1::8000/113': {'index': {1: {'localprf': 100,
                                                                                                                      'next_hop': '4444',
                                                                                                                      'origin_codes': 'i',
                                                                                                                      'path_type': 'i',
@@ -6903,8 +6903,8 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'weight': 0}}}}},
                     'ipv6 unicast': {'bgp_table_version': 7,
                                                       'local_router_id': '0.0.0.0',
-                                                      'prefixes': {'abcd::/112': {'index': {1: {'localprf': 100,
-                                                                                                'next_hop': 'fec0::1002',
+                                                      'prefixes': {'2001:db8:f574::/112': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '2001:db8:8d82::1002',
                                                                                                 'origin_codes': 'i',
                                                                                                 'path': '3 '
                                                                                                         '10 '
@@ -6919,9 +6919,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'path_type': 'i',
                                                                                                 'status_codes': '*>',
                                                                                                 'weight': 0}}},
-                                                                   'dddd::/113': {'index': {1: {'localprf': 100,
+                                                                   '2001:db8:1111::/113': {'index': {1: {'localprf': 100,
                                                                                                 'metric': 4444,
-                                                                                                'next_hop': 'fec0::1002',
+                                                                                                'next_hop': '2001:db8:8d82::1002',
                                                                                                 'origin_codes': 'i',
                                                                                                 'path': '38050 '
                                                                                                         '9430 '
@@ -6931,9 +6931,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'path_type': 'i',
                                                                                                 'status_codes': '*>',
                                                                                                 'weight': 0}}},
-                                                                   'dddd::8000/113': {'index': {1: {'localprf': 100,
+                                                                   '2001:db8:1111::8000/113': {'index': {1: {'localprf': 100,
                                                                                                     'metric': 4444,
-                                                                                                    'next_hop': 'fec0::1002',
+                                                                                                    'next_hop': '2001:db8:8d82::1002',
                                                                                                     'origin_codes': 'i',
                                                                                                     'path': '38050 '
                                                                                                             '9430 '
@@ -6983,11 +6983,11 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
            Network            Next Hop            Metric     LocPrf     Weight Path
-        d e2001::/112         fec0::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
-        d e2001::1:0/112      fec0::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
-        *>iabcd::/112         fec0::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
-        *>idddd::/113         fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
-        *>idddd::8000/113     fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        d e2001::/112         2001:db8:8d82::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
+        d e2001::1:0/112      2001:db8:8d82::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
+        *>i2001:db8:f574::/112         2001:db8:8d82::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
+        *>i2001:db8:1111::/113         2001:db8:8d82::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        *>i2001:db8:1111::8000/113     2001:db8:8d82::1002            4444        100          0 38050 9430 46344 17724 54639 i
 
         BGP routing table information for VRF default, address family IPv6 Multicast
         BGP table version is 6, Local Router ID is 10.145.0.6
@@ -6996,8 +6996,8 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
            Network            Next Hop            Metric     LocPrf     Weight Path
-        *>ieeee::/113         fec0::1002                        100          0 i
-        *>ieeee::8000/113     fec0::1002                        100          0 i
+        *>i2001:db8:4444::/113         2001:db8:8d82::1002                        100          0 i
+        *>i2001:db8:4444::8000/113     2001:db8:8d82::1002                        100          0 i
 
         BGP routing table information for VRF default, address family VPNv4 Unicast
         BGP table version is 183, Local Router ID is 10.145.0.6
@@ -7028,15 +7028,15 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
-        *>e0::/41             ::ffff:10.106.102.3
+        *>e2001:db8:c400::/41             ::ffff:10.106.102.3
                                                                              0 888 10 20 30 40 50 60 70 80 90 i
-        *>e0:0:80::/41        ::ffff:10.106.102.3
+        *>e2001:db8:4000::/41        ::ffff:10.106.102.3
                                                                              0 888 10 20 30 40 50 60 70 80 90 i
 
         BGP routing table information for VRF default, address family Link-State
@@ -7084,9 +7084,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
            Network            Next Hop            Metric     LocPrf     Weight Path
-        *>iabcd::/112         fec0::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
-        *>idddd::/113         fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
-        *>idddd::8000/113     fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        *>i2001:db8:f574::/112         2001:db8:8d82::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
+        *>i2001:db8:1111::/113         2001:db8:8d82::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        *>i2001:db8:1111::8000/113     2001:db8:8d82::1002            4444        100          0 38050 9430 46344 17724 54639 i
         '''}
 
     def test_show_bgp_vrf_all_all_golden1(self):
@@ -8068,7 +8068,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:54'},
-            'fec1::1002':
+            '2001:db8:8b05::1002':
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
@@ -8154,7 +8154,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'session_state': 'established',
                 'shutdown': False,
                 'up_time': '00:07:40'},
-            'fec1::2002':
+            '2001:db8:8b05::2002':
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
@@ -8542,7 +8542,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
 
           No established BGP session with peer
 
-        BGP neighbor is fec1::1002, remote AS 333, ibgp link, Peer index 3
+        BGP neighbor is 2001:db8:8b05::1002, remote AS 333, ibgp link, Peer index 3
           BGP version 4, remote router ID 10.186.101.1
           BGP state = Established, up for 00:07:40
           Peer is directly attached, interface Ethernet1/1
@@ -8599,11 +8599,11 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           5 paths flushed from peer
           Last End-of-RIB received 00:00:01 after session start
 
-          Local host: fec1::112, Local port: 179
-          Foreign host: fec1::1002, Foreign port: 29470
+          Local host: 2001:db8:8b05::112, Local port: 179
+          Foreign host: 2001:db8:8b05::1002, Foreign port: 29470
           fd = 88
 
-        BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 4
+        BGP neighbor is 2001:db8:8b05::2002, remote AS 888, ebgp link, Peer index 4
           BGP version 4, remote router ID 0.0.0.0
           BGP state = Idle (Connect failure), down for 01:27:55, retry in 00:00:29
           Peer is directly attached, interface Ethernet1/1
@@ -9426,7 +9426,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            'fec1::1002':
+            '2001:db8:8b05::1002':
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 358,
@@ -9479,7 +9479,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'reset_reason': 'no error'},
                     'transport': 
                         {'foreign_host': 'unspecified',
-                        'foreign_port': 'fec1::1002',
+                        'foreign_port': '2001:db8:8b05::1002',
                         'local_host': '::',
                         'local_port': 'unspecified',
                         'passive_mode': 'false'}},
@@ -9511,7 +9511,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
-            'fec1::2002':
+            '2001:db8:8b05::2002':
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 358,
@@ -9584,7 +9584,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'reset_reason': 'no error'},
                     'transport': 
                         {'foreign_host': 'unspecified',
-                        'foreign_port': 'fec1::2002',
+                        'foreign_port': '2001:db8:8b05::2002',
                         'local_host': '::',
                         'local_port': 'unspecified',
                         'passive_mode': 'false'}},
@@ -9932,7 +9932,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           No established BGP session with peer
 
-        BGP neighbor is fec1::1002, remote AS 333, ibgp link, Peer index 7
+        BGP neighbor is 2001:db8:8b05::1002, remote AS 333, ibgp link, Peer index 7
           BGP version 4, remote router ID 0.0.0.0
           BGP state = Idle, down for 1w4d, retry in 00:00:32
           Last read never, hold time = 180, keepalive interval is 60 seconds
@@ -9969,7 +9969,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
           No established BGP session with peer
 
-        BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 8
+        BGP neighbor is 2001:db8:8b05::2002, remote AS 888, ebgp link, Peer index 8
           BGP version 4, remote router ID 0.0.0.0
           BGP state = Idle (Connect failure), down for 1w4d, retry in 00:00:03
           Last read never, hold time = 180, keepalive interval is 60 seconds
@@ -10775,7 +10775,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::2002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                             </config>
                             <ebgp-multihop>
                                 <config>
@@ -10810,7 +10810,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::2002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                             </state>
                             <timers>
                                 <config>
@@ -10832,11 +10832,11 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                     <local-address>::</local-address>
                                     <passive-mode>false</passive-mode>
                                     <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::2002</remote-address>
                                     <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                 </state>
                             </transport>
-                            <neighbor-address>fec1::2002</neighbor-address>
+                            <neighbor-address>2001:db8:8b05::2002</neighbor-address>
                         </neighbor>
                         <neighbor>
                             <afi-safis>
@@ -10886,7 +10886,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::1002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                             </config>
                             <ebgp-multihop>
                                 <config>
@@ -10921,7 +10921,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                 <remove-private-as/>
                                 <send-community>BOTH</send-community>
                                 <peer-group/>
-                                <neighbor-address>fec1::1002</neighbor-address>
+                                <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                             </state>
                             <timers>
                                 <config>
@@ -10943,11 +10943,11 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                     <local-address>::</local-address>
                                     <passive-mode>false</passive-mode>
                                     <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">2001:db8:8b05::1002</remote-address>
                                     <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
                                 </state>
                             </transport>
-                            <neighbor-address>fec1::1002</neighbor-address>
+                            <neighbor-address>2001:db8:8b05::1002</neighbor-address>
                         </neighbor>
                         <neighbor>
                             <afi-safis>
@@ -11895,7 +11895,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                               }
                          }
                     },
-                    "fec::db8::20:1::5::5": {
+                    "2001:db8:828d::db82001:db8::20:12001:db8::52001:db8::5": {
                          "address_family": {
                               "ipv4 unicast": {
                                    "msg_rcvd": 0,
@@ -12024,7 +12024,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         10.16.2.5         4   200       0       0        0    0    0     5w6d Shut (Admin)
-        fec::db8::20:1::5::5
+        2001:db8:828d::db82001:db8::20:12001:db8::52001:db8::5
                         3   200       0       0        0    0    0     5w5d Shut (Admin)
 
         BGP summary information for VRF default, address family IPv6 Unicast
@@ -12130,7 +12130,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                               }
                          }
                     },
-                    "fec1::112": {
+                    "2001:db8:8b05::112": {
                          "address_family": {
                               "ipv4 unicast": {
                                    "msg_rcvd": 16,
@@ -12191,7 +12191,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         10.186.0.2        4   333      17      15       25    0    0 00:08:22 3
-        fec1::112       4   333      16      13       25    0    0 00:08:17 3
+        2001:db8:8b05::112       4   333      16      13       25    0    0 00:08:17 3
 
         BGP summary information for VRF default, address family IPv4 Multicast
         BGP router identifier 10.186.101.1, local AS number 333
@@ -12709,7 +12709,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                               }
                          }
                     },
-                    "fec0::1002": {
+                    "2001:db8:8d82::1002": {
                          "address_family": {
                               "ipv6 unicast": {
                                    "config_peers": 5,
@@ -12812,7 +12812,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                               }
                          }
                     },
-                    "fec0::2002": {
+                    "2001:db8:8d82::2002": {
                          "address_family": {
                               "ipv6 unicast": {
                                    "config_peers": 5,
@@ -13320,8 +13320,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         10.106.101.1    4   333      29      31        0    0    0 00:20:33 0 (No Cap)
         10.106.102.3    4   888     841      28        0    0    0 00:20:33 0 (No Cap)
         10.106.102.4    4   333      27      31        0    0    0 00:20:33 0 (No Cap)
-        fec0::1002      4   333      26      26      173    0    0 00:20:33 3
-        fec0::2002      4   888     187      25      173    0    0 00:20:33 2
+        2001:db8:8d82::1002      4   333      26      26      173    0    0 00:20:33 3
+        2001:db8:8d82::2002      4   888     187      25      173    0    0 00:20:33 2
 
         BGP summary information for VRF default, address family IPv6 Multicast
         BGP router identifier 10.145.0.6, local AS number 333
@@ -13335,8 +13335,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         10.106.101.1    4   333      29      31        0    0    0 00:20:33 0 (No Cap)
         10.106.102.3    4   888     841      28        0    0    0 00:20:33 0 (No Cap)
         10.106.102.4    4   333      27      31        0    0    0 00:20:33 0 (No Cap)
-        fec0::1002      4   333      26      26        6    0    0 00:20:33 2
-        fec0::2002      4   888     187      25        6    0    0 00:20:33 0
+        2001:db8:8d82::1002      4   333      26      26        6    0    0 00:20:33 2
+        2001:db8:8d82::2002      4   888     187      25        6    0    0 00:20:33 0
 
         BGP summary information for VRF default, address family VPNv4 Unicast
         BGP router identifier 10.145.0.6, local AS number 333
@@ -13376,8 +13376,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         10.106.101.1    4   333      29      31      173    0    0 00:20:33 2
         10.106.102.3    4   888     841      28      173    0    0 00:20:33 2
         10.106.102.4    4   333      27      31      173    0    0 00:20:33 0
-        fec0::1002      4   333      26      26        0    0    0 00:20:33 0 (No Cap)
-        fec0::2002      4   888     187      25        0    0    0 00:20:33 0 (No Cap)
+        2001:db8:8d82::1002      4   333      26      26        0    0    0 00:20:33 0 (No Cap)
+        2001:db8:8d82::2002      4   888     187      25        0    0    0 00:20:33 0 (No Cap)
 
         BGP summary information for VRF vpn1, address family IPv4 Unicast
         BGP router identifier 0.0.0.0, local AS number 333
@@ -13460,7 +13460,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
         "vrf": {
           "default": {
                "neighbor": {
-                    "50:1::1:101": {
+                    "2001:db8:1900:1::1:101": {
                          "address_family": {
                               "ipv6 unicast": {
                                    "route_identifier": "10.1.1.1",
@@ -13531,7 +13531,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
                               }
                          }
                     },
-                    "200:1::1:1": {
+                    "2001:db8:4:1::1:1": {
                          "address_family": {
                               "ipv6 unicast": {
                                    "route_identifier": "10.1.1.1",
@@ -13700,7 +13700,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
                        <dampening>false</dampening>
                        <TABLE_neighbor>
                         <ROW_neighbor>
-                         <neighborid>50:1::1:101</neighborid>
+                         <neighborid>2001:db8:1900:1::1:101</neighborid>
                          <neighborversion>4</neighborversion>
                          <msgrecvd>4549</msgrecvd>
                          <msgsent>4549</msgsent>
@@ -13713,7 +13713,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
                          <prefixreceived>5</prefixreceived>
                         </ROW_neighbor>
                         <ROW_neighbor>
-                         <neighborid>200:1::1:1</neighborid>
+                         <neighborid>2001:db8:4:1::1:1</neighborid>
                          <neighborversion>4</neighborversion>
                          <msgrecvd>6826</msgrecvd>
                          <msgsent>2733</msgsent>
@@ -15526,7 +15526,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'routes':
-                                    {'aaaa:1::/113':
+                                    {'2001:db8:aaaa:1::/113':
                                         {'index':
                                             {1:
                                                 {'locprf': 100,
@@ -15535,7 +15535,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113':
+                                    '2001:db8:2001:db8:aaaa:1::8000/113':
                                         {'index':
                                             {1:
                                                 {'locprf': 100,
@@ -15612,9 +15612,9 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
@@ -16165,7 +16165,7 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                 'local_router_id': '10.145.0.6',
                                 'route_distinguisher': '100:200',
                                 'received_routes':
-                                    {'aaaa:1::/113':
+                                    {'2001:db8:aaaa:1::/113':
                                         {'index':
                                             {1:
                                                 {'locprf': 100,
@@ -16174,7 +16174,7 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}},
-                                    'aaaa:1::8000/113':
+                                    '2001:db8:2001:db8:aaaa:1::8000/113':
                                         {'index':
                                             {1:
                                                 {'locprf': 100,
@@ -16250,9 +16250,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 100:200
-        *>iaaaa:1::/113       ::ffff:10.106.101.1
+        *>i2001:db8:aaaa:1::/113       ::ffff:10.106.101.1
                                                     4444        100          0 i
-        *>iaaaa:1::8000/113   ::ffff:10.106.101.1
+        *>i2001:db8:2001:db8:aaaa:1::8000/113   ::ffff:10.106.101.1
                                                     4444        100          0 i
 
         Route Distinguisher: 0xbb00010000000000
@@ -16492,7 +16492,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                   "ipv4 labeled-unicast": {}
                 },
                 "neighbor_id": {
-                  "fec1::2002": {
+                  "2001:db8:8b05::2002": {
                     "nbr_local_as_replace_as": False,
                     "nbr_disable_connected_check": False,
                     "nbr_remove_private_as": False,
@@ -16696,7 +16696,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                     "nbr_fall_over_bfd": False,
                     "nbr_remote_as": 333
                   },
-                  "fec1::1002": {
+                  "2001:db8:8b05::1002": {
                     "nbr_local_as_replace_as": False,
                     "nbr_af_name": {
                       "ipv4 unicast": {
@@ -16828,14 +16828,14 @@ class test_show_running_config_bgp(unittest.TestCase):
             dampening 1 10 30 2
           template peer-session PEER-SESSION
             ebgp-multihop 3
-          neighbor fec1::1002
+          neighbor 2001:db8:8b05::1002
             remote-as 333
             address-family ipv4 unicast
               send-community
               send-community extended
               route-reflector-client
               soft-reconfiguration inbound always
-          neighbor fec1::2002
+          neighbor 2001:db8:8b05::2002
             remote-as 888
             update-source loopback0
             address-family ipv4 unicast
@@ -17075,7 +17075,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_remove_private_as': False,
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False},
-                                '55:1::1:101': 
+                                '2001:db8:1c39:1::1:101': 
                                     {'nbr_af_name': 
                                         {'ipv6 unicast': {}},
                                     'nbr_disable_connected_check': False,
@@ -17176,7 +17176,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_transport_connection_mode': 'passive',
                                     'nbr_update_source': 'loopback0'},
-                                '200:1::1:1': 
+                                '2001:db8:4:1::1:1': 
                                     {'nbr_af_name': 
                                         {'ipv6 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17216,7 +17216,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_update_source': 'loopback0'},
-                                '210:1::1:1': 
+                                '2001:db8:4104:1::1:1': 
                                     {'nbr_af_name': 
                                         {'ipv6 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17276,7 +17276,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_update_source': 'loopback0'},
-                                '50:1::1:101': 
+                                '2001:db8:1900:1::1:101': 
                                     {'nbr_af_name': 
                                         {'ipv6 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17344,7 +17344,7 @@ class test_show_running_config_bgp(unittest.TestCase):
           template peer-session PS-1
             description ps_desc_test
             disable-connected-check
-          neighbor 50:1::1:101
+          neighbor 2001:db8:1900:1::1:101
             inherit peer-session PS-1
             remote-as 300
             dont-capability-negotiate
@@ -17354,14 +17354,14 @@ class test_show_running_config_bgp(unittest.TestCase):
             address-family ipv6 unicast
               route-map ALL in
               route-map ALL out
-          neighbor 200:1::1:1
+          neighbor 2001:db8:4:1::1:1
             remote-as 100
             password 3 a667d47acc18ea6b
             update-source loopback0
             timers 50 60
             address-family ipv6 unicast
               next-hop-self
-          neighbor 210:1::1:1
+          neighbor 2001:db8:4104:1::1:1
             remote-as 200
             update-source loopback0
             ebgp-multihop 5
@@ -17415,7 +17415,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             address-family ipv4 unicast
               next-hop-self
           vrf VRF1
-            neighbor 55:1::1:101
+            neighbor 2001:db8:1c39:1::1:101
               remote-as 70000
               address-family ipv6 unicast
             neighbor 10.76.1.101
@@ -17554,9 +17554,9 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                         "ipv6 multicast": {
                              "dampening_enabled": True,
                              "network": {
-                                  "3100::/112": {
+                                  "2001:db8:961::/112": {
                                        "duration": "00:21:00",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -17566,9 +17566,9 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                                        "reuse_limit": 10,
                                        "reuse_time": "00:01:50"
                                   },
-                                  "3100::1:0/112": {
+                                  "2001:db8:961::1:0/112": {
                                        "duration": "00:21:00",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -17635,7 +17635,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                              "network": {
                                   "2001::/112": {
                                        "duration": "00:21:00",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -17647,7 +17647,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                                   },
                                   "2001::1:0/112": {
                                        "duration": "00:21:00",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -17800,8 +17800,8 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
             Network                 Peer              Flaps  Duration ReuseTime P / S / R
-        d e 2001::/112        fec0::2002                84   00:21:00 00:01:50  34/30/10
-        d e 2001::1:0/112     fec0::2002                84   00:21:00 00:01:50  34/30/10
+        d e 2001::/112        2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+        d e 2001::1:0/112     2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
 
         Flap Statistics for VRF default, address family IPv6 Multicast:
         Flaps - Flap count of prefix, Duration - Duration of flap statistics
@@ -17810,8 +17810,8 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
         Dampening configured, 0 history paths, 2 dampened paths
 
             Network                 Peer              Flaps  Duration ReuseTime P / S / R
-        d e 3100::/112        fec0::2002                84   00:21:00 00:01:50  34/30/10
-        d e 3100::1:0/112     fec0::2002                84   00:21:00 00:01:50  34/30/10
+        d e 2001:db8:961::/112        2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
+        d e 2001:db8:961::1:0/112     2001:db8:8d82::2002                84   00:21:00 00:01:50  34/30/10
 
         Flap Statistics for VRF default, address family VPNv4 Unicast:
         Flaps - Flap count of prefix, Duration - Duration of flap statistics
@@ -18116,9 +18116,9 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                         "ipv6 multicast": {
                              "dampening_enabled": True,
                              "network": {
-                                  "3100::/112": {
+                                  "2001:db8:961::/112": {
                                        "duration": "00:19:41",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -18128,9 +18128,9 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                                        "reuse_limit": 10,
                                        "reuse_time": "00:01:40"
                                   },
-                                  "3100::1:0/112": {
+                                  "2001:db8:961::1:0/112": {
                                        "duration": "00:19:42",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -18197,7 +18197,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                              "network": {
                                   "2001::/112": {
                                        "duration": "00:19:41",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -18209,7 +18209,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                                   },
                                   "2001::1:0/112": {
                                        "duration": "00:19:41",
-                                       "peer": "fec0::2002",
+                                       "peer": "2001:db8:8d82::2002",
                                        "best": False,
                                        "suppress_limit": 30,
                                        "pathtype": "e",
@@ -18451,7 +18451,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                           <ipv6prefix>2001::/112</ipv6prefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
-                          <ipv6peer>fec0::2002</ipv6peer>
+                          <ipv6peer>2001:db8:8d82::2002</ipv6peer>
                           <flapcount>79</flapcount>
                           <duration>00:19:41</duration>
                           <reuse>00:01:40</reuse>
@@ -18464,7 +18464,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                           <ipv6prefix>2001::1:0/112</ipv6prefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
-                          <ipv6peer>fec0::2002</ipv6peer>
+                          <ipv6peer>2001:db8:8d82::2002</ipv6peer>
                           <flapcount>79</flapcount>
                           <duration>00:19:41</duration>
                           <reuse>00:01:40</reuse>
@@ -18492,10 +18492,10 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                         <dampenedpaths>2</dampenedpaths>
                         <TABLE_prefix>
                          <ROW_prefix>
-                          <ipv6prefix>3100::/112</ipv6prefix>
+                          <ipv6prefix>2001:db8:961::/112</ipv6prefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
-                          <ipv6peer>fec0::2002</ipv6peer>
+                          <ipv6peer>2001:db8:8d82::2002</ipv6peer>
                           <flapcount>79</flapcount>
                           <duration>00:19:41</duration>
                           <reuse>00:01:40</reuse>
@@ -18505,10 +18505,10 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                           <best>false</best>
                          </ROW_prefix>
                          <ROW_prefix>
-                          <ipv6prefix>3100::1:0/112</ipv6prefix>
+                          <ipv6prefix>2001:db8:961::1:0/112</ipv6prefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
-                          <ipv6peer>fec0::2002</ipv6peer>
+                          <ipv6peer>2001:db8:8d82::2002</ipv6peer>
                           <flapcount>79</flapcount>
                           <duration>00:19:42</duration>
                           <reuse>00:01:40</reuse>
@@ -19066,7 +19066,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                          "nexthop_trigger_delay_critical": 3000,
                          "nexthop_trigger_delay_non_critical": 10000,
                          "next_hop": {
-                            "2000::3:1": {
+                            "2001:db8:400::3:1": {
                                  "resolve_time": "18:37:36",
                                  "igp_cost": 2,
                                  "attached_nexthop": {
@@ -19078,7 +19078,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                  "igp_route_type": 0,
                                  "refcount": 1,
                                  "metric_next_advertise": "never",
-                                 "rib_route": "2000::3:1/128",
+                                 "rib_route": "2001:db8:400::3:1/128",
                                  "igp_preference": 110,
                                  'attached': False,
                                  'local': False,
@@ -19125,11 +19125,11 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
 
         IPv6 Unicast Next-hops:
 
-        Nexthop: 2000::3:1, Flags: 0x1, Refcount: 1, IGP cost: 2
+        Nexthop: 2001:db8:400::3:1, Flags: 0x1, Refcount: 1, IGP cost: 2
         IGP Route type: 0, IGP preference: 110
         Attached nexthop: fe80::6e9c:edff:fe4d:ff41, Interface: port-channel2.100
         Nexthop is not-attached not-local reachable not-labeled
-        Nexthop last resolved: 18:37:36, using 2000::3:1/128
+        Nexthop last resolved: 18:37:36, using 2001:db8:400::3:1/128
         Metric next advertise: Never
         RNH epoch: 1
 
@@ -19229,14 +19229,14 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                         },
                         "ipv6 multicast": {
                              "next_hop": {
-                                  "fec0::1002": {
+                                  "2001:db8:8d82::1002": {
                                        "pending_update": False,
                                        "refcount": 2,
                                        "attached": True,
                                        "igp_route_type": 0,
                                        "rnh_epoch": 0,
                                        "attached_nexthop": {
-                                            "fec0::1002": {
+                                            "2001:db8:8d82::1002": {
                                                  "attached_nexthop_interface": "Ethernet1/1"
                                             }
                                        },
@@ -19249,16 +19249,16 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                        "labeled": False,
                                        "local": False,
                                        "igp_cost": 0,
-                                       "rib_route": "fec0::1002/128"
+                                       "rib_route": "2001:db8:8d82::1002/128"
                                   },
-                                  "fec0::2002": {
+                                  "2001:db8:8d82::2002": {
                                        "pending_update": False,
                                        "refcount": 2,
                                        "attached": True,
                                        "igp_route_type": 0,
                                        "rnh_epoch": 0,
                                        "attached_nexthop": {
-                                            "fec0::2002": {
+                                            "2001:db8:8d82::2002": {
                                                  "attached_nexthop_interface": "Ethernet1/1"
                                             }
                                        },
@@ -19271,7 +19271,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                        "labeled": False,
                                        "local": False,
                                        "igp_cost": 0,
-                                       "rib_route": "fec0::2002/128"
+                                       "rib_route": "2001:db8:8d82::2002/128"
                                   }
                              },
                              "af_nexthop_trigger_enable": True,
@@ -19567,14 +19567,14 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                         },
                         "ipv6 unicast": {
                              "next_hop": {
-                                  "fec0::1002": {
+                                  "2001:db8:8d82::1002": {
                                        "pending_update": False,
                                        "refcount": 3,
                                        "attached": True,
                                        "igp_route_type": 0,
                                        "rnh_epoch": 0,
                                        "attached_nexthop": {
-                                            "fec0::1002": {
+                                            "2001:db8:8d82::1002": {
                                                  "attached_nexthop_interface": "Ethernet1/1"
                                             }
                                        },
@@ -19587,16 +19587,16 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                        "labeled": False,
                                        "local": False,
                                        "igp_cost": 0,
-                                       "rib_route": "fec0::1002/128"
+                                       "rib_route": "2001:db8:8d82::1002/128"
                                   },
-                                  "fec0::2002": {
+                                  "2001:db8:8d82::2002": {
                                        "pending_update": False,
                                        "refcount": 2,
                                        "attached": True,
                                        "igp_route_type": 0,
                                        "rnh_epoch": 0,
                                        "attached_nexthop": {
-                                            "fec0::2002": {
+                                            "2001:db8:8d82::2002": {
                                                  "attached_nexthop_interface": "Ethernet1/1"
                                             }
                                        },
@@ -19609,7 +19609,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                        "labeled": False,
                                        "local": False,
                                        "igp_cost": 0,
-                                       "rib_route": "fec0::2002/128"
+                                       "rib_route": "2001:db8:8d82::2002/128"
                                   }
                              },
                              "af_nexthop_trigger_enable": True,
@@ -19618,7 +19618,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                         },
                         "ipv6 mvpn": {
                              "next_hop": {
-                                  "1920:21::2": {
+                                  "2001:db8:4677:441::2": {
                                        "pending_update": False,
                                        "refcount": 10,
                                        "attached": False,
@@ -19635,7 +19635,7 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
                                        "igp_cost": -1,
                                        "rib_route": "0::/0"
                                   },
-                                  "1920:11::2": {
+                                  "2001:db8:4677:121::2": {
                                        "pending_update": False,
                                        "refcount": 10,
                                        "attached": False,
@@ -19842,19 +19842,19 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
 
         IPv6 Unicast Next-hops:
 
-        Nexthop: fec0::1002, Flags: 0x5, Refcount: 3, IGP cost: 0
+        Nexthop: 2001:db8:8d82::1002, Flags: 0x5, Refcount: 3, IGP cost: 0
         IGP Route type: 0, IGP preference: 250
-        Attached nexthop: fec0::1002, Interface: Ethernet1/1
+        Attached nexthop: 2001:db8:8d82::1002, Interface: Ethernet1/1
         Nexthop is attached not-local reachable not-labeled
-        Nexthop last resolved: 00:52:09, using fec0::1002/128
+        Nexthop last resolved: 00:52:09, using 2001:db8:8d82::1002/128
         Metric next advertise: Never
         RNH epoch: 0
 
-        Nexthop: fec0::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        Nexthop: 2001:db8:8d82::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
         IGP Route type: 0, IGP preference: 250
-        Attached nexthop: fec0::2002, Interface: Ethernet1/1
+        Attached nexthop: 2001:db8:8d82::2002, Interface: Ethernet1/1
         Nexthop is attached not-local reachable not-labeled
-        Nexthop last resolved: 00:52:19, using fec0::2002/128
+        Nexthop last resolved: 00:52:19, using 2001:db8:8d82::2002/128
         Metric next advertise: Never
         RNH epoch: 0
 
@@ -19868,19 +19868,19 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
 
         IPv6 Multicast Next-hops:
 
-        Nexthop: fec0::1002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        Nexthop: 2001:db8:8d82::1002, Flags: 0x5, Refcount: 2, IGP cost: 0
         IGP Route type: 0, IGP preference: 250
-        Attached nexthop: fec0::1002, Interface: Ethernet1/1
+        Attached nexthop: 2001:db8:8d82::1002, Interface: Ethernet1/1
         Nexthop is attached not-local reachable not-labeled
-        Nexthop last resolved: 00:52:09, using fec0::1002/128
+        Nexthop last resolved: 00:52:09, using 2001:db8:8d82::1002/128
         Metric next advertise: Never
         RNH epoch: 0
 
-        Nexthop: fec0::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        Nexthop: 2001:db8:8d82::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
         IGP Route type: 0, IGP preference: 250
-        Attached nexthop: fec0::2002, Interface: Ethernet1/1
+        Attached nexthop: 2001:db8:8d82::2002, Interface: Ethernet1/1
         Nexthop is attached not-local reachable not-labeled
-        Nexthop last resolved: 00:52:09, using fec0::2002/128
+        Nexthop last resolved: 00:52:09, using 2001:db8:8d82::2002/128
         Metric next advertise: Never
         RNH epoch: 0
 
@@ -19980,14 +19980,14 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
 
         IPv6 Unicast Next-hops:
 
-        Nexthop: 1920:11::2, Flags: 0, Refcount: 10, IGP cost: -1
+        Nexthop: 2001:db8:4677:121::2, Flags: 0, Refcount: 10, IGP cost: -1
         IGP Route type: 0, IGP preference: 0
         Nexthop is not-attached not-local unreachable not-labeled
         Nexthop last resolved: 00:52:09, using 0::/0
         Metric next advertise: Never
         RNH epoch: 0
 
-        Nexthop: 1920:21::2, Flags: 0, Refcount: 10, IGP cost: -1
+        Nexthop: 2001:db8:4677:441::2, Flags: 0, Refcount: 10, IGP cost: -1
         IGP Route type: 0, IGP preference: 0
         Nexthop is not-attached not-local unreachable not-labeled
         Nexthop last resolved: 00:52:09, using 0::/0
@@ -20157,7 +20157,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                          "nexthop_trigger_delay_critical": 3000,
                          "nexthop_trigger_delay_non_critical": 10000,
                          "next_hop": {
-                            "2000::3:1": {
+                            "2001:db8:400::3:1": {
                                  "resolve_time": "18:38:21",
                                  "igp_cost": 2,
                                  "attached_nexthop": {
@@ -20169,7 +20169,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                                  "igp_route_type": 0,
                                  "refcount": 1,
                                  "metric_next_advertise": "never",
-                                 "rib_route": "2000::3:1/128",
+                                 "rib_route": "2001:db8:400::3:1/128",
                                  "igp_preference": 110,
                                  'attached': False,
                                  'local': False,
@@ -20252,7 +20252,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>2000::3:1</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:400::3:1</ipv6nexthop-out>
                        <refcount>1</refcount>
                        <igpmetric>2</igpmetric>
                        <igptype>0</igptype>
@@ -20269,7 +20269,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <labeled>false</labeled>
                        <filtered>false</filtered>
                        <resolvetime>18:38:21</resolvetime>
-                       <ipv6ribroute>2000::3:1/128</ipv6ribroute>
+                       <ipv6ribroute>2001:db8:400::3:1/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>1</rnhepoch>
@@ -20719,16 +20719,16 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_critical": 3000,
                          "next_hop": {
-                              "fec0::2002": {
+                              "2001:db8:8d82::2002": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "attached_nexthop": {
-                                        "fec0::2002": {
+                                        "2001:db8:8d82::2002": {
                                              "attached_nexthop_interface": "Ethernet1/1"
                                         }
                                    },
                                    "igp_cost": 0,
-                                   "rib_route": "fec0::2002/128",
+                                   "rib_route": "2001:db8:8d82::2002/128",
                                    "labeled": False,
                                    "resolve_time": "00:53:45",
                                    "local": False,
@@ -20740,16 +20740,16 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                                    "metric_next_advertise": "never",
                                    "pending_update": False
                               },
-                              "fec0::1002": {
+                              "2001:db8:8d82::1002": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "attached_nexthop": {
-                                        "fec0::1002": {
+                                        "2001:db8:8d82::1002": {
                                              "attached_nexthop_interface": "Ethernet1/1"
                                         }
                                    },
                                    "igp_cost": 0,
-                                   "rib_route": "fec0::1002/128",
+                                   "rib_route": "2001:db8:8d82::1002/128",
                                    "labeled": False,
                                    "resolve_time": "00:53:36",
                                    "local": False,
@@ -20768,7 +20768,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_critical": 3000,
                          "next_hop": {
-                              "1920:21::2": {
+                              "2001:db8:4677:441::2": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "igp_cost": -1,
@@ -20784,7 +20784,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                                    "metric_next_advertise": "never",
                                    "pending_update": False
                               },
-                              "1920:11::2": {
+                              "2001:db8:4677:121::2": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "igp_cost": -1,
@@ -20877,16 +20877,16 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_critical": 3000,
                          "next_hop": {
-                              "fec0::2002": {
+                              "2001:db8:8d82::2002": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "attached_nexthop": {
-                                        "fec0::2002": {
+                                        "2001:db8:8d82::2002": {
                                              "attached_nexthop_interface": "Ethernet1/1"
                                         }
                                    },
                                    "igp_cost": 0,
-                                   "rib_route": "fec0::2002/128",
+                                   "rib_route": "2001:db8:8d82::2002/128",
                                    "labeled": False,
                                    "resolve_time": "00:53:37",
                                    "local": False,
@@ -20898,16 +20898,16 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                                    "metric_next_advertise": "never",
                                    "pending_update": False
                               },
-                              "fec0::1002": {
+                              "2001:db8:8d82::1002": {
                                    "igp_route_type": 0,
                                    "filtered": False,
                                    "attached_nexthop": {
-                                        "fec0::1002": {
+                                        "2001:db8:8d82::1002": {
                                              "attached_nexthop_interface": "Ethernet1/1"
                                         }
                                    },
                                    "igp_cost": 0,
-                                   "rib_route": "fec0::1002/128",
+                                   "rib_route": "2001:db8:8d82::1002/128",
                                    "labeled": False,
                                    "resolve_time": "00:53:37",
                                    "local": False,
@@ -21110,14 +21110,14 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>fec0::1002</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:8d82::1002</ipv6nexthop-out>
                        <refcount>3</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
                        <igppref>250</igppref>
                        <TABLE_attachedhops>
                         <ROW_attachedhops>
-                         <ipv6attachedhop>fec0::1002</ipv6attachedhop>
+                         <ipv6attachedhop>2001:db8:8d82::1002</ipv6attachedhop>
                          <interface>Ethernet1/1</interface>
                         </ROW_attachedhops>
                        </TABLE_attachedhops>
@@ -21127,20 +21127,20 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <labeled>false</labeled>
                        <filtered>false</filtered>
                        <resolvetime>00:53:36</resolvetime>
-                       <ipv6ribroute>fec0::1002/128</ipv6ribroute>
+                       <ipv6ribroute>2001:db8:8d82::1002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
                       </ROW_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>fec0::2002</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:8d82::2002</ipv6nexthop-out>
                        <refcount>2</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
                        <igppref>250</igppref>
                        <TABLE_attachedhops>
                         <ROW_attachedhops>
-                         <ipv6attachedhop>fec0::2002</ipv6attachedhop>
+                         <ipv6attachedhop>2001:db8:8d82::2002</ipv6attachedhop>
                          <interface>Ethernet1/1</interface>
                         </ROW_attachedhops>
                        </TABLE_attachedhops>
@@ -21150,7 +21150,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <labeled>false</labeled>
                        <filtered>false</filtered>
                        <resolvetime>00:53:45</resolvetime>
-                       <ipv6ribroute>fec0::2002/128</ipv6ribroute>
+                       <ipv6ribroute>2001:db8:8d82::2002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
@@ -21174,14 +21174,14 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>fec0::1002</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:8d82::1002</ipv6nexthop-out>
                        <refcount>2</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
                        <igppref>250</igppref>
                        <TABLE_attachedhops>
                         <ROW_attachedhops>
-                         <ipv6attachedhop>fec0::1002</ipv6attachedhop>
+                         <ipv6attachedhop>2001:db8:8d82::1002</ipv6attachedhop>
                          <interface>Ethernet1/1</interface>
                         </ROW_attachedhops>
                        </TABLE_attachedhops>
@@ -21191,20 +21191,20 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <labeled>false</labeled>
                        <filtered>false</filtered>
                        <resolvetime>00:53:37</resolvetime>
-                       <ipv6ribroute>fec0::1002/128</ipv6ribroute>
+                       <ipv6ribroute>2001:db8:8d82::1002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
                       </ROW_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>fec0::2002</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:8d82::2002</ipv6nexthop-out>
                        <refcount>2</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
                        <igppref>250</igppref>
                        <TABLE_attachedhops>
                         <ROW_attachedhops>
-                         <ipv6attachedhop>fec0::2002</ipv6attachedhop>
+                         <ipv6attachedhop>2001:db8:8d82::2002</ipv6attachedhop>
                          <interface>Ethernet1/1</interface>
                         </ROW_attachedhops>
                        </TABLE_attachedhops>
@@ -21214,7 +21214,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <labeled>false</labeled>
                        <filtered>false</filtered>
                        <resolvetime>00:53:37</resolvetime>
-                       <ipv6ribroute>fec0::2002/128</ipv6ribroute>
+                       <ipv6ribroute>2001:db8:8d82::2002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
@@ -21453,7 +21453,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>1920:11::2</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:4677:121::2</ipv6nexthop-out>
                        <refcount>10</refcount>
                        <igpmetric>-1</igpmetric>
                        <igptype>0</igptype>
@@ -21470,7 +21470,7 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                        <rnhepoch>0</rnhepoch>
                       </ROW_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>1920:21::2</ipv6nexthop-out>
+                       <ipv6nexthop-out>2001:db8:4677:441::2</ipv6nexthop-out>
                        <refcount>10</refcount>
                        <igpmetric>-1</igpmetric>
                        <igptype>0</igptype>
@@ -25439,7 +25439,7 @@ class test_show_bgp_sessions_cli(unittest.TestCase):
                          "remote_as": 300,
                          "connections_dropped": 2
                     },
-                    "200:1::1:1": {
+                    "2001:db8:4:1::1:1": {
                          "last_write": "00:00:04",
                          "state": "established",
                          "notifications_received": 0,
@@ -25451,7 +25451,7 @@ class test_show_bgp_sessions_cli(unittest.TestCase):
                          "remote_as": 100,
                          "connections_dropped": 1
                     },
-                    "50:1::1:101": {
+                    "2001:db8:1900:1::1:101": {
                          "last_write": "00:00:13",
                          "state": "established",
                          "notifications_received": 0,
@@ -25490,8 +25490,8 @@ class test_show_bgp_sessions_cli(unittest.TestCase):
         Neighbor        ASN    Flaps LastUpDn|LastRead|LastWrit St Port(L/R)  Notif(S/R)
         10.51.1.101        300 2     00:30:22|never   |never    I   0/0          2/0
         192.168.4.1         100 1     12:12:01|00:00:04|00:00:20 E   179/37583      0/0
-        50:1::1:101       300 5     02:29:16|00:00:15|00:00:13 E   179/32874      5/0
-        200:1::1:1        100 1     12:11:57|0.599405|00:00:04 E   30942/179        0/0
+        2001:db8:1900:1::1:101       300 5     02:29:16|00:00:15|00:00:13 E   179/32874      5/0
+        2001:db8:4:1::1:1        100 1     12:11:57|0.599405|00:00:04 E   30942/179        0/0
     '''}
 
     def test_golden_vrf_all(self):
@@ -25551,7 +25551,7 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
                              "notifications_sent": 0,
                              "connections_dropped": 0
                         },
-                        "200:1::1:1": {
+                        "2001:db8:4:1::1:1": {
                              "state": "established",
                              "remote_port": 179,
                              "last_flap": "1d13h",
@@ -25563,7 +25563,7 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
                              "notifications_sent": 0,
                              "connections_dropped": 0
                         },
-                        "50:1::1:101": {
+                        "2001:db8:1900:1::1:101": {
                              "state": "established",
                              "remote_port": 32851,
                              "last_flap": "1d13h",
@@ -25630,7 +25630,7 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
                     <notificationsreceived>0</notificationsreceived>
                    </ROW_neighbor>
                    <ROW_neighbor>
-                    <neighbor-id>50:1::1:101</neighbor-id>
+                    <neighbor-id>2001:db8:1900:1::1:101</neighbor-id>
                     <connectionsdropped>0</connectionsdropped>
                     <remoteas>300</remoteas>
                     <lastflap>P1DT13H52M48S</lastflap>
@@ -25643,7 +25643,7 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
                     <notificationsreceived>0</notificationsreceived>
                    </ROW_neighbor>
                    <ROW_neighbor>
-                    <neighbor-id>200:1::1:1</neighbor-id>
+                    <neighbor-id>2001:db8:4:1::1:1</neighbor-id>
                     <connectionsdropped>0</connectionsdropped>
                     <remoteas>100</remoteas>
                     <lastflap>P1DT13H53M26S</lastflap>
@@ -26091,72 +26091,72 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                 {'address_family': 
                     {'ipv6 unicast': 
                         {'prefix': 
-                            {'85::/112': 
+                            {'2001:db8:4519::/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': '492287',
-                                        'nexthop': '55:1::1:101',
+                                        'nexthop': '2001:db8:1c39:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '85::1:0/112': 
+                            '2001:db8:4519::1:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': '492287',
-                                        'nexthop': '55:1::1:101',
+                                        'nexthop': '2001:db8:1c39:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '85::2:0/112': 
+                            '2001:db8:4519::2:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': '492287',
-                                        'nexthop': '55:1::1:101',
+                                        'nexthop': '2001:db8:1c39:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '85::3:0/112': 
+                            '2001:db8:4519::3:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': '492287',
-                                        'nexthop': '55:1::1:101',
+                                        'nexthop': '2001:db8:1c39:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '85::4:0/112': 
+                            '2001:db8:4519::4:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': '492287',
-                                        'nexthop': '55:1::1:101',
+                                        'nexthop': '2001:db8:1c39:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '88::/112': 
+                            '2001:db8:4840::/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
@@ -26169,7 +26169,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '88::1:0/112': 
+                            '2001:db8:4840::1:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
@@ -26182,7 +26182,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '88::2:0/112': 
+                            '2001:db8:4840::2:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
@@ -26195,7 +26195,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '88::3:0/112': 
+                            '2001:db8:4840::3:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
@@ -26208,7 +26208,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'type': 'external',
                                         'type_code': 'e',
                                         'vpn': 'VRF1'}}},
-                            '88::4:0/112': 
+                            '2001:db8:4840::4:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
@@ -26227,37 +26227,37 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                 {'address_family': 
                     {'ipv6 unicast': 
                         {'prefix': 
-                            {'84::/112': 
+                            {'2001:db8:4410::/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': 'nolabel',
-                                        'nexthop': '50:1::1:101',
+                                        'nexthop': '2001:db8:1900:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e'}}},
-                            '84::1:0/112': 
+                            '2001:db8:4410::1:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': 'nolabel',
-                                        'nexthop': '50:1::1:101',
+                                        'nexthop': '2001:db8:1900:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e'}}},
-                            '84::2:0/112': 
+                            '2001:db8:4410::2:0/112': 
                                 {'index': 
                                     {0: 
                                         {'best_code': '>',
                                         'best_path': True,
                                         'in_label': 'nolabel',
-                                        'nexthop': '50:1::1:101',
+                                        'nexthop': '2001:db8:1900:1::1:101',
                                         'out_label': 'nolabel',
                                         'status': 'valid',
                                         'status_code': '*',
@@ -26276,20 +26276,20 @@ class test_show_bgp_labels_cli(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
            Network            Next Hop            In label/Out label
-        *>e85::/112           55:1::1:101         492287/nolabel (VRF1)
-        *>e85::1:0/112        55:1::1:101         492287/nolabel (VRF1)
-        *>e85::2:0/112        55:1::1:101         492287/nolabel (VRF1)
-        *>e85::3:0/112        55:1::1:101         492287/nolabel (VRF1)
-        *>e85::4:0/112        55:1::1:101         492287/nolabel (VRF1)
-        *>e88::/112           ::ffff:10.51.1.101
+        *>e2001:db8:4519::/112           2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+        *>e2001:db8:4519::1:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+        *>e2001:db8:4519::2:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+        *>e2001:db8:4519::3:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+        *>e2001:db8:4519::4:0/112        2001:db8:1c39:1::1:101         492287/nolabel (VRF1)
+        *>e2001:db8:4840::/112           ::ffff:10.51.1.101
                                                   21/16 (VRF1)
-        *>e88::1:0/112        ::ffff:10.51.1.101
+        *>e2001:db8:4840::1:0/112        ::ffff:10.51.1.101
                                                   22/17 (VRF1)
-        *>e88::2:0/112        ::ffff:10.51.1.101
+        *>e2001:db8:4840::2:0/112        ::ffff:10.51.1.101
                                                   23/18 (VRF1)
-        *>e88::3:0/112        ::ffff:10.51.1.101
+        *>e2001:db8:4840::3:0/112        ::ffff:10.51.1.101
                                                   24/19 (VRF1)
-        *>e88::4:0/112        ::ffff:10.51.1.101
+        *>e2001:db8:4840::4:0/112        ::ffff:10.51.1.101
                                                   25/20 (VRF1)
 
         BGP routing table information for VRF default, address family IPv6 Unicast
@@ -26299,9 +26299,9 @@ class test_show_bgp_labels_cli(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
            Network            Next Hop            In label/Out label
-        *>e84::/112           50:1::1:101         nolabel/nolabel
-        *>e84::1:0/112        50:1::1:101         nolabel/nolabel
-        *>e84::2:0/112        50:1::1:101         nolabel/nolabel
+        *>e2001:db8:4410::/112           2001:db8:1900:1::1:101         nolabel/nolabel
+        *>e2001:db8:4410::1:0/112        2001:db8:1900:1::1:101         nolabel/nolabel
+        *>e2001:db8:4410::2:0/112        2001:db8:1900:1::1:101         nolabel/nolabel
         '''}
 
     def test_golden_vrf_all1(self):
