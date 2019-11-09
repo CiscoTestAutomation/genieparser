@@ -1654,7 +1654,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
     """Parser for
         show mpls forwarding-table
         show mpls forwarding-table {prefix}
-        show mpls forwarding-table vrf <vrf>"""
+        show mpls forwarding-table vrf {vrf}"""
 
     cli_command = ['show mpls forwarding-table vrf {vrf}',
                    'show mpls forwarding-table {prefix}',
@@ -1685,12 +1685,13 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #                                        0             Po1.51     192.168.10.253
         #            No Label   10.23.120.0/24[V]   \
         # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
-        #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        # 39    [M]  16052      10.169.14.241/32   \
+        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        # 22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
+        #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
+        # 22    [M]  Pop Label  192.168.0.1/32   0             Gi2        192.168.0.2
         # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
         p2_2 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
                            '(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
@@ -1700,8 +1701,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                            '(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
-            ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+                          r'(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?'
+                          r'(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
+                          r' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
@@ -1721,7 +1723,6 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p7 = re.compile(r'^(?P<method>\S+) +load\-sharing, +slots: +(?P<slots>[\d\s]+)$')
         #      Broadcast
         p8 = re.compile(r'^(B|b)roadcast$')
-
 
         for line in out.splitlines():
             line = line.strip()

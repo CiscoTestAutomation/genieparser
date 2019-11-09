@@ -23,25 +23,21 @@ class ShowIpRouteDistributor(MetaParser):
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
-    def cli(self, vrf='', route='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
-        if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
-                elif protocol:
-                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                if route:
-                    cmd = self.cli_command[4].format(route=route)
-                elif protocol:
-                    cmd = self.cli_command[5].format(protocol=protocol)
-                else:
-                    cmd = self.cli_command[3]
+    def cli(self, vrf=None, route=None, protocol=None, output=None):
 
+        if output is None:
+            if vrf and protocol:
+                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
+            elif vrf and route:
+                cmd = self.cli_command[1].format(vrf=vrf, route=route)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.cli_command[5].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[4].format(route=route)
+            else:
+                cmd = self.cli_command[3]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -49,12 +45,12 @@ class ShowIpRouteDistributor(MetaParser):
         if (route or protocol) in self.protocol_set or (not route and not protocol):
             parser = ShowIpRoute(self.device)
             self.schema = parser.schema
-            return parser.parse(vrf=vrf, protocol=protocol, output=out)
+            return parser.parse(output=out)
 
         else:
             parser = ShowIpRouteWord(self.device)
             self.schema=parser.schema
-            return parser.parse(vrf=vrf, route=route, output=out)
+            return parser.parse(output=out)
 
 # ====================================================
 #  distributor class for show ipv6 route
@@ -66,33 +62,39 @@ class ShowIpv6RouteDistributor(MetaParser):
                    'show ipv6 route vrf {vrf} {protocol}',
                    'show ipv6 route',
                    'show ipv6 route {route}',
-                   'show ipv6 route {protocol}']
+                   'show ipv6 route {protocol}',
+                   'show ipv6 route interface {interface}',
+                   'show ipv6 route vrf {vrf} interface {interface}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
 
-    def cli(self, vrf='', route='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
+        
         if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
-                elif protocol:
-                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.cli_command[0].format(vrf=vrf)
-            else:
-                if route:
-                    cmd = self.cli_command[4].format(route=route)
-                elif protocol:
-                    cmd = self.cli_command[5].format(protocol=protocol)
-                else:
-                    cmd = self.cli_command[3]
 
+            if vrf and route:
+                cmd = self.cli_command[1].format(vrf=vrf, route=route)
+            elif vrf and protocol:
+                cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
+            elif vrf and interface:
+                cmd = self.cli_command[7].format(vrf=vrf, interface=interface)
+            elif vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif route:
+                cmd = self.cli_command[4].format(route=route)
+            elif protocol:
+                cmd = self.cli_command[5].format(protocol=protocol)
+            elif interface:
+                cmd = self.cli_command[6].format(interface=interface)
+            else:
+                cmd = self.cli_command[3]
             out = self.device.execute(cmd)
         else:
             out = output
+        
+        if not vrf:
+            vrf = 'default'
 
         if (route or protocol) in self.protocol_set or (not route and not protocol):
             parser = ShowIpv6Route(self.device)
@@ -183,26 +185,26 @@ class ShowIpRoute(ShowIpRouteSchema):
     exclude = ['updated']
     IP_VER='ipv4'
 
-    def cli(self, vrf="", protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, output=None):
+
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[3].format(protocol=protocol)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
 
         af = self.IP_VER
         route = ""
+        if not vrf:
+            vrf = 'default'
+
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
         source_protocol_dict['odr'] = ['o']
@@ -618,28 +620,32 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for:
         show ipv6 route
         show ipv6 route vrf <vrf>"""
-    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {protocol}',
-               'show ipv6 route', 'show ipv6 route {protocol}']
+    command = ['show ipv6 route vrf {vrf}', 
+                'show ipv6 route vrf {vrf} {protocol}',
+               'show ipv6 route', 
+               'show ipv6 route {protocol}',
+               'show ipv6 route interface {interface}']
     exclude = ['uptime']
 
     IP_VER = 'ipv6'
-    def cli(self, vrf='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, interface=None, output=None):
+        
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[3].format(protocol=protocol)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
+        if not vrf:
+            vrf = 'default'
         return super().cli(vrf=vrf, protocol=protocol, output=out)
 
 # ====================================================
@@ -697,7 +703,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
 
     cli_command = ['show ipv6 route vrf {vrf} updated', 'show ipv6 route updated']
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf=None, output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -1055,27 +1061,32 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
     """Parser for :
        show ip route <Hostname or A.B.C.D>
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {route}',
-                   'show ip route', 'show ip route {route}']
+    command = ['show ip route vrf {vrf}', 
+                'show ip route vrf {vrf} {route}',
+                'show ip route', 
+                'show ip route {route}',
+                'show ip route interface {interface}']
     IP_VER = 'ip'
 
-    def cli(self, route='', vrf='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, route=None, vrf=None, interface=None, output=None):
+
         if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.command[1].format(vrf=vrf, route=route)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf, route=route)
+            elif route:
+                cmd = self.command[3].format(route=route)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
-                if route:
-                    cmd = self.command[3].format(route=route)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2].format()
             out = self.device.execute(cmd)
         else:
             out = output
+
+        if not vrf:
+            vrf = 'default'
 
         # initial regexp pattern
         # Routing entry for 10.151.0.0/24, 1 known subnets
@@ -1113,7 +1124,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
                         r'(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
                         r'(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
-       
+
+        # * directly connected, via GigabitEthernet1.120
+        p5_1 = re.compile(r'^\* +directly +connected, via +(?P<interface>\S+)$')
+        
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                         r'traffic +share +count +is +(?P<share_count>\d+)$')
@@ -1245,7 +1259,17 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 path_dict.update({'prefer_non_rib_labels': True if group['rib_labels'] else False})
                 path_dict.update({'merge_labels': True if group['merge_labels'] else False})
                 continue
-            
+
+            # * directly connected, via GigabitEthernet1.120
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                if group['interface']:
+                    path_dict.update({'interface': group['interface']})
+                continue
+
             # AS Hops 9
             m = p16.match(line)
             if m:
@@ -1383,28 +1407,31 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
     """Parser for :
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {route}',
-                   'show ipv6 route', 'show ipv6 route {route}']
+    command = ['show ipv6 route vrf {vrf}', 
+                'show ipv6 route vrf {vrf} {route}',
+                'show ipv6 route', 
+                'show ipv6 route {route}',
+                'show ipv6 route interface {interface}']
     IP_VER = 'ipv6'
 
-    def cli(self, route='', vrf='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, route=None, vrf=None, interface=None, output=None):
+        
         if output is None:
-            if vrf != 'default':
-                if route:
-                    cmd = self.command[1].format(vrf=vrf, route=route)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf, route=route)
+            elif vrf:
+                cmd = self.command[0].format(vrf=vrf)
+            elif route:
+                cmd = self.command[3].format(route=route)
+            elif interface:
+                cmd = self.command[4].format(interface=interface)
             else:
-                if route:
-                    cmd = self.command[3].format(route=route)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[2]
             out = self.device.execute(cmd)
         else:
             out = output
-
+        if not vrf:
+            vrf = 'default'
         return super().cli(route=route, vrf=vrf, output=out)
 
 
@@ -1906,3 +1933,461 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
         return ret_dict
+
+
+# =========================================
+#  Parser for 'show ip cef internal'
+# =========================================
+class ShowIpCefInternalSchema(MetaParser):
+    """Schema for show ip cef internal
+                  show ip cef <ip> internal"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'prefix': {
+                            Any(): {
+                                Optional('epoch'): int,
+                                Optional('per_destination_sharing'): bool,
+                                Optional('rib'): str,
+                                Optional('refcnt'): int,
+                                Optional('sr_local_label_info'): str,
+                                Optional('dflt_local_label_info'): str,
+                                Optional('flags'): list,
+                                Optional('sources'): list,
+                                Optional('path_list'): {
+                                    Any(): {
+                                        'locks': int,
+                                        'path': {
+                                            Any(): {
+                                                Optional('nexthop'): {
+                                                    Any(): {
+                                                        Optional('outgoing_interface'): {
+                                                            Any(): {
+                                                                Optional('local_label'): int,
+                                                                Optional('outgoing_label'): list,
+                                                                Optional('outgoing_label_backup'): str,
+                                                                Optional('outgoing_label_info'): str,
+                                                                Optional('repair'): str,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'output_chain': {
+                                    Optional('label'): list,
+                                    Optional('tag_midchain'): {
+                                        Any(): { # tag_midchain_dict
+                                            'tag_midchain_info': str,
+                                            'label': list,
+                                            'frr': { # frr_dict
+                                                'Primary': { # frr_primary_dict
+                                                    'info': str,
+                                                    'primary': {
+                                                        Optional('tag_adj'): {
+                                                            Any(): {
+                                                                'addr': str,
+                                                                'addr_info': str,
+                                                            }
+                                                        }
+                                                    },
+                                                    'repair': {
+                                                        Optional('tag_midchain'): {
+                                                            'interface': str,
+                                                        },
+                                                        Optional('label'): list,
+                                                        Optional('tag_adj'): {
+                                                            Any(): {
+                                                                'addr': str,
+                                                                'addr_info': str,
+                                                            }
+                                                        },
+                                                    },
+                                                }
+                                            },
+                                        }
+                                    },
+                                    Optional('frr'): {
+                                            'Primary': {
+                                                'info': str,
+                                                'primary': {
+                                                    Optional('tag_adj'): {
+                                                        Any(): {
+                                                            'addr': str,
+                                                            'addr_info': str,
+                                                        }
+                                                    }
+                                                },
+                                                'repair': {
+                                                    Optional('tag_midchain'): {
+                                                        Any(): {
+                                                            Optional('tag_midchain_info'): str,
+                                                            Optional('label'): list,
+                                                            Optional('tag_adj'): {
+                                                                Any(): {
+                                                                    'addr': str,
+                                                                    'addr_info': str,
+                                                                }
+                                                            },
+                                                        }
+                                                    },
+                                                    Optional('tag_adj'): {
+                                                        Any(): {
+                                                            'addr': str,
+                                                            'addr_info': str,
+                                                        },
+                                                    },
+                                                },
+                                            }
+                                        },
+                                }
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpCefInternal(ShowIpCefInternalSchema):
+    ''' Parser for:
+        * 'show ip cef internal'
+        * 'show ip cef <ip> internal'
+    '''
+
+    cli_command = ['show ip cef {ip} internal',
+                   'show ip cef internal']
+
+    def cli(self, ip="", vrf="", output=None):
+
+        if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1].format(ip=ip)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
+
+        result_dict = {}
+
+        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+        # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+        p1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch'
+                        r' +(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)?'
+                        r' +refcnt +(?P<refcnt>\d+),'
+                        r' +(?P<sharing>(per-destination sharing))$')
+
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+        # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+        # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+        p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
+                          r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
+                          r'+RIB+(?P<rib>\S+),)? +refcnt +(?P<refcnt>\d+), '
+                          r'+(?P<sharing>(per-destination sharing))$')
+
+        #   sources: RIB, RR, LTE
+        p2 = re.compile(r'^sources: +(?P<sources>[a-zA-Z, ]+)$')
+
+        # dflt local label info: global/28 [0x3]
+        p3 = re.compile(r'^dflt +local +label +info: +(?P<dflt_local_label_info>(.*))$')
+
+        # sr local label info: global/16073 [0x1B]
+        p4 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
+
+        # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+        p5 = re.compile(r'path +list +(?P<path_list_id>[A-Z0-9]+), +(?P<locks>\d+) +locks, .*')
+
+        # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), .*')
+
+        # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+        p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
+                        r'(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
+                        r'\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)(.*)$')
+
+        # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+        p7_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
+                          r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
+                          r'(-\(local:(?P<local_label>\w+)\))?)?,.*$')
+
+        # FRR Primary (0x80007F0FF094DD88)
+        p8_0 = re.compile(r'^FRR +Primary +\((?P<info>\S+)\)$')
+
+        # TAG midchain out of Tunnel65537 7F4F881C0718
+        p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
+
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
+        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr'
+                        r' +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
+
+        # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+        # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+        p9 = re.compile(r'^(?:<repair: +)?TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), '
+                        r'+addr +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
+
+        # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
+        p9_1 = re.compile(r'^<repair: +TAG +midchain +out +of +(?P<interface>[a-zA-Z\d\/-]+) +(?P<addr_info>[A-Z\d]+)$')
+
+        # label 98
+        # label implicit-null
+        # label [16073|16073]
+        # label [51885|16073]-(local:28)
+        p10 = re.compile(r'^label +(?P<label>.*)$')
+
+        # <repair:  label 16061
+        p11 = re.compile(r'<repair: +label +(?P<label>.*)')
+
+        label_list = []
+        label_list2 = []
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
+            # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+            m1 = p1.match(line)
+
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
+            # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+            # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+            m1_1 = p1_1.match(line)
+            if m1 or m1_1:
+                if m1:
+                    group = m1.groupdict()
+                elif m1_1:
+                    group = m1_1.groupdict()
+
+                if ':' in group['prefix']:
+                    address_family = 'ipv6'
+                else:
+                    address_family = 'ipv4'
+
+                prefix_dict = result_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('prefix', {}). \
+                    setdefault(group['prefix'], {})
+                output_chain_dict = prefix_dict.setdefault('output_chain', {})
+                if group['epoch']:
+                    prefix_dict['epoch'] = int(group['epoch'])
+                if group['sharing']:
+                    prefix_dict['per_destination_sharing'] = True
+                if 'rib' in group and group['rib']:
+                    prefix_dict['rib'] = group['rib']
+                if 'refcnt' in group and group['refcnt']:
+                    prefix_dict['refcnt'] = int(group['refcnt'])
+                if 'flags' in group and group['flags']:
+                    prefix_dict['flags'] = group['flags'].split(', ')
+
+                continue
+
+            #   sources: RIB, RR, LTE
+            m2 = p2.match(line)
+            if m2:
+                prefix_dict['sources'] = m2.groupdict()['sources'].split()
+
+                continue
+
+            # dflt local label info: global/28 [0x3]
+            m3 = p3.match(line)
+            if m3:
+                prefix_dict['dflt_local_label_info'] = m3.groupdict()['dflt_local_label_info']
+
+                continue
+
+            # sr local label info: global/16073 [0x1B]
+            m4 = p4.match(line)
+            if m4:
+                prefix_dict['sr_local_label_info'] = m4.groupdict()['sr_local_label_info']
+
+                continue
+
+            # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                pathlist_dict = prefix_dict.setdefault('path_list', {}). \
+                    setdefault(group['path_list_id'], {})
+                if group['locks']:
+                    pathlist_dict['locks'] = int(group['locks'])
+
+                continue
+
+            # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+            m6 = p6.match(line)
+            if m6:
+                path_dict = pathlist_dict.setdefault('path', {}). \
+                    setdefault(m6.groupdict()['path_id'], {})
+
+                continue
+
+            # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
+            m7 = p7.match(line)
+            # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
+            m7_1 = p7_1.match(line)
+            if m7 or m7_1:
+                if m7:
+                    group = m7.groupdict()
+                elif m7_1:
+                    group = m7_1.groupdict()
+                nexthop_dict = path_dict.setdefault('nexthop', {}). \
+                    setdefault(group['nexthop'], {}). \
+                    setdefault('outgoing_interface', {}). \
+                    setdefault(group['interface'], {})
+
+                if group['local_label']:
+                    nexthop_dict['local_label'] = int(group['local_label'])
+
+                if 'outgoing_label' in group and group['outgoing_label']:
+                    nexthop_dict['outgoing_label'] = group['outgoing_label'].split()
+
+                if 'outgoing_label_backup' in group and group['outgoing_label_backup']:
+                    nexthop_dict['outgoing_label_backup'] = group['outgoing_label_backup']
+
+                if 'outgoing_label_info' in group and group['outgoing_label_info']:
+                    nexthop_dict['outgoing_label_info'] = group['outgoing_label_info']
+
+                continue
+
+            # FRR Primary (0x80007F0FF094DD88)
+            m8_0 = p8_0.match(line)
+            if m8_0:
+                group = m8_0.groupdict()
+                empty_dict = {}
+                frr_dict = empty_dict.setdefault('frr', {})
+                frr_primary_dict = frr_dict.setdefault('Primary', {})
+                frr_primary_dict['info'] = group['info']
+
+                if 'tag_midchain' in output_chain_dict:
+                    tag_midchain_dict.setdefault('frr', frr_dict)
+                else:
+                    output_chain_dict.setdefault('frr', frr_dict)
+
+                continue
+
+            # TAG midchain out of Tunnel65537 7F4F881C0718
+            m8_1 = p8_1.match(line)
+            if m8_1:
+                group = m8_1.groupdict()
+                if 'output_chain' in prefix_dict:
+                    tag_midchain_dict = output_chain_dict.setdefault('tag_midchain', {}). \
+                        setdefault(group['tunnel'], {})
+                    tag_midchain_dict['tag_midchain_info'] = group['info']
+                continue
+
+            # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        primary_dict = tag_midchain_dict['frr']['Primary'].setdefault('primary', {}). \
+                                                    setdefault('tag_adj', {}). \
+                                                    setdefault(group['interface'], {})
+                    else:
+                        primary_dict = output_chain_dict['frr']['Primary'].setdefault('primary', {}). \
+                                                    setdefault('tag_adj', {}). \
+                                                    setdefault(group['interface'], {})
+
+                    primary_dict['addr'] = group['addr']
+                    primary_dict['addr_info'] = group['addr_info']
+
+                continue
+
+            # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
+            # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        repair_adj_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                                                       setdefault('tag_adj', {}). \
+                                                       setdefault(group['interface'], {})
+                    elif 'frr' in output_chain_dict:
+                        if 'repair' in output_chain_dict['frr']['Primary']:
+                            if 'tag_midchain' in output_chain_dict['frr']['Primary']['repair']:
+                                temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                                temp_key = list(temp_tag_dict.keys())[0]
+                                repair_adj_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]. \
+                                    setdefault('tag_adj', {}). \
+                                    setdefault(group['interface'], {})
+                        else:
+                            repair_adj_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                                setdefault('tag_adj', {}). \
+                                setdefault(group['interface'], {})
+
+                    repair_adj_dict['addr'] = group['addr']
+                    repair_adj_dict['addr_info'] = group['addr_info']
+
+                continue
+
+            # <repair:  TAG midchain out of MPLS-SR-Tunnel1 7F0FF0AFAC68
+            m9_1 = p9_1.match(line)
+            if m9_1:
+                group = m9_1.groupdict()
+                if 'output_chain' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+                        repair_mid_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                            setdefault('tag_midchain', {}).setdefault(group['interface'], {})
+
+                    else:
+                        repair_mid_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                            setdefault('tag_midchain', {}).setdefault(group['interface'], {})
+
+                    repair_mid_dict['tag_midchain_info'] = group['addr_info']
+
+                continue
+
+            # label 98
+            # label implicit-null
+            # label [16073|16073]
+            # label [51885|16073]-(local:28)
+            m10 = p10.match(line)
+
+            if m10:
+                label_val = m10.groupdict()['label']
+                if 'path_list' in prefix_dict:
+                    if 'tag_midchain' in output_chain_dict:
+
+                        if 'frr' in tag_midchain_dict:
+                            temp_tag_dict = tag_midchain_dict['frr']['Primary']['repair']['tag_adj']
+                            temp_key = list(temp_tag_dict.keys())[0]
+                            tag_midchain_dict['frr']['Primary']['repair']['tag_adj'][temp_key]['label'] = label_val.split()
+
+                        else:
+                            for i in label_val.split():
+                                label_list2.append(i)
+                            tag_midchain_dict['label'] = label_list2
+
+                    elif 'frr' in output_chain_dict:
+                        temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                        temp_key = list(temp_tag_dict.keys())[0]
+                        output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]['label'] = label_val.split()
+
+                    else:
+                        for i in label_val.split():
+                            label_list.append(i)
+                        output_chain_dict['label'] = label_list
+                continue
+
+            # <repair:  label 16061
+            m11 = p11.match(line)
+            if m11:
+                label_val = m11.groupdict()['label']
+                if 'tag_midchain' in output_chain_dict:
+                    if 'frr' in tag_midchain_dict:
+                        temp_tag_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {})
+                        temp_tag_dict['label'] = label_val.split()
+                continue
+
+        return result_dict

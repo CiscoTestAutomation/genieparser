@@ -7504,8 +7504,8 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
                                     Any(): {
                                         'address': str,
                                         'adj_sid': int,
-                                        'backup_nexthop': str,
-                                        'backup_interface': str
+                                        Optional('backup_nexthop'): str,
+                                        Optional('backup_interface'): str
                                     }
                                 }
                             }
@@ -7541,8 +7541,9 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
         p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
 
         # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
-        p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
-                         '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
+        p3 = re.compile(
+            r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +('
+            r'?P<adj_sid>\d+)( +(?P<backup_nexthop>\S+))?( +(?P<backup_interface>\S+))?$')
 
         # initial variables
         ret_dict = {}
@@ -7587,9 +7588,11 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
 
                 neighbor_dict.update({'address': address})
                 neighbor_dict.update({'adj_sid': adj_sid})
-                neighbor_dict.update({'backup_nexthop': backup_nexthop})
-                neighbor_dict.update({'backup_interface':
-                    Common.convert_intf_name(backup_interface)})
+                if backup_nexthop:
+                    neighbor_dict.update({'backup_nexthop': backup_nexthop})
+                if backup_interface:
+                    neighbor_dict.update({'backup_interface':
+                        Common.convert_intf_name(backup_interface)})
                 continue
 
         return ret_dict
