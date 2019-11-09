@@ -11895,7 +11895,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                               }
                          }
                     },
-                    "2001:db8:828d::db82001:db8::20:12001:db8::52001:db8::5": {
+                    "2001:db8:828d::db822001:db8:1:34fc::20:12002001:db8:1:34fc::52002001:db8:1:34fc::5": {
                          "address_family": {
                               "ipv4 unicast": {
                                    "msg_rcvd": 0,
@@ -12024,7 +12024,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         10.16.2.5         4   200       0       0        0    0    0     5w6d Shut (Admin)
-        2001:db8:828d::db82001:db8::20:12001:db8::52001:db8::5
+        2001:db8:828d::db822001:db8:1:34fc::20:12002001:db8:1:34fc::52002001:db8:1:34fc::5
                         3   200       0       0        0    0    0     5w5d Shut (Admin)
 
         BGP summary information for VRF default, address family IPv6 Unicast
