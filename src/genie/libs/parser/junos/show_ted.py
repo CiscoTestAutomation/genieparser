@@ -23,7 +23,7 @@ class ShowTedDatabaseExtensiveSchema(MetaParser):
         'isis_nodes': int,
         'inet_nodes': int,
         'node': {
-            Any(): {  # '169.0.0.1'
+            Any(): {  # '172.16.1.1'
                 'type': str,
                 'age': int,
                 'link_in': int,
@@ -31,11 +31,11 @@ class ShowTedDatabaseExtensiveSchema(MetaParser):
                 Optional('protocol'): {
                     Any(): {  # 'ospf(0.0.0.1)'
                         'to': {
-                            Any(): {  # '169.0.0.1'
+                            Any(): {  # '172.16.1.1'
                                 'local': {
-                                    Any(): {  # '169.0.0.1'
+                                    Any(): {  # '172.16.1.1'
                                         'remote': {
-                                            Any(): {  # '169.0.0.1'
+                                            Any(): {  # '172.16.1.1'
                                                 'local_interface_index': int,
                                                 'remote_interface_index': int,
                                                 Optional('color'): str,
@@ -127,7 +127,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         # TED database: 0 ISIS nodes 0 INET nodes
         p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +(?P<inet_nodes>\d+) +INET +nodes$')
 
-        # NodeID: 169.0.0.1
+        # NodeID: 172.16.1.1
         p2 = re.compile(r'^NodeID: +(?P<node_id>\S+)$')
 
         # Type: Rtr, Age: 1000 secs, LinkIn: 0, LinkOut: 0
@@ -137,7 +137,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         # Protocol: OSPF(0.0.0.1)
         p4 = re.compile(r'^Protocol: +(?P<protocol>[\w().]+)$')
 
-        # To: 169.0.0.1, Local: 4.0.0.1, Remote: 4.0.0.2
+        # To: 172.16.1.1, Local: 10.16.0.1, Remote: 10.16.0.2
         p5 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +(?P<remote>\S+)$')
 
         # Local interface index: 0, Remote interface index: 0
@@ -175,7 +175,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p15 = re.compile(r'^(?P<address_family>\w+), +SID: +(?P<sid>\d+), +Flags: +'
                          r'(?P<flags>\w+), +Weight: +(?P<weight>\d+)$')
 
-        # 169.0.0.1/32
+        # 172.16.1.1/32
         p16 = re.compile(r'^(?P<prefix>\S+/\d+)$')
 
         # Flags: 0x60

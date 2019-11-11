@@ -23,10 +23,10 @@ class test_show_ted_database(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ted database extensive
         TED database: 0 ISIS nodes 6 INET nodes
-        NodeID: 1.1.1.1
+        NodeID: 10.4.1.1
           Type: Rtr, Age: 1024 secs, LinkIn: 0, LinkOut: 1
           Protocol: OSPF(0.0.0.4)
-            To: 169.0.0.1, Local: 2.0.0.2, Remote: 2.0.0.1
+            To: 172.16.1.1, Local: 10.4.0.2, Remote: 10.4.0.1
               Local interface index: 0, Remote interface index: 0
               Color: 0 <none>
               Metric: 1
@@ -44,7 +44,7 @@ class test_show_ted_database(unittest.TestCase):
               P2P Adjacency-SID:
                 IPV4, SID: 12345, Flags: 0x24, Weight: 0
            Prefixes:
-             1.1.1.1/32
+             10.4.1.1/32
               Flags: 0x60
               Prefix-SID:
                 SID: 1234, Flags: 0x00, Algo: 0
@@ -53,10 +53,10 @@ class test_show_ted_database(unittest.TestCase):
            SPRING-Algorithms:
              Algo: 0
              Algo: 1
-        NodeID: 2.2.2.2-1
+        NodeID: 10.16.2.2-1
           Type: Net, Age: 1024 secs, LinkIn: 0, LinkOut: 2
           Protocol: OSPF(0.0.0.4)
-            To: 2.2.2.34, Local: 0.0.0.0, Remote: 0.0.0.0
+            To: 10.16.2.34, Local: 0.0.0.0, Remote: 0.0.0.0
               Local interface index: 0, Remote interface index: 0
               Metric: 0
               Interface Switching Capability Descriptor(1):
@@ -65,7 +65,7 @@ class test_show_ted_database(unittest.TestCase):
                 Maximum LSP BW [priority] bps:
                   [0] 0bps         [1] 0bps        [2] 0bps        [3] 0bps
                   [4] 0bps         [5] 0bps        [6] 1000bps        [7] 0bps
-            To: 2.2.2.42, Local: 0.0.0.0, Remote: 0.0.0.0
+            To: 10.16.2.42, Local: 0.0.0.0, Remote: 0.0.0.0
               Local interface index: 0, Remote interface index: 0
               Metric: 0
               Interface Switching Capability Descriptor(1):
@@ -74,10 +74,10 @@ class test_show_ted_database(unittest.TestCase):
                 Maximum LSP BW [priority] bps:
                   [0] 0bps         [1] 0bps        [2] 0bps        [3] 0bps
                   [4] 0bps         [5] 0bps        [6] 0bps        [7] 0bps
-        NodeID: 169.0.0.4-1
+        NodeID: 172.16.1.4-1
           Type: Net, Age: 2048 secs, LinkIn: 0, LinkOut: 2
           Protocol: OSPF(0.0.0.4)
-            To: 169.0.1.48, Local: 0.0.0.0, Remote: 0.0.0.0
+            To: 172.16.85.48, Local: 0.0.0.0, Remote: 0.0.0.0
               Local interface index: 0, Remote interface index: 0
               Metric: 0
               Interface Switching Capability Descriptor(1):
@@ -86,7 +86,7 @@ class test_show_ted_database(unittest.TestCase):
                 Maximum LSP BW [priority] bps:
                   [0] 0bps         [1] 0bps        [2] 0bps        [3] 0bps
                   [4] 0bps         [5] 0bps        [6] 0bps        [7] 0bps
-            To: 169.0.1.52, Local: 0.0.0.0, Remote: 0.0.0.0
+            To: 172.16.85.52, Local: 0.0.0.0, Remote: 0.0.0.0
               Local interface index: 0, Remote interface index: 0
               Metric: 0
               Interface Switching Capability Descriptor(1):
@@ -95,9 +95,9 @@ class test_show_ted_database(unittest.TestCase):
                 Maximum LSP BW [priority] bps:
                   [0] 0bps         [1] 0bps        [2] 0bps        [3] 0bps
                   [4] 0bps         [5] 0bps        [6] 0bps        [7] 0bps
-        NodeID: 3.3.3.3
+        NodeID: 10.36.3.3
           Type: ---, Age: 3440 secs, LinkIn: 1, LinkOut: 0
-        NodeID: 4.4.4.4
+        NodeID: 10.64.4.4
           Type: ---, Age: 2560 secs, LinkIn: 1, LinkOut: 0
     '''}
 
@@ -105,7 +105,7 @@ class test_show_ted_database(unittest.TestCase):
         'isis_nodes': 0,
         'inet_nodes': 6,
         'node': {
-            '1.1.1.1': {
+            '10.4.1.1': {
                 'type': 'Rtr',
                 'age': 1024,
                 'link_in': 0,
@@ -113,11 +113,11 @@ class test_show_ted_database(unittest.TestCase):
                 'protocol': {
                     'OSPF(0.0.0.4)': {
                         'to': {
-                            '169.0.0.1': {
+                            '172.16.1.1': {
                                 'local': {
-                                    '2.0.0.2': {
+                                    '10.4.0.2': {
                                         'remote': {
-                                            '2.0.0.1': {
+                                            '10.4.0.1': {
                                                 'local_interface_index': 0,
                                                 'remote_interface_index': 0,
                                                 'color': '0 <none>',
@@ -198,7 +198,7 @@ class test_show_ted_database(unittest.TestCase):
                             }
                         },
                         'prefixes': {
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'flags': '0x60',
                                 'prefix_sid': {
                                     1234: {
@@ -219,7 +219,7 @@ class test_show_ted_database(unittest.TestCase):
                     }
                 }
             },
-            '2.2.2.2-1': {
+            '10.16.2.2-1': {
                 'type': 'Net',
                 'age': 1024,
                 'link_in': 0,
@@ -227,7 +227,7 @@ class test_show_ted_database(unittest.TestCase):
                 'protocol': {
                     'OSPF(0.0.0.4)': {
                         'to': {
-                            '2.2.2.34': {
+                            '10.16.2.34': {
                                 'local': {
                                     '0.0.0.0': {
                                         'remote': {
@@ -272,7 +272,7 @@ class test_show_ted_database(unittest.TestCase):
                                     }
                                 }
                             },
-                            '2.2.2.42': {
+                            '10.16.2.42': {
                                 'local': {
                                     '0.0.0.0': {
                                         'remote': {
@@ -321,7 +321,7 @@ class test_show_ted_database(unittest.TestCase):
                     }
                 }
             },
-            '169.0.0.4-1': {
+            '172.16.1.4-1': {
                 'type': 'Net',
                 'age': 2048,
                 'link_in': 0,
@@ -329,7 +329,7 @@ class test_show_ted_database(unittest.TestCase):
                 'protocol': {
                     'OSPF(0.0.0.4)': {
                         'to': {
-                            '169.0.1.48': {
+                            '172.16.85.48': {
                                 'local': {
                                     '0.0.0.0': {
                                         'remote': {
@@ -374,7 +374,7 @@ class test_show_ted_database(unittest.TestCase):
                                     }
                                 }
                             },
-                            '169.0.1.52': {
+                            '172.16.85.52': {
                                 'local': {
                                     '0.0.0.0': {
                                         'remote': {
@@ -423,13 +423,13 @@ class test_show_ted_database(unittest.TestCase):
                     }
                 }
             },
-            '3.3.3.3': {
+            '10.36.3.3': {
                 'type': '---',
                 'age': 3440,
                 'link_in': 1,
                 'link_out': 0
             },
-            '4.4.4.4': {
+            '10.64.4.4': {
                 'type': '---',
                 'age': 2560,
                 'link_in': 1,
@@ -439,12 +439,12 @@ class test_show_ted_database(unittest.TestCase):
     }
 
     golden_output_node_id = {'execute.return_value': '''
-    show ted database extensive 1.1.1.1
+    show ted database extensive 10.4.1.1
     TED database: 0 ISIS nodes 13 INET nodes
-    NodeID: 1.1.1.1
+    NodeID: 10.4.1.1
       Type: Rtr, Age: 2048 secs, LinkIn: 6, LinkOut: 2
       Protocol: OSPF(0.0.0.4)
-        To: 169.0.0.1, Local: 169.0.0.2, Remote: 169.0.0.3
+        To: 172.16.1.1, Local: 172.16.1.2, Remote: 172.16.1.3
           Local interface index: 123, Remote interface index: 0
           Color: 0 <none>
           Metric: 4
@@ -461,7 +461,7 @@ class test_show_ted_database(unittest.TestCase):
               [4] 500Mbps     [5] 500Mbps    [6] 500Mbps    [7] 500Mbps
           P2P Adjacency-SID:
             IPV4, SID: 8, Flags: 0x35, Weight: 0
-        To: 169.0.0.4, Local: 169.0.0.5, Remote: 169.0.0.6
+        To: 172.16.1.4, Local: 172.16.1.5, Remote: 172.16.1.6
           Local interface index: 456, Remote interface index: 0
           Color: 0x2 blue
           Metric: 350
@@ -493,7 +493,7 @@ class test_show_ted_database(unittest.TestCase):
         'isis_nodes': 0,
         'inet_nodes': 13,
         'node': {
-            '1.1.1.1': {
+            '10.4.1.1': {
                 'type': 'Rtr',
                 'age': 2048,
                 'link_in': 6,
@@ -501,11 +501,11 @@ class test_show_ted_database(unittest.TestCase):
                 'protocol': {
                     'OSPF(0.0.0.4)': {
                         'to': {
-                            '169.0.0.1': {
+                            '172.16.1.1': {
                                 'local': {
-                                    '169.0.0.2': {
+                                    '172.16.1.2': {
                                         'remote': {
-                                            '169.0.0.3': {
+                                            '172.16.1.3': {
                                                 'local_interface_index': 123,
                                                 'remote_interface_index': 0,
                                                 'color': '0 <none>',
@@ -584,11 +584,11 @@ class test_show_ted_database(unittest.TestCase):
                                     }
                                 }
                             },
-                            '169.0.0.4': {
+                            '172.16.1.4': {
                                 'local': {
-                                    '169.0.0.5': {
+                                    '172.16.1.5': {
                                         'remote': {
-                                            '169.0.0.6': {
+                                            '172.16.1.6': {
                                                 'local_interface_index': 456,
                                                 'remote_interface_index': 0,
                                                 'color': '0x2 blue',
@@ -709,7 +709,7 @@ class test_show_ted_database(unittest.TestCase):
     def test_show_ted_database_extensive_node_id(self):
         self.device = Mock(**self.golden_output_node_id)
         obj = ShowTedDatabaseExtensive(device=self.device)
-        parsed_output = obj.parse(node_id='59.128.2.250')
+        parsed_output = obj.parse(node_id='10.34.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output_node_id)
 
 
