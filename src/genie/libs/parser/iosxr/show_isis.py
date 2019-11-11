@@ -218,7 +218,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
         p1 = re.compile(r'^IS-IS\s+(?P<isis_name>\S+)\s*neighbors:$')
 
         # R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
-        p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)+) +(?P<holdtime>\S+) '
+        p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None|Init)+) +(?P<holdtime>\S+) '
                          '+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
 
         # Total neighbor count: 1

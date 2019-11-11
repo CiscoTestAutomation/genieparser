@@ -6422,17 +6422,28 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpInstanceNeighborsDetail):
 class ShowBgpNeighbors(ShowBgpInstanceNeighborsDetail):
 
     """Parser for show bgp neighbors
-                  show bgp neighbors <neighbor>
+                  show bgp neighbors {neighbor}
+                  show bgp vrf {vrf} neighbors
+                  show bgp vrf {vrf} neighbors {neighbor}
     """
 
-    cli_command = ['show bgp neighbors', 'show bgp neighbors {neighbor}']
+    cli_command = ['show bgp neighbors',
+                   'show bgp neighbors {neighbor}',
+                   'show bgp vrf {vrf} neighbors',
+                   'show bgp vrf {vrf} neighbors {neighbor}']
 
-    def cli(self, neighbor='', output=None):
+    def cli(self, neighbor='', vrf='', output=None):
 
         if neighbor:
-            cmd = self.cli_command[1].format(neighbor=neighbor)
+            if vrf:
+                cmd = self.cli_command[3].format(neighbor=neighbor, vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
         else:
-            cmd = self.cli_command[0]
+            if vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
 
         out = output or self.device.execute(cmd)
 

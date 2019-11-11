@@ -5427,7 +5427,7 @@ class TestShowBgpInstanceAllAllAllNeighborsAdvertisedRoutes(unittest.TestCase):
                                 'route_distinguisher': '200:2'},
                             'vpnv6 unicast RD 200:2': 
                                 {'advertised': 
-                                    {'615:11:11:1::/64': 
+                                    {'2001:1:11:1::/64': 
                                         {'index': 
                                             {1: 
                                                 {'froms': '2001:db8:20:1:5::5',
@@ -5438,7 +5438,7 @@ class TestShowBgpInstanceAllAllAllNeighborsAdvertisedRoutes(unittest.TestCase):
                                                 '51178 '
                                                 '47751 '
                                                 '{27016}'}}},
-                                    '615:11:11::/64': 
+                                    '2001:1:11::/64': 
                                         {'index': 
                                             {1: 
                                                 {'froms': '2001:db8:20:1:5::5',
@@ -5474,9 +5474,9 @@ class TestShowBgpInstanceAllAllAllNeighborsAdvertisedRoutes(unittest.TestCase):
 
         Network            Next Hop        From            AS  Path
         Route Distinguisher: 200:2
-        615:11:11::/64     10.4.1.1         2001:db8:20:1:5::5
+        2001:1:11::/64     10.4.1.1         2001:db8:20:1:5::5
                                                            200 33299 51178 47751 {27017}e
-        615:11:11:1::/64   10.4.1.1         2001:db8:20:1:5::5
+        2001:1:11:1::/64   10.4.1.1         2001:db8:20:1:5::5
                                                            200 33299 51178 47751 {27016}e
 
         Processed 2 prefixes, 2 paths
@@ -5684,7 +5684,7 @@ class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
                                 'nsr_issu_sync_group_versions': '0/0',
                                 'rd_version': 0,
                                 'received': 
-                                    {'646:11:11:4::/64': 
+                                    {'2001:2:11:4::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -5698,7 +5698,7 @@ class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
                                                         '{27016}',
                                                'status_codes': '*i',
                                                'weight': '0'}}},
-                                    '646:11:11::/64': 
+                                    '2001:2:11::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -5728,7 +5728,7 @@ class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
                                 'processed_prefixes': 10,
                                 'rd_version': 0,
                                 'received': 
-                                    {'646:22:22:1::/64': 
+                                    {'2001:3:22:1::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -5742,7 +5742,7 @@ class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
                                                         '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}},
-                                    '646:22:22::/64': 
+                                    '2001:3:22::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -5808,11 +5808,11 @@ class TestShowBgpInstanceAllAllAllNeighborsReceivedRoutes(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i646:11:11:4::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i2001:2:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i2001:2:11:4::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        * i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        * i646:22:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i2001:3:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i2001:3:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
         '''}
@@ -6019,7 +6019,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                                 'rd_version': 0,
                                 'router_identifier': '10.4.1.1',
                                 'routes': 
-                                    {'646:11:11:1::/64': 
+                                    {'2001:2:11:1::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -6033,7 +6033,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                                                         '{27016}',
                                                 'status_codes': '*i',
                                                 'weight': '0'}}},
-                                    '646:11:11::/64': 
+                                    '2001:2:11::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -6063,7 +6063,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                                 'rd_version': 0,
                                 'router_identifier': '10.4.1.1',
                                 'routes':
-                                    {'646:22:22::/64': 
+                                    {'2001:3:22::/64': 
                                         {'index': 
                                             {1: 
                                                 {'locprf': '100',
@@ -6130,10 +6130,10 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
-        * i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i2001:2:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i2001:2:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        * i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i2001:3:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         
 
         Processed 3 prefixes, 3 paths
@@ -7077,7 +7077,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                    'table_id': '0x0',
                                                                                    'table_state': 'active'},
                                                                  'vpnv6 unicast RD 200:1': {'default_vrf': 'vrf1',
-                                                                                            'prefix': {'615:11:11:3::/64': {'index': {1: {'metric': '2219',
+                                                                                            'prefix': {'2001:1:11:3::/64': {'index': {1: {'metric': '2219',
                                                                                                                                           'next_hop': '2001:db8:20:1:5::5',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '200 '
@@ -7087,7 +7087,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '615:11:11:4::/64': {'index': {1: {'metric': '2219',
+                                                                                                       '2001:1:11:4::/64': {'index': {1: {'metric': '2219',
                                                                                                                                           'next_hop': '2001:db8:20:1:5::5',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '200 '
@@ -7097,7 +7097,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7108,7 +7108,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11:2::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11:2::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7119,7 +7119,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
                                                                                                                                         'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
@@ -7132,7 +7132,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                         'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:1'},
                                                                  'vpnv6 unicast RD 200:2': {'default_vrf': 'vrf2',
-                                                                                            'prefix': {'615:11:11:1::/64': {'index': {1: {'metric': '2219',
+                                                                                            'prefix': {'2001:1:11:1::/64': {'index': {1: {'metric': '2219',
                                                                                                                                           'next_hop': '2001:db8:20:1:5::5',
                                                                                                                                           'origin_codes': 'e',
                                                                                                                                           'path': '200 '
@@ -7142,7 +7142,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '615:11:11::/64': {'index': {1: {'metric': '2219',
+                                                                                                       '2001:1:11::/64': {'index': {1: {'metric': '2219',
                                                                                                                                         'next_hop': '2001:db8:20:1:5::5',
                                                                                                                                         'origin_codes': 'e',
                                                                                                                                         'path': '200 '
@@ -7152,7 +7152,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                 '{27016}',
                                                                                                                                         'status_codes': '*>',
                                                                                                                                         'weight': '0'}}},
-                                                                                                       '646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7163,7 +7163,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11:2::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11:2::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7174,7 +7174,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*>i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
                                                                                                                                         'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
@@ -7186,7 +7186,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                         'status_codes': '*>i',
                                                                                                                                         'weight': '0'}}}},
                                                                                             'route_distinguisher': '200:2'},
-                                                                 'vpnv6 unicast RD 300:1': {'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                 'vpnv6 unicast RD 300:1': {'prefix': {'2001:2:11:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7208,7 +7208,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:2:11::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
                                                                                                                                         'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
@@ -7231,7 +7231,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                         'status_codes': '*i',
                                                                                                                                         'weight': '0'}}}},
                                                                                             'route_distinguisher': '300:1'},
-                                                                 'vpnv6 unicast RD 400:1': {'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
+                                                                 'vpnv6 unicast RD 400:1': {'prefix': {'2001:3:22:1::/64': {'index': {1: {'locprf': '100',
                                                                                                                                           'metric': '2219',
                                                                                                                                           'next_hop': '10.64.4.4',
                                                                                                                                           'origin_codes': 'e',
@@ -7253,7 +7253,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                   '{27016}',
                                                                                                                                           'status_codes': '*i',
                                                                                                                                           'weight': '0'}}},
-                                                                                                       '646:22:22::/64': {'index': {1: {'locprf': '100',
+                                                                                                       '2001:3:22::/64': {'index': {1: {'locprf': '100',
                                                                                                                                         'metric': '2219',
                                                                                                                                         'next_hop': '10.64.4.4',
                                                                                                                                         'origin_codes': 'e',
@@ -7336,30 +7336,30 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1 (default for vrf VRF1)
-        *> 615:11:11:3::/64   2001:db8:20:1:5::5
+        *> 2001:1:11:3::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *> 615:11:11:4::/64   2001:db8:20:1:5::5
+        *> 2001:1:11:4::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2 (default for vrf VRF2)
-        *> 615:11:11::/64     2001:db8:20:1:5::5
+        *> 2001:1:11::/64     2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *> 615:11:11:1::/64   2001:db8:20:1:5::5
+        *> 2001:1:11:1::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
-        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11:2::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1
-        *>i646:11:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11::/64     10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:11:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i2001:2:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
-        *>i646:22:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i2001:3:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i646:22:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i2001:3:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
     
         Processed 40 prefixes, 50 paths
@@ -8521,7 +8521,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
@@ -8532,51 +8532,51 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368": {
+                            "[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2001:db8:3664:121::1:2]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368": {
+                            "[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2001:db8:3664:121::1:3]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368": {
+                            "[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2001:db8:3664:121::4:2]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
                                     }
                                 }
                             },
-                            "[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184": {
+                            "[3]:[0]:[128]:[2001:db8:400:100:0:abcd:5678:1]/184": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:100:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
@@ -8595,14 +8595,14 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*>",
                                         "weight": 0
                                     },
                                     2: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*",
                                         "weight": 0
@@ -8613,14 +8613,14 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*>",
                                         "weight": 0
                                     },
                                     2: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*",
                                         "weight": 0
@@ -8631,14 +8631,14 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*>",
                                         "weight": 0
                                     },
                                     2: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*",
                                         "weight": 0
@@ -8649,14 +8649,14 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*>",
                                         "weight": 0
                                     },
                                     2: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*",
                                         "weight": 0
@@ -8667,14 +8667,14 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*>",
                                         "weight": 0
                                     },
                                     2: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:3",
                                         "path_type": "i",
                                         "status_codes": "*",
                                         "weight": 0
@@ -8685,7 +8685,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 "index": {
                                     1: {
                                         "localprf": 100,
-                                        "next_hop": "2000:1015::abcd:5678:1",
+                                        "next_hop": "2001:db8:400:a2bb:0:abcd:5678:1",
                                         "path_type": "l",
                                         "status_codes": "*>",
                                         "weight": 33445
@@ -8721,37 +8721,37 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
         *>l[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272
 
-                              2000:1000::abcd:5678:1
+                              2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
         *>l[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272
 
-                              2000:1000::abcd:5678:1
+                              2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368
+        *>l[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2001:db8:3664:121::1:2]/368
 
-                              2000:1000::abcd:5678:1
-
-                                                                100      33445 i
-
-        *>l[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368
-
-                              2000:1000::abcd:5678:1
+                              2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368
+        *>l[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2001:db8:3664:121::1:3]/368
 
-                              2000:1000::abcd:5678:1
+                              2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184
+        *>l[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2001:db8:3664:121::4:2]/368
 
-                              2000:1000::abcd:5678:1
+                              2001:db8:400:100:0:abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[3]:[0]:[128]:[2001:db8:400:100:0:abcd:5678:1]/184
+
+                              2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
@@ -8761,57 +8761,57 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
         *>l[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272
 
-                              2000:1015::abcd:5678:1
+                              2001:db8:400:a2bb:0:abcd:5678:1
 
                                                                 100      33445 i
 
         *>i[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272
 
-                              2000:1015::abcd:5678:3
+                              2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
-        * i                   2000:1015::abcd:5678:3
+        * i                   2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
         *>i[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272
 
-                              2000:1015::abcd:5678:3
+                              2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
-        * i                   2000:1015::abcd:5678:3
+        * i                   2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
         *>i[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272
 
-                              2000:1015::abcd:5678:3
+                              2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
-        * i                   2000:1015::abcd:5678:3
+        * i                   2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
         *>i[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272
 
-                              2000:1015::abcd:5678:3
+                              2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
-        * i                   2000:1015::abcd:5678:3
+        * i                   2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
         *>i[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272
 
-                              2000:1015::abcd:5678:3
+                              2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
 
-        * i                   2000:1015::abcd:5678:3
+        * i                   2001:db8:400:a2bb:0:abcd:5678:3
 
                                                                 100          0 i
     '''}

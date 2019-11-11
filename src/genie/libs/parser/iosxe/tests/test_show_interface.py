@@ -18650,12 +18650,12 @@ class TestShowInterfacesDescription(unittest.TestCase):
         Po13                           up             up       
         Tu0                            up             up       Pim Register Tunnel (Encap) for RP 2001:2:2:2::2
         Tu1                            up             up       Pim Register Tunnel (Encap) for Embedded RP
-        Tu2                            up             up       Pim Register Tunnel (Encap) for RP 2.2.2.2
-        Tu3                            up             up       Pim Register Tunnel (Encap) for RP 2.2.2.2 on VRF VRF1
-        Tu4                            up             up       Pim Register Tunnel (Decap) for RP 1.1.1.1 on VRF VRF1
-        Tu5                            up             up       Pim Register Tunnel (Decap) for RP 1.1.1.1
-        Tu6                            up             up       Pim Register Tunnel (Encap) for RP 1.1.1.1 on VRF VRF1
-        Tu7                            up             up       Pim Register Tunnel (Encap) for RP 1.1.1.1
+        Tu2                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2
+        Tu3                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2 on VRF VRF1
+        Tu4                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1 on VRF VRF1
+        Tu5                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1
+        Tu6                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1 on VRF VRF1
+        Tu7                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1
     '''}
 
     golden_parsed_output = {
@@ -18811,32 +18811,32 @@ class TestShowInterfacesDescription(unittest.TestCase):
                 "status": "up"
             },
             "Tunnel2": {
-                "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2",
+                "description": "Pim Register Tunnel (Encap) for RP 10.16.2.2",
                 "protocol": "up",
                 "status": "up"
             },
             "Tunnel3": {
-                "description": "Pim Register Tunnel (Encap) for RP 2.2.2.2 on VRF VRF1",
+                "description": "Pim Register Tunnel (Encap) for RP 10.16.2.2 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
             "Tunnel4": {
-                "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1 on VRF VRF1",
+                "description": "Pim Register Tunnel (Decap) for RP 10.4.1.1 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
             "Tunnel5": {
-                "description": "Pim Register Tunnel (Decap) for RP 1.1.1.1",
+                "description": "Pim Register Tunnel (Decap) for RP 10.4.1.1",
                 "protocol": "up",
                 "status": "up"
             },
             "Tunnel6": {
-                "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1 on VRF VRF1",
+                "description": "Pim Register Tunnel (Encap) for RP 10.4.1.1 on VRF VRF1",
                 "protocol": "up",
                 "status": "up"
             },
             "Tunnel7": {
-                "description": "Pim Register Tunnel (Encap) for RP 1.1.1.1",
+                "description": "Pim Register Tunnel (Encap) for RP 10.4.1.1",
                 "protocol": "up",
                 "status": "up"
             }
