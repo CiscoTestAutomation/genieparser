@@ -84,6 +84,14 @@
     * Added ShowMsdpStatisticsPeer for commands:
         * 'show msdp statistics peer'
         * 'show msdp vrf {vrf} statistics peer'
+    * Added ShowBgpNeighbors for commands:
+        * 'show bgp neighbors'
+        * 'show bgp neighbors {neighbor}'
+        * 'show bgp vrf {vrf} neighbors'
+        * 'show bgp vrf {vrf} neighbors {neighbor}'
+    * Added ShowBgpSummary for commands:
+        * 'show bgp summary'
+        * 'show bgp {address_family} summary'
 
 * JUNOS
     * Added ShowOspfInterface for commands:
