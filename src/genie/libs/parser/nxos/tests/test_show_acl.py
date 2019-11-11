@@ -29,11 +29,9 @@ class TestShowAccessLists(unittest.TestCase):
     IPv6 access list ipv6_acl2
             10 permit udp any any
     MAC access list mac_acl
-            10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aa
-    rp
+            10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
             20 permit 0000.0000.0000 0000.0000.0000 any
-            30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x80
-    41
+            30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x80 41
             40 deny any any vlan 10
             50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
     IP access list test22
@@ -273,14 +271,6 @@ class TestShowAccessLists(unittest.TestCase):
                     'forwarding': 'permit',
                 },
                 'matches': {
-                    'l2': {
-                        'eth': {
-                            'destination_mac_address': 'any',
-                            'ether_type': 'aarp',
-                            'source_mac_address': 'aaaa.aaaa.aaaa ffff.ffff.0000',
-                            'vlan': 10,
-                        },
-                    },
                     'l3': {
                         'udp': {
                             'destination_network': {
@@ -297,13 +287,88 @@ class TestShowAccessLists(unittest.TestCase):
                         },
                     },
                 },
-                'name': '50',
+                'name': '10',
             },
         },
         'name': 'ipv6_acl2',
         'type': 'ipv6-acl-type',
     },
     'mac_acl': {
+        'aces': {
+            10: {
+                'actions': {
+                    'forwarding': 'permit',
+                },
+                'matches': {
+                    'l2': {
+                        'eth': {
+                            'destination_mac_address': 'bbbb.cccc.dddd bbbb.cccc.dddd',
+                            'ether_type': 'aarp',
+                            'source_mac_address': 'aaaa.bbbb.cccc 0000.0000.0000',
+                        },
+                    },
+                },
+                'name': '10',
+            },
+            20: {
+                'actions': {
+                    'forwarding': 'permit',
+                },
+                'matches': {
+                    'l2': {
+                        'eth': {
+                            'destination_mac_address': 'any',
+                            'source_mac_address': '0000.0000.0000 0000.0000.0000',
+                        },
+                    },
+                },
+                'name': '20',
+            },
+            30: {
+                'actions': {
+                    'forwarding': 'deny',
+                },
+                'matches': {
+                    'l2': {
+                        'eth': {
+                            'destination_mac_address': 'aaaa.bbbb.cccc 0000.0000.0000',
+                            'source_mac_address': '0000.0000.0000 0000.0000.0000',
+                        },
+                    },
+                },
+                'name': '30',
+            },
+            40: {
+                'actions': {
+                    'forwarding': 'deny',
+                },
+                'matches': {
+                    'l2': {
+                        'eth': {
+                            'destination_mac_address': 'any',
+                            'source_mac_address': 'any',
+                            'vlan': 10,
+                        },
+                    },
+                },
+                'name': '40',
+            },
+            50: {
+                'actions': {
+                    'forwarding': 'permit',
+                },
+                'matches': {
+                    'l2': {
+                        'eth': {
+                            'destination_mac_address': 'any',
+                            'ether_type': 'aarp',
+                            'source_mac_address': 'aaaa.aaaa.aaaa ffff.ffff.0000',
+                        },
+                    },
+                },
+                'name': '50',
+            },
+        },
         'name': 'mac_acl',
         'type': 'mac-acl-type',
     },

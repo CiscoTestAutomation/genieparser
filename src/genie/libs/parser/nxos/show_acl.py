@@ -145,8 +145,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit ip any any
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
-        # 10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
-        # 20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
+        # 10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
+        # 20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
         # 30 deny ip any any
         # 10 permit ip 10.1.50.64/32 any [match=0]
         # 40 permit ip any any [match=4]
@@ -271,11 +271,14 @@ class ShowAccessLists(ShowAccessListsSchema):
             m = p2_mac.match(line)
             if m:
                 group = m.groupdict()
+                seq = int(group['seq'])
 
+                seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
                 seq_dict.setdefault('actions', {}).setdefault('forwarding', group['actions_forwarding'])
 
                 # l2 dict
+                matches_dict = seq_dict.setdefault('matches', {})
                 l2_dict = matches_dict.setdefault('l2', {}).setdefault('eth', {})
                 for i in ['source_mac_address', 'destination_mac_address', 'ether_type', 'vlan']:
                     if group[i]:
