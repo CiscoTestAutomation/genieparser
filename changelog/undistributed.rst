@@ -41,6 +41,9 @@
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
+    * Added ShowAccessLists for commands:
+        * 'show access-lists'
+        * 'show access-lists {acl}'
 
 * IOS
     * Added ShowInterfacesDescription for commands;
