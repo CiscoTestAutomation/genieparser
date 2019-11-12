@@ -157,6 +157,9 @@
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
 
+* NXOS
+    * Updated ShowIpOspfInterfaceVrfAll
+        * Changed keywords schema to optional
 * IOSXE
     * Updated ShowAuthenticationSessionsInterfaceDetails
         * Added keywords to schema
