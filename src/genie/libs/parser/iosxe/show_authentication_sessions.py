@@ -380,15 +380,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                             mac_dict = intf_dict.setdefault(group['value'], {})
                         elif key == 'iif_id':
                             hold_dict.update({'argument': key, 'value': group['value']})
-                        else:
-                            if hold_dict:
-                                mac_dict.update({key: group['value']})
-                                tmp_keys = hold_dict.pop('argument')
-                                tmp_values = hold_dict.pop('value')
-                                mac_dict.update({tmp_keys: tmp_values})
-                            else:
-                                if key != 'interface':
-                                    mac_dict.update({key: group['value']})
+                        elif hold_dict:
+                            mac_dict.update({key: group['value']})
+                            tmp_keys = hold_dict.pop('argument')
+                            tmp_values = hold_dict.pop('value')
+                            mac_dict.update({tmp_keys: tmp_values})
+
+                        elif key != 'interface':
+                            mac_dict.update({key: group['value']})
                     else:
                         mac_dict = ret_dict.setdefault('interfaces', {})
                         value_dict = mac_dict.setdefault(group['value'], {})
