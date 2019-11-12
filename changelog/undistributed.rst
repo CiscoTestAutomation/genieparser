@@ -33,6 +33,9 @@
         * show ip nat translations vrf {vrf} verbose
     * Added ShowIpNatStatistics
         * show ip nat statistics
+    * Added ShowIpCefInternal
+        * show ip cef {ip} internal
+        * show ip cef internal
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
@@ -92,6 +95,9 @@
         * 'show ospf interface {interface} detail'
         * 'show ospf interface detail instance {instance}'
         * 'show ospf interface {interface} detail instance {instance}'
+    * Added ShowTedDatabaseExtensive for commands:
+        * 'show ted database extensive'
+        * 'show ted database extensive {node_id}'
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -134,6 +140,10 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+    * Updated ShowMplsForwardingTable for:
+        * show mpls forwarding-table
+        * show mpls forwarding-table {prefix}
+        * show mpls forwarding-table vrf {vrf}
 
 * IOS
     * Updated ShowInventory
