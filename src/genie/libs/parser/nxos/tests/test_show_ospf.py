@@ -2483,48 +2483,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 118, Passive interface
-        Vlan3021 is up, line protocol is up
-            IP address 100.10.127.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 115, Passive interface
-        Vlan3020 is up, line protocol is up
-            IP address 100.10.96.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 114, Passive interface
-        Vlan3015 is up, line protocol is up
-            IP address 100.10.95.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 111, Passive interface
-        Vlan3014 is up, line protocol is up
-            IP address 100.10.65.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 109, Passive interface
-        Vlan1854 is up, line protocol is up
-            IP address 192.168.10.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 31, Passive interface
-        Vlan1853 is up, line protocol is up
-            IP address 100.10.225.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 30, Passive interface
-        Vlan1852 is up, line protocol is up
-            IP address 192.168.224.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 29, Passive interface
         Vlan997 is up, line protocol is up
             IP address 10.100.17.81/30
             Process ID 2000 VRF default, area 0.0.0.1
@@ -2542,163 +2500,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
             Index 122, Passive interface
-        Vlan738 is up, line protocol is up
-            IP address 192.128.38.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 131, Passive interface
-        Vlan601 is up, line protocol is up
-            IP address 100.10.201.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 41, Passive interface
-        Vlan600 is up, line protocol is up
-            IP address 100.10.200.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State BDR, Network type BROADCAST, cost 1000
-            Index 40, Transmit delay 1 sec, Router Priority 240
-            Designated Router ID: 10.100.0.12, address: 100.10.200.5
-            Backup Designated Router ID: 10.100.0.11, address: 100.10.200.4
-            3 Neighbors, flooding to 3, adjacent with 2
-            Timer intervals: Hello 2, Dead 6, Wait 6, Retransmit 5
-            Hello timer due in 00:00:01
-            Message-digest authentication, using key id 1
-            Number of opaque link LSAs: 1, checksum sum 0x5f3f
-        Vlan243 is up, line protocol is up
-            IP address 192.168.243.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 147, Passive interface
-        Vlan242 is up, line protocol is up
-            IP address 192.168.242.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 146, Passive interface
-        Vlan241 is up, line protocol is up
-            IP address 192.168.241.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 145, Passive interface
-        Vlan240 is up, line protocol is up
-            IP address 192.168.240.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 144, Passive interface
-        Vlan238 is up, line protocol is up
-            IP address 192.168.238.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 143, Passive interface
-        Vlan156 is up, line protocol is up
-            IP address 192.168.156.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 86, Passive interface
-        Vlan152 is up, line protocol is up
-            IP address 192.168.152.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 85, Passive interface
-        Vlan110 is up, line protocol is up
-            IP address 192.168.110.2/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 54, Passive interface
-        Vlan67 is up, line protocol is up
-            IP address 192.168.67.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 34, Passive interface
-        Vlan66 is up, line protocol is up
-            IP address 192.168.66.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 33, Passive interface
-        Vlan45 is up, line protocol is up
-            IP address 192.168.45.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 27, Passive interface
-        Vlan44 is up, line protocol is up
-            IP address 192.168.44.2/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 26, Passive interface
-        Vlan43 is up, line protocol is up
-            IP address 192.168.43.2/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 25, Passive interface
-        Vlan42 is up, line protocol is up
-            IP address 192.168.42.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 24, Passive interface
-        Vlan41 is up, line protocol is up
-            IP address 192.168.41.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 23, Passive interface
-        Vlan40 is up, line protocol is up
-            IP address 192.168.40.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 22, Passive interface
-        Vlan39 is up, line protocol is up
-            IP address 192.168.39.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 21, Passive interface
-        Vlan38 is up, line protocol is up
-            IP address 192.168.38.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 20, Passive interface
-        Vlan37 is up, line protocol is up
-            IP address 192.168.37.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 19, Passive interface
-        Vlan36 is up, line protocol is up
-            IP address 192.168.36.4/24
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State DR, Network type BROADCAST, cost 1000
-            Index 18, Passive interface
-        port-channel1002 is up, line protocol is up
-            IP address 10.100.31.198/30
-            Process ID 2000 VRF default, area 0.0.0.1
-            Enabled by interface configuration
-            State P2P, Network type P2P, cost 10
-            BFD is enabled
-            Index 138, Transmit delay 1 sec
-            1 Neighbors, flooding to 1, adjacent with 1
-            Timer intervals: Hello 2, Dead 6, Wait 6, Retransmit 5
-            Hello timer due in 00:00:01
-            No authentication
-            Number of opaque link LSAs: 0, checksum sum 0
         loopback100 is up, line protocol is up
             IP address 10.100.0.11/32
             Process ID 2000 VRF default, area 0.0.0.1
@@ -2728,7 +2529,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
 
         Vlan959 is up, line protocol is up
             IP address 10.100.31.217/30
-            Process ID 1000 VRF LAN-CORE, area 0.0.0.1
+            Process ID 1000 VRF GENIE-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
             Index 4, Transmit delay 1 sec
@@ -2739,7 +2540,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
         port-channel1001 is up, line protocol is up
             IP address 10.100.31.197/30
-            Process ID 1000 VRF LAN-CORE, area 0.0.0.1
+            Process ID 1000 VRF GENIE-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 10
             BFD is enabled
@@ -2751,27 +2552,16 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
         loopback110 is up, line protocol is up
             IP address 10.100.0.13/32
-            Process ID 1000 VRF LAN-CORE, area 0.0.0.1
+            Process ID 1000 VRF GENIE-CORE, area 0.0.0.1
             Enabled by interface configuration
             State LOOPBACK, Network type LOOPBACK, cost 1
             Index 3
         Ethernet1/2 is up, line protocol is up
             IP address 10.100.31.27/31
-            Process ID 1000 VRF LAN-CORE, area 0.0.0.1
+            Process ID 1000 VRF GENIE-CORE, area 0.0.0.1
             Enabled by interface configuration
             State P2P, Network type P2P, cost 20
             Index 1, Transmit delay 1 sec
-            1 Neighbors, flooding to 1, adjacent with 1
-            Timer intervals: Hello 2, Dead 6, Wait 6, Retransmit 5
-            Hello timer due in 00:00:01
-            Message-digest authentication, using key id 1
-            Number of opaque link LSAs: 0, checksum sum 0
-        Ethernet2/2 is up, line protocol is up
-            IP address 10.100.31.61/31
-            Process ID 1000 VRF LAN-CORE, area 0.0.0.1
-            Enabled by interface configuration
-            State P2P, Network type P2P, cost 20
-            Index 2, Transmit delay 1 sec
             1 Neighbors, flooding to 1, adjacent with 1
             Timer intervals: Hello 2, Dead 6, Wait 6, Retransmit 5
             Hello timer due in 00:00:01
@@ -2781,7 +2571,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
 
     golden_parsed_output_customer = {
         'vrf': {
-            'LAN-CORE': {
+            'GENIE-CORE': {
                 'address_family': {
                     'ipv4': {
                         'instance': {
@@ -2804,34 +2594,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'ip_address': '10.100.31.27/31',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet1/2',
-                                                'passive': False,
-                                                'retransmit_interval': 5,
-                                                'state': 'p2p',
-                                                'statistics': {
-                                                    'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0,
-                                                    'num_nbrs_adjacent': 1,
-                                                    'num_nbrs_flooding': 1,
-                                                    'total_neighbors': 1
-                                                },
-                                                'transmit_delay': 1,
-                                                'wait_interval': 6
-                                            },
-                                            'Ethernet2/2': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 20,
-                                                'dead_interval': 6,
-                                                'enable': True,
-                                                'hello_interval': 2,
-                                                'hello_timer': '00:00:01',
-                                                'if_cfg': True,
-                                                'index': 2,
-                                                'interface_type': 'p2p',
-                                                'ip_address': '10.100.31.61/31',
-                                                'line_protocol': 'up',
-                                                'name': 'Ethernet2/2',
                                                 'passive': False,
                                                 'retransmit_interval': 5,
                                                 'state': 'p2p',
@@ -2984,231 +2746,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40
                                             },
-                                            'Vlan110': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 54,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.110.2/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan110',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan152': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 85,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.152.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan152',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan156': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 86,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.156.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan156',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan1852': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 29,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.224.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan1852',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan1853': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 30,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.225.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan1853',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan1854': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 31,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.10.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan1854',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan238': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 143,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.238.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan238',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan240': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 144,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.240.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan240',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan241': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 145,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.241.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan241',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan242': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 146,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.242.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan242',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan243': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 147,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.243.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan243',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan3014': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 109,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.65.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan3014',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan3015': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 111,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.95.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan3015',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan3020': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 114,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.96.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan3020',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan3021': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 115,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.127.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan3021',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
                                             'Vlan3030': {
                                                 'bfd': {
                                                     'enable': False
@@ -3221,247 +2758,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'ip_address': '100.10.128.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3030',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan36': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 18,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.36.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan36',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan37': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 19,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.37.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan37',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan38': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 20,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.38.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan38',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan39': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 21,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.39.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan39',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan40': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 22,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.40.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan40',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan41': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 23,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.41.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan41',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan42': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 24,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.42.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan42',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan43': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 25,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.43.2/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan43',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan44': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 26,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.44.2/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan44',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan45': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 27,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.45.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan45',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan600': {
-                                                'bdr_ip_addr': '100.10.200.4',
-                                                'bdr_router_id': '10.100.0.11',
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'dead_interval': 6,
-                                                'dr_ip_addr': '100.10.200.5',
-                                                'dr_router_id': '10.100.0.12',
-                                                'enable': True,
-                                                'hello_interval': 2,
-                                                'hello_timer': '00:00:01',
-                                                'if_cfg': True,
-                                                'index': 40,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.200.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan600',
-                                                'passive': False,
-                                                'priority': 240,
-                                                'retransmit_interval': 5,
-                                                'state': 'bdr',
-                                                'statistics': {
-                                                    'num_nbrs_adjacent': 2,
-                                                    'num_nbrs_flooding': 3,
-                                                    'total_neighbors': 3
-                                                },
-                                                'transmit_delay': 1,
-                                                'wait_interval': 6
-                                            },
-                                            'Vlan601': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 41,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '100.10.201.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan601',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan66': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 33,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.66.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan66',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan67': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 34,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.168.67.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan67',
-                                                'passive': True,
-                                                'state': 'dr'
-                                            },
-                                            'Vlan738': {
-                                                'bfd': {
-                                                    'enable': False
-                                                },
-                                                'cost': 1000,
-                                                'enable': True,
-                                                'if_cfg': True,
-                                                'index': 131,
-                                                'interface_type': 'broadcast',
-                                                'ip_address': '192.128.38.4/24',
-                                                'line_protocol': 'up',
-                                                'name': 'Vlan738',
                                                 'passive': True,
                                                 'state': 'dr'
                                             },
@@ -3519,34 +2815,6 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'line_protocol': 'up',
                                                 'name': 'loopback100',
                                                 'state': 'loopback'
-                                            },
-                                            'port-channel1002': {
-                                                'bfd': {
-                                                    'enable': True
-                                                },
-                                                'cost': 10,
-                                                'dead_interval': 6,
-                                                'enable': True,
-                                                'hello_interval': 2,
-                                                'hello_timer': '00:00:01',
-                                                'if_cfg': True,
-                                                'index': 138,
-                                                'interface_type': 'p2p',
-                                                'ip_address': '10.100.31.198/30',
-                                                'line_protocol': 'up',
-                                                'name': 'port-channel1002',
-                                                'passive': False,
-                                                'retransmit_interval': 5,
-                                                'state': 'p2p',
-                                                'statistics': {
-                                                    'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0,
-                                                    'num_nbrs_adjacent': 1,
-                                                    'num_nbrs_flooding': 1,
-                                                    'total_neighbors': 1
-                                                },
-                                                'transmit_delay': 1,
-                                                'wait_interval': 6
                                             }
                                         }
                                     }
@@ -3558,6 +2826,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             }
         }
     }
+
     def test_full_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
