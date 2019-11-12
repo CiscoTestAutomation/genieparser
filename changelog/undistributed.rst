@@ -151,8 +151,11 @@
     * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
         * changed backup_nexthop and backup_nexthop to optional
 
-* JUNOS
-    * Enhanced ShowOspfInterfaceBrief:
-        * Added command 'show ospf interface {interface} brief'
-    * Enhanced ShowInterfacesTerse:
-        * Added command 'show interfaces {interface} terse'
+* IOSXR
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
+
+* IOSXE
+    * Updated ShowBoot
+        * Added schema to accommodate new output formats
+        * Added regex to for new outputs
