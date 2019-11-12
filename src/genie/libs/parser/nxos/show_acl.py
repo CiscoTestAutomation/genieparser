@@ -3,8 +3,8 @@ show_acl.py
 
 NXOS parsers for the following show commands:
     * show access-lists
+    * show access-list <acl>
     * show access-lists summary
-    * show access-list NTP-ACL
 """
 
 # Python
@@ -145,8 +145,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit ip any any
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
-        # 10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
-        # 20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
+        # 10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
+        # 20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
         # 30 deny ip any any
         # 10 permit ip 10.1.50.64/32 any [match=0]
         # 40 permit ip any any [match=4]
@@ -236,11 +236,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l3_dict = matches_dict.setdefault('l3', {}).setdefault(protocol, {})
                 for i in ['protocol', 'ttl', 'precedence']:
                     if group[i]:
-                        if i == 'ttl':
-                            i_val = int(group[i])
-                        else:
-                            i_val = group[i]
-                        l3_dict[i] = i_val
+                        l3_dict[i] = int(group[i]) if i == 'ttl' else group[i]
 
                 for i in ['source_network', 'destination_network']:
                     l3_dict.setdefault(i, {}).setdefault(group[i], {}). \
@@ -282,12 +278,138 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l2_dict = matches_dict.setdefault('l2', {}).setdefault('eth', {})
                 for i in ['source_mac_address', 'destination_mac_address', 'ether_type', 'vlan']:
                     if group[i]:
-                        if i == 'vlan':
-                            i_val = int(group[i])
-                        else:
-                            i_val = group[i]
-                        l2_dict[i] = i_val
+                        l2_dict[i] = int(group[i]) if i == 'vlan' else group[i]
 
                 continue
 
         return result_dict
+
+# =======================================
+# Schema for 'show access-lists summary'
+# =======================================
+
+
+class ShowAccessListsSummarySchema(MetaParser):
+    """ Schema for:
+        'show access-lists summary'
+    """
+    schema = {
+        'acls': {
+            Any(): {
+                'name': str,
+                'type': str,
+                'aces': {
+                    'statistics': {
+                        'total_configured': int,
+                        Optional('configured_interface'): {
+                            Any(): {
+                                Optional('egress'): str,
+                                Optional('ingress'): str,
+                            },
+                        },
+                        Optional('interface_active'): {
+                            Any(): {
+                                Optional('egress'): str,
+                                Optional('ingress'): str,
+                            },
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+# =======================================
+# Parser for 'show access-lists summary'
+# =======================================
+
+
+class ShowAccessListsSummary(ShowAccessListsSummarySchema):
+    """ Parser for
+        'show access-lists summary'
+    """
+    cli_command = 'show access-lists summary'
+
+    def cli(self, acl="", output=None):
+        if output is None:
+            cmd = self.cli_command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # IPV4 ACL acl_name
+        # IPV6 ACL ipv6_acl2
+        p1 = re.compile(r'^(?P<type>[A-Z0-9]+) +ACL +(?P<name>[a-z0-9_]+)$')
+
+        # Total ACEs Configured: 1
+        p2 = re.compile(r'^Total +ACEs +Configured: +(?P<total_configured>\d+)$')
+
+        # Configured on interfaces:
+        p3_1 = re.compile(r'^Configured +on +interfaces:$')
+
+        # Active on interfaces
+        p3_2 = re.compile(r'^Active +on +interfaces:$')
+
+        # Ethernet1/1 - egress (Router ACL)
+        # Ethernet1/1 - ingress (Port ACL)
+        p4 = re.compile(r'(?P<interface>Ethernet1/1) +- +(?P<traffic>egress|ingress) +\((?P<name>[\w\s]+)\)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IPV4 ACL acl_name
+            # IPV6 ACL ipv6_acl2
+            m = p1.match(line)
+            if m:
+                if result_dict:
+                    for i in ['configured_interface', 'interface_active']:
+                        if not stats_dict[i]:
+                            del stats_dict[i]
+
+                group = m.groupdict()
+                acl_dict = result_dict.setdefault('acls', {}).setdefault(group['name'], {})
+                for i in ['name', 'type']:
+                    if group[i]:
+                        acl_dict[i] = group[i]
+                aces_dict = acl_dict.setdefault('aces', {})
+                continue
+
+            # Total ACEs Configured: 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict = aces_dict.setdefault('statistics', {})
+                stats_dict['total_configured'] = int(group['total_configured'])
+                continue
+
+            # Configured on interfaces:
+            m = p3_1.match(line)
+            if m:
+                conf_dict = stats_dict.setdefault('configured_interface', {})
+                continue
+
+            # Active on interfaces
+            m = p3_2.match(line)
+            if m:
+                intf_dict = stats_dict.setdefault('interface_active', {})
+                continue
+
+            # Ethernet1/1 - egress (Router ACL)
+            # Ethernet1/1 - ingress (Port ACL)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if 'interface_active' in stats_dict:
+                    intf_sub_dict = intf_dict.setdefault(group['interface'], {})
+                    if group['traffic']:
+                        intf_sub_dict.setdefault(group['traffic'], group['name'])
+                else:
+                    conf_sub_dict = conf_dict.setdefault(group['interface'], {})
+                    if group['traffic']:
+                        conf_sub_dict.setdefault(group['traffic'], group['name'])
+                continue
+
+        return result_dict
+

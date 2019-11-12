@@ -6,7 +6,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
-from genie.libs.parser.nxos.show_acl import ShowAccessLists
+from genie.libs.parser.nxos.show_acl import ShowAccessLists, ShowAccessListsSummary
 
 class TestShowAccessLists(unittest.TestCase):
     dev = Device(name='device')
@@ -578,3 +578,189 @@ IP access list NTP-ACL
         obj = ShowAccessLists(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.parsed_output2)
+
+class TestShowAccessListsSummary(unittest.TestCase):
+    dev = Device(name='device')
+    empty_output = {'execute.return_value': ''}
+
+    device_output = {'execute.return_value': '''
+    R3_n9kv# show access-lists summary 
+IPV4 ACL acl_name
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL ipv4_acl
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+IPV4 ACL ipv4_ext
+        Total ACEs Configured: 0
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL ipv6_acl
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+IPV6 ACL ipv6_acl2
+        Total ACEs Configured: 1
+        Configured on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+MAC ACL mac_acl
+        Total ACEs Configured: 5
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Port ACL)
+        Active on interfaces:
+IPV4 ACL sl_def_acl
+
+        Statistics enabled
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL test22
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+    '''}
+
+    parsed_output = {
+    'acls': {
+        'acl_name': {
+            'aces': {
+                'statistics': {
+                    'total_configured': 1,
+                },
+            },
+            'name': 'acl_name',
+            'type': 'IPV4',
+        },
+        'ipv4_acl': {
+            'aces': {
+                'statistics': {
+                    'configured_interface': {
+                        'Ethernet1/1': {
+                            'egress': 'Router ACL',
+                        },
+                    },
+                    'interface_active': {
+                        'Ethernet1/1': {
+                            'egress': 'Router ACL',
+                        },
+                    },
+                    'total_configured': 3,
+                },
+            },
+            'name': 'ipv4_acl',
+            'type': 'IPV4',
+        },
+        'ipv4_ext': {
+            'aces': {
+                'statistics': {
+                    'total_configured': 0,
+                },
+            },
+            'name': 'ipv4_ext',
+            'type': 'IPV4',
+        },
+        'ipv6_acl': {
+            'aces': {
+                'statistics': {
+                    'configured_interface': {
+                        'Ethernet1/1': {
+                            'ingress': 'Router ACL',
+                        },
+                    },
+                    'interface_active': {
+                        'Ethernet1/1': {
+                            'ingress': 'Router ACL',
+                        },
+                    },
+                    'total_configured': 3,
+                },
+            },
+            'name': 'ipv6_acl',
+            'type': 'IPV6',
+        },
+        'ipv6_acl2': {
+            'aces': {
+                'statistics': {
+                    'configured_interface': {
+                        'Ethernet1/1': {
+                            'egress': 'Router ACL',
+                        },
+                    },
+                    'interface_active': {
+                        'Ethernet1/1': {
+                            'egress': 'Router ACL',
+                        },
+                    },
+                    'total_configured': 1,
+                },
+            },
+            'name': 'ipv6_acl2',
+            'type': 'IPV6',
+        },
+        'mac_acl': {
+            'aces': {
+                'statistics': {
+                    'configured_interface': {
+                        'Ethernet1/1': {
+                            'ingress': 'Port ACL',
+                        },
+                    },
+                    'total_configured': 5,
+                },
+            },
+            'name': 'mac_acl',
+            'type': 'MAC',
+        },
+        'sl_def_acl': {
+            'aces': {
+                'statistics': {
+                    'total_configured': 4,
+                },
+            },
+            'name': 'sl_def_acl',
+            'type': 'IPV4',
+        },
+        'test22': {
+            'aces': {
+                'statistics': {
+                    'configured_interface': {
+                        'Ethernet1/1': {
+                            'ingress': 'Router ACL',
+                        },
+                    },
+                    'interface_active': {
+                        'Ethernet1/1': {
+                            'ingress': 'Router ACL',
+                        },
+                    },
+                    'total_configured': 3,
+                },
+            },
+            'name': 'test22',
+            'type': 'IPV4',
+        },
+    },
+}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowAccessListsSummary(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.device_output)
+        obj = ShowAccessListsSummary(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output)
