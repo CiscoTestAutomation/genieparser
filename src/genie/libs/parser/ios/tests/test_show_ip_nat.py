@@ -185,7 +185,7 @@ class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
         -- Inside Source 
         [Id: 1] access-list 1 pool pool1 refcount 3 
         pool pool1: netmask 255.255.255.0 
-        start 198.168.1.1 end 198.168.254.254 
+        start 192.168.49.1 end 192.168.115.254 
         type generic, total addresses 254, allocated 0 (0%), misses 0 
         longest chain in pool: pool1's addr-hash: 0, average len 0,chains 0/256 
         Pool stats drop: 0 Mapping stats drop: 0 
@@ -218,10 +218,10 @@ class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
                                 'allocated_percentage': 0,
                                 'average_len': 0,
                                 'chains': '0/256',
-                                'end': '198.168.254.254',
+                                'end': '192.168.115.254',
                                 'misses': 0,
                                 'netmask': '255.255.255.0',
-                                'start': '198.168.1.1',
+                                'start': '192.168.49.1',
                                 'total_addresses': 254,
                                 'type': 'generic'
                             }

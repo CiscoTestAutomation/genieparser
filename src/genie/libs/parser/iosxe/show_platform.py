@@ -1805,25 +1805,80 @@ class ShowPlatform(ShowPlatformSchema):
 class ShowBootSchema(MetaParser):
     """Schema for show boot"""
 
-    schema = {Optional('current_boot_variable'): str,
-              Optional('next_reload_boot_variable'): str,
-              Optional('manual_boot'): bool,
-              Optional('enable_break'): bool,
-              Optional('boot_mode'): str,
-              Optional('ipxe_timeout'): int,
-              Optional('active'): {              
-                  Optional('configuration_register'): str,
-                  Optional('boot_variable'): str,
-              },
-              Optional('standby'): {              
-                  Optional('configuration_register'): str,
-                  Optional('boot_variable'): str,
-              },
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('manual_boot'): bool,
+        Optional('enable_break'): bool,
+        Optional('boot_mode'): str,
+        Optional('ipxe_timeout'): int,
+        Optional('active'): {              
+            Optional('configuration_register'): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('standby'): {              
+            Optional('configuration_register'): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('boot_path_list'): str,
+        Optional('config_file'): str,
+        Optional('private_config_file'): str,
+        Optional('enable_break'): bool,
+        Optional('manual_boot'): bool,
+        Optional('helper_path_list'): str,
+        Optional('auto_upgrade'): bool,
+        Optional('auto_upgrade_path'): str,
+        Optional('boot_optimization'): bool,
+        Optional('nvram_buffer_size'): int,
+        Optional('timeout_config_download'): str,
+        Optional('config_download_via_dhcp'): bool,
+        Optional('next_boot'): bool,
+        Optional('allow_dev_key'): bool,
+        Optional('switches'): {
+            Any(): { 
+                'boot_path_list': str,
+                'config_file': str,
+                'private_config_file': str,
+                'enable_break': bool,
+                'manual_boot': bool,
+                Optional('helper_path_list'): str,
+                'auto_upgrade': bool,
+                Optional('auto_upgrade_path'): str,
+                Optional('boot_optimization'): bool,
+                Optional('nvram_buffer_size'): int,
+                Optional('timeout_config_download'): str,
+                Optional('config_download_via_dhcp'): bool,
+                Optional('next_boot'): bool,
+                Optional('allow_dev_key'): bool,
+            },
+        },
     }
 
 class ShowBoot(ShowBootSchema):
     """Parser for show boot"""
-
+    SW_MAPPING = {
+        'BOOT path-list ': 'boot_path_list',
+        'Config file' : 'config_file',
+        'Private Config file' : 'private_config_file',
+        'Enable Break': 'enable_break',
+        'Manual Boot': 'manual_boot',
+        'Allow Dev Key': 'allow_dev_key',
+        'HELPER path-list': 'helper_path_list',
+        'Auto upgrade': 'auto_upgrade',
+        'Auto upgrade path': 'auto_upgrade_path',
+        'Boot optimization': 'boot_optimization',
+        'NVRAM/Config file buffer size': 'nvram_buffer_size',
+        'Timeout for Config Download': 'timeout_config_download',
+        'Config Download via DHCP': 'config_download_via_dhcp'
+    }
+    TRUE_FALSE = {
+        'disable': False,
+        'disabled': False,
+        'no': False,
+        'enable': True,
+        'enabled': True,
+        'yes': True
+    }
     cli_command = 'show boot'
 
     def cli(self, output=None):
@@ -1834,6 +1889,7 @@ class ShowBoot(ShowBootSchema):
 
         boot_dict = {}
         boot_variable = None
+        switch_number = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -1930,6 +1986,90 @@ class ShowBoot(ShowBootSchema):
             if m:
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
                 continue
+
+            # BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+            # HELPER path-list    :
+            p7 = re.compile(r'^(?P<key>BOOT|HELPER) +path\-list +\:(?: '
+                            r'+(?P<value>[\w\:\/\-\.]+)?)$')
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if 'BOOT' in group['key']:
+                    sw_dict = boot_dict
+                    if switch_number >= 2:
+                        switches_dict = sw_dict.setdefault('switches', {})
+                        index_dict = switches_dict.setdefault(switch_number, {})
+                        index_dict.update({'boot_path_list': m7.groupdict()['value']})
+                    else:
+                        index_dict = sw_dict
+                        index_dict.update(
+                            {'boot_path_list': m7.groupdict()['value']})
+
+                elif 'HELPER' in group['key']:
+                    index_dict.update({'helper_path_list': m7.groupdict()['value']})
+
+                continue
+
+            # Config file         : flash:/config.text
+            # Private Config file : flash:/private-config.text
+            # Enable Break        : yes
+            # Manual Boot         : no
+            # Allow Dev Key         : yes
+            # Auto upgrade        : no
+            # Auto upgrade path   :            
+            p8 = re.compile(r'^(?P<key>[\w\s]+) +\: +(?P<value>[\w\:\/\-\.]+)$')
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                
+                key = self.SW_MAPPING.get(group['key'].strip())
+                true_false = self.TRUE_FALSE.get(group['value'])
+                
+                if isinstance(true_false, bool):
+                    index_dict[key] = true_false
+                else:
+                    index_dict[key] = group['value']
+
+                continue
+
+            # buffer size:   524288
+            p9 = re.compile(r'buffer +size\: +(?P<value>\d+)$')
+            m9 = p9.match(line)
+            if m9:
+                index_dict.update({'nvram_buffer_size': int(m9.groupdict()['value'])})
+
+                continue
+            
+            # Download:    0 seconds
+            p10 = re.compile(r'Download\: +(?P<value>\d+ +\w+)$')
+            m10 = p10.match(line)
+            if m10:
+                index_dict.update({'timeout_config_download': m10.groupdict()['value']})
+
+                continue
+
+            # via DHCP:       disabled (next boot: disabled)
+            p11 = re.compile(r'via +DHCP\: +(?P<value>\w+) +\(next +boot\: '
+                             r'+(?P<next_boot>\w+)\)$')
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                value = self.TRUE_FALSE.get(group['value'])
+                next_boot = self.TRUE_FALSE.get(group['next_boot'])
+                index_dict.update({'config_download_via_dhcp': value})
+                index_dict.update({'next_boot': next_boot})
+
+                continue
+
+            # Switch 2
+            # switch 3
+            p12 = re.compile(r'^[Ss]witch +(?P<switch_number>\d+)$')
+            m12 = p12.match(line)
+            if m12:
+                switch_number = int(m12.groupdict()['switch_number'])
+                
+                continue
+
         return boot_dict
 
 
