@@ -1069,7 +1069,7 @@ class DirSchema(MetaParser):
 class Dir(DirSchema):
     """Parser for dir"""
 
-    cli_command = 'dir'
+    cli_command = ['dir', 'dir {directory}']
     exclude = [
         'date',
         'size',
@@ -1077,14 +1077,17 @@ class Dir(DirSchema):
         'disk_free_space',
         'disk_used_space']
 
-    def cli(self,output=None):
+    def cli(self, directory='', output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
