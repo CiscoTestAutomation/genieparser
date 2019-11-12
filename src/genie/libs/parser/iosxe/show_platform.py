@@ -2061,8 +2061,6 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # Switch 2
-            # switch 2
-            # Switch 3
             # switch 3
             p12 = re.compile(r'^[Ss]witch +(?P<switch_number>\d+)$')
             m12 = p12.match(line)
