@@ -29,7 +29,7 @@ from genie.libs.parser.iosxe.tests.test_show_mpls import \
                             test_show_mpls_ldp_capabilities as test_show_mpls_ldp_capabilities_iosxe,\
                             test_show_mpls_ldp_discovery as test_show_mpls_ldp_discovery_iosxe,\
                             test_show_mpls_ldp_igp_sync as test_show_mpls_ldp_igp_sync_iosxe,\
-                            test_show_mpls_forwarding_table as test_show_mpls_forwarding_table_iosxe,\
+                            TestShowMplsForwardingTable as test_show_mpls_forwarding_table_iosxe,\
                             test_show_mpls_interface as test_show_mpls_interface_iosxe, \
                             test_show_mpls_l2transport_vc as test_show_mpls_l2transport_vc_iosxe
 

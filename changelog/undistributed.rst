@@ -26,30 +26,34 @@
     * Added ShowInterfacesDescription for commands;
         * 'show interfaces description'
         * 'show interfaces {interface} description'
-		
+    * Added ShowIpNatTranslations
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+    * Added ShowIpCefInternal
+        * show ip cef {ip} internal
+        * show ip cef internal
+
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-		
+
 * IOS
     * Added ShowInterfacesDescription for commands;
         * 'show interfaces description'
         * 'show interfaces {interface} description'
-
-* IOSXR
-    * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
-        * 'show msdp peer'
-        * 'show msdp vrf {vrf} peer'
-        * 'show msdp context'
-        * 'show msdp vrf {vrf} context'
-        * 'show msdp summary'
-        * 'show msdp vrf {vrf} summary'
-        * 'show msdp sa-cache'
-        * 'show msdp vrf {vrf} sa-cache'
-        * 'show msdp statistics peer'
-        * 'show msdp vrf {vrf} statistics peer'
-    * Added ShowIgmp for commands;
+    * Added ShowIpNatTranslations for commands:
+        * show ip nat translations
+        * show ip nat translations verbose
+        * show ip nat translations vrf {vrf}
+        * show ip nat translations vrf {vrf} verbose
+    * Added ShowIpNatStatistics
+        * show ip nat statistics
+    * Added ShowIgmp for commands:
         * 'show igmp interface'
         * 'show igmp interface {interface}'
         * 'show igmp vrf {vrf} interface'
@@ -63,7 +67,38 @@
         * 'show interfaces {interface} description'
     * Added ShowIsisPrivateAll for commands;
         * 'show isis private all'
-		
+
+* IOSXR
+    * Added ShowMsdpPeer for commands:
+        * 'show msdp peer'
+        * 'show msdp vrf {vrf} peer'
+    * Added ShowMsdpContext for commands:
+        * 'show msdp context'
+        * 'show msdp vrf {vrf} context'
+    * Added ShowMsdpSummary for commands:
+        * 'show msdp summary'
+        * 'show msdp vrf {vrf} summary'
+    * Added ShowMsdpSaCache for commands:
+        * 'show msdp sa-cache'
+        * 'show msdp vrf {vrf} sa-cache'
+    * Added ShowMsdpStatisticsPeer for commands:
+        * 'show msdp statistics peer'
+        * 'show msdp vrf {vrf} statistics peer'
+
+* JUNOS
+    * Added ShowOspfInterface for commands:
+        * 'show ospf interface'
+        * 'show ospf interface {interface}'
+        * 'show ospf interface instance {instance}'
+    * Added ShowOspfInterfaceDetail for commands:
+        * 'show ospf interface detail'
+        * 'show ospf interface {interface} detail'
+        * 'show ospf interface detail instance {instance}'
+        * 'show ospf interface {interface} detail instance {instance}'
+    * Added ShowTedDatabaseExtensive for commands:
+        * 'show ted database extensive'
+        * 'show ted database extensive {node_id}'
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -76,10 +111,9 @@
         * Added unittest corresponding to the new supported output
     * Enhanced ShowRouteIpv6:
         * Updated regex to support various outputs
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * NXOS
     * ShowIpOspf
         * Added missing keys to schema
@@ -87,9 +121,6 @@
     * Updated ShowVpc for:
         * Parser schema and regex to support more output
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowAuthenticationSessions
         * Changed keyword to Optional
@@ -109,10 +140,11 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+    * Updated ShowMplsForwardingTable for:
+        * show mpls forwarding-table
+        * show mpls forwarding-table {prefix}
+        * show mpls forwarding-table vrf {vrf}
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * IOS
     * Updated ShowInventory
         * Added regex to support various outputs
