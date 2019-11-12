@@ -4988,7 +4988,64 @@ Paths: (1 available, best #1, no table)
                 },
             },
         }
-        
+   
+    golden_output4 = {'execute.return_value':'''
+        Route Distinguisher: 65000:1 (default for vrf VRF1)
+        BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+          Paths: (1 available, best #1, table VRF1)
+          Not advertised to any peer
+          Refresh Epoch 1
+          Local
+            0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+              Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
+              Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
+                0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
+              rx pathid: 0, tx pathid: 0x0
+        '''}   
+ 
+    golden_parsed_output4 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'VRF1': {
+                        'address_family': {
+                            'vpnv4': {
+                                'prefixes': {
+                                    '1.1.1.1/32': {
+                                        'table_version': '2',
+                                        'available_path': '1',
+                                        'best_path': '1',
+                                        'paths': '1 available, best #1, table VRF1',
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
+                                                'gateway': '0.0.0.0',
+                                                'originator': '1.1.1.1',
+                                                'next_hop_via': 'vrf VRF1',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'weight': '32768',
+                                                'origin_codes': 'i',
+                                                'status_codes': '*>',
+                                                'refresh_epoch': 1,
+                                                'route_info': 'Local',
+                                                'ext_community': 'Cost:pre-bestpath:128:1280 0x8800:32768:0',
+                                                'recipient_pathid': '0',
+                                                'transfer_pathid': '0x0',
+                                                }
+                                            }
+                                        }
+                                    },
+                                    'route_distinguisher': '65000:1',
+                                    'default_vrf': 'VRF1'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -5016,6 +5073,13 @@ Paths: (1 available, best #1, no table)
         parsed_output = obj.parse(address_family='vpnv4', rd='65109:4093',
             route='10.229.11.11/32')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+        
+    def test_show_bgp_all_detail_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpBgpDetail(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4')
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
         
 #-------------------------------------------------------------------------------
 
