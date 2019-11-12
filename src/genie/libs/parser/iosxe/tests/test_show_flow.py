@@ -160,24 +160,24 @@ class TestShowFlowMonitorCache(unittest.TestCase):
         'entries': {
             1: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.2.254',
-                'ipv4_dst_addr': '193.168.2.253',
+                'ipv4_src_addr': '192.168.189.254',
+                'ipv4_dst_addr': '192.168.189.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1003',
                 'pkts': 2,
             },
             2: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.0.254',
-                'ipv4_dst_addr': '193.168.0.253',
+                'ipv4_src_addr': '192.168.16.254',
+                'ipv4_dst_addr': '192.168.16.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1001',
                 'pkts': 3,
             },
             3: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.1.254',
-                'ipv4_dst_addr': '193.168.1.253',
+                'ipv4_src_addr': '192.168.229.254',
+                'ipv4_dst_addr': '192.168.229.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1002',
                 'pkts': 3,
@@ -200,9 +200,9 @@ class TestShowFlowMonitorCache(unittest.TestCase):
 
         IP VRF ID INPUT                IPV4 SRC ADDR    IPV4 DST ADDR    intf input            intf output                 pkts
         =============================  ===============  ===============  ====================  ====================  ==========
-        0          (DEFAULT)           193.168.2.254    193.168.2.253    Null                  Te0/0/0.1003                   2
-        0          (DEFAULT)           193.168.0.254    193.168.0.253    Null                  Te0/0/0.1001                   3
-        0          (DEFAULT)           193.168.1.254    193.168.1.253    Null                  Te0/0/0.1002                   3
+        0          (DEFAULT)           192.168.189.254    192.168.189.253    Null                  Te0/0/0.1003                   2
+        0          (DEFAULT)           192.168.16.254    192.168.16.253    Null                  Te0/0/0.1001                   3
+        0          (DEFAULT)           192.168.229.254    192.168.229.253    Null                  Te0/0/0.1002                   3
         
         Device#
     '''}
@@ -246,24 +246,24 @@ class TestShowFlowMonitorCacheRecord(unittest.TestCase):
         'entries': {
             1: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.2.254',
-                'ipv4_dst_addr': '193.168.2.253',
+                'ipv4_src_addr': '192.168.189.254',
+                'ipv4_dst_addr': '192.168.189.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1003',
                 'pkts': 3,
             },
             2: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.0.254',
-                'ipv4_dst_addr': '193.168.0.253',
+                'ipv4_src_addr': '192.168.16.254',
+                'ipv4_dst_addr': '192.168.16.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1001',
                 'pkts': 4,
             },
             3: {
                 'ip_vrf_id_input': '0          (DEFAULT)',
-                'ipv4_src_addr': '193.168.1.254',
-                'ipv4_dst_addr': '193.168.1.253',
+                'ipv4_src_addr': '192.168.229.254',
+                'ipv4_dst_addr': '192.168.229.253',
                 'intf_input': 'Null',
                 'intf_output': 'TenGigabitEthernet0/0/0.1002',
                 'pkts': 4,
@@ -289,22 +289,22 @@ class TestShowFlowMonitorCacheRecord(unittest.TestCase):
             - Emergency aged                           0
 
         IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       193.168.2.254
-        IPV4 DESTINATION ADDRESS:  193.168.2.253
+        IPV4 SOURCE ADDRESS:       192.168.189.254
+        IPV4 DESTINATION ADDRESS:  192.168.189.253
         interface input:           Null
         interface output:          Te0/0/0.1003
         counter packets:           3
 
         IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       193.168.0.254
-        IPV4 DESTINATION ADDRESS:  193.168.0.253
+        IPV4 SOURCE ADDRESS:       192.168.16.254
+        IPV4 DESTINATION ADDRESS:  192.168.16.253
         interface input:           Null
         interface output:          Te0/0/0.1001
         counter packets:           4
 
         IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       193.168.1.254
-        IPV4 DESTINATION ADDRESS:  193.168.1.253
+        IPV4 SOURCE ADDRESS:       192.168.229.254
+        IPV4 DESTINATION ADDRESS:  192.168.229.253
         interface input:           Null
         interface output:          Te0/0/0.1002
         counter packets:           4
