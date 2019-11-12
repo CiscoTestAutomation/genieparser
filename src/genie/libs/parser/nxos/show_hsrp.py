@@ -111,8 +111,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                 hsrp_summary['stats']['v2_ipv6'] = int(m.groupdict()['v2_ipv6'])
                 continue
 
-            # Stat2001:db8:c4::     Active: 0       Standby: 0       Listen: 0
-            p5 = re.compile(r'\s*Stat2001:db8:c4:: +Active: +(?P<active>[0-9]+)'
+            # State::     Active: 0       Standby: 0       Listen: 0
+            p5 = re.compile(r'\s*State:: +Active: +(?P<active>[0-9]+)'
                              ' +Standby: +(?P<standby>[0-9]+) +Listen:'
                              ' +(?P<listen>[0-9]+)$')
             m = p5.match(line)
@@ -122,8 +122,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                 hsrp_summary['stats']['listen'] = int(m.groupdict()['listen'])
                 continue
 
-            # Stat2001:db8:c4::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0
-            p6 = re.compile(r'\s*Stat2001:db8:c4:: +V6-Active: +(?P<v6_active>[0-9]+)'
+            # State::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0
+            p6 = re.compile(r'\s*State:: +V6-Active: +(?P<v6_active>[0-9]+)'
                              ' +V6-Standby: +(?P<v6_standby>[0-9]+)'
                              ' +V6-Listen: +(?P<v6_listen>[0-9]+)$')
             m = p6.match(line)

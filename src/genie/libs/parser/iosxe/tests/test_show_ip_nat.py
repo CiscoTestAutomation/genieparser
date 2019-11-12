@@ -98,7 +98,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
         Pro Inside global        Inside local       Outside local      Outside global
         udp 10.1.7.2:1220  192.168.1.95:1220  10.100.20.100:53    10.100.20.100:53
         tcp 10.1.7.2:11012 192.168.1.89:11012 10.26.102.100:23    10.26.102.100:23
-        tcp 10.1.7.2:1067  192.168.1.95:1067  100.100.2.25:23    100.100.2.25:23
+        tcp 10.1.7.2:1067  192.168.1.95:1067  10.220.2.25:23    10.220.2.25:23
         Total number of translations: 3
     '''
     }
@@ -124,8 +124,8 @@ class TestShowIpNatTranslations(unittest.TestCase):
                     3: {
                         'inside_global': '10.1.7.2:1067',
                         'inside_local': '192.168.1.95:1067',
-                        'outside_global': '100.100.2.25:23',
-                        'outside_local': '100.100.2.25:23',
+                        'outside_global': '10.220.2.25:23',
+                        'outside_local': '10.220.2.25:23',
                         'protocol': 'tcp'
                     }
                 }
@@ -224,15 +224,15 @@ class TestShowIpNatTranslations(unittest.TestCase):
     golden_output_vrf = {'execute.return_value': '''
         Router# show ip nat translations vrf abc
         Pro Inside global Inside local Outside local Outside global
-        --- 2.2.2.1 192.168.121.113 --- ---
-        --- 2.2.2.2 192.168.122.49 --- ---
-        --- 2.2.2.11 192.168.11.1 --- ---
-        --- 2.2.2.12 192.168.11.3 --- ---
-        --- 2.2.2.13 140.48.5.20 --- ---
+        --- 10.16.2.1 192.168.121.113 --- ---
+        --- 10.16.2.2 192.168.122.49 --- ---
+        --- 10.16.2.11 192.168.11.1 --- ---
+        --- 10.16.2.12 192.168.11.3 --- ---
+        --- 10.16.2.13 172.16.19.20 --- ---
 
         Pro Inside global Inside local Outside local Outside global
-        --- 2.2.2.3 192.168.121.113 --- ---
-        --- 2.2.2.4 192.168.22.49 --- ---
+        --- 10.16.2.3 192.168.121.113 --- ---
+        --- 10.16.2.4 192.168.22.49 --- ---
     '''
     }
 
@@ -241,49 +241,49 @@ class TestShowIpNatTranslations(unittest.TestCase):
             'default': {
                 'index': {
                     1: {
-                        'inside_global': '2.2.2.1',
+                        'inside_global': '10.16.2.1',
                         'inside_local': '192.168.121.113',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     2: {
-                        'inside_global': '2.2.2.2',
+                        'inside_global': '10.16.2.2',
                         'inside_local': '192.168.122.49',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     3: {
-                        'inside_global': '2.2.2.11',
+                        'inside_global': '10.16.2.11',
                         'inside_local': '192.168.11.1',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     4: {
-                        'inside_global': '2.2.2.12',
+                        'inside_global': '10.16.2.12',
                         'inside_local': '192.168.11.3',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     5: {
-                        'inside_global': '2.2.2.13',
-                        'inside_local': '140.48.5.20',
+                        'inside_global': '10.16.2.13',
+                        'inside_local': '172.16.19.20',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     6: {
-                        'inside_global': '2.2.2.3',
+                        'inside_global': '10.16.2.3',
                         'inside_local': '192.168.121.113',
                         'outside_global': '---',
                         'outside_local': '---',
                         'protocol': '---'
                     },
                     7: {
-                        'inside_global': '2.2.2.4',
+                        'inside_global': '10.16.2.4',
                         'inside_local': '192.168.22.49',
                         'outside_global': '---',
                         'outside_local': '---',
@@ -299,9 +299,9 @@ class TestShowIpNatTranslations(unittest.TestCase):
         Pro Inside global      Inside local       Outside local      Outside global
         icmp 192.168.33.28:228 172.25.0.1:228     192.168.33.1:228   192.168.33.1:228
         icmp 192.168.33.28:229 172.25.0.1:229     192.168.33.28:229  192.168.33.28:229
-        icmp 192.168.33.28:230 172.25.0.1:230     8.8.8.8:230        8.8.8.8:230
-        icmp 192.168.33.28:231 172.25.0.1:231     198.80.55.1:231    198.80.55.1:231
-        icmp 192.168.33.28:27432 172.25.0.2:27432 8.8.8.8:27432      8.8.8.8:27432
+        icmp 192.168.33.28:230 172.25.0.1:230     10.1.8.8:230        10.1.8.8:230
+        icmp 192.168.33.28:231 172.25.0.1:231     192.168.219.1:231    192.168.219.1:231
+        icmp 192.168.33.28:27432 172.25.0.2:27432 10.1.8.8:27432      10.1.8.8:27432
     '''
     }
 
@@ -326,22 +326,22 @@ class TestShowIpNatTranslations(unittest.TestCase):
                     3: {
                         'inside_global': '192.168.33.28:230',
                         'inside_local': '172.25.0.1:230',
-                        'outside_global': '8.8.8.8:230',
-                        'outside_local': '8.8.8.8:230',
+                        'outside_global': '10.1.8.8:230',
+                        'outside_local': '10.1.8.8:230',
                         'protocol': 'icmp'
                     },
                     4: {
                         'inside_global': '192.168.33.28:231',
                         'inside_local': '172.25.0.1:231',
-                        'outside_global': '198.80.55.1:231',
-                        'outside_local': '198.80.55.1:231',
+                        'outside_global': '192.168.219.1:231',
+                        'outside_local': '192.168.219.1:231',
                         'protocol': 'icmp'
                     },
                     5: {
                         'inside_global': '192.168.33.28:27432',
                         'inside_local': '172.25.0.2:27432',
-                        'outside_global': '8.8.8.8:27432',
-                        'outside_local': '8.8.8.8:27432',
+                        'outside_global': '10.1.8.8:27432',
+                        'outside_local': '10.1.8.8:27432',
                         'protocol': 'icmp'
                     }
                 }
@@ -352,25 +352,25 @@ class TestShowIpNatTranslations(unittest.TestCase):
     golden_output_vrf_verbose = {'execute.return_value': '''
         GENIE-1(config)# show ip nat translations vrf genie verbose
         Pro Inside global      Inside local       Outside local      Outside global
-        any ---                ---                10.1.0.2          11.1.0.2
+        any ---                ---                10.1.0.2          10.144.0.2
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:0:-1
-        any ---                ---                100.1.2.21          120.1.211
+        any ---                ---                10.1.2.21          120.1.211
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:38
-        any ---                ---                100.1.2.22          120.1.212
+        any ---                ---                10.1.2.22          120.1.212
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:56
-        any ---                ---                100.1.2.23          120.1.213
+        any ---                ---                10.1.2.23          120.1.213
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:30
-        any ---                ---                100.1.2.24          120.1.214
+        any ---                ---                10.1.2.24          120.1.214
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:54
-        any ---                ---                100.1.2.25          120.1.215
+        any ---                ---                10.1.2.25          120.1.215
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:58
-        any ---                ---                100.1.2.26          120.1.216
+        any ---                ---                10.1.2.26          120.1.216
             Group_id:0   vrf: genie
             Format(H:M:S) Time-left :0:1:30
     '''
@@ -384,7 +384,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'group_id': 0,
                         'inside_global': '---',
                         'inside_local': '---',
-                        'outside_global': '11.1.0.2',
+                        'outside_global': '10.144.0.2',
                         'outside_local': '10.1.0.2',
                         'protocol': 'any',
                         'time_left': '0:0:-1'
@@ -394,7 +394,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.211',
-                        'outside_local': '100.1.2.21',
+                        'outside_local': '10.1.2.21',
                         'protocol': 'any',
                         'time_left': '0:1:38'
                     },
@@ -403,7 +403,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.212',
-                        'outside_local': '100.1.2.22',
+                        'outside_local': '10.1.2.22',
                         'protocol': 'any',
                         'time_left': '0:1:56'
                     },
@@ -412,7 +412,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.213',
-                        'outside_local': '100.1.2.23',
+                        'outside_local': '10.1.2.23',
                         'protocol': 'any',
                         'time_left': '0:1:30'
                     },
@@ -421,7 +421,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.214',
-                        'outside_local': '100.1.2.24',
+                        'outside_local': '10.1.2.24',
                         'protocol': 'any',
                         'time_left': '0:1:54'
                     },
@@ -430,7 +430,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.215',
-                        'outside_local': '100.1.2.25',
+                        'outside_local': '10.1.2.25',
                         'protocol': 'any',
                         'time_left': '0:1:58'
                     },
@@ -439,7 +439,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
                         'inside_global': '---',
                         'inside_local': '---',
                         'outside_global': '120.1.216',
-                        'outside_local': '100.1.2.26',
+                        'outside_local': '10.1.2.26',
                         'protocol': 'any',
                         'time_left': '0:1:30'
                     }
@@ -797,7 +797,7 @@ class TestShowIpNatStatistics(unittest.TestCase):
         -- Inside Source
         [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
         pool inside-pool: id 1, netmask 255.255.255.0
-            start 6.1.1.1 end 6.1.1.1
+            start 10.49.1.1 end 10.49.1.1
             type generic, total addresses 1, allocated 1 (100%), misses 0
         nat-limit statistics:
         max entry: max allowed 0, used 0, missed 0
@@ -825,11 +825,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
                             'inside-pool': {
                                 'allocated': 1,
                                 'allocated_percentage': 100,
-                                'end': '6.1.1.1',
+                                'end': '10.49.1.1',
                                 'id': 1,
                                 'misses': 0,
                                 'netmask': '255.255.255.0',
-                                'start': '6.1.1.1',
+                                'start': '10.49.1.1',
                                 'total_addresses': 1,
                                 'type': 'generic'
                             }
@@ -876,11 +876,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
         -- Inside Source
         [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
         pool inside-pool: id 6, netmask 255.255.255.0
-            start 6.1.1.1 end 6.1.1.1
+            start 10.49.1.1 end 10.49.1.1
             type generic, total addresses 1, allocated 1 (100%), misses 0
         [Id: 0] route-map STATIC-MAP pool genie-pool refcount 5
         pool genie-pool: id 5, netmask 255.255.255.0
-            start 6.1.1.1 end 6.1.1.1
+            start 10.49.1.1 end 10.49.1.1
             type generic, total addresses 1, allocated 1 (100%), misses 0
         [Id: 4] route-map GENIE-MAP
         [Id: 3] access-list 99 interface Serial0/0 refcount 1
@@ -910,11 +910,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
                             'genie-pool': {
                                 'allocated': 1,
                                 'allocated_percentage': 100,
-                                'end': '6.1.1.1',
+                                'end': '10.49.1.1',
                                 'id': 5,
                                 'misses': 0,
                                 'netmask': '255.255.255.0',
-                                'start': '6.1.1.1',
+                                'start': '10.49.1.1',
                                 'total_addresses': 1,
                                 'type': 'generic'
                             }
@@ -928,11 +928,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
                             'inside-pool': {
                                 'allocated': 1,
                                 'allocated_percentage': 100,
-                                'end': '6.1.1.1',
+                                'end': '10.49.1.1',
                                 'id': 6,
                                 'misses': 0,
                                 'netmask': '255.255.255.0',
-                                'start': '6.1.1.1',
+                                'start': '10.49.1.1',
                                 'total_addresses': 1,
                                 'type': 'generic'
                             }
@@ -991,7 +991,7 @@ class TestShowIpNatStatistics(unittest.TestCase):
         -- Inside Source
         [Id: 1] access-list test pool net-208 refcount 3000
         pool net-208: id 1, netmask 255.255.0.0
-            start 50.50.0.1 end 50.50.100.254
+            start 10.55.0.1 end 10.55.100.254
             type generic, total addresses 25854, allocated 1500 (5%), misses 0
         longest chain in pool: net-208's addr-hash: 6, average len 5,chains 256/256
     '''
@@ -1019,11 +1019,11 @@ class TestShowIpNatStatistics(unittest.TestCase):
                                 'allocated_percentage': 5,
                                 'average_len': 5,
                                 'chains': '256/256',
-                                'end': '50.50.100.254',
+                                'end': '10.55.100.254',
                                 'id': 1,
                                 'misses': 0,
                                 'netmask': '255.255.0.0',
-                                'start': '50.50.0.1',
+                                'start': '10.55.0.1',
                                 'total_addresses': 25854,
                                 'type': 'generic'
                             }
