@@ -58,7 +58,8 @@ class ShowAuthenticationSessionsSchema(MetaParser):
                     }
                 }
             }
-        }
+        },
+        Optional('session_count'): int,
     }
 
 
@@ -103,6 +104,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
                         '(?P<status>\w+(?: +\w+)?) +'
                         '(?P<session>\w+)$')
 
+        # *Session count = 2*
+        p5 = re.compile(r'(?:\*)?Session +[Cc]ount +\= '
+                        r'+(?P<session_count>\d+)(?:\*)?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -129,6 +134,14 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
                 session = group['session']
                 client_dict.setdefault('session', {}).setdefault(session, {}) \
                     .setdefault('session_id', session)
+                continue
+            
+            # *Session count = 2*
+            m5 = p5.match(line)
+            if m5:
+                count = int(m5.groupdict()['session_count'])
+                ret_dict.update({'session_count': count})
+
                 continue
 
         return ret_dict
@@ -169,6 +182,12 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         'handle': str,
                         Optional('idle_timeout'): str,
                         Optional('current_policy'): str,
+                        Optional('server_policies'): {
+                            Any():{ # 1, 2, 3
+                                Optional('name'): str,
+                                Optional('policies'): str
+                            }
+                        },
                         Optional('local_policies'): {
                             'template': {
                                 Any(): {
@@ -224,8 +243,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
-
-        p1 = re.compile(r'^(?P<argument>[\w\s\-]+): +(?P<value>[\w\s\-\.\./]+)$')
+        p1 = re.compile(r'(?:\*)?(?P<argument>[\w\s\-]+)\: '
+                        r'+(?P<value>[\w\s\-\.\./]+|\S+)(?:\*)?$')
 
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
@@ -266,10 +285,15 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # IPv6 Address: fe9d:f156::1
         p11 = re.compile(r'^IPv6 +Address\: +(?P<ipv6>\S+?)$')
 
+        # Server Policies:
+        p12 = re.compile(r'^Server +Policies\:$')
+
         # initial return dictionary
         ret_dict = {}
         hold_dict = {}
         mac_dict = {}
+        policies_flag = False
+        index = 1
 
         for line in out.splitlines():
             line = line.strip()
@@ -327,37 +351,57 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #        Current Policy:  dot1x_dvlan_reauth_hm
             #         Authorized By:  Guest Vlan
             #                Status:  Authz Success
-
+            # *ACS ACL: xGENIEx-Test_ACL_CiscoPhones-e23431ede2*
+            # ACS ACL: xACSACLx-IP-ACL_MABDefault_V3-8dase3932
+            # URL Redirect ACL: ACLSWITCH_Redirect_v1
             m = p1.match(line)
             if m:
+                known_list = ['interface', 'iif_id', 'mac_address', 
+                              'ipv6_address', 'ipv4_address', 'user_name', 
+                              'status', 'domain', 'oper_host_mode', 
+                              'oper_control_dir', 'session_timeout', 
+                              'common_session_id', 'acct_session_id', 
+                              'handle', 'current_policy', 'authorized_by',
+                              'periodic_acct_timeout', 'restart_timeout',
+                              'session_uptime', 'timeout_action', 'ip_address',
+                              'idle_timeout', 'vlan_policy']
+
                 group = m.groupdict()
 
                 key = re.sub(r'( |-)', '_', group['argument'].lower())
 
-                # to keep pv4_address as common key
-                if key == 'ip_address':
-                    key = 'ipv4_address'
+                if key in known_list:
+                    # to keep pv4_address as common key
+                    if key == 'ip_address':
+                        key = 'ipv4_address'
 
-                if 'interfaces' in ret_dict.keys():
-                    if key == 'mac_address':
-                        mac_dict = intf_dict.setdefault(group['value'], {})
-                    elif key == 'iif_id':
-                        hold_dict.update({'argument': key, 'value': group['value']})
-                    else:
-                        if hold_dict:
+                    if 'interfaces' in ret_dict.keys():
+                        if key == 'mac_address':
+                            mac_dict = intf_dict.setdefault(group['value'], {})
+                        elif key == 'iif_id':
+                            hold_dict.update({'argument': key, 'value': group['value']})
+                        elif hold_dict:
                             mac_dict.update({key: group['value']})
                             tmp_keys = hold_dict.pop('argument')
                             tmp_values = hold_dict.pop('value')
                             mac_dict.update({tmp_keys: tmp_values})
-                        else:
-                            if key != 'interface':
-                                mac_dict.update({key: group['value']})
-                else:
-                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(group['value'], \
-                                                                                 {}).setdefault('mac_address', {})
+
+                        elif key != 'interface':
+                            mac_dict.update({key: group['value']})
+                    else:
+                        mac_dict = ret_dict.setdefault('interfaces', {})
+                        value_dict = mac_dict.setdefault(group['value'], {})
+                        intf_dict = value_dict.setdefault('mac_address', {})
+
+                elif (key not in known_list) and policies_flag:
+                    policies_dict = mac_dict.setdefault('server_policies', {})
+                    index_dict = policies_dict.setdefault(index, {})
+                    index_dict.update({'name': group['argument']})
+                    index_dict.update({'policies': group['value']})
+                    index += 1
 
                 continue
-
+ 
             # Template: CRITICAL_VLAN (priority 150)
             m = p3.match(line)
             if m:
@@ -396,6 +440,13 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m11 = p11.match(line)
             if m11:
                 mac_dict.update({'ipv6_address': m11.groupdict()['ipv6']})
+
+                continue
+
+            # Server Policies:
+            m12 = p12.match(line)
+            if m12:
+                policies_flag = True
 
                 continue
 

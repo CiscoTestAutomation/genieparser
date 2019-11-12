@@ -157,8 +157,11 @@
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
 
-* NXOS
-    * Updated ShowIpArpstatisticsVrfAll
+* IOSXE
+    * Updated ShowAuthenticationSessionsInterfaceDetails
         * Added keywords to schema
-        * Added regex to support more outputs
-        
+        * Added and changed regex to accommodate different outputs
+    
+    * Updated ShowAuthenticationSessions
+        * Added keyword to schema
+        * Added regex to support new output
