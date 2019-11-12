@@ -2024,7 +2024,8 @@ class ShowBoot(ShowBootSchema):
                 
                 key = self.SW_MAPPING.get(group['key'].strip())
                 true_false = self.TRUE_FALSE.get(group['value'])
-                if true_false == True or true_false == False:
+                
+                if isinstance(true_false, bool):
                     index_dict[key] = true_false
                 else:
                     index_dict[key] = group['value']
