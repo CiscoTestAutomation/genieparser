@@ -1058,7 +1058,7 @@ class DirSchema(MetaParser):
               'disk_free_space': str,
               'disk_total_space': str,
               'dir': str,
-              'files':
+              Optional('files'):
                   {Any():
                       {'size': str,
                        'date': str,
