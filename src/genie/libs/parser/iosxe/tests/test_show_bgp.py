@@ -1854,6 +1854,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: VPNv6 Flowspec
         '''}
 
+
+
     golden_parsed_output2 = {
       'instance':
         {'default':
@@ -1887,11 +1889,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
                           'originator': '10.21.33.33',
                           'recipient_pathid': '0',
                           'refresh_epoch': 1,
-                          'route_info': 'Local, '
-                                        'imported '
-                                        'path '
-                                        'from '
-                                        'base',
+                          'route_info': 'Local',
+                          'route_status': 'imported path from base',
                           'status_codes': '*>',
                           'transfer_pathid': '0x0',
                           'weight': '32768'}},
@@ -1926,11 +1925,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
                           'originator': '10.21.33.33',
                           'recipient_pathid': '0',
                           'refresh_epoch': 1,
-                          'route_info': 'Local, '
-                                        'imported '
-                                        'path '
-                                        'from '
-                                        'base',
+                          'route_info': 'Local',
+                          'route_status': 'imported path from base',
                           'status_codes': '*>',
                           'transfer_pathid': '0x0',
                           'weight': '32768'},
@@ -1955,11 +1951,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
                           'recipient_pathid': '0',
                           'transfer_pathid': '0',
                           'refresh_epoch': 1,
-                          'route_info': '65530, '
-                                        'imported '
-                                        'path '
-                                        'from '
-                                        'base',
+                          'route_info': '65530',
+                          'route_status': 'imported path from base',
                           'status_codes': '* '}},
                        'paths': '2 '
                                 'available, '
@@ -3014,11 +3007,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                  'originator': '10.169.197.254',
                                                                  'recipient_pathid': '0',
                                                                  'refresh_epoch': 2,
-                                                                 'route_info': '62000, '
-                                                                               '(Received '
-                                                                               'from '
-                                                                               'a '
-                                                                               'RR-client)',
+                                                                 'route_info': '62000',
+                                                                 'route_status': '(Received from a RR-client)',
                                                                  'status_codes': '*>',
                                                                  'transfer_pathid': '0x0',
                                                                  'update_group': [38, 44, 45]}},
@@ -3042,11 +3032,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                      'originator': '10.169.197.254',
                                                                      'recipient_pathid': '0',
                                                                      'refresh_epoch': 2,
-                                                                     'route_info': '62000, '
-                                                                                   '(Received '
-                                                                                   'from '
-                                                                                   'a '
-                                                                                   'RR-client)',
+                                                                     'route_info': '62000',
+                                                                     'route_status': '(Received from a RR-client)',
                                                                      'status_codes': '*>',
                                                                      'transfer_pathid': '0x0',
                                                                      'update_group': [38, 44, 45]}},
@@ -3071,11 +3058,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3099,11 +3083,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                        'originator': '10.169.197.254',
                                                                        'recipient_pathid': '0',
                                                                        'refresh_epoch': 2,
-                                                                       'route_info': '62000, '
-                                                                                     '(Received '
-                                                                                     'from '
-                                                                                     'a '
-                                                                                     'RR-client)',
+                                                                       'route_info': '62000',
+                                                                       'route_status': '(Received from a RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
                                                                        'update_group': [38, 44, 45]}},
@@ -3127,11 +3108,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                        'originator': '10.169.197.254',
                                                                        'recipient_pathid': '0',
                                                                        'refresh_epoch': 2,
-                                                                       'route_info': '62000, '
-                                                                                     '(Received '
-                                                                                     'from '
-                                                                                     'a '
-                                                                                     'RR-client)',
+                                                                       'route_info': '62000',
+                                                                       'route_status': '(Received from a RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
                                                                        'update_group': [38, 44, 45]}},
@@ -3155,11 +3133,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                        'originator': '10.169.197.254',
                                                                        'recipient_pathid': '0',
                                                                        'refresh_epoch': 2,
-                                                                       'route_info': '62000, '
-                                                                                     '(Received '
-                                                                                     'from '
-                                                                                     'a '
-                                                                                     'RR-client)',
+                                                                       'route_info': '62000',
+                                                                       'route_status': '(Received from a RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
                                                                        'update_group': [38, 44, 45]}},
@@ -3183,11 +3158,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                        'originator': '10.169.197.254',
                                                                        'recipient_pathid': '0',
                                                                        'refresh_epoch': 2,
-                                                                       'route_info': '62000, '
-                                                                                     '(Received '
-                                                                                     'from '
-                                                                                     'a '
-                                                                                     'RR-client)',
+                                                                       'route_info': '62000',
+                                                                       'route_status': '(Received from a RR-client)',
                                                                        'status_codes': '*>',
                                                                        'transfer_pathid': '0x0',
                                                                        'update_group': [38, 44, 45]}},
@@ -3212,11 +3184,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3240,11 +3209,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3268,11 +3234,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3296,11 +3259,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3324,11 +3284,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3352,11 +3309,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3380,11 +3334,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -3408,11 +3359,8 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                                       'originator': '10.169.197.254',
                                                                       'recipient_pathid': '0',
                                                                       'refresh_epoch': 2,
-                                                                      'route_info': '62000, '
-                                                                                    '(Received '
-                                                                                    'from '
-                                                                                    'a '
-                                                                                    'RR-client)',
+                                                                      'route_info': '62000',
+                                                                      'route_status': '(Received from a RR-client)',
                                                                       'status_codes': '*>',
                                                                       'transfer_pathid': '0x0',
                                                                       'update_group': [38, 44, 45]}},
@@ -5023,7 +4971,8 @@ Paths: (1 available, best #1, no table)
                                                 'origin_codes': '?',
                                                 'status_codes': '*>',
                                                 'refresh_epoch': 9,
-                                                'route_info': '65555, (Received from a RR-client)',
+                                                'route_info': '65555',
+                                                'route_status': '(Received from a RR-client)',
                                                 'community': '62000:1',
                                                 'ext_community': 'RT:65109:4093',
                                                 'recipient_pathid': '0',
@@ -5039,6 +4988,7 @@ Paths: (1 available, best #1, no table)
                 },
             },
         }
+        
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -5066,8 +5016,7 @@ Paths: (1 available, best #1, no table)
         parsed_output = obj.parse(address_family='vpnv4', rd='65109:4093',
             route='10.229.11.11/32')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
-
-
+        
 #-------------------------------------------------------------------------------
 
 
@@ -9628,7 +9577,7 @@ class test_show_bgp_all_neighbors(unittest.TestCase):
                                                 'received',
                             'graceful_restart_af_advertised_by_peer': ['vpnv4 '
                                                                        'unicast',
-                                                                       'l2vpn '
+                                                                     'l2vpn '
                                                                        'vpls'],
                             'l2vpn_vpls': 'advertised '
                                           'and '
