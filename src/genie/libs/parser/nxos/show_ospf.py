@@ -1808,8 +1808,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('hello_timer'): str,
                                                 Optional('statistics'): 
-                                                    {'link_scope_lsa_count': int,
-                                                    'link_scope_lsa_cksum_sum': int,
+                                                    {Optional('link_scope_lsa_count'): int,
+                                                    Optional('link_scope_lsa_cksum_sum'): int,
                                                     Optional('total_neighbors'): int,
                                                     Optional('num_nbrs_flooding'): int,
                                                     Optional('num_nbrs_adjacent'): int},

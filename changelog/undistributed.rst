@@ -36,6 +36,10 @@
     * Added ShowIpCefInternal
         * show ip cef {ip} internal
         * show ip cef internal
+    * Added ShowFlowMonitorCache for command;
+        * show flow monitor {name} cache
+    * Added ShowFlowMonitorCacheRecord for command;
+        * show flow monitor {name} cache format record
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
@@ -140,6 +144,10 @@
     * Updated ShowIpv6RouteWord for:
         * show ipv6 route {route}
         * show ipv6 route vrf {vrf} {route}
+    * Updated ShowMplsForwardingTable for:
+        * show mpls forwarding-table
+        * show mpls forwarding-table {prefix}
+        * show mpls forwarding-table vrf {vrf}
 
 * IOS
     * Updated ShowInventory
@@ -152,3 +160,15 @@
         * Added command 'show ospf interface {interface} brief'
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
+
+* NXOS
+    * Updated ShowIpOspfInterfaceVrfAll
+        * Changed keywords schema to optional
+* IOSXE
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+        * Added keywords to schema
+        * Added and changed regex to accommodate different outputs
+    
+    * Updated ShowAuthenticationSessions
+        * Added keyword to schema
+        * Added regex to support new output

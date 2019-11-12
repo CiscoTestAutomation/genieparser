@@ -286,7 +286,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
     show ospf interface detail
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-      Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 50
+      Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 50
       Adj count: 1
       Hello: 10, Dead: 20, ReXmit: 10, Not Stub
       Auth type: None
@@ -294,7 +294,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
       Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 50
       Topology default (ID 0) -> Cost: 50
     ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-      Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+      Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
       Adj count: 1
       Hello: 10, Dead: 10, ReXmit: 5, Not Stub
       Auth type: None
@@ -315,7 +315,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 50,
@@ -347,7 +347,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,
@@ -384,7 +384,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
     show ospf interface ge-0/0/1.0 detail
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-      Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+      Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
       Adj count: 1
       Hello: 10, Dead: 10, ReXmit: 5, Not Stub
       Auth type: None
@@ -405,7 +405,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,
@@ -442,7 +442,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         show ospf interface detail instance master
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 50
+          Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 50
           Adj count: 1
           Hello: 10, Dead: 20, ReXmit: 10, Not Stub
           Auth type: None
@@ -450,7 +450,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
           Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 50
           Topology default (ID 0) -> Cost: 50
         ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+          Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
           Adj count: 1
           Hello: 10, Dead: 10, ReXmit: 5, Not Stub
           Auth type: None
@@ -471,7 +471,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 50,
@@ -503,7 +503,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,
@@ -540,7 +540,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         show ospf interface ge-0/0/1.0 detail instance master
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-          Type: P2P, Address: 169.0.4.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
+          Type: P2P, Address: 172.16.94.1, Mask: 255.255.255.0, MTU: 500, Cost: 100
           Adj count: 1
           Hello: 10, Dead: 10, ReXmit: 5, Not Stub
           Auth type: None
@@ -561,7 +561,7 @@ class test_show_ospf_interface_detail(unittest.TestCase):
                                 'bdr_id': '0.0.0.0',
                                 'nbrs_count': 1,
                                 'type': 'P2P',
-                                'address': '169.0.4.1',
+                                'address': '172.16.94.1',
                                 'mask': '255.255.255.0',
                                 'mtu': 500,
                                 'cost': 100,

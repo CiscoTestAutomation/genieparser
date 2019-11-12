@@ -56,8 +56,8 @@ class test_show_hsrp_summary(unittest.TestCase):
 
         Total Groups: 3
              Version::    V1-IPV4: 0       V2-IPV4: 3      V2-IPV6: 0   
-               Stat2001:db8:c4::     Active: 0       Standby: 0       Listen: 0   
-               Stat2001:db8:c4::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0   
+               State::     Active: 0       Standby: 0       Listen: 0   
+               State::  V6-Active: 0    V6-Standby: 0    V6-Listen: 0   
 
         Total HSRP Enabled interfaces: 1
 
