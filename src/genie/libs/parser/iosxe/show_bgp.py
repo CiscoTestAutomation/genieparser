@@ -996,10 +996,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
         # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
         # 62000, (Received from a RR-client)
-        # p17 = re.compile(r'^(?!.*?(Community|BGP|Origin|Refresh|Refresh|Refresh|AGI|rx|vrf|vtep-ip|encap|bdi))\s*(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\.\/\:\[\]]+)+((\,)?)+(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
-        # p17 = re.compile(r'^(?!.*(Community))\s*(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\.\/\:\[\]]+)+(\,)?+(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
         p17=re.compile(r'^(?!.*(Community))\s*(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)(\,)?(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
-        # p17 = re.compile(r'^\s*(?P<route_info>[a-zA-Z0-9\-\.\,\{\}\s\(\)\.\/\:\[\]]+)$')
 
         for line in output.splitlines():
             line = line.rstrip()
