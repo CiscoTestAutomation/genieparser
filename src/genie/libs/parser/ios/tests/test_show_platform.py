@@ -32,27 +32,27 @@ from genie.libs.parser.ios.show_platform import ShowVersion,\
     ShowModule,\
     ShowSwitch, ShowSwitchDetail
 
-from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform as test_show_platform_iosxe,\
-    test_show_platform_power as test_show_platform_power_iosxe,\
-    test_show_version_rp as test_show_version_rp_iosxe,\
-    test_show_processes_cpu as test_show_processes_cpu_iosxe,\
-    test_show_processes_cpu_history as test_show_processes_cpu_history_iosxe,\
-    test_show_processes_cpu_platform as test_show_processes_cpu_platform_iosxe,\
-    test_show_platform_software_status_control_processor_brief as test_show_platform_software_status_control_processor_brief_iosxe,\
-    test_show_platform_software_slot_active_monitor_Mem_Swap as test_show_platform_software_slot_active_monitor_Mem_iosxe,\
-    test_show_platform_hardware as test_show_platform_hardware_iosxe,\
-    test_show_platform_hardware_plim as test_show_platform_hardware_plim_iosxe,\
-    test_show_platform_hardware_qfp_bqs_opm_mapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe,\
-    test_show_platform_hardware_qfp_bqs_ipm_mapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe,\
-    test_show_platform_hardware_serdes_statistics as test_show_platform_hardware_serdes_statistics_iosxe,\
-    test_show_platform_hardware_serdes_statistics_internal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
-    show_platform_hardware_qfp_bqs_statistics_channel_all as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
-    show_platform_hardware_qfp_interface as show_platform_hardware_qfp_interface_iosxe,\
-    test_show_platform_hardware_qfp_statistics_drop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
-    test_show_env as test_show_env_iosxe,\
-    test_show_module as test_show_module_iosxe,\
-    test_show_switch as test_show_switch_iosxe,\
-    test_show_switch_detail as test_show_switch_detail_iosxe
+from genie.libs.parser.iosxe.tests.test_show_platform import TestShowPlatform as test_show_platform_iosxe,\
+    TestShowPlatformPower as test_show_platform_power_iosxe,\
+    TestShowVersionRp as test_show_version_rp_iosxe,\
+    TestShowProcessesCpu as test_show_processes_cpu_iosxe,\
+    TestShowProcessesCpuHistory as test_show_processes_cpu_history_iosxe,\
+    TestShowProcessesCpuPlatform as test_show_processes_cpu_platform_iosxe,\
+    TestShowPlatformSoftwareStatusControlProcessorBrief as test_show_platform_software_status_control_processor_brief_iosxe,\
+    TestShowPlatformSoftwareSlotActiveMonitorMemSwap as test_show_platform_software_slot_active_monitor_Mem_iosxe,\
+    TestShowPlatformHardware as test_show_platform_hardware_iosxe,\
+    TestShowPlatformHardwarePlim as test_show_platform_hardware_plim_iosxe,\
+    TestShowPlatformHardwareQfpBqsOpmMapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe,\
+    TestShowPlatformHardwareQfpBqsIpmMapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe,\
+    TestShowPlatformHardwareSerdesStatistics as test_show_platform_hardware_serdes_statistics_iosxe,\
+    TestShowPlatformHardwareSerdesStatisticsInternal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
+    ShowPlatformHardwareQfpInterface as show_platform_hardware_qfp_interface_iosxe,\
+    TestShowPlatformHardwareQfpStatisticsDrop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
+    TestShowEnv as test_show_env_iosxe,\
+    TestShowModule as test_show_module_iosxe,\
+    TestShowSwitch as test_show_switch_iosxe,\
+    TestShowSwitchDetail as test_show_switch_detail_iosxe
 
 
 
@@ -79,9 +79,13 @@ class TestShowVersion(unittest.TestCase):
             "chassis_sn": "9K66Z7TOKAACDEQA24N7S",
             "chassis": "IOSv",
             "image_id": "VIOS-ADVENTERPRISEK9-M",
+            'compiled_by': 'prod_rel_team',
+            'compiled_date': 'Wed 29-Mar-17 14:05',
             "processor_type": "revision 1.0",
             "platform": "IOSv",
             "image_type": "production image",
+            'processor_board_flash': '10080K',
+            'returned_to_rom_by': 'reload',
             "main_mem": "435457",
             "mem_size": {
                 "non-volatile configuration": "256"
@@ -142,6 +146,8 @@ class TestShowVersion(unittest.TestCase):
                     'chassis': 'WS-C3750X-24P',
                     'chassis_sn': 'FDO2028F1WK',
                     'curr_config_register': '0xF',
+                    'compiled_by': 'prod_rel_team',
+                    'compiled_date': 'Wed 26-Jun-13 09:56',
                     'hostname': 'R5',
                     'image_id': 'C3750E-UNIVERSALK9-M',
                     'image_type': 'production image',
@@ -153,10 +159,14 @@ class TestShowVersion(unittest.TestCase):
                     'next_reload_license_level': 'ipservices',
                     'number_of_intfs': {'Gigabit Ethernet': '28',
                                         'Ten Gigabit Ethernet': '2',
-                                        'Virtual Ethernet': '2'},
+                                        'Virtual Ethernet': '2',
+                                        'Gigabit Ethernet': '28',
+                                        'FastEthernet': '1'
+                                        },
                     'os': 'C3750E boot loader',
                     'platform': 'C3750E',
                     'processor_type': 'PowerPC405',
+                    'returned_to_rom_by': 'power-on',
                     'rom': 'Bootstrap program is C3750E boot loader',
                     'rtr_type': 'WS-C3750X-24P',
                     'system_image': 'flash:c3750e-universalk9-mz',
@@ -244,6 +254,8 @@ class TestShowVersion(unittest.TestCase):
             "platform": "s72033_rp",
             "version": "12.2(18)SXF7",
             "image_id": "s72033_rp-ADVENTERPRISEK9_WAN-M",
+            'compiled_by': 'kellythw',
+            'compiled_date': 'Thu 23-Nov-06 06:26',
             "image_type": "production image",
             "rom": "System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)",
             "bootldr": "s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)",
@@ -253,10 +265,17 @@ class TestShowVersion(unittest.TestCase):
             "chassis": "WS-C6503-E",
             "main_mem": "983008",
             "processor_type": "R7000",
+            'sp_by': 'power on',
+            'returned_to_rom_at': '21:57:23 UTC Sat Aug 28 2010',
+            'returned_to_rom_by': 'power cycle',
             "rtr_type": "WS-C6503-E",
             "chassis_sn": "FXS1821Q2H9",
             "last_reload_reason": "s/w reset",
-            "number_of_intfs": {"Gigabit Ethernet/IEEE 802.3": "50"},
+            'processor_board_flash': '65536K',
+            "number_of_intfs": {
+                "Gigabit Ethernet/IEEE 802.3": "50",
+                'Virtual Ethernet/IEEE 802.3': '1'
+            },
             "mem_size": {"non-volatile configuration": "1917", "packet buffer": "8192"},
             "curr_config_register": "0x2102",
         }

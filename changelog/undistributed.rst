@@ -149,6 +149,14 @@
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
 
+* IOSXR
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
+
+* IOSXE
+    * Updated ShowVersion
+        * Added keywords to schema
+        * Added regex for unparsed outputs
 * IOS
     * Updated ShowInventory
         * Added regex to support various outputs
