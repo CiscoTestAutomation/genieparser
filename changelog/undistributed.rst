@@ -172,3 +172,5 @@
     * Updated ShowAuthenticationSessions
         * Added keyword to schema
         * Added regex to support new output
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Updated regex and added optional key to support more outputs

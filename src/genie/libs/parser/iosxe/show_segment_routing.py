@@ -848,6 +848,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             out = output
 
         # Name: test1 (Color: 100 End-point: 10.169.196.241)
+        # Name: test_3-7-1-1 (Color: 0 End-point: )
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
                          '+End-point: +(?P<end_point>\S+)?\)$')
 
