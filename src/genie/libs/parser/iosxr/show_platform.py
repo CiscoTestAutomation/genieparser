@@ -1388,12 +1388,15 @@ class DirSchema(MetaParser):
 
 class Dir(DirSchema):
     """Parser for dir"""
-    cli_command = 'dir'
+    cli_command = ['dir', 'dir {directory}']
     exclude = ['size', 'time', 'total_free_bytes', 'date', 'index']
 
-    def cli(self, output=None):
+    def cli(self, directory='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 

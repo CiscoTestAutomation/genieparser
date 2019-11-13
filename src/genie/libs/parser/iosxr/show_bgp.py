@@ -6425,22 +6425,40 @@ class ShowBgpNeighbors(ShowBgpInstanceNeighborsDetail):
                   show bgp neighbors {neighbor}
                   show bgp vrf {vrf} neighbors
                   show bgp vrf {vrf} neighbors {neighbor}
+                  show bgp {address_family} neighbors
+                  show bgp {address_family} neighbors {neighbor}
+                  show bgp vrf {vrf} {address_family} neighbors
+                  show bgp vrf {vrf} {address_family} neighbors {neighbor}
     """
 
     cli_command = ['show bgp neighbors',
                    'show bgp neighbors {neighbor}',
                    'show bgp vrf {vrf} neighbors',
-                   'show bgp vrf {vrf} neighbors {neighbor}']
+                   'show bgp vrf {vrf} neighbors {neighbor}',
+                   'show bgp {address_family} neighbors',
+                   'show bgp {address_family} neighbors {neighbor}',
+                   'show bgp vrf {vrf} {address_family} neighbors',
+                   'show bgp vrf {vrf} {address_family} neighbors {neighbor}']
 
-    def cli(self, neighbor='', vrf='', output=None):
+    def cli(self, neighbor='', vrf='', address_family='', output=None):
 
         if neighbor:
-            if vrf:
-                cmd = self.cli_command[3].format(neighbor=neighbor, vrf=vrf)
+            if vrf and address_family:
+                cmd = self.cli_command[7].format(vrf=vrf, address_family=address_family,
+                                                 neighbor=neighbor)
+            elif address_family:
+                cmd = self.cli_command[5].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            elif vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, neighbor=neighbor)
             else:
                 cmd = self.cli_command[1].format(neighbor=neighbor)
         else:
-            if vrf:
+            if vrf and address_family:
+                cmd = self.cli_command[6].format(vrf=vrf, address_family=address_family)
+            elif address_family:
+                cmd = self.cli_command[4].format(address_family=address_family)
+            elif vrf:
                 cmd = self.cli_command[2].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]

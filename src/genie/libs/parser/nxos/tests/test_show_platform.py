@@ -1142,6 +1142,13 @@ Usage for bootflash://
         parsed_output = dir_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_with_arg(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        dir_obj = Dir(device=self.device)
+        parsed_output = dir_obj.parse(directory='bootflash:/')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         dir_obj = Dir(device=self.device1)

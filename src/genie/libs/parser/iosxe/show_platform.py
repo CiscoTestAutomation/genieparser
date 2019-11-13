@@ -46,8 +46,18 @@ class ShowVersionSchema(MetaParser):
                     'hostname': str,
                     'uptime': str,
                     Optional('uptime_this_cp'): str,
+                    Optional('jawa_revision'): str,
+                    Optional('snowtrooper_revision'): str,
+                    Optional('running_default_software'): bool,
+                    Optional('processor_board_flash'): str,
+                    Optional('last_reload_type'): str,
+                    Optional('returned_to_rom_by'):  str,
+                    Optional('returned_to_rom_at'): str,
+                    Optional('compiled_date'): str,
+                    Optional('sp_by'): str,
+                    Optional('compiled_by'): str,
                     Optional('system_restarted_at'): str,
-                    'system_image': str,
+                    Optional('system_image'): str,
                     Optional('last_reload_reason'): str,
                     Optional('license_type'): str,
                     Optional('license_level'): str,
@@ -89,7 +99,31 @@ class ShowVersionSchema(MetaParser):
                             Optional('sw_ver'): str,
                             Optional('active'): bool,
                         }
-                    }
+                    },
+                    Optional('processor'): {
+                        Optional('cpu_type'): str,
+                        Optional('speed'): str,
+                        Optional('core'): str,
+                        Optional('l2_cache'): str,
+                        Optional('supervisor'): str,
+                    },
+                    Optional('license_package'): {
+                        Any(): {
+                            'license_level': str,
+                            'license_type': str,
+                            'next_reload_license_level': str,
+                        },
+                    },
+                    Optional('module'): {
+                        Any(): {
+                            Any(): {
+                                Optional('suite'): str,
+                                Optional('suite_current'): str,
+                                Optional('type'): str,
+                                Optional('suite_next_reboot'): str,
+                            },
+                        },
+                    },
                 }
             }
 
@@ -124,67 +158,79 @@ class ShowVersion(ShowVersionSchema):
         version_dict = {}
         active_dict = {}
         rtr_type = ''
+        suite_flag = False
+        license_flag = False
 
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
+        # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
         p1 = re.compile(
-            r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
-             'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
-             '(?P<version>\S+) +')
+            r'^[Cc]isco +IOS +[Ss]oftware\, +(?P<os>([\S]+)) +Software\, '
+            r'+(?P<platform>.+) Software +\((?P<image_id>.+)\).+[Vv]ersion '
+            r'+(?P<version>\S+) +.*$')
 
         # 16.6.5
-        p2 = re.compile(r'^\s*(?P<ver_short>\d+\.\d+).*')
+        p2 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
 
         # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
         # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
         # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
-        p3 = re.compile(
-            r'^\s*[Cc]isco +(?P<os>([A-Z]+)) +[Ss]oftware(.+)?, +(?P<platform>.+) '
-             'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
-             '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
+        
+        p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
+                        r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
+                        r'+Experimental)? +[Vv]ersion '
+                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
-        p4 = re.compile(r'^\s*Copyright +(.*)$')        
+        p4 = re.compile(r'^Copyright +(.*)$')        
 
         # Technical Support: http://www.cisco.com/techsupport
-        p5 = re.compile(r'^\s*Technical +Support: +http\:\/\/www\.cisco\.com\/techsupport')        
+        p5 = re.compile(r'^Technical +Support: +http\:\/\/www'
+                        r'\.cisco\.com\/techsupport')        
 
         # rom
-        p6 = re.compile(r'^\s*ROM\: +(?P<rom>.+)$')
+        p6 = re.compile(r'^ROM\: +(?P<rom>.+)$')
         
         # ROM: Bootstrap program is IOSv
         p7 = re.compile(r'^Bootstrap +program +is +(?P<os>.+)$')
 
         # bootldr
-        p8 = re.compile(r'^\s*BOOTLDR\: +(?P<bootldr>.+)$')
+        p8 = re.compile(r'^BOOTLDR\: +(?P<bootldr>.+)$')
 
         # hostname & uptime
-        p9 = re.compile(r'^\s*(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
+        p9 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
 
         # uptime_this_cp
-        p10 = re.compile(r'^\s*[Uu]ptime +for +this +control +processor +is +(?P<uptime_this_cp>.+)$')
+        p10 = re.compile(r'^[Uu]ptime +for +this +control +processor '
+                         r'+is +(?P<uptime_this_cp>.+)$')
 
         # system_restarted_at
-        p11 = re.compile(r'^\s*[Ss]ystem +restarted +at +(?P<system_restarted_at>.+)$')
+        p11 = re.compile(r'^[Ss]ystem +restarted +at '
+                         r'+(?P<system_restarted_at>.+)$')
 
         # system_image
-        p12 = re.compile(r'^\s*[Ss]ystem +image +file +is +\"(?P<system_image>.+)\"')
+        # System image file is "tftp://10.1.6.241//auto/genie-ftp/Edison/cat3k_caa-universalk9.BLD__20170410_174845.SSA.bin"
+        # System image file is "harddisk:test-image-PE1-13113029"
+        p12 = re.compile(r'^[Ss]ystem +image +file +is '
+                         r'+\"(?P<system_image>.+)\"')
 
         # last_reload_reason
-        p13 = re.compile(r'^\s*[Ll]ast +reload +reason\: +(?P<last_reload_reason>.+)$')
+        p13 = re.compile(r'^[Ll]ast +reload +reason\: '
+                         r'+(?P<last_reload_reason>.+)$')
 
         # last_reload_reason
         # Last reset from power-on
-        p14 = re.compile(r'^\s*[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')
+        p14 = re.compile(r'^[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')
 
         # license_type
-        p15 = re.compile(r'^\s*[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')
+        p15 = re.compile(r'^[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')
 
         # license_level
         p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
 
         # next_reload_license_level
-        p17 = re.compile(r'^\s*[Nn]ext +reload +license +Level\: +(?P<next_reload_license_level>.+)$')
+        p17 = re.compile(r'^[Nn]ext +(reload|reboot) +license +Level\: '
+                         r'+(?P<next_reload_license_level>.+)$')
 
         # chassis, processor_type, main_mem and rtr_type
         # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -193,66 +239,134 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
         # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
         # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
-        p18 = re.compile(r'^\s*(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/]+) +\((?P<processor_type>.+)\) +((processor.*)|with) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+        # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
+                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
+                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
         
         # chassis_sn
-        p19 = re.compile(r'^\s*[pP]rocessor +board +ID +(?P<chassis_sn>[a-zA-Z0-9]+)')
+        p19 = re.compile(r'^[pP]rocessor +board +ID '
+                         r'+(?P<chassis_sn>[a-zA-Z0-9]+)')
 
         # number_of_intfs
-        p20 = re.compile(r'^\s*(?P<number_of_ports>\d+) +(?P<interface>.+) +interfaces')
+        p20 = re.compile(r'^(?P<number_of_ports>\d+) +(?P<interface>.+) '
+                         r'+(interface(?:s)?|line|port(?:s)?)$')
         
         # mem_size
-        p21 = re.compile(r'^\s*(?P<mem_size>\d+)K +bytes +of +(?P<memories>.+) +[Mm]emory\.')
+        p21 = re.compile(r'^(?P<mem_size>\d+)K +bytes +of '
+                         r'+(?P<memories>.+) +[Mm]emory\.')
 
         # disks, disk_size and type_of_disk
-        p22 = re.compile(r'^\s*(?P<disk_size>\d+)K bytes of (?P<type_of_disk>.*) at (?P<disks>.+)$')
+        p22 = re.compile(r'^(?P<disk_size>\d+)K bytes of '
+                         r'(?P<type_of_disk>.*) at (?P<disks>.+)$')
 
         # os
-        p23 = re.compile(r'^\s*[Cc]isco +(?P<os>[a-zA-Z\-]+) +[Ss]oftware,')
+        # Cisco IOS Software,
+        p23 = re.compile(r'^[Cc]isco +(?P<os>[a-zA-Z\-]+) '
+                         r'+[Ss]oftware\,')
 
         # curr_config_register
-        p24 = re.compile(r'^\s*[Cc]onfiguration +register +is +(?P<curr_config_register>[a-zA-Z0-9]+)')
+        p24 = re.compile(r'^[Cc]onfiguration +register +is '
+                         r'+(?P<curr_config_register>[a-zA-Z0-9]+)')
 
         # next_config_register
-        p25 = re.compile(r'^\s*[Cc]onfiguration +register +is +[a-zA-Z0-9]+ +\(will be (?P<next_config_register>[a-zA-Z0-9]+) at next reload\)')
+        p25 = re.compile(r'^[Cc]onfiguration +register +is +[a-zA-Z0-9]+ '
+                         r'+\(will be (?P<next_config_register>[a-zA-Z0-9]+) '
+                         r'at next reload\)')
         
         # switch_number
-        p26 = re.compile(r'^\s*[Ss]witch +0(?P<switch_number>\d+)$')
+        p26 = re.compile(r'^[Ss]witch +0(?P<switch_number>\d+)$')
 
         # uptime
-        p27 = re.compile(r'^\s*[Ss]witch +uptime +\: +(?P<uptime>.+)$')
+        p27 = re.compile(r'^[Ss]witch +uptime +\: +(?P<uptime>.+)$')
 
         # mac_address
-        p28 = re.compile(r'^\s*[Bb]ase +[Ee]thernet +MAC +[Aa]ddress +\: +(?P<mac_address>.+)$')
+        p28 = re.compile(r'^[Bb]ase +[Ee]thernet +MAC +[Aa]ddress '
+                         r'+\: +(?P<mac_address>.+)$')
 
         # mb_assembly_num
-        p29 = re.compile(r'^\s*[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: +(?P<mb_assembly_num>.+)$')
+        p29 = re.compile(r'^[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: '
+                         r'+(?P<mb_assembly_num>.+)$')
         
         # mb_sn
-        p30 = re.compile(r'^\s*[Mm]otherboard +[Ss]erial +[Nn]umber +\: +(?P<mb_sn>.+)$')
+        p30 = re.compile(r'^[Mm]otherboard +[Ss]erial +[Nn]umber +\: '
+                         r'+(?P<mb_sn>.+)$')
 
         # model_rev_num
-        p31 = re.compile(r'^\s*[Mm]odel +[Rr]evision +[Nn]umber +\: +(?P<model_rev_num>.+)$')
+        p31 = re.compile(r'^[Mm]odel +[Rr]evision +[Nn]umber +\: '
+                         r'+(?P<model_rev_num>.+)$')
 
         # mb_rev_num
-        p32 = re.compile(r'^\s*[Mm]otherboard +[Rr]evision +[Nn]umber +\: +(?P<mb_rev_num>.+)$')
+        p32 = re.compile(r'^[Mm]otherboard +[Rr]evision +[Nn]umber +\: '
+                         r'+(?P<mb_rev_num>.+)$')
 
         # model_num
-        p33 = re.compile(r'^\s*[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
+        p33 = re.compile(r'^[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
 
         # system_sn
-        p34 = re.compile(r'^\s*[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
+        p34 = re.compile(r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
 
         # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
         p35 = re.compile(r'(?P<os>([A-Z]+)) \(\S+\)\s+(?P<platform>\S+)\s+'
-                          'Software\s+\((?P<image_id>\S+)\), Version (?P<version>\S+),'
-                          '\s*RELEASE\s+SOFTWARE\s+\(\S+\)')
+                         r'Software\s+\((?P<image_id>\S+)\), Version (?P<version>\S+),'
+                         r'\s*RELEASE\s+SOFTWARE\s+\(\S+\)')
+
+        # Compiled Mon 10-Apr-17 04:35 by mcpre
+        # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
+        p36 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
+                         r'+(?P<compiled_by>\w+)$')
+
+        # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
+        # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
+        # System returned to ROM by reload
+        # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
+        # System returned to ROM by power-on
+        p37 = re.compile(r'^System +returned +to +ROM +by '
+                         r'+(?P<returned_to_rom_by>[\w\s\-]+)(?: +at '
+                         r'+(?P<returned_to_rom_at>[\w\s\:]+))?(?: +\(SP +by '
+                         r'+(?P<sp_by>[\S\s\-]+)\))?$')
+
+        # Last reload type: Normal Reload
+        p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>[\S ]+)$')
         
+        # P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
+        p39 = re.compile(r'^(?P<cpu_name>\S+) +(CPU|cpu|Cpu) +at '
+                         r'+(?P<speed>\S+)\,(( +(?P<core>\S+) +core\, '
+                         r'+(?P<l2_cache>\S+) +L2 +[Cc]ache)|( +Supervisor '
+                         r'+(?P<supervisor>\S+)))$')
+        
+        # 98304K bytes of processor board System flash (Read/Write)
+        p40 = re.compile(r'^(?P<processor_board_flash>\S+) +bytes .+$')
+        
+        # Running default software
+        p41 = re.compile(
+            r'^Running +(?P<running_default_software>\S+) +software$')
+
+        # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
+        p42 = re.compile(r'^Jawa +Revision +(?P<jawa_revision>\S+)\, '
+                         r'+Snowtrooper +Revision +(?P<snowtrooper_rev>\S+)$')
+
+        # ipbase           ipbasek9         Smart License    ipbasek9
+        # securityk9       securityk9       RightToUse       securityk9
+        p43 = re.compile(r'^(?P<technology>\w[\w\-]+)(?: {2,}'
+                         r'(?P<license_level>\w+) {2,}(?P<license_type>\w+(?: '
+                         r'+\w+)?) {2,}(?P<next_boot>\w+))?$')
+
+        # Suite                 Suite Current         Type           Suite Next reboot
+        # Technology    Technology-package           Technology-package
+        p44 = re.compile(r'^(?P<aname>Suite|Technology) +((Suite +Current)|'
+                         r'(Technology\-package))')
+
+        # Suite License Information for Module:'esg'
+        p45 = re.compile(r'^[Ss]uite +[Ll]icense +[Ii]nformation +for '
+                         r'+[Mm]odule\:\'(?P<module>\S+)\'$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # version
-            # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)            
+            # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3) 
+            # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)           
             m = p1.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -269,6 +383,7 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
+                    version_dict['version']['os'] = m.groupdict()['os']
                     continue
 
             # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
@@ -278,7 +393,9 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 version = m.groupdict()['version']
                 # 16.6.5
+                
                 m2 = p2.match(version)
+                
                 if m2:
                     if 'version' not in version_dict:
                         version_dict['version'] = {}
@@ -351,6 +468,8 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # system_image
+            # System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
+            # System image file is "harddisk:test-image-PE1-13113029"
             m = p12.match(line)
             if m:
                 version_dict['version']['system_image'] = \
@@ -380,13 +499,27 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # license_level
+            # License Level: entservices   Type: Permanent
+            # License Level: AdvancedMetroIPAccess
             m = p16.match(line)
             if m:
-                version_dict['version']['license_level'] = \
-                    m.groupdict()['license_level']
+                group = m.groupdict()
+                if 'Type:' in group['license_level']:
+                    # entservices   Type: Permanent
+                    p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: '
+                                       r'+(?P<license_type>\S+)')
+                    lic_type = group['license_level'].strip()
+                    m_1 = p16_1.match(lic_type)
+                    group = m_1.groupdict()
+                    version_dict['version']['license_type'] = group['license_type']
+                    version_dict['version']['license_level'] = group['license_level']
+                else:
+                    version_dict['version']['license_level'] = group['license_level']
                 continue
 
             # next_reload_license_level
+            # Next reboot license Level: entservices
+            # Next reload license Level: advipservices
             m = p17.match(line)
             if m:
                 version_dict['version']['next_reload_license_level'] = \
@@ -429,6 +562,12 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # number_of_intfs
+            # 1 External Alarm interface
+            # 1 FastEthernet interface
+            # 12 Gigabit Ethernet interfaces
+            # 2 Ten Gigabit Ethernet interfaces
+            # 1 terminal line
+            # 8 Channelized T1 ports
             m = p20.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -466,6 +605,7 @@ class ShowVersion(ShowVersionSchema):
             m = p23.match(line)
             if m:
                 version_dict['version']['os'] = m.groupdict()['os']
+            
                 continue
 
             # curr_config_register
@@ -587,6 +727,141 @@ class ShowVersion(ShowVersionSchema):
 
                 continue
 
+            # Compiled Mon 10-Apr-17 04:35 by mcpre
+            # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
+            m36 = p36.match(line)
+            if m36:
+                group = m36.groupdict()
+                version_dict['version']['compiled_date'] = group['compiled_date']
+                version_dict['version']['compiled_by'] = group['compiled_by']
+
+                continue
+
+            # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
+            # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
+            # System returned to ROM by reload
+            # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
+            # System returned to ROM by power-on
+            m37 = p37.match(line)
+            if m37:
+                group = m37.groupdict()
+                
+                if group['returned_to_rom_at']:
+                    version_dict['version']['returned_to_rom_by'] = group['returned_to_rom_by']
+                    version_dict['version']['returned_to_rom_at'] = group['returned_to_rom_at']
+                else:
+                    version_dict['version']['returned_to_rom_by'] = group['returned_to_rom_by']
+
+                if group['sp_by']:
+                    version_dict['version']['sp_by'] = group['sp_by']
+
+                continue
+
+            # Last reload type: Normal Reload
+            m38 = p38.match(line)
+            if m38:
+                version_dict['version']['last_reload_type'] = m38.groupdict()['last_reload_type']
+
+                continue
+
+            # P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
+            # MPC8572 CPU at 1.5GHz, Supervisor 7
+            m39 = p39.match(line)
+            if m39:
+                group = m39.groupdict()
+                cpu_dict = version_dict['version'].setdefault('processor', {})
+                if group['supervisor']:
+                    cpu_dict['cpu_type'] = group['cpu_name']
+                    cpu_dict['speed'] = group['speed']
+                    cpu_dict['supervisor'] = group['supervisor']
+                else:
+                    cpu_dict['cpu_type'] = group['cpu_name']
+                    cpu_dict['speed'] =  group['speed']
+                    cpu_dict['core'] = group['core']
+                    cpu_dict['l2_cache'] = group['l2_cache']
+
+                continue
+
+            # 98304K bytes of processor board System flash (Read/Write)
+            m40 = p40.match(line)
+            if m40:
+                flash_dict = version_dict['version']
+                in_kb = m40.groupdict()['processor_board_flash']
+                flash_dict['processor_board_flash'] = in_kb
+
+                continue
+
+            # Running default software
+            m41 = p41.match(line)
+            if m41:
+                version_dict['version']['running_default_software'] = True
+
+                continue
+
+            # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
+            m42 = p42.match(line)
+            if m42:
+                version_dict['version']['jawa_revision'] = m42.groupdict()['jawa_revision']
+                version_dict['version']['snowtrooper_revision']= m42.groupdict()['snowtrooper_rev']
+
+                continue
+            
+            # ipbase           ipbasek9         Smart License    ipbasek9
+            # securityk9       securityk9       RightToUse       securityk9
+            m43 = p43.match(line)
+            if m43:
+                group = m43.groupdict()
+
+                if license_flag:
+                    lic_initial_dict = version_dict['version'].setdefault('license_package', {})
+                    license_dict = lic_initial_dict.setdefault(group['technology'], {})
+                    
+                    if group['license_type']:
+                        license_dict.update({'license_type': group['license_type']})
+                    
+                    if group['license_level']:
+                        license_dict.update({'license_level': group['license_level']})
+                    
+                    if group['next_boot']:
+                        license_dict.update(
+                            {'next_reload_license_level': group['next_boot']})
+                
+                if suite_flag:
+                    suite_lic_dict = suite_dict.setdefault(group['technology'], {})
+
+                    if group['license_level']:
+                        suite_lic_dict.update(
+                            {'suite_current': group['license_level']})
+
+                    if group['license_type']:
+                        suite_lic_dict.update({'type': group['license_type'].strip()})
+                    
+                    if group['next_boot']:
+                        suite_lic_dict.update({'suite_next_reboot': group['next_boot']})
+                
+                continue
+
+            # Suite                 Suite Current         Type           Suite Next reboot
+            # Technology    Technology-package           Technology-package
+            m44 = p44.match(line)
+            if m44:
+                if 'Suite' in m44.groupdict()['aname']:
+                    suite_flag = True
+                
+                if 'Technology' in m44.groupdict()['aname']: 
+                    license_flag = True
+                    suite_flag = False
+
+                continue
+        
+            # Suite License Information for Module:'esg'
+            m45 = p45.match(line)
+            if m45:
+                module_dict = version_dict['version'].setdefault('module', {})
+                suite_dict = module_dict.setdefault(m45.groupdict()['module'], {})
+
+                continue
+
         # table2 for C3850
         tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
                                            header_fields=
@@ -624,7 +899,7 @@ class ShowVersion(ShowVersionSchema):
                                               device_os='iosxe')
 
         if tmp.entries:
-            res = tmp
+            res = tmp 
             for key in res.entries.keys():
                 for k, v in res.entries[key].items():
                     version_dict['version'][k] = v
@@ -689,11 +964,11 @@ class Dir(DirSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
-    cli_command = 'dir'
+    cli_command = ['dir', 'dir {directory}']
     exclude = ['last_modified_date', 'bytes_free', 'files']
 
 
-    def cli(self, output=None):
+    def cli(self, directory='', output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -701,7 +976,10 @@ class Dir(DirSchema):
         cuting, transforming, returning
         """
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -1805,25 +2083,80 @@ class ShowPlatform(ShowPlatformSchema):
 class ShowBootSchema(MetaParser):
     """Schema for show boot"""
 
-    schema = {Optional('current_boot_variable'): str,
-              Optional('next_reload_boot_variable'): str,
-              Optional('manual_boot'): bool,
-              Optional('enable_break'): bool,
-              Optional('boot_mode'): str,
-              Optional('ipxe_timeout'): int,
-              Optional('active'): {              
-                  Optional('configuration_register'): str,
-                  Optional('boot_variable'): str,
-              },
-              Optional('standby'): {              
-                  Optional('configuration_register'): str,
-                  Optional('boot_variable'): str,
-              },
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('manual_boot'): bool,
+        Optional('enable_break'): bool,
+        Optional('boot_mode'): str,
+        Optional('ipxe_timeout'): int,
+        Optional('active'): {              
+            Optional('configuration_register'): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('standby'): {              
+            Optional('configuration_register'): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('boot_path_list'): str,
+        Optional('config_file'): str,
+        Optional('private_config_file'): str,
+        Optional('enable_break'): bool,
+        Optional('manual_boot'): bool,
+        Optional('helper_path_list'): str,
+        Optional('auto_upgrade'): bool,
+        Optional('auto_upgrade_path'): str,
+        Optional('boot_optimization'): bool,
+        Optional('nvram_buffer_size'): int,
+        Optional('timeout_config_download'): str,
+        Optional('config_download_via_dhcp'): bool,
+        Optional('next_boot'): bool,
+        Optional('allow_dev_key'): bool,
+        Optional('switches'): {
+            Any(): { 
+                'boot_path_list': str,
+                'config_file': str,
+                'private_config_file': str,
+                'enable_break': bool,
+                'manual_boot': bool,
+                Optional('helper_path_list'): str,
+                'auto_upgrade': bool,
+                Optional('auto_upgrade_path'): str,
+                Optional('boot_optimization'): bool,
+                Optional('nvram_buffer_size'): int,
+                Optional('timeout_config_download'): str,
+                Optional('config_download_via_dhcp'): bool,
+                Optional('next_boot'): bool,
+                Optional('allow_dev_key'): bool,
+            },
+        },
     }
 
 class ShowBoot(ShowBootSchema):
     """Parser for show boot"""
-
+    SW_MAPPING = {
+        'BOOT path-list ': 'boot_path_list',
+        'Config file' : 'config_file',
+        'Private Config file' : 'private_config_file',
+        'Enable Break': 'enable_break',
+        'Manual Boot': 'manual_boot',
+        'Allow Dev Key': 'allow_dev_key',
+        'HELPER path-list': 'helper_path_list',
+        'Auto upgrade': 'auto_upgrade',
+        'Auto upgrade path': 'auto_upgrade_path',
+        'Boot optimization': 'boot_optimization',
+        'NVRAM/Config file buffer size': 'nvram_buffer_size',
+        'Timeout for Config Download': 'timeout_config_download',
+        'Config Download via DHCP': 'config_download_via_dhcp'
+    }
+    TRUE_FALSE = {
+        'disable': False,
+        'disabled': False,
+        'no': False,
+        'enable': True,
+        'enabled': True,
+        'yes': True
+    }
     cli_command = 'show boot'
 
     def cli(self, output=None):
@@ -1834,6 +2167,7 @@ class ShowBoot(ShowBootSchema):
 
         boot_dict = {}
         boot_variable = None
+        switch_number = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -1930,6 +2264,90 @@ class ShowBoot(ShowBootSchema):
             if m:
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
                 continue
+
+            # BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+            # HELPER path-list    :
+            p7 = re.compile(r'^(?P<key>BOOT|HELPER) +path\-list +\:(?: '
+                            r'+(?P<value>[\w\:\/\-\.]+)?)$')
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if 'BOOT' in group['key']:
+                    sw_dict = boot_dict
+                    if switch_number >= 2:
+                        switches_dict = sw_dict.setdefault('switches', {})
+                        index_dict = switches_dict.setdefault(switch_number, {})
+                        index_dict.update({'boot_path_list': m7.groupdict()['value']})
+                    else:
+                        index_dict = sw_dict
+                        index_dict.update(
+                            {'boot_path_list': m7.groupdict()['value']})
+
+                elif 'HELPER' in group['key']:
+                    index_dict.update({'helper_path_list': m7.groupdict()['value']})
+
+                continue
+
+            # Config file         : flash:/config.text
+            # Private Config file : flash:/private-config.text
+            # Enable Break        : yes
+            # Manual Boot         : no
+            # Allow Dev Key         : yes
+            # Auto upgrade        : no
+            # Auto upgrade path   :            
+            p8 = re.compile(r'^(?P<key>[\w\s]+) +\: +(?P<value>[\w\:\/\-\.]+)$')
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                
+                key = self.SW_MAPPING.get(group['key'].strip())
+                true_false = self.TRUE_FALSE.get(group['value'])
+                
+                if isinstance(true_false, bool):
+                    index_dict[key] = true_false
+                else:
+                    index_dict[key] = group['value']
+
+                continue
+
+            # buffer size:   524288
+            p9 = re.compile(r'buffer +size\: +(?P<value>\d+)$')
+            m9 = p9.match(line)
+            if m9:
+                index_dict.update({'nvram_buffer_size': int(m9.groupdict()['value'])})
+
+                continue
+            
+            # Download:    0 seconds
+            p10 = re.compile(r'Download\: +(?P<value>\d+ +\w+)$')
+            m10 = p10.match(line)
+            if m10:
+                index_dict.update({'timeout_config_download': m10.groupdict()['value']})
+
+                continue
+
+            # via DHCP:       disabled (next boot: disabled)
+            p11 = re.compile(r'via +DHCP\: +(?P<value>\w+) +\(next +boot\: '
+                             r'+(?P<next_boot>\w+)\)$')
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                value = self.TRUE_FALSE.get(group['value'])
+                next_boot = self.TRUE_FALSE.get(group['next_boot'])
+                index_dict.update({'config_download_via_dhcp': value})
+                index_dict.update({'next_boot': next_boot})
+
+                continue
+
+            # Switch 2
+            # switch 3
+            p12 = re.compile(r'^[Ss]witch +(?P<switch_number>\d+)$')
+            m12 = p12.match(line)
+            if m12:
+                switch_number = int(m12.groupdict()['switch_number'])
+                
+                continue
+
         return boot_dict
 
 
