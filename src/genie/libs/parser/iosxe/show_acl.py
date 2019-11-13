@@ -295,18 +295,18 @@ class ShowAccessLists(ShowAccessListsSchema):
             r'(?: +\d+\.\d+\.\d+\.\d+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
             r'+(?P<dst_port>(?:\S ?)+\S))?(?P<left>.+)?$')
 
-        # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
-        # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
-        # permit ipv6 host 2001:: 1 host 2001: 1: : 2 sequence 20
-        # permit tcp any eq www 8443 host 2001: 2001:db8:4:: 2 sequence 30
-        # permit ipv6 3: 3: : 3 4: 4: : 4 1: 1: : 1 6: 6: : 6 log sequence 80
+        # permit tcp host 2001:DB8:1::32 eq bgp host 2001:DB8:2::32 eq 11000 sequence 1
+        # permit tcp host 2001:DB8:1::32 eq telnet host 2001:DB8:2::32 eq 11001 sequence 2
+        # permit ipv6 host 2001::1 host 2001:1::2 sequence 20
+        # permit tcp any eq www 8443 host 2001:2::2 sequence 30
+        # permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
         # permit udp any any eq domain sequence 10
         # permit esp any any dscp cs7 log sequence 20
         # deny ipv6 any any sequence 30
-        # permit ipv6 2001: DB8: : / 64 any sequence 10
-        # permit esp host 2001: DB8: 5: : 1 any sequence 20
-        # permit tcp host 2001: DB8: 1: : 1 eq www any eq bgp sequence 30
-        # permit udp any host 2001: DB8: 1: : 1 sequence 40
+        # permit ipv6 2001:DB8::/64 any sequence 10
+        # permit esp host 2001:DB8:5::1 any sequence 20
+        # permit tcp host 2001:DB8:1::1 eq www any eq bgp sequence 30
+        # permit udp any host 2001:DB8:1::1 sequence 40
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>permit|deny) +(?P<protocol>ahp|esp|hbh'
             r'|icmp|ipv6|pcp|sctp|tcp|udp) +(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?)'
