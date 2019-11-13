@@ -144,6 +144,9 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+    * Updated ShowIpCefInternal for:
+        * show ip cef internal
+        * show ip cef {ip} internal
 
 * IOS
     * Updated ShowInventory
