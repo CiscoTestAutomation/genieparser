@@ -964,11 +964,11 @@ class Dir(DirSchema):
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
-    cli_command = 'dir'
+    cli_command = ['dir', 'dir {directory}']
     exclude = ['last_modified_date', 'bytes_free', 'files']
 
 
-    def cli(self, output=None):
+    def cli(self, directory='', output=None):
         """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -976,7 +976,10 @@ class Dir(DirSchema):
         cuting, transforming, returning
         """
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 

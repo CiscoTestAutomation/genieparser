@@ -40,11 +40,16 @@
         * show flow monitor {name} cache
     * Added ShowFlowMonitorCacheRecord for command;
         * show flow monitor {name} cache format record
+	* Enhanced Dir
+		* added 'dir {directory}' support
+
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
+	* Enhanced Dir
+		* added 'dir {directory}' support
 
 * IOS
     * Added ShowInterfacesDescription for commands;
@@ -88,6 +93,8 @@
     * Added ShowMsdpStatisticsPeer for commands:
         * 'show msdp statistics peer'
         * 'show msdp vrf {vrf} statistics peer'
+	* Enhanced Dir
+		* added 'dir {directory}' support
 
 * JUNOS
     * Added ShowOspfInterface for commands:
