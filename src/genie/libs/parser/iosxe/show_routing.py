@@ -2183,7 +2183,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p5 = re.compile(r'path +list +(?P<path_list_id>[A-Z0-9]+), +(?P<locks>\d+) +locks, .*')
 
         # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
-        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), share +(?P<share>\d\/\d), +type '
+        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), share +(?P<share>\S+), +type '
                         r'+(?P<type>[\w\s]+), +for +(?P<for>[\w\d\-\s]+)(?:, flags +(?P<flags>\S+))?')
 
         # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
@@ -2203,8 +2203,8 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
 
         # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
-        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
-        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d\/]+), '
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 27.86.198.25>
+        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>\S+), '
                         r'addr +(?P<addr>[\d.]+)(?: +(?P<addr_info>[A-Z\d]+))?>$')
 
         # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
@@ -2231,7 +2231,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p13 = re.compile(r'^Broker: +(?P<status>\w+), +distributed +at +(?P<priority>\w+) +priority$')
 
         # LFD: 10.13.110.0/24 0 local labels
-        p14 = re.compile(r'^LFD: +(?P<address>[\d./]+) +(?P<labels>\d+) +local +labels$')
+        p14 = re.compile(r'^LFD: +(?P<address>\S+) +(?P<labels>\d+) +local +labels$')
 
         # dflt disposition chain 0x7F0FF19606C0
         # sr disposition chain 0x7F0FF1960590
@@ -2239,7 +2239,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # sr label switch chain 0x7F0FF1960590
         p15 = re.compile(r'^(?P<type>dflt|sr) +(?P<chain_type>label +switch|disposition) +chain +(?P<id>\S+)$')
 
-        # GigabitEthernet0/1/6(15): 10.169.196.213
+        # GigabitEthernet0/1/6(15): 106.162.196.213
         # MPLS-SR-Tunnel1(29)
         p16 = re.compile(r'^(?P<interface>[\w/()-]+)(?:\: +(?P<addr>[\d.]+))?$')
 
@@ -2299,8 +2299,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             if m:
                 group = m.groupdict()
                 feature_space_dict = prefix_dict.setdefault('feature_space', {})
-                if group['iprm']:
-                    feature_space_dict['IPRM'] = group['iprm']
+                feature_space_dict['IPRM'] = group['iprm']
 
                 continue
 
@@ -2319,9 +2318,8 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             if m:
                 group = m.groupdict()
                 lfd_dict = feature_space_dict.setdefault('LFD', {})
-                if group['address'] and group['labels']:
-                    lfd_dict.setdefault(group['address'], {}). \
-                             setdefault('local_labels', int(group['labels']))
+                lfd_dict.setdefault(group['address'], {}). \
+                         setdefault('local_labels', int(group['labels']))
                 continue
 
             # dflt local label info: global/28 [0x3]
@@ -2368,7 +2366,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                                               setdefault(group['id'], {})
                 continue
 
-            # GigabitEthernet0/1/6(15): 10.169.196.213
+            # GigabitEthernet0/1/6(15): 106.162.196.213
             # MPLS-SR-Tunnel1(29)
             m = p16.match(line)
             if m:
