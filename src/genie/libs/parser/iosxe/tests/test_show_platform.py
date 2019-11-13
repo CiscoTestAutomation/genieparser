@@ -1064,6 +1064,13 @@ Directory of bootflash:/
         parsed_output = dir_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
+    def test_golden_asr1k_with_arg(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output_asr1k)
+        dir_obj = Dir(device=self.dev_asr1k)
+        parsed_output = dir_obj.parse(directory='bootflash:/')
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
+
 
 class test_show_redundancy(unittest.TestCase):
     dev1 = Device(name='empty')
