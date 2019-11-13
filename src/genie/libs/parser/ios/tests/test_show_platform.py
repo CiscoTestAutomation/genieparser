@@ -265,6 +265,7 @@ class TestShowVersion(unittest.TestCase):
             "chassis": "WS-C6503-E",
             "main_mem": "983008",
             "processor_type": "R7000",
+            'sp_by': 'power on',
             'returned_to_rom_at': '21:57:23 UTC Sat Aug 28 2010',
             'returned_to_rom_by': 'power cycle',
             "rtr_type": "WS-C6503-E",

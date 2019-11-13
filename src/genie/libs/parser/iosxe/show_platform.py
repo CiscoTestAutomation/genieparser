@@ -54,6 +54,7 @@ class ShowVersionSchema(MetaParser):
                     Optional('returned_to_rom_by'):  str,
                     Optional('returned_to_rom_at'): str,
                     Optional('compiled_date'): str,
+                    Optional('sp_by'): str,
                     Optional('compiled_by'): str,
                     Optional('system_restarted_at'): str,
                     Optional('system_image'): str,
@@ -208,7 +209,7 @@ class ShowVersion(ShowVersionSchema):
                          r'+(?P<system_restarted_at>.+)$')
 
         # system_image
-        # System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
+        # System image file is "tftp://10.1.6.241//auto/genie-ftp/Edison/cat3k_caa-universalk9.BLD__20170410_174845.SSA.bin"
         # System image file is "harddisk:test-image-PE1-13113029"
         p12 = re.compile(r'^[Ss]ystem +image +file +is '
                          r'+\"(?P<system_image>.+)\"')
@@ -322,7 +323,8 @@ class ShowVersion(ShowVersionSchema):
         # System returned to ROM by power-on
         p37 = re.compile(r'^System +returned +to +ROM +by '
                          r'+(?P<returned_to_rom_by>[\w\s\-]+)(?: +at '
-                         r'+(?P<returned_to_rom_at>[\w\s\:]+))?(?: +\(.*\))?$')
+                         r'+(?P<returned_to_rom_at>[\w\s\:]+))?(?: +\(SP +by '
+                         r'+(?P<sp_by>[\S\s\-]+)\))?$')
 
         # Last reload type: Normal Reload
         p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>[\S ]+)$')
@@ -749,6 +751,9 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['returned_to_rom_at'] = group['returned_to_rom_at']
                 else:
                     version_dict['version']['returned_to_rom_by'] = group['returned_to_rom_by']
+
+                if group['sp_by']:
+                    version_dict['version']['sp_by'] = group['sp_by']
 
                 continue
 
