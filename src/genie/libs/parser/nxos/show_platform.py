@@ -229,10 +229,9 @@ class ShowVersion(ShowVersionSchema):
 
             # cisco NX-OSv chassis
             # cisco Nexus7000 C7009 (9 Slot) Chassis ("Supervisor Module-2")
-            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
+            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>[a-zA-Z0-9\s\-\/]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
-
                 model = chassis = str(m.groupdict()['model'])
                 slot = str(m.groupdict()['slot'])
                 rp = str(m.groupdict()['rp'])
