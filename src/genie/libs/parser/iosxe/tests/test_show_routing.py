@@ -1643,7 +1643,7 @@ class TestShowIpv6RouteWord(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
         obj = ShowIpv6RouteWord(device=self.device)
-        parsed_output = obj.parse(route='2001:db8:400:4::4:1')
+        parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
@@ -2558,25 +2558,32 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                         '10.19.198.239/32': {
                             'epoch': 2,
                             'feature_space': {
-                                'IPRM': '0x00028000',
-                                'LFD': {
+                                'broker': {
+                                    'distribution_priority': 1,
+                                    'status': 'linked',
+                                },
+                                'iprm': '0x00028000',
+                                'lfd': {
                                     '10.19.198.239/32': {
                                         'local_labels': 2,
                                     },
                                 },
-                                'broker': {
-                                    'priority': '1st',
-                                    'status': 'linked',
+                                'local_label_info': {
+                                    'dflt': 'global/28 [0x3]',
+                                    'sr': 'global/16073 [0x1B]',
                                 },
-                                'dflt_local_label_info': 'global/28 [0x3]',
                                 'path_extension_list': {
                                     'dflt': {
                                         'disposition_chain': {
                                             '0x7F0FF19606C0': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.169.196.213',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.169.196.213',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2585,10 +2592,14 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                         },
                                         'label_switch_chain': {
                                             '0x7F0FF19606C0': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.169.196.213',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.169.196.213',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2599,10 +2610,14 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                     'sr': {
                                         'disposition_chain': {
                                             '0x7F0FF1960590': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.169.196.213',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.169.196.213',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2611,10 +2626,14 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                         },
                                         'label_switch_chain': {
                                             '0x7F0FF1960590': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.169.196.213',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.169.196.213',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2623,18 +2642,19 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                         },
                                     },
                                 },
-                                'sr_local_label_info': 'global/16073 [0x1B]',
                             },
                             'ifnums': {
-                                'GigabitEthernet0/1/6(15)': {
+                                'GigabitEthernet0/1/6': {
                                     'address': '10.169.196.213',
+                                    'ifnum': 15,
                                 },
-                                'MPLS-SR-Tunnel1(29)': {
+                                'MPLS-SR-Tunnel1': {
+                                    'ifnum': 29,
                                 },
                             },
                             'output_chain': {
                                 'frr': {
-                                    'Primary': {
+                                    'primary': {
                                         'info': '0x80007F0FF094DD88',
                                         'primary': {
                                             'tag_adj': {
@@ -2664,6 +2684,7 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                             },
                             'path_list': {
                                 '7F0FEC884768': {
+                                    'flags': '0x4D [shble, hvsh, rif, hwcn]',
                                     'locks': 19,
                                     'path': {
                                         '7F0FF11E0AE0': {
@@ -2673,6 +2694,12 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                                 '10.169.196.213': {
                                                     'outgoing_interface': {
                                                         'GigabitEthernet0/1/6': {
+                                                            'ip_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.169.196.213',
+                                                                    'addr_info': '7F0FF08D4900',
+                                                                },
+                                                            },
                                                             'local_label': 28,
                                                             'outgoing_label': ['51885'],
                                                             'outgoing_label_backup': '16073',
@@ -2684,12 +2711,24 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                                             'type': 'attached nexthop',
                                         },
                                     },
+                                    'sharing': 'per-destination',
                                 },
                             },
-                            'per_destination_sharing': True,
                             'refcnt': 7,
                             'rib': '[I]',
+                            'sharing': 'per-destination',
                             'sources': ['RIB,', 'RR,', 'LTE'],
+                            'subblocks': {
+                                'rr_source': {
+                                    'counts': 1,
+                                    'details': {
+                                        'flags': '0111',
+                                        'id': '7F0FF16E6F38',
+                                        'locks': 8,
+                                    },
+                                    'info': '[non-eos indirection, heavily shared]',
+                                },
+                            },
                         },
                     },
                 },
@@ -2754,25 +2793,32 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                         '10.100.5.5/32': {
                             'epoch': 3,
                             'feature_space': {
-                                'IPRM': '0x00028000',
-                                'LFD': {
+                                'broker': {
+                                    'distribution_priority': 4,
+                                    'status': 'linked',
+                                },
+                                'iprm': '0x00028000',
+                                'lfd': {
                                     '10.100.5.5/32': {
                                         'local_labels': 2,
                                     },
                                 },
-                                'broker': {
-                                    'priority': '4th',
-                                    'status': 'linked',
+                                'local_label_info': {
+                                    'dflt': 'global/25 [0x23]',
+                                    'sr': 'global/17000 [0x1B]',
                                 },
-                                'dflt_local_label_info': 'global/25 [0x23]',
                                 'path_extension_list': {
                                     'dflt': {
                                         'disposition_chain': {
                                             '0x7F2B22651570': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.19.198.25',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.19.198.25',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2781,10 +2827,14 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                         },
                                         'label_switch_chain': {
                                             '0x7F2B22651570': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.19.198.25',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.19.198.25',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2795,10 +2845,14 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                     'sr': {
                                         'disposition_chain': {
                                             '0x7F2B22651440': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.19.198.25',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.19.198.25',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2807,10 +2861,14 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                         },
                                         'label_switch_chain': {
                                             '0x7F2B22651440': {
-                                                'frr_primary': {
-                                                    'tag_adj': {
-                                                        'GigabitEthernet0/1/6': {
-                                                            'addr': '10.19.198.25',
+                                                'frr': {
+                                                    'primary': {
+                                                        'primary': {
+                                                            'tag_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.19.198.25',
+                                                                },
+                                                            },
                                                         },
                                                     },
                                                 },
@@ -2819,19 +2877,20 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                         },
                                     },
                                 },
-                                'sr_local_label_info': 'global/17000 [0x1B]',
                             },
                             'ifnums': {
-                                'GigabitEthernet0/1/6(15)': {
+                                'GigabitEthernet0/1/6': {
                                     'address': '10.19.198.25',
+                                    'ifnum': 15,
                                 },
-                                'GigabitEthernet0/1/7(16)': {
+                                'GigabitEthernet0/1/7': {
                                     'address': '10.19.198.29',
+                                    'ifnum': 16,
                                 },
                             },
                             'output_chain': {
                                 'frr': {
-                                    'Primary': {
+                                    'primary': {
                                         'info': '0x80007F2B146ED518',
                                         'primary': {
                                             'tag_adj': {
@@ -2855,6 +2914,7 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                             },
                             'path_list': {
                                 '7F2B22A8B0A0': {
+                                    'flags': '0x4D [shble, hvsh, rif, hwcn]',
                                     'locks': 477,
                                     'path': {
                                         '7F2B22A6C220': {
@@ -2864,6 +2924,12 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                                 '10.19.198.25': {
                                                     'outgoing_interface': {
                                                         'GigabitEthernet0/1/6': {
+                                                            'ip_adj': {
+                                                                'GigabitEthernet0/1/6': {
+                                                                    'addr': '10.19.198.25',
+                                                                    'addr_info': '7F2B21B247D8',
+                                                                },
+                                                            },
                                                             'local_label': 25,
                                                             'outgoing_label': ['63300'],
                                                             'outgoing_label_backup': '68544',
@@ -2892,11 +2958,12 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                             'type': 'attached nexthop',
                                         },
                                     },
+                                    'sharing': 'per-destination',
                                 },
                             },
-                            'per_destination_sharing': True,
                             'refcnt': 6,
                             'rib': '[I]',
+                            'sharing': 'per-destination',
                             'sources': ['RIB,', 'LTE'],
                         },
                     },
@@ -2949,15 +3016,15 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                         '10.55.50.1/32': {
                             'epoch': 0,
                             'feature_space': {
-                                'IPRM': '0x00018000',
-                                'LFD': {
+                                'broker': {
+                                    'distribution_priority': 3,
+                                    'status': 'linked',
+                                },
+                                'iprm': '0x00018000',
+                                'lfd': {
                                     '10.55.50.1/32': {
                                         'local_labels': 0,
                                     },
-                                },
-                                'broker': {
-                                    'priority': '3rd',
-                                    'status': 'linked',
                                 },
                             },
                             'flags': ['rlbls'],
@@ -2966,7 +3033,7 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                 'tag_midchain': {
                                     'Tunnel65537': {
                                         'frr': {
-                                            'Primary': {
+                                            'primary': {
                                                 'info': '0x80007F4F894B79F0',
                                                 'primary': {
                                                     'tag_adj': {
@@ -2994,6 +3061,7 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                             },
                             'path_list': {
                                 '7F4F8A142848': {
+                                    'flags': '0x249 [shble, rif, hwcn, bgp]',
                                     'locks': 3,
                                     'path': {
                                         '7F4F89512770': {
@@ -3003,8 +3071,10 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                             'type': 'recursive',
                                         },
                                     },
+                                    'sharing': 'per-destination',
                                 },
                                 '7F4F8A1428E8': {
+                                    'flags': '0x249 [shble, rif, hwcn, bgp]',
                                     'locks': 3,
                                     'path': {
                                         '7F4F89512430': {
@@ -3013,11 +3083,12 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                                             'type': 'attached prefix',
                                         },
                                     },
+                                    'sharing': 'per-destination',
                                 },
                             },
-                            'per_destination_sharing': True,
                             'refcnt': 6,
                             'rib': '[B]',
+                            'sharing': 'per-destination',
                             'sources': ['RIB'],
                         },
                     },
