@@ -1955,7 +1955,6 @@ class ShowIpCefInternalSchema(MetaParser):
                                 Optional('feature_space'): {
                                     Optional('iprm'): str,
                                     Optional('broker'): {
-                                      'status': str,
                                       'distribution_priority': int,
                                     },
                                     Optional('lfd'): {
@@ -2357,8 +2356,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             if m:
                 group = m.groupdict()
                 broker_dict = feature_space_dict.setdefault('broker', {})
-                if group['status'] and group['priority']:
-                    broker_dict['status'] = group['status']
+                if group['priority']:
                     broker_dict['distribution_priority'] = int(group['priority'])
                 continue
 

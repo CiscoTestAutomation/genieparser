@@ -2493,8 +2493,9 @@ Total           4           23          0           2688        9932
 # ==========================================
 class TestShowIpCefInternal(unittest.TestCase):
     '''Unittest for:
-        * 'show ip cef <ip> internal'
+        * 'show ip cef <prefix> internal'
         * 'show ip cef internal'
+        * 'show ip cef vrf {vrf} {prefix} internal'
     '''
 
     device = Device(name='aDevice')
@@ -2560,7 +2561,6 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                             'feature_space': {
                                 'broker': {
                                     'distribution_priority': 1,
-                                    'status': 'linked',
                                 },
                                 'iprm': '0x00028000',
                                 'lfd': {
@@ -2795,7 +2795,6 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                             'feature_space': {
                                 'broker': {
                                     'distribution_priority': 4,
-                                    'status': 'linked',
                                 },
                                 'iprm': '0x00028000',
                                 'lfd': {
@@ -3018,7 +3017,6 @@ Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
                             'feature_space': {
                                 'broker': {
                                     'distribution_priority': 3,
-                                    'status': 'linked',
                                 },
                                 'iprm': '0x00018000',
                                 'lfd': {
