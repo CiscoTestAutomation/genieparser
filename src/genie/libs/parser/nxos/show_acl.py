@@ -163,7 +163,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                            r'(?: +[\d.]+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range)'
                            r' +(?P<dst_port>(?:\S ?)+\S))?(?P<established_log> +established +log)?'
                            r'(?: +precedence +(?P<precedence>network) +ttl +(?P<ttl>\d+))?'
-                           r'(?: +\[match=(?P<match>\d+)\])?(?P<left>.+)?$')
+                           r'(?: +\[match=(?P<match>\d+)\])?(?: +(?P<logging>log))?(?P<left>.+)?$')
 
         # --- MAC access list ---
         # 10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
@@ -222,11 +222,14 @@ class ShowAccessLists(ShowAccessListsSchema):
                 dst_port = group['dst_port']
                 established_log = group['established_log']
                 match = int(group['match']) if group['match'] else None
+                logging = group['logging']
 
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
 
                 seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
+                if logging:
+                    seq_dict.setdefault('actions', {}).setdefault('logging', 'log-syslog')
 
                 if match:
                     seq_dict.setdefault('statistics', {}).setdefault('matched_packets', match)

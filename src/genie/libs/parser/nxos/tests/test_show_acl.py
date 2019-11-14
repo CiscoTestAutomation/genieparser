@@ -35,8 +35,8 @@ class TestShowAccessLists(unittest.TestCase):
             40 deny any any vlan 10
             50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
     IP access list test22
-            10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
-            20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
+            10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
+            20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
             30 deny ip any any
     '''}
 
@@ -184,6 +184,7 @@ class TestShowAccessLists(unittest.TestCase):
             10: {
                 'actions': {
                     'forwarding': 'permit',
+                    'logging': 'log-syslog',
                 },
                 'matches': {
                     'l3': {
@@ -382,8 +383,8 @@ class TestShowAccessLists(unittest.TestCase):
                     'l3': {
                         'tcp': {
                             'destination_network': {
-                                '1.1.1.1/32': {
-                                    'destination_network': '1.1.1.1/32',
+                                '10.4.1.1/32': {
+                                    'destination_network': '10.4.1.1/32',
                                 },
                             },
                             'protocol': 'tcp',
@@ -417,8 +418,8 @@ class TestShowAccessLists(unittest.TestCase):
                             'precedence': 'network',
                             'protocol': 'tcp',
                             'source_network': {
-                                '2.2.2.2/32': {
-                                    'source_network': '2.2.2.2/32',
+                                '10.16.2.2/32': {
+                                    'source_network': '10.16.2.2/32',
                                 },
                             },
                             'ttl': 255,
