@@ -766,6 +766,8 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('gateway'): str,
                                                 Optional('route_info'): str,
                                                 Optional('route_status'): str,
+                                                Optional('imported_path_from'): str,
+                                                Optional('imported_safety_path'): bool,
                                                 Optional('next_hop_via'): str,
                                                 Optional('update_group'): Any(),
                                                 Optional('status_codes'): str,
@@ -847,6 +849,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch_flag = False
         route_info = ''
         route_status = ''
+        imported_path_from = ''
+        imported_safety_path = False
         refresh_epoch = None
         cmd_vrf = vrf if vrf else None
         # For address family: IPv4 Unicast
@@ -1289,6 +1293,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 # Adding the keys we got from 'route_status' line                   
                 if route_status:
                     subdict['route_status'] = route_status
+                    
+                # Adding the keys we got from 'imported_path_from' line                   
+                if imported_path_from:
+                    subdict['imported_path_from'] = imported_path_from
+
+                # Adding the keys we got from 'imported_safety_path' line                   
+                if imported_safety_path:
+                    subdict['imported_safety_path'] = imported_safety_path
 
                 continue
 
@@ -1453,6 +1465,16 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 route_info = str(m.groupdict()['route_info'])
                 if m.groupdict()['route_status']:
                     route_status = str(m.groupdict()['route_status'].strip(' '))
+                    if route_status.startswith('(') and route_status.endswith(')'):
+                        route_status = route_status.strip("()")
+                    elif 'imported path from' in route_status:
+                        imported_path_from = route_status.lstrip('imported path from')
+                        imported_safety_path = False
+                        route_status = ''
+                    elif 'imported safety path from' in route_status:
+                        imported_path_from = route_status.lstrip('imported safety path from')
+                        imported_safety_path = True
+                        route_status = ''
                 refresh_epoch_flag = False
                 continue
 
