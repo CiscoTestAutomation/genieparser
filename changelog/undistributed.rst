@@ -148,6 +148,8 @@
         * Added regex to capture more outputs
     * Updated ShowVpc for:
         * Parser schema and regex to support more output
+    * Updated ShowVersion:
+	    * Updated regex matching for platform:chassis and platform:model
 
 * IOSXE
     * Updated ShowAuthenticationSessions
@@ -172,8 +174,13 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+
     * Updated ShowBgpDetailSuperParser for:
         * show ip bgp {address_family} vrf {vrf} detail 
+
+    * Updated ShowVersion:
+	    * Removed extra spaces in platform keyword
+
 
 * IOSXR
     * Updated ShowBgpSessions
@@ -188,6 +195,8 @@
         * Added regex to support various outputs
     * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
         * changed backup_nexthop and backup_nexthop to optional
+    * Updated ShowVersion
+	    * Corrected the value in os key
 
 * JUNOS
     * Enhanced ShowOspfInterfaceBrief:
