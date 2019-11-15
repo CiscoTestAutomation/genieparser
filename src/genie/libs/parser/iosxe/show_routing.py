@@ -2242,7 +2242,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
 
         # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
-        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 27.86.198.25>
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
         p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>\S+), '
                         r'addr +(?P<addr>[\d.]+)(?: +(?P<addr_info>[A-Z\d]+))?>$')
 
@@ -2278,7 +2278,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # sr label switch chain 0x7F0FF1960590
         p15 = re.compile(r'^(?P<type>dflt|sr) +(?P<chain_type>label +switch|disposition) +chain +(?P<id>\S+)$')
 
-        # GigabitEthernet0/1/6(15): 106.162.196.213
+        # GigabitEthernet0/1/6(15): 10.169.196.213
         # MPLS-SR-Tunnel1(29)
         p16 = re.compile(r'^(?P<interface>[\w\/-]+)\((?P<ifnum>\d+)\)(?:\: +(?P<addr>[\d.]+))?$')
 
@@ -2407,7 +2407,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                                               setdefault(group['id'], {})
                 continue
 
-            # GigabitEthernet0/1/6(15): 106.162.196.213
+            # GigabitEthernet0/1/6(15): 10.169.196.213
             # MPLS-SR-Tunnel1(29)
             m = p16.match(line)
             if m:
