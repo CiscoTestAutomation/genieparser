@@ -167,6 +167,8 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
+        * Supporting more than one entry under one sid
 
 * IOSXR
     * Updated ShowBgpSessions
