@@ -1000,6 +1000,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
         # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
         # 62000, (Received from a RR-client)
+        # 2, imported safety path from 50000:2:172.17.0.0/16
         p17=re.compile(r'^(?!.*(Community))\s*(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)(\,)?(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
 
         for line in output.splitlines():
