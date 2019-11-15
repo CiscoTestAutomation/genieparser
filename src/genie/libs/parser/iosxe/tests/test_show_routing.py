@@ -2719,14 +2719,12 @@ Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
                             'sharing': 'per-destination',
                             'sources': ['RIB,', 'RR,', 'LTE'],
                             'subblocks': {
-                                'rr_source': {
-                                    'counts': 1,
-                                    'details': {
-                                        'flags': '0111',
-                                        'id': '7F0FF16E6F38',
-                                        'locks': 8,
-                                    },
-                                    'info': '[non-eos indirection, heavily shared]',
+                                1: {
+                                    'non_eos_chain_loadinfo': '7F0FF16E6F38',
+                                    'per-session': True,
+                                    'flags': '0111',
+                                    'locks': 8,
+                                    'rr_source': ['non-eos indirection', 'heavily shared']
                                 },
                             },
                         },

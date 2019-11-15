@@ -2038,14 +2038,12 @@ class ShowIpCefInternalSchema(MetaParser):
                                     },
                                 },
                                 Optional('subblocks'): {
-                                  'rr_source': {
-                                      'counts': int,
-                                      'info': str,
-                                      'details': {
-                                          'id': str,
-                                          'flags': str,
-                                          'locks': int,
-                                      }
+                                  Any(): {
+                                      'rr_source': list,
+                                      'non_eos_chain_loadinfo': str,
+                                      'per-session': bool,
+                                      'flags': str,
+                                      'locks': int,
                                   }
                                 },
                                 Optional('ifnums'): {
@@ -2285,11 +2283,11 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p16 = re.compile(r'^(?P<interface>[\w\/-]+)\((?P<ifnum>\d+)\)(?:\: +(?P<addr>[\d.]+))?$')
 
         # 1 RR source [non-eos indirection, heavily shared]
-        p17 = re.compile(r'^(?P<counts>\d+) +RR +source +(?P<info>[\s\S]+)$')
+        p17 = re.compile(r'^(?P<counts>\d+) +RR +source +\[(?P<rr_source>[\s\S]+)\]$')
 
         # non-eos chain loadinfo 7F0FF16E6F38, per-session, flags 0111, 8 locks
-        p18 = re.compile(r'^non-eos +chain +loadinfo +(?P<id>\S+), +per-session, '
-                         r'+flags +(?P<flags>\S+), +(?P<locks>\d+) +locks$')
+        p18 = re.compile(r'^non-eos +chain +loadinfo +(?P<non_eos_chain_loadinfo>\S+),'
+                         r' +(?P<per_session>per-session), +flags +(?P<flags>\S+), +(?P<locks>\d+) +locks$')
 
         label_list = []
         label_list2 = []
@@ -2426,18 +2424,20 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                rr_dict = prefix_dict.setdefault('subblocks', {}).setdefault('rr_source', {})
-                rr_dict['counts'] = int(group['counts'])
-                rr_dict['info'] = group['info']
+                rr_dict = prefix_dict.setdefault('subblocks', {}).setdefault(int(group['counts']), {})
+                rr_dict['rr_source'] = group['rr_source'].split(', ')
                 continue
 
             # non-eos chain loadinfo 7F0FF16E6F38, per-session, flags 0111, 8 locks
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                rr_subdict = rr_dict.setdefault('details', {})
-                for i in ['id', 'flags', 'locks']:
-                    rr_subdict[i] = int(group[i]) if i == 'locks' else group[i]
+                if group['per_session'] == 'per-session':
+                    rr_dict['per-session'] = True
+                else:
+                    rr_dict['per-session'] = False
+                for i in ['non_eos_chain_loadinfo', 'flags', 'locks']:
+                    rr_dict[i] = int(group[i]) if i == 'locks' else group[i]
                 continue
 
             # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
