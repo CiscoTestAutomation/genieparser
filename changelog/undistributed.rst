@@ -40,16 +40,15 @@
         * show flow monitor {name} cache
     * Added ShowFlowMonitorCacheRecord for command;
         * show flow monitor {name} cache format record
-	* Enhanced Dir
-		* added 'dir {directory}' support
-
+    * Enhanced Dir
+        * added 'dir {directory}' support
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-	* Enhanced Dir
-		* added 'dir {directory}' support
+    * Enhanced Dir
+        * added 'dir {directory}' support
 
 * IOS
     * Added ShowInterfacesDescription for commands;
@@ -105,8 +104,8 @@
     * Added ShowBgpSummary for commands:
         * 'show bgp summary'
         * 'show bgp {address_family} summary'
-	* Enhanced Dir
-		* added 'dir {directory}' support
+    * Enhanced Dir
+        * added 'dir {directory}' support
 
 * JUNOS
     * Added ShowOspfInterface for commands:
@@ -136,6 +135,8 @@
         * Updated regex to support various outputs
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+    * Updated ShowBgpSessions
+        * Updated regex to accommodate different formats
 
 * NXOS
     * ShowIpOspf
@@ -143,6 +144,8 @@
         * Added regex to capture more outputs
     * Updated ShowVpc for:
         * Parser schema and regex to support more output
+    * Updated ShowIpOspfInterfaceVrfAll
+        * Changed keywords schema to optional
 
 * IOSXE
     * Updated ShowAuthenticationSessions
@@ -167,17 +170,18 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
-    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
-        * Supporting more than one entry under one sid
-
-* IOSXR
-    * Updated ShowBgpSessions
-        * Updated regex to accommodate different formats
-
-* IOSXE
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+        * Added keywords to schema
+        * Added and changed regex to accommodate different outputs
+    * Updated ShowAuthenticationSessions
+        * Added keyword to schema
+        * Added regex to support new output
     * Updated ShowVersion
         * Added keywords to schema
         * Added regex for unparsed outputs
+    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
+        * Supporting more than one entry under one sid
+
 * IOS
     * Updated ShowInventory
         * Added regex to support various outputs
@@ -189,15 +193,3 @@
         * Added command 'show ospf interface {interface} brief'
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
-
-* NXOS
-    * Updated ShowIpOspfInterfaceVrfAll
-        * Changed keywords schema to optional
-* IOSXE
-    * Updated ShowAuthenticationSessionsInterfaceDetails
-        * Added keywords to schema
-        * Added and changed regex to accommodate different outputs
-    
-    * Updated ShowAuthenticationSessions
-        * Added keyword to schema
-        * Added regex to support new output
