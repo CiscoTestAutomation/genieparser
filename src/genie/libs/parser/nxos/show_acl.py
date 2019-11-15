@@ -40,6 +40,7 @@ class ShowAccessListsSchema(MetaParser):
                                 'source_mac_address': str,
                                 Optional('ether_type'): str,
                                 Optional('vlan'): int,
+                                Optional('mac_protocol_number'): str,
                             }
                         },
                         Optional('l3'): {
@@ -145,8 +146,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit ip any any
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
-        # 10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
-        # 20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
+        # 10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
+        # 20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
         # 30 deny ip any any
         # 10 permit ip 10.1.50.64/32 any [match=0]
         # 40 permit ip any any [match=4]
@@ -168,13 +169,15 @@ class ShowAccessLists(ShowAccessListsSchema):
         # --- MAC access list ---
         # 10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
         # 20 permit 0000.0000.0000 0000.0000.0000 any
-        # 30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x80 41
+        # 30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x8041
         # 40 deny any any vlan 10
         # 50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
         p2_mac = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) '
-                            r'+(?P<source_mac_address>any|host|[\w]{4}.[\w]{4}.[\w]{4}(?: [\w]{4}.[\w]{4}.[\w]{4})?) '
+                            r'+(?P<source_mac_address>any|host|[\w]{4}.[\w]{4}.[\w]{4}'
+                            r'(?: [\w]{4}.[\w]{4}.[\w]{4})?) '
                             r'+(?P<destination_mac_address>(?:any|host|[\w.]+|[\d.]+)(?: +[\w]{4}.[\w]{4}.[\w]{4})?)'
-                            r'(?: +any)?(?: +(?P<ether_type>aarp))?(?: +vlan +(?P<vlan>\d+))?(?:(?P<others>.*))?$')
+                            r'(?: +any)?(?: +(?P<ether_type>aarp))?(?: +vlan +(?P<vlan>\d+))?'
+                            r'(?: (?P<mac_protocol_number>\w+))?(?:(?P<others>.*))?$')
 
         result_dict = {}
 
@@ -279,7 +282,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 # l2 dict
                 matches_dict = seq_dict.setdefault('matches', {})
                 l2_dict = matches_dict.setdefault('l2', {}).setdefault('eth', {})
-                for i in ['source_mac_address', 'destination_mac_address', 'ether_type', 'vlan']:
+                for i in ['source_mac_address', 'destination_mac_address', 'ether_type', 'vlan', 'mac_protocol_number']:
                     if group[i]:
                         l2_dict[i] = int(group[i]) if i == 'vlan' else group[i]
 

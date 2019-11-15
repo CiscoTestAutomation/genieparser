@@ -31,12 +31,12 @@ class TestShowAccessLists(unittest.TestCase):
     MAC access list mac_acl
             10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
             20 permit 0000.0000.0000 0000.0000.0000 any
-            30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x80 41
+            30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x8041
             40 deny any any vlan 10
             50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
     IP access list test22
-            10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
-            20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
+            10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
+            20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
             30 deny ip any any
     '''}
 
@@ -334,6 +334,7 @@ class TestShowAccessLists(unittest.TestCase):
                         'eth': {
                             'destination_mac_address': 'aaaa.bbbb.cccc 0000.0000.0000',
                             'source_mac_address': '0000.0000.0000 0000.0000.0000',
+                            'mac_protocol_number': '0x8041',
                         },
                     },
                 },
@@ -383,8 +384,8 @@ class TestShowAccessLists(unittest.TestCase):
                     'l3': {
                         'tcp': {
                             'destination_network': {
-                                '1.1.1.1/32': {
-                                    'destination_network': '1.1.1.1/32',
+                                '10.4.1.1/32': {
+                                    'destination_network': '10.4.1.1/32',
                                 },
                             },
                             'protocol': 'tcp',
@@ -418,8 +419,8 @@ class TestShowAccessLists(unittest.TestCase):
                             'precedence': 'network',
                             'protocol': 'tcp',
                             'source_network': {
-                                '2.2.2.2/32': {
-                                    'source_network': '2.2.2.2/32',
+                                '10.16.2.2/32': {
+                                    'source_network': '10.16.2.2/32',
                                 },
                             },
                             'ttl': 255,
