@@ -35,8 +35,8 @@ class TestShowAccessLists(unittest.TestCase):
             40 deny any any vlan 10
             50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
     IP access list test22
-            10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
-            20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
+            10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
+            20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
             30 deny ip any any
     '''}
 
@@ -383,8 +383,8 @@ class TestShowAccessLists(unittest.TestCase):
                     'l3': {
                         'tcp': {
                             'destination_network': {
-                                '10.4.1.1/32': {
-                                    'destination_network': '10.4.1.1/32',
+                                '1.1.1.1/32': {
+                                    'destination_network': '1.1.1.1/32',
                                 },
                             },
                             'protocol': 'tcp',
@@ -418,8 +418,8 @@ class TestShowAccessLists(unittest.TestCase):
                             'precedence': 'network',
                             'protocol': 'tcp',
                             'source_network': {
-                                '10.16.2.2/32': {
-                                    'source_network': '10.16.2.2/32',
+                                '2.2.2.2/32': {
+                                    'source_network': '2.2.2.2/32',
                                 },
                             },
                             'ttl': 255,
@@ -501,6 +501,9 @@ IP access list NTP-ACL
                     },
                 },
                 'name': '10',
+                'statistics': {
+                    'matched_packets': 0,
+                },
             },
             20: {
                 'actions': {
@@ -585,7 +588,7 @@ class TestShowAccessListsSummary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     device_output = {'execute.return_value': '''
-    R3_n9kv# show access-lists summary 
+    Device# show access-lists summary 
 IPV4 ACL acl_name
         Total ACEs Configured: 1
         Configured on interfaces:
@@ -632,123 +635,61 @@ IPV4 ACL test22
     '''}
 
     parsed_output = {
-    'acls': {
+    'acl': {
         'acl_name': {
-            'aces': {
-                'statistics': {
-                    'total_configured': 1,
-                },
-            },
-            'name': 'acl_name',
-            'type': 'IPV4',
-        },
-        'ipv4_acl': {
-            'aces': {
-                'statistics': {
-                    'configured_interface': {
-                        'Ethernet1/1': {
-                            'egress': 'Router ACL',
-                        },
-                    },
-                    'interface_active': {
-                        'Ethernet1/1': {
-                            'egress': 'Router ACL',
-                        },
-                    },
-                    'total_configured': 3,
-                },
-            },
-            'name': 'ipv4_acl',
-            'type': 'IPV4',
+            'total_aces_configured': 1,
         },
         'ipv4_ext': {
-            'aces': {
-                'statistics': {
-                    'total_configured': 0,
-                },
-            },
-            'name': 'ipv4_ext',
-            'type': 'IPV4',
+            'total_aces_configured': 0,
         },
-        'ipv6_acl': {
-            'aces': {
-                'statistics': {
-                    'configured_interface': {
-                        'Ethernet1/1': {
-                            'ingress': 'Router ACL',
-                        },
+    },
+    'attachment_points': {
+        'Ethernet1/1': {
+            'egress': {
+                'ipv4_acl': {
+                    'ace_statistics': {
+                        'total_aces_configured': 3,
                     },
-                    'interface_active': {
-                        'Ethernet1/1': {
-                            'ingress': 'Router ACL',
-                        },
+                    'active': True,
+                    'name': 'ipv4_acl',
+                    'type': 'Router ACL',
+                },
+                'ipv6_acl2': {
+                    'ace_statistics': {
+                        'total_aces_configured': 1,
                     },
-                    'total_configured': 3,
+                    'active': True,
+                    'name': 'ipv6_acl2',
+                    'type': 'Router ACL',
                 },
             },
-            'name': 'ipv6_acl',
-            'type': 'IPV6',
-        },
-        'ipv6_acl2': {
-            'aces': {
-                'statistics': {
-                    'configured_interface': {
-                        'Ethernet1/1': {
-                            'egress': 'Router ACL',
-                        },
+            'ingress': {
+                'ipv6_acl': {
+                    'ace_statistics': {
+                        'total_aces_configured': 3,
                     },
-                    'interface_active': {
-                        'Ethernet1/1': {
-                            'egress': 'Router ACL',
-                        },
+                    'active': True,
+                    'name': 'ipv6_acl',
+                    'type': 'Router ACL',
+                },
+                'mac_acl': {
+                    'ace_statistics': {
+                        'total_aces_configured': 5,
                     },
-                    'total_configured': 1,
+                    'active': True,
+                    'name': 'mac_acl',
+                    'type': 'Port ACL',
+                },
+                'test22': {
+                    'ace_statistics': {
+                        'total_aces_configured': 3,
+                    },
+                    'active': True,
+                    'name': 'test22',
+                    'type': 'Router ACL',
                 },
             },
-            'name': 'ipv6_acl2',
-            'type': 'IPV6',
-        },
-        'mac_acl': {
-            'aces': {
-                'statistics': {
-                    'configured_interface': {
-                        'Ethernet1/1': {
-                            'ingress': 'Port ACL',
-                        },
-                    },
-                    'total_configured': 5,
-                },
-            },
-            'name': 'mac_acl',
-            'type': 'MAC',
-        },
-        'sl_def_acl': {
-            'aces': {
-                'statistics': {
-                    'total_configured': 4,
-                },
-            },
-            'name': 'sl_def_acl',
-            'type': 'IPV4',
-        },
-        'test22': {
-            'aces': {
-                'statistics': {
-                    'configured_interface': {
-                        'Ethernet1/1': {
-                            'ingress': 'Router ACL',
-                        },
-                    },
-                    'interface_active': {
-                        'Ethernet1/1': {
-                            'ingress': 'Router ACL',
-                        },
-                    },
-                    'total_configured': 3,
-                },
-            },
-            'name': 'test22',
-            'type': 'IPV4',
+            'interface_id': 'Ethernet1/1',
         },
     },
 }

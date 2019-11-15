@@ -145,8 +145,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit ip any any
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
-        # 10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
-        # 20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
+        # 10 permit tcp 192.168.1.0 0.0.0.255 1.1.1.1/32 established log
+        # 20 permit tcp 2.2.2.2/32 eq www any precedence network ttl 255
         # 30 deny ip any any
         # 10 permit ip 10.1.50.64/32 any [match=0]
         # 40 permit ip any any [match=4]
@@ -221,7 +221,6 @@ class ShowAccessLists(ShowAccessListsSchema):
                 dst_operator = group['dst_operator']
                 dst_port = group['dst_port']
                 established_log = group['established_log']
-                match = int(group['match']) if group['match'] else None
                 logging = group['logging']
 
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
@@ -231,8 +230,9 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if logging:
                     seq_dict.setdefault('actions', {}).setdefault('logging', 'log-syslog')
 
-                if match:
-                    seq_dict.setdefault('statistics', {}).setdefault('matched_packets', match)
+                if group['match']:
+                    seq_dict.setdefault('statistics', {}).\
+                        setdefault('matched_packets', int(group['match']))
 
                 # l3 dict
                 matches_dict = seq_dict.setdefault('matches', {})
@@ -297,28 +297,35 @@ class ShowAccessListsSummarySchema(MetaParser):
         'show access-lists summary'
     """
     schema = {
-        'acls': {
-            Any(): {
-                'name': str,
-                'type': str,
-                'aces': {
-                    'statistics': {
-                        'total_configured': int,
-                        Optional('configured_interface'): {
-                            Any(): {
-                                Optional('egress'): str,
-                                Optional('ingress'): str,
-                            },
-                        },
-                        Optional('interface_active'): {
-                            Any(): {
-                                Optional('egress'): str,
-                                Optional('ingress'): str,
-                            },
-                        },
+        'acl': {
+          Any(): { # 'ipv4_acl'
+              'total_aces_configured': int,
+          }
+        },
+        'attachment_points': {
+            Any(): { # 'Ethernet1/1'
+                'interface_id': str, #'Ethernet1/1'
+                Optional('ingress'): {
+                    Any(): { # 'ipv4_acl'
+                        'name': str, # 'ipv4_acl'
+                        'type': str, # 'Router ACL'
+                        'active': bool,
+                        'ace_statistics': {
+                            'total_aces_configured': int,
+                        }
+                    }
+                },
+                Optional('egress'): {
+                    Any(): {
+                        'name': str,
+                        'type': str,
+                        'active': bool,
+                        'ace_statistics': {
+                            'total_aces_configured': int,
+                        }
                     }
                 }
-            }
+            },
         }
     }
 
@@ -340,79 +347,61 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
         else:
             out = output
 
-        result_dict = {}
-
         # IPV4 ACL acl_name
         # IPV6 ACL ipv6_acl2
         p1 = re.compile(r'^(?P<type>[A-Z0-9]+) +ACL +(?P<name>[a-z0-9_]+)$')
 
-        # Total ACEs Configured: 1
-        p2 = re.compile(r'^Total +ACEs +Configured: +(?P<total_configured>\d+)$')
-
-        # Configured on interfaces:
-        p3_1 = re.compile(r'^Configured +on +interfaces:$')
-
-        # Active on interfaces
-        p3_2 = re.compile(r'^Active +on +interfaces:$')
-
-        # Ethernet1/1 - egress (Router ACL)
-        # Ethernet1/1 - ingress (Port ACL)
-        p4 = re.compile(r'(?P<interface>Ethernet1/1) +- +(?P<traffic>egress|ingress) +\((?P<name>[\w\s]+)\)')
-
+        stack = []
+        stacks = []
+        start_flag = 0
+        result_dict = {}
         for line in out.splitlines():
-            line = line.strip()
-
-            # IPV4 ACL acl_name
-            # IPV6 ACL ipv6_acl2
+            acl_dict = result_dict.setdefault('acl', {})
+            att_dict = result_dict.setdefault('attachment_points', {})
             m = p1.match(line)
             if m:
-                if result_dict:
-                    for i in ['configured_interface', 'interface_active']:
-                        if not stats_dict[i]:
-                            del stats_dict[i]
-
-                group = m.groupdict()
-                acl_dict = result_dict.setdefault('acls', {}).setdefault(group['name'], {})
-                for i in ['name', 'type']:
-                    if group[i]:
-                        acl_dict[i] = group[i]
-                aces_dict = acl_dict.setdefault('aces', {})
-                continue
-
-            # Total ACEs Configured: 1
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                stats_dict = aces_dict.setdefault('statistics', {})
-                stats_dict['total_configured'] = int(group['total_configured'])
-                continue
-
-            # Configured on interfaces:
-            m = p3_1.match(line)
-            if m:
-                conf_dict = stats_dict.setdefault('configured_interface', {})
-                continue
-
-            # Active on interfaces
-            m = p3_2.match(line)
-            if m:
-                intf_dict = stats_dict.setdefault('interface_active', {})
-                continue
-
-            # Ethernet1/1 - egress (Router ACL)
-            # Ethernet1/1 - ingress (Port ACL)
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                if 'interface_active' in stats_dict:
-                    intf_sub_dict = intf_dict.setdefault(group['interface'], {})
-                    if group['traffic']:
-                        intf_sub_dict.setdefault(group['traffic'], group['name'])
+                if start_flag == 0:
+                    start_flag += 1
                 else:
-                    conf_sub_dict = conf_dict.setdefault(group['interface'], {})
-                    if group['traffic']:
-                        conf_sub_dict.setdefault(group['traffic'], group['name'])
-                continue
+                    stacks.append('\n'.join(stack))
+                    stack = []
+                    start_flag = 1
+
+            if start_flag == 1:
+                stack.append(line)
+
+        stacks.append('\n'.join(stack))
+
+        p = re.compile(r'^(?P<ip>[A-Z0-9]+) +ACL +(?P<name>[a-z0-9_]+)\n '
+                       r'+Total +ACEs +Configured: +(?P<total_configured>\d+)\n '
+                       r'+Configured +on +interfaces:\n(?: +(?P<interface>Ethernet1/1) '
+                       r'+- +(?P<traffic>egress|ingress) +\((?P<type>[\w\s]+)\)\n)? '
+                       r'+(?P<active>Active) +on +interfaces:(?:\n +(?P<interface2>Ethernet1/1) '
+                       r'+- +(?P<traffic2>egress|ingress) +\((?P<type2>[\w\s]+)\))?')
+
+        for s in stacks:
+            m = p.match(s)
+            if m:
+                group = m.groupdict()
+                ip = group['ip']
+                name = group['name']
+                total_configured = int(group['total_configured'])
+                if not group['interface'] and not group['interface2']:
+                    acl_dict.setdefault(name, {}).setdefault('total_aces_configured', total_configured)
+                else:
+                    sub_att_dict = att_dict.setdefault(group['interface'], {})
+                    sub_att_dict['interface_id'] = group['interface']
+                    traffic_dict = sub_att_dict.setdefault(group['traffic'], {}).\
+                                                setdefault(name, {})
+
+                    traffic_dict['name'] = name
+                    traffic_dict['type'] = group['type']
+                    if group['active'] == 'Active':
+                        active = True
+                    else:
+                        active = False
+                    traffic_dict['active'] = True
+                    traffic_dict.setdefault('ace_statistics', {}).setdefault('total_aces_configured', total_configured)
 
         return result_dict
 
