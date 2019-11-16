@@ -549,7 +549,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -558,7 +557,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:47:23"
                             },
@@ -567,7 +565,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -576,7 +573,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -585,7 +581,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:19:56"
                             },
@@ -594,7 +589,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             }	
@@ -607,7 +601,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "01:53:32"
                             }
@@ -620,7 +613,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -629,7 +621,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "10:36:57"
                             },
@@ -638,7 +629,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "10:36:57"
                             },
@@ -647,7 +637,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -656,7 +645,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:44:55"
                             },
@@ -665,7 +653,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.1",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "00:01:41",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:29:47",
                             }
@@ -678,7 +665,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:47:23"
                             }
@@ -691,7 +677,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:47:23"
                             }			
@@ -837,7 +822,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             },
@@ -846,7 +830,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:48:07"
                             },
@@ -855,7 +838,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             },
@@ -864,7 +846,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.16.2.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             }
@@ -877,7 +858,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "01:54:16"
                             }
@@ -890,7 +870,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             },
@@ -899,7 +878,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "10:37:41"
                             },
@@ -908,7 +886,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "10:37:41"
                             },
@@ -917,7 +894,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             },
@@ -926,7 +902,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             },
@@ -935,7 +910,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.1",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "00:01:21",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:30:06"
                             },
@@ -944,7 +918,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "10.12.110.2",
                                 "router_mode": "EXCLUDE",
                                 "router_mode_expires": "never",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "02:43:30"
                             }        
@@ -957,7 +930,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:48:07"
                             }
@@ -970,7 +942,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "01:54:16"
                             }
@@ -983,7 +954,6 @@ class test_show_igmp_groups_detail(unittest.TestCase):
                                 "last_reporter": "0.0.0.0",
                                 "router_mode": "INCLUDE",
                                 "router_mode_expires": "None",
-                                "source_list": "empty",
                                 "suppress": 0,
                                 "up_time": "09:48:07"
                             }			
@@ -1118,6 +1088,47 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         Source list is empty
     '''}
 
+    golden_output1 = {'execute.return_value': '''
+        R2_xr#show igmp groups detail
+            Interface:      GigabitEthernet0/0/0/2
+            Group:          232.1.1.1
+            Uptime:         00:04:55
+            Router mode:    INCLUDE
+            Host mode:      INCLUDE
+            Last reporter:  192.168.1.42
+            Group source list:
+              Source Address   Uptime    Expires   Fwd  Flags
+              192.168.1.18     00:04:55  00:01:28  Yes  Remote
+    '''}
+    
+    golden_parsed_output1 = {
+        "vrf": {
+            "default": {
+                "interfaces": {
+                    "GigabitEthernet0/0/0/2": {
+                        "group": {
+                            "232.1.1.1": {
+                                "host_mode": "include",
+                                "last_reporter": "192.168.1.42",
+                                "router_mode": "INCLUDE",
+                                "router_mode_expires": "None",
+                                "up_time": "00:04:55",
+                                "source": {
+                                    "192.168.1.18": {
+                                        "up_time": "00:04:55",
+                                        "expire": "00:01:28",
+                                        "forward": "Yes",
+                                        "flags": "Remote"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         igmp_groups_detail_obj = ShowIgmpGroupsDetail(device=self.device1)
@@ -1137,6 +1148,13 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         parsed_output = igmp_groups_detail_obj.parse(vrf='VRF1')
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_igmp_groups_output)
+        
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        igmp_groups_detail_obj = ShowIgmpGroupsDetail(device=self.device)
+        parsed_output = igmp_groups_detail_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
       
 if __name__ == '__main__':
     unittest.main()
