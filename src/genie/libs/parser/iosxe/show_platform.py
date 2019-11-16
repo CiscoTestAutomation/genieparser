@@ -378,7 +378,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['version_short'] = \
                         m2.groupdict()['ver_short']
                     version_dict['version']['platform'] = \
-                        m.groupdict()['platform']
+                        m.groupdict()['platform'].strip()
                     version_dict['version']['version'] = \
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
@@ -432,8 +432,9 @@ class ShowVersion(ShowVersionSchema):
                 # ROM: Bootstrap program is IOSv
                 m = p7.match(rom)
                 if m:
-                    version_dict['version']['os'] = \
-                        m.groupdict()['os']
+                    if 'os' not in version_dict['version']:
+                        version_dict['version']['os'] = \
+                            m.groupdict()['os']
                 continue
 
             # bootldr
