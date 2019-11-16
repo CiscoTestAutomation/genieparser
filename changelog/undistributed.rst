@@ -36,12 +36,17 @@
     * Added ShowIpCefInternal
         * show ip cef {ip} internal
         * show ip cef internal
+
     * Added ShowFlowMonitorCache for command;
         * show flow monitor {name} cache
     * Added ShowFlowMonitorCacheRecord for command;
         * show flow monitor {name} cache format record
 	* Enhanced Dir
 		* added 'dir {directory}' support
+
+
+    * Updated ShowIpBgpDetail for:
+        * show ip bgp {address_family} all detail
 
 
 * NXOS
@@ -167,6 +172,8 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+    * Updated ShowBgpDetailSuperParser for:
+        * show ip bgp {address_family} vrf {vrf} detail 
 
 * IOSXR
     * Updated ShowBgpSessions
@@ -188,6 +195,7 @@
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
 
+
 * NXOS
     * Updated ShowIpOspfInterfaceVrfAll
         * Changed keywords schema to optional
@@ -199,3 +207,4 @@
     * Updated ShowAuthenticationSessions
         * Added keyword to schema
         * Added regex to support new output
+
