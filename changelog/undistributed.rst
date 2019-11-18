@@ -174,6 +174,10 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+    * Updated ShowIpCefInternal for:
+        * show ip cef internal
+        * show ip cef {prefix} internal
+        * show ip cef vrf {vrf} {prefix} internal
 
     * Updated ShowBgpDetailSuperParser for:
         * show ip bgp {address_family} vrf {vrf} detail 
