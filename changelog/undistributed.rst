@@ -180,12 +180,14 @@
         * show ip cef vrf {vrf} {prefix} internal
 
     * Updated ShowBgpDetailSuperParser for:
-        * show ip bgp {address_family} vrf {vrf} detail 
+        * show ip bgp {address_family} vrf {vrf} detail
 
     * Updated ShowVersion:
 	    * Removed extra spaces in platform keyword
     * Updated ShowPlatform
         * Updated parser logic to support c8300 platform
+    * Updated ShowSegmentRoutingTrafficEngPolicy for:
+        * Better support for hop configurations
 
 * IOSXR
     * Updated ShowBgpSessions
