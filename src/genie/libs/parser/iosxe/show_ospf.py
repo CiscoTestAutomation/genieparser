@@ -7681,7 +7681,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                 sids_dict = process_dict.setdefault('sids', {})
                 sids_dict.update({'total_entries': sid_entries})
 
-                if group['sid']:
+                if group.get('sid'):
                     index = 1
                     sid_dict = sids_dict.setdefault(int(group['sid']), {})
                 else:
@@ -7691,15 +7691,15 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                 index_dict = sid_dict.setdefault('index', {}).setdefault(index, {})
                 index_dict.update({'prefix': group['prefix']})
 
-                if group['codes']:
+                if group.get('codes'):
                     index_dict.update({'codes': group['codes']})
-                if 'adv_rtr_id' in group and group['adv_rtr_id']:
+                if group.get('adv_rtr_id'):
                     index_dict.update({'adv_rtr_id': group['adv_rtr_id']})
-                if 'area_id' in group and group['area_id']:
+                if group.get('area_id'):
                     index_dict.update({'area_id': str(IPAddress(group['area_id']))})
-                if group['type']:
+                if group.get('type'):
                     index_dict.update({'type': group['type']})
-                if group['algo']:
+                if group.get('algo'):
                     index_dict.update({'algo': int(group['algo'])})
                 continue
 
