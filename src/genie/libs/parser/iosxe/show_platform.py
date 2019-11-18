@@ -378,7 +378,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['version_short'] = \
                         m2.groupdict()['ver_short']
                     version_dict['version']['platform'] = \
-                        m.groupdict()['platform']
+                        m.groupdict()['platform'].strip()
                     version_dict['version']['version'] = \
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
@@ -432,8 +432,9 @@ class ShowVersion(ShowVersionSchema):
                 # ROM: Bootstrap program is IOSv
                 m = p7.match(rom)
                 if m:
-                    version_dict['version']['os'] = \
-                        m.groupdict()['os']
+                    if 'os' not in version_dict['version']:
+                        version_dict['version']['os'] = \
+                            m.groupdict()['os']
                 continue
 
             # bootldr
@@ -2044,6 +2045,22 @@ class ShowPlatform(ShowPlatformSchema):
                 sub_dict['insert_time'] = m.groupdict()['insert_time']
                 continue
 
+            m = p7.match(line)
+            if m:
+                fw_ver = m.groupdict()['fireware_ver']
+                cpld_ver = m.groupdict()['cpld_version']
+                slot = m.groupdict()['slot']
+                if 'slot' not in platform_dict:
+                    continue
+                if slot not in platform_dict['slot']:
+                    continue
+
+                for key, value in platform_dict['slot'][slot].items():
+                    for key, last in value.items():
+                        last['cpld_ver'] = m.groupdict()['cpld_version']
+                        last['fw_ver'] = m.groupdict()['fireware_ver']
+                continue
+
             m = p6_1.match(line)
             if m:                    
                 slot = m.groupdict()['slot']
@@ -2059,22 +2076,6 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['slot'][slot]['other']['']['name'] = ''
                 platform_dict['slot'][slot]['other']['']['state'] = m.groupdict()['state']
                 platform_dict['slot'][slot]['other']['']['insert_time'] = m.groupdict()['insert_time']
-                continue
-
-            m = p7.match(line)
-            if m:
-                fw_ver = m.groupdict()['fireware_ver']
-                cpld_ver = m.groupdict()['cpld_version']
-                slot = m.groupdict()['slot']
-                if 'slot' not in platform_dict:
-                    continue
-                if slot not in platform_dict['slot']:
-                    continue
-
-                for key, value in platform_dict['slot'][slot].items():
-                    for key, last in value.items():
-                        last['cpld_ver'] = m.groupdict()['cpld_version']
-                        last['fw_ver'] = m.groupdict()['fireware_ver']
                 continue
 
         return platform_dict

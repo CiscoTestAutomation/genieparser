@@ -1949,18 +1949,122 @@ class ShowIpCefInternalSchema(MetaParser):
                         'prefix': {
                             Any(): {
                                 Optional('epoch'): int,
-                                Optional('per_destination_sharing'): bool,
+                                Optional('sharing'): str,
                                 Optional('rib'): str,
                                 Optional('refcnt'): int,
-                                Optional('sr_local_label_info'): str,
-                                Optional('dflt_local_label_info'): str,
+                                Optional('feature_space'): {
+                                    Optional('iprm'): str,
+                                    Optional('broker'): {
+                                      'distribution_priority': int,
+                                    },
+                                    Optional('lfd'): {
+                                        Any(): {
+                                            'local_labels': int,
+                                        }
+                                    },
+                                    Optional('local_label_info'): {
+                                      Optional('dflt'): str,
+                                      Optional('sr'): str,
+                                    },
+                                    Optional('path_extension_list'): {
+                                        'dflt': {
+                                            'disposition_chain': {
+                                                Any(): {
+                                                    'label': int,
+                                                    'frr': {
+                                                        'primary': {
+                                                            'primary': {
+                                                                'tag_adj': {
+                                                                    Any(): {
+                                                                        'addr': str,
+                                                                    }
+                                                                }
+                                                            },
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            'label_switch_chain': {
+                                                Any(): {
+                                                    'label': int,
+                                                    'frr': {
+                                                        'primary': {
+                                                            'primary': {
+                                                                'tag_adj': {
+                                                                    Any(): {
+                                                                        'addr': str,
+                                                                    }
+                                                                }
+                                                            },
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        'sr': {
+                                            'disposition_chain': {
+                                                Any(): {
+                                                    'label': int,
+                                                    'frr': {
+                                                        'primary': {
+                                                            'primary': {
+                                                                'tag_adj': {
+                                                                    Any(): {
+                                                                        'addr': str,
+                                                                    }
+                                                                }
+                                                            },
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            'label_switch_chain': {
+                                                Any(): {
+                                                    'label': int,
+                                                    'frr': {
+                                                        'primary': {
+                                                            'primary': {
+                                                                'tag_adj': {
+                                                                    Any(): {
+                                                                        'addr': str,
+                                                                    }
+                                                                }
+                                                            },
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    },
+                                },
+                                Optional('subblocks'): {
+                                  Any(): {
+                                      'rr_source': list,
+                                      'non_eos_chain_loadinfo': str,
+                                      'per-session': bool,
+                                      'flags': str,
+                                      'locks': int,
+                                  }
+                                },
+                                Optional('ifnums'): {
+                                    Any(): {
+                                        'ifnum': int,
+                                        Optional('address'): str,
+                                    }
+                                },
                                 Optional('flags'): list,
                                 Optional('sources'): list,
                                 Optional('path_list'): {
                                     Any(): {
+                                        'sharing': str,
+                                        'flags': str,
                                         'locks': int,
                                         'path': {
                                             Any(): {
+                                                Optional('share'): str,
+                                                Optional('type'): str,
+                                                Optional('for'): str,
+                                                Optional('flags'): str,
                                                 Optional('nexthop'): {
                                                     Any(): {
                                                         Optional('outgoing_interface'): {
@@ -1970,6 +2074,12 @@ class ShowIpCefInternalSchema(MetaParser):
                                                                 Optional('outgoing_label_backup'): str,
                                                                 Optional('outgoing_label_info'): str,
                                                                 Optional('repair'): str,
+                                                                Optional('ip_adj'): {
+                                                                    Any(): {
+                                                                        Optional('addr'): str,
+                                                                        Optional('addr_info'): str,
+                                                                    }
+                                                                }
                                                             },
                                                         },
                                                     },
@@ -1985,7 +2095,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                             'tag_midchain_info': str,
                                             'label': list,
                                             'frr': { # frr_dict
-                                                'Primary': { # frr_primary_dict
+                                                'primary': { # frr_primary_dict
                                                     'info': str,
                                                     'primary': {
                                                         Optional('tag_adj'): {
@@ -2012,7 +2122,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                         }
                                     },
                                     Optional('frr'): {
-                                            'Primary': {
+                                            'primary': {
                                                 'info': str,
                                                 'primary': {
                                                     Optional('tag_adj'): {
@@ -2057,19 +2167,23 @@ class ShowIpCefInternalSchema(MetaParser):
 class ShowIpCefInternal(ShowIpCefInternalSchema):
     ''' Parser for:
         * 'show ip cef internal'
-        * 'show ip cef <ip> internal'
+        * 'show ip cef <prefix> internal'
+        * 'show ip cef vrf <vrf> <prefix> internal'
     '''
 
     cli_command = ['show ip cef {ip} internal',
-                   'show ip cef internal']
+                   'show ip cef internal',
+                   'show ip cef vrf {vrf} {ip} internal']
 
     def cli(self, ip="", vrf="", output=None):
 
         if output is None:
-            if ip:
+            if ip and vrf:
+                cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
+            elif ip:
                 cmd = self.cli_command[0].format(ip=ip)
             else:
-                cmd = self.cli_command[1].format(ip=ip)
+                cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -2081,38 +2195,41 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
         # 0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
-        p1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch'
-                        r' +(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)?'
-                        r' +refcnt +(?P<refcnt>\d+),'
-                        r' +(?P<sharing>(per-destination sharing))$')
+        p1 = re.compile(r'^(?P<prefix>[\w:.\/d]+), +epoch '
+                        r'+(?P<epoch>\d+),(?: +RIB(?P<rib>\S+),)? '
+                        r'+refcnt +(?P<refcnt>\d+), +(?P<sharing>\S+) sharing$')
 
         # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
         # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
         # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-packet sharing
         p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
                           r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
                           r'+RIB+(?P<rib>\S+),)? +refcnt +(?P<refcnt>\d+), '
-                          r'+(?P<sharing>(per-destination sharing))$')
+                          r'+(?P<sharing>\S+) sharing$')
 
         #   sources: RIB, RR, LTE
         p2 = re.compile(r'^sources: +(?P<sources>[a-zA-Z, ]+)$')
 
         # dflt local label info: global/28 [0x3]
-        p3 = re.compile(r'^dflt +local +label +info: +(?P<dflt_local_label_info>(.*))$')
-
         # sr local label info: global/16073 [0x1B]
-        p4 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
+        p3 = re.compile(r'^(?P<local_label>dflt|sr) +local +label +info: +(?P<info>(.*))$')
 
         # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
-        p5 = re.compile(r'path +list +(?P<path_list_id>[A-Z0-9]+), +(?P<locks>\d+) +locks, .*')
+        p5 = re.compile(r'^path +list +(?P<path_list_id>[A-Z0-9]+), '
+                        r'+(?P<locks>\d+) +locks, +(?P<sharing>per-destination),'
+                        r' +flags +(?P<flags>[\S\s]+)$')
 
         # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
-        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), .*')
+        p6 = re.compile(r'path +(?P<path_id>[A-Z0-9]+), share +(?P<share>\S+), +type '
+                        r'+(?P<type>[\w\s]+), +for +(?P<for>[\w\d\-\s]+)(?:, flags +(?P<flags>\S+))?')
 
         # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [51885|16073]-(local:28), IP adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D4900
-        p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
-                        r'(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
-                        r'\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)(.*)$')
+        p7 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label '
+                        r'+\[(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)\]'
+                        r'(?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)'
+                        r'(?:, +(?P<ip_adj>IP adj) +out +of +(?P<interface2>\S+), +addr +(?P<addr>\S+) '
+                        r'+(?P<addr_info>\S+))?(.*)$')
 
         # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
         p7_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
@@ -2126,8 +2243,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
 
         # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
-        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>[a-zA-Z\d/]+), addr'
-                        r' +(?P<addr>[\d.]+) +(?P<addr_info>[A-Z\d]+)>$')
+        # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        p8 = re.compile(r'^<primary: +TAG +adj +out +of +(?P<interface>\S+), '
+                        r'addr +(?P<addr>[\d.]+)(?: +(?P<addr_info>[A-Z\d]+))?>$')
 
         # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
         # <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
@@ -2145,6 +2263,32 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         # <repair:  label 16061
         p11 = re.compile(r'<repair: +label +(?P<label>.*)')
+
+        # IPRM: 0x00018000
+        p12 = re.compile(r'^IPRM: +(?P<iprm>\S+)$')
+
+        # Broker: linked, distributed at 2nd priority
+        p13 = re.compile(r'^Broker: +(?P<status>\w+), +distributed +at +(?P<priority>\d+).* +priority$')
+
+        # LFD: 10.13.110.0/24 0 local labels
+        p14 = re.compile(r'^LFD: +(?P<address>\S+) +(?P<labels>\d+) +local +labels$')
+
+        # dflt disposition chain 0x7F0FF19606C0
+        # sr disposition chain 0x7F0FF1960590
+        # dflt label switch chain 0x7F0FF19606C0
+        # sr label switch chain 0x7F0FF1960590
+        p15 = re.compile(r'^(?P<type>dflt|sr) +(?P<chain_type>label +switch|disposition) +chain +(?P<id>\S+)$')
+
+        # GigabitEthernet0/1/6(15): 10.169.196.213
+        # MPLS-SR-Tunnel1(29)
+        p16 = re.compile(r'^(?P<interface>[\w\/-]+)\((?P<ifnum>\d+)\)(?:\: +(?P<addr>[\d.]+))?$')
+
+        # 1 RR source [non-eos indirection, heavily shared]
+        p17 = re.compile(r'^(?P<counts>\d+) +RR +source +\[(?P<rr_source>[\s\S]+)\]$')
+
+        # non-eos chain loadinfo 7F0FF16E6F38, per-session, flags 0111, 8 locks
+        p18 = re.compile(r'^non-eos +chain +loadinfo +(?P<non_eos_chain_loadinfo>\S+),'
+                         r' +(?P<per_session>per-session), +flags +(?P<flags>\S+), +(?P<locks>\d+) +locks$')
 
         label_list = []
         label_list2 = []
@@ -2180,7 +2324,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 if group['epoch']:
                     prefix_dict['epoch'] = int(group['epoch'])
                 if group['sharing']:
-                    prefix_dict['per_destination_sharing'] = True
+                    prefix_dict['sharing'] = group['sharing']
                 if 'rib' in group and group['rib']:
                     prefix_dict['rib'] = group['rib']
                 if 'refcnt' in group and group['refcnt']:
@@ -2197,18 +2341,104 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
                 continue
 
-            # dflt local label info: global/28 [0x3]
-            m3 = p3.match(line)
-            if m3:
-                prefix_dict['dflt_local_label_info'] = m3.groupdict()['dflt_local_label_info']
+            # IPRM: 0x00028000
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                feature_space_dict = prefix_dict.setdefault('feature_space', {})
+                feature_space_dict['iprm'] = group['iprm']
 
                 continue
 
-            # sr local label info: global/16073 [0x1B]
-            m4 = p4.match(line)
-            if m4:
-                prefix_dict['sr_local_label_info'] = m4.groupdict()['sr_local_label_info']
+            # Broker: linked, distributed at 1st priority
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                broker_dict = feature_space_dict.setdefault('broker', {})
+                if group['priority']:
+                    broker_dict['distribution_priority'] = int(group['priority'])
+                continue
 
+            # LFD: 10.13.110.0/24 0 local labels
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                lfd_dict = feature_space_dict.setdefault('lfd', {})
+                lfd_dict.setdefault(group['address'], {}). \
+                         setdefault('local_labels', int(group['labels']))
+                continue
+
+            # dflt local label info: global/28 [0x3]
+            # sr local label info: global/16073 [0x1B]
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                local_label_info_dict = feature_space_dict.setdefault('local_label_info', {})
+                local_label_info_dict[group['local_label']] = group['info']
+
+                continue
+
+            # dflt disposition chain 0x7F0FF19606C0
+            # sr disposition chain 0x7F0FF1960590
+            # dflt label switch chain 0x7F0FF19606C0
+            # sr label switch chain 0x7F0FF1960590
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if group['type'] == 'dflt' and group['chain_type'] == 'label switch':
+                    dft_lb_dict = feature_space_dict.setdefault('path_extension_list', {}). \
+                                              setdefault('dflt', {}). \
+                                              setdefault('label_switch_chain', {}). \
+                                              setdefault(group['id'], {})
+                elif group['type'] == 'dflt' and group['chain_type'] == 'disposition':
+                    dft_dp_dict = feature_space_dict.setdefault('path_extension_list', {}). \
+                                              setdefault('dflt', {}). \
+                                              setdefault('disposition_chain', {}). \
+                                              setdefault(group['id'], {})
+
+                if group['type'] == 'sr' and group['chain_type'] == 'label switch':
+                    sr_lb_dict = feature_space_dict.setdefault('path_extension_list', {}). \
+                                              setdefault('sr', {}). \
+                                              setdefault('label_switch_chain', {}). \
+                                              setdefault(group['id'], {})
+                elif group['type'] == 'sr' and group['chain_type'] == 'disposition':
+                    sr_dp_dict = feature_space_dict.setdefault('path_extension_list', {}). \
+                                              setdefault('sr', {}). \
+                                              setdefault('disposition_chain', {}). \
+                                              setdefault(group['id'], {})
+                continue
+
+            # GigabitEthernet0/1/6(15): 10.169.196.213
+            # MPLS-SR-Tunnel1(29)
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ifnum_dict = prefix_dict.setdefault('ifnums', {}). \
+                                setdefault(group['interface'], {})
+                ifnum_dict['ifnum'] = int(group['ifnum'])
+                if group['addr']:
+                    ifnum_dict.setdefault('address', group['addr'])
+
+                continue
+
+            # 1 RR source [non-eos indirection, heavily shared]
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                rr_dict = prefix_dict.setdefault('subblocks', {}).setdefault(int(group['counts']), {})
+                rr_dict['rr_source'] = group['rr_source'].split(', ')
+                continue
+
+            # non-eos chain loadinfo 7F0FF16E6F38, per-session, flags 0111, 8 locks
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                if group['per_session'] == 'per-session':
+                    rr_dict['per-session'] = True
+                else:
+                    rr_dict['per-session'] = False
+                for i in ['non_eos_chain_loadinfo', 'flags', 'locks']:
+                    rr_dict[i] = int(group[i]) if i == 'locks' else group[i]
                 continue
 
             # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
@@ -2219,14 +2449,22 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     setdefault(group['path_list_id'], {})
                 if group['locks']:
                     pathlist_dict['locks'] = int(group['locks'])
+                if group['sharing']:
+                    pathlist_dict['sharing'] = group['sharing']
+                if group['flags']:
+                    pathlist_dict['flags'] = group['flags']
 
                 continue
 
             # path 7F0FF11E0AE0, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
             m6 = p6.match(line)
             if m6:
+                group = m6.groupdict()
                 path_dict = pathlist_dict.setdefault('path', {}). \
-                    setdefault(m6.groupdict()['path_id'], {})
+                    setdefault(group['path_id'], {})
+                for i in ['share', 'type', 'for', 'flags']:
+                    if group[i]:
+                        path_dict[i] = group[i]
 
                 continue
 
@@ -2250,11 +2488,14 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 if 'outgoing_label' in group and group['outgoing_label']:
                     nexthop_dict['outgoing_label'] = group['outgoing_label'].split()
 
-                if 'outgoing_label_backup' in group and group['outgoing_label_backup']:
-                    nexthop_dict['outgoing_label_backup'] = group['outgoing_label_backup']
+                for i in ['outgoing_label_backup', 'outgoing_label_info']:
+                    if i in group and group[i]:
+                        nexthop_dict[i] = group[i]
 
-                if 'outgoing_label_info' in group and group['outgoing_label_info']:
-                    nexthop_dict['outgoing_label_info'] = group['outgoing_label_info']
+                if 'ip_adj' in group and group['ip_adj']:
+                    ip_adj_dict = nexthop_dict.setdefault('ip_adj', {}).setdefault(group['interface2'], {})
+                    ip_adj_dict['addr'] = group['addr']
+                    ip_adj_dict['addr_info'] = group['addr_info']
 
                 continue
 
@@ -2264,7 +2505,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 group = m8_0.groupdict()
                 empty_dict = {}
                 frr_dict = empty_dict.setdefault('frr', {})
-                frr_primary_dict = frr_dict.setdefault('Primary', {})
+                frr_primary_dict = frr_dict.setdefault('primary', {})
                 frr_primary_dict['info'] = group['info']
 
                 if 'tag_midchain' in output_chain_dict:
@@ -2288,19 +2529,43 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
-                if 'output_chain' in prefix_dict:
+
+                if 'path_list' in prefix_dict:
                     if 'tag_midchain' in output_chain_dict:
-                        primary_dict = tag_midchain_dict['frr']['Primary'].setdefault('primary', {}). \
+                        primary_dict = tag_midchain_dict['frr']['primary'].setdefault('primary', {}). \
                                                     setdefault('tag_adj', {}). \
                                                     setdefault(group['interface'], {})
                     else:
-                        primary_dict = output_chain_dict['frr']['Primary'].setdefault('primary', {}). \
+
+                        primary_dict = output_chain_dict.setdefault('frr', {}). \
+                                                    setdefault('primary', {}). \
+                                                    setdefault('primary', {}). \
                                                     setdefault('tag_adj', {}). \
                                                     setdefault(group['interface'], {})
 
                     primary_dict['addr'] = group['addr']
                     primary_dict['addr_info'] = group['addr_info']
+                elif 'path_extension_list' in feature_space_dict:
 
+                    path_ext_frr_dict = {}
+                    path_ext_frr_dict.setdefault('tag_adj', {}). \
+                                      setdefault(group['interface'], {'addr': group['addr']})
+
+                    if 'sr' in feature_space_dict['path_extension_list']:
+                        if 'label_switch_chain' in feature_space_dict['path_extension_list']['sr']:
+                            sr_lb_dict.setdefault('frr', {}).\
+                                setdefault('primary', {}).setdefault('primary', path_ext_frr_dict)
+                        elif 'disposition_chain' in feature_space_dict['path_extension_list']['sr']:
+                            sr_dp_dict.setdefault('frr', {}).\
+                                setdefault('primary', {}).setdefault('primary', path_ext_frr_dict)
+
+                    elif 'dflt' in feature_space_dict['path_extension_list']:
+                        if 'label_switch_chain' in feature_space_dict['path_extension_list']['dflt']:
+                            dft_lb_dict.setdefault('frr', {}).\
+                                setdefault('primary', {}).setdefault('primary', path_ext_frr_dict)
+                        elif 'disposition_chain' in feature_space_dict['path_extension_list']['dflt']:
+                            dft_dp_dict.setdefault('frr', {}).\
+                                setdefault('primary', {}).setdefault('primary', path_ext_frr_dict)
                 continue
 
             # TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F0FF0AFB2F8>
@@ -2310,19 +2575,19 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 group = m9.groupdict()
                 if 'output_chain' in prefix_dict:
                     if 'tag_midchain' in output_chain_dict:
-                        repair_adj_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                        repair_adj_dict = tag_midchain_dict['frr']['primary'].setdefault('repair', {}). \
                                                        setdefault('tag_adj', {}). \
                                                        setdefault(group['interface'], {})
                     elif 'frr' in output_chain_dict:
-                        if 'repair' in output_chain_dict['frr']['Primary']:
-                            if 'tag_midchain' in output_chain_dict['frr']['Primary']['repair']:
-                                temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                        if 'repair' in output_chain_dict['frr']['primary']:
+                            if 'tag_midchain' in output_chain_dict['frr']['primary']['repair']:
+                                temp_tag_dict = output_chain_dict['frr']['primary']['repair']['tag_midchain']
                                 temp_key = list(temp_tag_dict.keys())[0]
-                                repair_adj_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]. \
+                                repair_adj_dict = output_chain_dict['frr']['primary']['repair']['tag_midchain'][temp_key]. \
                                     setdefault('tag_adj', {}). \
                                     setdefault(group['interface'], {})
                         else:
-                            repair_adj_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                            repair_adj_dict = output_chain_dict['frr']['primary'].setdefault('repair', {}). \
                                 setdefault('tag_adj', {}). \
                                 setdefault(group['interface'], {})
 
@@ -2337,11 +2602,11 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 group = m9_1.groupdict()
                 if 'output_chain' in prefix_dict:
                     if 'tag_midchain' in output_chain_dict:
-                        repair_mid_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {}). \
+                        repair_mid_dict = tag_midchain_dict['frr']['primary'].setdefault('repair', {}). \
                             setdefault('tag_midchain', {}).setdefault(group['interface'], {})
 
                     else:
-                        repair_mid_dict = output_chain_dict['frr']['Primary'].setdefault('repair', {}). \
+                        repair_mid_dict = output_chain_dict['frr']['primary'].setdefault('repair', {}). \
                             setdefault('tag_midchain', {}).setdefault(group['interface'], {})
 
                     repair_mid_dict['tag_midchain_info'] = group['addr_info']
@@ -2360,24 +2625,36 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     if 'tag_midchain' in output_chain_dict:
 
                         if 'frr' in tag_midchain_dict:
-                            temp_tag_dict = tag_midchain_dict['frr']['Primary']['repair']['tag_adj']
+                            temp_tag_dict = tag_midchain_dict['frr']['primary']['repair']['tag_adj']
                             temp_key = list(temp_tag_dict.keys())[0]
-                            tag_midchain_dict['frr']['Primary']['repair']['tag_adj'][temp_key]['label'] = label_val.split()
+                            tag_midchain_dict['frr']['primary']['repair']['tag_adj'][temp_key]['label'] = label_val.split()
 
                         else:
                             for i in label_val.split():
                                 label_list2.append(i)
                             tag_midchain_dict['label'] = label_list2
 
-                    elif 'frr' in output_chain_dict:
-                        temp_tag_dict = output_chain_dict['frr']['Primary']['repair']['tag_midchain']
+                    elif 'frr' in output_chain_dict and 'repair' in output_chain_dict['frr']['primary']:
+                        temp_tag_dict = output_chain_dict['frr']['primary']['repair']['tag_midchain']
                         temp_key = list(temp_tag_dict.keys())[0]
-                        output_chain_dict['frr']['Primary']['repair']['tag_midchain'][temp_key]['label'] = label_val.split()
+                        output_chain_dict['frr']['primary']['repair']['tag_midchain'][temp_key]['label'] = label_val.split()
 
                     else:
                         for i in label_val.split():
                             label_list.append(i)
                         output_chain_dict['label'] = label_list
+
+                elif 'path_extension_list' in feature_space_dict:
+                    if 'sr' in feature_space_dict['path_extension_list']:
+                        if 'label_switch_chain' in feature_space_dict['path_extension_list']['sr']:
+                            sr_lb_dict['label'] = int(label_val)
+                        elif 'disposition_chain' in feature_space_dict['path_extension_list']['sr']:
+                            sr_dp_dict['label'] = int(label_val)
+                    elif 'dflt' in feature_space_dict['path_extension_list']:
+                        if 'label_switch_chain' in feature_space_dict['path_extension_list']['dflt']:
+                            dft_lb_dict['label'] = int(label_val)
+                        elif 'disposition_chain' in feature_space_dict['path_extension_list']['dflt']:
+                            dft_dp_dict['label'] = int(label_val)
                 continue
 
             # <repair:  label 16061
@@ -2386,7 +2663,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 label_val = m11.groupdict()['label']
                 if 'tag_midchain' in output_chain_dict:
                     if 'frr' in tag_midchain_dict:
-                        temp_tag_dict = tag_midchain_dict['frr']['Primary'].setdefault('repair', {})
+                        temp_tag_dict = tag_midchain_dict['frr']['primary'].setdefault('repair', {})
                         temp_tag_dict['label'] = label_val.split()
                 continue
 

@@ -844,7 +844,117 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
+    golden_output_1 = {'execute.return_value': '''
+        Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500e-UNIVERSALK9-M), Version 03.04.06.SG RELEASE SOFTWARE (fc1)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2015 by Cisco Systems, Inc.
+        Compiled Mon 04-May-15 02:44 by prod_rel_team
+        
+        
+        
+        Cisco IOS-XE software, Copyright (c) 2005-2010, 2012 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
+        
+        
+        
+        ROM: 15.0(1r)SG10
+        sample_4510r_e uptime is 2 years, 11 weeks, 3 days, 3 hours, 3 minutes
+        Uptime for this control processor is 2 years, 11 weeks, 1 day, 22 hours, 18 minutes
+        System returned to ROM by SSO Switchover
+        System restarted at 19:11:28 GMT Tue Aug 22 2017
+        System image file is "bootflash:cat4500e-universalk9.SPA.03.04.06.SG.151-2.SG6.bin"
+        Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
+        
+        Last reload reason: power-on
+        
+        
+        
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+        
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+        
+        
+        License Information for 'WS-X45-SUP7-E'
+            License Level: entservices   Type: Permanent
+            Next reboot license Level: entservices
+        
+        cisco WS-C4510R+E (MPC8572) processor (revision 11) with 2097152K/20480K bytes of memory.
+        Processor board ID JAD213101PP
+        MPC8572 CPU at 1.5GHz, Supervisor 7
+        Last reset from PowerUp
+        8 Virtual Ethernet interfaces
+        384 Gigabit Ethernet interfaces
+        8 Ten Gigabit Ethernet interfaces
+        511K bytes of non-volatile configuration memory.
+        
+        Configuration register is 0x2102
+        
+    '''}
 
+    golden_parsed_output_1 = {
+        'version': {
+            'version_short': '03.04',
+            'platform': 'Catalyst 4500 L3 Switch',
+            'version': '03.04.06.SG',
+            'image_id': 'cat4500e-UNIVERSALK9-M',
+            'os': 'IOS-XE',
+            'image_type': 'production image',
+            'compiled_date': 'Mon 04-May-15 02:44',
+            'compiled_by': 'prod_rel_team',
+            'rom': '15.0(1r)SG10',
+            'hostname': 'sample_4510r_e',
+            'uptime': '2 years, 11 weeks, 3 days, 3 hours, 3 minutes',
+            'uptime_this_cp': '2 years, 11 weeks, 1 day, 22 hours, 18 minutes',
+            'returned_to_rom_by': 'SSO Switchover',
+            'system_restarted_at': '19:11:28 GMT Tue Aug 22 2017',
+            'system_image': 'bootflash:cat4500e-universalk9.SPA.03.04.06.SG.151-2.SG6.bin',
+            'jawa_revision': '7',
+            'snowtrooper_revision': '0x0.0x1C',
+            'last_reload_reason': 'PowerUp',
+            'license_type': 'Permanent',
+            'license_level': 'entservices',
+            'next_reload_license_level': 'entservices',
+            'chassis': 'WS-C4510R+E',
+            'main_mem': '2097152',
+            'processor_type': 'MPC8572',
+            'rtr_type': 'WS-C4510R+E',
+            'chassis_sn': 'JAD213101PP',
+            'processor': {
+                'cpu_type': 'MPC8572',
+                'speed': '1.5GHz',
+                'supervisor': '7'
+            },
+            'number_of_intfs': {
+                'Virtual Ethernet': '8',
+                'Gigabit Ethernet': '384',
+                'Ten Gigabit Ethernet': '8'
+            },
+            'mem_size': {
+                'non-volatile configuration': '511'
+            },
+            'curr_config_register': '0x2102'
+        }
+    }
+
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -891,6 +1001,13 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_c4k)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_c4507)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_1)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -2753,6 +2870,131 @@ Switch#   Role        Priority      State
 *1       Active          3          Ready  
 '''}
 
+    golden_parsed_output_c8300 = {
+        "slot": {
+            "0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "subslot": {
+                            "0": {
+                                "4x1G-2xSFP+": {
+                                    "subslot": "0",
+                                    "name": "4x1G-2xSFP+",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            },
+                            "1": {
+                                "NIMX-M-1TE-SFP": {
+                                    "subslot": "1",
+                                    "name": "NIMX-M-1TE-SFP",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            }
+                        },
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "1": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "1",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "R0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "R0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "F0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "F0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "PWR-4430-AC": {
+                        "slot": "P0",
+                        "name": "PWR-4430-AC",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            },
+            "P1": {
+                "other": {
+                    "Unknown": {
+                        "slot": "P1",
+                        "name": "Unknown",
+                        "state": "empty",
+                        "insert_time": "never"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "ACS-4450-FANASSY": {
+                        "slot": "P2",
+                        "name": "ACS-4450-FANASSY",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c8300 = {'execute.return_value': '''\
+        Radium-Ultima#sh platform
+        Chassis type: C8300-1N1S-4G2X
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         C8300-1N1S-4G2X     ok                    1w5d         
+         0/0      4x1G-2xSFP+         ok                    1w5d         
+         0/1      NIMX-M-1TE-SFP      ok                    1w5d         
+        1         C8300-1N1S-4G2X     ok                    1w5d         
+        R0        C8300-1N1S-4G2X     ok, active            1w5d         
+        F0        C8300-1N1S-4G2X     ok, active            1w5d         
+        P0        PWR-4430-AC         ok                    1w5d         
+        P1        Unknown             empty                 never        
+        P2        ACS-4450-FANASSY    ok                    1w5d         
+         
+        Slot      CPLD Version        Firmware Version                       
+        --------- ------------------- ---------------------------------------
+        0         19041222            20190618                           
+        1         19041222            20190618                           
+        R0        19041222            20190618                           
+        F0        19041222            20190618      
+    '''}
+
     golden_parsed_output_c3850 = {
                                     'main': {
                                         'switch_mac_address': '0057.d21b.cc00',
@@ -3389,6 +3631,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()       
+
+    def test_golden_c8300(self):
+        self.maxDiff = None
+        self.dev_c8300 = Mock(**self.golden_output_c8300)
+        platform_obj = ShowPlatform(device=self.dev_c8300)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c8300)
 
     def test_golden_c3850(self):
         self.maxDiff = None

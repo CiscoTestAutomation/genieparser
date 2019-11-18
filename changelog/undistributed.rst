@@ -40,15 +40,17 @@
         * show flow monitor {name} cache
     * Added ShowFlowMonitorCacheRecord for command;
         * show flow monitor {name} cache format record
-    * Enhanced Dir
-        * added 'dir {directory}' support
+	* Enhanced Dir
+		* added 'dir {directory}' support
+    * Updated ShowIpBgpDetail for:
+        * show ip bgp {address_family} all detail
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-    * Enhanced Dir
-        * added 'dir {directory}' support
+	* Enhanced Dir
+		* added 'dir {directory}' support
 
 * IOS
     * Added ShowInterfacesDescription for commands;
@@ -104,8 +106,8 @@
     * Added ShowBgpSummary for commands:
         * 'show bgp summary'
         * 'show bgp {address_family} summary'
-    * Enhanced Dir
-        * added 'dir {directory}' support
+	* Enhanced Dir
+		* added 'dir {directory}' support
 
 * JUNOS
     * Added ShowOspfInterface for commands:
@@ -135,8 +137,6 @@
         * Updated regex to support various outputs
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
-    * Updated ShowBgpSessions
-        * Updated regex to accommodate different formats
 
 * NXOS
     * ShowIpOspf
@@ -144,12 +144,16 @@
         * Added regex to capture more outputs
     * Updated ShowVpc for:
         * Parser schema and regex to support more output
+    * Updated ShowVersion:
+	    * Updated regex matching for platform:chassis and platform:model
     * Updated ShowIpOspfInterfaceVrfAll
         * Changed keywords schema to optional
 
 * IOSXE
     * Updated ShowAuthenticationSessions
         * Changed keyword to Optional
+        * Added keyword to schema
+        * Added regex to support new output
     * Updated ShowIpRoute for:
         * show ip route vrf {vrf} {protocol}
         * show ip route vrf {vrf}
@@ -170,23 +174,31 @@
         * show mpls forwarding-table
         * show mpls forwarding-table {prefix}
         * show mpls forwarding-table vrf {vrf}
+    * Updated ShowIpCefInternal for:
+        * show ip cef internal
+        * show ip cef {prefix} internal
+        * show ip cef vrf {vrf} {prefix} internal
+    * Updated ShowBgpDetailSuperParser for:
+        * show ip bgp {address_family} vrf {vrf} detail
+    * Updated ShowVersion:
+        * Added keywords to schema
+        * Added regex for unparsed outputs
+	    * Removed extra spaces in platform keyword
+    * Updated ShowPlatform
+        * Updated parser logic to support c8300 platform
+    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
+        * Supporting more than one entry under one sid
     * Updated ShowAuthenticationSessionsInterfaceDetails
         * Added keywords to schema
         * Added and changed regex to accommodate different outputs
-    * Updated ShowAuthenticationSessions
-        * Added keyword to schema
-        * Added regex to support new output
-    * Updated ShowVersion
-        * Added keywords to schema
-        * Added regex for unparsed outputs
-    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
-        * Supporting more than one entry under one sid
 
 * IOS
     * Updated ShowInventory
         * Added regex to support various outputs
     * Updated ShowIpOspfSegmentRoutingProtectedAdjacencies for:
         * changed backup_nexthop and backup_nexthop to optional
+    * Updated ShowVersion
+	    * Corrected the value in os key
 
 * JUNOS
     * Enhanced ShowOspfInterfaceBrief:
