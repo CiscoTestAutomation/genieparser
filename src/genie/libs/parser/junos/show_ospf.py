@@ -226,7 +226,7 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<state>\S+) '
                         r'+(?P<area>\S+) +(?P<dr_id>\S+) +(?P<bdr_id>\S+) +(?P<nbrs_count>\d+)$')
 
-        # Type: P2P, Address: 168.104.12.25, Mask: 255.255.255.0, MTU: 1200, Cost: 100
+        # Type: P2P, Address: 172.16.76.25, Mask: 255.255.255.0, MTU: 1200, Cost: 100
         p2 = re.compile(r'^Type: +(?P<interface_type>\w+), +Address: +(?P<interface_address>[\d.]+)'
                         r', +Mask: +(?P<address_mask>[\d.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
 
@@ -274,7 +274,7 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
                 intf_dict.update({'nbrs_count' : int(group['nbrs_count'])})
                 continue
 
-            # Type: P2P, Address: 168.104.12.25, Mask: 255.255.255.0, MTU: 1200, Cost: 100
+            # Type: P2P, Address: 172.16.76.25, Mask: 255.255.255.0, MTU: 1200, Cost: 100
             m = p2.match(line)
             if m:
                 group = m.groupdict()
