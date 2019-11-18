@@ -2753,6 +2753,131 @@ Switch#   Role        Priority      State
 *1       Active          3          Ready  
 '''}
 
+    golden_parsed_output_c8300 = {
+        "slot": {
+            "0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "subslot": {
+                            "0": {
+                                "4x1G-2xSFP+": {
+                                    "subslot": "0",
+                                    "name": "4x1G-2xSFP+",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            },
+                            "1": {
+                                "NIMX-M-1TE-SFP": {
+                                    "subslot": "1",
+                                    "name": "NIMX-M-1TE-SFP",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            }
+                        },
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "1": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "1",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "R0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "R0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "F0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "F0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "PWR-4430-AC": {
+                        "slot": "P0",
+                        "name": "PWR-4430-AC",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            },
+            "P1": {
+                "other": {
+                    "Unknown": {
+                        "slot": "P1",
+                        "name": "Unknown",
+                        "state": "empty",
+                        "insert_time": "never"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "ACS-4450-FANASSY": {
+                        "slot": "P2",
+                        "name": "ACS-4450-FANASSY",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c8300 = {'execute.return_value': '''\
+        Radium-Ultima#sh platform
+        Chassis type: C8300-1N1S-4G2X
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         C8300-1N1S-4G2X     ok                    1w5d         
+         0/0      4x1G-2xSFP+         ok                    1w5d         
+         0/1      NIMX-M-1TE-SFP      ok                    1w5d         
+        1         C8300-1N1S-4G2X     ok                    1w5d         
+        R0        C8300-1N1S-4G2X     ok, active            1w5d         
+        F0        C8300-1N1S-4G2X     ok, active            1w5d         
+        P0        PWR-4430-AC         ok                    1w5d         
+        P1        Unknown             empty                 never        
+        P2        ACS-4450-FANASSY    ok                    1w5d         
+         
+        Slot      CPLD Version        Firmware Version                       
+        --------- ------------------- ---------------------------------------
+        0         19041222            20190618                           
+        1         19041222            20190618                           
+        R0        19041222            20190618                           
+        F0        19041222            20190618      
+    '''}
+
     golden_parsed_output_c3850 = {
                                     'main': {
                                         'switch_mac_address': '0057.d21b.cc00',
@@ -3389,6 +3514,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()       
+
+    def test_golden_c8300(self):
+        self.maxDiff = None
+        self.dev_c8300 = Mock(**self.golden_output_c8300)
+        platform_obj = ShowPlatform(device=self.dev_c8300)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c8300)
 
     def test_golden_c3850(self):
         self.maxDiff = None
