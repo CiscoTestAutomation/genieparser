@@ -44,20 +44,26 @@ class ShowInterfacesTerseSchema(MetaParser):
 # Parser for 'show interfaces terse [| match <interface>]
 # =======================================================
 class ShowInterfacesTerse(ShowInterfacesTerseSchema):
-    """Parser for show interfaces terse [| match <interface>]"""
+    """ Parser for:
+            - show interfaces terse
+            - show interfaces {interface} terse
+    """
 
-    cli_command = ['show interfaces terse | match {interface}','show interfaces terse' ]
+    cli_command = [
+        'show interfaces terse',
+        'show interfaces {interface} terse'
+    ]
     exclude = [
         'duration'
     ]
 
-    def cli(self, interface=None,output=None):
+    def cli(self, interface=None, output=None):
         # execute the command
         if output is None:
             if interface:
-                cmd = self.cli_command[0].format(interface=interface)
+                cmd = self.cli_command[1].format(interface=interface)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -75,7 +81,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         #                                             172.16.64.1/2       
         #                                    inet6    fe80::250:56ff:fe82:ba52/64
-        #                                             fec0::a:0:0:4/64
+        #                                             2001:db8:8d82:0:a::4/64
         #                                    tnp      0x4
         #                                             10.11.11.11         --> 0/0
         p2 =  re.compile(r'^((?P<protocol>\S+) +)?(?P<local>((\d+\.[\d\.\/]+)|(\w+\:[\w\:\/]+)|(0x\d+))+)'
@@ -118,7 +124,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
             #                                             172.16.64.1/2       
             #                                    inet6    fe80::250:56ff:fe82:ba52/64
-            #                                             fec0::a:0:0:4/64
+            #                                             2001:db8:8d82:0:a::4/64
             #                                    tnp      0x4
             #                                             10.11.11.11         --> 0/0
             m = p2.match(line)
@@ -142,3 +148,21 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
                 pro_dict = intf_dict.setdefault('protocol', {}).setdefault(protocol, {})
                 continue
         return ret_dict
+
+
+class ShowInterfacesTerseMatch(ShowInterfacesTerse):
+    """ Parser for:
+            - show interfaces terse | match {interface}
+    """
+
+    cli_command = [
+        'show interfaces terse | match {interface}'
+    ]
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(interface=interface))
+        else:
+            out = output
+
+        return super().cli(output=out)

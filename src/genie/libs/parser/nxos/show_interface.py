@@ -2339,7 +2339,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #IPv6 virtual addresses configured:
-            #        fe80::5:73ff:fea0:2  192:168::1
+            #        fe80::5:73ff:fea0:2  2001:db8:7746:fa41::1
             p6_1 = re.compile(r'^\s*(IPv6 virtual *(?P<virtual_add>(addresses|address) configured:))$')
             m = p6_1.match(line)
             if m:
@@ -3231,3 +3231,69 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
                 continue
 
         return interface_dict
+        
+#############################################################################
+# Parser For show interface Description
+#############################################################################
+        
+class ShowInterfaceDescriptionSchema(MetaParser):
+    """schema for show interface description
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('type'): str,
+                Optional('speed'): str,
+                'description': str
+            }
+        }
+    }
+
+class ShowInterfaceDescription(ShowInterfaceDescriptionSchema):
+    """parser for show interface description
+    """
+
+    cli_command = ['show interface description', 'show interface {interface} description']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+        index = 1
+
+        # -------------------------------------------------------------------------------
+        # Port          Type   Speed   Description
+        # -------------------------------------------------------------------------------
+        # Eth1/1        eth    10G     --
+
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<type>(\S+))? +(?P<speed>(\S+))? +(?P<description>(.*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            line = line.replace('\t', '')
+            # -------------------------------------------------------------------------------
+            # Port          Type   Speed   Description
+            # -------------------------------------------------------------------------------
+            # Eth1/1        eth    10G     --
+            m = p1.match(line)
+            if m and m.groupdict()['description'] != 'Description':
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                if group['type'] is not None:
+                    intf_dict['type'] = str(group['type'])
+                if group['speed'] is not None:
+                    intf_dict['speed'] = str(group['speed'])
+                intf_dict['description'] = str(group['description'])
+                index += 1                
+                continue
+
+        return result_dict

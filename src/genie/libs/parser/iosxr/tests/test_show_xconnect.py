@@ -511,6 +511,59 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         
     '''}
 
+    golden_parsed_output6 = {
+        "groups": {
+            "vpws": {
+                "name": {
+                    "vpws": {
+                        "status": "UR",
+                        "segment1": {
+                            "TenGigabitEthernet0/0/15/0": {
+                                "status": "UR",
+                                "segment2": {
+                                    "EVPN 302,302,0.0.0.0": {
+                                        "status": "DN"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "vrp_vpws_2": {
+                        "status": "DN",
+                        "segment1": {
+                            "Bundle-Ether2.78": {
+                                "status": "UP",
+                                "segment2": {
+                                    "EVPN 12345,67895,10.4.2.1": {
+                                        "status": "DN"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output6 = {'execute.return_value': '''
+        show l2vpn xconnect
+
+        Thu Oct 24 11:40:08.221 EDT
+        Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
+                SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+
+        XConnect                   Segment 1                       Segment 2                
+        Group      Name       ST   Description            ST       Description            ST    
+        ------------------------   -----------------------------   -----------------------------
+        vpws       vpws       UR   Te0/0/15/0              UR       EVPN 302,302,0.0.0.0   DN    
+        ----------------------------------------------------------------------------------------
+        vpws       vrp_vpws_2
+                              DN   BE2.78                 UP       EVPN 12345,67895,10.4.2.1 
+                                                                                          DN    
+        ----------------------------------------------------------------------------------------
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnect(device=self.device)
@@ -551,6 +604,13 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
+    
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        obj = ShowL2vpnXconnect(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect detail'

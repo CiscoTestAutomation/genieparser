@@ -33,7 +33,8 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowInterfacesCounters as ShowInterfacesCounters_iosxe, \
     ShowInterfacesSwitchport as ShowInterfacesSwitchport_iosxe, \
     ShowInterfacesTrunk as ShowInterfacesTrunk_iosxe, \
-    ShowInterfacesStats as ShowInterfacesStats_iosxe
+    ShowInterfacesStats as ShowInterfacesStats_iosxe,\
+    ShowInterfacesDescription as ShowInterfacesDescription_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -112,4 +113,10 @@ class ShowInterfacesStats(ShowInterfacesStats_iosxe):
     """Parser for:
         show interfaces <interface> stats
         show interfaces stats"""
+    pass
+    
+class ShowInterfacesDescription(ShowInterfacesDescription_iosxe):
+    """Parser for:
+        show interfaces <interface> description
+        show interfaces description"""
     pass

@@ -176,9 +176,11 @@ class ShowIsis(ShowIsisSchema):
         p19 = re.compile(r'^VRF +ID *: +(?P<vrf_id>\d+)$')
 
         # Stale routes during non-graceful controlled restart
+        # Flush Routes during non-graceful controlled restart
         p20 = re.compile(r'^(?P<route>[\w\s]+) +during +non-graceful +controlled +restart$')
 
         # Enable resolution of L3->L2 address for ISIS adjacency
+        # Disable resolution of L3->L2 address for ISIS adjacency
         p21 = re.compile(r'^(?P<resolution>\w+) +resolution +of +L3->L2 +address +for +ISIS +adjacency$')
 
         # SR IPv4 is not configured and disabled for ISIS process: test
@@ -512,63 +514,70 @@ class ShowIsisInterfaceSchema(MetaParser):
     """Schema for show isis interface"""
 
     schema = {
-        Any(): { # process_id
-            'vrf': {
-                Any(): {
-                    'interfaces': {
-                        Any(): {
-                            'name': str,
-                            'status': str,
-                            'ipv4': str,
-                            'ipv4_subnet': str,
-                            'ipv6': str,
-                            'ipv6_state': str,
-                            'ipv6_subnet': str,
-                            'ipv6_link_address': str,
-                            'authentication': {
-                                Any(): { # level_1 level_2
-                                    'authentication_type': {
+        'instance': {
+            Any(): { # process_id
+                'vrf': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                'name': str,
+                                'status': str,
+                                'ipv4': str,
+                                'ipv4_subnet': str,
+                                'ipv6': {
+                                    Any(): {
+                                        'state': str,
+                                    }
+                                },
+                                'ipv6_subnet': str,
+                                'ipv6_link_local_address': str,
+                                'authentication': {
+                                    Any(): { # level_1 level_2
+                                        Optional('authentication_type'): {
+                                        },
+                                        'auth_check': str,
                                     },
-                                    'auth_check': str,
                                 },
-                            },
-                            'index': str,
-                            'local_circuit_id': str,
-                            'circuit_type': str,
-                            'bfd_ipv4': str,
-                            'bfd_ipv6': str,
-                            'mtr': str,
-                            Optional('mtu'): int,
-                            Optional('lsp_interval'): str,
-                            'levels': {
-                                Any(): { # level_1 level_2
-                                    Optional('metric'): str,
-                                    Optional('designated_is'): str,
-                                    Optional('metric_0'): str,
-                                    Optional('metric_2'): str,
-                                    Optional('csnp'): str,
-                                    Optional('next_csnp'): str,
-                                    Optional('hello'): str,
-                                    Optional('multi'): str,
-                                    Optional('next_iih'): str,
-                                    Optional('adjs'): str,
-                                    Optional('adjs_up'): str,
-                                    Optional('pri'): str,
-                                    Optional('circuit_id'): str,
-                                    Optional('since'): str,
+                                'index': str,
+                                'local_circuit_id': str,
+                                'circuit_type': str,
+                                'bfd_ipv4': str,
+                                'bfd_ipv6': str,
+                                'mtr': str,
+                                Optional('mtu'): int,
+                                Optional('lsp_interval_ms'): int,
+                                'levels': {
+                                    Any(): { # 1, 2
+                                        Optional('metric'): str,
+                                        Optional('designated_is'): str,
+                                        Optional('metric_0'): str,
+                                        Optional('metric_2'): str,
+                                        Optional('csnp'): str,
+                                        Optional('next_csnp'): str,
+                                        Optional('hello'): str,
+                                        Optional('multi'): str,
+                                        Optional('next_iih'): str,
+                                        Optional('adjs'): str,
+                                        Optional('adjs_up'): str,
+                                        Optional('pri'): str,
+                                        Optional('circuit_id'): str,
+                                        Optional('since'): str,
+                                    },
                                 },
-                            },
-                            'topologies': {
-                                Any(): { # index
-                                    'level': str,
-                                    'mt': str,
-                                    'metric': str,
-                                    'metric_cfg': str,
-                                    'fwdng': str,
-                                    'ipv4_mt': str,
-                                    'ipv4_cfg': str,
-                                    'ipv6_mt': str,
-                                    'ipv6_cfg': str,
+                                'topologies': {
+                                    Any(): { # mt
+                                        'level': {
+                                            Any(): { # 1, 2
+                                                'metric': str,
+                                                'metric_cfg': str,
+                                                'fwdng': str,
+                                                'ipv4_mt': str,
+                                                'ipv4_cfg': str,
+                                                'ipv6_mt': str,
+                                                'ipv6_cfg': str,
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -632,10 +641,10 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'+(?P<circuit_id>\w+), +Circuit +Type: +(?P<circuit_type>\S+)$')
 
         #   BFD IPv4 is locally disabled for Interface loopback0
-        p11 = re.compile(r'^BFD +IPv4 +is +locally +(?P<bfd_ipv4>\w+) +for +Interface +(?P<intf>.*)$')
+        p11 = re.compile(r'^BFD +IPv4 +is +(?P<bfd_ipv4>[\s\w]+) +for +Interface +(?P<intf>.*)$')
 
         #   BFD IPv6 is locally disabled for Interface loopback0
-        p12 = re.compile(r'^BFD +IPv6 +is +locally +(?P<bfd_ipv6>\w+) +for +Interface +(?P<intf>.*)$')
+        p12 = re.compile(r'^BFD +IPv6 +is +(?P<bfd_ipv6>[\s\w]+) +for +Interface +(?P<intf>.*)$')
         
         #   MTR is enabled
         p13 = re.compile(r'^MTR +is +(?P<mtr>\w+)$')
@@ -645,7 +654,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         p14 = re.compile(r'^(?P<level>\d+) +(?P<metric>\d+)$')
 
         #   LSP interval: 33 ms, MTU: 1500
-        p15 = re.compile(r'^LSP +interval: +(?P<lsp_interval>[\w\s]+), +MTU: +(?P<mtu>\d+)$')
+        p15 = re.compile(r'^LSP +interval: +(?P<lsp_interval>[\d]+) +ms, +MTU: +(?P<mtu>\d+)$')
         
         #   Level-1 Designated IS: R2_xr
         #   Level-2 Designated IS: R2_xr
@@ -681,7 +690,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 process_id = group['process_id']
                 vrf = group['vrf']
 
-                vrf_dict = result_dict.setdefault(process_id, {}).\
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
                                        setdefault('vrf', {}).\
                                        setdefault(vrf, {})
                 continue
@@ -711,7 +721,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = m.groupdict()
                 ipv6 = group['ipv6']
                 state = group['state']
-                intf_dict.update({'ipv6': ipv6, 'ipv6_state': state})
+                ipv6_dict = intf_dict.setdefault('ipv6', {}).setdefault(ipv6, {})
+                ipv6_dict.update({'state': state})
                 continue
 
             #  IPv6 subnet:  2001:3:3:3::3/128
@@ -727,7 +738,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if m:
                 group = m.groupdict()
                 link_address = group['link_address']
-                intf_dict.update({'ipv6_link_address': link_address})
+                intf_dict.update({'ipv6_link_local_address': link_address})
                 continue
 
             #   Level1
@@ -742,7 +753,6 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                level_dict.update({'authentication_type': {}})
                 continue
 
             #   Auth check set
@@ -795,7 +805,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                level = 'level_{}'.format(group['level'])
+                level = group['level']
                 metric = group['metric']
                 lvl_dict = intf_dict.setdefault('levels', {}).setdefault(level, {})
                 lvl_dict.update({'metric': metric})
@@ -806,26 +816,26 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if m:
                 group = m.groupdict()
                 mtu = int(group['mtu'])
-                lsp_interval = group['lsp_interval']
-                intf_dict.update({'mtu': mtu, 'lsp_interval': lsp_interval})
+                lsp_interval = int(group['lsp_interval'])
+                intf_dict.update({'mtu': mtu, 'lsp_interval_ms': lsp_interval})
                 continue
 
             #   Level-1 Designated IS: R2_xr
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                level = group['level'].replace('-', '_').lower()
+                level = group['level'].split('-')[-1]
                 designated_is = group['designated_is']
                 lvl_dict = intf_dict.setdefault('levels', {}).setdefault(level, {})
                 lvl_dict.update({'designated_is': designated_is})
                 continue
 
             #   Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
-            #   1              40     40     10 00:00:06      10   3       00:00:04
+            #   1             40         40     10  00:00:06      10   3       00:00:04
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                level = 'level_{}'.format(group.pop('level'))
+                level = group.pop('level')
                 lvl_dict = intf_dict.setdefault('levels', {}).setdefault(level, {})
                 lvl_dict.update({k: v for k, v in group.items()})
                 continue
@@ -835,7 +845,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                level = 'level_{}'.format(group.pop('level'))
+                level = group.pop('level')
                 lvl_dict = intf_dict.setdefault('levels', {}).setdefault(level, {})
                 lvl_dict.update({k: v for k, v in group.items()})
                 continue
@@ -846,9 +856,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             m = p19.match(line)
             if m:
                 group = m.groupdict()
+                mt = group.pop('mt')
+                level = group.pop('level')
                 topo_dict = intf_dict.setdefault('topologies', {})
-                idx_dict = topo_dict.setdefault(len(topo_dict)+1, {})
-                idx_dict.update({k: v for k, v in group.items()})
+                sub_dict = topo_dict.setdefault(mt, {}).setdefault('level', {})\
+                                    .setdefault(level, {})
+                sub_dict.update({k: v for k, v in group.items()})
                 continue
 
         return result_dict
@@ -858,30 +871,34 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
     """Schema for show isis spf-log detail"""
 
     schema = {
-        Any(): { # process_id
-            'vrf': {
-                Any(): {
-                    'topology': {
-                        Any(): {
-                            'total_num': int,
-                            'current_log_entry': int,
-                            'max_log_entry': int,
-                            'log_entrys': {
-                                Any(): {
-                                    'ago': str,
-                                    'date': str,
-                                    'level': {
-                                        Any(): {
-                                            Optional('instance'): str,
-                                            Optional('init'): str,
-                                            Optional('spf'): str,
-                                            Optional('is_update'): str,
-                                            Optional('urib_update'): str,
-                                            Optional('total'): str,
-                                            Optional('node'): int,
-                                            Optional('count'): int,
-                                            Optional('changed'): int,
-                                            Optional('reason'): str,
+        'instance': {
+            Any(): { # process_id
+                'vrf': {
+                    Any(): {
+                        'topology': {
+                            Any(): {
+                                'total_num_of_spf_calc': int,
+                                'log_entry': {
+                                    'current': int,
+                                    'max': int,
+                                },
+                                'entrys': {
+                                    Any(): {
+                                        'ago': str,
+                                        'date': str,
+                                        'level': {
+                                            Any(): {
+                                                Optional('instance'): str,
+                                                Optional('init'): float,
+                                                Optional('spf'): float,
+                                                Optional('is_update'): float,
+                                                Optional('urib_update'): float,
+                                                Optional('total'): float,
+                                                Optional('node'): int,
+                                                Optional('count'): int,
+                                                Optional('changed'): int,
+                                                Optional('reason'): str,
+                                            },
                                         },
                                     },
                                 },
@@ -952,7 +969,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 process_id = group['process_id']
                 vrf = group['vrf']
 
-                vrf_dict = result_dict.setdefault(process_id, {}).\
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
                                        setdefault('vrf', {}).\
                                        setdefault(vrf, {})
                 continue
@@ -970,7 +988,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if m:
                 group = m.groupdict()
                 total_num = int(group['total_num'])
-                topo_dict.update({'total_num': total_num})
+                topo_dict.update({'total_num_of_spf_calc': total_num})
                 continue
 
             # Log entry (current/max): 20/20
@@ -979,7 +997,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 group = m.groupdict()
                 curr = int(group['curr'])
                 max = int(group['max'])
-                topo_dict.update({'current_log_entry': curr, 'max_log_entry': max})
+                log_dict = topo_dict.setdefault('log_entry', {})
+                log_dict.update({'current': curr, 'max': max})
                 continue
 
             # Log entry: 01, Ago: 00:01:25, Date: Tue Oct 15 21:52:57 2019
@@ -990,7 +1009,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 ago = group['ago']
                 date = group['date']
 
-                entry_dict = topo_dict.setdefault('log_entrys', {}).setdefault(entry, {})
+                entry_dict = topo_dict.setdefault('entrys', {}).setdefault(entry, {})
                 entry_dict.update({'ago': ago, 'date': date})
                 continue
 
@@ -1001,7 +1020,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 group = m.groupdict()
                 level = int(group.pop('level'))
                 lvl_dict = entry_dict.setdefault('level', {}).setdefault(level, {})
-                lvl_dict.update({k: v for k, v in group.items()})
+                lvl_dict.update({'instance': group.pop('instance')})
+                lvl_dict.update({k: float(v) for k, v in group.items()})
                 continue
 
             #   Level  Node Count   Changed  Reason

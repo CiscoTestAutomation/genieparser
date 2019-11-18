@@ -29,13 +29,15 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesCounters, \
                                         ShowInterfacesSwitchport, \
                                         ShowInterfacesTrunk, \
-                                        ShowInterfacesStats
+                                        ShowInterfacesStats,\
+                                        ShowInterfacesDescription
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
                 TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
                 TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
-                TestShowInterfacesStats as TestShowInterfacesStats_iosxe
+                TestShowInterfacesStats as TestShowInterfacesStats_iosxe,\
+                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe
 
 class TestShowInterfaceParsergen(unittest.TestCase):
 
@@ -744,9 +746,9 @@ class TestShowIpv6Interface(unittest.TestCase):
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
                "enabled": True,
-               "201::1:1/112": {
+               "2001:db8:405::1:1/112": {
                     "status": "valid",
-                    "ip": "201::1:1",
+                    "ip": "2001:db8:405::1:1",
                     "prefix_length": "112"
                },
                "FE80::F816:3EFF:FE4B:55FD": {
@@ -754,9 +756,9 @@ class TestShowIpv6Interface(unittest.TestCase):
                     "ip": "FE80::F816:3EFF:FE4B:55FD",
                     "origin": "link_layer"
                },
-               "201::5:2/112": {
+               "2001:db8:405::5:2/112": {
                     "status": "valid",
-                    "ip": "201::5:2",
+                    "ip": "2001:db8:405::5:2",
                     "prefix_length": "112"
                },
                "nd": {
@@ -793,9 +795,9 @@ class TestShowIpv6Interface(unittest.TestCase):
             "enabled": True,
             "addresses_config_method": "stateless autoconfig",
             "ipv6": {
-               "100:1::1:1/112": {
+               "2001:db8:1:1::1:1/112": {
                     "status": "valid",
-                    "ip": "100:1::1:1",
+                    "ip": "2001:db8:1:1::1:1",
                     "prefix_length": "112"
                },
                "enabled": True,
@@ -830,8 +832,8 @@ class TestShowIpv6Interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::F816:3EFF:FE4B:55FD 
           No Virtual link-local address(es):
           Global unicast address(es):
-            201::1:1, subnet is 201::1:0/112 
-            201::5:2, subnet is 201::5:0/112 
+            2001:db8:405::1:1, subnet is 2001:db8:405::1:0/112 
+            2001:db8:405::5:2, subnet is 2001:db8:405::5:0/112 
           Joined group address(es):
             FF02::1
             FF02::2
@@ -856,7 +858,7 @@ class TestShowIpv6Interface(unittest.TestCase):
           IPv6 is enabled, link-local address is FE80::5C00:C0FF:FE00:0 
           No Virtual link-local address(es):
           Global unicast address(es):
-            100:1::1:1, subnet is 100:1::1:0/112 
+            2001:db8:1:1::1:1, subnet is 2001:db8:1:1::1:0/112 
           Joined group address(es):
             FF02::1
             FF02::2
@@ -1064,6 +1066,29 @@ class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
         obj = ShowInterfacesStats(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
+
+class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
+    """unit test for show interfaces description """
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+        
+    def test_golden_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse(interface='Gi0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':

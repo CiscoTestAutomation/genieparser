@@ -375,7 +375,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         # Secondary VIP(s):
         p16 = re.compile(r'Secondary +VIP\(s\):$')
 
-        # 192:168::1
+        # 2001:db8:7746:fa41::1
         p17 = re.compile(r'(?P<vip>(\S+))$')
 
 
@@ -637,7 +637,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 secondary_vips = []
                 continue
 
-            # 192:168::1
+            # 2001:db8:7746:fa41::1
             # 10.1.1.253
             m = p17.match(line)
             if m and secondary_vip_exists:

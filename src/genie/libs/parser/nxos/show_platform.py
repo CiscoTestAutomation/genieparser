@@ -229,10 +229,12 @@ class ShowVersion(ShowVersionSchema):
 
             # cisco NX-OSv chassis
             # cisco Nexus7000 C7009 (9 Slot) Chassis ("Supervisor Module-2")
-            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
+            # cisco Nexus 5596 Chassis ("O2 48X10GE/Modular Supervisor")
+            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)'
+            r'( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>'
+            r'[a-zA-Z0-9\s\-\/]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
-
                 model = chassis = str(m.groupdict()['model'])
                 slot = str(m.groupdict()['slot'])
                 rp = str(m.groupdict()['rp'])
@@ -1058,7 +1060,7 @@ class DirSchema(MetaParser):
               'disk_free_space': str,
               'disk_total_space': str,
               'dir': str,
-              'files':
+              Optional('files'):
                   {Any():
                       {'size': str,
                        'date': str,
@@ -1069,7 +1071,7 @@ class DirSchema(MetaParser):
 class Dir(DirSchema):
     """Parser for dir"""
 
-    cli_command = 'dir'
+    cli_command = ['dir', 'dir {directory}']
     exclude = [
         'date',
         'size',
@@ -1077,14 +1079,17 @@ class Dir(DirSchema):
         'disk_free_space',
         'disk_used_space']
 
-    def cli(self,output=None):
+    def cli(self, directory='', output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
