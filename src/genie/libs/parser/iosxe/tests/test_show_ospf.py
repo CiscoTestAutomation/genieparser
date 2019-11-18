@@ -12467,7 +12467,6 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         self.device = Mock(**self.golden_output3)
         obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
         parsed_output = obj.parse()
-        print(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =============================================

@@ -7672,7 +7672,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
             # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
             #                 10.16.2.3/32          10.16.2.2          8        Intra     0
             # 3       (M)     10.16.2.3/32                                    Unknown   0
-            #                 3.3.3.3/32               2.2.2.10         0   
+            #                 3.3.3.3/32               2.2.2.10         0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
