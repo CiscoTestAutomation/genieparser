@@ -648,17 +648,13 @@ IPV4 ACL test22
         'Ethernet1/1': {
             'egress': {
                 'ipv4_acl': {
-                    'ace_statistics': {
-                        'total_aces_configured': 3,
-                    },
+                    'total_aces_configured': 3,
                     'active': True,
                     'name': 'ipv4_acl',
                     'type': 'Router ACL',
                 },
                 'ipv6_acl2': {
-                    'ace_statistics': {
-                        'total_aces_configured': 1,
-                    },
+                    'total_aces_configured': 1,
                     'active': True,
                     'name': 'ipv6_acl2',
                     'type': 'Router ACL',
@@ -666,25 +662,19 @@ IPV4 ACL test22
             },
             'ingress': {
                 'ipv6_acl': {
-                    'ace_statistics': {
-                        'total_aces_configured': 3,
-                    },
+                    'total_aces_configured': 3,
                     'active': True,
                     'name': 'ipv6_acl',
                     'type': 'Router ACL',
                 },
                 'mac_acl': {
-                    'ace_statistics': {
-                        'total_aces_configured': 5,
-                    },
+                    'total_aces_configured': 5,
                     'active': True,
                     'name': 'mac_acl',
                     'type': 'Port ACL',
                 },
                 'test22': {
-                    'ace_statistics': {
-                        'total_aces_configured': 3,
-                    },
+                    'total_aces_configured': 3,
                     'active': True,
                     'name': 'test22',
                     'type': 'Router ACL',

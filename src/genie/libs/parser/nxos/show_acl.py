@@ -164,7 +164,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                            r'(?: +[\d.]+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range)'
                            r' +(?P<dst_port>(?:\S ?)+\S))?(?P<established_log> +established +log)?'
                            r'(?: +precedence +(?P<precedence>network) +ttl +(?P<ttl>\d+))?'
-                           r'(?: +\[match=(?P<match>\d+)\])?(?: +(?P<logging>log))?(?P<left>.+)?$')
+                           r'(?: +\[match=(?P<match>\d+)\])?(?: +(?P<logging>log))?$')
 
         # --- MAC access list ---
         # 10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
@@ -177,7 +177,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                             r'(?: [\w]{4}.[\w]{4}.[\w]{4})?) '
                             r'+(?P<destination_mac_address>(?:any|host|[\w.]+|[\d.]+)(?: +[\w]{4}.[\w]{4}.[\w]{4})?)'
                             r'(?: +any)?(?: +(?P<ether_type>aarp))?(?: +vlan +(?P<vlan>\d+))?'
-                            r'(?: (?P<mac_protocol_number>\w+))?(?:(?P<others>.*))?$')
+                            r'(?: (?P<mac_protocol_number>\w+))?$')
 
         result_dict = {}
 
@@ -313,9 +313,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                         'name': str, # 'ipv4_acl'
                         'type': str, # 'Router ACL'
                         'active': bool,
-                        'ace_statistics': {
-                            'total_aces_configured': int,
-                        }
+                        'total_aces_configured': int,
                     }
                 },
                 Optional('egress'): {
@@ -323,9 +321,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                         'name': str,
                         'type': str,
                         'active': bool,
-                        'ace_statistics': {
-                            'total_aces_configured': int,
-                        }
+                        'total_aces_configured': int,
                     }
                 }
             },
@@ -404,7 +400,7 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
                     else:
                         active = False
                     traffic_dict['active'] = True
-                    traffic_dict.setdefault('ace_statistics', {}).setdefault('total_aces_configured', total_configured)
+                    traffic_dict['total_aces_configured'] = total_configured
 
         return result_dict
 
