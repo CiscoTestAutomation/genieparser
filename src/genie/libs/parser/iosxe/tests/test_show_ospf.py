@@ -12329,24 +12329,30 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
             1234: {
                 'router_id': '10.4.1.1',
                 'sids': {
+                    'total_entries': 2,
                     1: {
-                        'sid': 1,
-                        'codes': 'L',
-                        'prefix': '10.4.1.1/32',
-                        'adv_rtr_id': '10.4.1.1',
-                        'area_id': '0.0.0.8',
-                        'type': 'Intra',
-                        'algo': 0
+                        'index': {
+                            1: {
+                                'prefix': '10.4.1.1/32',
+                                'codes': 'L',
+                                'adv_rtr_id': '10.4.1.1',
+                                'area_id': '0.0.0.8',
+                                'type': 'Intra',
+                                'algo': 0
+                            }
+                        }
                     },
                     2: {
-                        'sid': 2,
-                        'prefix': '10.16.2.2/32',
-                        'adv_rtr_id': '10.16.2.2',
-                        'area_id': '0.0.0.8',
-                        'type': 'Intra',
-                        'algo': 0
-                    },
-                    'total_entries': 2
+                        'index': {
+                            1: {
+                                'prefix': '10.16.2.2/32',
+                                'adv_rtr_id': '10.16.2.2',
+                                'area_id': '0.0.0.8',
+                                'type': 'Intra',
+                                'algo': 0
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -12366,41 +12372,56 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
             OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
-
     golden_parsed_output3 = {
         'process_id': {
             65109: {
                 'router_id': '10.4.1.1',
                 'sids': {
-                    'total_entries': 3,
+                    'total_entries': 4,
                     1: {
-                        'sid': 1,
-                        'codes': 'L',
-                        'prefix': '10.4.1.1/32',
-                        'adv_rtr_id': '10.4.1.1',
-                        'area_id': '0.0.0.8',
-                        'type': 'Intra',
-                        'algo': 0,
-                        },
-                    11: {
-                        'sid': 11,
-                        'prefix': '10.4.1.2/32',
-                        'adv_rtr_id': '10.4.1.2',
-                        'area_id': '0.0.0.8',
-                        'type': 'Intra',
-                        'algo': 0,
-                        },
-                    45: {
-                        'sid': 45,
-                        'codes': 'M',
-                        'prefix': '10.4.1.3/32',
-                        'type': 'Unknown',
-                        'algo': 0,
-                        },
+                        'index': {
+                            1: {
+                                'prefix': '10.4.1.1/32',
+                                'codes': 'L',
+                                'adv_rtr_id': '10.4.1.1',
+                                'area_id': '0.0.0.8',
+                                'type': 'Intra',
+                                'algo': 0
+                            },
+                            2: {
+                                'prefix': '10.4.1.2/32',
+                                'adv_rtr_id': '10.4.1.2',
+                                'area_id': '0.0.0.8',
+                                'type': 'Intra',
+                                'algo': 0
+                            }
+                        }
                     },
-                },
-            },
+                    11: {
+                        'index': {
+                            1: {
+                                'prefix': '10.4.1.2/32',
+                                'adv_rtr_id': '10.4.1.2',
+                                'area_id': '0.0.0.8',
+                                'type': 'Intra',
+                                'algo': 0
+                            }
+                        }
+                    },
+                    45: {
+                        'index': {
+                            1: {
+                                'prefix': '10.4.1.3/32',
+                                'codes': 'M',
+                                'type': 'Unknown',
+                                'algo': 0
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
 
     golden_output3 = {'execute.return_value': '''
         show ip ospf segment-routing sid-database
@@ -12415,6 +12436,7 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
         --------------  ------------------  ---------------  -------  --------  ----
         1       (L)     10.4.1.1/32         10.4.1.1          8        Intra     0
+                        10.4.1.2/32         10.4.1.2          8        Intra     0
         11              10.4.1.2/32         10.4.1.2          8        Intra     0
         45      (M)     10.4.1.3/32                                    Unknown   0
     '''}
