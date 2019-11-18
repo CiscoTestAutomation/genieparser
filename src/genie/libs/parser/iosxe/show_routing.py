@@ -2202,6 +2202,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], RIB[C], refcnt 6, per-destination sharing
         # 10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
         # 0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+        # 10.19.198.239/32, epoch 2, RIB[I], refcnt 7, per-packet sharing
         p1_1 = re.compile(r'^(?P<prefix>[\w:./d]+), +epoch +(?P<epoch>\d+), '
                           r'+flags +\[(?P<flags>[a-zA-Z, ]+)\],(?:(?: +intf-rcv,)? '
                           r'+RIB+(?P<rib>\S+),)? +refcnt +(?P<refcnt>\d+), '

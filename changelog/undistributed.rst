@@ -147,7 +147,7 @@
     * Updated ShowIpCefInternal for:
         * show ip cef internal
         * show ip cef {prefix} internal
-        * show ip cef vrf {vrf} {ip} internal
+        * show ip cef vrf {vrf} {prefix} internal
 
 * IOS
     * Updated ShowInventory
