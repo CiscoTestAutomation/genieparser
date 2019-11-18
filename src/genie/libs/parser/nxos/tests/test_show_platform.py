@@ -179,6 +179,92 @@ Active Package(s):
  
 ''', 'os': 'nxos'}
 
+    golden_output3 = {'execute.return_value': '''
+ 
+        Cisco Nexus Operating System (NX-OS) Software
+        TAC support: http://www.cisco.com/tac
+        Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
+        Copyright (c) 2002-2018, Cisco Systems, Inc. All rights reserved.
+        The copyrights to certain works contained herein are owned by
+        other third parties and are used and distributed under license.
+        Some parts of this software are covered under the GNU Public
+        License. A copy of the license is available at
+        http://www.gnu.org/licenses/gpl.html.
+        
+        Software
+          BIOS:      version 3.6.0
+          Power Sequencer Firmware: 
+                     Module 1: v7.0
+                     Module 1: v1.0
+                     Module 3: v1.0
+          Microcontroller Firmware:        version v1.0.0.2
+          QSFP Microcontroller Firmware:   
+                     Module 3: v0.0.0.0
+          CXP Microcontroller Firmware:   
+                     Module not detected
+          kickstart: version 7.3(3)N1(1)
+          system:    version 7.3(3)N1(1)
+          BIOS compile time:       05/09/2012
+          kickstart image file is: bootflash:///n5000-uk9-kickstart.7.3.3.N1.1.bin
+          kickstart compile time:  4/27/2018 9:00:00 [04/27/2018 17:18:59]
+          system image file is:    bootflash:///n5000-uk9.7.3.3.N1.1.bin
+          system compile time:     4/27/2018 9:00:00 [04/27/2018 21:24:41]
+        
+        
+        Hardware
+          cisco Nexus 5596 Chassis ("O2 48X10GE/Modular Supervisor")
+          Intel(R) Xeon(R) CPU         with 8253792 kB of memory.
+          Processor Board ID FOC171850PP
+        
+          Device name: sample_5k
+          bootflash:    2007040 kB
+        
+        Kernel uptime is 289 day(s), 16 hour(s), 36 minute(s), 32 second(s)
+        
+        Last reset at 463212 usecs after  Thu Jan 24 05:58:41 2019
+        
+          Reason: Disruptive upgrade
+          System version: 7.0(8)N1(1)
+          Service: 
+        
+        plugin
+          Core Plugin, Ethernet Plugin, Fc Plugin
+        
+        Active Package(s)
+        
+        '''}
+
+    golden_parsed_output3 = {'platform': {
+                               'os': 'NX-OS',
+                               'name': 'Nexus',
+                               'reason': 'Disruptive upgrade',
+                               'hardware':
+                                {'model': 'Nexus 5596',
+                                 'chassis': 'Nexus 5596',
+                                 'rp': 'O2 48X10GE/Modular Supervisor',
+                                 'slots': 'None',
+                                 'cpu': 'Intel(R) Xeon(R) CPU',
+                                 'device_name': 'sample_5k',
+                                 'memory': '8253792 kB',
+                                 'bootflash': '2007040 kB',
+                                 'processor_board_id': 'FOC171850PP'}, 
+                              'kernel_uptime':
+                                {'days': 289,
+                                 'hours': 16,
+                                 'minutes': 36,
+                                 'seconds': 32},
+                              'software':
+                                {'bios_version': '3.6.0',
+                                 'kickstart_version': '7.3(3)N1(1)',
+                                 'system_version': '7.3(3)N1(1)',
+                                 'bios_compile_time': '05/09/2012',
+                                 'kickstart_image_file': 'bootflash:///n5000-uk9-kickstart.7.3.3.N1.1.bin',
+                                 'kickstart_compile_time': '4/27/2018 9:00:00 [04/27/2018 17:18:59]',
+                                 'system_image_file': 'bootflash:///n5000-uk9.7.3.3.N1.1.bin',
+                                 'system_compile_time': '4/27/2018 9:00:00 [04/27/2018 21:24:41]'}
+                              }
+                            }
+
     ats_mock.tcl.eval.return_value = 'nxos'
 
     def test_golden(self):
@@ -194,7 +280,14 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
+        
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+        
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.device2)
