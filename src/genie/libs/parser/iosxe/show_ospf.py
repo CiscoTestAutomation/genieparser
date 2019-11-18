@@ -7647,10 +7647,11 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
         # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
         # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
         #                 10.16.2.3/32          10.16.2.2          8        Intra     0
-        # 3       (M)     10.16.2.3/32                                    Unknown   0  
-        p2 = re.compile(r'(?:(?P<sid>\d+) +)?(?:\((?P<codes>[LNM,]+)\) +)?'
-            '(?P<prefix>[\d\.\/]+)( +(?P<adv_rtr_id>[\d\.]+))?'
-            '( +(?P<area_id>\d+))? +(?P<type>\w+) +(?P<algo>\d+)')
+        # 3       (M)     10.16.2.3/32                                    Unknown   0
+        #                 3.3.3.3/32               2.2.2.10         0
+        p2 = re.compile(r'(?:(?P<sid>\d+) +)?(?:\((?P<codes>[LNM,]+)\) +)?(?P<prefix>[\d\.\/]+)'
+                        r'( +(?P<adv_rtr_id>[\d\.]+))?( +(?P<area_id>\d+))?(?: +(?P<type>\w+))?'
+                        r'(?: +(?P<algo>\d+))?')
 
         ret_dict = {}
         sid_entries = 0
@@ -7671,6 +7672,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
             # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
             #                 10.16.2.3/32          10.16.2.2          8        Intra     0
             # 3       (M)     10.16.2.3/32                                    Unknown   0
+            #                 3.3.3.3/32               2.2.2.10         0   
             m = p2.match(line)
             if m:
                 group = m.groupdict()
