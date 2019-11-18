@@ -184,7 +184,8 @@
 
     * Updated ShowVersion:
 	    * Removed extra spaces in platform keyword
-
+    * Updated ShowPlatform
+        * Updated parser logic to support c8300 platform
 
 * IOSXR
     * Updated ShowBgpSessions
