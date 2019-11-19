@@ -2071,6 +2071,13 @@ class TestShowIpCef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
+    
+    def test_golden_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='27.86.198.239')
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 
 ###################################################
