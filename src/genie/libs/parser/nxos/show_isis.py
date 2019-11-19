@@ -1041,19 +1041,21 @@ class ShowIsisAdjacencySchema(MetaParser):
     """Schema for show isis adjacency"""
 
     schema = {
-        Any(): {
-            'vrf': {
-                Any(): {
-                    'interfaces': {
-                        Any(): {
-                            'adjacencies': {
-                                Any(): {
-                                    'neighbor_snpa': {
-                                        Any(): {
-                                            'level': {
-                                                Any(): {
-                                                    'hold_time': str, 
-                                                    'state': str,
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                'adjacencies': {
+                                    Any(): {
+                                        'neighbor_snpa': {
+                                            Any(): {
+                                                'level': {
+                                                    Any(): {
+                                                        'hold_time': str, 
+                                                        'state': str,
+                                                    },
                                                 },
                                             },
                                         },
@@ -1107,7 +1109,8 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
                 process_id = group['process_id']
                 vrf = group['vrf']
 
-                vrf_dict = result_dict.setdefault(process_id, {}).\
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
                                        setdefault('vrf', {}).\
                                        setdefault(vrf, {})
                 continue
@@ -1140,15 +1143,17 @@ class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
 
     schema = {
-        Any(): {
-            'vrf': {
-                Any(): {
-                    'hostname_db': {
-                        'hostname': {
-                            Any(): {
-                                'hostname': str,
-                                'level': int,
-                                Optional('local_router'): bool,
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'hostname_db': {
+                            'hostname': {
+                                Any(): {
+                                    'hostname': str,
+                                    'level': int,
+                                    Optional('local_router'): bool,
+                                },
                             },
                         },
                     },
@@ -1198,7 +1203,8 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                 process_id = group['process_id']
                 vrf = group['vrf']
 
-                vrf_dict = result_dict.setdefault(process_id, {}).\
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
                                        setdefault('vrf', {}).\
                                        setdefault(vrf, {})
                 continue
@@ -1226,64 +1232,68 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
     """Schema for show isis database detail"""
 
     schema = {
-        Any(): {
-            'vrf': {
-                Any(): {
-                    'level_db': {
-                        Any(): { # level
-                            Any(): { # lsp_id
-                                'lsp_id': str,
-                                'sequence': str,
-                                'checksum': str,
-                                'lifetime': int,
-                                'attach_bit': int,
-                                'p_bit': int,
-                                'overload_bit': int,
-                                't_bit': int,
-                                'instance': str,
-                                Optional('area_address'): str,
-                                Optional('nlpid'): str,
-                                Optional('topo_id'): int,
-                                Optional('hostname'): str,
-                                Optional('router_id'): str,
-                                Optional('length'): int,
-                                Optional('mt_entries'): {
-                                    Any(): {
-                                        'att': int,
-                                        'ol': int,
-                                    }
-                                },
-                                Optional('extended_is_neighbor'): {
-                                    Any(): {
-                                        'neighbor_id': str,
-                                        'metric': int,
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'level_db': {
+                            Any(): { # level
+                                Any(): { # lsp_id
+                                    'lsp_id': str,
+                                    'sequence': str,
+                                    'checksum': str,
+                                    'lifetime': int,
+                                    'attach_bit': int,
+                                    'p_bit': int,
+                                    'overload_bit': int,
+                                    't_bit': int,
+                                    'instance': str,
+                                    Optional('area_address'): str,
+                                    Optional('nlpid'): str,
+                                    Optional('hostname'): str,
+                                    Optional('router_id'): str,
+                                    Optional('length'): int,
+                                    Optional('mt_entries'): {
+                                        Any(): {
+                                            'att': int,
+                                            'ol': int,
+                                        }
                                     },
-                                },
-                                Optional('mt_is_neighbor'): {
-                                    Any(): {
-                                        'neighbor_id': str,
-                                        'metric': int,
+                                    Optional('extended_is_neighbor'): {
+                                        Any(): {
+                                            'neighbor_id': str,
+                                            'metric': int,
+                                        },
                                     },
-                                },
-                                Optional('ip_address'): str,
-                                Optional('extended_ip'): {
-                                    Any(): {
-                                        'ip': str,
-                                        'metric': int,
-                                        Optional('sub_tlv_length'): int,
-                                        Optional('sub_tlv_type'): int,
+                                    Optional('mt_is_neighbor'): {
+                                        Any(): {
+                                            'neighbor_id': str,
+                                            'metric': int,
+                                            'topo_id': int,
+                                        },
                                     },
-                                },
-                                Optional('ipv6_address'): str,
-                                Optional('mt_ipv6_prefix'): {
-                                    Any(): {
-                                        'ipv6': str,
-                                        'metric': int,
-                                        Optional('sub_tlv_length'): int,
-                                        Optional('sub_tlv_type'): int,
+                                    Optional('ip_address'): str,
+                                    Optional('extended_ip'): {
+                                        Any(): {
+                                            'metric': int,
+                                            'up_down': str,
+                                            Optional('sub_tlv_length'): int,
+                                            Optional('sub_tlv_type'): int,
+                                        },
                                     },
+                                    Optional('ipv6_address'): str,
+                                    Optional('mt_ipv6_prefix'): {
+                                        Any(): {
+                                            'metric': int,
+                                            'topo_id': int,
+                                            'up_down': str,
+                                            'ext_origin': str,
+                                            Optional('sub_tlv_length'): int,
+                                            Optional('sub_tlv_type'): int,
+                                        },
+                                    },
+                                    'digest_offset': int,
                                 },
-                                'digest_offset': int,
                             },
                         },
                     },
@@ -1296,7 +1306,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     """Parser for show isis database detail"""
 
-    cli_command = ['show isis database detail', 
+    cli_command = ['show isis database detail',
                    'show isis database detail vrf {vrf}']
 
     def cli(self, vrf='', output=None):
@@ -1357,7 +1367,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         p12 = re.compile(r'^IP +Address *: +(?P<ip_address>[\d\.]+)$')
 
         #   Extended IP   :     10.12.115.0/24  Metric : 10          (U)
-        p13 = re.compile(r'^Extended +IP *: +(?P<ext_ip>\S+) +Metric *: +(?P<metric>\d+) +\(.*\)$')
+        #   Extended IP   :     10.12.115.0/24  Metric : 10          (D)
+        p13 = re.compile(r'^Extended +IP *: +(?P<ext_ip>\S+) +Metric *: +(?P<metric>\d+) +\((?P<up_down>\S+)\)$')
 
         #   IPv6 Address  :  2001:10:13:115::1
         p14 = re.compile(r'^IPv6 +Address *: +(?P<ip_address>\S+)$')
@@ -1369,7 +1380,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         p16 = re.compile(r'^MT-IPv6 +Prefx *: +TopoId *: +(?P<topo_id>\d+)$')
 
         #   2001:10:12:115::/64  Metric : 10          (U/I)
-        p17 = re.compile(r'^(?P<prefix>\S+) +Metric *: +(?P<metric>\d+) +\(.*\)$')
+        #   2001:10:12:115::/64  Metric : 10          (D/E)
+        p17 = re.compile(r'^(?P<prefix>\S+) +Metric *: +(?P<metric>\d+) +\((?P<up_down>\w+)\/(?P<ext_origin>\w+)\)$')
 
         #   Unknown Sub-TLV      :  Length : 1  Type :   4
         p18 = re.compile(r'^Unknown +Sub-TLV *: +Length *: +(?P<length>\d+) +Type *: +(?P<type>\d+)$')
@@ -1389,7 +1401,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 process_id = group['process_id']
                 vrf = group['vrf']
 
-                vrf_dict = result_dict.setdefault(process_id, {}).\
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
                                        setdefault('vrf', {}).\
                                        setdefault(vrf, {})
                 continue
@@ -1481,7 +1494,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             #   TopoId: 2
             m = p10.match(line)
             if m:
-                lsp_dict['topo_id'] = int(m.groupdict()['topo_id'])
+                ipv4_topo_id = int(m.groupdict()['topo_id'])
                 continue
             
             #   MtExtend IS   :  R1_xe.01           Metric : 10
@@ -1495,6 +1508,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                                        setdefault(ext, {})
                 mt_ext_dict['neighbor_id'] = mt_ext
                 mt_ext_dict['metric'] = metric
+                mt_ext_dict['topo_id'] = ipv4_topo_id
                 continue
 
             #   IP Address    :  10.13.115.1
@@ -1508,10 +1522,11 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             if m:
                 ip = m.groupdict()['ext_ip']
                 metric = int(m.groupdict()['metric'])
+                up_down = m.groupdict()['up_down']
                 ip_dict = lsp_dict.setdefault('extended_ip', {}).setdefault(ip, {})
 
-                ip_dict['ip'] = ip
                 ip_dict['metric'] = metric
+                ip_dict['up_down'] = up_down
                 continue
 
             #   IPv6 Address  :  2001:10:13:115::1
@@ -1530,7 +1545,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             m = p16.match(line)
             if m:
                 topo_id = int(m.groupdict()['topo_id'])
-                lsp_dict['topo_id'] = topo_id
+                ipv6_topo_id = topo_id
                 continue
 
             #   2001:10:12:115::/64  Metric : 10          (U/I)
@@ -1538,10 +1553,14 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             if m:
                 prefix = m.groupdict()['prefix']
                 metric = int(m.groupdict()['metric'])
+                up_down = m.groupdict()['up_down']
+                ext_origin = m.groupdict()['ext_origin']
                 ip_dict = lsp_dict.setdefault('mt_ipv6_prefix', {}).setdefault(prefix, {})
 
-                ip_dict['ipv6'] = prefix
                 ip_dict['metric'] = metric
+                ip_dict['topo_id'] = ipv6_topo_id
+                ip_dict['up_down'] = up_down
+                ip_dict['ext_origin'] = ext_origin
                 continue
 
             #   Unknown Sub-TLV      :  Length : 1  Type :   4
