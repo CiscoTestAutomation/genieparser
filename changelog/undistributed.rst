@@ -137,6 +137,8 @@
         * Updated regex to support various outputs
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+    * Updated ShowIgmpGroupsDetail
+        * Updated schema and patten match for source list	 
 
 * NXOS
     * ShowIpOspf
