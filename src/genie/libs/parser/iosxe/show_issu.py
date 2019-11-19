@@ -57,12 +57,12 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
 
     """Parser for show issu state detail"""
 
-    cli_command = 'show issu state detail'
+    cli_command = ['show issu state detail']
 
     def cli(self,output=None):
         if output is None:
             # Execute command to get output from device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -337,12 +337,13 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
 
     """Parser for show issu rollback-timer"""
 
-    cli_command = 'show issu rollback-timer'
+    cli_command = ['show issu rollback-timer']
 
     def cli(self,output=None):
+
         if output is None:
             # Execute command to get output from device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
