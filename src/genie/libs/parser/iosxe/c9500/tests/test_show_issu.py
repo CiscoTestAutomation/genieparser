@@ -65,7 +65,7 @@ class test_show_issu_state_detail(unittest.TestCase):
                 "current_status": "Disabled",
                 'previous_operation': 'N/A',
                 "system_check": {
-                    "platform_issu_Support": "No",
+                    "platform_issu_support": "No",
                     "standby_online": "No",
                     "autoboot_enabled": "Yes",
                     "sso_mode": "No",

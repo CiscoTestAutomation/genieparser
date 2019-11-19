@@ -32,7 +32,7 @@ class ShowIssuStateDetailSchema(MetaParser):
                 Optional('current_status'): str,
                 Optional('previous_operation'): str,
                 Optional('system_check'): {
-                    Optional('platform_issu_Support'): str,
+                    Optional('platform_issu_support'): str,
                     Optional('standby_online'): str,
                     Optional('autoboot_enabled'): str,
                     Optional('sso_mode'): str,
@@ -82,7 +82,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         p4 = re.compile(r'^System +Check +Status$')
 
         # Platform ISSU Support               No
-        p5 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_Support>(\S+))$')
+        p5 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_support>(\S+))$')
 
         # Standby Online                      No
         p6 = re.compile(r'^Standby +Online +(?P<standby_online>(\S+))$')
@@ -145,11 +145,11 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 continue
 
             # Platform ISSU Support               No
-            # p5 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_Support>(\S+))$')
+            # p5 = re.compile(r'^Platform +ISSU +Support +(?P<platform_issu_support>(\S+))$')
             m = p5.match(line)
             if m:
-                platform_issu_Support = m.groupdict()['platform_issu_Support']
-                slot_dict['system_check']['platform_issu_Support'] = platform_issu_Support
+                platform_issu_support = m.groupdict()['platform_issu_support']
+                slot_dict['system_check']['platform_issu_support'] = platform_issu_support
                 continue
 
             # Standby Online                      No
