@@ -945,8 +945,6 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                 'hops': {
                                     1: {
                                         'sid': 16063,
-                                        'sid_type': 'Prefix-SID',
-                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -991,7 +989,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
             Dynamic (inactive)
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 10.169.196.241]
+                16063
         Attributes:
             Binding SID: 15000
             Allocation mode: explicit
