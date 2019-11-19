@@ -32,27 +32,27 @@ from genie.libs.parser.ios.show_platform import ShowVersion,\
     ShowModule,\
     ShowSwitch, ShowSwitchDetail
 
-from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform as test_show_platform_iosxe,\
-    test_show_platform_power as test_show_platform_power_iosxe,\
-    test_show_version_rp as test_show_version_rp_iosxe,\
-    test_show_processes_cpu as test_show_processes_cpu_iosxe,\
-    test_show_processes_cpu_history as test_show_processes_cpu_history_iosxe,\
-    test_show_processes_cpu_platform as test_show_processes_cpu_platform_iosxe,\
-    test_show_platform_software_status_control_processor_brief as test_show_platform_software_status_control_processor_brief_iosxe,\
-    test_show_platform_software_slot_active_monitor_Mem_Swap as test_show_platform_software_slot_active_monitor_Mem_iosxe,\
-    test_show_platform_hardware as test_show_platform_hardware_iosxe,\
-    test_show_platform_hardware_plim as test_show_platform_hardware_plim_iosxe,\
-    test_show_platform_hardware_qfp_bqs_opm_mapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe,\
-    test_show_platform_hardware_qfp_bqs_ipm_mapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe,\
-    test_show_platform_hardware_serdes_statistics as test_show_platform_hardware_serdes_statistics_iosxe,\
-    test_show_platform_hardware_serdes_statistics_internal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
-    show_platform_hardware_qfp_bqs_statistics_channel_all as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
-    show_platform_hardware_qfp_interface as show_platform_hardware_qfp_interface_iosxe,\
-    test_show_platform_hardware_qfp_statistics_drop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
-    test_show_env as test_show_env_iosxe,\
-    test_show_module as test_show_module_iosxe,\
-    test_show_switch as test_show_switch_iosxe,\
-    test_show_switch_detail as test_show_switch_detail_iosxe
+from genie.libs.parser.iosxe.tests.test_show_platform import TestShowPlatform as test_show_platform_iosxe,\
+    TestShowPlatformPower as test_show_platform_power_iosxe,\
+    TestShowVersionRp as test_show_version_rp_iosxe,\
+    TestShowProcessesCpu as test_show_processes_cpu_iosxe,\
+    TestShowProcessesCpuHistory as test_show_processes_cpu_history_iosxe,\
+    TestShowProcessesCpuPlatform as test_show_processes_cpu_platform_iosxe,\
+    TestShowPlatformSoftwareStatusControlProcessorBrief as test_show_platform_software_status_control_processor_brief_iosxe,\
+    TestShowPlatformSoftwareSlotActiveMonitorMemSwap as test_show_platform_software_slot_active_monitor_Mem_iosxe,\
+    TestShowPlatformHardware as test_show_platform_hardware_iosxe,\
+    TestShowPlatformHardwarePlim as test_show_platform_hardware_plim_iosxe,\
+    TestShowPlatformHardwareQfpBqsOpmMapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe,\
+    TestShowPlatformHardwareQfpBqsIpmMapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe,\
+    TestShowPlatformHardwareSerdesStatistics as test_show_platform_hardware_serdes_statistics_iosxe,\
+    TestShowPlatformHardwareSerdesStatisticsInternal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
+    ShowPlatformHardwareQfpInterface as show_platform_hardware_qfp_interface_iosxe,\
+    TestShowPlatformHardwareQfpStatisticsDrop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
+    TestShowEnv as test_show_env_iosxe,\
+    TestShowModule as test_show_module_iosxe,\
+    TestShowSwitch as test_show_switch_iosxe,\
+    TestShowSwitchDetail as test_show_switch_detail_iosxe
 
 
 
@@ -69,7 +69,7 @@ class TestShowVersion(unittest.TestCase):
         "version": {
             "last_reload_reason": "Unknown reason",
             "hostname": "N95_1",
-            "os": "IOSv",
+            "os": "IOS",
             "version_short": "15.6",
             "number_of_intfs": {
                 "Gigabit Ethernet": "6"
@@ -79,9 +79,13 @@ class TestShowVersion(unittest.TestCase):
             "chassis_sn": "9K66Z7TOKAACDEQA24N7S",
             "chassis": "IOSv",
             "image_id": "VIOS-ADVENTERPRISEK9-M",
+            'compiled_by': 'prod_rel_team',
+            'compiled_date': 'Wed 29-Mar-17 14:05',
             "processor_type": "revision 1.0",
             "platform": "IOSv",
             "image_type": "production image",
+            'processor_board_flash': '10080K',
+            'returned_to_rom_by': 'reload',
             "main_mem": "435457",
             "mem_size": {
                 "non-volatile configuration": "256"
@@ -142,6 +146,8 @@ class TestShowVersion(unittest.TestCase):
                     'chassis': 'WS-C3750X-24P',
                     'chassis_sn': 'FDO2028F1WK',
                     'curr_config_register': '0xF',
+                    'compiled_by': 'prod_rel_team',
+                    'compiled_date': 'Wed 26-Jun-13 09:56',
                     'hostname': 'R5',
                     'image_id': 'C3750E-UNIVERSALK9-M',
                     'image_type': 'production image',
@@ -153,10 +159,14 @@ class TestShowVersion(unittest.TestCase):
                     'next_reload_license_level': 'ipservices',
                     'number_of_intfs': {'Gigabit Ethernet': '28',
                                         'Ten Gigabit Ethernet': '2',
-                                        'Virtual Ethernet': '2'},
-                    'os': 'C3750E boot loader',
+                                        'Virtual Ethernet': '2',
+                                        'Gigabit Ethernet': '28',
+                                        'FastEthernet': '1'
+                                        },
+                    'os': 'IOS',
                     'platform': 'C3750E',
                     'processor_type': 'PowerPC405',
+                    'returned_to_rom_by': 'power-on',
                     'rom': 'Bootstrap program is C3750E boot loader',
                     'rtr_type': 'WS-C3750X-24P',
                     'system_image': 'flash:c3750e-universalk9-mz',
@@ -244,6 +254,8 @@ class TestShowVersion(unittest.TestCase):
             "platform": "s72033_rp",
             "version": "12.2(18)SXF7",
             "image_id": "s72033_rp-ADVENTERPRISEK9_WAN-M",
+            'compiled_by': 'kellythw',
+            'compiled_date': 'Thu 23-Nov-06 06:26',
             "image_type": "production image",
             "rom": "System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)",
             "bootldr": "s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)",
@@ -253,10 +265,17 @@ class TestShowVersion(unittest.TestCase):
             "chassis": "WS-C6503-E",
             "main_mem": "983008",
             "processor_type": "R7000",
+            'sp_by': 'power on',
+            'returned_to_rom_at': '21:57:23 UTC Sat Aug 28 2010',
+            'returned_to_rom_by': 'power cycle',
             "rtr_type": "WS-C6503-E",
             "chassis_sn": "FXS1821Q2H9",
             "last_reload_reason": "s/w reset",
-            "number_of_intfs": {"Gigabit Ethernet/IEEE 802.3": "50"},
+            'processor_board_flash': '65536K',
+            "number_of_intfs": {
+                "Gigabit Ethernet/IEEE 802.3": "50",
+                'Virtual Ethernet/IEEE 802.3': '1'
+            },
             "mem_size": {"non-volatile configuration": "1917", "packet buffer": "8192"},
             "curr_config_register": "0x2102",
         }
@@ -313,6 +332,115 @@ class TestShowVersion(unittest.TestCase):
         Configuration register is 0x2102
     '''}
 
+    golden_output_ios_1 = {'execute.return_value': '''\
+    Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 15.2(2)E8, RELEASE SOFTWARE (fc1)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2018 by Cisco Systems, Inc.
+    Compiled Mon 22-Jan-18 04:07 by prod_rel_team
+
+    ROM: Bootstrap program is C3750E boot loader
+    BOOTLDR: C3750E Boot Loader (C3750X-HBOOT-M) Version 12.2(58r)SE, RELEASE SOFTWARE (fc1)
+
+    sample_switch uptime is 8 weeks, 3 days, 10 hours, 27 minutes
+    System returned to ROM by power-on
+    System restarted at 05:06:40 GMT Tue Sep 10 2019
+    System image file is "flash:c3750e-universalk9-mz.152-2.E8.bin"
+    Last reload reason: Reload command
+
+
+
+    This product contains cryptographic features and is subject to United
+    States and local country laws governing import, export, transfer and
+    use. Delivery of Cisco cryptographic products does not imply
+    third-party authority to import, export, distribute or use encryption.
+    Importers, exporters, distributors and users are responsible for
+    compliance with U.S. and local country laws. By using this product you
+    agree to comply with applicable laws and regulations. If you are unable
+    to comply with U.S. and local laws, return this product immediately.
+
+    A summary of U.S. laws governing Cisco cryptographic products may be found at:
+    http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+    If you require further assistance please contact us by sending email to
+    export@cisco.com.
+
+    License Level: ipservices
+    License Type: Permanent
+    Next reload license Level: ipservices
+
+    cisco WS-C3750X-24S (PowerPC405) processor (revision A0) with 524288K bytes of memory.
+    Processor board ID FDO1633Q14S
+    Last reset from power-on
+    14 Virtual Ethernet interfaces
+    1 FastEthernet interface
+    28 Gigabit Ethernet interfaces
+    2 Ten Gigabit Ethernet interfaces
+    The password-recovery mechanism is enabled.
+
+    512K bytes of flash-simulated non-volatile configuration memory.
+    Base ethernet MAC Address       : AC:F2:C5:E7:6D:00
+    Motherboard assembly number     : 73-13061-04
+    Motherboard serial number       : FDO1633Q14M
+    Model revision number           : A0
+    Motherboard revision number     : A0
+    Model number                    : WS-C3750X-24S-E
+    Daughterboard assembly number   : 800-32727-03
+    Daughterboard serial number     : FDO172217ED
+    System serial number            : FDO1633Q14S
+    Top Assembly Part Number        : 800-33746-04
+    Top Assembly Revision Number    : B0
+    Version ID                      : V03
+    CLEI Code Number                : CMMFF00ARC
+    Hardware Board Revision Number  : 0x04
+
+
+    Switch Ports Model                     SW Version            SW Image
+    ------ ----- -----                     ----------            ----------
+    *    1 30    WS-C3750X-24S             15.2(2)E8             C3750E-UNIVERSALK9-M
+
+
+    Configuration register is 0xF
+
+    '''}
+
+    golden_parsed_output_ios_1 = {
+        'version': {'version_short': '15.2',
+                    'platform': 'C3750E',
+                    'version': '15.2(2)E8',
+                    'image_id': 'C3750E-UNIVERSALK9-M',
+                    'os': 'IOS',
+                    'image_type': 'production image',
+                    'compiled_date': 'Mon 22-Jan-18 04:07',
+                    'compiled_by': 'prod_rel_team',
+                    'rom': 'Bootstrap program is C3750E boot loader',
+                    'bootldr': 'C3750E Boot Loader (C3750X-HBOOT-M) Version 12.2(58r)SE, RELEASE SOFTWARE (fc1)',
+                    'hostname': 'sample_switch',
+                    'uptime': '8 weeks, 3 days, 10 hours, 27 minutes',
+                    'returned_to_rom_by': 'power-on',
+                    'system_restarted_at': '05:06:40 GMT Tue Sep 10 2019',
+                    'system_image': 'flash:c3750e-universalk9-mz.152-2.E8.bin',
+                    'last_reload_reason': 'power-on',
+                    'license_level': 'ipservices',
+                    'license_type': 'Permanent',
+                    'next_reload_license_level': 'ipservices',
+                    'chassis': 'WS-C3750X-24S',
+                    'main_mem': '524288',
+                    'processor_type': 'PowerPC405',
+                    'rtr_type': 'WS-C3750X-24S',
+                    'chassis_sn': 'FDO1633Q14S',
+                    'number_of_intfs': {
+                        'Virtual Ethernet': '14',
+                        'FastEthernet': '1',
+                        'Gigabit Ethernet': '28',
+                        'Ten Gigabit Ethernet': '2'
+                    },
+                    'mem_size': {
+                        'flash-simulated non-volatile configuration': '512'
+                    },
+                    'curr_config_register': '0xF'
+                }
+            }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -346,6 +474,12 @@ class TestShowVersion(unittest.TestCase):
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_ios_cat6k)
 
+    def test_golden_ios_1(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.golden_output_ios_1)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios_1)
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')

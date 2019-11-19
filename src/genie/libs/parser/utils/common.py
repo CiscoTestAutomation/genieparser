@@ -53,7 +53,7 @@ def format_output(parser_data, tab=2):
     s = ['{\n']
     if parser_data is None:
         return parser_data
-    for k,v in parser_data.items():
+    for k,v in sorted(parser_data.items()):
         if isinstance(v, dict):
             v = format_output(v, tab+2)
         else:
