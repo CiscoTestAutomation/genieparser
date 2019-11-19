@@ -30,7 +30,7 @@ class ShowIssuStateDetailSchema(MetaParser):
                 {
                 Optional('issu_in_progress'): bool,
                 Optional('current_status'): str,
-                Optional('last_operation'): str,
+                Optional('previous_operation'): str,
                 Optional('system_check'): {
                     Optional('platform_issu_Support'): str,
                     Optional('standby_online'): str,
@@ -76,7 +76,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         p2 = re.compile(r'^Current +ISSU +Status: +(?P<current_status>(\S+))$')
         
         # Previous ISSU Operation: N/A
-        p3 = re.compile(r'^pdb +ISSU +Operation: +(?P<last_operation>(\S+))$')
+        p3 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>(\S+))$')
 
         # System Check                        Status
         p4 = re.compile(r'^System +Check +Status$')
@@ -130,14 +130,13 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 continue
 
             # Previous ISSU Operation: N/A
-            # p3 = re.compile(r'^Previous +ISSU +Operation: +(?P<last_operation>(\S+))$')
+            # p3 = re.compile(r'^Previous +ISSU +Operation: +(?P<previous_operation>([\S\/]+))$')
             m = p3.match(line)
             if m:
-                last_operation = m.groupdict()['last_operation']
-                slot_dict['last_operation'] = last_operation
+                previous_operation = m.groupdict()['previous_operation']
+                slot_dict['previous_operation'] = previous_operation
                 continue
 
-            # import pdb; pdb.set_trace()
             # System Check                        Status
             # p4 = re.compile(r'^System +Check +Status$')
             m = p4.match(line)
@@ -204,13 +203,9 @@ class ShowIssuRollbackTimerSchema(MetaParser):
     """Schema for show issu rollback-timer"""
 
     schema = {
-        'slot':
-            {Any():
-                {'rollback_timer_state': str,
-                 Optional('rollback_timer_reason'): str,
-                 Optional('rollback_timer_time'): str,
-                }
-            },
+        'rollback_timer_state': str,
+        Optional('rollback_timer_reason'): str,
+        Optional('rollback_timer_time'): str,
         }
 
 # ======================================
@@ -235,10 +230,6 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
 
         # Compile regexp patterns
 
-        # Finished local lock acquisition on R0
-        p0 = re.compile(r'^Finished +local +lock +acquisition'
-                         ' +on +(?P<slot>(\S+))$')
-
         # Rollback: inactive, no ISSU operation is in progress
         p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
 
@@ -252,36 +243,27 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Finished local lock acquisition on R0
-            # p0 = re.compile(r'^Finished +local +lock +acquisition'
-            #                  ' +on +(?P<slot>(\S+))$')
-            m = p0.match(line)
-            if m:
-                slot = m.groupdict()['slot']
-                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
-                continue
-
             # Rollback: inactive, no ISSU operation is in progress
             # p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict['rollback_timer_state'] = group['state']
-                slot_dict['rollback_timer_reason'] = group['reason']
+                ret_dict['rollback_timer_state'] = group['state']
+                ret_dict['rollback_timer_reason'] = group['reason']
                 continue
 
             # Rollback Process State = Not in progress
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict['rollback_timer_state'] = group['state']
+                ret_dict['rollback_timer_state'] = group['state']
                 continue
 
             # Configured Rollback Time = 00:45:00
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                slot_dict['rollback_timer_time'] = group['rollback_time']                
+                ret_dict['rollback_timer_time'] = group['rollback_time']                
                 continue
 
         return ret_dict

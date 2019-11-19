@@ -63,6 +63,7 @@ class test_show_issu_state_detail(unittest.TestCase):
             "R0": {
                 "issu_in_progress": False,
                 "current_status": "Disabled",
+                'previous_operation': 'N/A',
                 "system_check": {
                     "platform_issu_Support": "No",
                     "standby_online": "No",
@@ -112,12 +113,8 @@ class test_show_issu_rollback_timer(unittest.TestCase):
     '''}
 
     golden_parsed_output_1 = {
-        'slot': {
-            'R0': {
-                'rollback_timer_reason': 'no ISSU operation is in progress',
-                'rollback_timer_state': 'inactive',
-            }
-        }
+        'rollback_timer_reason': 'no ISSU operation is in progress',
+        'rollback_timer_state': 'inactive',
     }
 
     def test_empty(self):
