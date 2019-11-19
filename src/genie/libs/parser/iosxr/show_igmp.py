@@ -454,8 +454,15 @@ class ShowIgmpGroupsDetailSchema(MetaParser):
                                 'router_mode_expires': str,
                                 'host_mode': str,
                                 'last_reporter': str,
-                                'suppress': int,
-                                'source_list': str
+                                Optional('suppress'): int,
+                                Optional('source'): {
+                                    Any(): {
+                                        'up_time': str,
+                                        'expire': str,
+                                        Optional('forward'): str,
+                                        Optional('flags'): str
+                                    }
+                                }
                             }
                         }
                     }
@@ -518,8 +525,13 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
         # Suppress:	0
         p7 = re.compile(r'^Suppress:+[\s*]+(?P<suppress>[\d]+)$')
         
-        # Source list is empty
-        p8 = re.compile(r'^Source +list +is +(?P<source_list>[\S]+)$')
+        # Source Address   Uptime    Expires   Fwd  Flags
+        # 192.168.1.18     00:04:55  00:01:28  Yes  Remote
+        p8 = re.compile(r'^(?P<source>[\d\.\:]+) +'
+                             '(?P<up_time>[\w\.\:]+) +'
+                             '(?P<expire>[\w\:]+) +'
+                             '(?P<forward>\w+)? +'
+                             '(?P<flags>\w+)?$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -576,11 +588,21 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
                 group_dict['suppress'] = int(suppress)
                 continue
               
-            # Source list is empty
+            # Source Address   Uptime    Expires   Fwd  Flags
+            # 192.168.1.18     00:04:55  00:01:28  Yes  Remote
             m = p8.match(line)
             if m:
-                source_list = m.groupdict()['source_list']
-                group_dict['source_list'] = source_list
+                source = m.groupdict()['source']
+                up_time = m.groupdict()['up_time']
+                expire = m.groupdict()['expire']
+                forward = m.groupdict()['forward']
+                flags = m.groupdict()['flags']
+                
+                source_dict = group_dict.setdefault('source', {}).setdefault(source, {})
+                source_dict['up_time'] = up_time
+                source_dict['expire'] = expire
+                source_dict['forward'] = forward
+                source_dict['flags'] = flags
                 continue
             
         return result_dict
