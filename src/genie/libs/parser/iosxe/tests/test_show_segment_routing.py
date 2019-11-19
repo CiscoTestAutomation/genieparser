@@ -1068,6 +1068,75 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                 State: Programmed
         '''}
 
+    golden_output2 = {'execute.return_value': '''
+        show segment-routing traffic-eng policy all
+        Name: test_genie_1 (Color: 0 End-point: )
+        Status:
+            Admin: down, Operational: down for 00:00:01 (since 05-18 03:50:08.958)
+        Candidate-paths:
+        Attributes:
+        Name: test_genie_2 (Color: 100 End-point: 10.19.198.239)
+        Status:
+            Admin: down, Operational: down for 00:00:00 (since 05-18 03:50:09.080)
+        Candidate-paths:
+            Preference 100:
+            Dynamic (inactive)
+                Weight: 0, Metric Type: TE
+        Attributes:
+            Binding SID: 257
+            Allocation mode: dynamic
+            State: Programmed
+    '''}
+
+    golden_parsed_output2 = {
+        'test_genie_1': {
+            'color': 0,
+            'name': 'test_genie_1',
+            'status': {
+                'admin': 'down',
+                'operational': {
+                    'since': '05-18 03:50:08.958',
+                    'state': 'down',
+                    'time_for_state': '00:00:01',
+                },
+            },
+        },
+        'test_genie_2': {
+            'attributes': {
+                'binding_sid': {
+                    257: {
+                        'allocation_mode': 'dynamic',
+                        'state': 'programmed',
+                    },
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    100: {
+                        'path_type': {
+                            'dynamic': {
+                                'metric_type': 'TE',
+                                'status': 'inactive',
+                                'weight': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            'color': 100,
+            'end_point': '10.19.198.239',
+            'name': 'test_genie_2',
+            'status': {
+                'admin': 'down',
+                'operational': {
+                    'since': '05-18 03:50:09.080',
+                    'state': 'down',
+                    'time_for_state': '00:00:00',
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device1)
@@ -1094,6 +1163,13 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
         obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_affinity)
+    
+    def test_golden_output2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ====================================================================

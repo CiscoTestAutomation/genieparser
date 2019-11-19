@@ -205,6 +205,8 @@
         * Added and changed regex to accommodate different outputs
     * Updated ShowSegmentRoutingTrafficEngPolicy for:
         * Better support for hop configurations
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Updated regex and added optional key to support more outputs
 
 * IOS
     * Updated ShowInventory

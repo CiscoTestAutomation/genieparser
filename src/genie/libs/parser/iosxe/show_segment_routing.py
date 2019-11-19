@@ -748,7 +748,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
         Any(): {
             "name": str,
             "color": int,
-            "end_point": str,
+            Optional("end_point"): str,
             "status": {
                 "admin": str,
                 "operational": {
@@ -757,7 +757,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     "since": str,
                 },
             },
-            "candidate_paths": {
+            Optional("candidate_paths"): {
                 "preference": {
                     Any(): {
                         Optional("constraints"): {
@@ -802,7 +802,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     },
                 },
             },
-            "attributes": {
+            Optional("attributes"): {
                 "binding_sid": {
                     Any(): {
                         "allocation_mode": str,
@@ -848,8 +848,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             out = output
 
         # Name: test1 (Color: 100 End-point: 10.169.196.241)
+        # Name: test_genie_1 (Color: 0 End-point: )
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
-                         '+End-point: +(?P<end_point>\S+)\)$')
+                         '+End-point: *(?P<end_point>\S+)?\)$')
 
         # Status:
         #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
@@ -937,7 +938,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
                 policy_dict.update({'name': name})
                 policy_dict.update({'color': int(group['color'])})
-                policy_dict.update({'end_point': group['end_point']})
+                if group.get('end_point', None):
+                    policy_dict.update({'end_point': group['end_point']})
                 event_index = 0
                 continue
 
