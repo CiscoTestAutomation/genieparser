@@ -1072,12 +1072,12 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
 
     golden_output2 = {'execute.return_value': '''
         show segment-routing traffic-eng policy all
-        Name: test_3-7-1-1 (Color: 0 End-point: )
+        Name: test_genie_1 (Color: 0 End-point: )
         Status:
             Admin: down, Operational: down for 00:00:01 (since 05-18 03:50:08.958)
         Candidate-paths:
         Attributes:
-        Name: test_3-7-1-2 (Color: 100 End-point: 27.86.198.239)
+        Name: test_genie_2 (Color: 100 End-point: 10.19.198.239)
         Status:
             Admin: down, Operational: down for 00:00:00 (since 05-18 03:50:09.080)
         Candidate-paths:
@@ -1091,9 +1091,9 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        'test_3-7-1-1': {
+        'test_genie_1': {
             'color': 0,
-            'name': 'test_3-7-1-1',
+            'name': 'test_genie_1',
             'status': {
                 'admin': 'down',
                 'operational': {
@@ -1103,7 +1103,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                 },
             },
         },
-        'test_3-7-1-2': {
+        'test_genie_2': {
             'attributes': {
                 'binding_sid': {
                     257: {
@@ -1126,8 +1126,8 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                 },
             },
             'color': 100,
-            'end_point': '27.86.198.239',
-            'name': 'test_3-7-1-2',
+            'end_point': '10.19.198.239',
+            'name': 'test_genie_2',
             'status': {
                 'admin': 'down',
                 'operational': {
