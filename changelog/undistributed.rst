@@ -49,8 +49,15 @@
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-	* Enhanced Dir
-		* added 'dir {directory}' support
+
+    * Added ShowAccessLists for commands:
+        * 'show access-lists'
+        * 'show access-lists {acl}'
+        * 'show access-lists summary'
+
+    * Enhanced Dir
+        * added 'dir {directory}' support
+
 
 * IOS
     * Added ShowInterfacesDescription for commands;
