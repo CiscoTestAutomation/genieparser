@@ -62,7 +62,6 @@
     * Enhanced Dir
         * added 'dir {directory}' support
 
-
 * IOS
     * Added ShowInterfacesDescription for commands;
         * 'show interfaces description'
@@ -149,7 +148,7 @@
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
     * Updated ShowIgmpGroupsDetail
-        * Updated schema and patten match for source list	 
+        * Updated schema and patten match for source list
 
 * NXOS
     * ShowIpOspf
@@ -204,6 +203,8 @@
     * Updated ShowAuthenticationSessionsInterfaceDetails
         * Added keywords to schema
         * Added and changed regex to accommodate different outputs
+    * Updated ShowSegmentRoutingTrafficEngPolicy for:
+        * Better support for hop configurations
 
 * IOS
     * Updated ShowInventory
