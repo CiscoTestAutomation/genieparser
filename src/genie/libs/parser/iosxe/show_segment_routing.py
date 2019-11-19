@@ -937,7 +937,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
                 policy_dict.update({'name': name})
                 policy_dict.update({'color': int(group['color'])})
-                if group['end_point']:
+                if group.get('end_point', None):
                     policy_dict.update({'end_point': group['end_point']})
                 event_index = 0
                 continue
