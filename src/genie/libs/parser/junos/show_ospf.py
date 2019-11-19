@@ -1,7 +1,8 @@
 ''' show_ospf.py
 
-IOSXE parsers for the following show commands:
+JunOS parsers for the following show commands:
 
+    * show ospf interface brief instance {instance}
     * show ospf interface brief
 
 '''
