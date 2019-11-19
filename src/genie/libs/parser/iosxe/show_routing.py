@@ -1519,9 +1519,12 @@ class ShowIpCef(ShowIpCefSchema):
         # 10.169.197.104/30
         # 2001:DB8:1:3::/64
         # 10.16.2.2/32, epoch 2, per-destination sharing
+        # 27.86.198.239/32, epoch 2, RIB[I], refcnt 7, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)'
-                         '(?:, +epoch +(?P<epoch>(\d+)))?'
-                         '(?:, +(?P<sharing>(per-destination sharing)))?$')
+                r'(?:, +epoch +(?P<epoch>(\d+)))?'
+                r'(?:, +RIB\[\w+\])?'
+                r'(?:, +refcnt +(?P<refcnt>\d+))?'
+                r'(?:, +(?P<sharing>(per-destination sharing)))?$')
 
         # sr local label info: global/16002 [0x1B]
         p1_1 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
@@ -1538,9 +1541,13 @@ class ShowIpCef(ShowIpCefSchema):
         # nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         # nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
-        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
-                           '(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
-                           '\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)$')
+        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +'
+                r'(?P<interface>\S+) +label +\[(?P<outgoing_label>[\S]+)'
+                r'\|(?P<outgoing_label_backup>[\S]+)\]'
+                r'(?:\((?P<outgoing_label_info>\w+)\))?'
+                r'\-\(local\:(?P<local_label>(\d+))\)'
+                r'(, +IP +adj +out +of +(?P<ip_adj_out_interface>\S+),'
+                r' +addr +(?P<addr>\S+ +\S+))?$')
 
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
@@ -1704,6 +1711,14 @@ class ShowIpCef(ShowIpCefSchema):
 
         return result_dict
 
+class ShowIpCefInternal(ShowIpCef):
+    cli_command = 'show ip cef {prefix} internal'
+
+    def cli(self, prefix=None, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(prefix=prefix))
+        return super().cli(prefix=prefix, output=output)
 
 # ====================================================
 #  parser  for show ipv6 cef
