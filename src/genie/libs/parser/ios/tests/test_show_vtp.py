@@ -179,7 +179,7 @@ class test_show_vtp_status(unittest.TestCase):
     golden_output_4 = {'execute.return_value': '''\
         VTP Version capable             : 1 to 3
         VTP version running             : 3
-        VTP Domain Name                 : MIGRA
+        VTP Domain Name                 : GENIE
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
         Device ID                       : 885a.92d1.aac0
@@ -224,7 +224,7 @@ class test_show_vtp_status(unittest.TestCase):
                     'enabled': False
                 }
             },
-                'domain_name': 'MIGRA',
+                'domain_name': 'GENIE',
                 'pruning_mode': False,
                 'traps_generation': False,
                 'device_id': '885a.92d1.aac0'
