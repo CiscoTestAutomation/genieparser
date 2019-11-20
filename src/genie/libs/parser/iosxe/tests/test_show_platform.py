@@ -3620,6 +3620,103 @@ Switch#   Role        Priority      State
         F0        11112222            16.7(2r)            
     '''}
 
+    golden_parsed_output_c9500 = {
+        "slot": {
+            "1": {
+                "lc": {
+                    "C9500-32QC": {
+                        "slot": "1",
+                        "name": "C9500-32QC",
+                        "state": "ok",
+                        "insert_time": "1d18h",
+                        "subslot": {
+                            "0": {
+                                "C9500-32QC": {
+                                    "subslot": "0",
+                                    "name": "C9500-32QC",
+                                    "state": "ok",
+                                    "insert_time": "1d18h"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "R0": {
+                "rp": {
+                    "C9500-32QC": {
+                        "slot": "R0",
+                        "name": "C9500-32QC",
+                        "state": "ok, active",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "C9K-PWR-650WAC-R": {
+                        "slot": "P0",
+                        "name": "C9K-PWR-650WAC-R",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P2",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P3": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P3",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c9500 = {'execute.return_value': '''\
+        show platform
+
+        Chassis type: C9500-32QC          
+
+
+
+        Slot      Type                State                 Insert time (ago) 
+
+        --------- ------------------- --------------------- ----------------- 
+
+        1         C9500-32QC          ok                    1d18h         
+
+         1/0      C9500-32QC          ok                    1d18h         
+
+        R0        C9500-32QC          ok, active            1d18h         
+
+        P0        C9K-PWR-650WAC-R    ok                    1d18h         
+
+        P2        C9K-T1-FANTRAY      ok                    1d18h         
+
+        P3        C9K-T1-FANTRAY      ok                    1d18h         
+
+
+
+        Slot      CPLD Version        Firmware Version                        
+
+        --------- ------------------- --------------------------------------- 
+
+        1         19061022            17.1.1[FC2]      
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -3673,6 +3770,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev_asr1002)
         parsed_output_3 = platform_obj.parse()
         self.assertEqual(parsed_output_3,self.golden_parsed_output_3)
+
+    def test_golden_c9500(self):
+        self.maxDiff = None
+        self.dev_c9500 = Mock(**self.golden_output_c9500)
+        platform_obj = ShowPlatform(device=self.dev_c9500)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c9500)
 
 
 class TestShowBoot(unittest.TestCase):

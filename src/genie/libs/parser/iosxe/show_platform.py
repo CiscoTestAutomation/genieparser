@@ -2015,7 +2015,7 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name):
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name):
                         if 'R' in slot:
                             lc_type = 'rp'
                         elif re.match(r'^\d+', slot):
