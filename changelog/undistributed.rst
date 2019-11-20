@@ -215,6 +215,8 @@
         * changed backup_nexthop and backup_nexthop to optional
     * Updated ShowVersion
 	    * Corrected the value in os key
+    * Updated ShowVtpStatus
+	    * Updated schema to fix customer issue for show vtp status
 
 * JUNOS
     * Enhanced ShowOspfInterfaceBrief:
