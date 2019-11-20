@@ -281,15 +281,14 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                 Any(): {
                                     'metric': int,
                                     Optional('mt_ipv6'): bool,
+                                },
                             },
                         },
-                    },
+                    }
                 }
             }
         }
     }
-
-}
 
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     """Parser for show isis database detail"""

@@ -53,14 +53,30 @@
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-
     * Added ShowAccessLists for commands:
         * 'show access-lists'
         * 'show access-lists {acl}'
         * 'show access-lists summary'
-
     * Enhanced Dir
         * added 'dir {directory}' support
+    * Added ShowIsis for commands:
+        * 'show isis'
+        * 'show isis vrf {vrf}'
+    * Added ShowIsisInterface for commands:
+        * 'show isis interface'
+        * 'show isis interface vrf {vrf}'
+    * Added ShowIsisSpfLogDetail for commands:
+        * 'show isis spf-log detail'
+        * 'show isis spf-log detail vrf {vrf}'
+    * Added ShowIsisAdjacency for commands:
+        * 'show isis adjacency'
+        * 'show isis adjacency vrf {vrf}'
+    * Added ShowIsisHostname for commands:
+        * 'show isis hostname'
+        * 'show isis hostname vrf {vrf}'
+    * Added ShowIsisDatabaseDetail for commands:
+        * 'show isis database detail'
+        * 'show isis database detail vrf {vrf}'
 
 * IOS
     * Added ShowInterfacesDescription for commands;
