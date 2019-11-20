@@ -118,6 +118,10 @@
         * 'show bgp {address_family} summary'
 	* Enhanced Dir
 		* added 'dir {directory}' support
+    * Added ShowIpv4InterfaceBrief for commands:
+        * 'show ipv4 interface brief | include {ip}'
+        * 'show ipv4 interface brief'
+
 
 * JUNOS
     * Added ShowOspfInterface for commands:
