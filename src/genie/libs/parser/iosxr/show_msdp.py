@@ -956,7 +956,7 @@ class ShowMsdpSaCacheSchema(MetaParser):
 
     """ Schema for:
         * 'show msdp sa-cache'
-        * 'show msdp vrf <vrf> sa-cache <>'
+        * 'show msdp vrf <vrf> sa-cache <source_addr>'
     """
     schema = {
         'vrf': {
