@@ -341,7 +341,7 @@ class ShowClnsProtocolSchema(MetaParser):
              Any(): {
                 'system_id': str,
                 'nsel': str,
-                'process_handle': str,
+                Optional('process_handle'): str,
                 'is_type': str,
                 Optional('manual_area_address'): list,
                 Optional('routing_for_area_address'): list,
@@ -382,7 +382,8 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
 
         # IS-IS Router: VRF1 (0x10001)
         # IS-IS Router: <Null Tag> (0x10000)
-        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+) +\((?P<tag>\w+)\)$')
+        # IS-IS Router: test
+        p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+?)( +\((?P<tag>\w+)\))?$')
         # System Id: 2222.2222.2222.00  IS-Type: level-1-2
         p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
         # Manual area address(es):
@@ -423,10 +424,13 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
             if m:
                 group = m.groupdict()
                 tag_process = group['tag_process']
+                tag = group['tag']
                 if tag_process == '<Null Tag>':
                     tag_process = ''
                 clns_dict = result_dict.setdefault('instance', {}).setdefault(tag_process, {})
-                clns_dict.update({'process_handle': group['tag']})
+
+                if tag:
+                    clns_dict.update({'process_handle': tag})
                 continue
 
             # System Id: 2222.2222.2222.00  IS-Type: level-1-2

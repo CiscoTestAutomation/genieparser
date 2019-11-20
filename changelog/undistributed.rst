@@ -227,6 +227,8 @@
         * Better support for hop configurations
     * Updated ShowSegmentRoutingTrafficEngPolicy
         * Updated regex and added optional key to support more outputs
+    * Updated ShowClnsProtocol
+        * Changed keyword 'process_handle' to Optional
 
 * IOS
     * Updated ShowInventory
