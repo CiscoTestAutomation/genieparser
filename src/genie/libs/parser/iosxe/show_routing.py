@@ -1711,15 +1711,6 @@ class ShowIpCef(ShowIpCefSchema):
 
         return result_dict
 
-class ShowIpCefInternal(ShowIpCef):
-    cli_command = 'show ip cef {prefix} internal'
-
-    def cli(self, prefix=None, output=None):
-        if output is None:
-            output = self.device.execute(
-                self.cli_command.format(prefix=prefix))
-        return super().cli(prefix=prefix, output=output)
-
 # ====================================================
 #  parser  for show ipv6 cef
 # ====================================================
@@ -1771,7 +1762,6 @@ class ShowIpCefDetail(ShowIpCef):
             output = output
 
         return super().cli(prefix=prefix, output=output)
-
 
 # ====================================================
 #  schema for show ip route summary
