@@ -177,7 +177,7 @@ class TestShowMsdpPeer(unittest.TestCase):
     '''}
 
     device_output_3 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp peer 10.4.1.1' +++
+    +++ Device: executing command 'show msdp peer 10.4.1.1' +++
     show msdp peer 10.4.1.1
     Wed Nov 20 16:12:35.742 UTC
     MSDP Peer 10.4.1.1 (?), AS 65000
@@ -272,7 +272,7 @@ class TestShowMsdpPeer(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp vrf VRF1 peer 10.4.1.1' +++
+    +++ Device: executing command 'show msdp vrf VRF1 peer 10.4.1.1' +++
     show msdp vrf VRF1 peer 10.4.1.1
     Wed Nov 20 16:32:18.700 UTC
     MSDP Peer 10.4.1.1 (?), AS 65000
@@ -837,7 +837,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
     }
 
     device_output_3 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp sa-cache 10.4.1.1' +++
+    +++ Device: executing command 'show msdp sa-cache 10.4.1.1' +++
     show msdp sa-cache 10.4.1.1
     Wed Nov 20 20:25:03.135 UTC
     
@@ -858,7 +858,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
       Learned from peer 10.4.1.1, RPF peer 10.4.1.1
       SAs recvd 10605, Encapsulated data received: 0
         grp flags: none,  src flags: EA
-    RP/0/RP0/CPU0:R2_xr#
+    RP/0/RP0/CPU0:Device#
     '''}
     expected_output_3 = {
     'vrf': {
@@ -942,7 +942,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp vrf VRF1 sa-cache 10.4.1.1' +++
+    +++ Device: executing command 'show msdp vrf VRF1 sa-cache 10.4.1.1' +++
     show msdp vrf VRF1 sa-cache 10.4.1.1
     Wed Nov 20 19:16:31.452 UTC
     
@@ -1094,7 +1094,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     device_output_1 = {'execute.return_value': '''
-    RP/0/0/CPU0:R2_xrvr#show msdp vrf VRF1 statistics peer 
+    RP/0/0/CPU0:Devicevr#show msdp vrf VRF1 statistics peer 
     Fri Jun 16 15:52:06.775 UTC
     MSDP Peer Statistics :- VRF1
     Peer 10.4.1.1 : AS is 0, State is Listen, 0 active SAs
@@ -1182,7 +1182,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     }
 
     device_output_2 = {'execute.return_value': '''
-    P/0/0/CPU0:R2_xrvr#show msdp statistics peer 
+    P/0/0/CPU0:Devicevr#show msdp statistics peer 
     Fri Jun 16 15:52:01.005 UTC
     MSDP Peer Statistics :- default
     Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
@@ -1233,7 +1233,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     }
 
     device_output_3 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp statistics peer 10.4.1.1' +++
+    +++ Device: executing command 'show msdp statistics peer 10.4.1.1' +++
     show msdp statistics peer 10.4.1.1
     Wed Nov 20 16:36:52.240 UTC
     MSDP Peer Statistics :- default
@@ -1247,7 +1247,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
                    0 SAs, 0 SA Requests
                    0 SA responses
         SA msgs  : 31083 received, 0 sent
-    RP/0/RP0/CPU0:R2_xr#
+    RP/0/RP0/CPU0:Device#
     '''}
 
     expected_output_3 = {
@@ -1286,7 +1286,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ R2_xr: executing command 'show msdp vrf VRF1 statistics peer 10.4.1.1' +++
+    +++ Device: executing command 'show msdp vrf VRF1 statistics peer 10.4.1.1' +++
     show msdp vrf VRF1 statistics peer 10.4.1.1
     Wed Nov 20 16:37:11.526 UTC
     MSDP Peer Statistics :- VRF1
@@ -1300,7 +1300,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
                    0 SAs, 0 SA Requests
                    0 SA responses
         SA msgs  : 31095 received, 0 sent
-    RP/0/RP0/CPU0:R2_xr#
+    RP/0/RP0/CPU0:Device#
     '''}
 
     expected_output_4 = {
