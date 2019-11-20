@@ -2045,6 +2045,22 @@ class ShowPlatform(ShowPlatformSchema):
                 sub_dict['insert_time'] = m.groupdict()['insert_time']
                 continue
 
+            m = p7.match(line)
+            if m:
+                fw_ver = m.groupdict()['fireware_ver']
+                cpld_ver = m.groupdict()['cpld_version']
+                slot = m.groupdict()['slot']
+                if 'slot' not in platform_dict:
+                    continue
+                if slot not in platform_dict['slot']:
+                    continue
+
+                for key, value in platform_dict['slot'][slot].items():
+                    for key, last in value.items():
+                        last['cpld_ver'] = m.groupdict()['cpld_version']
+                        last['fw_ver'] = m.groupdict()['fireware_ver']
+                continue
+
             m = p6_1.match(line)
             if m:                    
                 slot = m.groupdict()['slot']
@@ -2060,22 +2076,6 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['slot'][slot]['other']['']['name'] = ''
                 platform_dict['slot'][slot]['other']['']['state'] = m.groupdict()['state']
                 platform_dict['slot'][slot]['other']['']['insert_time'] = m.groupdict()['insert_time']
-                continue
-
-            m = p7.match(line)
-            if m:
-                fw_ver = m.groupdict()['fireware_ver']
-                cpld_ver = m.groupdict()['cpld_version']
-                slot = m.groupdict()['slot']
-                if 'slot' not in platform_dict:
-                    continue
-                if slot not in platform_dict['slot']:
-                    continue
-
-                for key, value in platform_dict['slot'][slot].items():
-                    for key, last in value.items():
-                        last['cpld_ver'] = m.groupdict()['cpld_version']
-                        last['fw_ver'] = m.groupdict()['fireware_ver']
                 continue
 
         return platform_dict

@@ -112,7 +112,7 @@ class ShowVtpStatusSchema(MetaParser):
                         Optional('primary_description'): str,
                         Optional('md5_digest'): str,
                     },
-                    'unknown': {
+                    Optional('unknown'): {
                         'enabled': bool,
                         'operating_mode': str,
                     }
@@ -237,7 +237,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
 
                 if version == '3':
                     if 'feature' not in ret_dict['vtp']:
-                        ret_dict['vtp']['feature'] = {'vlan': {}, 'mst': {}, 'unknown': {}}
+                        ret_dict['vtp']['feature'] = {'vlan': {}, 'mst': {}}
 
                 continue
 
@@ -411,6 +411,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             # --------------
             m = p19.match(line)
             if m:
+                unknown_dict = {'unknown': {}}
+                ret_dict['vtp']['feature'].update(unknown_dict)
                 if version == '3':
                     feature = 'unknown'
 

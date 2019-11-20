@@ -36,25 +36,47 @@
     * Added ShowIpCefInternal
         * show ip cef {ip} internal
         * show ip cef internal
-
     * Added ShowFlowMonitorCache for command;
         * show flow monitor {name} cache
     * Added ShowFlowMonitorCacheRecord for command;
         * show flow monitor {name} cache format record
 	* Enhanced Dir
 		* added 'dir {directory}' support
-
-
     * Updated ShowIpBgpDetail for:
         * show ip bgp {address_family} all detail
-
+    * Added ShowIssuStateDetail (cat9500)
+        * show issu state detail
+    * Added ShowIssuRollbackTimer (cat9500)
+        * show issu rollback-timer
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
         * 'show interface description'
         * 'show interface {interface} description'
-	* Enhanced Dir
-		* added 'dir {directory}' support
+    * Added ShowAccessLists for commands:
+        * 'show access-lists'
+        * 'show access-lists {acl}'
+        * 'show access-lists summary'
+    * Enhanced Dir
+        * added 'dir {directory}' support
+    * Added ShowIsis for commands:
+        * 'show isis'
+        * 'show isis vrf {vrf}'
+    * Added ShowIsisInterface for commands:
+        * 'show isis interface'
+        * 'show isis interface vrf {vrf}'
+    * Added ShowIsisSpfLogDetail for commands:
+        * 'show isis spf-log detail'
+        * 'show isis spf-log detail vrf {vrf}'
+    * Added ShowIsisAdjacency for commands:
+        * 'show isis adjacency'
+        * 'show isis adjacency vrf {vrf}'
+    * Added ShowIsisHostname for commands:
+        * 'show isis hostname'
+        * 'show isis hostname vrf {vrf}'
+    * Added ShowIsisDatabaseDetail for commands:
+        * 'show isis database detail'
+        * 'show isis database detail vrf {vrf}'
 
 * IOS
     * Added ShowInterfacesDescription for commands;
@@ -141,6 +163,8 @@
         * Updated regex to support various outputs
     * Updated ShowBgpSessions
         * Updated regex to accommodate different formats
+    * Updated ShowIgmpGroupsDetail
+        * Updated schema and patten match for source list
 
 * NXOS
     * ShowIpOspf
@@ -150,10 +174,14 @@
         * Parser schema and regex to support more output
     * Updated ShowVersion:
 	    * Updated regex matching for platform:chassis and platform:model
+    * Updated ShowIpOspfInterfaceVrfAll
+        * Changed keywords schema to optional
 
 * IOSXE
     * Updated ShowAuthenticationSessions
         * Changed keyword to Optional
+        * Added keyword to schema
+        * Added regex to support new output
     * Updated ShowIpRoute for:
         * show ip route vrf {vrf} {protocol}
         * show ip route vrf {vrf}
@@ -178,22 +206,24 @@
         * show ip cef internal
         * show ip cef {prefix} internal
         * show ip cef vrf {vrf} {prefix} internal
-
     * Updated ShowBgpDetailSuperParser for:
-        * show ip bgp {address_family} vrf {vrf} detail 
-
+        * show ip bgp {address_family} vrf {vrf} detail
     * Updated ShowVersion:
-	    * Removed extra spaces in platform keyword
-
-
-* IOSXR
-    * Updated ShowBgpSessions
-        * Updated regex to accommodate different formats
-
-* IOSXE
-    * Updated ShowVersion
         * Added keywords to schema
         * Added regex for unparsed outputs
+	    * Removed extra spaces in platform keyword
+    * Updated ShowPlatform
+        * Updated parser logic to support c8300 platform
+    * Updated ShowIpOspfSegmentRoutingSidDatabase for:
+        * Supporting more than one entry under one sid
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+        * Added keywords to schema
+        * Added and changed regex to accommodate different outputs
+    * Updated ShowSegmentRoutingTrafficEngPolicy for:
+        * Better support for hop configurations
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Updated regex and added optional key to support more outputs
+
 * IOS
     * Updated ShowInventory
         * Added regex to support various outputs
@@ -201,23 +231,11 @@
         * changed backup_nexthop and backup_nexthop to optional
     * Updated ShowVersion
 	    * Corrected the value in os key
+    * Updated ShowVtpStatus
+	    * Updated schema to fix customer issue for show vtp status
 
 * JUNOS
     * Enhanced ShowOspfInterfaceBrief:
         * Added command 'show ospf interface {interface} brief'
     * Enhanced ShowInterfacesTerse:
         * Added command 'show interfaces {interface} terse'
-
-
-* NXOS
-    * Updated ShowIpOspfInterfaceVrfAll
-        * Changed keywords schema to optional
-* IOSXE
-    * Updated ShowAuthenticationSessionsInterfaceDetails
-        * Added keywords to schema
-        * Added and changed regex to accommodate different outputs
-    
-    * Updated ShowAuthenticationSessions
-        * Added keyword to schema
-        * Added regex to support new output
-
