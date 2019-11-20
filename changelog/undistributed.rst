@@ -107,7 +107,9 @@
 * IOSXR
     * Added ShowMsdpPeer for commands:
         * 'show msdp peer'
+        * 'show msdp peer {peer}'
         * 'show msdp vrf {vrf} peer'
+        * 'show msdp vrf {vrf} peer {peer}'
     * Added ShowMsdpContext for commands:
         * 'show msdp context'
         * 'show msdp vrf {vrf} context'
@@ -116,10 +118,14 @@
         * 'show msdp vrf {vrf} summary'
     * Added ShowMsdpSaCache for commands:
         * 'show msdp sa-cache'
+        * 'show msdp sa-cache {source_addr}'
         * 'show msdp vrf {vrf} sa-cache'
+        * 'show msdp vrf {vrf} sa-cache {source_addr}'
     * Added ShowMsdpStatisticsPeer for commands:
         * 'show msdp statistics peer'
+        * 'show msdp statistics peer {peer}'
         * 'show msdp vrf {vrf} statistics peer'
+        * 'show msdp vrf {vrf} statistics peer {peer}'
     * Added ShowBgpNeighbors for commands:
         * 'show bgp neighbors'
         * 'show bgp neighbors {neighbor}'

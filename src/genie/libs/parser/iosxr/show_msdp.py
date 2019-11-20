@@ -1,7 +1,10 @@
 """show_msdp.py
 IOSXR parsers for the following commands
-
     * 'show msdp peer'
+    * 'show msdp context'
+    * 'show msdp summary'
+    * 'show msdp sa-cache'
+    * 'show msdp statistics peer'
 """
 
 # Python
@@ -80,17 +83,25 @@ class ShowMsdpPeerSchema(MetaParser):
 class ShowMsdpPeer(ShowMsdpPeerSchema):
     """ Parser for:
         * 'show msdp peer'
+        * 'show msdp peer <peer>'
         * 'show msdp vrf <vrf> peer'
+        * 'show msdp vrf <vrf> peer <peer>'
     """
 
     cli_command = ['show msdp vrf {vrf} peer',
-                   'show msdp peer']
+                   'show msdp peer',
+                   'show msdp peer {peer}',
+                   'show msdp vrf {vrf} peer {peer}']
     exclude = ['elapsed_time', 'tlv_message', 'sa_message']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', peer='', output=None):
         if output is None:
-            if vrf:
+            if vrf and not peer:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif peer and not vrf:
+                cmd = self.cli_command[2].format(peer=peer)
+            elif peer and vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, peer=peer)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -189,12 +200,14 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
 
                 if not vrf:
                     vrf = 'default'
+                if not peer:
+                    peer = group_dict['peer']
 
                 peer_dict = parsed_dict.setdefault(
                     'vrf', {}).setdefault(
                     vrf, {}).setdefault(
                     'peer', {}).setdefault(
-                    group_dict['peer'], {})
+                    peer, {})
 
                 peer_dict['peer_as'] = int(group_dict['peer_as'])
                 peer_dict['peer_name'] = group_dict['peer_name']
@@ -943,7 +956,7 @@ class ShowMsdpSaCacheSchema(MetaParser):
 
     """ Schema for:
         * 'show msdp sa-cache'
-        * 'show msdp vrf <vrf> sa-cache'
+        * 'show msdp vrf <vrf> sa-cache <>'
     """
     schema = {
         'vrf': {
@@ -981,12 +994,18 @@ class ShowMsdpSaCacheSchema(MetaParser):
 class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
     cli_command = ['show msdp vrf {vrf} sa-cache',
-                   'show msdp sa-cache', ]
+                   'show msdp sa-cache',
+                   'show msdp sa-cache {source_addr}',
+                   'show msdp vrf {vrf} sa-cache {source_addr}']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', source_addr='', output=None):
         if output is None:
-            if vrf:
+            if vrf and not source_addr:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif source_addr and not vrf:
+                cmd = self.cli_command[2].format(source_addr=source_addr)
+            elif vrf and source_addr:
+                cmd = self.cli_command[3].format(vrf=vrf, source_addr=source_addr)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -1021,23 +1040,24 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
             if result:
                 group = result.groupdict()
 
-                source_addr = group['source_addr']
-                addres_group = group['group']
+                group_addr = group['group']
                 rp_address = group['rp_address']
                 peer_as = group['peer_as']
                 up_time = group['up_time']
                 expire = group['expire']
 
-                sa_cache = '{} {}'.format(addres_group, source_addr)
                 if not vrf:
                     vrf = 'default'
+                if not source_addr:
+                    source_addr = group['source_addr']
+                sa_cache = '{} {}'.format(group_addr, source_addr)
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
 
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
-                sa_cache_dict['group'] = addres_group
+                sa_cache_dict['group'] = group_addr
                 sa_cache_dict['source_addr'] = source_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire
@@ -1124,12 +1144,18 @@ class ShowMsdpStatisticsPeerSchema(MetaParser):
 class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
 
     cli_command = ['show msdp statistics peer',
-                   'show msdp vrf {vrf} statistics peer']
+                   'show msdp vrf {vrf} statistics peer',
+                   'show msdp statistics peer {peer}',
+                   'show msdp vrf {vrf} statistics peer {peer}']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', peer='', output=None):
         if output is None:
-            if vrf:
+            if vrf and not peer:
                 cmd = self.cli_command[1].format(vrf=vrf)
+            elif peer and not vrf:
+                cmd = self.cli_command[2].format(peer=peer)
+            elif vrf and peer:
+                cmd = self.cli_command[3].format(vrf=vrf, peer=peer)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -1169,13 +1195,18 @@ class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
             m = r1.match(line)
             if m:
                 group = m.groupdict()
+
                 if not vrf:
                     vrf = 'default'
+                if peer:
+                    peer_addr = peer
+                else:
+                    peer_addr = group['peer_address']
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
                 peer_dict = vrf_dict.setdefault('peer', {})\
-                    .setdefault(group['peer_address'], {})
+                    .setdefault(peer_addr, {})
 
                 peer_dict['as'] = int(group['as'])
                 peer_dict['state'] = group['state']
