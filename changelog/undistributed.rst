@@ -44,10 +44,19 @@
 		* added 'dir {directory}' support
     * Updated ShowIpBgpDetail for:
         * show ip bgp {address_family} all detail
-    * Added ShowIssuStateDetail (cat9500)
-        * show issu state detail
-    * Added ShowIssuRollbackTimer (cat9500)
-        * show issu rollback-timer
+    * cat9500
+        * Added ShowIssuStateDetail
+            * show issu state detail
+        * Added ShowIssuRollbackTimer
+            * show issu rollback-timer
+        * Added ShowVersion
+            * show version
+        * Added ShowRedundancy
+            * show redundancy
+        * Added ShowInventory
+            * show inventory
+        * Added ShowPlatform
+            * show platform
 
 * NXOS
     * Added ShowInterfacesDescription for commands;
