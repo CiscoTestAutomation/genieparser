@@ -409,6 +409,7 @@ class ShowIpArpstatisticsVrfAllSchema(MetaParser):
 					'invalid_protocol_packet': int,
 					'appeared_on_a_wrong_interface': int,
 					'incorrect_length': int,
+					Optional('source_ip_address_is_our_own'): int,
 				}
 			},
 			'adjacency':{
@@ -454,9 +455,9 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 
 		# Total 0, Requests 22632, Replies 6582, Requests on L2 0, Replies on L2 0,
 		p2 = re.compile(r'^\s*Total +(?P<total>[\w]+), +Requests '
-			'+(?P<requests>[\w]+), +Replies +(?P<replies>[\w]+), '
-			'+Requests +on +L2 +(?P<l2_requests>[\w]+), +Replies +on +L2 '
-			'+(?P<l2_replies>[\w]+)(,)?$')
+			r'+(?P<requests>[\w]+), +Replies +(?P<replies>[\w]+), '
+			r'+Requests +on +L2 +(?P<l2_requests>[\w]+), +Replies +on +L2 '
+			r'+(?P<l2_replies>[\w]+)(,)?$')
 
 		# Gratuitous 58, Tunneled 0, Dropped 0
 		p3 = re.compile(r'^\s*Gratuitous +(?P<gratuitous>[\w]+), +Tunneled '
@@ -465,19 +466,21 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		# Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath 0, Snooped 0, Dropped 28218  on Server Port 0 
 		# Proxy arp 0, Local-Proxy arp 0, Tunneled 0, Fastpath 0, Snooped 0, Dropped 4
 		p4 = re.compile(r'^Proxy +arp +(?P<proxy_arp>[\w]+), +Local-Proxy +'
-			'arp +(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +'
-			'(?P<enhanced_proxy_arp>[\w]+),)?( +Anycast +proxy +Proxy +'
-			'arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +'
-			'arp +(?P<l2_port_track_proxy_arp>[\w]+),?)?( +Tunneled +'
-			'(?P<tunneled>[\w]+))?,?( +Fastpath +(?P<fastpath>[\w]+))?,?'
-			'( +Snooped +(?P<snooped>[\w]+))?,?( +Dropped +(?P<dropped>[\w]+))'
-			'?,?( +on +Server +Port +(?P<dropped_server_port>[\w]+))?')
+			r'arp +(?P<local_proxy_arp>[\w]+),( +Enhanced +Proxy +arp +'
+			r'(?P<enhanced_proxy_arp>[\w]+),)?( +Anycast +proxy +Proxy +'
+			r'arp +(?P<anycast_proxy_arp>[\w]+),)?( +L2 +Port-track +Proxy +'
+			r'arp +(?P<l2_port_track_proxy_arp>[\w]+),?)?( +Tunneled +'
+			r'(?P<tunneled>[\w]+))?,?( +Fastpath +(?P<fastpath>[\w]+))?,?'
+			r'( +Snooped +(?P<snooped>[\w]+))?,?( +Dropped +(?P<dropped>[\w]+))'
+			r'?,?( +on +Server +Port +(?P<dropped_server_port>[\w]+))?')
 
 		# MBUF operation failed               : 0
-		p5 = re.compile(r'^\s*MBUF +operation +failed +: +(?P<mbuf_operation_failed>[\d]+)$')
+		p5 = re.compile(r'^\s*MBUF +operation +failed +: '
+						r'+(?P<mbuf_operation_failed>[\d]+)$')
 
 		# Context not yet created             : 0
-		p6 = re.compile(r'^\s*Context +not +yet +created +: +(?P<context_not_created>[\d]+)$')
+		p6 = re.compile(r'^\s*Context +not +yet +created +: '
+						r'+(?P<context_not_created>[\d]+)$')
 
 		# Invalid context                     : 0
 		p7 = re.compile(r'^\s*Invalid +context +: +(?P<invalid_context>[\d]+)$')
@@ -492,13 +495,15 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p10 = re.compile(r'^\s*Invalid +DEST +IP +: +(?P<invalid_dest_ip>[\d]+)$')
 
 		# Destination is our own IP           :  26
-		p11 = re.compile(r'^\s*Destination +is +our +own +IP +: +(?P<destnination_is_our_own_ip>[\d]+)$')
+		p11 = re.compile(r'^\s*Destination +is +our +own +IP +: '
+						 r'+(?P<destnination_is_our_own_ip>[\d]+)$')
 
 		# Unattached IP                       :  0
 		p12 = re.compile(r'^\s*Unattached +IP +: +(?P<unattached_ip>[\d]+)$')
 
 		# Adjacency Couldn't be added         :  0
-		p13 = re.compile(r'^\s*Adjacency +Couldn\'t +be +added +: +(?P<adjacency_couldnt_be_added>[\d]+)$')
+		p13 = re.compile(r'^\s*Adjacency +Couldn\'t +be +added +: '
+						 r'+(?P<adjacency_couldnt_be_added>[\d]+)$')
 
 		# Null Source IP                      :  0
 		p14 = re.compile(r'^\s*Null +Source +IP +: +(?P<null_source_ip>[\d]+)$')
@@ -510,17 +515,21 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p16 = re.compile(r'^\s*Client +Enqueue +Failed +: +(?P<client_enqueue_failed>[\d]+)$')
 
 		# Dest. not reachable for proxy arp   :  0
-		p17 = re.compile(r'^\s*Dest. +not +reachable +for +proxy +arp +: +(?P<dest_not_reachable_for_proxy_arp>[\d]+)$')
+		p17 = re.compile(r'^\s*Dest. +not +reachable +for +proxy +arp +: '
+						 r'+(?P<dest_not_reachable_for_proxy_arp>[\d]+)$')
 
 		# Dest. unreachable for enhanced proxy:  0
 		# Dest. unreachable for enhanced proxy :  0
-		p18 = re.compile(r'^\s*Dest. +unreachable +for +enhanced +proxy( +)?: +(?P<dest_unreachable_for_enhanced_proxy>[\d]+)$')
+		p18 = re.compile(r'^\s*Dest. +unreachable +for +enhanced +proxy( +)?: '
+						 r'+(?P<dest_unreachable_for_enhanced_proxy>[\d]+)$')
 
 		# Dest. on L2 port being tracked      :  0
-		p19 = re.compile(r'^\s*Dest. +on +L2 +port +being +tracked +: +(?P<destnination_on_l2_port_tracked>[\d]+)$')
+		p19 = re.compile(r'^\s*Dest. +on +L2 +port +being +tracked +: '
+						 r'+(?P<destnination_on_l2_port_tracked>[\d]+)$')
 
 		# Invalid Local proxy arp             :  0
-		p20 = re.compile(r'^\s*Invalid +Local +proxy +arp +: +(?P<invalid_local_proxy_arp>[\d]+)$')
+		p20 = re.compile(r'^\s*Invalid +Local +proxy +arp +: '
+						 r'+(?P<invalid_local_proxy_arp>[\d]+)$')
 
 		# Invalid proxy arp                   :  0
 		p21 = re.compile(r'^\s*Invalid +proxy +arp +: +(?P<invalid_proxy_arp>[\d]+)$')
@@ -529,102 +538,141 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 		p22 = re.compile(r'^\s*VIP +is +not +active +: +(?P<vip_is_not_active>[\d]+)$')
 
 		# ARP refresh skipped over core and flooded on server :  0
-		p23 = re.compile(r'^\s*ARP +refresh +skipped +over +core +and +flooded +on +server +: +(?P<arp_refresh_skipped_over_core_and_flooded>[\d]+)$')
+		p23 = re.compile(r'^\s*ARP +refresh +skipped +over +core +and +flooded '
+						 r'+on +server +: +(?P<arp_refresh_skipped_over_core_'
+						 r'and_flooded>[\d]+)$')
 
 		# Appeared on a wrong interface :  0
-		p24 = re.compile(r'^\s*Appeared +on +a +wrong +interface +: +(?P<appeared_on_a_wrong_interface>[\d]+)$')
+		p24 = re.compile(r'^\s*Appeared +on +a +wrong +interface +: '
+					 	 r'+(?P<appeared_on_a_wrong_interface>[\d]+)$')
 
 		# Incorrect length                    : 0
 		p25 = re.compile(r'^\s*Incorrect +length +: +(?P<incorrect_length>[\d]+)$')
 
 		# Invalid protocol packet                    : 0
-		p26 = re.compile(r'^\s*Invalid +protocol +packet +: +(?P<invalid_protocol_packet>[\d]+)$')
+		p26 = re.compile(r'^\s*Invalid +protocol +packet +: '
+						 r'+(?P<invalid_protocol_packet>[\d]+)$')
 
 		# Invalid Hardware type                  : 0
-		p27 = re.compile(r'^\s*Invalid +Hardware +type +: +(?P<invalid_hardwaretype>[\d]+)$')
+		p27 = re.compile(r'^\s*Invalid +Hardware +type +: '
+						 r'+(?P<invalid_hardwaretype>[\d]+)$')
 
 		# ARP adjacency statistics
 		p27_1 = re.compile(r'^\s*ARP adjacency statistics$')
 
 		# Invalid layer 2 address length      : 0
-		p30 = re.compile(r'^\s*Invalid +layer +2 +address +length +: +(?P<invalid_layer2_address_length>[\d]+)$')
+		p30 = re.compile(r'^\s*Invalid +layer +2 +address +length +: '
+						 r'+(?P<invalid_layer2_address_length>[\d]+)$')
 
 		# Invalid source IP address           : 28
-		p31 = re.compile(r'^\s*Invalid +source +IP +address +: +(?P<invalid_source_ip_address>[\d]+)$')
+		p31 = re.compile(r'^\s*Invalid +source +IP +address +: '
+						 r'+(?P<invalid_source_ip_address>[\d]+)$')
 
 		# Source IP address is our own        : 0
-		p32 = re.compile(r'^\s*Source +IP +address +is +our +own +: +(?P<source_ip_address_is_our_own>[\d]+)$')
+		p32 = re.compile(r'^\s*Source +IP +address +is +our +own +: '
+						 r'+(?P<source_ip_address_is_our_own>[\d]+)$')
 
 		# No mem to create per intf structure : 0
-		p32 = re.compile(r'^\s*No +mem +to +create +per +intf +structure +: +(?P<no_mem_to_create_per_intf_structure>[\d]+)$')
+		p32 = re.compile(r'^\s*No +mem +to +create +per +intf +structure +: '
+						 r'+(?P<no_mem_to_create_per_intf_structure>[\d]+)$')
 
 		# Invalid layer 3 address length      : 0
-		p33 = re.compile(r'^\s*Invalid +layer +3 +address +length +: +(?P<invalid_layer3_address_length>[\d]+)$')
+		p33 = re.compile(r'^\s*Invalid +layer +3 +address +length +: '
+						 r'+(?P<invalid_layer3_address_length>[\d]+)$')
 
 		# Source address mismatch with subnet : 0
-		p34 = re.compile(r'^\s*Source +address +mismatch +with +subnet +: +(?P<source_address_mismatch_with_subnet>[\d]+)$')
+		p34 = re.compile(r'^\s*Source +address +mismatch +with +subnet +: '
+						 r'+(?P<source_address_mismatch_with_subnet>[\d]+)$')
 
 		# Directed broadcast source           : 0
-		p35 = re.compile(r'^\s*Directed +broadcast +source +: +(?P<directed_broadcast_source>[\d]+)$')
+		p35 = re.compile(r'^\s*Directed +broadcast +source +: '
+						 r'+(?P<directed_broadcast_source>[\d]+)$')
 
 		# Invalid destination IP address      : 0
-		p36 = re.compile(r'^\s*Invalid +destination +IP +address +: +(?P<invalid_destination_ip_address>[\d]+)$')
+		p36 = re.compile(r'^\s*Invalid +destination +IP +address +: '
+						 r'+(?P<invalid_destination_ip_address>[\d]+)$')
 
 		# Non-local destination IP address    : 20421
-		p37 = re.compile(r'^\s*Non-local +destination +IP +address +: +(?P<non_local_destination_ip_address>[\d]+)$')
+		p37 = re.compile(r'^\s*Non-local +destination +IP +address +: '
+						 r'+(?P<non_local_destination_ip_address>[\d]+)$')
 
 		# Invalid source MAC address          : 0
-		p38 = re.compile(r'^\s*Invalid +source +MAC +address +: +(?P<invalid_source_mac_address>[\d]+)$')
+		p38 = re.compile(r'^\s*Invalid +source +MAC +address +: '
+						 r'+(?P<invalid_source_mac_address>[\d]+)$')
 
 		# Source MAC address is our own       : 0
-		p39 = re.compile(r'^\s*Source +MAC +address +is +our +own +: +(?P<source_mac_address_is_our_own>[\d]+)$')
+		p39 = re.compile(r'^\s*Source +MAC +address +is +our +own +: '
+						 r'+(?P<source_mac_address_is_our_own>[\d]+)$')
 
 		# Received before arp initialization  : 0
-		p40 = re.compile(r'^\s*Received +before +arp +initialization +: +(?P<received_before_arp_initialization>[\d]+)$')
+		p40 = re.compile(r'^\s*Received +before +arp +initialization +: '
+						 r'+(?P<received_before_arp_initialization>[\d]+)$')
 
 		# L2 packet on untrusted L2 port      : 0
-		p41 = re.compile(r'^\s*L2 +packet +on +untrusted +L2 +port +: +(?P<l2_packet_on_untrusted_l2_port>[\d]+)$')
+		p41 = re.compile(r'^\s*L2 +packet +on +untrusted +L2 +port +: '
+						 r'+(?P<l2_packet_on_untrusted_l2_port>[\d]+)$')
 
 		# Packet with VIP on standby FHRP     : 0
-		p42 = re.compile(r'^\s*Packet +with +VIP +on +standby +FHRP +: +(?P<packet_with_vip_on_standby_fhrp>[\d]+)$')
+		p42 = re.compile(r'^\s*Packet +with +VIP +on +standby +FHRP +: '
+						 r'+(?P<packet_with_vip_on_standby_fhrp>[\d]+)$')
 
 		# Requests came for exising entries   : 15
-		p43 = re.compile(r'^\s*Requests +came +for +exising +entries +: +(?P<requests_came_for_exising_entries>[\d]+)$')
+		p43 = re.compile(r'^\s*Requests +came +for +exising +entries +: '
+						 r'+(?P<requests_came_for_exising_entries>[\d]+)$')
 
 		# Requests came on a L2 interface     : 0
 		# Requests came on a l2 interface     : 0
-		p44 = re.compile(r'^\s*Requests +came +on +a +(l|L)2 +interface +: +(?P<requests_came_on_a_l2_interface>[\d]+)$')
+		p44 = re.compile(r'^\s*Requests +came +on +a +(l|L)2 +interface +: '
+						 r'+(?P<requests_came_on_a_l2_interface>[\d]+)$')
 
 		# L2FM query failed for a L2 Address  : 0
-		p45 = re.compile(r'^\s*L2FM +query +failed +for +a +L2 +Address +: +(?P<l2fm_query_failed_for_a_l2address>[\d]+)$')
+		p45 = re.compile(r'^\s*L2FM +query +failed +for +a +L2 +Address +: '
+						 r'+(?P<l2fm_query_failed_for_a_l2address>[\d]+)$')
 
 		# Dropping due to tunneling failures  : 0
-		p46 = re.compile(r'^\s*Dropping due to tunneling failures +: +(?P<dropping_due_to_tunneling_failures>[\d]+)$')
+		p46 = re.compile(r'^\s*Dropping due to tunneling failures +: '
+						 r'+(?P<dropping_due_to_tunneling_failures>[\d]+)$')
 
 		# Glean requests recv count : 71
-		p47 = re.compile(r'^\s*Glean +requests +recv +count +: +(?P<glean_requests_recv_count>[\d]+)$')
+		p47 = re.compile(r'^\s*Glean +requests +recv +count +: '
+						 r'+(?P<glean_requests_recv_count>[\d]+)$')
 
 		# ARP refresh requests received from clients: 0
-		p48 = re.compile(r'^\s*ARP +refresh +requests +received +from +clients: +(?P<arp_refresh_requests_received_from_clients>[\d]+)$')
+		p48 = re.compile(r'^\s*ARP +refresh +requests +received +from +clients: '
+					 	 r'+(?P<arp_refresh_requests_received_from_clients>[\d]+)$')
 
 		# Number of Signals received from L2rib : 0
-		p49 = re.compile(r'^\s*Number +of +Signals +received +from +L2rib +: +(?P<number_of_signals_received_from_l2rib>[\d]+)$')
+		p49 = re.compile(r'^\s*Number +of +Signals +received +from +L2rib +: '
+						 r'+(?P<number_of_signals_received_from_l2rib>[\d]+)$')
 
 		# Adds 43, Deletes 12, Timeouts 12
 		p50 = re.compile(r'^\s*Adds +(?P<adjacency_adds>[\w]+), +Deletes '
-			'+(?P<adjacency_deletes>[\w]+), +Timeouts +(?P<adjacency_timeouts>[\w]+)$')
+						 r'+(?P<adjacency_deletes>[\w]+), +Timeouts '
+						 r'+(?P<adjacency_timeouts>[\w]+)$')
 
 		# Failed due to limits: 0
-		p51 = re.compile(r'^\s*Failed +due +to +limits: +(?P<failed_due_to_limits>[\d]+)$')
+		p51 = re.compile(r'^\s*Failed +due +to +limits: '
+						 r'+(?P<failed_due_to_limits>[\d]+)$')
 
 		# Non-active FHRP dest IP address. Learn and drop
-		p52 = re.compile(r'^\s*Non-active +FHRP +dest +IP +address. +Learn +and +drop$')
+		p52 = re.compile(r'^\s*Non-active +FHRP +dest +IP +address. '
+						 r'+Learn +and +drop$')
 
 		# Grat arp received on proxy-arp-enabled interface
-		p53 = re.compile(r'^\s*Grat +arp +received +on +proxy-arp-enabled +interface$')
+		p53 = re.compile(r'^\s*Grat +arp +received +on +proxy-arp-enabled '
+						 r'+interface$')
 
 		#                                     : 0
 		p54 = re.compile(r'^\s*: +(?P<statistic_number>[\d]+)$')
+
+		# 0, Snooped 0, Dropped 181721798, on Server Port 0
+		p55 = re.compile(r'(?P<fastpath>[\w]+)\,( +Snooped +(?P<snooped>[\w]+))'
+						 r'?\,?( +Dropped +(?P<dropped>[\w]+))\,?( +on +Server '
+						 r'+Port +(?P<dropped_server_port>[\w]+))')
+		
+		# Source IP address is our own        : 1
+		p56 = re.compile(r'^Source +IP +address +is +our +own +\: '
+						 r'+(?P<source_ip_address_is_our_own>\d+)$')
 
 		for line in out.splitlines():
 			line = line.strip()
@@ -1051,4 +1099,22 @@ class ShowIpArpstatisticsVrfAll(ShowIpArpstatisticsVrfAllSchema):
 					int(m.groupdict()['statistic_number'])
 				key = ''
 				continue
+			
+			m55 = p55.match(line)
+			if m55:
+				group = m55.groupdict()
+				received_dict = ret_dict['statistics']['received']
+				received_dict.update({k:
+                                    int(v) for k, v in group.items() if v})
+				
+				continue
+			
+			m56 = p56.match(line)
+			if m56:
+				drop_dict = ret_dict['statistics']['received']['drops_details']
+				drop_dict.update({'source_ip_address_is_our_own': int(
+					m56.groupdict()['source_ip_address_is_our_own'])})
+
+				continue
+
 		return ret_dict

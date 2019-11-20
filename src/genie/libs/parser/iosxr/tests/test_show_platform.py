@@ -1639,6 +1639,13 @@ class test_dir(unittest.TestCase):
         parsed_output2 = dir_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
 
+    def test_dir_golden2_with_arg(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        dir_obj2 = Dir(device=self.device)
+        parsed_output2 = dir_obj2.parse(directory='disk0a:/usr')
+        self.assertEqual(parsed_output2,self.golden_parsed_output2)
+
     def test_dir_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)

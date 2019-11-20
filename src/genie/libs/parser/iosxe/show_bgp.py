@@ -765,6 +765,9 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('next_hop_igp_metric'): str,
                                                 Optional('gateway'): str,
                                                 Optional('route_info'): str,
+                                                Optional('route_status'): str,
+                                                Optional('imported_path_from'): str,
+                                                Optional('imported_safety_path'): bool,
                                                 Optional('next_hop_via'): str,
                                                 Optional('update_group'): Any(),
                                                 Optional('status_codes'): str,
@@ -836,7 +839,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
     '''
 
     def cli(self, address_family='', vrf='', rd='', output=None):
-
         # Init dictionary
         ret_dict = {}
         subdict = ''
@@ -846,6 +848,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         original_address_family = address_family
         refresh_epoch_flag = False
         route_info = ''
+        route_status = ''
+        imported_path_from = ''
+        imported_safety_path = False
         refresh_epoch = None
         cmd_vrf = vrf if vrf else None
         # For address family: IPv4 Unicast
@@ -995,8 +1000,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
         # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
         # 62000, (Received from a RR-client)
-        p17 = re.compile(r'^\s*(?P<route_info>[a-zA-Z0-9\-\.\,\{\}\s\(\)\.\/\:\[\]]+)$')
-
+        # 2, imported safety path from 50000:2:172.17.0.0/16
+        p17=re.compile(r'^(?!.*(Community))\s*(?P<route_info>'
+            r'[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)(\,)?(?P<route_status>'
+            r'[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
 
         for line in output.splitlines():
             line = line.rstrip()
@@ -1285,6 +1292,18 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 # Adding the keys we got from 'route_info' line
                 if route_info:
                     subdict['route_info'] = route_info
+                   
+                # Adding the keys we got from 'route_status' line                   
+                if route_status:
+                    subdict['route_status'] = route_status
+                    
+                # Adding the keys we got from 'imported_path_from' line                   
+                if imported_path_from:
+                    subdict['imported_path_from'] = imported_path_from
+
+                # Adding the keys we got from 'imported_safety_path' line                   
+                if imported_safety_path:
+                    subdict['imported_safety_path'] = imported_safety_path
 
                 continue
 
@@ -1447,6 +1466,18 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             m = p17.match(line)
             if m and refresh_epoch_flag:
                 route_info = str(m.groupdict()['route_info'])
+                if m.groupdict()['route_status']:
+                    route_status = str(m.groupdict()['route_status'].strip(' '))
+                    if route_status.startswith('(') and route_status.endswith(')'):
+                        route_status = route_status.strip("()")
+                    elif 'imported path from' in route_status:
+                        imported_path_from = route_status.lstrip('imported path from')
+                        imported_safety_path = False
+                        route_status = ''
+                    elif 'imported safety path from' in route_status:
+                        imported_path_from = route_status.lstrip('imported safety path from')
+                        imported_safety_path = True
+                        route_status = ''
                 refresh_epoch_flag = False
                 continue
 
@@ -1475,7 +1506,6 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
 
     def cli(self, vrf='', route='', address_family='',output=None):
-
         if output is None:
             if vrf and route:
                 if address_family:
@@ -1581,11 +1611,13 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
         * 'show ip bgp {address_family} vrf {vrf} detail'
         * 'show ip bgp {address_family} rd {rd} detail'
         * 'show ip bgp {address_family} rd {rd} {route}'
+        * 'show ip bgp {address_family} all detail'
     '''
 
-    cli_command = ['show ip bgp {address_family} vrf {vrf} detail',
+    cli_command = ['show ip bgp {address_family} vrf {vrf} detail',    
                    'show ip bgp {address_family} rd {rd} detail',
-                   'show ip bgp {address_family} rd {rd} {route}'
+                   'show ip bgp {address_family} rd {rd} {route}',
+                   'show ip bgp {address_family} all detail'
                    ]
 
     def cli(self, address_family='', vrf='', rd='', route='', output=None):
@@ -1611,7 +1643,10 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                 else:
                     return ret_dict   
             else:
-                return ret_dict
+                if address_family:
+                    cmd = self.cli_command[3].format(address_family=address_family)
+                else:
+                    return ret_dict
             # Execute command
             show_output = self.device.execute(cmd)
         else:
