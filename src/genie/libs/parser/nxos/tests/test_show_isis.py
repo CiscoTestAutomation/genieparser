@@ -1288,6 +1288,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C9',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1370,6 +1371,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C6',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -1392,6 +1394,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C6',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -1414,6 +1417,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007BD',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1505,6 +1509,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C5',
                                     'extended_is_neighbor': {
                                         'R2_xr.00': {
@@ -1527,6 +1532,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '*',
                                     'instance': '0x00000B05',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1608,6 +1614,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C4',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1704,6 +1711,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007BF',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -1726,6 +1734,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C7',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -1748,6 +1757,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C9',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1867,6 +1877,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C1',
                                     'extended_is_neighbor': {
                                         'R2_xr.00': {
@@ -1889,6 +1900,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '*',
                                     'instance': '0x00000B05',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -1974,6 +1986,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C6',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -2047,6 +2060,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C6',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -2069,6 +2083,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '*',
                                     'instance': '0x00000B09',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -2146,6 +2161,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C6',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',
@@ -2233,6 +2249,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '',
                                     'instance': '0x000007C5',
                                     'extended_is_neighbor': {
                                         'R1_xe.00': {
@@ -2255,6 +2272,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'p_bit': 0,
                                     'overload_bit': 0,
                                     't_bit': 3,
+                                    'lsp_status': '*',
                                     'instance': '0x00000B06',
                                     'area_address': '49.0001',
                                     'nlpid': '0xCC 0x8E',

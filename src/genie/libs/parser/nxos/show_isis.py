@@ -1240,6 +1240,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             Any(): { # level
                                 Any(): { # lsp_id
                                     'lsp_id': str,
+                                    'lsp_status': str,
                                     'sequence': str,
                                     'checksum': str,
                                     'lifetime': int,
@@ -1334,7 +1335,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # R1_xe.00-00           0x000007CC   0xAF21    490        0/0/0/3
         # R3_nx.00-00         * 0x00000B05   0x7FA7    697        0/0/0/3
         p3 = re.compile(
-            r'^(?P<lsp_id>\S+)(\s*(?P<star>\*))? +(?P<sequence>\w+) +(?P<checksum>\w+) '
+            r'^(?P<lsp_id>\S+)(\s*(?P<lsp_status>[!*#?]+))? +(?P<sequence>\w+) +(?P<checksum>\w+) '
             r'+(?P<lifetime>[\d\*]+) +(?P<a>\d+)/(?P<p>\d+)/(?P<o>\d+)/(?P<t>\d+)$')
 
         #   Instance      :  0x000007C8
@@ -1425,6 +1426,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 sequence = group['sequence']
                 checksum = group['checksum']
                 lifetime = int(group['lifetime'])
+                lsp_status = group['lsp_status']
                 a = int(group['a'])
                 p = int(group['p'])
                 o = int(group['o'])
@@ -1439,6 +1441,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict['p_bit'] = p
                 lsp_dict['overload_bit'] = o
                 lsp_dict['t_bit'] = t
+                lsp_dict['lsp_status'] = lsp_status or ''
                 continue
 
             #   Instance      :  0x000007C8
