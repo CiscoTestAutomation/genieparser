@@ -1,6 +1,6 @@
 """ show_ospf.py
 
-Junos parsers for the following show commands:
+JunOs parsers for the following show commands:
     * show ospf interface brief
     * show ospf interface {interface} brief
     * show ospf interface brief instance {instance}
@@ -274,6 +274,7 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
                 intf_dict.update({'nbrs_count' : int(group['nbrs_count'])})
                 continue
 
+<<<<<<< HEAD
             # Type: P2P, Address: 172.16.76.25, Mask: 255.255.255.0, MTU: 1200, Cost: 100
             m = p2.match(line)
             if m:
@@ -345,4 +346,6 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
                 intf_dict.update({'priority': int(group['router_priority'])})
                 continue
 
+=======
+>>>>>>> 71a6fbcd239fc57998ed8092e8877215cb957201
         return ret_dict
