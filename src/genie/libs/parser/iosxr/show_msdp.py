@@ -1,10 +1,21 @@
 """show_msdp.py
 IOSXR parsers for the following commands
     * 'show msdp peer'
+    * 'show msdp peer {peer}'
+    * 'show msdp vrf {vrf} peer'
+    * 'show msdp vrf {vrf} peer {peer}'
     * 'show msdp context'
+    * 'show msdp vrf {vrf} context'
     * 'show msdp summary'
+    * 'show msdp vrf {vrf} summary'
     * 'show msdp sa-cache'
+    * 'show msdp sa-cache {group_addr}'
+    * 'show msdp vrf {vrf} sa-cache'
+    * 'show msdp vrf {vrf} sa-cache {group_addr}'
     * 'show msdp statistics peer'
+    * 'show msdp statistics peer {peer}'
+    * 'show msdp vrf {vrf} statistics peer'
+    * 'show msdp vrf {vrf} statistics peer {peer}'
 """
 
 # Python
