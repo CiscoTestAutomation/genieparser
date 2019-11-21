@@ -497,16 +497,16 @@ class ShowRedundancySchema(MetaParser):
 # =============================
 class ShowRedundancy(ShowRedundancySchema):
 
-    """Schema for show redundancy"""
+    """Parser for show redundancy"""
 
-    cli_command = 'show redundancy'
+    cli_command = ['show redundancy']
     exclude = ['available_system_uptime', 'uptime_in_curr_state']
 
 
     def cli(self, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -726,8 +726,8 @@ class ShowInventorySchema(MetaParser):
 
     schema = {
         Any():
-            {Optional('name'): str,
-             Optional('descr'): str,
+            {'name': str,
+             'descr': str,
              Optional('pid'): str,
              Optional('vid'): str,
              Optional('sn'): str,
@@ -760,33 +760,18 @@ class ShowInventory(ShowInventorySchema):
         # Init vars
         ret_dict = {}
 
-        # NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
-        # NAME: "StackPort5/2", DESCR: "StackPort5/2"
-        # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
-        # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
-        # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+        # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
                          ' +DESCR: +\"(?P<descr>.*)\"$')
 
-        # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
-        # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
-        # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
-        # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
-        # PID: ISR4331-3x1GE     , VID: V01  , SN:
-        # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
-        # PID: ISR4331/K9        , VID:      , SN:
-        # PID: , VID: 1.0  , SN: 1162722191
+        # PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A
         p2 = re.compile(r'^PID: +(?P<pid>\S+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                          ' +SN:(?: +(?P<sn>(\S+)))?$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
-            # NAME: "StackPort5/2", DESCR: "StackPort5/2"
-            # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
-            # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
-            # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+            # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -797,13 +782,7 @@ class ShowInventory(ShowInventorySchema):
                         final_dict[key] = group[key]
                 continue
 
-            # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
-            # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
-            # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
-            # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
-            # PID: ISR4331-3x1GE     , VID: V01  , SN:
-            # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
-            # PID: ISR4331/K9        , VID:      , SN:
+            # PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A
             m = p2.match(line)
             if m:
                 group = m.groupdict()
