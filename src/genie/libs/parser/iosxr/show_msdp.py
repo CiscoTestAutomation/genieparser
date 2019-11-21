@@ -200,14 +200,12 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
 
                 if not vrf:
                     vrf = 'default'
-                if not peer:
-                    peer = group_dict['peer']
 
                 peer_dict = parsed_dict.setdefault(
                     'vrf', {}).setdefault(
                     vrf, {}).setdefault(
                     'peer', {}).setdefault(
-                    peer, {})
+                    group_dict['peer'], {})
 
                 peer_dict['peer_as'] = int(group_dict['peer_as'])
                 peer_dict['peer_name'] = group_dict['peer_name']
@@ -1198,15 +1196,11 @@ class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
 
                 if not vrf:
                     vrf = 'default'
-                if peer:
-                    peer_addr = peer
-                else:
-                    peer_addr = group['peer_address']
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
                 peer_dict = vrf_dict.setdefault('peer', {})\
-                    .setdefault(peer_addr, {})
+                    .setdefault(group['peer_address'], {})
 
                 peer_dict['as'] = int(group['as'])
                 peer_dict['state'] = group['state']
