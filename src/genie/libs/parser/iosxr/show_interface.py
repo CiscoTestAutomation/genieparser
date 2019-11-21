@@ -2,7 +2,10 @@
     show_interface.py
     IOSXR parsers for the following show commands:
 
+    * show ip interface brief | include {ip}
     * show ip interface brief
+    * show ipv4 interface brief | include {ip}
+    * show ipv4 interface brief
     * show ip interface brief | include Vlan
     * show interface brief
     * show interface detail
@@ -98,6 +101,28 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                 continue
 
         return interface_dict
+
+
+class ShowIpv4InterfaceBrief(ShowIpInterfaceBrief):
+    """Parser for
+           show ipv4 interface brief | include {ip}
+           show ipv4 interface brief
+    """
+
+    cli_command = ['show ipv4 interface brief | include {ip}',
+                   'show ipv4 interface brief']
+
+    def cli(self, ip='', output=None):
+        if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
@@ -2917,6 +2942,69 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 counter_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+        return result_dict
+        
+#############################################################################
+# Parser For show interfaces Description
+#############################################################################
+        
+class ShowInterfacesDescriptionSchema(MetaParser):
+    """schema for show interfaces description
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'status': str,
+                'protocol': str,
+                Optional('description'): str
+            }
+        }
+    }
+
+
+class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
+    """parser for show interface description
+    """
+
+    cli_command = ['show interfaces description', 'show interfaces {interface} description']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+        index = 1
+
+        # Interface Status Protocol Description
+        # Et0/0 		up	 up
+        p1 = re.compile(r'(?P<interface>(\S+)[^-]) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(\S+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            line = line.replace('\t', '')
+            # Interface Status Protocol Description
+            # Et0/0 		up	 up
+            m = p1.match(line)
+            if m and m.groupdict()['protocol'] != 'Protocol':
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['status'] = group['status']
+                intf_dict['protocol'] = group['protocol']
+                if group['description'] is not None:
+                    intf_dict['description'] = str(group['description'])
+                else:
+                    intf_dict['description'] = ''
+                index += 1                
                 continue
 
         return result_dict

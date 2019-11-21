@@ -7,7 +7,9 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
     Any, \
     Optional
-
+# ====================================================
+#  schema for show route ipv4
+# ====================================================
 class ShowRouteIpv4Schema(MetaParser):
     """Schema for show route ipv4"""
     schema = {
@@ -113,7 +115,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
     def cli(self, vrf=None, route=None, protocol=None, output=None):
         
         # Check if argument from device.parse is protocol or route
-        if protocol and not route and protocol not in self.protocol_set:
+        if protocol and protocol not in self.protocol_set:
             route = protocol
             protocol = None
 
@@ -151,16 +153,32 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         # R    1.0.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
         # B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
-        p2 = re.compile(r'^(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+) +\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,( +(?P<date>[\w:]+),?)?( +(?P<interface>[\w\/\.\-]+))?( +(?P<code3>[\w\*\(\>\)\!]+))?$')
+        # i L2 10.154.219.32/32 [115/100030] via 10.4.1.1, 1d06h, HundredGigE0/0/1/1 (!)
+        # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
+        # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
+        # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
+        # S*   192.168.4.4/10 [111/10] via 172.16.84.11, 1w0d
+        # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
+        # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
+        p2 = re.compile(r'^(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+) +'
+                r'\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
+                r'(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                r'( +(?P<date>[\w:]+),?)?( +(?P<interface>[\w\/\.\-]+))?'
+                r'( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
         # [90/15360] via 10.23.90.3, 1w0d, GigabitEthernet0/0/0/1.90
-        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +(?P<interface>[\w\/\.\-]+)$')
+        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
+                r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
+                r'(?P<interface>[\w\/\.\-]+)$')
 
         # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
+        # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
+        # L    ::ffff:192.168.13.12/19 
+        # O E1 2001:db8::/39
         p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +'
-                        r'(?P<network>\S+) +)?is +directly +'
-                        r'connected, +(?P<date>[\w:]+),? +(?P<interface>[\w\/\.\-]+)$')
+                r'(?P<network>\S+) *)?(is +directly +connected, +'
+                r'(?P<date>[\w:]+),? +(?P<interface>[\w\/\.\-]+))?$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -171,7 +189,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
+        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +'
+                r'(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?'
+                r'(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -524,7 +544,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
     def cli(self, vrf=None, route=None, protocol=None, output=None):
         
         # Check if argument from device.parse is protocol or route
-        if protocol and not route and protocol not in self.protocol_set:
+        if protocol and protocol not in self.protocol_set:
             route = protocol
             protocol = None
 
@@ -561,14 +581,18 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
 
         # S    2001:1:1:1::1/128
-        p2 = re.compile(r'^(?P<code1>\w(\*)?) *(?P<code2>\w+)? +(?P<network>[\w\:\/]+)$')
+        p2 = re.compile(r'^(?P<code1>\w(\*)?) *(?P<code2>\w+)? +'
+                '(?P<network>[\w\:\/]+)$')
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
-        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
+        p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
+                'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                '( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # L    2001:2:2:2::2/128 is directly connected,
-        p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+) +)?is +directly +connected,$')
+        p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +'
+                '(?P<network>\S+) +)?is +directly +connected,$')
 
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
@@ -582,7 +606,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
-        p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
+        p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +'
+                'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                '( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
+                'default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p8 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -857,3 +884,24 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
         
         return ret_dict
+    """Parser for :
+       show route ipv6 <Hostname or A.B.C.D>
+       show route ipv6 vrf <vrf> <Hostname or A.B.C.D>"""
+    command = ['show route ipv6 {route}',
+                'show route vrf {vrf} ipv6 {route}']
+    IP_VER = 'ipv6'
+
+    def cli(self, route, vrf=None, interface=None, output=None):
+        
+        if output is None:
+            if vrf and route:
+                cmd = self.command[1].format(vrf=vrf,
+                        route=route)
+            else:
+                cmd = self.command[0].format(route=route)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        if not vrf:
+            vrf = 'default'
+        return super().cli(route=route, vrf=vrf, output=out)
