@@ -1041,6 +1041,7 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
                 group = result.groupdict()
 
                 group_addr = group['group']
+                src_addr = group['source_addr']
                 rp_address = group['rp_address']
                 peer_as = group['peer_as']
                 up_time = group['up_time']
@@ -1048,9 +1049,8 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
                 if not vrf:
                     vrf = 'default'
-                if not source_addr:
-                    source_addr = group['source_addr']
-                sa_cache = '{} {}'.format(group_addr, source_addr)
+
+                sa_cache = '{} {}'.format(group_addr, src_addr)
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
@@ -1058,7 +1058,7 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
                 sa_cache_dict['group'] = group_addr
-                sa_cache_dict['source_addr'] = source_addr
+                sa_cache_dict['source_addr'] = src_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire
 
