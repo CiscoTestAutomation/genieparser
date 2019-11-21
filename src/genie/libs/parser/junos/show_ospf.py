@@ -1,6 +1,6 @@
 """ show_ospf.py
 
-Junos parsers for the following show commands:
+JunOs parsers for the following show commands:
     * show ospf interface brief
     * show ospf interface {interface} brief
     * show ospf interface brief instance {instance}
