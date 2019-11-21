@@ -2,7 +2,10 @@
     show_interface.py
     IOSXR parsers for the following show commands:
 
+    * show ip interface brief | include {ip}
     * show ip interface brief
+    * show ipv4 interface brief | include {ip}
+    * show ipv4 interface brief
     * show ip interface brief | include Vlan
     * show interface brief
     * show interface detail
@@ -98,6 +101,28 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                 continue
 
         return interface_dict
+
+
+class ShowIpv4InterfaceBrief(ShowIpInterfaceBrief):
+    """Parser for
+           show ipv4 interface brief | include {ip}
+           show ipv4 interface brief
+    """
+
+    cli_command = ['show ipv4 interface brief | include {ip}',
+                   'show ipv4 interface brief']
+
+    def cli(self, ip='', output=None):
+        if output is None:
+            if ip:
+                cmd = self.cli_command[0].format(ip=ip)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):

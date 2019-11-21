@@ -748,7 +748,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
         Any(): {
             "name": str,
             "color": int,
-            "end_point": str,
+            Optional("end_point"): str,
             "status": {
                 "admin": str,
                 "operational": {
@@ -757,7 +757,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     "since": str,
                 },
             },
-            "candidate_paths": {
+            Optional("candidate_paths"): {
                 "preference": {
                     Any(): {
                         Optional("constraints"): {
@@ -775,8 +775,8 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                                 Optional("hops"): {
                                     Any(): {
                                         "sid": int,
-                                        "sid_type": str,
-                                        "local_address": str,
+                                        Optional("sid_type"): str,
+                                        Optional("local_address"): str,
                                         Optional("remote_address"): str,
                                     },
                                 },
@@ -790,8 +790,8 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                                         Optional("hops"): {
                                             Any(): {
                                                 "sid": int,
-                                                "sid_type": str,
-                                                "local_address": str,
+                                                Optional("sid_type"): str,
+                                                Optional("local_address"): str,
                                                 Optional("remote_address"): str,
                                             },
                                         },
@@ -802,7 +802,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     },
                 },
             },
-            "attributes": {
+            Optional("attributes"): {
                 "binding_sid": {
                     Any(): {
                         "allocation_mode": str,
@@ -848,8 +848,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             out = output
 
         # Name: test1 (Color: 100 End-point: 10.169.196.241)
+        # Name: test_genie_1 (Color: 0 End-point: )
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
-                         '+End-point: +(?P<end_point>\S+)\)$')
+                         '+End-point: *(?P<end_point>\S+)?\)$')
 
         # Status:
         #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
@@ -874,8 +875,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         #         16063 [Prefix-SID, 10.169.196.241]
         #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
-        p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
-                         '( +- +(?P<remote_address>[\S]+))?\]$')
+        #         16063
+        p7 = re.compile(r'^(?P<sid>[\d]+)(?: +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
+                         '( +- +(?P<remote_address>[\S]+))?\])?$')
 
         #     Explicit: segment-list test1 (inactive)
         p8 = re.compile(r'^Explicit: +(?P<category>\S+) +(?P<name>\S+) +\((?P<status>\w+)\)$')
@@ -936,7 +938,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
                 policy_dict.update({'name': name})
                 policy_dict.update({'color': int(group['color'])})
-                policy_dict.update({'end_point': group['end_point']})
+                if group.get('end_point', None):
+                    policy_dict.update({'end_point': group['end_point']})
                 event_index = 0
                 continue
 
@@ -999,6 +1002,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 continue
 
             #   16063 [Prefix-SID, 10.169.196.241]
+            #   16063
             m = p7.match(line)
             if m:
                 aff_flag = False
@@ -1007,9 +1011,11 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
                 
                 hop_dict.update({'sid': int(group['sid'])})
-                hop_dict.update({'sid_type': group['sid_type']})
-                hop_dict.update({'local_address': group['local_address']})
-                if group['remote_address']:
+                if group.get('sid_type'):
+                    hop_dict.update({'sid_type': group['sid_type']})
+                if group.get('local_address'):
+                    hop_dict.update({'local_address': group['local_address']})
+                if group.get('remote_address'):
                     hop_dict.update({'remote_address': group['remote_address']})
                 continue
 

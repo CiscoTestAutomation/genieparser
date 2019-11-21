@@ -1,7 +1,21 @@
 """show_msdp.py
 IOSXR parsers for the following commands
-
     * 'show msdp peer'
+    * 'show msdp peer {peer}'
+    * 'show msdp vrf {vrf} peer'
+    * 'show msdp vrf {vrf} peer {peer}'
+    * 'show msdp context'
+    * 'show msdp vrf {vrf} context'
+    * 'show msdp summary'
+    * 'show msdp vrf {vrf} summary'
+    * 'show msdp sa-cache'
+    * 'show msdp sa-cache {group_addr}'
+    * 'show msdp vrf {vrf} sa-cache'
+    * 'show msdp vrf {vrf} sa-cache {group_addr}'
+    * 'show msdp statistics peer'
+    * 'show msdp statistics peer {peer}'
+    * 'show msdp vrf {vrf} statistics peer'
+    * 'show msdp vrf {vrf} statistics peer {peer}'
 """
 
 # Python
@@ -80,17 +94,25 @@ class ShowMsdpPeerSchema(MetaParser):
 class ShowMsdpPeer(ShowMsdpPeerSchema):
     """ Parser for:
         * 'show msdp peer'
+        * 'show msdp peer <peer>'
         * 'show msdp vrf <vrf> peer'
+        * 'show msdp vrf <vrf> peer <peer>'
     """
 
     cli_command = ['show msdp vrf {vrf} peer',
-                   'show msdp peer']
+                   'show msdp peer',
+                   'show msdp peer {peer}',
+                   'show msdp vrf {vrf} peer {peer}']
     exclude = ['elapsed_time', 'tlv_message', 'sa_message']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', peer='', output=None):
         if output is None:
-            if vrf:
+            if vrf and not peer:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif peer and not vrf:
+                cmd = self.cli_command[2].format(peer=peer)
+            elif peer and vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, peer=peer)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -943,7 +965,7 @@ class ShowMsdpSaCacheSchema(MetaParser):
 
     """ Schema for:
         * 'show msdp sa-cache'
-        * 'show msdp vrf <vrf> sa-cache'
+        * 'show msdp vrf <vrf> sa-cache <group_addr>'
     """
     schema = {
         'vrf': {
@@ -981,12 +1003,18 @@ class ShowMsdpSaCacheSchema(MetaParser):
 class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
     cli_command = ['show msdp vrf {vrf} sa-cache',
-                   'show msdp sa-cache', ]
+                   'show msdp sa-cache',
+                   'show msdp sa-cache {group_addr}',
+                   'show msdp vrf {vrf} sa-cache {group_addr}']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', group_addr='', output=None):
         if output is None:
-            if vrf:
+            if vrf and not group_addr:
                 cmd = self.cli_command[0].format(vrf=vrf)
+            elif group_addr and not vrf:
+                cmd = self.cli_command[2].format(group_addr=group_addr)
+            elif vrf and group_addr:
+                cmd = self.cli_command[3].format(vrf=vrf, group_addr=group_addr)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -1021,24 +1049,25 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
             if result:
                 group = result.groupdict()
 
-                source_addr = group['source_addr']
-                addres_group = group['group']
+                gp_addr = group['group']
+                src_addr = group['source_addr']
                 rp_address = group['rp_address']
                 peer_as = group['peer_as']
                 up_time = group['up_time']
                 expire = group['expire']
 
-                sa_cache = '{} {}'.format(addres_group, source_addr)
                 if not vrf:
                     vrf = 'default'
+
+                sa_cache = '{} {}'.format(gp_addr, src_addr)
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
 
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
-                sa_cache_dict['group'] = addres_group
-                sa_cache_dict['source_addr'] = source_addr
+                sa_cache_dict['group'] = gp_addr
+                sa_cache_dict['source_addr'] = src_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire
 
@@ -1124,14 +1153,20 @@ class ShowMsdpStatisticsPeerSchema(MetaParser):
 class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
 
     cli_command = ['show msdp statistics peer',
-                   'show msdp vrf <vrf> statistics peer']
+                   'show msdp vrf {vrf} statistics peer',
+                   'show msdp statistics peer {peer}',
+                   'show msdp vrf {vrf} statistics peer {peer}']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', peer='', output=None):
         if output is None:
-            if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf)
+            if vrf and not peer:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            elif peer and not vrf:
+                cmd = self.cli_command[2].format(peer=peer)
+            elif vrf and peer:
+                cmd = self.cli_command[3].format(vrf=vrf, peer=peer)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1169,6 +1204,7 @@ class ShowMsdpStatisticsPeer(ShowMsdpStatisticsPeerSchema):
             m = r1.match(line)
             if m:
                 group = m.groupdict()
+
                 if not vrf:
                     vrf = 'default'
 

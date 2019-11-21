@@ -8,7 +8,6 @@ import sys
 import warnings
 import logging
 import importlib
-
 from genie.libs import parser
 from genie.abstract import Lookup
 
@@ -36,7 +35,6 @@ def _load_parser_json():
 # Parser within Genie
 parser_data = _load_parser_json()
 
-
 def get_parser_commands(device, data=parser_data):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
@@ -55,7 +53,7 @@ def format_output(parser_data, tab=2):
     s = ['{\n']
     if parser_data is None:
         return parser_data
-    for k,v in parser_data.items():
+    for k,v in sorted(parser_data.items()):
         if isinstance(v, dict):
             v = format_output(v, tab+2)
         else:
