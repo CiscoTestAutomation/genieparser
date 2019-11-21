@@ -30,13 +30,12 @@ class ShowVersionSchema(MetaParser):
                 'version': {
                     'version_short': str,
                     'os': str,
-                    Optional('city'): str,
+                    Optional('code_name'): str,
                     'platform': str,
                     'version': str,
                     'image_id': str,
                     'rom': str,
-                    'bootldr_version': str,
-                    'release_software': str,                    
+                    'bootldr_version': str,                    
                     'hostname': str,
                     'uptime': str,
                     'uptime_this_cp': str,
@@ -99,11 +98,11 @@ class ShowVersion(ShowVersionSchema):
         # version
         # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
         p0 = re.compile(
-            r'^Cisco +(?P<os>([\S\s]+)) +Software, +Version +(?P<ver_short>.*)$')
+            r'^Cisco +([\S\s]+) +Software, +Version +(?P<ver_short>.*)$')
 
         # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
         p1 = re.compile(
-            r'^Cisco +IOS +Software +\[(?P<city>([\S]+))\], +(?P<platform>([\S\s]+)) '
+            r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
             r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+)+.*$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
@@ -117,8 +116,7 @@ class ShowVersion(ShowVersionSchema):
         p4 = re.compile(r'^ROM: +(?P<rom>.+)$')
         
         # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
-        p5 = re.compile(r'^BOOTLDR: +System +Bootstrap, +Version '
-            r'+(?P<bootldr_version>[\S]+), +RELEASE +SOFTWARE +(?P<release_software>[\S]+)$')
+        p5 = re.compile(r'^BOOTLDR: +(?P<bootldr_version>[\S\s]+)$')
 
         # SF2 uptime is 1 day, 18 hours, 48 minutes
         p6 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
@@ -219,6 +217,9 @@ class ShowVersion(ShowVersionSchema):
         p31 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
                          r'+(?P<compiled_by>\S+)$')
 
+        # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
+        p32 = re.compile(r'^Cisco +(?P<os>\S+) +software.*$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -226,17 +227,15 @@ class ShowVersion(ShowVersionSchema):
             m = p0.match(line)
             if m:
                 version_short = m.groupdict()['ver_short']
-                os = m.groupdict()['os']
                 if 'version' not in ver_dict:
                     version_dict = ver_dict.setdefault('version', {})
                 version_dict['version_short'] = version_short
-                version_dict['os'] = os
                 continue
 
             # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
             m = p1.match(line)
             if m:
-                version_dict['city'] = m.groupdict()['city']
+                version_dict['code_name'] = m.groupdict()['code_name']
                 version_dict['platform'] = m.groupdict()['platform']
                 version_dict['image_id'] = m.groupdict()['image_id']
                 version_dict['version'] = m.groupdict()['version']
@@ -263,7 +262,6 @@ class ShowVersion(ShowVersionSchema):
             m = p5.match(line)
             if m:
                 version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
-                version_dict['release_software'] = m.groupdict()['release_software']
                 continue
 
             # SF2 uptime is 1 day, 18 hours, 48 minutes
@@ -374,7 +372,7 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'disks' not in version_dict:
                     disk_dict = version_dict.setdefault('disks', {})
-                disk_dict.setdefault('bootflash', {})['disk_size'] = \
+                disk_dict.setdefault('bootflash:', {})['disk_size'] = \
                     m.groupdict()['bootflash_size']
                 continue
 
@@ -383,7 +381,7 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'disks' not in version_dict:
                     disk_dict = version_dict.setdefault('disks', {})
-                disk_dict.setdefault('crashinfo', {})['disk_size'] = \
+                disk_dict.setdefault('crashinfo:', {})['disk_size'] = \
                     m.groupdict()['crash_size']
                 continue
 
@@ -450,6 +448,13 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['compiled_by'] = m.groupdict()['compiled_by']
                 continue
 
+            # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
+            m = p32.match(line)
+            if m:
+                os = m.groupdict()['os']
+                version_dict['os'] = os
+                continue
+
         return ver_dict
 
 
@@ -482,11 +487,6 @@ class ShowRedundancySchema(MetaParser):
                         'config_register': str,
                         'compiled_by': str,
                         'compiled_date': str,
-                        'peer': {
-                            'slot': int,
-                            'state': str,
-                        }
-
                     }
                 }
             }
@@ -568,10 +568,6 @@ class ShowRedundancy(ShowRedundancySchema):
         # Compiled Thu 31-Oct-19 17:43 by makale
         p16 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
                          r'+(?P<compiled_by>\S+)$')
-
-        # Peer (slot: 1) information is not available because it is in 'DISABLED' state
-        p17 = re.compile(r'^Peer +\(slot: +(?P<peer_slot>\d+)\) +information +is +not +available'
-            r' +because +it +is +in \'+(?P<peer_state>\S+)\' +state$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -701,17 +697,6 @@ class ShowRedundancy(ShowRedundancySchema):
                         m.groupdict()['compiled_date']
                 continue
 
-            # Peer (slot: 1) information is not available because it is in 'DISABLED' state
-            m = p17.match(line)
-            if m:
-                if 'slot' in redundancy_dict:
-                    slot_dict.setdefault('peer', {})
-                    slot_dict['peer']['slot'] = \
-                        int(m.groupdict()['peer_slot'])
-                    slot_dict['peer']['state'] = \
-                        m.groupdict()['peer_state']
-                continue
-
         return redundancy_dict
 
 
@@ -725,15 +710,16 @@ class ShowInventorySchema(MetaParser):
     '''
 
     schema = {
-        Any():
-            {'name': str,
-             'descr': str,
-             Optional('pid'): str,
-             Optional('vid'): str,
-             Optional('sn'): str,
-        },
-    }
-
+        'index': {
+            Any():
+                {'name': str,
+                 'descr': str,
+                 Optional('pid'): str,
+                 Optional('vid'): str,
+                 Optional('sn'): str,
+                },
+            }
+        }
 
 
 # ============================
@@ -759,6 +745,7 @@ class ShowInventory(ShowInventorySchema):
 
         # Init vars
         ret_dict = {}
+        index = 0
 
         # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
@@ -774,9 +761,9 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
             m = p1.match(line)
             if m:
+                index += 1
                 group = m.groupdict()
-                name = group['name']
-                final_dict = ret_dict.setdefault(name, {})
+                final_dict = ret_dict.setdefault('index', {}).setdefault(index, {})
                 for key in group.keys():
                     if group[key]:
                         final_dict[key] = group[key]
@@ -909,6 +896,7 @@ class ShowPlatform(ShowPlatformSchema):
             # 1         19061022            17.1.1[FC2] 
             m = p3.match(line)
             if m:
+                slot = m.groupdict()['slot']
                 slot_dict = platform_dict.setdefault('slot', {}).setdefault(slot, {})
                 slot_dict['cpld_ver'] = m.groupdict()['cpld_version']
                 slot_dict['fw_ver'] = m.groupdict()['fireware_ver']
