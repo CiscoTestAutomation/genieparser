@@ -16,7 +16,9 @@ class TestShowMsdpPeer(unittest.TestCase):
     """
         Commands:
         show msdp peer
+        show msdp peer <peer>
         show msdp vrf <vrf> peer
+        show msdp vrf <vrf> peer <peer>
     """
     device = Device(name='aDevice')
 
@@ -174,6 +176,196 @@ class TestShowMsdpPeer(unittest.TestCase):
             NSR-Uptime(NSR-Downtime): 22:46:31
     '''}
 
+    device_output_3 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp peer 10.4.1.1' +++
+    show msdp peer 10.4.1.1
+    Wed Nov 20 16:12:35.742 UTC
+    MSDP Peer 10.4.1.1 (?), AS 65000
+    Description: 
+      Connection status:
+        State: Established, Resets: 0, Connection Source: 10.16.2.2
+        Uptime(Downtime): 6d16h, SA messages received: 31005
+        TLV messages sent/received: 19295/10336
+      Output messages discarded: 0
+        Connection and counters cleared 6d16h ago
+      SA Filtering:
+        Input (S,G) filter: none
+        Input RP filter: none
+        Output (S,G) filter: none
+        Output RP filter: none
+      SA-Requests:
+        Input filter: none
+        Sending SA-Requests to peer: disabled
+      Password: None 
+      Peer ttl threshold: 2
+      Input queue size: 0, Output queue size: 0
+      KeepAlive timer period: 30
+      Peer Timeout timer period: 75
+      NSR:
+        State: Unknown, Oper-Downs: 0
+        NSR-Uptime(NSR-Downtime): 6d16h
+    '''}
+
+    expected_output_3 = {
+    'vrf': {
+        'default': {
+            'peer': {
+                '10.4.1.1': {
+                    'connect_source_address': '10.16.2.2',
+                    'elapsed_time': '6d16h',
+                    'nsr': {
+                        'oper_downs': 0,
+                        'state': 'Unknown',
+                        'up_down_time': '6d16h',
+                    },
+                    'password': 'None',
+                    'peer_as': 65000,
+                    'peer_name': '?',
+                    'reset': '0',
+                    'sa_filter': {
+                        'in': {
+                            '(S,G)': {
+                                'filter': 'none',
+                            },
+                            'RP': {
+                                'filter': 'none',
+                            },
+                        },
+                        'out': {
+                            '(S,G)': {
+                                'filter': 'none',
+                            },
+                            'RP': {
+                                'filter': 'none',
+                            },
+                        },
+                    },
+                    'sa_request': {
+                        'input_filter': 'none',
+                        'sa_request_to_peer': 'disabled',
+                    },
+                    'session_state': 'Established',
+                    'statistics': {
+                        'conn_count_cleared': '6d16h',
+                        'output_message_discarded': 0,
+                        'queue': {
+                            'size_input': 0,
+                            'size_output': 0,
+                        },
+                        'received': {
+                            'sa_message': 31005,
+                            'tlv_message': 10336,
+                        },
+                        'sent': {
+                            'tlv_message': 19295,
+                        },
+                    },
+                    'timer': {
+                        'keepalive_interval': 30,
+                        'peer_timeout_interval': 75,
+                    },
+                    'ttl_threshold': 2,
+                },
+            },
+        },
+    },
+}
+
+    device_output_4 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp vrf VRF1 peer 10.4.1.1' +++
+    show msdp vrf VRF1 peer 10.4.1.1
+    Wed Nov 20 16:32:18.700 UTC
+    MSDP Peer 10.4.1.1 (?), AS 65000
+    Description: 
+      Connection status:
+        State: Established, Resets: 0, Connection Source: 10.16.2.2
+        Uptime(Downtime): 6d17h, SA messages received: 31080
+        TLV messages sent/received: 19335/10361
+      Output messages discarded: 0
+        Connection and counters cleared 6d17h ago
+      SA Filtering:
+        Input (S,G) filter: none
+        Input RP filter: none
+        Output (S,G) filter: none
+        Output RP filter: none
+      SA-Requests:
+        Input filter: none
+        Sending SA-Requests to peer: disabled
+      Password: None 
+      Peer ttl threshold: 2
+      Input queue size: 0, Output queue size: 0
+      KeepAlive timer period: 30
+      Peer Timeout timer period: 75
+      NSR:
+        State: Unknown, Oper-Downs: 0
+        NSR-Uptime(NSR-Downtime): 6d17h
+    '''}
+
+    expected_output_4 = {
+    'vrf': {
+        'VRF1': {
+            'peer': {
+                '10.4.1.1': {
+                    'connect_source_address': '10.16.2.2',
+                    'elapsed_time': '6d17h',
+                    'nsr': {
+                        'oper_downs': 0,
+                        'state': 'Unknown',
+                        'up_down_time': '6d17h',
+                    },
+                    'password': 'None',
+                    'peer_as': 65000,
+                    'peer_name': '?',
+                    'reset': '0',
+                    'sa_filter': {
+                        'in': {
+                            '(S,G)': {
+                                'filter': 'none',
+                            },
+                            'RP': {
+                                'filter': 'none',
+                            },
+                        },
+                        'out': {
+                            '(S,G)': {
+                                'filter': 'none',
+                            },
+                            'RP': {
+                                'filter': 'none',
+                            },
+                        },
+                    },
+                    'sa_request': {
+                        'input_filter': 'none',
+                        'sa_request_to_peer': 'disabled',
+                    },
+                    'session_state': 'Established',
+                    'statistics': {
+                        'conn_count_cleared': '6d17h',
+                        'output_message_discarded': 0,
+                        'queue': {
+                            'size_input': 0,
+                            'size_output': 0,
+                        },
+                        'received': {
+                            'sa_message': 31080,
+                            'tlv_message': 10361,
+                        },
+                        'sent': {
+                            'tlv_message': 19335,
+                        },
+                    },
+                    'timer': {
+                        'keepalive_interval': 30,
+                        'peer_timeout_interval': 75,
+                    },
+                    'ttl_threshold': 2,
+                },
+            },
+        },
+    },
+}
+
     def test_show_msdp_peer_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -194,6 +386,20 @@ class TestShowMsdpPeer(unittest.TestCase):
         obj = ShowMsdpPeer(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.expected_output_2)
+
+    def test_show_msdp_peer_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowMsdpPeer(device=self.device)
+        parsed_output = obj.parse(peer='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_3)
+
+    def test_show_msdp_peer_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4)
+        obj = ShowMsdpPeer(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', peer='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_4)
 
 
 class TestShowMsdpContext(unittest.TestCase):
@@ -528,7 +734,9 @@ class TestShowMsdpSaCache(unittest.TestCase):
     """
          Commands:
          show msdp sa-cache
+         show msdp sa-cache <group_addr>
          show msdp vrf <vrf> sa-cache
+         show msdp vrf <vrf> sa-cache <group_addr>
      """
     device = Device(name='aDevice')
 
@@ -628,6 +836,215 @@ class TestShowMsdpSaCache(unittest.TestCase):
         },
     }
 
+    device_output_3 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp sa-cache 10.4.1.1' +++
+    show msdp sa-cache 10.4.1.1
+    Wed Nov 20 20:25:03.135 UTC
+    
+    MSDP Flags:
+    E - set MRIB E flag , L - domain local source is active,
+    EA - externally active source, PI - PIM is interested in the group,
+    DE - SAs have been denied.  Timers age/expiration,
+    Cache Entry:
+    (10.4.1.1, 239.1.1.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10605, Encapsulated data received: 0
+        grp flags: none,  src flags: EA
+    (10.4.1.1, 239.2.2.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10605, Encapsulated data received: 0
+        grp flags: none,  src flags: EA
+    (10.4.1.1, 239.3.3.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10605, Encapsulated data received: 0
+        grp flags: none,  src flags: EA
+    RP/0/RP0/CPU0:Device#
+    '''}
+    expected_output_3 = {
+    'vrf': {
+        'default': {
+            'sa_cache': {
+                '239.1.1.1 10.4.1.1': {
+                    'expire': '00:01:42',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.1.1.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10605,
+                        },
+                    },
+                    'up_time': '6d21h',
+                },
+                '239.2.2.1 10.4.1.1': {
+                    'expire': '00:01:42',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.2.2.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10605,
+                        },
+                    },
+                    'up_time': '6d21h',
+                },
+                '239.3.3.1 10.4.1.1': {
+                    'expire': '00:01:42',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.3.3.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10605,
+                        },
+                    },
+                    'up_time': '6d21h',
+                },
+            },
+        },
+    },
+}
+
+    device_output_4 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp vrf VRF1 sa-cache 10.4.1.1' +++
+    show msdp vrf VRF1 sa-cache 10.4.1.1
+    Wed Nov 20 19:16:31.452 UTC
+    
+    MSDP Flags:
+    E - set MRIB E flag , L - domain local source is active,
+    EA - externally active source, PI - PIM is interested in the group,
+    DE - SAs have been denied.  Timers age/expiration,
+    Cache Entry:
+    (10.4.1.1, 239.1.1.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10536, Encapsulated data received: 0
+        grp flags: none,  src flags: EA
+    (10.4.1.1, 239.2.2.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10536, Encapsulated data received: 0
+        grp flags: none,  src flags: EA
+    (10.4.1.1, 239.3.3.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+      SAs recvd 10536, Encapsulated data received: 0
+        grp flags: none,  src flags: EA'''}
+
+    expected_output_4 = {
+    'vrf': {
+        'VRF1': {
+            'sa_cache': {
+                '239.1.1.1 10.4.1.1': {
+                    'expire': '00:02:08',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.1.1.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10536,
+                        },
+                    },
+                    'up_time': '6d19h',
+                },
+                '239.2.2.1 10.4.1.1': {
+                    'expire': '00:02:08',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.2.2.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10536,
+                        },
+                    },
+                    'up_time': '6d19h',
+                },
+                '239.3.3.1 10.4.1.1': {
+                    'expire': '00:02:08',
+                    'flags': {
+                        'grp': ['none'],
+                        'src': ['EA'],
+                    },
+                    'group': '239.3.3.1',
+                    'origin_rp': {
+                        '10.4.1.1': {
+                            'rp_address': '10.4.1.1',
+                        },
+                    },
+                    'peer_as': 65000,
+                    'peer_learned_from': '10.4.1.1',
+                    'rpf_peer': '10.4.1.1',
+                    'source_addr': '10.4.1.1',
+                    'statistics': {
+                        'received': {
+                            'encapsulated_data_received': 0,
+                            'sa': 10536,
+                        },
+                    },
+                    'up_time': '6d19h',
+                },
+            },
+        },
+    },
+}
+
     def test_show_msdp_sacache_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -649,18 +1066,35 @@ class TestShowMsdpSaCache(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output_2)
 
+    def test_show_msdp_sacache_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowMsdpSaCache(device=self.device)
+        parsed_output = obj.parse(group_addr='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_3)
+
+    def test_show_msdp_sacache_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4)
+        obj = ShowMsdpSaCache(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', group_addr='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_4)
+
+
 class TestShowMsdpStatisticsPeer(unittest.TestCase):
     """
          Commands:
          show msdp statistics peer
+         show msdp statistics peer <peer>
          show msdp vrf <vrf> statistics peer
+         show msdp vrf <vrf> statistics peer <peer>
      """
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
 
     device_output_1 = {'execute.return_value': '''
-    RP/0/0/CPU0:R2_xrvr#show msdp vrf VRF1 statistics peer 
+    RP/0/0/CPU0:Devicevr#show msdp vrf VRF1 statistics peer 
     Fri Jun 16 15:52:06.775 UTC
     MSDP Peer Statistics :- VRF1
     Peer 10.4.1.1 : AS is 0, State is Listen, 0 active SAs
@@ -748,7 +1182,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     }
 
     device_output_2 = {'execute.return_value': '''
-    P/0/0/CPU0:R2_xrvr#show msdp statistics peer 
+    P/0/0/CPU0:Devicevr#show msdp statistics peer 
     Fri Jun 16 15:52:01.005 UTC
     MSDP Peer Statistics :- default
     Peer 10.64.4.4 : AS is 200, State is Connect, 0 active SAs
@@ -798,6 +1232,112 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
         },
     }
 
+    device_output_3 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp statistics peer 10.4.1.1' +++
+    show msdp statistics peer 10.4.1.1
+    Wed Nov 20 16:36:52.240 UTC
+    MSDP Peer Statistics :- default
+    Peer 10.4.1.1 : AS is 65000, State is Established, 3 active SAs
+        TLV Rcvd : 10362 total
+                   1 keepalives, 0 notifications
+                   10361 SAs, 0 SA Requests
+                   0 SA responses, 0 unknowns
+        TLV Sent : 19344 total
+                   19344 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses
+        SA msgs  : 31083 received, 0 sent
+    RP/0/RP0/CPU0:Device#
+    '''}
+
+    expected_output_3 = {
+    'vrf': {
+        'default': {
+            'peer': {
+                '10.4.1.1': {
+                    'active_sa': 3,
+                    'as': 65000,
+                    'sa_msgs': {
+                        'received': 31083,
+                        'sent': 0,
+                    },
+                    'state': 'Established',
+                    'tlv_rcvd': {
+                        'keepalives': 1,
+                        'notifications': 0,
+                        'request': 0,
+                        'sa': 10361,
+                        'sa_response': 0,
+                        'total': 10362,
+                        'unknowns': 0,
+                    },
+                    'tlv_sent': {
+                        'keepalives': 19344,
+                        'notifications': 0,
+                        'request': 0,
+                        'sa': 0,
+                        'sa_response': 0,
+                        'total': 19344,
+                    },
+                },
+            },
+        },
+    },
+}
+
+    device_output_4 = {'execute.return_value': '''
+    +++ Device: executing command 'show msdp vrf VRF1 statistics peer 10.4.1.1' +++
+    show msdp vrf VRF1 statistics peer 10.4.1.1
+    Wed Nov 20 16:37:11.526 UTC
+    MSDP Peer Statistics :- VRF1
+    Peer 10.4.1.1 : AS is 65000, State is Established, 3 active SAs
+        TLV Rcvd : 10366 total
+                   1 keepalives, 0 notifications
+                   10365 SAs, 0 SA Requests
+                   0 SA responses, 0 unknowns
+        TLV Sent : 19345 total
+                   19345 keepalives, 0 notifications
+                   0 SAs, 0 SA Requests
+                   0 SA responses
+        SA msgs  : 31095 received, 0 sent
+    RP/0/RP0/CPU0:Device#
+    '''}
+
+    expected_output_4 = {
+    'vrf': {
+        'VRF1': {
+            'peer': {
+                '10.4.1.1': {
+                    'active_sa': 3,
+                    'as': 65000,
+                    'sa_msgs': {
+                        'received': 31095,
+                        'sent': 0,
+                    },
+                    'state': 'Established',
+                    'tlv_rcvd': {
+                        'keepalives': 1,
+                        'notifications': 0,
+                        'request': 0,
+                        'sa': 10365,
+                        'sa_response': 0,
+                        'total': 10366,
+                        'unknowns': 0,
+                    },
+                    'tlv_sent': {
+                        'keepalives': 19345,
+                        'notifications': 0,
+                        'request': 0,
+                        'sa': 0,
+                        'sa_response': 0,
+                        'total': 19345,
+                    },
+                },
+            },
+        },
+    },
+}
+
     def test_show_msdp_statistics_peer_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -818,6 +1358,20 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
         obj = ShowMsdpStatisticsPeer(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output_2)
+
+    def test_show_msdp_statistics_peer_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowMsdpStatisticsPeer(device=self.device)
+        parsed_output = obj.parse(peer='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_3)
+
+    def test_show_msdp_statistics_peer_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4)
+        obj = ShowMsdpStatisticsPeer(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', peer='10.4.1.1')
+        self.assertEqual(parsed_output, self.expected_output_4)
 
 if __name__ == '__main__':
     unittest.main()
