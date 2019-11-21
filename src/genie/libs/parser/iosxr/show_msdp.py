@@ -956,7 +956,7 @@ class ShowMsdpSaCacheSchema(MetaParser):
 
     """ Schema for:
         * 'show msdp sa-cache'
-        * 'show msdp vrf <vrf> sa-cache <source_addr>'
+        * 'show msdp vrf <vrf> sa-cache <group_addr>'
     """
     schema = {
         'vrf': {
@@ -995,17 +995,17 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
     cli_command = ['show msdp vrf {vrf} sa-cache',
                    'show msdp sa-cache',
-                   'show msdp sa-cache {source_addr}',
-                   'show msdp vrf {vrf} sa-cache {source_addr}']
+                   'show msdp sa-cache {group_addr}',
+                   'show msdp vrf {vrf} sa-cache {group_addr}']
 
-    def cli(self, vrf='', source_addr='', output=None):
+    def cli(self, vrf='', group_addr='', output=None):
         if output is None:
-            if vrf and not source_addr:
+            if vrf and not group_addr:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            elif source_addr and not vrf:
-                cmd = self.cli_command[2].format(source_addr=source_addr)
-            elif vrf and source_addr:
-                cmd = self.cli_command[3].format(vrf=vrf, source_addr=source_addr)
+            elif group_addr and not vrf:
+                cmd = self.cli_command[2].format(group_addr=group_addr)
+            elif vrf and group_addr:
+                cmd = self.cli_command[3].format(vrf=vrf, group_addr=group_addr)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -1040,7 +1040,7 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
             if result:
                 group = result.groupdict()
 
-                group_addr = group['group']
+                gp_addr = group['group']
                 src_addr = group['source_addr']
                 rp_address = group['rp_address']
                 peer_as = group['peer_as']
@@ -1050,14 +1050,14 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
                 if not vrf:
                     vrf = 'default'
 
-                sa_cache = '{} {}'.format(group_addr, src_addr)
+                sa_cache = '{} {}'.format(gp_addr, src_addr)
 
                 vrf_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {})
 
                 sa_cache_dict = vrf_dict.setdefault('sa_cache', {})\
                     .setdefault(sa_cache, {})
-                sa_cache_dict['group'] = group_addr
+                sa_cache_dict['group'] = gp_addr
                 sa_cache_dict['source_addr'] = src_addr
                 sa_cache_dict['up_time'] = up_time
                 sa_cache_dict['expire'] = expire

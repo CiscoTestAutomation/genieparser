@@ -177,13 +177,13 @@ class TestShowMsdpPeer(unittest.TestCase):
     '''}
 
     device_output_3 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp peer 10.4.1.1' +++
-    show msdp peer 10.4.1.1
+    +++ Device: executing command 'show msdp peer 1.1.1.1' +++
+    show msdp peer 1.1.1.1
     Wed Nov 20 16:12:35.742 UTC
-    MSDP Peer 10.4.1.1 (?), AS 65000
+    MSDP Peer 1.1.1.1 (?), AS 65000
     Description: 
       Connection status:
-        State: Established, Resets: 0, Connection Source: 10.16.2.2
+        State: Established, Resets: 0, Connection Source: 2.2.2.2
         Uptime(Downtime): 6d16h, SA messages received: 31005
         TLV messages sent/received: 19295/10336
       Output messages discarded: 0
@@ -210,8 +210,8 @@ class TestShowMsdpPeer(unittest.TestCase):
     'vrf': {
         'default': {
             'peer': {
-                '10.4.1.1': {
-                    'connect_source_address': '10.16.2.2',
+                '1.1.1.1': {
+                    'connect_source_address': '2.2.2.2',
                     'elapsed_time': '6d16h',
                     'nsr': {
                         'oper_downs': 0,
@@ -272,13 +272,13 @@ class TestShowMsdpPeer(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp vrf VRF1 peer 10.4.1.1' +++
-    show msdp vrf VRF1 peer 10.4.1.1
+    +++ Device: executing command 'show msdp vrf VRF1 peer 1.1.1.1' +++
+    show msdp vrf VRF1 peer 1.1.1.1
     Wed Nov 20 16:32:18.700 UTC
-    MSDP Peer 10.4.1.1 (?), AS 65000
+    MSDP Peer 1.1.1.1 (?), AS 65000
     Description: 
       Connection status:
-        State: Established, Resets: 0, Connection Source: 10.16.2.2
+        State: Established, Resets: 0, Connection Source: 2.2.2.2
         Uptime(Downtime): 6d17h, SA messages received: 31080
         TLV messages sent/received: 19335/10361
       Output messages discarded: 0
@@ -305,8 +305,8 @@ class TestShowMsdpPeer(unittest.TestCase):
     'vrf': {
         'VRF1': {
             'peer': {
-                '10.4.1.1': {
-                    'connect_source_address': '10.16.2.2',
+                '1.1.1.1': {
+                    'connect_source_address': '2.2.2.2',
                     'elapsed_time': '6d17h',
                     'nsr': {
                         'oper_downs': 0,
@@ -391,14 +391,14 @@ class TestShowMsdpPeer(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
         obj = ShowMsdpPeer(device=self.device)
-        parsed_output = obj.parse(peer='10.4.1.1')
+        parsed_output = obj.parse(peer='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_3)
 
     def test_show_msdp_peer_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4)
         obj = ShowMsdpPeer(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', peer='10.4.1.1')
+        parsed_output = obj.parse(vrf='VRF1', peer='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_4)
 
 
@@ -837,8 +837,8 @@ class TestShowMsdpSaCache(unittest.TestCase):
     }
 
     device_output_3 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp sa-cache 10.4.1.1' +++
-    show msdp sa-cache 10.4.1.1
+    +++ Device: executing command 'show msdp sa-cache 1.1.1.1' +++
+    show msdp sa-cache 1.1.1.1
     Wed Nov 20 20:25:03.135 UTC
     
     MSDP Flags:
@@ -846,16 +846,16 @@ class TestShowMsdpSaCache(unittest.TestCase):
     EA - externally active source, PI - PIM is interested in the group,
     DE - SAs have been denied.  Timers age/expiration,
     Cache Entry:
-    (10.4.1.1, 239.1.1.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.1.1.1), RP 1.1.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10605, Encapsulated data received: 0
         grp flags: none,  src flags: EA
-    (10.4.1.1, 239.2.2.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.2.2.1), RP 1.1.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10605, Encapsulated data received: 0
         grp flags: none,  src flags: EA
-    (10.4.1.1, 239.3.3.1), RP 10.4.1.1, MBGP/AS 65000, 6d21h/00:01:42
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.3.3.1), RP 1.1.1.1, MBGP/AS 65000, 6d21h/00:01:42
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10605, Encapsulated data received: 0
         grp flags: none,  src flags: EA
     RP/0/RP0/CPU0:Device#
@@ -864,7 +864,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
     'vrf': {
         'default': {
             'sa_cache': {
-                '239.1.1.1 10.4.1.1': {
+                '239.1.1.1 1.1.1.1': {
                     'expire': '00:01:42',
                     'flags': {
                         'grp': ['none'],
@@ -872,14 +872,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.1.1.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -888,7 +888,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'up_time': '6d21h',
                 },
-                '239.2.2.1 10.4.1.1': {
+                '239.2.2.1 1.1.1.1': {
                     'expire': '00:01:42',
                     'flags': {
                         'grp': ['none'],
@@ -896,14 +896,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.2.2.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -912,7 +912,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'up_time': '6d21h',
                 },
-                '239.3.3.1 10.4.1.1': {
+                '239.3.3.1 1.1.1.1': {
                     'expire': '00:01:42',
                     'flags': {
                         'grp': ['none'],
@@ -920,14 +920,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.3.3.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -942,8 +942,8 @@ class TestShowMsdpSaCache(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp vrf VRF1 sa-cache 10.4.1.1' +++
-    show msdp vrf VRF1 sa-cache 10.4.1.1
+    +++ Device: executing command 'show msdp vrf VRF1 sa-cache 1.1.1.1' +++
+    show msdp vrf VRF1 sa-cache 1.1.1.1
     Wed Nov 20 19:16:31.452 UTC
     
     MSDP Flags:
@@ -951,16 +951,16 @@ class TestShowMsdpSaCache(unittest.TestCase):
     EA - externally active source, PI - PIM is interested in the group,
     DE - SAs have been denied.  Timers age/expiration,
     Cache Entry:
-    (10.4.1.1, 239.1.1.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.1.1.1), RP 1.1.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10536, Encapsulated data received: 0
         grp flags: none,  src flags: EA
-    (10.4.1.1, 239.2.2.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.2.2.1), RP 1.1.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10536, Encapsulated data received: 0
         grp flags: none,  src flags: EA
-    (10.4.1.1, 239.3.3.1), RP 10.4.1.1, MBGP/AS 65000, 6d19h/00:02:08
-      Learned from peer 10.4.1.1, RPF peer 10.4.1.1
+    (1.1.1.1, 239.3.3.1), RP 1.1.1.1, MBGP/AS 65000, 6d19h/00:02:08
+      Learned from peer 1.1.1.1, RPF peer 1.1.1.1
       SAs recvd 10536, Encapsulated data received: 0
         grp flags: none,  src flags: EA'''}
 
@@ -968,7 +968,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
     'vrf': {
         'VRF1': {
             'sa_cache': {
-                '239.1.1.1 10.4.1.1': {
+                '239.1.1.1 1.1.1.1': {
                     'expire': '00:02:08',
                     'flags': {
                         'grp': ['none'],
@@ -976,14 +976,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.1.1.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -992,7 +992,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'up_time': '6d19h',
                 },
-                '239.2.2.1 10.4.1.1': {
+                '239.2.2.1 1.1.1.1': {
                     'expire': '00:02:08',
                     'flags': {
                         'grp': ['none'],
@@ -1000,14 +1000,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.2.2.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -1016,7 +1016,7 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'up_time': '6d19h',
                 },
-                '239.3.3.1 10.4.1.1': {
+                '239.3.3.1 1.1.1.1': {
                     'expire': '00:02:08',
                     'flags': {
                         'grp': ['none'],
@@ -1024,14 +1024,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
                     },
                     'group': '239.3.3.1',
                     'origin_rp': {
-                        '10.4.1.1': {
-                            'rp_address': '10.4.1.1',
+                        '1.1.1.1': {
+                            'rp_address': '1.1.1.1',
                         },
                     },
                     'peer_as': 65000,
-                    'peer_learned_from': '10.4.1.1',
-                    'rpf_peer': '10.4.1.1',
-                    'source_addr': '10.4.1.1',
+                    'peer_learned_from': '1.1.1.1',
+                    'rpf_peer': '1.1.1.1',
+                    'source_addr': '1.1.1.1',
                     'statistics': {
                         'received': {
                             'encapsulated_data_received': 0,
@@ -1070,14 +1070,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
         obj = ShowMsdpSaCache(device=self.device)
-        parsed_output = obj.parse(source_addr='10.4.1.1')
+        parsed_output = obj.parse(group_addr='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_3)
 
     def test_show_msdp_sacache_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4)
         obj = ShowMsdpSaCache(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', source_addr='10.4.1.1')
+        parsed_output = obj.parse(vrf='VRF1', group_addr='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_4)
 
 
@@ -1233,11 +1233,11 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     }
 
     device_output_3 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp statistics peer 10.4.1.1' +++
-    show msdp statistics peer 10.4.1.1
+    +++ Device: executing command 'show msdp statistics peer 1.1.1.1' +++
+    show msdp statistics peer 1.1.1.1
     Wed Nov 20 16:36:52.240 UTC
     MSDP Peer Statistics :- default
-    Peer 10.4.1.1 : AS is 65000, State is Established, 3 active SAs
+    Peer 1.1.1.1 : AS is 65000, State is Established, 3 active SAs
         TLV Rcvd : 10362 total
                    1 keepalives, 0 notifications
                    10361 SAs, 0 SA Requests
@@ -1254,7 +1254,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     'vrf': {
         'default': {
             'peer': {
-                '10.4.1.1': {
+                '1.1.1.1': {
                     'active_sa': 3,
                     'as': 65000,
                     'sa_msgs': {
@@ -1286,11 +1286,11 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
 }
 
     device_output_4 = {'execute.return_value': '''
-    +++ Device: executing command 'show msdp vrf VRF1 statistics peer 10.4.1.1' +++
-    show msdp vrf VRF1 statistics peer 10.4.1.1
+    +++ Device: executing command 'show msdp vrf VRF1 statistics peer 1.1.1.1' +++
+    show msdp vrf VRF1 statistics peer 1.1.1.1
     Wed Nov 20 16:37:11.526 UTC
     MSDP Peer Statistics :- VRF1
-    Peer 10.4.1.1 : AS is 65000, State is Established, 3 active SAs
+    Peer 1.1.1.1 : AS is 65000, State is Established, 3 active SAs
         TLV Rcvd : 10366 total
                    1 keepalives, 0 notifications
                    10365 SAs, 0 SA Requests
@@ -1307,7 +1307,7 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
     'vrf': {
         'VRF1': {
             'peer': {
-                '10.4.1.1': {
+                '1.1.1.1': {
                     'active_sa': 3,
                     'as': 65000,
                     'sa_msgs': {
@@ -1363,14 +1363,14 @@ class TestShowMsdpStatisticsPeer(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
         obj = ShowMsdpStatisticsPeer(device=self.device)
-        parsed_output = obj.parse(peer='10.4.1.1')
+        parsed_output = obj.parse(peer='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_3)
 
     def test_show_msdp_statistics_peer_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4)
         obj = ShowMsdpStatisticsPeer(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', peer='10.4.1.1')
+        parsed_output = obj.parse(vrf='VRF1', peer='1.1.1.1')
         self.assertEqual(parsed_output, self.expected_output_4)
 
 if __name__ == '__main__':
