@@ -140,6 +140,10 @@
         * 'show bgp {address_family} summary'
 	* Enhanced Dir
 		* added 'dir {directory}' support
+    * Added ShowIpv4InterfaceBrief for commands:
+        * 'show ipv4 interface brief | include {ip}'
+        * 'show ipv4 interface brief'
+
 
 * JUNOS
     * Added ShowOspfInterface for commands:
@@ -229,6 +233,8 @@
         * Better support for hop configurations
     * Updated ShowSegmentRoutingTrafficEngPolicy
         * Updated regex and added optional key to support more outputs
+    * Updated ShowClnsProtocol
+        * Changed keyword 'process_handle' to Optional
 
 * IOS
     * Updated ShowInventory

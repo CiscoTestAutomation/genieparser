@@ -5,18 +5,19 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
+                                              SchemaMissingKeyError)
 
-from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
-                                        ShowVlanInterface, \
-                                        ShowIpv4VrfAllInterface, \
-                                        ShowIpv6VrfAllInterface, \
-                                        ShowEthernetTags, \
-                                        ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBrief,\
-                                        ShowInterfaces,\
-                                        ShowInterfacesDescription
+from genie.libs.parser.iosxr.show_interface import (ShowInterfacesDetail,
+                                                    ShowVlanInterface,
+                                                    ShowIpv4VrfAllInterface,
+                                                    ShowIpv6VrfAllInterface,
+                                                    ShowEthernetTags,
+                                                    ShowInterfacesAccounting,
+                                                    ShowIpInterfaceBrief,
+                                                    ShowIpv4InterfaceBrief,
+                                                    ShowInterfaces,
+                                                    ShowInterfacesDescription)
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -3196,6 +3197,24 @@ class test_show_ip_interface_brief(unittest.TestCase):
         parsed_output = obj.parse(ip='10.1.17.179')
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
 
+    def test_empty_ipv4(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_ipv4(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1_ipv4(self):
+        self.device = Mock(**self.golden_output_pipe_ip)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        parsed_output = obj.parse(ip='10.1.17.179')
+        self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
+        
 
 #############################################################################
 # unitest For show interfaces
