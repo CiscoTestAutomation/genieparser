@@ -54,9 +54,9 @@ class ShowPolicyMapTypeSchema(MetaParser):
     schema = {
         Any(): {
             Optional('service_group'): int,
-            'service_policy': {
+            Optional('service_policy'): {
                 Any(): {
-                    'policy_name': {
+                    Optional('policy_name'): {
                         Any(): {
                             Optional('child_policy_name'): {
                                 Any(): {
@@ -189,9 +189,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         },
                                     },
                                     Optional('queue_stats_for_all_priority_classes'): {
-                                        'priority_level': {
+                                        Optional('priority_level'): {
                                             Any(): {
                                                 Optional('queueing'): bool,
+                                                Optional('queue_limit_packets'): int,
                                                 Optional('queue_limit_bytes'): int,
                                                 Optional('queue_limit_us'): int,
                                                 Optional('queue_depth'): int,
@@ -330,9 +331,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                 },
                             },
                             Optional('queue_stats_for_all_priority_classes'): {
-                                'priority_level': {
+                                Optional('priority_level'): {
                                     Any(): {
                                         Optional('queueing'): bool,
+                                        Optional('queue_limit_packets'): int,
                                         Optional('queue_limit_bytes'): int,
                                         Optional('queue_limit_us'): int,
                                         Optional('queue_depth'): int,
@@ -386,6 +388,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         class_line_type = None
         queue_stats = 0
         priority_dict = {}
+        priority_level_status = False
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
@@ -687,6 +690,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # priority level 2
             m = p2_1_1.match(line)
             if m:
+                priority_level_status = True
                 priority_level = m.groupdict()['priority_level']
                 priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
                 priority_dict['queueing'] = queueing_val
@@ -938,7 +942,14 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # queue limit 64 packets
             m = p16.match(line)
             if m:
-                class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
+                if queue_stats == 1:
+                    if not priority_level_status:
+                        priority_dict = queue_dict.setdefault('priority_level',
+                                                              {}).setdefault('default', {})
+                        priority_dict['queueing'] = queueing_val
+                    priority_dict['queue_limit_packets'] = int(m.groupdict()['queue_limit'])
+                else:
+                    class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
                 continue
 
             # queue limit 62500 bytes

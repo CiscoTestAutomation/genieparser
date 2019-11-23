@@ -1980,7 +1980,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     "any"
                                 ],
                                 "queueing": True,
-                                "queue_limit_packets": "512",
+                                "queue_limit_packets": "64",
                                 "queue_depth": 0,
                                 "total_drops": 11111,
                                 "no_buffer_drops": 0,
@@ -1999,6 +1999,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     "priority_level": {
                                         "1": {
                                             "queueing": True,
+                                            "queue_limit_packets": 512,
                                             "queue_depth": 0,
                                             "total_drops": 0,
                                             "no_buffer_drops": 0,
@@ -2287,7 +2288,9 @@ show policy-map interface te0/0/0.101
                                             'total_drops': 0}},
                                     'queue_stats_for_all_priority_classes': {
                                         'priority_level': {
-                                            'default': {'bytes_output': 0,
+                                            'default': {'queueing': True,
+                                                        'queue_limit_packets': 512,
+                                                        'bytes_output': 0,
                                                         'no_buffer_drops': 0,
                                                         'pkts_output': 0,
                                                         'queue_depth': 0,
@@ -2304,7 +2307,7 @@ show policy-map interface te0/0/0.101
                                     'packets': 0,
                                     'pkts_output': 0,
                                     'queue_depth': 0,
-                                    'queue_limit_packets': '512',
+                                    'queue_limit_packets': '34',
                                     'queueing': True,
                                     'rate': {'drop_rate_bps': 0,
                                              'interval': 300,
@@ -2408,6 +2411,517 @@ show policy-map interface te0/0/0.101
                 25            50  1/10
 
     '''}
+
+    golden_output22 = {'execute.return_value': '''
+TenGigabitEthernet0/0/0
+
+  Service-policy output: pm_queuing
+
+    queue stats for all priority classes:
+      Queueing
+      queue limit 512 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+
+    Class-map: cm_dscp_class1 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp ef (46)
+      Priority: Strict, b/w exceed drops: 0
+
+
+    Class-map: cm_dscp_att_ncp (match-any)
+      50402030 packets, 4960596805 bytes
+      1 minute offered rate 1000 bps, drop rate 0000 bps
+      Match: ip dscp cs6 (48) cs7 (56)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 21791793/1927911831
+      bandwidth remaining 5%
+
+    Class-map: cm_dscp_class2 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af31 (26) af32 (28)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: cm_dscp_class3 (match-any)
+      25610 packets, 5013442 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af21 (18) af22 (20)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 25610/5013442
+      bandwidth remaining 25%
+
+    Class-map: class-default (match-any)
+      195800135 packets, 14147555758 bytes
+      1 minute offered rate 4000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 183412932/9203926787
+      bandwidth remaining 25%
+'''}
+
+    golden_parsed_output22 = {
+        'TenGigabitEthernet0/0/0': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'pm_queuing': {
+                            'queue_stats_for_all_priority_classes': {
+                                'priority_level': {
+                                    'default': {
+                                        'queueing': True,
+                                        'queue_limit_packets': 512,
+                                        'queue_depth': 0,
+                                        'total_drops': 0,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 0,
+                                        'bytes_output': 0
+                                    }
+                                }
+                            },
+                            'class_map': {
+                                'cm_dscp_class1': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp ef (46)'],
+                                },
+                                'cm_dscp_att_ncp': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 50402030,
+                                    'bytes': 4960596805,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 1000,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp cs6 (48) cs7 (56)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 21791793,
+                                    'bytes_output': 1927911831,
+                                    'bandwidth_remaining_percent': 5
+                                },
+                                'cm_dscp_class2': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp af31 (26) af32 (28)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'cm_dscp_class3': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 25610,
+                                    'bytes': 5013442,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp af21 (18) af22 (20)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 25610,
+                                    'bytes_output': 5013442,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 195800135,
+                                    'bytes': 14147555758,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 4000,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 183412932,
+                                    'bytes_output': 9203926787,
+                                    'bandwidth_remaining_percent': 25
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output23 = {'execute.return_value': '''
+TenGigabitEthernet0/0/0
+
+  Service-policy output: pm_queuing
+
+    queue stats for all priority classes:
+      Queueing
+      queue limit 512 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+
+    Class-map: cm_dscp_class1 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp ef (46)
+      Priority: Strict, b/w exceed drops: 0
+
+
+    Class-map: cm_dscp_att_ncp (match-any)
+      50402030 packets, 4960596805 bytes
+      1 minute offered rate 1000 bps, drop rate 0000 bps
+      Match: ip dscp cs6 (48) cs7 (56)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 21791793/1927911831
+      bandwidth remaining 5%
+
+    Class-map: cm_dscp_class2 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af31 (26) af32 (28)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: cm_dscp_class3 (match-any)
+      25610 packets, 5013442 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af21 (18) af22 (20)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 25610/5013442
+      bandwidth remaining 25%
+
+    Class-map: class-default (match-any)
+      195800135 packets, 14147555758 bytes
+      1 minute offered rate 4000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 183412932/9203926787
+      bandwidth remaining 25%
+TenGigabitEthernet0/0/1
+
+  Service-policy output: pm_queuing
+
+    queue stats for all priority classes:
+      Queueing
+      queue limit 512 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+
+    Class-map: cm_dscp_class1 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp ef (46)
+      Priority: Strict, b/w exceed drops: 0
+
+
+    Class-map: cm_dscp_ncp (match-any)
+      23626008 packets, 1937686834 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp cs6 (48) cs7 (56)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 11439795/960005330
+      bandwidth remaining 5%
+
+    Class-map: cm_dscp_class2 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af31 (26) af32 (28)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: cm_dscp_class3 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af21 (18) af22 (20)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: class-default (match-any)
+      3979929 packets, 1589680038 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 47152/3617479
+      bandwidth remaining 25%
+GigabitEthernet0/0/3
+
+'''}
+
+    golden_parsed_output23 = {
+        'TenGigabitEthernet0/0/0': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'pm_queuing': {
+                            'queue_stats_for_all_priority_classes': {
+                                'priority_level': {
+                                    'default': {
+                                        'queueing': True,
+                                        'queue_limit_packets': 512,
+                                        'queue_depth': 0,
+                                        'total_drops': 0,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 0,
+                                        'bytes_output': 0
+                                    }
+                                }
+                            },
+                            'class_map': {
+                                'cm_dscp_class1': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp ef (46)'],
+                                },
+                                'cm_dscp_att_ncp': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 50402030,
+                                    'bytes': 4960596805,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 1000,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp cs6 (48) cs7 (56)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 21791793,
+                                    'bytes_output': 1927911831,
+                                    'bandwidth_remaining_percent': 5
+                                },
+                                'cm_dscp_class2': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp af31 (26) af32 (28)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'cm_dscp_class3': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 25610,
+                                    'bytes': 5013442,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0},
+                                    'match': ['ip dscp af21 (18) af22 (20)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 25610,
+                                    'bytes_output': 5013442,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 195800135,
+                                    'bytes': 14147555758,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 4000,
+                                        'drop_rate_bps': 0},
+                                    'match': ['any'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '41666',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 183412932,
+                                    'bytes_output': 9203926787,
+                                    'bandwidth_remaining_percent': 25
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'TenGigabitEthernet0/0/1': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'pm_queuing': {
+                            'queue_stats_for_all_priority_classes': {
+                                'priority_level': {
+                                    'default': {
+                                        'queueing': True,
+                                        'queue_limit_packets': 512,
+                                        'queue_depth': 0,
+                                        'total_drops': 0,
+                                        'no_buffer_drops': 0,
+                                        'pkts_output': 0,
+                                        'bytes_output': 0
+                                    }
+                                }
+                            },
+                            'class_map': {
+                                'cm_dscp_class1': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0
+                                    },
+                                    'match': ['ip dscp ef (46)']
+                                },
+                                'cm_dscp_ncp': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 23626008,
+                                    'bytes': 1937686834,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0
+                                    },
+                                    'match': ['ip dscp cs6 (48) cs7 (56)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '13932',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 11439795,
+                                    'bytes_output': 960005330,
+                                    'bandwidth_remaining_percent': 5
+                                },
+                                'cm_dscp_class2': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0
+                                    },
+                                    'match': ['ip dscp af31 (26) af32 (28)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '13932',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'cm_dscp_class3': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 0,
+                                    'bytes': 0,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0
+                                    },
+                                    'match': ['ip dscp af21 (18) af22 (20)'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '13932',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 0,
+                                    'bytes_output': 0,
+                                    'bandwidth_remaining_percent': 25
+                                },
+                                'class-default': {
+                                    'match_evaluation': 'match-any',
+                                    'packets': 3979929,
+                                    'bytes': 1589680038,
+                                    'rate': {
+                                        'interval': 60,
+                                        'offered_rate_bps': 0,
+                                        'drop_rate_bps': 0
+                                    },
+                                    'match': ['any'],
+                                    'queueing': True,
+                                    'queue_limit_packets': '13932',
+                                    'queue_depth': 0,
+                                    'total_drops': 0,
+                                    'no_buffer_drops': 0,
+                                    'pkts_output': 47152,
+                                    'bytes_output': 3617479,
+                                    'bandwidth_remaining_percent': 25
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'GigabitEthernet0/0/3': {
+        }
+    }
+                                        
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
@@ -2567,6 +3081,20 @@ show policy-map interface te0/0/0.101
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output21)
 
+    def test_show_policy_map_interface_output_full_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output22)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output22)
+        
+    def test_show_policy_map_interface_output_full_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output23)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output23)
+        
 # =============================================
 # Unit test for :
 #    *'show policy map'
