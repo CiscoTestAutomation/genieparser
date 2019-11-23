@@ -139,7 +139,7 @@ class test_show_access_session_interface_details(unittest.TestCase):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessSessionInterfaceDetails(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(interface='GigabitEthernet1/0/21')
 
     def test_golden(self):
         self.maxDiff = None

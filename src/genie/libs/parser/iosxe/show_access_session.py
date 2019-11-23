@@ -112,11 +112,11 @@ class ShowAccessSession(ShowAccessSessionSchema):
        
 class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails_iosxe):
     '''
-        c3850 parser for the following show commands:
+        Parser for the following show commands:
             * show access-session interface {interface} details
     '''
     cli_command = 'show access-session interface {interface} details'
-    def cli(self, interface='', output=None):
+    def cli(self, interface, output=None):
 
         if output is None:
             cmd = self.cli_command.format(interface=interface)
