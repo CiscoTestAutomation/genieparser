@@ -438,7 +438,7 @@ class ShowMsdpContextSchema(MetaParser):
                 },
                 'config': {
                     'originator_address': str,
-                    'originator_interface': str,
+                    Optional('originator_interface'): str,
                     'default_peer_address': str,
                     'sa_holdtime': int,
                     'allow_encaps_count': int,
@@ -851,7 +851,7 @@ class ShowMsdpSummarySchema(MetaParser):
             Any(): {
                 'maximum_external_sa_global': int,
                 'current_external_active_sa': int,
-                'peer_address': {
+                Optional('peer_address'): {
                     Any(): {
                         'as': int,
                         'state': str,
