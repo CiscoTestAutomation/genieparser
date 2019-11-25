@@ -239,7 +239,13 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 # l3 dict
                 matches_dict = seq_dict.setdefault('matches', {})
-                l3_dict = matches_dict.setdefault('l3', {}).setdefault(protocol, {})
+                if protocol != 'ipv4' or 'ipv6':
+                    if acl_dict['type'] is 'ipv6-acl-type':
+                        protocol_name = 'ipv6'
+                    else:
+                        protocol_name = 'ipv4'
+
+                l3_dict = matches_dict.setdefault('l3', {}).setdefault(protocol_name, {})
                 for i in ['protocol', 'ttl', 'precedence']:
                     if group[i]:
                         l3_dict[i] = int(group[i]) if i == 'ttl' else group[i]
