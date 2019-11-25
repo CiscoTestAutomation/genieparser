@@ -851,7 +851,7 @@ class ShowMsdpSummarySchema(MetaParser):
             Any(): {
                 'maximum_external_sa_global': int,
                 'current_external_active_sa': int,
-                'peer_address': {
+                Optional('peer_address'): {
                     Any(): {
                         'as': int,
                         'state': str,
