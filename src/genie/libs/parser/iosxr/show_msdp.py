@@ -438,7 +438,7 @@ class ShowMsdpContextSchema(MetaParser):
                 },
                 'config': {
                     'originator_address': str,
-                    'originator_interface': str,
+                    Optional('originator_interface'): str,
                     'default_peer_address': str,
                     'sa_holdtime': int,
                     'allow_encaps_count': int,
