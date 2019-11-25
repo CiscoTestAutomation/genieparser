@@ -169,6 +169,8 @@
         * Updated regex to accommodate different formats
     * Updated ShowIgmpGroupsDetail
         * Updated schema and patten match for source list
+    * Updated ShowIsis
+        * Updated regex to support more various output
 
 * NXOS
     * ShowIpOspf
