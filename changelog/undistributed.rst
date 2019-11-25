@@ -118,9 +118,9 @@
         * 'show msdp vrf {vrf} summary'
     * Added ShowMsdpSaCache for commands:
         * 'show msdp sa-cache'
-        * 'show msdp sa-cache {group_addr}'
+        * 'show msdp sa-cache {group}'
         * 'show msdp vrf {vrf} sa-cache'
-        * 'show msdp vrf {vrf} sa-cache {group_addr}'
+        * 'show msdp vrf {vrf} sa-cache {group}'
     * Added ShowMsdpStatisticsPeer for commands:
         * 'show msdp statistics peer'
         * 'show msdp statistics peer {peer}'
