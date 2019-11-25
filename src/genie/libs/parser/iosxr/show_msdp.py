@@ -9,9 +9,9 @@ IOSXR parsers for the following commands
     * 'show msdp summary'
     * 'show msdp vrf {vrf} summary'
     * 'show msdp sa-cache'
-    * 'show msdp sa-cache {group_addr}'
+    * 'show msdp sa-cache {group}'
     * 'show msdp vrf {vrf} sa-cache'
-    * 'show msdp vrf {vrf} sa-cache {group_addr}'
+    * 'show msdp vrf {vrf} sa-cache {group}'
     * 'show msdp statistics peer'
     * 'show msdp statistics peer {peer}'
     * 'show msdp vrf {vrf} statistics peer'
@@ -965,7 +965,7 @@ class ShowMsdpSaCacheSchema(MetaParser):
 
     """ Schema for:
         * 'show msdp sa-cache'
-        * 'show msdp vrf <vrf> sa-cache <group_addr>'
+        * 'show msdp vrf {vrf} sa-cache {group}'
     """
     schema = {
         'vrf': {
@@ -1004,17 +1004,17 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
 
     cli_command = ['show msdp vrf {vrf} sa-cache',
                    'show msdp sa-cache',
-                   'show msdp sa-cache {group_addr}',
-                   'show msdp vrf {vrf} sa-cache {group_addr}']
+                   'show msdp sa-cache {group}',
+                   'show msdp vrf {vrf} sa-cache {group}']
 
-    def cli(self, vrf='', group_addr='', output=None):
+    def cli(self, vrf='', group='', output=None):
         if output is None:
-            if vrf and not group_addr:
+            if vrf and not group:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            elif group_addr and not vrf:
-                cmd = self.cli_command[2].format(group_addr=group_addr)
-            elif vrf and group_addr:
-                cmd = self.cli_command[3].format(vrf=vrf, group_addr=group_addr)
+            elif group and not vrf:
+                cmd = self.cli_command[2].format(group=group)
+            elif vrf and group:
+                cmd = self.cli_command[3].format(vrf=vrf, group=group)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
@@ -1047,14 +1047,14 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
             # (10.1.1.10, 239.1.1.1), RP 192.168.1.1, MBGP/AS 200, 00:01:02/00:01:32
             result = r1.match(line)
             if result:
-                group = result.groupdict()
+                group_dict = result.groupdict()
 
-                gp_addr = group['group']
-                src_addr = group['source_addr']
-                rp_address = group['rp_address']
-                peer_as = group['peer_as']
-                up_time = group['up_time']
-                expire = group['expire']
+                gp_addr = group_dict['group']
+                src_addr = group_dict['source_addr']
+                rp_address = group_dict['rp_address']
+                peer_as = group_dict['peer_as']
+                up_time = group_dict['up_time']
+                expire = group_dict['expire']
 
                 if not vrf:
                     vrf = 'default'
@@ -1083,31 +1083,31 @@ class ShowMsdpSaCache(ShowMsdpSaCacheSchema):
             #  Learned from peer 192.168.1.1, RPF peer 192.168.1.1
             result = r2.match(line)
             if result:
-                group = result.groupdict()
-                sa_cache_dict['peer_learned_from'] = group['peer_learned_from']
-                sa_cache_dict['rpf_peer'] = group['rpf_peer']
+                group_dict = result.groupdict()
+                sa_cache_dict['peer_learned_from'] = group_dict['peer_learned_from']
+                sa_cache_dict['rpf_peer'] = group_dict['rpf_peer']
 
                 continue
 
             # SAs recvd 2, Encapsulated data received: 0
             result = r3.match(line)
             if result:
-                group = result.groupdict()
+                group_dict = result.groupdict()
                 received_dict = sa_cache_dict.setdefault('statistics', {})\
                     .setdefault('received', {})
-                received_dict['sa'] = int(group['sa_received'])
+                received_dict['sa'] = int(group_dict['sa_received'])
                 received_dict['encapsulated_data_received'] = \
-                    int(group['encapsulated_data_received'])
+                    int(group_dict['encapsulated_data_received'])
 
                 continue
 
             # grp flags: PI,    src flags: E, EA, PI
             result = r4.match(line)
             if result:
-                group = result.groupdict()
+                group_dict = result.groupdict()
                 flags_dict = sa_cache_dict.setdefault('flags', {})
-                flags_dict['grp'] = group['grp_flag'].split(', ')
-                flags_dict['src'] = group['src_flag'].split(', ')
+                flags_dict['grp'] = group_dict['grp_flag'].split(', ')
+                flags_dict['src'] = group_dict['src_flag'].split(', ')
         return parsed_dict
 
 class ShowMsdpStatisticsPeerSchema(MetaParser):
