@@ -1873,7 +1873,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
-class test_show_mpls_forwarding_table(unittest.TestCase):
+class TestShowMplsForwardingTable(unittest.TestCase):
     dev1 = Device(name='empty')
     dev = Device(name='dev')
     empty_output = {'execute.return_value': ''}
@@ -2510,6 +2510,58 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                                             0             Gi3.420    10.13.120.3  
     '''}
 
+    golden_output_7 = {'execute.return_value': '''
+    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+    Label      Label      or Tunnel Id     Switched      interface              
+    39    [M]  16052      10.169.14.241/32   \
+                                           0             Gi0/1/7    10.169.196.217
+    16052 [M]  16052      10.169.14.241/32   \
+                                           0             Gi0/1/7    10.169.196.217
+    '''}
+
+    golden_parsed_output_7 = {
+    'vrf': {
+        'default': {
+            'local_label': {
+                39: {
+                    'outgoing_label_or_vc': {
+                        '16052': {
+                            'prefix_or_tunnel_id': {
+                                '10.169.14.241/32': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/1/7': {
+                                            'bytes_label_switched': 0,
+                                            'merged': True,
+                                            'next_hop': '10.169.196.217',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                16052: {
+                    'outgoing_label_or_vc': {
+                        '16052': {
+                            'prefix_or_tunnel_id': {
+                                '10.169.14.241/32': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/1/7': {
+                                            'bytes_label_switched': 0,
+                                            'merged': True,
+                                            'next_hop': '10.169.196.217',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
@@ -2557,6 +2609,13 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_7)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 
 class test_show_mpls_forwarding_table_detail(unittest.TestCase):
