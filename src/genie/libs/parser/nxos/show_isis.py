@@ -11,6 +11,7 @@ NXOS parsers for the following show commands:
     * show isis adjacency vrf {vrf}
     * show isis hostname
     * show isis hostname vrf {vrf}
+    * show isis hostname detail
     * show isis hostname detail vrf {vrf}
     * show isis database detail
     * show isis database detail vrf {vrf}
