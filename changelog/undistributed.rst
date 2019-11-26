@@ -19,3 +19,6 @@
 * NXOS
     * Updated ShowAccessLists for:
         * Updated few keys' names by following ACL's Ops structure
+* IOSXE
+    * Updated ShowIsisHostname for:
+        * Updated int to list for level key
