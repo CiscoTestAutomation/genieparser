@@ -559,26 +559,25 @@ class TestShowClnsProtocol(unittest.TestCase):
             }
         }
     }
-
     golden_output = {'execute.return_value': '''\
-    R2#show clns protocol
-    IS-IS Router: VRF1 (0x10001)
-      System Id: 2222.2222.2222.00  IS-Type: level-1-2
-      Manual area address(es):
-        49.0001
-      Routing for area address(es):
-        49.0001
-      Interfaces supported by IS-IS:
-        GigabitEthernet4 - IP - IPv6
-        Loopback1 - IP - IPv6
-      Redistribute:
-        static (on by default)
-      Distance for L2 CLNS routes: 110
-      RRR level: none
-      Generate narrow metrics: none
-      Accept narrow metrics:   none
-      Generate wide metrics:   level-1-2
-      Accept wide metrics:     level-1-2
+        R2#show clns protocol
+        IS-IS Router: VRF1 (0x10001)
+        System Id: 2222.2222.2222.00  IS-Type: level-1-2
+        Manual area address(es):
+            49.0001
+        Routing for area address(es):
+            49.0001
+        Interfaces supported by IS-IS:
+            GigabitEthernet4 - IP - IPv6
+            Loopback1 - IP - IPv6
+        Redistribute:
+            static (on by default)
+        Distance for L2 CLNS routes: 110
+        RRR level: none
+        Generate narrow metrics: none
+        Accept narrow metrics:   none
+        Generate wide metrics:   level-1-2
+        Accept wide metrics:     level-1-2
     '''}
 
     golden_parsed_output_2 = {
@@ -608,7 +607,6 @@ class TestShowClnsProtocol(unittest.TestCase):
             }
         }
     }
-
     golden_output_2 = {'execute.return_value': '''
         IS-IS Router: <Null Tag> (0x10000)
           System Id: 0000.0000.0007.00  IS-Type: level-1
@@ -674,8 +672,6 @@ class TestShowClnsProtocol(unittest.TestCase):
             },
         }
     }
-
-
     golden_output_3 = {'execute.return_value': '''
         #show clns protocol
 
@@ -714,6 +710,56 @@ class TestShowClnsProtocol(unittest.TestCase):
           Accept wide metrics:     none
     '''}
 
+    golden_parsed_output_4 = {
+        'instance': {
+            'test': {
+                'is_type': 'level-1',
+                'system_id': '1111.1111.1111',
+                'nsel': '00',
+                'manual_area_address': ['49.0001'],
+                'routing_for_area_address': ['49.0001'],
+                'interfaces': {
+                    'GigabitEthernet0/1': {
+                        'topology': ['ipv4', 'ipv6'],
+                    },
+                    'Loopback0': {
+                        'topology': ['ipv4', 'ipv6'],
+                    },
+                },
+                'redistribute': 'static (on by default)',
+                'distance_for_l2_clns_routes': 110,
+                'rrr_level': 'none',
+                'metrics': {
+                    'generate_narrow': 'none',
+                    'accept_narrow': 'none',
+                    'generate_wide': 'level-1-2',
+                    'accept_wide': 'level-1-2',
+                },
+            },
+        },
+    }
+    golden_output_4 = {'execute.return_value': '''
+        #show clns protocol
+
+        IS-IS Router: test
+        System Id: 1111.1111.1111.00  IS-Type: level-1
+        Manual area address(es):
+                49.0001
+        Routing for area address(es):
+                49.0001
+        Interfaces supported by IS-IS:
+                GigabitEthernet0/1 - IP - IPv6
+                Loopback0 - IP - IPv6
+        Redistribute:
+            static (on by default)
+        Distance for L2 CLNS routes: 110
+        RRR level: none
+        Generate narrow metrics: none
+        Accept narrow metrics:   none
+        Generate wide metrics:   level-1-2
+        Accept wide metrics:     level-1-2
+    '''}
+
     def test_empty(self):
         device = Mock(**self.empty_output)
         obj = ShowClnsProtocol(device=device)
@@ -737,6 +783,13 @@ class TestShowClnsProtocol(unittest.TestCase):
         obj = ShowClnsProtocol(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_clns_protocol_4(self):
+        device = Mock(**self.golden_output_4)
+        obj = ShowClnsProtocol(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
 
 # =========================================================
 # Unit test for 'show clns neighbors detail'

@@ -2015,7 +2015,7 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name):
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name):
                         if 'R' in slot:
                             lc_type = 'rp'
                         elif re.match(r'^\d+', slot):
@@ -5285,31 +5285,35 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
 
 class ShowProcessesMemorySchema(MetaParser):
     schema = {
-        Optional('processor_pool'): {
+        'processor_pool': {
             'total': int,
             'used': int,
             'free': int,
         },
-        Optional('reserve_p_pool'): {
+        'reserve_p_pool': {
             'total': int,
             'used': int,
             'free': int,
         },
-        Optional('lsmi_io_pool'): {
+        'lsmi_io_pool': {
             'total': int,
             'used': int,
             'free': int,
         },
         Optional('pid'): {
             Any(): {
-                'pid': int,
-                'tty': int,
-                'allocated': int,
-                'freed': int,
-                'holding': int,
-                'getbufs': int,
-                'retbufs': int,
-                'process': str,
+                'index': {
+                    Any(): {
+                        'pid': int,
+                        'tty': int,
+                        'allocated': int,
+                        'freed': int,
+                        'holding': int,
+                        'getbufs': int,
+                        'retbufs': int,
+                        'process': str,
+                    }
+                }
             }
         }
     }
@@ -5318,13 +5322,13 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
 
     cli_command = [
         'show processes memory',
-        'show processes memory | include {include}',
-        'show processes memory | i {include}'
+        'show processes memory | include {include}'
     ]
 
     def cli(self, include=None, output=None):
 
         ret_dict = {}
+        pid_index = {}
         
         if not output:
             if include:
@@ -5386,8 +5390,12 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 pid = int(group['pid'])
+                index = pid_index.get(pid, 0) + 1
                 pid_dict = ret_dict.setdefault('pid', {}). \
-                    setdefault(pid, {})
+                    setdefault(pid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+                pid_index.update({pid: index})
                 pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
                 continue
             

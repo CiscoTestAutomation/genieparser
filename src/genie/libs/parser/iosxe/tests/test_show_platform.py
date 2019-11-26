@@ -3621,6 +3621,103 @@ Switch#   Role        Priority      State
         F0        11112222            16.7(2r)            
     '''}
 
+    golden_parsed_output_c9500 = {
+        "slot": {
+            "1": {
+                "lc": {
+                    "C9500-32QC": {
+                        "slot": "1",
+                        "name": "C9500-32QC",
+                        "state": "ok",
+                        "insert_time": "1d18h",
+                        "subslot": {
+                            "0": {
+                                "C9500-32QC": {
+                                    "subslot": "0",
+                                    "name": "C9500-32QC",
+                                    "state": "ok",
+                                    "insert_time": "1d18h"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "R0": {
+                "rp": {
+                    "C9500-32QC": {
+                        "slot": "R0",
+                        "name": "C9500-32QC",
+                        "state": "ok, active",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "C9K-PWR-650WAC-R": {
+                        "slot": "P0",
+                        "name": "C9K-PWR-650WAC-R",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P2",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P3": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P3",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c9500 = {'execute.return_value': '''\
+        show platform
+
+        Chassis type: C9500-32QC          
+
+
+
+        Slot      Type                State                 Insert time (ago) 
+
+        --------- ------------------- --------------------- ----------------- 
+
+        1         C9500-32QC          ok                    1d18h         
+
+         1/0      C9500-32QC          ok                    1d18h         
+
+        R0        C9500-32QC          ok, active            1d18h         
+
+        P0        C9K-PWR-650WAC-R    ok                    1d18h         
+
+        P2        C9K-T1-FANTRAY      ok                    1d18h         
+
+        P3        C9K-T1-FANTRAY      ok                    1d18h         
+
+
+
+        Slot      CPLD Version        Firmware Version                        
+
+        --------- ------------------- --------------------------------------- 
+
+        1         19061022            17.1.1[FC2]      
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -3674,6 +3771,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev_asr1002)
         parsed_output_3 = platform_obj.parse()
         self.assertEqual(parsed_output_3,self.golden_parsed_output_3)
+
+    def test_golden_c9500(self):
+        self.maxDiff = None
+        self.dev_c9500 = Mock(**self.golden_output_c9500)
+        platform_obj = ShowPlatform(device=self.dev_c9500)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c9500)
 
 
 class TestShowBoot(unittest.TestCase):
@@ -18748,42 +18852,80 @@ class TestShowProcessMemory(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'processor_pool': {
-            'total': 10147887840,
-            'used': 485435960,
-            'free': 9662451880,
-        },
-        'reserve_p_pool': {
-            'total': 102404,
-            'used': 88,
-            'free': 102316,
-        },
         'lsmi_io_pool': {
+            'free': 832,
             'total': 6295128,
             'used': 6294296,
-            'free': 832,
         },
         'pid': {
             0: {
-                'pid': 0,
-                'tty': 0,
-                'allocated': 0,
-                'freed': 0,
-                'holding': 4070880,
-                'getbufs': 0,
-                'retbufs': 0,
-                'process': '*MallocLite*',
+                'index': {
+                    1: {
+                        'allocated': 678985440,
+                        'freed': 347855496,
+                        'getbufs': 428,
+                        'holding': 304892096,
+                        'pid': 0,
+                        'process': '*Init*',
+                        'retbufs': 2134314,
+                        'tty': 0,
+                    },
+                    2: {
+                        'allocated': 800,
+                        'freed': 4965889216,
+                        'getbufs': 17,
+                        'holding': 800,
+                        'pid': 0,
+                        'process': '*Sched*',
+                        'retbufs': 17,
+                        'tty': 0,
+                    },
+                    3: {
+                        'allocated': 2675774192,
+                        'freed': 2559881512,
+                        'getbufs': 2111,
+                        'holding': 43465512,
+                        'pid': 0,
+                        'process': '*Dead*',
+                        'retbufs': 351,
+                        'tty': 0,
+                    },
+                    4: {
+                        'allocated': 0,
+                        'freed': 0,
+                        'getbufs': 0,
+                        'holding': 4070880,
+                        'pid': 0,
+                        'process': '*MallocLite*',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
             },
             1: {
-                'pid': 1,
-                'tty': 0,
-                'allocated': 3415536,
-                'freed': 879912,
-                'holding': 2565568,
-                'getbufs': 0,
-                'retbufs': 0,
-                'process': 'Chunk Manager',
+                'index': {
+                    1: {
+                        'allocated': 3415536,
+                        'freed': 879912,
+                        'getbufs': 0,
+                        'holding': 2565568,
+                        'pid': 1,
+                        'process': 'Chunk Manager',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
             },
+        },
+        'processor_pool': {
+            'free': 9662451880,
+            'total': 10147887840,
+            'used': 485435960,
+        },
+        'reserve_p_pool': {
+            'free': 102316,
+            'total': 102404,
+            'used': 88,
         },
     }
 
@@ -18838,6 +18980,11 @@ class TestShowProcessMemory(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         platform_obj = ShowProcessesMemory(device=self.device)
         parsed_output = platform_obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output)
     
     def test_golden2(self):
