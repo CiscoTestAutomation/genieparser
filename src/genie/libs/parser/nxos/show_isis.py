@@ -1153,7 +1153,7 @@ class ShowIsisHostnameSchema(MetaParser):
                             'hostname': {
                                 Any(): {
                                     'hostname': str,
-                                    'level': int,
+                                    'level': list,
                                     Optional('local_router'): bool,
                                 },
                             },
@@ -1221,7 +1221,11 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                                          setdefault(group['system_id'], {})
 
                 hostname_dict.update({'hostname': group['dynamic_hostname']})
-                hostname_dict.update({'level': int(group['level'])})
+                level_list = hostname_dict.get('level', [])
+                level = int(group['level'])
+                if level not in level_list:
+                    level_list.append(level)
+                hostname_dict.update({'level': level_list})
 
                 if group['star']:
                     hostname_dict.update({'local_router': True})

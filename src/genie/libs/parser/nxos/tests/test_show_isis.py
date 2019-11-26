@@ -1093,31 +1093,31 @@ class TestShowIsisHostname(unittest.TestCase):
         'instance': {
             'test': {
                 'vrf': {
-                    'default': {
-                        'hostname_db': {
-                            'hostname': {
-                                '1111.1111.1111': {
-                                    'hostname': 'R1_ios',
-                                    'level': 1,
-                                },
-                                '2222.2222.2222': {
-                                    'hostname': 'R2_xr',
-                                    'level': 1,
-                                },
-                                '3333.3333.3333': {
-                                    'hostname': 'R3_nx',
-                                    'level': 1,
-                                    'local_router': True,
-                                },
-                            },
-                        },
-                    },
                     'VRF1': {
                         'hostname_db': {
                             'hostname': {
                                 '3333.3333.3333': {
                                     'hostname': 'R3_nx',
-                                    'level': 1,
+                                    'level': [1],
+                                    'local_router': True,
+                                },
+                            },
+                        },
+                    },
+                    'default': {
+                        'hostname_db': {
+                            'hostname': {
+                                '1111.1111.1111': {
+                                    'hostname': 'R1_ios',
+                                    'level': [1],
+                                },
+                                '2222.2222.2222': {
+                                    'hostname': 'R2_xr',
+                                    'level': [1],
+                                },
+                                '3333.3333.3333': {
+                                    'hostname': 'R3_nx',
+                                    'level': [1],
                                     'local_router': True,
                                 },
                             },
