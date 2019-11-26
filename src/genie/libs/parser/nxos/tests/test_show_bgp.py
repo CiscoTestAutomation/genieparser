@@ -16645,6 +16645,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                   },
                   "10.186.101.1": {
                     "nbr_local_as_replace_as": False,
+                    "nbr_inherit_peer": "GENIE-BGP",
                     "nbr_af_name": {
                       "ipv4 unicast": {
                         "nbr_af_soft_reconfiguration": True,
@@ -16855,6 +16856,7 @@ class test_show_running_config_bgp(unittest.TestCase):
               send-community extended
           neighbor 10.64.4.4
           neighbor 10.186.101.1
+            inherit peer GENIE-BGP
             remote-as 333
             address-family ipv4 multicast
               send-community

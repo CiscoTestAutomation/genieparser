@@ -6045,6 +6045,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                      Optional('nbr_password_text'): str,
                                      Optional('nbr_transport_connection_mode'): str,
                                      Optional('nbr_peer_type'): str,
+                                     Optional('nbr_inherit_peer'): str,
                                      Optional('nbr_af_name'):
                                         {Any():
                                             {Optional('nbr_af_allowas_in'): bool,
@@ -6177,6 +6178,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p55 = re.compile(r'^\s*password +(?P<nbr_password_text>.*)$')
         p56 = re.compile(r'^\s*transport connection-mode +(?P<nbr_transport_connection_mode>[a-z]+)$')
         p101 = re.compile(r'^\s*peer-type +(?P<nbr_peer_type>[\w\-]+)$')
+        p104 = re.compile(r'^\s*inherit peer +(?P<nbr_inherit_peer>\S+)$')
         p57 = re.compile(r'^\s*address-family +(?P<nbr_af_name>[A-Za-z0-9\s\-]+)$')
         p58 = re.compile(r'^\s*allowas-in( +(?P<nbr_af_allowas_in_as_number>[0-9]+))?$')
         p59 = re.compile(r'^\s*inherit peer-policy +(?P<nbr_af_inherit_peer_policy>[A-Za-z0-9\-]+) +(?P<nbr_af_inherit_peer_seq>[0-9]+)$')
@@ -6895,6 +6897,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
                                 ['nbr_peer_type'] = m.groupdict()['nbr_peer_type']
+                            continue
+
+                        # inherit peer GENIE-NEXUS-EBGP
+                        m = p104.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
+                                ['nbr_inherit_peer'] = m.groupdict()['nbr_inherit_peer']
                             continue
 
                         #   address-family <nbr_af_name>
