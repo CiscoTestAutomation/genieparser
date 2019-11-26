@@ -11,6 +11,7 @@ NXOS parsers for the following show commands:
     * show isis adjacency vrf {vrf}
     * show isis hostname
     * show isis hostname vrf {vrf}
+    * show isis hostname detail vrf {vrf}
     * show isis database detail
     * show isis database detail vrf {vrf}
 """
@@ -1190,7 +1191,9 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         #  Level  System ID       Dynamic hostname
         #  1      1111.1111.1111  R1_ios
         #  1      3333.3333.3333* R3_nx
-        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\.]+)(?P<star>\*)? '
+        #  1      7777.7777.7777.00-00* R7
+        #  2      2222.2222.2222.00-00  R2
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\-\.]+)(?P<star>\*)? '
                         r'+(?P<dynamic_hostname>\S+)$')
 
         for line in out.splitlines():
@@ -1211,6 +1214,8 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
             #  1      1111.1111.1111  R1_ios
             #  1      3333.3333.3333* R3_nx
+            #  1      7777.7777.7777.00-00* R7
+            #  2      2222.2222.2222.00-00  R2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1227,6 +1232,25 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
         return result_dict
 
+class ShowIsisHostnameDetail(ShowIsisHostname):
+    """Parser for 
+            * show isis hostname detail
+            * show isis hostname detail vrf {vrf}"""
+
+    cli_command = ['show isis hostname detail', 
+                   'show isis hostname detail vrf {vrf}']
+    
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(output=out)
 
 class ShowIsisDatabaseDetailSchema(MetaParser):
     """Schema for show isis database detail"""
