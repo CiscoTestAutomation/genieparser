@@ -6907,7 +6907,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name] = {}
                             continue
 
-                        if nbr_af_name:
+                        if 'nbr_af_name' in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
                             #   allowas-in [ <allowas-in-cnt> ]
                             m = p58.match(line)
                             if m:
