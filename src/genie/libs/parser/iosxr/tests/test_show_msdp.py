@@ -734,9 +734,9 @@ class TestShowMsdpSaCache(unittest.TestCase):
     """
          Commands:
          show msdp sa-cache
-         show msdp sa-cache <group_addr>
-         show msdp vrf <vrf> sa-cache
-         show msdp vrf <vrf> sa-cache <group_addr>
+         show msdp sa-cache {group}
+         show msdp vrf {vrf} sa-cache
+         show msdp vrf {vrf} sa-cache {group}
      """
     device = Device(name='aDevice')
 
@@ -1070,14 +1070,14 @@ class TestShowMsdpSaCache(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_3)
         obj = ShowMsdpSaCache(device=self.device)
-        parsed_output = obj.parse(group_addr='10.4.1.1')
+        parsed_output = obj.parse(group='10.4.1.1')
         self.assertEqual(parsed_output, self.expected_output_3)
 
     def test_show_msdp_sacache_4(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_4)
         obj = ShowMsdpSaCache(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', group_addr='10.4.1.1')
+        parsed_output = obj.parse(vrf='VRF1', group='10.4.1.1')
         self.assertEqual(parsed_output, self.expected_output_4)
 
 
