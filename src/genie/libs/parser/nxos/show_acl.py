@@ -239,7 +239,9 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 # l3 dict
                 matches_dict = seq_dict.setdefault('matches', {})
-                if protocol is (not 'ipv4' or not 'ipv6'):
+                if protocol is ('ipv4' or 'ipv6'):
+                    protocol_name = protocol
+                else:
                     if acl_dict['type'] is 'ipv6-acl-type':
                         protocol_name = 'ipv6'
                     else:
