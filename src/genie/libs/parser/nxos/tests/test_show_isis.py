@@ -1166,20 +1166,20 @@ class TestShowIsisHostnameDetail(unittest.TestCase):
                             'hostname': {
                                 '1111.1111.1111': {
                                     'hostname': 'R1_ios',
-                                    'level': 1,
+                                    'level': [1],
                                 },
                                 '2222.2222.2222.00-00': {
                                     'hostname': 'R2',
-                                    'level': 2,
+                                    'level': [2],
                                 },
                                 '3333.3333.3333': {
                                     'hostname': 'R3_nx',
-                                    'level': 1,
+                                    'level': [1],
                                     'local_router': True,
                                 },
                                 '7777.7777.7777.00-00': {
                                     'hostname': 'R7',
-                                    'level': 2,
+                                    'level': [1, 2],
                                     'local_router': True,
                                 },
                             },
@@ -1190,36 +1190,36 @@ class TestShowIsisHostnameDetail(unittest.TestCase):
                             'hostname': {
                                 '2222.2222.2222.00-00': {
                                     'hostname': 'R2',
-                                    'level': 2,
+                                    'level': [2],
                                 },
                                 '3333.3333.3333.00-00': {
                                     'hostname': 'R3',
-                                    'level': 2,
+                                    'level': [1, 2],
                                 },
                                 '4444.4444.4444.00-00': {
                                     'hostname': 'R4',
-                                    'level': 1,
+                                    'level': [1],
                                 },
                                 '5555.5555.5555.00-00': {
                                     'hostname': 'R5',
-                                    'level': 2,
+                                    'level': [1, 2],
                                 },
                                 '6666.6666.6666.00-00': {
                                     'hostname': 'R6',
-                                    'level': 1,
+                                    'level': [1],
                                 },
                                 '7777.7777.7777.00-00': {
                                     'hostname': 'R7',
-                                    'level': 2,
+                                    'level': [1, 2],
                                     'local_router': True,
                                 },
                                 '8888.8888.8888.00-00': {
                                     'hostname': 'R8',
-                                    'level': 2,
+                                    'level': [2],
                                 },
                                 '9999.9999.9999.00-00': {
                                     'hostname': 'R9',
-                                    'level': 2,
+                                    'level': [2],
                                 },
                             },
                         },

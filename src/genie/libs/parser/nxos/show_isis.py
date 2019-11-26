@@ -1192,9 +1192,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         #  Level  System ID       Dynamic hostname
         #  1      1111.1111.1111  R1_ios
         #  1      3333.3333.3333* R3_nx
-        #  1      7777.7777.7777.00-00* R7
-        #  2      2222.2222.2222.00-00  R2
-        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\-\.]+)(?P<star>\*)? '
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\.]+)(?P<star>\*)? '
                         r'+(?P<dynamic_hostname>\S+)$')
 
         for line in out.splitlines():
@@ -1215,8 +1213,6 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
             #  1      1111.1111.1111  R1_ios
             #  1      3333.3333.3333* R3_nx
-            #  1      7777.7777.7777.00-00* R7
-            #  2      2222.2222.2222.00-00  R2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1233,7 +1229,32 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
         return result_dict
 
-class ShowIsisHostnameDetail(ShowIsisHostname):
+class ShowIsisHostnameDetailSchema(MetaParser):
+    """Schema for 
+            * show isis hostname detail
+            * show isis hostname detail vrf {vrf}"""
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'hostname_db': {
+                            'hostname': {
+                                Any(): {
+                                    'hostname': str,
+                                    'level': list,
+                                    Optional('local_router'): bool,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowIsisHostnameDetail(ShowIsisHostnameDetailSchema):
     """Parser for 
             * show isis hostname detail
             * show isis hostname detail vrf {vrf}"""
@@ -1251,7 +1272,56 @@ class ShowIsisHostnameDetail(ShowIsisHostname):
         else:
             out = output
         
-        return super().cli(output=out)
+        # initial return dictionary
+        result_dict = {}
+
+        # IS-IS Process: test dynamic hostname table VRF: default
+        p1 = re.compile(r'^IS-IS +Process: +(?P<process_id>\S+) +dynamic '
+                        r'+hostname +table +VRF: +(?P<vrf>\S+)$')
+
+        #  Level  LSP ID                Dynamic hostname
+        #  1      7777.7777.7777.00-00* R7
+        #  2      2222.2222.2222.00-00  R2
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<lsp_id>[\d\-\.]+)(?P<star>\*)? '
+                        r'+(?P<dynamic_hostname>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  IS-IS Process: test dynamic hostname table VRF: default
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id = group['process_id']
+                vrf = group['vrf']
+
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
+                                       setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
+                continue
+
+            #  1      7777.7777.7777.00-00* R7
+            #  2      2222.2222.2222.00-00  R2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                hostname_dict = vrf_dict.setdefault('hostname_db', {}).\
+                                         setdefault('hostname', {}).\
+                                         setdefault(group['lsp_id'], {})
+
+                hostname_dict.update({'hostname': group['dynamic_hostname']})
+                level_list = hostname_dict.get('level', [])
+                level = int(group['level'])
+                if level not in level_list:
+                    level_list.append(level)
+                hostname_dict.update({'level': level_list})
+
+                if group['star']:
+                    hostname_dict.update({'local_router': True})
+                continue
+        
+        return result_dict
 
 class ShowIsisDatabaseDetailSchema(MetaParser):
     """Schema for show isis database detail"""
