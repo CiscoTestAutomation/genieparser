@@ -54,9 +54,9 @@ class ShowPolicyMapTypeSchema(MetaParser):
     schema = {
         Any(): {
             Optional('service_group'): int,
-            'service_policy': {
+            Optional('service_policy'): {
                 Any(): {
-                    'policy_name': {
+                    Optional('policy_name'): {
                         Any(): {
                             Optional('child_policy_name'): {
                                 Any(): {
@@ -119,7 +119,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                 Optional('percent'): int,
                                                 Optional('kbps'): int,
                                                 Optional('burst_bytes'): int,
-                                                Optional('exceed_drops'): int},
+                                                Optional('exceed_drops'): int,
+                                                Optional('type'): str},
                                             Optional('rate'): {
                                                 Optional('interval'): int,
                                                 Optional('offered_rate_bps'): int,
@@ -189,9 +190,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         },
                                     },
                                     Optional('queue_stats_for_all_priority_classes'): {
-                                        'priority_level': {
+                                        Optional('priority_level'): {
                                             Any(): {
                                                 Optional('queueing'): bool,
+                                                Optional('queue_limit_packets'): str,
                                                 Optional('queue_limit_bytes'): int,
                                                 Optional('queue_limit_us'): int,
                                                 Optional('queue_depth'): int,
@@ -262,7 +264,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('percent'): int,
                                         Optional('kbps'): int,
                                         Optional('burst_bytes'): int,
-                                        Optional('exceed_drops'): int},
+                                        Optional('exceed_drops'): int,
+                                        Optional('type'): str},
                                     Optional('rate'): {
                                         Optional('interval'): int,
                                         Optional('offered_rate_bps'): int,
@@ -330,9 +333,10 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                 },
                             },
                             Optional('queue_stats_for_all_priority_classes'): {
-                                'priority_level': {
+                                Optional('priority_level'): {
                                     Any(): {
                                         Optional('queueing'): bool,
+                                        Optional('queue_limit_packets'): str,
                                         Optional('queue_limit_bytes'): int,
                                         Optional('queue_limit_us'): int,
                                         Optional('queue_depth'): int,
@@ -386,6 +390,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         class_line_type = None
         queue_stats = 0
         priority_dict = {}
+        priority_level_status = False
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
@@ -620,6 +625,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # bandwidth remaining 70%
         p40 = re.compile(r'^bandwidth +remaining +(?P<bandwidth_remaining_percent>(\d+))%$')
+        
+        # Priority: Strict, b/w exceed drops: 0
+        p41 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -687,6 +695,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # priority level 2
             m = p2_1_1.match(line)
             if m:
+                priority_level_status = True
                 priority_level = m.groupdict()['priority_level']
                 priority_dict = queue_dict.setdefault('priority_level', {}).setdefault(priority_level, {})
                 priority_dict['queueing'] = queueing_val
@@ -938,7 +947,14 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # queue limit 64 packets
             m = p16.match(line)
             if m:
-                class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
+                if queue_stats == 1:
+                    if not priority_level_status:
+                        priority_dict = queue_dict.setdefault('priority_level',
+                                                              {}).setdefault('default', {})
+                        priority_dict['queueing'] = queueing_val
+                    priority_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
+                else:
+                    class_map_dict['queue_limit_packets'] = m.groupdict()['queue_limit']
                 continue
 
             # queue limit 62500 bytes
@@ -1208,7 +1224,15 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
-
+                
+            # Priority: Strict, b/w exceed drops: 0
+            m = p41.match(line)
+            if m:
+                pri_dict = class_map_dict.setdefault('priority', {})
+                pri_dict['type'] = m.groupdict()['type']
+                pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
+                continue
+                
         return ret_dict
 
 
