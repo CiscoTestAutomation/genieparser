@@ -64,7 +64,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -99,7 +99,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -140,7 +140,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'pim': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -170,7 +170,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'icmp': {
+                        'ipv4': {
                             'source_network': {
                                 '0.1.1.1 255.0.0.0': {
                                     'source_network': '0.1.1.1 255.0.0.0',
@@ -207,7 +207,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'source_network': {
                                 '192.168.1.0 0.0.0.255': {
                                     'source_network': '192.168.1.0 0.0.0.255',
@@ -236,7 +236,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -303,7 +303,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -373,7 +373,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv6': {
                             'destination_network': {
                                 'host 2001:2::2': {
                                     'destination_network': 'host 2001:2::2',
@@ -443,7 +443,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'udp': {
+                        'ipv6': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -478,7 +478,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'esp': {
+                        'ipv6': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -690,7 +690,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.7.0 0.0.0.255": {
                                             "source_network": "10.4.7.0 0.0.0.255"
@@ -725,7 +725,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.4.0 0.0.0.255": {
                                             "source_network": "10.4.4.0 0.0.0.255"
@@ -760,7 +760,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.69.188.0 0.0.0.255": {
                                             "source_network": "10.69.188.0 0.0.0.255"
@@ -795,7 +795,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.12.0 0.0.0.255": {
                                             "source_network": "10.4.12.0 0.0.0.255"
@@ -830,7 +830,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.8.0 0.0.0.255": {
                                             "source_network": "10.4.8.0 0.0.0.255"
@@ -865,7 +865,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.3.0 0.0.0.255": {
                                             "source_network": "10.4.3.0 0.0.0.255"
@@ -900,7 +900,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.14.0 0.0.0.255": {
                                             "source_network": "10.4.14.0 0.0.0.255"
@@ -935,7 +935,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.2.0 0.0.0.255": {
                                             "source_network": "10.4.2.0 0.0.0.255"
@@ -970,7 +970,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.11.0 0.0.0.255": {
                                             "source_network": "10.4.11.0 0.0.0.255"
@@ -1005,7 +1005,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.9.0 0.0.0.255": {
                                             "source_network": "10.4.9.0 0.0.0.255"
@@ -1040,7 +1040,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.16.0 0.0.0.255": {
                                             "source_network": "10.4.16.0 0.0.0.255"
@@ -1075,7 +1075,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.15.0 0.0.0.255": {
                                             "source_network": "10.4.15.0 0.0.0.255"
@@ -1110,7 +1110,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.1.0 0.0.0.255": {
                                             "source_network": "10.4.1.0 0.0.0.255"
@@ -1145,7 +1145,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.6.0 0.0.0.255": {
                                             "source_network": "10.4.6.0 0.0.0.255"
@@ -1180,7 +1180,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.10.0 0.0.0.255": {
                                             "source_network": "10.4.10.0 0.0.0.255"
@@ -1215,7 +1215,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.13.0 0.0.0.255": {
                                             "source_network": "10.4.13.0 0.0.0.255"
@@ -1250,7 +1250,7 @@ Extended IP access list ACL_TEST
                         },
                         "matches": {
                             "l3": {
-                                "tcp": {
+                                "ipv4": {
                                     "source_network": {
                                         "10.4.5.0 0.0.0.255": {
                                             "source_network": "10.4.5.0 0.0.0.255"
@@ -1345,7 +1345,7 @@ IPv6 access list OutFilter_IPv6
                               }
                          },
                          "l3": {
-                              "icmp": {
+                              "ipv6": {
                                    "destination_network": {
                                         "any": {
                                              "destination_network": "any"
@@ -1465,7 +1465,7 @@ IPv6 access list OutFilter_IPv6
                               }
                          },
                          "l3": {
-                              "icmp": {
+                              "ipv6": {
                                    "destination_network": {
                                         "any": {
                                              "destination_network": "any"
@@ -1510,7 +1510,7 @@ IPv6 access list OutFilter_IPv6
                               }
                          },
                          "l3": {
-                              "icmp": {
+                              "ipv6": {
                                    "destination_network": {
                                         "any": {
                                              "destination_network": "any"
@@ -1539,7 +1539,7 @@ IPv6 access list OutFilter_IPv6
                               }
                          },
                          "l3": {
-                              "icmp": {
+                              "ipv6": {
                                    "destination_network": {
                                         "any": {
                                              "destination_network": "any"
@@ -1703,7 +1703,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     "matches": {
                         "l3": {
-                            "tcp": {
+                            "ipv6": {
                                 "destination_network": {
                                     "any": {
                                         "destination_network": "any"
@@ -1738,7 +1738,7 @@ IPv6 access list OutFilter_IPv6
                 "30": {
                     "matches": {
                         "l3": {
-                            "udp": {
+                            "ipv6": {
                                 "destination_network": {
                                     "any": {
                                         "destination_network": "any"
@@ -1770,7 +1770,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     "matches": {
                         "l3": {
-                            "tcp": {
+                            "ipv6": {
                                 "destination_network": {
                                     "any": {
                                         "destination_network": "any"
@@ -1815,7 +1815,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'tcp': {
+                            'ipv6': {
                                 'destination_network': {
                                     'host 2001:DB8:2::32': {
                                         'destination_network': 'host 2001:DB8:2::32'
@@ -1856,7 +1856,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'tcp': {
+                            'ipv6': {
                                 'destination_network': {
                                     'host 2001:DB8:2::32': {
                                         'destination_network': 'host 2001:DB8:2::32'
@@ -2127,7 +2127,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'tcp': {
+                            'ipv4': {
                                 'destination_network': {
                                     '192.168.220.0 0.0.0.255': {
                                         'destination_network': '192.168.220.0 0.0.0.255'
@@ -2191,7 +2191,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'esp': {
+                            'ipv6': {
                                 'destination_network': {
                                     'any': {
                                         'destination_network': 'any'
@@ -2220,7 +2220,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'tcp': {
+                            'ipv6': {
                                 'destination_network': {
                                     'any': {
                                         'destination_network': 'any'
@@ -2261,7 +2261,7 @@ IPv6 access list OutFilter_IPv6
                     },
                     'matches': {
                         'l3': {
-                            'udp': {
+                            'ipv6': {
                                 'destination_network': {
                                     'host 2001:DB8:1::1': {
                                         'destination_network': 'host 2001:DB8:1::1'
