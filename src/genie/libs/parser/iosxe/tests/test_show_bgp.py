@@ -4991,12 +4991,12 @@ Paths: (1 available, best #1, no table)
    
     golden_output4 = {'execute.return_value':'''
         Route Distinguisher: 65000:1 (default for vrf VRF1)
-        BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+        BGP routing table entry for 65000:1:10.4.1.1/32, version 2
           Paths: (1 available, best #1, table VRF1)
           Not advertised to any peer
           Refresh Epoch 1
           Local
-            0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+            0.0.0.0 (via vrf VRF1) from 0.0.0.0 (10.4.1.1)
               Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
               Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
                 0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
@@ -5011,7 +5011,7 @@ Paths: (1 available, best #1, no table)
                         'address_family': {
                             'vpnv4': {
                                 'prefixes': {
-                                    '1.1.1.1/32': {
+                                    '10.4.1.1/32': {
                                         'table_version': '2',
                                         'available_path': '1',
                                         'best_path': '1',
@@ -5020,7 +5020,7 @@ Paths: (1 available, best #1, no table)
                                             1: {
                                                 'next_hop': '0.0.0.0',
                                                 'gateway': '0.0.0.0',
-                                                'originator': '1.1.1.1',
+                                                'originator': '10.4.1.1',
                                                 'next_hop_via': 'vrf VRF1',
                                                 'localpref': 100,
                                                 'metric': 0,
@@ -5054,47 +5054,47 @@ Paths: (1 available, best #1, no table)
              1          29         35
           Refresh Epoch 1
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.100.100.80 (via vrf sample_vrf) from 100.100.100.80 (100.10.10.40)
+            10.220.100.80 (via vrf sample_vrf) from 10.220.100.80 (10.115.10.40)
               Origin IGP, localpref 100, valid, external, best
               Community: 65300:106 65300:500 65300:601 65351:1
               rx pathid: 0, tx pathid: 0x0
           Refresh Epoch 3
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.10.10.1 (metric 2) (via vrf sample_vrf) from 100.10.10.1 (100.10.10.1)
+            10.115.10.1 (metric 2) (via vrf sample_vrf) from 10.115.10.1 (10.115.10.1)
               Origin IGP, metric 0, localpref 100, valid, internal
               Community: 65300:106 65300:500 65300:601 65351:1
               rx pathid: 0, tx pathid: 0
           Refresh Epoch 1
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.10.10.84 (via vrf sample_vrf) from 100.10.10.84 (100.10.10.17)
+            10.115.10.84 (via vrf sample_vrf) from 10.115.10.84 (10.115.10.17)
               Origin IGP, localpref 100, valid, external
               Community: 65300:106 65300:500 65300:601 65351:1
               rx pathid: 0, tx pathid: 0
           Refresh Epoch 1
           65000 65181 65181 65181 65106 65102, (received-only)
-            1.2.3.5 (via vrf sample_vrf) from 1.2.3.5 (2.4.229.220)
+            10.9.3.5 (via vrf sample_vrf) from 10.9.3.5 (10.36.229.220)
               Origin IGP, localpref 100, valid, external
               Community: 1:1 65102:100
               rx pathid: 0, tx pathid: 0
-        BGP routing table entry for 102:102:5.6.20.128/25, version 1559898
+        BGP routing table entry for 102:102:10.121.20.128/25, version 1559898
           Paths: (3 available, best #1, table sample_vrf)
           Advertised to update-groups:
              1          29         35
           Refresh Epoch 1
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.10.10.84 (via vrf sample_vrf) from 100.10.10.84 (100.10.10.17)
+            10.115.10.84 (via vrf sample_vrf) from 10.115.10.84 (10.115.10.17)
               Origin IGP, localpref 100, valid, external, best
               Community: 65300:106 65300:508 65300:704 65351:1
               rx pathid: 0, tx pathid: 0x0
           Refresh Epoch 3
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.10.10.1 (metric 2) (via vrf sample_vrf) from 100.10.10.1 (100.10.10.1)
+            10.115.10.1 (metric 2) (via vrf sample_vrf) from 10.115.10.1 (10.115.10.1)
               Origin IGP, metric 0, localpref 100, valid, internal
               Community: 65300:106 65300:508 65300:704 65351:1
               rx pathid: 0, tx pathid: 0
           Refresh Epoch 1
           1000001002 1000001502 1000001001 1000001505 1000001005 1000001504 000002 888, (received & used)
-            100.100.100.80 (via vrf sample_vrf) from 100.100.100.80 (100.10.10.40)
+            10.220.100.80 (via vrf sample_vrf) from 10.220.100.80 (10.115.10.40)
               Origin IGP, localpref 100, valid, external
               Community: 65300:106 65300:508 65300:704 65351:1
               rx pathid: 0, tx pathid: 0
@@ -5115,9 +5115,9 @@ Paths: (1 available, best #1, no table)
                                         'paths': '4 available, best #1, table sample_vrf',
                                         'index': {
                                             1: {
-                                                'next_hop': '100.100.100.80',
-                                                'gateway': '100.100.100.80',
-                                                'originator': '100.10.10.40',
+                                                'next_hop': '10.220.100.80',
+                                                'gateway': '10.220.100.80',
+                                                'originator': '10.115.10.40',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
                                                 'localpref': 100,
@@ -5130,9 +5130,9 @@ Paths: (1 available, best #1, no table)
                                                 'transfer_pathid': '0x0'
                                                 },
                                             2: {
-                                                'next_hop': '100.10.10.1',
-                                                'gateway': '100.10.10.1',
-                                                'originator': '100.10.10.1',
+                                                'next_hop': '10.115.10.1',
+                                                'gateway': '10.115.10.1',
+                                                'originator': '10.115.10.1',
                                                 'next_hop_igp_metric': '2',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
@@ -5147,9 +5147,9 @@ Paths: (1 available, best #1, no table)
                                                 'transfer_pathid': '0'
                                             },
                                             3: {
-                                                'next_hop': '100.10.10.84',
-                                                'gateway': '100.10.10.84',
-                                                'originator': '100.10.10.17',
+                                                'next_hop': '10.115.10.84',
+                                                'gateway': '10.115.10.84',
+                                                'originator': '10.115.10.17',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'origin_codes': 'i',
                                                 'update_group': [1, 29, 35],
@@ -5163,9 +5163,9 @@ Paths: (1 available, best #1, no table)
                                                 'recipient_pathid': '0'
                                             },
                                             4: {
-                                                'next_hop': '1.2.3.5',
-                                                'gateway': '1.2.3.5',
-                                                'originator': '2.4.229.220',
+                                                'next_hop': '10.9.3.5',
+                                                'gateway': '10.9.3.5',
+                                                'originator': '10.36.229.220',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
                                                 'localpref': 100,
@@ -5179,16 +5179,16 @@ Paths: (1 available, best #1, no table)
                                             }
                                         }
                                     },
-                                    '5.6.20.128/25':{
+                                    '10.121.20.128/25':{
                                             'table_version': '1559898',
                                             'available_path': '3',
                                             'best_path': '1',
                                             'paths': '3 available, best #1, table sample_vrf',
                                             'index': {
                                             1: {
-                                                'next_hop': '100.10.10.84',
-                                                'gateway': '100.10.10.84',
-                                                'originator': '100.10.10.17',
+                                                'next_hop': '10.115.10.84',
+                                                'gateway': '10.115.10.84',
+                                                'originator': '10.115.10.17',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
                                                 'localpref': 100,
@@ -5201,9 +5201,9 @@ Paths: (1 available, best #1, no table)
                                                 'transfer_pathid': '0x0'
                                             },
                                             2: {
-                                                'next_hop': '100.10.10.1',
-                                                'gateway': '100.10.10.1',
-                                                'originator': '100.10.10.1',
+                                                'next_hop': '10.115.10.1',
+                                                'gateway': '10.115.10.1',
+                                                'originator': '10.115.10.1',
                                                 'next_hop_igp_metric': '2',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
@@ -5218,9 +5218,9 @@ Paths: (1 available, best #1, no table)
                                                 'transfer_pathid': '0'
                                             },
                                             3: {
-                                                'next_hop': '100.100.100.80',
-                                                'gateway': '100.100.100.80',
-                                                'originator': '100.10.10.40',
+                                                'next_hop': '10.220.100.80',
+                                                'gateway': '10.220.100.80',
+                                                'originator': '10.115.10.40',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
                                                 'localpref': 100,
@@ -5253,13 +5253,13 @@ Paths: (1 available, best #1, no table)
              1          29         35
           Refresh Epoch 1
           2, imported safety path from 50000:2:172.17.0.0/16
-            100.100.100.80 (via vrf sample_vrf) from 100.100.100.80 (100.10.10.40)
+            10.220.100.80 (via vrf sample_vrf) from 10.220.100.80 (10.115.10.40)
               Origin IGP, localpref 100, valid, external, best
               Community: 65300:106 65300:500 65300:601 65351:1
               rx pathid: 0, tx pathid: 0x0
           Refresh Epoch 3
           Local, imported path from base
-            100.10.10.1 (metric 2) (via vrf sample_vrf) from 100.10.10.1 (100.10.10.1)
+            10.115.10.1 (metric 2) (via vrf sample_vrf) from 10.115.10.1 (10.115.10.1)
               Origin IGP, metric 0, localpref 100, valid, internal
               Community: 65300:106 65300:500 65300:601 65351:1
               rx pathid: 0, tx pathid: 0
@@ -5280,9 +5280,9 @@ Paths: (1 available, best #1, no table)
                                         'paths': '4 available, best #1, table sample_vrf',
                                         'index': {
                                             1: {
-                                                'next_hop': '100.100.100.80',
-                                                'gateway': '100.100.100.80',
-                                                'originator': '100.10.10.40',
+                                                'next_hop': '10.220.100.80',
+                                                'gateway': '10.220.100.80',
+                                                'originator': '10.115.10.40',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],
                                                 'localpref': 100,
@@ -5296,9 +5296,9 @@ Paths: (1 available, best #1, no table)
                                                 'transfer_pathid': '0x0'
                                                 },
                                             2: {
-                                                'next_hop': '100.10.10.1',
-                                                'gateway': '100.10.10.1',
-                                                'originator': '100.10.10.1',
+                                                'next_hop': '10.115.10.1',
+                                                'gateway': '10.115.10.1',
+                                                'originator': '10.115.10.1',
                                                 'next_hop_igp_metric': '2',
                                                 'next_hop_via': 'vrf sample_vrf',
                                                 'update_group': [1, 29, 35],

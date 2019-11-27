@@ -249,7 +249,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # - Emergency aged                             0
         p7 = re.compile(r'^- +(?P<key>[\S\s]+?)( +\( +(?P<secs>\d+) +secs\))? +(?P<value>\d+)$')
 
-        # 0   (DEFAULT)   193.168.2.254    193.168.2.253    Null   Te0/0/0.1003     2
+        # 0   (DEFAULT)   192.168.189.254    192.168.189.253    Null   Te0/0/0.1003     2
         p8 = re.compile(r'^(?P<ip_vrf_id_input>\d+ +\(\S+\)) +(?P<ipv4_src_addr>\S+) '
                         r'+(?P<ipv4_dst_addr>\S+) +(?P<intf_input>\S+) '
                         r'+(?P<intf_output>\S+) +(?P<pkts>\d+)$')
@@ -257,10 +257,10 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         # IP VRF ID INPUT:           0          (DEFAULT)
         p9 = re.compile(r'^IP VRF ID INPUT: +(?P<id>[\S\s]+)$')
 
-        # IPV4 SOURCE ADDRESS:       193.168.2.254
+        # IPV4 SOURCE ADDRESS:       192.168.189.254
         p10 = re.compile(r'^IPV4 SOURCE ADDRESS: +(?P<src>\S+)$')
 
-        # IPV4 DESTINATION ADDRESS:  193.168.2.253
+        # IPV4 DESTINATION ADDRESS:  192.168.189.253
         p11 = re.compile(r'^IPV4 DESTINATION ADDRESS: +(?P<dst>\S+)$')
 
         # interface input:           Null
@@ -330,7 +330,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                     aged_dict.update({key + '_secs': int(secs)})
                 continue
 
-            # 0   (DEFAULT)   193.168.2.254    193.168.2.253    Null   Te0/0/0.1003     2
+            # 0   (DEFAULT)   192.168.189.254    192.168.189.253    Null   Te0/0/0.1003     2
             m = p8.match(line)
             if m:
                 index += 1
@@ -354,14 +354,14 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 entry_dict.update({'ip_vrf_id_input': group['id']})
                 continue
 
-            # IPV4 SOURCE ADDRESS:       193.168.2.254
+            # IPV4 SOURCE ADDRESS:       192.168.189.254
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict.update({'ipv4_src_addr': group['src']})
                 continue
 
-            # IPV4 DESTINATION ADDRESS:  193.168.2.253
+            # IPV4 DESTINATION ADDRESS:  192.168.189.253
             m = p11.match(line)
             if m:
                 group = m.groupdict()

@@ -816,6 +816,92 @@ class test_show_ip_igmp_groups(unittest.TestCase):
           Uptime/Expires: 00:26:05/never, Last Reporter: 2001:db8:8404:907f::1
     '''}
 
+    golden_parsed_output_2 = {
+    "vrfs": {
+        "default": {
+            "groups_count": 3,
+            "interface": {
+                "Ethernet1/2.10": {
+                    "group": {
+                        "ff38::1": {
+                            "source": {
+                                "2001:20:1:1::254": {
+                                    "type": "d",
+                                    "expire": "00:03:31",
+                                    "up_time": "00:13:56",
+                                    "last_reporter": "fe80::200:7cff:fe06:af79"
+                                }
+                            }
+                        },
+                        "fffe::1": {
+                            "type": "d",
+                            "expire": "00:03:31",
+                            "up_time": "00:13:56",
+                            "last_reporter": "fe80::200:7cff:fe06:af79"
+                        }
+                    }
+                },
+                "Ethernet1/2.12": {
+                    "group": {
+                        "fffe::4": {
+                            "type": "s",
+                            "expire": "never",
+                            "up_time": "00:21:20",
+                            "last_reporter": "fe80::282:49ff:fe9d:1b08"
+                        }
+                    }
+                }
+            }
+        },
+        "VRF1": {
+            "groups_count": 2,
+            "interface": {
+                "Ethernet1/2.11": {
+                    "group": {
+                        "ff38::1": {
+                            "source": {
+                                "2001:20:1:1::254": {
+                                    "type": "d",
+                                    "expire": "00:03:09",
+                                    "up_time": "00:13:56",
+                                    "last_reporter": "fe80::200:7cff:fe0c:2a3f"
+                                }
+                            }
+                        },
+                        "fffe::1": {
+                            "type": "d",
+                            "expire": "00:03:09",
+                            "up_time": "00:13:56",
+                            "last_reporter": "fe80::200:7cff:fe0c:2a3f"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output_2 = {'execute.return_value': '''\
+show ipv6 mld groups vrf all
+
+MLD Connected Group Membership for VRF "default" - 3 total entries
+Type: S - Static, D - Dynamic, L - Local, T - SSM Translated, H - Host Proxy
+      * - Cache Only
+Group Address      Type Interface              Uptime    Expires   Last Reporter
+ff38::1
+  2001:20:1:1::254 D    Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
+fffe::1            D   Ethernet1/2.10         00:13:56  00:03:31  fe80::200:7cff:fe06:af79
+fffe::4            S   Ethernet1/2.12         00:21:20  never     fe80::282:49ff:fe9d:1b08
+
+MLD Connected Group Membership for VRF "VRF1" - 2 total entries
+Type: S - Static, D - Dynamic, L - Local, T - SSM Translated, H - Host Proxy
+      * - Cache Only
+Group Address      Type Interface              Uptime    Expires   Last Reporter
+ff38::1
+  2001:20:1:1::254 D    Ethernet1/2.11         00:13:56  00:03:09  fe80::200:7cff:fe0c:2a3f
+fffe::1            D   Ethernet1/2.11         00:13:56  00:03:09  fe80::200:7cff:fe0c:2a3f
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6MldGroups(device=self.device)
@@ -833,6 +919,12 @@ class test_show_ip_igmp_groups(unittest.TestCase):
         obj = ShowIpv6MldGroups(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpv6MldGroups(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ==============================================
@@ -1047,6 +1139,79 @@ class test_show_ipv6_mld_local_groups(unittest.TestCase):
                 Static   Eth2/2      1d07h  
     '''}
 
+    golden_parsed_output_2 = {
+    "vrfs": {
+        "default": {
+            "interface": {
+                "Ethernet1/2.12": {
+                    "group": {
+                        "fffe::2": {
+                            "source": {
+                                "*": {
+                                    "last_reported": "00:27:31",
+                                    "type": "local"
+                                }
+                            },
+                            "last_reported": "00:27:31",
+                            "type": "local"
+                        },
+                        "fffe::3": {
+                            "source": {
+                                "*": {
+                                    "last_reported": "00:27:31",
+                                    "type": "local"
+                                }
+                            },
+                            "last_reported": "00:27:31",
+                            "type": "local"
+                        },
+                        "fffe::4": {
+                            "source": {
+                                "*": {
+                                    "last_reported": "00:27:31",
+                                    "type": "static"
+                                }
+                            },
+                            "last_reported": "00:27:31",
+                            "type": "static"
+                        }
+                    },
+                    "join_group": {
+                        "fffe::2 *": {
+                            "group": "fffe::2",
+                            "source": "*"
+                        },
+                        "fffe::3 *": {
+                            "group": "fffe::3",
+                            "source": "*"
+                        }
+                    },
+                    "static_group": {
+                        "fffe::4 *": {
+                            "group": "fffe::4",
+                            "source": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "VRF1": {}
+    }
+}
+
+    golden_output_2 = {'execute.return_value': '''\
+show ipv6 mld local-groups vrf all
+
+MLD Locally Joined Group Membership for VRF "default"
+Group Address    Source Address   Type     Interface   Last Reported 
+fffe::2          *                Local    Eth1/2.12   00:27:31  
+fffe::3          *                Local    Eth1/2.12   00:27:31  
+fffe::4          *                Static   Eth1/2.12   00:27:31  
+
+MLD Locally Joined Group Membership for VRF "VRF1"
+Group Address    Source Address   Type     Interface   Last Reported  
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6MldLocalGroups(device=self.device)
@@ -1064,6 +1229,12 @@ class test_show_ipv6_mld_local_groups(unittest.TestCase):
         obj = ShowIpv6MldLocalGroups(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpv6MldLocalGroups(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
