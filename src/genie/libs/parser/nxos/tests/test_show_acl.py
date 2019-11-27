@@ -49,7 +49,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'ip': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -78,7 +78,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -111,7 +111,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -144,7 +144,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -234,7 +234,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv6': {
                             'destination_network': {
                                 '2001:2::2/128': {
                                     'destination_network': '2001:2::2/128',
@@ -273,7 +273,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'udp': {
+                        'ipv6': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -382,7 +382,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 '10.4.1.1/32': {
                                     'destination_network': '10.4.1.1/32',
@@ -410,7 +410,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'tcp': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -445,7 +445,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'matches': {
                     'l3': {
-                        'ip': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -486,7 +486,7 @@ IP access list NTP-ACL
                 },
                 'matches': {
                     'l3': {
-                        'ip': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -512,7 +512,7 @@ IP access list NTP-ACL
                 },
                 'matches': {
                     'l3': {
-                        'ip': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',
@@ -538,7 +538,7 @@ IP access list NTP-ACL
                 },
                 'matches': {
                     'l3': {
-                        'ip': {
+                        'ipv4': {
                             'destination_network': {
                                 'any': {
                                     'destination_network': 'any',

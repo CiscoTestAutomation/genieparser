@@ -177,8 +177,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # L    ::ffff:192.168.13.12/19 
         # O E1 2001:db8::/39
         p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +'
-                r'(?P<network>\S+) *)?(is +directly +connected, +'
-                r'(?P<date>[\w:]+),? +(?P<interface>[\w\/\.\-]+))?$')
+                r'(?P<network>\S+) +)?is +directly +'
+                r'connected, +(?P<date>[\w:]+),? +(?P<interface>[\w\/\.\-]+)$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -220,7 +220,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
-
+            if not line:
+                continue
             # VRF: VRF501
             m = p1.match(line)
             if m:
@@ -305,49 +306,53 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     next_hop_list_dict.update({'updated': updated})
                 continue
             
+
             # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
             m = p4.match(line)
             if m:
-                group = m.groupdict()
-                code1 = group.get('code1', None)
-                source_protocol = None
-                network = group.get('network', None)
-                updated = group.get('date', None)
-                interface = group.get('interface', None)
+                try:
+                    group = m.groupdict()
+                    code1 = group.get('code1', None)
+                    source_protocol = None
+                    network = group.get('network', None)
+                    updated = group.get('date', None)
+                    interface = group.get('interface', None)
 
-                if network:
-                    route_dict = ret_dict.setdefault('vrf', {}). \
-                        setdefault(vrf, {}). \
-                        setdefault('address_family', {}). \
-                        setdefault(address_family, {}). \
-                        setdefault('routes', {}). \
-                        setdefault(network, {})
+                    if network:
+                        route_dict = ret_dict.setdefault('vrf', {}). \
+                            setdefault(vrf, {}). \
+                            setdefault('address_family', {}). \
+                            setdefault(address_family, {}). \
+                            setdefault('routes', {}). \
+                            setdefault(network, {})
 
-                    route_dict.update({'route': network})
-                    route_dict.update({'active': True})
-                
-                if code1:
-                    source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
-                    for key,val in self.source_protocol_dict.items():
-                        if source_protocol_code in val:
-                            source_protocol = key
+                        route_dict.update({'route': network})
+                        route_dict.update({'active': True})
                     
-                    code2 = group.get('code2', None)
-                    if code2:
-                        code1 = '{} {}'.format(code1, code2)
-                    route_dict.update({'source_protocol': source_protocol})
-                    route_dict.update({'source_protocol_codes': code1})
-                
-                outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
-                    setdefault('outgoing_interface', {}). \
-                    setdefault(interface, {})
-                
-                if interface:
-                    outgoing_interface_dict.update({'outgoing_interface': interface})
-                
-                if updated:
-                    outgoing_interface_dict.update({'updated': updated})
+                    if code1:
+                        source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                        for key,val in self.source_protocol_dict.items():
+                            if source_protocol_code in val:
+                                source_protocol = key
+                        
+                        code2 = group.get('code2', None)
+                        if code2:
+                            code1 = '{} {}'.format(code1, code2)
+                        route_dict.update({'source_protocol': source_protocol})
+                        route_dict.update({'source_protocol_codes': code1})
+                    
+                    outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
+                        setdefault('outgoing_interface', {}). \
+                        setdefault(interface, {})
+                    
+                    if interface:
+                        outgoing_interface_dict.update({'outgoing_interface': interface})
+                    
+                    if updated:
+                        outgoing_interface_dict.update({'updated': updated})
+                except Exception:
+                    print('--->'+line)
                 continue
             
             # Routing entry for 10.151.0.0/24, 1 known subnets
@@ -884,24 +889,3 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
         
         return ret_dict
-    """Parser for :
-       show route ipv6 <Hostname or A.B.C.D>
-       show route ipv6 vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show route ipv6 {route}',
-                'show route vrf {vrf} ipv6 {route}']
-    IP_VER = 'ipv6'
-
-    def cli(self, route, vrf=None, interface=None, output=None):
-        
-        if output is None:
-            if vrf and route:
-                cmd = self.command[1].format(vrf=vrf,
-                        route=route)
-            else:
-                cmd = self.command[0].format(route=route)
-            out = self.device.execute(cmd)
-        else:
-            out = output
-        if not vrf:
-            vrf = 'default'
-        return super().cli(route=route, vrf=vrf, output=out)
