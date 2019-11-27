@@ -13,6 +13,9 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowIsis
+        * Updated regex to support more various output
 
 * NXOS
     * Updated ShowAccessLists for:
