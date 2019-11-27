@@ -1097,6 +1097,77 @@ class test_show_route_ipv4(unittest.TestCase):
         },
     }
 
+    golden_output_9 = {'execute.return_value': '''
+        10.64.219.128, 2d04h
+        B    172.16.55.0/22 [200/0] via 10.154.219.128, 1w3d
+        B    172.16.21.0/22 [200/0] via 10.154.219.128, 1w3d
+        B    172.16.16.0/24 [200/0] via 10.154.219.128, 1w3d
+    '''}
+
+    golden_parsed_output_9 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '172.16.55.0/22': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.55.0/22',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                            '172.16.21.0/22': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.21.0/22',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                            '172.16.16.0/24': {
+                                'active': True,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.154.219.128',
+                                            'updated': '1w3d',
+                                        },
+                                    },
+                                },
+                                'route': '172.16.16.0/24',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_codes': 'B',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv4(device=self.device)
@@ -1164,8 +1235,14 @@ class test_show_route_ipv4(unittest.TestCase):
         self.device = Mock(**self.golden_output_8)
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(route='10.23.120.2/32', vrf='VRF1')
-        from genie.libs.parser.utils.common import format_output
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
 # ============================================
 # unit test for 'show route ipv6'
@@ -2383,6 +2460,7 @@ class test_show_route_ipv6(unittest.TestCase):
             },
         },
     }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv6(device=self.device)

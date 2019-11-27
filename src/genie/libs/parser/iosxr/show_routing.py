@@ -51,7 +51,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                     Optional('next_hop_list'): {
                                         Any(): { # index
                                             'index': int,
-                                            'next_hop': str,
+                                            Optional('next_hop'): str,
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
                                             Optional('metric'): int,
@@ -167,6 +167,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 r'( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
         # [90/15360] via 10.23.90.3, 1w0d, GigabitEthernet0/0/0/1.90
+        # [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
                 r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
                 r'(?P<interface>[\w\/\.\-]+)$')
@@ -174,11 +175,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-        # L    ::ffff:192.168.13.12/19 
-        # O E1 2001:db8::/39
-        p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +'
-                r'(?P<network>\S+) +)?is +directly +'
-                r'connected, +(?P<date>[\w:]+),? +(?P<interface>[\w\/\.\-]+)$')
+        p4 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*(?P<code2>\S+))? +'
+                r'(?P<network>\S+) +)?(is +directly +connected, +'
+                r'(?P<date>[\w:]+))?,? *(?P<interface>[\w\/\.\-]+)?$$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -210,6 +209,12 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
         p11 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
                         r'+via +(?P<interface>\S+)$')
+        
+        # R2_xrv#show route ipv4
+        # Routing Descriptor Blocks
+        # No advertising protos.
+        p12 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
+                r'Blocks)|(No +advertising +protos\.)')
 
         # initial variables
         ret_dict = {}
@@ -220,8 +225,15 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
-            if not line:
+            
+            # R2_xrv#show route ipv4
+            m = p12.match(line)
+            if m:
                 continue
+
+            if m or not line:
+                continue
+
             # VRF: VRF501
             m = p1.match(line)
             if m:
@@ -306,7 +318,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     next_hop_list_dict.update({'updated': updated})
                 continue
             
-
             # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
             m = p4.match(line)
@@ -429,11 +440,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     route_dict.update({'source_protocol': source_protocol})
                     route_dict.update({'source_protocol_codes': code1})
                 
-                outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
-                    setdefault('outgoing_interface', {}). \
-                    setdefault(interface, {})
-                
                 if interface:
+                    outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
+                        setdefault('outgoing_interface', {}). \
+                        setdefault(interface, {})
                     outgoing_interface_dict.update({'outgoing_interface': interface})
                 
                 if updated:
@@ -489,7 +499,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
-
+        
         return ret_dict
 
 # ====================================================
@@ -591,6 +601,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
+        # [0/0] via ::, 5w2d
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
                 'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
                 '( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
@@ -634,6 +645,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p12 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
                         r'+via +(?P<interface>\S+)$')
 
+        # R2_xrv#show route ipv6
+        p13 = re.compile(r'^(\S+#)?(show +route)')
+
         ret_dict = {}
         address_family = 'ipv6'
         index = 0
@@ -642,6 +656,11 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # R2_xrv#show route ipv6
+            m = p13.match(line)
+            if m:
+                continue
 
             # VRF: VRF501
             m = p1.match(line)
@@ -679,15 +698,14 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 index = 0
                 continue
             
-            # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 route_preference = int(group['route_preference'])
                 metric = int(group['metric'])
-                next_hop = group['next_hop']
-                updated = group['date']
-                interface = group['interface']
+                next_hop = group.get('next_hop', None)
+                updated = group.get('date', None)
+                interface = group.get('interface', None)
                 route_dict.update({'route_preference': route_preference})
                 route_dict.update({'metric': metric})
                 index += 1
@@ -697,7 +715,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     setdefault(index, {})
                 
                 next_hop_list_dict.update({'index': index})
-                next_hop_list_dict.update({'next_hop': next_hop})
+                if next_hop:
+                    next_hop_list_dict.update({'next_hop': next_hop})
                 if interface:
                     next_hop_list_dict.update({'outgoing_interface': interface})
                 if updated:
@@ -734,7 +753,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     code2 = group.get('code2', None)
                     if code2:
                         code1 = '{} {}'.format(code1, code2)
-                    route_dict.update({'source_protocol': source_protocol})
+                    if source_protocol:
+                        route_dict.update({'source_protocol': source_protocol})
                     route_dict.update({'source_protocol_codes': code1})
 
                 continue
