@@ -10,7 +10,7 @@ from genie.libs.parser.nxos.show_spanning_tree import (ShowSpanningTreeMst,
                                                       ShowSpanningTreeDetail,
                                                       ShowErrdisableRecovery)
 
-class testShowSpanningTreeMst(unittest.TestCase):
+class TestShowSpanningTreeMst(unittest.TestCase):
     dev1 = Device(name = 'deviceA')
     dev2 = Device(name = 'deviceB')
 
@@ -198,7 +198,7 @@ class testShowSpanningTreeMst(unittest.TestCase):
             parsed = obj.parse()
 
 
-class testShowSpanningTreeSummary(unittest.TestCase):
+class TestShowSpanningTreeSummary(unittest.TestCase):
     dev_c3850 = Device(name = 'deviceA')
     dev2 = Device(name = 'deviceB')
 
@@ -1193,8 +1193,8 @@ class TestShowErrdisabledRecovery(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'bpduguard_timeout_recovery': 300,
-        'timer_status': {
+        'timer_interval': 300,
+        'errdisable_reason': {
             'bpduguard': False,
             'event-debug': False,
             'event-debug1': False,
@@ -1260,8 +1260,8 @@ class TestShowErrdisabledRecovery(unittest.TestCase):
     '''}
 
     golden_parsed_output_2 = {
-        'bpduguard_timeout_recovery': 300,
-        'timer_status': {
+        'timer_interval': 300,
+        'errdisable_reason': {
             'CMM miscabling': False,
             'arp-inspection': False,
             'bpduguard': False,

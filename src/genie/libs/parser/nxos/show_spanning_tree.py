@@ -848,17 +848,10 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 class ShowErrdisableRecoverySchema(MetaParser):
     """Schema for show errdisable recovery"""
     schema = {
-        'timer_status': {
+        'errdisable_reason': {
             Any(): bool,
         },
-        'bpduguard_timeout_recovery': int,
-        Optional('interfaces'): {
-            Any(): {
-                'interface': str,
-                'errdisable_reason': str,
-                'time_left': int,
-            },
-        }
+        'timer_interval': int,
     }
 
 
@@ -897,13 +890,14 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
                 group = m1.groupdict()
                 name = group['name'].strip()
                 status = group['status'].lower()
-                status_dict = ret_dict.setdefault('timer_status', {})
+                status_dict = ret_dict.setdefault('errdisable_reason', {})
                 status_dict[name] = False if 'disabled' in status else True
                 continue
 
+            # Timer interval: 300
             m2 = p2.match(line)
             if m2:
-                ret_dict['bpduguard_timeout_recovery'] = int(m2.groupdict()['interval'])
+                ret_dict['timer_interval'] = int(m2.groupdict()['interval'])
 
                 continue
 

@@ -9,8 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * NXOS:
-    * ShowSpanningTree
-        * Added ShowErrdisabledRecovery
+    * ShowErrdisableRecovery
+        * Added show errdisable recovery command
 
 --------------------------------------------------------------------------------
                                 Fix
