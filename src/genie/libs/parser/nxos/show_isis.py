@@ -947,7 +947,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         p4 = re.compile(r'^Log +entry +\(current\/max\): +(?P<curr>\d+)\/(?P<max>\d+)$')
 
         # Log entry: 01, Ago: 00:01:26, Date: Tue Oct 15 21:53:39 2019
-        p5 = re.compile(r'^Log +entry: +(?P<entry>\d+), +Ago: +(?P<ago>[\d\:]+), '
+        # Log entry: 20, Ago: 0.800060, Date: Wed Nov 27 16:04:29 2019
+        p5 = re.compile(r'^Log +entry: +(?P<entry>\d+), +Ago: +(?P<ago>[\d\.\:]+), '
                         r'+Date: +(?P<date>[\S\s]+)$')
 
         #   Level  Instance    Init      SPF       IS Update  URIB Update  Total
