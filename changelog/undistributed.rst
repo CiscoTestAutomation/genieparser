@@ -23,6 +23,10 @@
 * NXOS
     * Updated ShowAccessLists for:
         * Updated few keys' names by following ACL's Ops structure
+    * Updated ShowIpv6MldLocalGroups for:
+        * Added support for various device outputs
+    * Updated ShowIpv6MldGroups for:
+        * Added support for various device outputs
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
