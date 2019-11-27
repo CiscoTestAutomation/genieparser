@@ -2302,8 +2302,8 @@ class ShowIsisInterfaceSchema(MetaParser):
                             'mtu': int,
                             Optional('snpa'): str,
                             Optional('layer2_mcast_groups_membership'): {
-                                'all_level_1_iss': str,
-                                'all_level_2_iss': str,
+                                Optional('all_level_1_iss'): str,
+                                Optional('all_level_2_iss'): str,
                             },
                         },
                         Optional('topology'): {
