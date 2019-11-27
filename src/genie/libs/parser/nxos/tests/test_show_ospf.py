@@ -2478,7 +2478,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
         show ip ospf interface vrf all
 
         Vlan3030 is up, line protocol is up
-            IP address 100.10.128.4/24
+            IP address 10.115.128.4/24
             Process ID 2000 VRF default, area 0.0.0.1
             Enabled by interface configuration
             State DR, Network type BROADCAST, cost 1000
@@ -2518,7 +2518,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
             Message-digest authentication, using key id 1
             Number of opaque link LSAs: 1, checksum sum 0xafaf
         Ethernet1/45 is up, line protocol is down
-            IP address 101.100.3.2/30
+            IP address 10.111.3.2/30
             Process ID 2000 VRF default, area 0.0.0.1
             State DOWN, Network type P2P, cost 100
             Index 1, Transmit delay 1 sec
@@ -2730,7 +2730,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': False,
                                                 'index': 1,
                                                 'interface_type': 'p2p',
-                                                'ip_address': '101.100.3.2/30',
+                                                'ip_address': '10.111.3.2/30',
                                                 'line_protocol': 'down',
                                                 'name': 'Ethernet1/45',
                                                 'passive': False,
@@ -2755,7 +2755,7 @@ class TestShowIpOspfInterfaceVrfAll(unittest.TestCase):
                                                 'if_cfg': True,
                                                 'index': 118,
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '100.10.128.4/24',
+                                                'ip_address': '10.115.128.4/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Vlan3030',
                                                 'passive': True,
