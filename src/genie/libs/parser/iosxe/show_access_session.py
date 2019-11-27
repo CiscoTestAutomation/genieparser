@@ -20,8 +20,7 @@ from genie.libs.parser.utils.common import Common
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_authentication_sessions import \
-						ShowAuthenticationSessionsInterfaceDetails as \
-						ShowAuthenticationSessionsInterfaceDetails_iosxe
+						ShowAuthenticationSessionsInterfaceDetails
 
 # ====================================
 # Parser for 'show access-session'
@@ -110,7 +109,7 @@ class ShowAccessSession(ShowAccessSessionSchema):
 
         return ret_dict
        
-class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails_iosxe):
+class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails):
     '''
         Parser for the following show commands:
             * show access-session interface {interface} details
