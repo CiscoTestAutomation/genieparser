@@ -253,7 +253,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                            r']+)( *\((?P<per_user>.*)\))?$')
 
 
-        # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+        # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
         # 20 permit 10.2.0.0
         # 20 deny   any
         # 10 permit 10.196.7.7
@@ -331,7 +331,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             m_ip_1 = p_ip_1.match(line)
             # IPv6 access list preauth_v6 (per-user)
             m_ipv6 = p_ipv6.match(line)
-            # Extended MAC access list mac_acl 
+            # Extended MAC access list mac_acl
             m_mac = p_mac.match(line)
             if m_ip or m_ip_1:
                 if m_ip:
@@ -358,7 +358,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 continue
 
             # permit 172.20.10.10
-            # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+            # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
             # 20 permit 10.2.0.0
             # 30 deny   any
             # 10 permit 172.31.0.2 (1168716 matches)
