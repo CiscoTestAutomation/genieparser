@@ -423,8 +423,8 @@ class ShowIsis(ShowIsisSchema):
         # IS Levels: level-1-2
         # IS Levels: level-2-only
         # IS Levels: level-1-only
-        r5 = re.compile(r'IS\s+Levels\s*:\s*'
-                         '(?P<is_levels>level-1-2|level-(1|2)-only)')
+        # IS Levels: level-1
+        r5 = re.compile(r'IS\s+Levels\s*:\s*(?P<is_levels>\S+)')
 
         # Manual area address(es):
         r6 = re.compile(r'Manual\s+area\s+address\(es\):')
@@ -518,9 +518,9 @@ class ShowIsis(ShowIsisSchema):
                     .setdefault('instance', {})\
                     .setdefault(isis_router, {})
                 instance_dict['process_id'] = isis_router
-                    
+ 
                 continue
-            
+
             # VRF context: VRF1     
             result = r2.match(line)
             if result:
@@ -2302,8 +2302,8 @@ class ShowIsisInterfaceSchema(MetaParser):
                             'mtu': int,
                             Optional('snpa'): str,
                             Optional('layer2_mcast_groups_membership'): {
-                                'all_level_1_iss': str,
-                                'all_level_2_iss': str,
+                                Optional('all_level_1_iss'): str,
+                                Optional('all_level_2_iss'): str,
                             },
                         },
                         Optional('topology'): {

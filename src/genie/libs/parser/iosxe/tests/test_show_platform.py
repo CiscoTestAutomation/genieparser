@@ -18980,11 +18980,6 @@ class TestShowProcessMemory(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         platform_obj = ShowProcessesMemory(device=self.device)
         parsed_output = platform_obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output)
     
     def test_golden2(self):
