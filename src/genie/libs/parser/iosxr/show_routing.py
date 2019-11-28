@@ -214,7 +214,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Routing Descriptor Blocks
         # No advertising protos.
         p12 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
-                r'Blocks)|(No +advertising +protos\.)')
+                r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
 
         # initial variables
         ret_dict = {}
@@ -227,9 +227,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             line = line.strip()
             
             # R2_xrv#show route ipv4
+            # Routing Descriptor Blocks
+            # No advertising protos.
             m = p12.match(line)
-            if m:
-                continue
 
             if m or not line:
                 continue
@@ -646,7 +646,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                         r'+via +(?P<interface>\S+)$')
 
         # R2_xrv#show route ipv6
-        p13 = re.compile(r'^(\S+#)?(show +route)')
+        p13 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
+                r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
 
         ret_dict = {}
         address_family = 'ipv6'
@@ -656,10 +657,13 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
-
+            
             # R2_xrv#show route ipv6
+            # Routing Descriptor Blocks
+            # No advertising protos.
             m = p13.match(line)
-            if m:
+
+            if m or not line:
                 continue
 
             # VRF: VRF501
