@@ -2,6 +2,7 @@
 
 IOSXR parsers for the following show commands:
     * 'show mpls ldp neighbor brief'
+    * 'show mpls interfaces'
 '''
 
 # Python
@@ -281,3 +282,97 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 continue
 
         return mpls_dict
+
+# ======================================================
+# Schema for 'show mpls interfaces'
+# ======================================================
+class ShowMplsInterfacesSchema(MetaParser):
+    schema = {
+        'interfaces': {
+            Any(): {
+                'ldp': str,
+                'tunnel': str,
+                'static': str,
+                'enabled': str,
+            }
+        },
+        'local_label': {
+            Any(): {
+                'outgoing_label': {
+                    Any(): {
+                        'prefix_or_id': str,
+                        'outgoing_interface': str,
+                        'next_hop': str,
+                        'bytes_switched': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 'show mpls interfaces'
+# ======================================================
+class ShowMplsInterfaces(ShowMplsInterfacesSchema):
+    cli_command = 'show mpls interfaces'
+
+    def cli(self, output=None):
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # GigabitEthernet0/0/0/0     No       No       No       Yes
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<ldp>No|Yes) +'
+                r'(?P<tunnel>No|Yes) +(?P<static>No|Yes) +'
+                r'(?P<enabled>No|Yes)$')
+
+        # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
+        p2 = re.compile(r'^(?P<local_label>\S+) +(?P<outgoing_label>\S+) +'
+                r'(?P<prefix_or_id>[\S ]+\)) +(?P<outgoing_interface>\S+) +'
+                r'(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
+        
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # GigabitEthernet0/0/0/0     No       No       No       Yes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group.get('interface')
+                ldp = group.get('ldp')
+                tunnel = group.get('tunnel')
+                static = group.get('static')
+                enabled = group.get('enabled')
+                interface_dict = ret_dict.setdefault('interfaces', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'ldp' : ldp})
+                interface_dict.update({'tunnel': tunnel})
+                interface_dict.update({'static': static})
+                interface_dict.update({'enabled': enabled})
+                continue
+            
+            # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_label = group.get('local_label')
+                outgoing_label = group.get('outgoing_label')
+                prefix_or_id = group.get('prefix_or_id')
+                outgoing_interface = group.get('outgoing_interface')
+                next_hop = group.get('next_hop')
+                bytes_switched = group.get('bytes_switched')
+                local_label_dict = ret_dict.setdefault('local_label', {}). \
+                    setdefault(local_label, {}). \
+                    setdefault('outgoing_label', {}). \
+                    setdefault(outgoing_label, {})
+                local_label_dict.update({'prefix_or_id': prefix_or_id})
+                local_label_dict.update({'outgoing_interface': outgoing_interface})
+                local_label_dict.update({'next_hop': next_hop})
+                local_label_dict.update({'bytes_switched': int(bytes_switched)})
+                continue
+        
+        return ret_dict
