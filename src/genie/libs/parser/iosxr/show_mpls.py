@@ -400,7 +400,9 @@ class ShowMplsForwarding(ShowMplsForwardingSchema):
             out = output
 
         # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
-        p1 = re.compile(r'^((?P<local_label>\S+) +)?(?P<outgoing_label>\S+) +(?P<prefix_or_id>[\S ]+(\))?) +(?P<outgoing_interface>\S+) +(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
+        p1 = re.compile(r'^((?P<local_label>\S+) +)?(?P<outgoing_label>\S+) +'
+                r'(?P<prefix_or_id>[\S ]+(\))?) +(?P<outgoing_interface>\S+) +'
+                r'(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
         
         ret_dict = {}
 
@@ -416,8 +418,8 @@ class ShowMplsForwarding(ShowMplsForwardingSchema):
                 group = m.groupdict()
                 local_label = group.get('local_label')
                 outgoing_label = group.get('outgoing_label')
-                prefix_or_id = group.get('prefix_or_id')
-                outgoing_interface = group.get('outgoing_interface')
+                prefix_or_id = group.get('prefix_or_id').strip()
+                outgoing_interface = Common.convert_intf_name(group.get('outgoing_interface'))
                 next_hop = group.get('next_hop')
                 bytes_switched = group.get('bytes_switched')
                 local_label_dict = ret_dict.setdefault('vrf', {}). \

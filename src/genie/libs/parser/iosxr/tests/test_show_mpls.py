@@ -561,9 +561,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Pfx (idx 1)    ': {
+                                    'SR Pfx (idx 1)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -577,9 +577,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             '16002': {
                                 'prefix_or_id': {
-                                    'SR Pfx (idx 2)    ': {
+                                    'SR Pfx (idx 2)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -593,9 +593,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Pfx (idx 4)    ': {
+                                    'SR Pfx (idx 4)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/1': {
+                                            'GigabitEthernet0/0/0/1': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.3.4.4',
                                             },
@@ -609,9 +609,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             '16005': {
                                 'prefix_or_id': {
-                                    'SR Pfx (idx 5)    ': {
+                                    'SR Pfx (idx 5)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -625,9 +625,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 0)    ': {
+                                    'SR Adj (idx 0)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -641,9 +641,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 2)    ': {
+                                    'SR Adj (idx 2)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -657,9 +657,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 1)    ': {
+                                    'SR Adj (idx 1)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -673,9 +673,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 3)    ': {
+                                    'SR Adj (idx 3)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/0': {
+                                            'GigabitEthernet0/0/0/0': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.1.3.1',
                                             },
@@ -689,9 +689,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 0)    ': {
+                                    'SR Adj (idx 0)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/1': {
+                                            'GigabitEthernet0/0/0/1': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.3.4.4',
                                             },
@@ -705,9 +705,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 2)    ': {
+                                    'SR Adj (idx 2)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/1': {
+                                            'GigabitEthernet0/0/0/1': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.3.4.4',
                                             },
@@ -721,9 +721,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 1)    ': {
+                                    'SR Adj (idx 1)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/1': {
+                                            'GigabitEthernet0/0/0/1': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.3.4.4',
                                             },
@@ -737,9 +737,9 @@ class TestShowMplsForwarding(unittest.TestCase):
                         'outgoing_label': {
                             'Pop': {
                                 'prefix_or_id': {
-                                    'SR Adj (idx 3)    ': {
+                                    'SR Adj (idx 3)': {
                                         'outgoing_interface': {
-                                            'Gi0/0/0/1': {
+                                            'GigabitEthernet0/0/0/1': {
                                                 'bytes_switched': 0,
                                                 'next_hop': '10.3.4.4',
                                             },
@@ -774,7 +774,234 @@ class TestShowMplsForwarding(unittest.TestCase):
         24007  Pop         SR Adj (idx 3)     Gi0/0/0/1    10.3.4.4        0
     '''}
 
-    golden_parsed_output1 = {}
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'local_label': {
+                    '24000': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '1.1.1.1/32': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.90': {
+                                                'bytes_switched': 7823705,
+                                                'next_hop': '10.12.90.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24002': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    '10.13.110.0/24': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.110': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.12.110.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24003': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '10.13.115.0/24': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.115': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.12.115.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24004': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '10.13.90.0/24': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.90': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.12.90.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24005': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '2001:1:1:1::1/128[V]': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.390': {
+                                                'bytes_switched': 3296461,
+                                                'next_hop': 'fe80::f816:3eff:fe53:2cc7',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24006': {
+                        'outgoing_label': {
+                            'Aggregate': {
+                                'prefix_or_id': {
+                                    'VRF1: Per-VRF': {
+                                        'outgoing_interface': {
+                                            'Aggr[V]': {
+                                                'bytes_switched': 832,
+                                                'next_hop': 'VRF1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24007': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '2001:3:3:3::3/128[V]': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/1.390': {
+                                                'bytes_switched': 3158559,
+                                                'next_hop': 'fe80::5c00:ff:fe02:7',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24008': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '1.1.1.1/32[V]': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.390': {
+                                                'bytes_switched': 5271845,
+                                                'next_hop': '10.12.90.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24009': {
+                        'outgoing_label': {
+                            'Aggregate': {
+                                'prefix_or_id': {
+                                    'VRF1: Per-VRF': {
+                                        'outgoing_interface': {
+                                            'Aggr[V]': {
+                                                'bytes_switched': 0,
+                                                'next_hop': 'VRF1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24010': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '3.3.3.3/32[V]': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/1.390': {
+                                                'bytes_switched': 6384776,
+                                                'next_hop': '10.23.90.3',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24011': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '1.0.0.0/8': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.120': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.12.120.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24012': {
+                        'outgoing_label': {
+                            'Unlabelled': {
+                                'prefix_or_id': {
+                                    '10.13.120.0/24': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/0.120': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.12.120.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'Unlabelled': {
+                        'outgoing_label': {
+                            '10.13.120.0/24': {
+                                'prefix_or_id': {
+                                    '': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/1.120': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.23.120.3',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            '10.13.90.0/24': {
+                                'prefix_or_id': {
+                                    '': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/0/0/1.90': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.23.90.3',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     golden_output2 = {'execute.return_value': '''
         show mpls forwarding
@@ -815,11 +1042,6 @@ class TestShowMplsForwarding(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowMplsForwarding(device=self.device)
         parsed_output = obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
@@ -827,11 +1049,6 @@ class TestShowMplsForwarding(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowMplsForwarding(device=self.device)
         parsed_output = obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 if __name__ == '__main__':
