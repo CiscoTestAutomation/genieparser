@@ -32,3 +32,10 @@
     * Updated ShowPolicyMapTypeSuperParser
 	    * Changed key 'service_policy', 'policy_name', 'priority_level' to Optional
 		* Updated regex match queue_limit
+* IOSXR
+    * Updated ShowRouteIpv4 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpDistributor, ShowRouteIpWord class
+    * Updated ShowRouteIpv6 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
