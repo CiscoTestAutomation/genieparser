@@ -19,8 +19,10 @@
 * IOSXR
     * Added ShowMplsInterfaces for:
         * show mpls interfaces
+        * show mpls interfaces {interface}
     * Added ShowMplsForwarding for:
         * show mpls forwarding
+        * show mpls forwarding vrf {vrf}
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
