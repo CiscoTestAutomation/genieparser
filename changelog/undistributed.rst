@@ -12,6 +12,10 @@
     * Added ShowProcessesMemory for:
         * show processes memory
         * show processes memory | include {include}
+* NXOS
+    * Added ShowIsisHostnameDetail for commands:
+        * show isis hostname detail
+        * show isis hostname detail vrf {vrf}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -27,6 +31,8 @@
         * Added support for various device outputs
     * Updated ShowIpv6MldGroups for:
         * Added support for various device outputs
+    * Updated ShowIsisHostname for:
+        * Updated int to list for level key
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
