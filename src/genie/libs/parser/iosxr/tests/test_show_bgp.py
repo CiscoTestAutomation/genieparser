@@ -29777,14 +29777,14 @@ class TestShowBgpNeighbors(unittest.TestCase):
                 "vrf": {
                     "default": {
                         "neighbor": {
-                            "1.1.1.1": {
+                            "10.4.1.1": {
                                 "remote_as": 65000,
                                 "link_state": "internal link",
                                 "local_as_as_no": 65000,
                                 "local_as_no_prepend": False,
                                 "local_as_replace_as": False,
                                 "local_as_dual_as": False,
-                                "router_id": "1.1.1.1",
+                                "router_id": "10.4.1.1",
                                 "session_state": "established",
                                 "up_time": "1w1d",
                                 "nsr_state": "None",
@@ -29841,10 +29841,10 @@ class TestShowBgpNeighbors(unittest.TestCase):
                                         "connections_dropped": 1
                                     },
                                     "transport": {
-                                        "local_host": "2.2.2.2",
+                                        "local_host": "10.16.2.2",
                                         "local_port": "179",
                                         "if_handle": "0x00000000",
-                                        "foreign_host": "1.1.1.1",
+                                        "foreign_host": "10.4.1.1",
                                         "foreign_port": "27104"
                                     }
                                 }
@@ -29856,12 +29856,12 @@ class TestShowBgpNeighbors(unittest.TestCase):
         }
     }
     golden_output = {'execute.return_value': '''\
-        RP/0/RP0/CPU0:R2_xr#show bgp neighbors 1.1.1.1
+        RP/0/RP0/CPU0:R2_xr#show bgp neighbors 10.4.1.1
         Fri Nov  1 21:31:51.172 UTC
 
-        BGP neighbor is 1.1.1.1
+        BGP neighbor is 10.4.1.1
         Remote AS 65000, local AS 65000, internal link
-        Remote router ID 1.1.1.1
+        Remote router ID 10.4.1.1
         BGP state = Established, up for 1w1d
         NSR State: None
         Last read 00:00:37, Last read before reset 1w1d
@@ -29911,8 +29911,8 @@ class TestShowBgpNeighbors(unittest.TestCase):
         Advertise routes with local-label via Unicast SAFI
 
         Connections established 2; dropped 1
-        Local host: 2.2.2.2, Local port: 179, IF Handle: 0x00000000
-        Foreign host: 1.1.1.1, Foreign port: 27104
+        Local host: 10.16.2.2, Local port: 179, IF Handle: 0x00000000
+        Foreign host: 10.4.1.1, Foreign port: 27104
         Last reset 1w1d, due to BGP Notification sent: hold time expired
         Time since last notification sent to neighbor: 1w1d
         Error Code: hold time expired
@@ -29930,7 +29930,7 @@ class TestShowBgpNeighbors(unittest.TestCase):
     def test_golden(self):
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpNeighbors(device=self.dev)
-        parsed_output = obj.parse(neighbor='1.1.1.1')
+        parsed_output = obj.parse(neighbor='10.4.1.1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -29949,7 +29949,7 @@ class TestShowBgpSummary(unittest.TestCase):
                     "default": {
                         "address_family": {
                             "ipv4 unicast": {
-                                "router_id": "2.2.2.2",
+                                "router_id": "10.16.2.2",
                                 "local_as": 65000,
                                 "generic_scan_interval": 60,
                                 "non_stop_routing": "enabled",
@@ -29974,7 +29974,7 @@ class TestShowBgpSummary(unittest.TestCase):
                             }
                         },
                         "neighbor": {
-                            "1.1.1.1": {
+                            "10.4.1.1": {
                                 "address_family": {
                                     "ipv4 unicast": {
                                         "spk": 0,
@@ -29989,7 +29989,7 @@ class TestShowBgpSummary(unittest.TestCase):
                                 },
                                 "remote_as": 65000
                             },
-                            "3.3.3.3": {
+                            "10.36.3.3": {
                                 "address_family": {
                                     "ipv4 unicast": {
                                         "spk": 0,
@@ -30013,7 +30013,7 @@ class TestShowBgpSummary(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         RP/0/RP0/CPU0:R2_xr#show bgp summary
         Fri Nov  1 22:14:22.804 UTC
-        BGP router identifier 2.2.2.2, local AS number 65000
+        BGP router identifier 10.16.2.2, local AS number 65000
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -30030,8 +30030,8 @@ class TestShowBgpSummary(unittest.TestCase):
         Speaker               7          7          7          7           7           0
 
         Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
-        1.1.1.1           0 65000   44813   40709        7    0    0     1w2d          1
-        3.3.3.3           0 65000   40706   40708        7    0    0     4w0d          1
+        10.4.1.1           0 65000   44813   40709        7    0    0     1w2d          1
+        10.36.3.3           0 65000   40706   40708        7    0    0     4w0d          1
 
         RP/0/RP0/CPU0:R2_xr#
     '''}
