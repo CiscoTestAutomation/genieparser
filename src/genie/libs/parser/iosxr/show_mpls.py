@@ -12,7 +12,8 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
-
+# import parser utils
+from genie.libs.parser.utils.common import Common
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
 # ======================================================
@@ -296,30 +297,24 @@ class ShowMplsInterfacesSchema(MetaParser):
                 'enabled': str,
             }
         },
-        'local_label': {
-            Any(): {
-                'outgoing_label': {
-                    Any(): {
-                        'prefix_or_id': str,
-                        'outgoing_interface': str,
-                        'next_hop': str,
-                        'bytes_switched': int,
-                    }
-                }
-            }
-        }
     }
 
 # ======================================================
 # Parser for 'show mpls interfaces'
 # ======================================================
 class ShowMplsInterfaces(ShowMplsInterfacesSchema):
-    cli_command = 'show mpls interfaces'
+    cli_command = ['show mpls interfaces',
+        'show mpls interfaces {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
         
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(
+                    interface=interface
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -327,11 +322,6 @@ class ShowMplsInterfaces(ShowMplsInterfacesSchema):
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<ldp>No|Yes) +'
                 r'(?P<tunnel>No|Yes) +(?P<static>No|Yes) +'
                 r'(?P<enabled>No|Yes)$')
-
-        # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
-        p2 = re.compile(r'^(?P<local_label>\S+) +(?P<outgoing_label>\S+) +'
-                r'(?P<prefix_or_id>[\S ]+\)) +(?P<outgoing_interface>\S+) +'
-                r'(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
         
         ret_dict = {}
 
@@ -342,7 +332,7 @@ class ShowMplsInterfaces(ShowMplsInterfacesSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group.get('interface')
+                interface = Common.convert_intf_name(group.get('interface'))
                 ldp = group.get('ldp')
                 tunnel = group.get('tunnel')
                 static = group.get('static')
@@ -354,9 +344,74 @@ class ShowMplsInterfaces(ShowMplsInterfacesSchema):
                 interface_dict.update({'static': static})
                 interface_dict.update({'enabled': enabled})
                 continue
+        
+        return ret_dict
+
+# ======================================================
+# Schema for
+#   * 'show mpls forwarding'
+#   * 'show mpls forwarding vrf {vrf}'
+# ======================================================
+class ShowMplsForwardingSchema(MetaParser):
+    schema = {
+        'vrf': {
+            Any(): {
+                'local_label': {
+                    Any(): {
+                        'outgoing_label': {
+                            Any(): {
+                                'prefix_or_id': {
+                                    Any(): {
+                                        'outgoing_interface': {
+                                            Any(): {
+                                                'next_hop': str,
+                                                'bytes_switched': int,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ======================================================
+# Parser for 
+#   * 'show mpls forwarding'
+#   * 'show mpls forwarding vrf {vrf}'
+# ======================================================
+class ShowMplsForwarding(ShowMplsForwardingSchema):
+    cli_command = ['show mpls forwarding',
+        'show mpls forwarding vrf {vrf}']
+
+    def cli(self, vrf=None, output=None):
+        
+        if output is None:
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(
+                    vrf=vrf
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
+        p1 = re.compile(r'^((?P<local_label>\S+) +)?(?P<outgoing_label>\S+) +(?P<prefix_or_id>[\S ]+(\))?) +(?P<outgoing_interface>\S+) +(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
+        
+        ret_dict = {}
+
+        if not vrf:
+            vrf = 'default'
+
+        for line in out.splitlines():
+            line = line.strip()
             
             # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
-            m = p2.match(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 local_label = group.get('local_label')
@@ -365,12 +420,16 @@ class ShowMplsInterfaces(ShowMplsInterfacesSchema):
                 outgoing_interface = group.get('outgoing_interface')
                 next_hop = group.get('next_hop')
                 bytes_switched = group.get('bytes_switched')
-                local_label_dict = ret_dict.setdefault('local_label', {}). \
+                local_label_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('local_label', {}). \
                     setdefault(local_label, {}). \
                     setdefault('outgoing_label', {}). \
-                    setdefault(outgoing_label, {})
-                local_label_dict.update({'prefix_or_id': prefix_or_id})
-                local_label_dict.update({'outgoing_interface': outgoing_interface})
+                    setdefault(outgoing_label, {}). \
+                    setdefault('prefix_or_id', {}). \
+                    setdefault(prefix_or_id, {}). \
+                    setdefault('outgoing_interface', {}). \
+                    setdefault(outgoing_interface, {})
                 local_label_dict.update({'next_hop': next_hop})
                 local_label_dict.update({'bytes_switched': int(bytes_switched)})
                 continue

@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxr show_mpls
 from genie.libs.parser.iosxr.show_mpls import (ShowMplsLdpNeighborBrief, 
                                                 ShowMplsLabelTableDetail,
-                                                ShowMplsInterfaces)
+                                                ShowMplsInterfaces,
+                                                ShowMplsForwarding)
 
 
 # ==================================================
@@ -520,128 +521,6 @@ class TestShowMplsInterfaces(unittest.TestCase):
                 'tunnel': 'No',
             },
         },
-        'local_label': {
-            '16001': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Pfx (idx 1)',
-                    },
-                },
-            },
-            '16002': {
-                'outgoing_label': {
-                    '16002': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Pfx (idx 2)',
-                    },
-                },
-            },
-            '16004': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.3.4.4',
-                        'outgoing_interface': 'Gi0/0/0/1',
-                        'prefix_or_id': 'SR Pfx (idx 4)',
-                    },
-                },
-            },
-            '16005': {
-                'outgoing_label': {
-                    '16005': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Pfx (idx 5)',
-                    },
-                },
-            },
-            '24000': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Adj (idx 0)',
-                    },
-                },
-            },
-            '24001': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Adj (idx 2)',
-                    },
-                },
-            },
-            '24002': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Adj (idx 1)',
-                    },
-                },
-            },
-            '24003': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.1.3.1',
-                        'outgoing_interface': 'Gi0/0/0/0',
-                        'prefix_or_id': 'SR Adj (idx 3)',
-                    },
-                },
-            },
-            '24004': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.3.4.4',
-                        'outgoing_interface': 'Gi0/0/0/1',
-                        'prefix_or_id': 'SR Adj (idx 0)',
-                    },
-                },
-            },
-            '24005': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.3.4.4',
-                        'outgoing_interface': 'Gi0/0/0/1',
-                        'prefix_or_id': 'SR Adj (idx 2)',
-                    },
-                },
-            },
-            '24006': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.3.4.4',
-                        'outgoing_interface': 'Gi0/0/0/1',
-                        'prefix_or_id': 'SR Adj (idx 1)',
-                    },
-                },
-            },
-            '24007': {
-                'outgoing_label': {
-                    'Pop': {
-                        'bytes_switched': 0,
-                        'next_hop': '10.3.4.4',
-                        'outgoing_interface': 'Gi0/0/0/1',
-                        'prefix_or_id': 'SR Adj (idx 3)',
-                    },
-                },
-            },
-        },
     }
     
     golden_output1 = {'execute.return_value': '''
@@ -652,6 +531,230 @@ class TestShowMplsInterfaces(unittest.TestCase):
         GigabitEthernet0/0/0/0     No       No       No       Yes
         GigabitEthernet0/0/0/1     No       No       No       Yes
 
+    '''}
+
+    def test__empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowMplsInterfaces(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowMplsInterfaces(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+# ==================================================
+#  Unit test for 'show mpls interfaces'
+# ==================================================
+class TestShowMplsForwarding(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'local_label': {
+                    '16001': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Pfx (idx 1)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '16002': {
+                        'outgoing_label': {
+                            '16002': {
+                                'prefix_or_id': {
+                                    'SR Pfx (idx 2)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '16004': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Pfx (idx 4)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/1': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.3.4.4',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '16005': {
+                        'outgoing_label': {
+                            '16005': {
+                                'prefix_or_id': {
+                                    'SR Pfx (idx 5)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24000': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 0)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24001': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 2)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24002': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 1)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24003': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 3)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/0': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.1.3.1',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24004': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 0)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/1': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.3.4.4',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24005': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 2)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/1': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.3.4.4',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24006': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 1)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/1': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.3.4.4',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '24007': {
+                        'outgoing_label': {
+                            'Pop': {
+                                'prefix_or_id': {
+                                    'SR Adj (idx 3)    ': {
+                                        'outgoing_interface': {
+                                            'Gi0/0/0/1': {
+                                                'bytes_switched': 0,
+                                                'next_hop': '10.3.4.4',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
+    golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:R3#show mpls forwarding 
         Thu Aug 29 15:29:39.411 UTC
         Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes       
@@ -671,18 +774,65 @@ class TestShowMplsInterfaces(unittest.TestCase):
         24007  Pop         SR Adj (idx 3)     Gi0/0/0/1    10.3.4.4        0
     '''}
 
+    golden_parsed_output1 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        show mpls forwarding
+        Fri Nov 29 19:14:47.084 UTC
+        Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes
+        Label  Label       or ID              Interface                    Switched
+        ------ ----------- ------------------ ------------ --------------- ------------
+        24000  Unlabelled  1.1.1.1/32         Gi0/0/0/0.90 10.12.90.1      7823705
+        24002  Pop         10.13.110.0/24     Gi0/0/0/0.110 10.12.110.1     0
+        24003  Unlabelled  10.13.115.0/24     Gi0/0/0/0.115 10.12.115.1     0
+        24004  Unlabelled  10.13.90.0/24      Gi0/0/0/0.90 10.12.90.1      0
+            Unlabelled  10.13.90.0/24      Gi0/0/0/1.90 10.23.90.3      0
+        24005  Unlabelled  2001:1:1:1::1/128[V]   \
+                                            Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
+                                                                        3296461
+        24006  Aggregate   VRF1: Per-VRF Aggr[V]   \
+                                            VRF1                         832
+        24007  Unlabelled  2001:3:3:3::3/128[V]   \
+                                            Gi0/0/0/1.390 fe80::5c00:ff:fe02:7   \
+                                                                        3158559
+        24008  Unlabelled  1.1.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      5271845
+        24009  Aggregate   VRF1: Per-VRF Aggr[V]   \
+                                            VRF1                         0
+        24010  Unlabelled  3.3.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      6384776
+        24011  Unlabelled  1.0.0.0/8          Gi0/0/0/0.120 10.12.120.1     0
+        24012  Unlabelled  10.13.120.0/24     Gi0/0/0/0.120 10.12.120.1     0
+            Unlabelled  10.13.120.0/24     Gi0/0/0/1.120 10.23.120.3     0
+    '''}
+
     def test__empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowMplsInterfaces(device=self.device)
+        obj = ShowMplsForwarding(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_empty(self):
+    def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-        obj = ShowMplsInterfaces(device=self.device)
+        obj = ShowMplsForwarding(device=self.device)
         parsed_output = obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMplsForwarding(device=self.device)
+        parsed_output = obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
