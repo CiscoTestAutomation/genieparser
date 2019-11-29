@@ -280,7 +280,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         p10 = re.compile(r'^Security +(?P<security_name>\S+): +(?P<policy_status>[\S ]+)$')
         
         # *      Security Policy:  None      Security Status:  Link Unsecured*
-        p10_1 = re.compile(r'(.*)\s+ Security +(?P<security_name>\w+):(\s+)* +(?P<policy_status>\w+(\s\w+)?)(\s+)+ Security +(?P<security_name2>\w+):(\s+)* +(?P<policy_status2>\w+(\s\w+)?)')
+        p10_1 = re.compile(r'(.*)\s+ Security +(?P<security_name>\w+):(\s+)* +'
+                r'(?P<policy_status>\w+(\s\w+)?)(\s+)+ Security +(?P<security_name2>\w+):(\s+)* '
+                r'+(?P<policy_status2>\w+(\s\w+)?)')
 
         # IPv6 Address: fe80::2119:3248:786b:40db
         # IPv6 Address: fe80:0000:0000:0000:0204:61ff:fe9d:f156
