@@ -218,7 +218,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     },
                     "matches": {
                         "l3": {
-                            "icmp": {
+                            "ipv4": {
                                 "protocol": "icmp",
                                 "source_network": {
                                     "any": {
