@@ -43,7 +43,7 @@ class TestShowAccessLists(unittest.TestCase):
     parsed_output1 = {
     'acl_name': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -72,7 +72,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
     'ipv4_acl': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -105,7 +105,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '10',
             },
-            20: {
+            '20': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -138,7 +138,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '20',
             },
-            30: {
+            '30': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -181,7 +181,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
     'ipv6_acl': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                     'logging': 'log-syslog',
@@ -205,7 +205,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '10',
             },
-            20: {
+            '20': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -228,7 +228,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '20',
             },
-            30: {
+            '30': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -267,7 +267,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
     'ipv6_acl2': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -296,7 +296,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
     'mac_acl': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -311,7 +311,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '10',
             },
-            20: {
+            '20': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -325,7 +325,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '20',
             },
-            30: {
+            '30': {
                 'actions': {
                     'forwarding': 'deny',
                 },
@@ -340,7 +340,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '30',
             },
-            40: {
+            '40': {
                 'actions': {
                     'forwarding': 'deny',
                 },
@@ -355,7 +355,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '40',
             },
-            50: {
+            '50': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -376,7 +376,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
     'test22': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -404,7 +404,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '10',
             },
-            20: {
+            '20': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -439,7 +439,7 @@ class TestShowAccessLists(unittest.TestCase):
                 },
                 'name': '20',
             },
-            30: {
+            '30': {
                 'actions': {
                     'forwarding': 'deny',
                 },
@@ -480,7 +480,7 @@ IP access list NTP-ACL
     parsed_output2 = {
     'NTP-ACL': {
         'aces': {
-            10: {
+            '10': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -506,7 +506,7 @@ IP access list NTP-ACL
                     'matched_packets': 0,
                 },
             },
-            20: {
+            '20': {
                 'actions': {
                     'forwarding': 'permit',
                 },
@@ -532,7 +532,7 @@ IP access list NTP-ACL
                     'matched_packets': 4,
                 },
             },
-            40: {
+            '40': {
                 'actions': {
                     'forwarding': 'permit',
                 },

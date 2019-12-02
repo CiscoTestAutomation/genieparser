@@ -27,7 +27,7 @@ class ShowAccessListsSchema(MetaParser):
         'show access-lists'
     """
     schema = {
-        Any():{
+        Any(): {
             'name': str,
             'type': str,
             Optional('aces'): {
@@ -216,7 +216,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             m = p2_ip.match(line)
             if m:
                 group = m.groupdict()
-                seq = int(group['seq'])
+                seq = group['seq']
                 actions_forwarding = group['actions_forwarding']
                 protocol = group['protocol']
                 src_operator = group['src_operator']
@@ -281,7 +281,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             m = p2_mac.match(line)
             if m:
                 group = m.groupdict()
-                seq = int(group['seq'])
+                seq = group['seq']
 
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
