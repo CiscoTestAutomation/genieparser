@@ -38,6 +38,9 @@
     * Updated ShowPolicyMapTypeSuperParser
 	    * Changed key 'service_policy', 'policy_name', 'priority_level' to Optional
 		* Updated regex match queue_limit
+    * Updated ShowAccessLists, ShowAccessListsSummary
+        * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
+
 * IOSXR
     * Updated ShowRouteIpv4 for:
         * Updated schema to support more ouput
@@ -45,3 +48,4 @@
     * Updated ShowRouteIpv6 for:
         * Updated schema to support more ouput
         * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+

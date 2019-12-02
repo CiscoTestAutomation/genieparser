@@ -253,7 +253,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                            r']+)( *\((?P<per_user>.*)\))?$')
 
 
-        # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+        # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
         # 20 permit 10.2.0.0
         # 20 deny   any
         # 10 permit 10.196.7.7
@@ -295,18 +295,18 @@ class ShowAccessLists(ShowAccessListsSchema):
             r'(?: +\d+\.\d+\.\d+\.\d+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
             r'+(?P<dst_port>(?:\S ?)+\S))?(?P<left>.+)?$')
 
-        # permit tcp host 2001:DB8:1::32 eq bgp host 2001:DB8:2::32 eq 11000 sequence 1
-        # permit tcp host 2001:DB8:1::32 eq telnet host 2001:DB8:2::32 eq 11001 sequence 2
-        # permit ipv6 host 2001::1 host 2001:1::2 sequence 20
-        # permit tcp any eq www 8443 host 2001:2::2 sequence 30
-        # permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
+        # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
+        # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
+        # permit ipv6 host 2001:: 1 host 2001: 1: : 2 sequence 20
+        # permit tcp any eq www 8443 host 2001: 2001:db8:4:: 2 sequence 30
+        # permit 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
         # permit udp any any eq domain sequence 10
         # permit esp any any dscp cs7 log sequence 20
         # deny ipv6 any any sequence 30
-        # permit ipv6 2001:DB8::/64 any sequence 10
-        # permit esp host 2001:DB8:5::1 any sequence 20
-        # permit tcp host 2001:DB8:1::1 eq www any eq bgp sequence 30
-        # permit udp any host 2001:DB8:1::1 sequence 40
+        # permit ipv6 2001: DB8: : / 64 any sequence 10
+        # permit esp host 2001: DB8: 5: : 1 any sequence 20
+        # permit tcp host 2001: DB8: 1: : 1 eq www any eq bgp sequence 30
+        # permit udp any host 2001: DB8: 1: : 1 sequence 40
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>permit|deny) +(?P<protocol>ahp|esp|hbh'
             r'|icmp|ipv6|pcp|sctp|tcp|udp) +(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?)'
@@ -331,7 +331,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             m_ip_1 = p_ip_1.match(line)
             # IPv6 access list preauth_v6 (per-user)
             m_ipv6 = p_ipv6.match(line)
-            # Extended MAC access list mac_acl 
+            # Extended MAC access list mac_acl
             m_mac = p_mac.match(line)
             if m_ip or m_ip_1:
                 if m_ip:
@@ -358,7 +358,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 continue
 
             # permit 172.20.10.10
-            # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+            # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
             # 20 permit 10.2.0.0
             # 30 deny   any
             # 10 permit 172.31.0.2 (1168716 matches)
@@ -388,8 +388,16 @@ class ShowAccessLists(ShowAccessListsSchema):
                         source_ipv4_network = group['src']
                     else:
                         source_ipv4_network = group['src'] + ' ' + '0.0.0.0'
-    
-                l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol, {})
+
+                if protocol is ('ipv4' or 'ipv6'):
+                    protocol_name = protocol
+                else:
+                    if acl_dict['type'] is 'ipv6-acl-type':
+                        protocol_name = 'ipv6'
+                    else:
+                        protocol_name = 'ipv4'
+
+                l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol_name, {})
                 l3_dict['protocol'] = protocol
                 l3_dict.setdefault('source_network', {}).setdefault(
                     source_ipv4_network, {}).setdefault('source_network', source_ipv4_network)
@@ -446,8 +454,16 @@ class ShowAccessLists(ShowAccessListsSchema):
                             int(re.search('\((\d+) +matches\)', left).groups()[0]))
 
                 # l3 dict
+                if protocol is ('ipv4' or 'ipv6'):
+                    protocol_name = protocol
+                else:
+                    if acl_dict['type'] is 'ipv6-acl-type':
+                        protocol_name = 'ipv6'
+                    else:
+                        protocol_name = 'ipv4'
+
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {})\
-                    .setdefault(protocol, {})
+                    .setdefault(protocol_name, {})
                 l3_dict['protocol'] = protocol
                 l3_dict.setdefault('source_network', {})\
                     .setdefault(src, {}).setdefault('source_network', src)
