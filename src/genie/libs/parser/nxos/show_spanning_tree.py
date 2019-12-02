@@ -858,12 +858,12 @@ class ShowErrdisableRecoverySchema(MetaParser):
 class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
     """Parser for show errdisable recovery"""
 
-    cli_command = 'show errdisable recovery'
+    cli_command = ['show errdisable recovery']
 
     def cli(self, output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
