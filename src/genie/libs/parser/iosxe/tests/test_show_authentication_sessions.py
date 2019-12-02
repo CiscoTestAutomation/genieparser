@@ -571,7 +571,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                     IIF-ID:  0x17B5937E
                 MAC Address:  b4a8.b968.f35b
                 IPv6 Address:  Unknown
-                IPv4 Address:  1.1.1.1
+                IPv4 Address:  10.4.1.1
                     User-Name:  B4-A8-B9-68-F3-5B
                     Status:  Authorized
                     Domain:  VOICE
@@ -607,7 +607,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'domain': 'VOICE',
                         'handle': '0x90000003',
                         'iif_id': '0x17B5937E',
-                        'ipv4_address': '1.1.1.1',
+                        'ipv4_address': '10.4.1.1',
                         'ipv6_address': 'Unknown',
                         'method_status': {
                             'dot1x': {

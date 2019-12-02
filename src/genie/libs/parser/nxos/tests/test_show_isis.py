@@ -11,7 +11,8 @@ from genie.libs.parser.nxos.show_isis import (ShowIsis,
                                               ShowIsisAdjacency,
                                               ShowIsisInterface,
                                               ShowIsisSpfLogDetail,
-                                              ShowIsisDatabaseDetail)
+                                              ShowIsisDatabaseDetail,
+                                              ShowIsisHostnameDetail)
 
 
 class TestShowIsis(unittest.TestCase):
@@ -1092,31 +1093,31 @@ class TestShowIsisHostname(unittest.TestCase):
         'instance': {
             'test': {
                 'vrf': {
-                    'default': {
-                        'hostname_db': {
-                            'hostname': {
-                                '1111.1111.1111': {
-                                    'hostname': 'R1_ios',
-                                    'level': 1,
-                                },
-                                '2222.2222.2222': {
-                                    'hostname': 'R2_xr',
-                                    'level': 1,
-                                },
-                                '3333.3333.3333': {
-                                    'hostname': 'R3_nx',
-                                    'level': 1,
-                                    'local_router': True,
-                                },
-                            },
-                        },
-                    },
                     'VRF1': {
                         'hostname_db': {
                             'hostname': {
                                 '3333.3333.3333': {
                                     'hostname': 'R3_nx',
-                                    'level': 1,
+                                    'level': [1],
+                                    'local_router': True,
+                                },
+                            },
+                        },
+                    },
+                    'default': {
+                        'hostname_db': {
+                            'hostname': {
+                                '1111.1111.1111': {
+                                    'hostname': 'R1_ios',
+                                    'level': [1],
+                                },
+                                '2222.2222.2222': {
+                                    'hostname': 'R2_xr',
+                                    'level': [1],
+                                },
+                                '3333.3333.3333': {
+                                    'hostname': 'R3_nx',
+                                    'level': [1],
                                     'local_router': True,
                                 },
                             },
@@ -1151,6 +1152,118 @@ class TestShowIsisHostname(unittest.TestCase):
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+class TestShowIsisHostnameDetail(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output = {
+        'instance': {
+            'test': {
+                'vrf': {
+                    'VRF1': {
+                        'hostname_db': {
+                            'hostname': {
+                                '1111.1111.1111': {
+                                    'hostname': 'R1_ios',
+                                    'level': [1],
+                                },
+                                '2222.2222.2222.00-00': {
+                                    'hostname': 'R2',
+                                    'level': [2],
+                                },
+                                '3333.3333.3333': {
+                                    'hostname': 'R3_nx',
+                                    'level': [1],
+                                    'local_router': True,
+                                },
+                                '7777.7777.7777.00-00': {
+                                    'hostname': 'R7',
+                                    'level': [1, 2],
+                                    'local_router': True,
+                                },
+                            },
+                        },
+                    },
+                    'default': {
+                        'hostname_db': {
+                            'hostname': {
+                                '2222.2222.2222.00-00': {
+                                    'hostname': 'R2',
+                                    'level': [2],
+                                },
+                                '3333.3333.3333.00-00': {
+                                    'hostname': 'R3',
+                                    'level': [1, 2],
+                                },
+                                '4444.4444.4444.00-00': {
+                                    'hostname': 'R4',
+                                    'level': [1],
+                                },
+                                '5555.5555.5555.00-00': {
+                                    'hostname': 'R5',
+                                    'level': [1, 2],
+                                },
+                                '6666.6666.6666.00-00': {
+                                    'hostname': 'R6',
+                                    'level': [1],
+                                },
+                                '7777.7777.7777.00-00': {
+                                    'hostname': 'R7',
+                                    'level': [1, 2],
+                                    'local_router': True,
+                                },
+                                '8888.8888.8888.00-00': {
+                                    'hostname': 'R8',
+                                    'level': [2],
+                                },
+                                '9999.9999.9999.00-00': {
+                                    'hostname': 'R9',
+                                    'level': [2],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        IS-IS Process: test dynamic hostname table VRF: default
+        Level  LSP ID                Dynamic hostname
+        2      2222.2222.2222.00-00  R2
+        1      3333.3333.3333.00-00  R3
+        2      3333.3333.3333.00-00  R3
+        1      4444.4444.4444.00-00  R4
+        1      5555.5555.5555.00-00  R5
+        2      5555.5555.5555.00-00  R5
+        1      6666.6666.6666.00-00  R6
+        1      7777.7777.7777.00-00* R7
+        2      7777.7777.7777.00-00* R7
+        2      8888.8888.8888.00-00  R8
+        2      9999.9999.9999.00-00  R9
+
+        IS-IS Process: test dynamic hostname table VRF: VRF1
+        Level  LSP ID                Dynamic hostname
+        2      2222.2222.2222.00-00  R2
+        1      7777.7777.7777.00-00* R7
+        2      7777.7777.7777.00-00* R7
+        1      1111.1111.1111  R1_ios
+        1      3333.3333.3333* R3_nx
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisHostnameDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIsisHostnameDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 class TestShowIsisAdjacency(unittest.TestCase):
 
