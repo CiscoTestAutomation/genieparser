@@ -15,4 +15,4 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowAccessLists for:
-        * Updated few keys' names by following ACL's Ops structure
+        * Updated few keys' names, one key's type by following ACL's Ops structure

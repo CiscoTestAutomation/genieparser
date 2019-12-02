@@ -219,8 +219,6 @@ class ShowAccessLists(ShowAccessListsSchema):
             if m:
                 group = m.groupdict()
                 seq = group['seq']
-                import pdb
-                pdb.set_trace()
                 actions_forwarding = group['actions_forwarding']
                 protocol = group['protocol']
                 src_operator = group['src_operator']
