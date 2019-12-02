@@ -196,7 +196,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
 #  Unit test for 'show mpls label table detail'
 # ==================================================
 
-class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
+class TestShowMplsLabelTableDetail(unittest.TestCase):
     '''Unit test for 'show mpls ldp neighbor brief'''
 
     device = Device(name='aDevice')
@@ -775,257 +775,235 @@ class TestShowMplsForwarding(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        'vrf': {
-            'default': {
-                'local_label': {
-                    '24000': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '1.1.1.1/32': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.90': {
-                                                'bytes_switched': 7823705,
-                                                'next_hop': '10.12.90.1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+        "vrf": {
+            "default": {
+                "local_label": {
+                    "24000": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "1.1.1.1/32": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.90": {
+                                                "next_hop": "10.12.90.1",
+                                                "bytes_switched": 9321675
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24002': {
-                        'outgoing_label': {
-                            'Pop': {
-                                'prefix_or_id': {
-                                    '10.13.110.0/24': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.110': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.12.110.1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24002": {
+                        "outgoing_label": {
+                            "Pop": {
+                                "prefix_or_id": {
+                                    "10.13.110.0/24": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.110": {
+                                                "next_hop": "10.12.110.1",
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24003': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '10.13.115.0/24': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.115': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.12.115.1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24003": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "10.13.115.0/24": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.115": {
+                                                "next_hop": "10.12.115.1",
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24004': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '10.13.90.0/24': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.90': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.12.90.1',
+                    "24004": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "10.13.90.0/24": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.90": {
+                                                "next_hop": "10.12.90.1",
+                                                "bytes_switched": 0
                                             },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                                            "GigabitEthernet0/0/0/1.90": {
+                                                "next_hop": "10.23.90.3",
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24005': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '2001:1:1:1::1/128[V]': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.390': {
-                                                'bytes_switched': 3296461,
-                                                'next_hop': 'fe80::f816:3eff:fe53:2cc7',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24005": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "2001:1:1:1::1/128[V]": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.390": {
+                                                "next_hop": "fe80::f816:3eff:fe53:2cc7",
+                                                "bytes_switched": 3928399
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24006': {
-                        'outgoing_label': {
-                            'Aggregate': {
-                                'prefix_or_id': {
-                                    'VRF1: Per-VRF': {
-                                        'outgoing_interface': {
-                                            'Aggr[V]': {
-                                                'bytes_switched': 832,
-                                                'next_hop': 'VRF1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24006": {
+                        "outgoing_label": {
+                            "Aggregate": {
+                                "prefix_or_id": {
+                                    "VRF1: Per-VRF Aggr[V]": {
+                                        "outgoing_interface": {
+                                            "VRF1": {
+                                                "bytes_switched": 832
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24007': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '2001:3:3:3::3/128[V]': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/1.390': {
-                                                'bytes_switched': 3158559,
-                                                'next_hop': 'fe80::5c00:ff:fe02:7',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24007": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "2001:3:3:3::3/128[V]": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/1.390": {
+                                                "next_hop": "fe80::5c00:ff:fe02:7",
+                                                "bytes_switched": 3762357
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24008': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '1.1.1.1/32[V]': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.390': {
-                                                'bytes_switched': 5271845,
-                                                'next_hop': '10.12.90.1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24008": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "1.1.1.1/32[V]": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.390": {
+                                                "next_hop": "10.12.90.1",
+                                                "bytes_switched": 6281421
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24009': {
-                        'outgoing_label': {
-                            'Aggregate': {
-                                'prefix_or_id': {
-                                    'VRF1: Per-VRF': {
-                                        'outgoing_interface': {
-                                            'Aggr[V]': {
-                                                'bytes_switched': 0,
-                                                'next_hop': 'VRF1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24009": {
+                        "outgoing_label": {
+                            "Aggregate": {
+                                "prefix_or_id": {
+                                    "VRF1: Per-VRF Aggr[V]": {
+                                        "outgoing_interface": {
+                                            "VRF1": {
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24010': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '3.3.3.3/32[V]': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/1.390': {
-                                                'bytes_switched': 6384776,
-                                                'next_hop': '10.23.90.3',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24010": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "3.3.3.3/32[V]": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/1.390": {
+                                                "next_hop": "10.23.90.3",
+                                                "bytes_switched": 7608898
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24011': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '1.0.0.0/8': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.120': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.12.120.1',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                    "24011": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "1.0.0.0/8": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.120": {
+                                                "next_hop": "10.12.120.1",
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    '24012': {
-                        'outgoing_label': {
-                            'Unlabelled': {
-                                'prefix_or_id': {
-                                    '10.13.120.0/24': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/0.120': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.12.120.1',
+                    "24012": {
+                        "outgoing_label": {
+                            "Unlabelled": {
+                                "prefix_or_id": {
+                                    "10.13.120.0/24": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet0/0/0/0.120": {
+                                                "next_hop": "10.12.120.1",
+                                                "bytes_switched": 0
                                             },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    'Unlabelled': {
-                        'outgoing_label': {
-                            '10.13.120.0/24': {
-                                'prefix_or_id': {
-                                    '': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/1.120': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.23.120.3',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                            '10.13.90.0/24': {
-                                'prefix_or_id': {
-                                    '': {
-                                        'outgoing_interface': {
-                                            'GigabitEthernet0/0/0/1.90': {
-                                                'bytes_switched': 0,
-                                                'next_hop': '10.23.90.3',
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                            "GigabitEthernet0/0/0/1.120": {
+                                                "next_hop": "10.23.120.3",
+                                                "bytes_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    golden_output2 = {'execute.return_value': '''
+    golden_output2 = {'execute.return_value': r'''
         show mpls forwarding
-        Fri Nov 29 19:14:47.084 UTC
+        Mon Dec  2 19:56:50.899 UTC
         Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes
         Label  Label       or ID              Interface                    Switched
         ------ ----------- ------------------ ------------ --------------- ------------
-        24000  Unlabelled  1.1.1.1/32         Gi0/0/0/0.90 10.12.90.1      7823705
+        24000  Unlabelled  1.1.1.1/32         Gi0/0/0/0.90 10.12.90.1      9321675
         24002  Pop         10.13.110.0/24     Gi0/0/0/0.110 10.12.110.1     0
         24003  Unlabelled  10.13.115.0/24     Gi0/0/0/0.115 10.12.115.1     0
         24004  Unlabelled  10.13.90.0/24      Gi0/0/0/0.90 10.12.90.1      0
             Unlabelled  10.13.90.0/24      Gi0/0/0/1.90 10.23.90.3      0
         24005  Unlabelled  2001:1:1:1::1/128[V]   \
                                             Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
-                                                                        3296461
+                                                                        3928399
         24006  Aggregate   VRF1: Per-VRF Aggr[V]   \
                                             VRF1                         832
         24007  Unlabelled  2001:3:3:3::3/128[V]   \
                                             Gi0/0/0/1.390 fe80::5c00:ff:fe02:7   \
-                                                                        3158559
-        24008  Unlabelled  1.1.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      5271845
+                                                                        3762357
+        24008  Unlabelled  1.1.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      6281421
         24009  Aggregate   VRF1: Per-VRF Aggr[V]   \
                                             VRF1                         0
-        24010  Unlabelled  3.3.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      6384776
+        24010  Unlabelled  3.3.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      7608898
         24011  Unlabelled  1.0.0.0/8          Gi0/0/0/0.120 10.12.120.1     0
         24012  Unlabelled  10.13.120.0/24     Gi0/0/0/0.120 10.12.120.1     0
             Unlabelled  10.13.120.0/24     Gi0/0/0/1.120 10.23.120.3     0
