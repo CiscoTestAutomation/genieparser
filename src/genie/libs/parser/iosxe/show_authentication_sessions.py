@@ -245,6 +245,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
+        # *ACS ACL:* *xGENIEx-Test_ACL_CiscoPhones-e23431ede2*
         p1 = re.compile(r'(?:\*)?(?P<argument>[\w\s\-]+)\:(?:\*)? '
                         r'+(?:\*)?(?P<value>[\w\s\-\.\./]+|\S+)(?:\*)?$')
 
