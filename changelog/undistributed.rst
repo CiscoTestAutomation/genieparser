@@ -8,6 +8,9 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* NXOS:
+    * Added ShowErrdisableRecovery for
+        * show errdisable recovery
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory

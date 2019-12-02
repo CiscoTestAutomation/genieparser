@@ -5,11 +5,12 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
-from genie.libs.parser.nxos.show_spanning_tree import ShowSpanningTreeMst,\
-                                                        ShowSpanningTreeSummary,\
-                                                            ShowSpanningTreeDetail
+from genie.libs.parser.nxos.show_spanning_tree import (ShowSpanningTreeMst,
+                                                      ShowSpanningTreeSummary,
+                                                      ShowSpanningTreeDetail,
+                                                      ShowErrdisableRecovery)
 
-class testShowSpanningTreeMst(unittest.TestCase):
+class TestShowSpanningTreeMst(unittest.TestCase):
     dev1 = Device(name = 'deviceA')
     dev2 = Device(name = 'deviceB')
 
@@ -197,7 +198,7 @@ class testShowSpanningTreeMst(unittest.TestCase):
             parsed = obj.parse()
 
 
-class testShowSpanningTreeSummary(unittest.TestCase):
+class TestShowSpanningTreeSummary(unittest.TestCase):
     dev_c3850 = Device(name = 'deviceA')
     dev2 = Device(name = 'deviceB')
 
@@ -1160,6 +1161,167 @@ DS1-R101# sh spanning-tree detail
         obj = ShowSpanningTreeDetail(device = self.dev_c3850)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output_3)    
+
+class TestShowErrdisabledRecovery(unittest.TestCase):
+    dev_n7k = Device(name='n7000')
+    dev2 = Device(name = 'empty')
+
+    empty_output = {'execute.return_value' : '          '}
+
+    golden_output = {'execute.return_value': '''
+        PE1# sh errdisable recovery                                                                                                                                                                                                                                                                                                                 
+        ErrDisable Reason               Timer Status                                                                                                                                                                                                                                                                                                
+        -----------------               ------------                                                                                                                                                                                                                                                                                                
+        link-flap                       disabled                                                                                                                                                                                                                                                                                                    
+        udld                            disabled                                                                                                                                                                                                                                                                                                    
+        bpduguard                       disabled                                                                                                                                                                                                                                                                                                    
+        loopback                        disabled                                                                                                                                                                                                                                                                                                    
+        storm-ctrl                      disabled                                                                                                                                                                                                                                                                                                    
+        sec-violation                   disabled                                                                                                                                                                                                                                                                                                    
+        psec-violation                  disabled                                                                                                                                                                                                                                                                                                    
+        vpc-peerlink                    disabled                                                                                                                                                                                                                                                                                                    
+        failed-port-state               disabled                                                                                                                                                                                                                                                                                                    
+        event-debug                     disabled                                                                                                                                                                                                                                                                                                    
+        event-debug1                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug2                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug3                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug4                    disabled                                                                                                                                                                                                                                                                                                    
+        miscabling                      disabled                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                    
+                Timer interval: 300                                                                                                                                                                                                                                                                                                                 
+        PE1# 
+    '''}
+
+    golden_parsed_output = {
+        'timer_interval': 300,
+        'errdisable_reason': {
+            'bpduguard': False,
+            'event-debug': False,
+            'event-debug1': False,
+            'event-debug2': False,
+            'event-debug3': False,
+            'event-debug4': False,
+            'failed-port-state': False,
+            'link-flap': False,
+            'loopback': False,
+            'miscabling': False,
+            'psec-violation': False,
+            'sec-violation': False,
+            'storm-ctrl': False,
+            'udld': False,
+            'vpc-peerlink': False
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        N95_2# sh errdisable recovery                                                                                                                                                                                                                                                                                                               
+        ErrDisable Reason               Timer Status                                                                                                                                                                                                                                                                                                
+        -----------------               ------------                                                                                                                                                                                                                                                                                                
+        link-flap                       disabled                                                                                                                                                                                                                                                                                                    
+        udld                            disabled                                                                                                                                                                                                                                                                                                    
+        bpduguard                       disabled                                                                                                                                                                                                                                                                                                    
+        loopback                        disabled                                                                                                                                                                                                                                                                                                    
+        storm-ctrl                      disabled                                                                                                                                                                                                                                                                                                    
+        dhcp-rate-lim                   disabled                                                                                                                                                                                                                                                                                                    
+        arp-inspection                  disabled                                                                                                                                                                                                                                                                                                    
+        sec-violation                   disabled                                                                                                                                                                                                                                                                                                    
+        psec-violation                  disabled                                                                                                                                                                                                                                                                                                    
+        vpc-peerlink                    disabled                                                                                                                                                                                                                                                                                                    
+        port-state-failed               disabled                                                                                                                                                                                                                                                                                                    
+        event-debug                     disabled                                                                                                                                                                                                                                                                                                    
+        event-debug1                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug2                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug3                    disabled                                                                                                                                                                                                                                                                                                    
+        event-debug4                    disabled                                                                                                                                                                                                                                                                                                    
+        ip-addr-conflict                disabled                                                                                                                                                                                                                                                                                                    
+        ipqos-mgr-error                 disabled                                                                                                                                                                                                                                                                                                    
+        ethpm                           disabled                                                                                                                                                                                                                                                                                                    
+        ipqos-compat-failure            disabled                                                                                                                                                                                                                                                                                                    
+        syserr based                    disabled                                                                                                                                                                                                                                                                                                    
+        CMM miscabling                  disabled                                                                                                                                                                                                                                                                                                    
+        md-mismatch                     disabled                                                                                                                                                                                                                                                                                                    
+        hw-res-exhaustion               disabled                                                                                                                                                                                                                                                                                                    
+        reinit-no-flap                  disabled                                                                                                                                                                                                                                                                                                    
+        dcbx-error                      disabled                                                                                                                                                                                                                                                                                                    
+        vlan-membership-erro            disabled                                                                                                                                                                                                                                                                                                    
+        pause-rate-limit                disabled                                                                                                                                                                                                                                                                                                    
+        inline-power                    disabled                                                                                                                                                                                                                                                                                                    
+        sw-failure                      disabled                                                                                                                                                                                                                                                                                                    
+        elo-session-down                disabled                                                                                                                                                                                                                                                                                                    
+        elo-discovery-timeou            disabled                                                                                                                                                                                                                                                                                                    
+        elo-capabilties-conf            disabled                                                                                                                                                                                                                                                                                                    
+        elo-miswired                    disabled                                                                                                                                                                                                                                                                                                    
+        elo-link-fault                  disabled                                                                                                                                                                                                                                                                                                    
+        elo-dying-gasp                  disabled                                                                                                                                                                                                                                                                                                    
+        elo-critical-event              disabled                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                    
+                Timer interval: 300                                                                                                                                                                                                                                                                                                                 
+        N95_2#  
+    '''}
+
+    golden_parsed_output_2 = {
+        'timer_interval': 300,
+        'errdisable_reason': {
+            'CMM miscabling': False,
+            'arp-inspection': False,
+            'bpduguard': False,
+            'dcbx-error': False,
+            'dhcp-rate-lim': False,
+            'elo-capabilties-conf': False,
+            'elo-critical-event': False,
+            'elo-discovery-timeou': False,
+            'elo-dying-gasp': False,
+            'elo-link-fault': False,
+            'elo-miswired': False,
+            'elo-session-down': False,
+            'ethpm': False,
+            'event-debug': False,
+            'event-debug1': False,
+            'event-debug2': False,
+            'event-debug3': False,
+            'event-debug4': False,
+            'hw-res-exhaustion': False,
+            'inline-power': False,
+            'ip-addr-conflict': False,
+            'ipqos-compat-failure': False,
+            'ipqos-mgr-error': False,
+            'link-flap': False,
+            'loopback': False,
+            'md-mismatch': False,
+            'pause-rate-limit': False,
+            'port-state-failed': False,
+            'psec-violation': False,
+            'reinit-no-flap': False,
+            'sec-violation': False,
+            'storm-ctrl': False,
+            'sw-failure': False,
+            'syserr based': False,
+            'udld': False,
+            'vlan-membership-erro': False,
+            'vpc-peerlink': False
+        }
+    }
+
+    def test_output_empty(self):
+        self.dev2 = Mock(**self.empty_output)
+        obj = ShowErrdisableRecovery(device=self.dev2)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output_1(self):
+        self.maxDiff = None
+        self.dev_n7k = Mock(**self.golden_output)
+        obj = ShowErrdisableRecovery(device=self.dev_n7k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_output_2(self):
+        self.maxDiff = None
+        self.dev_n7k = Mock(**self.golden_output_2)
+        obj = ShowErrdisableRecovery(device=self.dev_n7k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 if __name__ == '__main__':
     unittest.main()
