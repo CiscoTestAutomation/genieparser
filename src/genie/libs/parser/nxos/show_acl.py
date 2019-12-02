@@ -118,7 +118,7 @@ class ShowAccessListsSchema(MetaParser):
 class ShowAccessLists(ShowAccessListsSchema):
     """ Parser for
         'show access-lists'
-        'show access-lists <acl>'
+        'show access-lists {acl}'
     """
     cli_command = ['show access-lists',
                    'show access-lists {acl}']
@@ -157,7 +157,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 20 permit ipv6 2001::1/128 2001:1::2/128
         # 30 permit tcp any eq 8443 2001:2::2/128
         # 10 permit udp any any
-        p2_ip = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)'
+        p2_ip = re.compile(r'^(?P<seq>\S+) +(?P<actions_forwarding>permit|deny)'
                            r' +(?P<protocol>(?:ip|tcp|ipv6|udp)+) +(?P<source_network>(?:any|host|[\d.]+|[\d:.]+(?:\/\d+)?)?'
                            r'(?: [\d.]+)?)(?:( +(?P<src_operator>eq|gt|lt|neq|range)'
                            r' +(?P<src_port>[a-z\d ]{1,20})))? +(?P<destination_network>(?:any|host|[\d:.]+(?:\/\d+)?)'
@@ -172,7 +172,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x8041
         # 40 deny any any vlan 10
         # 50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
-        p2_mac = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) '
+        p2_mac = re.compile(r'^(?P<seq>\S+) +(?P<actions_forwarding>permit|deny) '
                             r'+(?P<source_mac_address>any|host|[\w]{4}.[\w]{4}.[\w]{4}'
                             r'(?: [\w]{4}.[\w]{4}.[\w]{4})?) '
                             r'+(?P<destination_mac_address>(?:any|host|[\w.]+|[\d.]+)(?: +[\w]{4}.[\w]{4}.[\w]{4})?)'
@@ -196,15 +196,17 @@ class ShowAccessLists(ShowAccessListsSchema):
             m_mac = p1_mac.match(line)
 
             if m_ip or m_ipv6 or m_mac:
+                # 'type': type, # Conf/Ops Enum('ipv4-acl-type','ipv6-acl-type','eth-acl-type',
+                # 'mixed-eth-ipv4-acl-type','mixed-eth-ipv6-acl-type','mixed-eth-ipv4-ipv6-acl-type')
                 if m_ip:
                     group = m_ip.groupdict()
-                    acl_type = 'ip-acl-type'
+                    acl_type = 'ipv4-acl-type'
                 elif m_ipv6:
                     group = m_ipv6.groupdict()
                     acl_type = 'ipv6-acl-type'
                 else:
                     group = m_mac.groupdict()
-                    acl_type = 'mac-acl-type'
+                    acl_type = 'eth-acl-type'
                 acl_dict = result_dict.setdefault(group['name'], {})
                 acl_dict['name'] = group['name']
                 acl_dict['type'] = acl_type
@@ -217,6 +219,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             if m:
                 group = m.groupdict()
                 seq = group['seq']
+                import pdb
+                pdb.set_trace()
                 actions_forwarding = group['actions_forwarding']
                 protocol = group['protocol']
                 src_operator = group['src_operator']

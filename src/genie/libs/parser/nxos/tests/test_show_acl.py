@@ -68,7 +68,7 @@ class TestShowAccessLists(unittest.TestCase):
             },
         },
         'name': 'acl_name',
-        'type': 'ip-acl-type',
+        'type': 'ipv4-acl-type',
     },
     'ipv4_acl': {
         'aces': {
@@ -173,11 +173,11 @@ class TestShowAccessLists(unittest.TestCase):
             },
         },
         'name': 'ipv4_acl',
-        'type': 'ip-acl-type',
+        'type': 'ipv4-acl-type',
     },
     'ipv4_ext': {
         'name': 'ipv4_ext',
-        'type': 'ip-acl-type',
+        'type': 'ipv4-acl-type',
     },
     'ipv6_acl': {
         'aces': {
@@ -372,7 +372,7 @@ class TestShowAccessLists(unittest.TestCase):
             },
         },
         'name': 'mac_acl',
-        'type': 'mac-acl-type',
+        'type': 'eth-acl-type',
     },
     'test22': {
         'aces': {
@@ -464,7 +464,7 @@ class TestShowAccessLists(unittest.TestCase):
             },
         },
         'name': 'test22',
-        'type': 'ip-acl-type',
+        'type': 'ipv4-acl-type',
     },
 }
 
@@ -560,7 +560,7 @@ IP access list NTP-ACL
             },
         },
         'name': 'NTP-ACL',
-        'type': 'ip-acl-type',
+        'type': 'ipv4-acl-type',
     },
 }
 
