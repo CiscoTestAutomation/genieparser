@@ -3,6 +3,7 @@
 IOSXR parsers for the following show commands:
     * 'show mpls ldp neighbor brief'
     * 'show mpls interfaces'
+    * 'show mpls forwarding'
 '''
 
 # Python
