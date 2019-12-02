@@ -2143,6 +2143,12 @@ IPv6 access list OutFilter_IPv6
                         },
                         'l4': {
                             'tcp': {
+                                'destination_port': {
+                                    'operator': {
+                                        'operator': 'eq',
+                                        'port': 80
+                                    }
+                                },
                                 'established': False
                             }
                         }

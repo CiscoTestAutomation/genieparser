@@ -8,7 +8,14 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
+* IOSXE
+    * Added ShowProcessesMemory for:
+        * show processes memory
+        * show processes memory | include {include}
+* NXOS
+    * Added ShowIsisHostnameDetail for commands:
+        * show isis hostname detail
+        * show isis hostname detail vrf {vrf}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -20,6 +27,12 @@
 * NXOS
     * Updated ShowAccessLists for:
         * Updated few keys' names by following ACL's Ops structure
+    * Updated ShowIpv6MldLocalGroups for:
+        * Added support for various device outputs
+    * Updated ShowIpv6MldGroups for:
+        * Added support for various device outputs
+    * Updated ShowIsisHostname for:
+        * Updated int to list for level key
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
@@ -27,3 +40,12 @@
 		* Updated regex match queue_limit
     * Updated ShowAccessLists, ShowAccessListsSummary
         * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
+
+* IOSXR
+    * Updated ShowRouteIpv4 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpDistributor, ShowRouteIpWord class
+    * Updated ShowRouteIpv6 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+

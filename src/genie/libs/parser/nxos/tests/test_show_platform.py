@@ -197,7 +197,7 @@ Active Package(s):
                      Module 1: v7.0
                      Module 1: v1.0
                      Module 3: v1.0
-          Microcontroller Firmware:        version v1.0.0.2
+          Microcontroller Firmware:        version v10.1.0.2
           QSFP Microcontroller Firmware:   
                      Module 3: v0.0.0.0
           CXP Microcontroller Firmware:   
@@ -207,7 +207,7 @@ Active Package(s):
           BIOS compile time:       05/09/2012
           kickstart image file is: bootflash:///n5000-uk9-kickstart.7.3.3.N1.1.bin
           kickstart compile time:  4/27/2018 9:00:00 [04/27/2018 17:18:59]
-          system image file is:    bootflash:///n5000-uk9.7.3.3.N1.1.bin
+          system image file is:    bootflash:///n5000-uk10.1.3.3.N1.1.bin
           system compile time:     4/27/2018 9:00:00 [04/27/2018 21:24:41]
         
         
@@ -260,7 +260,7 @@ Active Package(s):
                                  'bios_compile_time': '05/09/2012',
                                  'kickstart_image_file': 'bootflash:///n5000-uk9-kickstart.7.3.3.N1.1.bin',
                                  'kickstart_compile_time': '4/27/2018 9:00:00 [04/27/2018 17:18:59]',
-                                 'system_image_file': 'bootflash:///n5000-uk9.7.3.3.N1.1.bin',
+                                 'system_image_file': 'bootflash:///n5000-uk10.1.3.3.N1.1.bin',
                                  'system_compile_time': '4/27/2018 9:00:00 [04/27/2018 21:24:41]'}
                               }
                             }
