@@ -2,8 +2,11 @@
 
 IOSXR parsers for the following show commands:
     * 'show mpls ldp neighbor brief'
+    * 'show mpls label table detail'
     * 'show mpls interfaces'
+    * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
+    * 'show mpls forwarding vrf {vrf}'
 '''
 
 # Python
@@ -388,12 +391,12 @@ class ShowMplsForwardingVrfSchema(MetaParser):
 # ======================================================
 class ShowMplsForwardingVrf(ShowMplsForwardingVrfSchema):
 
-    cli_command = 'show mpls forwarding vrf {vrf}'
+    cli_command = ['show mpls forwarding vrf {vrf}']
 
     def cli(self, vrf, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf))
+            out = self.device.execute(self.cli_command[0].format(vrf=vrf))
         else:
             out = output
 
@@ -540,12 +543,12 @@ class ShowMplsForwardingSchema(MetaParser):
 # ======================================================
 class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
 
-    cli_command = 'show mpls forwarding'
+    cli_command = ['show mpls forwarding']
 
     def cli(self, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
