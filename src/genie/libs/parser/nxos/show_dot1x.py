@@ -176,8 +176,8 @@ class ShowDot1xAllDetailsSchema(MetaParser):
             show dot1x all details
     '''
     schema = {
-        'system_auth_control': bool,
-        'version': int,
+        Optional('system_auth_control'): bool,
+        Optional('version'): int,
         Optional ('interfaces'): {
             Any() : {
                 'pae': str,
@@ -218,6 +218,7 @@ class ShowDot1xAllDetailsSchema(MetaParser):
                 Optional('clients') : {
                     Any() : {
                         Optional('client'): str,
+                        Optional('eap_method'): str,
                         Optional('auth_method'): str, 
                         Optional('session'): {
                             Optional('reauth_action'): str,
@@ -247,11 +248,14 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             out = output
         
         ret_dict = {}
+        eap_method = ''
 
         p1 = re.compile(r'^Sysauthcontrol +(?P<SysControl>\w+)$')
         p2 = re.compile(r'^Dot1x +Protocol +Version +(?P<version>\d+)$')
         p3 = re.compile(r'^Dot1x +Info +for +(?P<intf>\w+\d+\/\d+)$')
-        p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(\w+((:\w+)|(\s\w+))*))$')
+        # p4 = re.compile(r'^(?P<key>[\-\s\w]+) + \= +(?P<value>(\w+((:\w+)|(\s\w+)|(.\w+))*))$')
+        p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(((\w)|(\())+((:\w+)|(\s\w+)|(.\w+))*)+(\))?)$')
+        # p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(\w+((:\w+)|(\s\w+))*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -283,7 +287,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             m = p4.match(line)
             if m:
                 value = m.groupdict()
-                key = value['key']
+                key = value['key'].strip()
                 val = value['value'].lower()
 
                 # PAE = AUTHENTICATOR
@@ -400,13 +404,19 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
                 elif key.lower() == 'supplicant':
                     client_dict = intf_dict.setdefault('clients', {}).setdefault(val, {})
                     client_dict['client'] = val
+                    if eap_method:
+                        client_dict['eap_method'] = eap_method
+                    
+                # EAP Method                = (13)
+                elif key.lower() == 'eap method':
+                    eap_method = val
 
                 # Authentication Method = EAP
                 elif key.lower() == 'authentication method':
                     client_dict.setdefault('auth_method', val)
 
             ### Session ###
-                        
+                    
                 # ReAuthAction = Reauthenticate
                 elif key.lower() == 'reauthaction':
                     # if 'session' not in intf_dict: 

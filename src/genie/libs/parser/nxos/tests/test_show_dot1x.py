@@ -216,7 +216,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
 class test_show_dot1x_all_details(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
-
+    maxDiff = None
 
     parsed_output = {
         'system_auth_control': True,
@@ -405,16 +405,63 @@ class test_show_dot1x_all_details(unittest.TestCase):
     '''}
 
     empty_output = {'execute.return_value' : '          '}
+    
+    output_3 = {'execute.return_value': '''\
+        Dot1x Info for GigabitEthernet1/6
+        -----------------------------------
+        PAE                       = AUTHENTICATOR
+        QuietPeriod               = 3
+        ServerTimeout             = 0
+        SuppTimeout               = 15
+        ReAuthMax                 = 2
+        MaxReq                    = 1
+        TxPeriod                  = 1
+        
+        Dot1x Authenticator Client List
+        -------------------------------
+        EAP Method                = (13)
+        Supplicant                = 6451.065c.f902
+        Session ID                = 0A90740B0000A7FD44A5F6A8
+            Auth SM State         = AUTHENTICATED
+            Auth BEND SM State    = IDLE
+        '''
+    }
 
+    parsed_output_3 = {
+        'interfaces': {
+            'GigabitEthernet1/6': {
+                'interface': 'GigabitEthernet1/6',
+                'pae': 'authenticator',
+                'timeout': {
+                    'quiet_period': 3,
+                    'server_timeout': 0,
+                    'supp_timeout': 15,
+                    'tx_period': 1,
+                },
+                're_auth_max': 2,
+                'max_req': 1,
+                'clients': {
+                    '6451.065c.f902' : {
+                        'client': '6451.065c.f902',
+                        'eap_method': '(13)',
+                        'session': {
+                            'session_id': '0a90740b0000a7fd44a5f6a8',
+                            'auth_sm_state':'authenticated',
+                            'auth_bend_sm_state': 'idle',
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     def test_output_1(self):
-        self.maxDiff = None
         self.dev1 = Mock(**self.output)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
         self.assertEqual(parsed, self.parsed_output)
 
     def test_output_2(self):
-        self.maxDiff = None
         self.dev1 = Mock(**self.output_2)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
@@ -426,6 +473,11 @@ class test_show_dot1x_all_details(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
-
+    def test_output_3(self):
+        self.dev1 = Mock(**self.output_3)
+        obj = ShowDot1xAllDetails(device = self.dev1)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.parsed_output_3)
+        
 if __name__ == '__main__':
     unittest.main()
