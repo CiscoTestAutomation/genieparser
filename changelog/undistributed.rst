@@ -11,14 +11,17 @@
 * NXOS:
     * Added ShowErrdisableRecovery for
         * show errdisable recovery
+    * Added ShowIsisHostnameDetail for commands:
+        * show isis hostname detail
+        * show isis hostname detail vrf {vrf}
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
         * show processes memory | include {include}
-* NXOS
-    * Added ShowIsisHostnameDetail for commands:
-        * show isis hostname detail
-        * show isis hostname detail vrf {vrf}
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
+
 * IOSXR
     * Added ShowMplsInterfaces for:
         * show mpls interfaces
@@ -26,6 +29,11 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+
+* IOS
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -35,7 +43,7 @@
 
 * NXOS
     * Updated ShowAccessLists for:
-        * Updated few keys' names by following ACL's Ops structure
+        * Updated few keys' names, one key's type by following ACL's Ops structure
     * Updated ShowIpv6MldLocalGroups for:
         * Added support for various device outputs
     * Updated ShowIpv6MldGroups for:
@@ -57,4 +65,8 @@
     * Updated ShowRouteIpv6 for:
         * Updated schema to support more ouput
         * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Changed key 'template' to Optional
+		* Added 'security_policy' and 'security_status' to 'server_policies'
+		* Added a regex to match Server Policies
 
