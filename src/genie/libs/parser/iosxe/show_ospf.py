@@ -7504,8 +7504,8 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
                                     Any(): {
                                         'address': str,
                                         'adj_sid': int,
-                                        'backup_nexthop': str,
-                                        'backup_interface': str
+                                        Optional('backup_nexthop'): str,
+                                        Optional('backup_interface'): str
                                     }
                                 }
                             }
@@ -7541,8 +7541,9 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
         p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
 
         # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
-        p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
-                         '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
+        p3 = re.compile(
+            r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +('
+            r'?P<adj_sid>\d+)( +(?P<backup_nexthop>\S+))?( +(?P<backup_interface>\S+))?$')
 
         # initial variables
         ret_dict = {}
@@ -7587,9 +7588,11 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
 
                 neighbor_dict.update({'address': address})
                 neighbor_dict.update({'adj_sid': adj_sid})
-                neighbor_dict.update({'backup_nexthop': backup_nexthop})
-                neighbor_dict.update({'backup_interface':
-                    Common.convert_intf_name(backup_interface)})
+                if backup_nexthop:
+                    neighbor_dict.update({'backup_nexthop': backup_nexthop})
+                if backup_interface:
+                    neighbor_dict.update({'backup_interface':
+                        Common.convert_intf_name(backup_interface)})
                 continue
 
         return ret_dict
@@ -7605,13 +7608,16 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
                 'router_id': str,
                 Optional('sids'): {
                     Any(): {
-                        'sid': int,
-                        Optional('codes'): str,
-                        'prefix': str,
-                        Optional('adv_rtr_id'): str,
-                        Optional('area_id'): str,
-                        'type': str,
-                        'algo': int
+                        'index': {
+                            Any(): {  # 1, 2, 3, ...
+                                Optional('codes'): str,
+                                'prefix': str,
+                                Optional('adv_rtr_id'): str,
+                                Optional('area_id'): str,
+                                Optional('type'): str,
+                                Optional('algo'): int
+                            }
+                        }
                     },
                     'total_entries': int
                 }
@@ -7640,10 +7646,12 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
 
         # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
         # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
-        # 3       (M)     10.16.2.3/32                                    Unknown   0  
-        p2 = re.compile(r'(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
-            '(?P<prefix>[\d\.\/]+)( +(?P<adv_rtr_id>[\d\.]+))?'
-            '( +(?P<area_id>\d+))? +(?P<type>\w+) +(?P<algo>\d+)')
+        #                 10.16.2.3/32          10.16.2.2          8        Intra     0
+        # 3       (M)     10.16.2.3/32                                    Unknown   0
+        #                 10.36.3.3/32               10.16.2.10         0
+        p2 = re.compile(r'(?:(?P<sid>\d+) +)?(?:\((?P<codes>[LNM,]+)\) +)?(?P<prefix>[\d\.\/]+)'
+                        r'( +(?P<adv_rtr_id>[\d\.]+))?( +(?P<area_id>\d+))?(?: +(?P<type>\w+))?'
+                        r'(?: +(?P<algo>\d+))?')
 
         ret_dict = {}
         sid_entries = 0
@@ -7662,7 +7670,9 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
 
             # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
             # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+            #                 10.16.2.3/32          10.16.2.2          8        Intra     0
             # 3       (M)     10.16.2.3/32                                    Unknown   0
+            #                 10.36.3.3/32               10.16.2.10         0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -7671,20 +7681,26 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                 sids_dict = process_dict.setdefault('sids', {})
                 sids_dict.update({'total_entries': sid_entries})
 
-                sid_dict = sids_dict.setdefault(int(group['sid']), {})
-                sid_dict.update({'sid': int(group['sid'])})
+                if group.get('sid'):
+                    index = 1
+                    sid_dict = sids_dict.setdefault(int(group['sid']), {})
+                else:
+                    # No sid found. Using previous sid.
+                    index += 1
 
-                if group['codes']:
-                    sid_dict.update({'codes': group['codes']})
+                index_dict = sid_dict.setdefault('index', {}).setdefault(index, {})
+                index_dict.update({'prefix': group['prefix']})
 
-                sid_dict.update({'prefix': group['prefix']})
-                if 'adv_rtr_id' in group and group['adv_rtr_id']:
-                    sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
-                if 'area_id' in group and group['area_id']:
-                    sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
-                
-                sid_dict.update({'type': group['type']})
-                sid_dict.update({'algo': int(group['algo'])})
+                if group.get('codes'):
+                    index_dict.update({'codes': group['codes']})
+                if group.get('adv_rtr_id'):
+                    index_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                if group.get('area_id'):
+                    index_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                if group.get('type'):
+                    index_dict.update({'type': group['type']})
+                if group.get('algo'):
+                    index_dict.update({'algo': int(group['algo'])})
                 continue
 
         return ret_dict

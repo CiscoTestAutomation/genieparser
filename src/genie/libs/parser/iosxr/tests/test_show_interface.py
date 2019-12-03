@@ -5,17 +5,19 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
+                                              SchemaMissingKeyError)
 
-from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
-                                        ShowVlanInterface, \
-                                        ShowIpv4VrfAllInterface, \
-                                        ShowIpv6VrfAllInterface, \
-                                        ShowEthernetTags, \
-                                        ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBrief,\
-                                        ShowInterfaces
+from genie.libs.parser.iosxr.show_interface import (ShowInterfacesDetail,
+                                                    ShowVlanInterface,
+                                                    ShowIpv4VrfAllInterface,
+                                                    ShowIpv6VrfAllInterface,
+                                                    ShowEthernetTags,
+                                                    ShowInterfacesAccounting,
+                                                    ShowIpInterfaceBrief,
+                                                    ShowIpv4InterfaceBrief,
+                                                    ShowInterfaces,
+                                                    ShowInterfacesDescription)
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -3195,6 +3197,24 @@ class test_show_ip_interface_brief(unittest.TestCase):
         parsed_output = obj.parse(ip='10.1.17.179')
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
 
+    def test_empty_ipv4(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_ipv4(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1_ipv4(self):
+        self.device = Mock(**self.golden_output_pipe_ip)
+        obj = ShowIpv4InterfaceBrief(device=self.device)
+        parsed_output = obj.parse(ip='10.1.17.179')
+        self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
+        
 
 #############################################################################
 # unitest For show interfaces
@@ -5194,6 +5214,126 @@ class test_show_interfaces(unittest.TestCase):
         obj = ShowInterfaces(device=self.device)
         parsed_output = obj.parse(interface='Bundle-Ether1')
         self.assertEqual(parsed_output,self.golden_interface_parsed_output)
+        
+#############################################################################
+# unitest For show interfaces description
+#############################################################################
+class test_show_interfaces_description(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Bundle-Ether12": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Bundle-Ether23": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Loopback0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Loopback300": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "Nu0": {
+                "description": "",
+                "protocol": "up",
+                "status" :"up"
+            },
+            "Mg0/RP0/CPU0/0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/0": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/0.90": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/1": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/1.90": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            },
+            "GigabitEthernet0/0/0/2": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        Interface          Status      Protocol    Description
+        --------------------------------------------------------------------------------
+        BE12               up          up
+        BE23               up          up
+        Lo0                up          up
+        Lo300              up          up
+        Nu0                up          up
+        Mg0/RP0/CPU0/0     up          up
+        Gi0/0/0/0          up          up
+        Gi0/0/0/0.90       up          up
+        Gi0/0/0/1          up          up
+        Gi0/0/0/1.90       up          up
+        Gi0/0/0/2          up          up
+    '''}
+
+    golden_parsed_interface_output = {
+        "interfaces": {
+            "Bundle-Ether12": {
+                "description": "",
+                "protocol": "up",
+                "status": "up"
+            }
+        }
+    }
+
+    golden_interface_output = {'execute.return_value': '''
+        Interface          Status      Protocol    Description
+        --------------------------------------------------------------------------------
+        BE12 		up	 up
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+        
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse(interface='BE12')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 #!/bin/env python
 import unittest
+
 from unittest.mock import Mock
 from ats.topology import Device
 
@@ -31,10 +32,11 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowProcessesCpuHistory
+                                                  ShowProcessesCpuHistory, \
+                                                  ShowProcessesMemory
 
 
-class test_show_version(unittest.TestCase):
+class TestShowVersion(unittest.TestCase):
 
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
@@ -43,6 +45,7 @@ class test_show_version(unittest.TestCase):
     dev_isr4k = Device(name='isr4k')
     dev_asr901 = Device(name='asr901')
     dev_asr1002 = Device(name='asr1002')
+    dev_c4k = Device(name='c4507')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -53,6 +56,10 @@ class test_show_version(unittest.TestCase):
             'version_short': '16.4',
             'platform': 'Catalyst L3 Switch',
             'version': '16.4.20170410:165034',
+            'returned_to_rom_at': '17:05:27 UTC Mon Apr 10 2017',
+            'returned_to_rom_by': 'reload',
+            'compiled_by': 'mcpre',
+            'compiled_date': 'Mon 10-Apr-17 13:02',
             'image_id': 'CAT3K_CAA-UNIVERSALK9-M',
             'rom': 'IOS-XE ROMMON',
             'bootldr': 'CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)',
@@ -355,53 +362,57 @@ class test_show_version(unittest.TestCase):
 '''}
 
     golden_parsed_output_asr1k = {
-                                    'version': {
-                                        'version_short': '16.3',
-                                        'platform': 'ASR1000',
-                                        'version': '16.3.20170410:103306',
-                                        'image_id': 'X86_64_LINUX_IOSD-UNIVERSALK9-M',
-                                        'rom': 'IOS-XE ROMMON',
-                                        'hostname': 'PE1',
-                                        'uptime': '32 minutes',
-                                        'image_type': 'developer image',
-                                        'uptime_this_cp': '34 minutes',
-                                        'system_restarted_at': '09:08:57 PDT Mon Apr 10 2017',
-                                        'system_image': 'harddisk:test-image-PE1-13113029',
-                                        'last_reload_reason': 'Reload Command',
-                                        'license_type': 'RightToUse',
-                                        'license_level': 'advipservices',
-                                        'next_reload_license_level': 'advipservices',
-                                        'chassis': 'ASR1006',
-                                        'processor_type': 'RP2',
-                                        'chassis_sn': 'FOX1444GPXU',
-                                        'rtr_type': 'ASR1K',
-                                        'os': 'IOS-XE',
-                                        'curr_config_register': '0x2000',
-                                        'next_config_register': '0x2002',
-                                        'main_mem': '4138965',
-                                        'number_of_intfs': {
-                                            'Gigabit Ethernet': '5',
-                                        },
-                                        'mem_size': {
-                                            'non-volatile configuration': '32768',
-                                            'physical': '8388608',
-                                        },
-                                        'disks': {
-                                            'bootflash:.': {
-                                                'disk_size': '1925119',
-                                                'type_of_disk': 'eUSB flash',
-                                            },
-                                            'harddisk:.': {
-                                                'disk_size': '78085207',
-                                                'type_of_disk': 'SATA hard disk',
-                                            },
-                                            'webui:.': {
-                                                'disk_size': '0',
-                                                'type_of_disk': '',
-                                            },
-                                        }
-                                    }
-                                }
+        'version': {
+            'version_short': '16.3',
+            'platform': 'ASR1000',
+            'compiled_by': 'mcpre',
+            'compiled_date': 'Mon 10-Apr-17 04:35',
+            'returned_to_rom_at': '02:14:51 PDT Mon Apr 10 2017',
+            'returned_to_rom_by': 'reload',
+            'version': '16.3.20170410:103306',
+            'image_id': 'X86_64_LINUX_IOSD-UNIVERSALK9-M',
+            'rom': 'IOS-XE ROMMON',
+            'hostname': 'PE1',
+            'uptime': '32 minutes',
+            'image_type': 'developer image',
+            'uptime_this_cp': '34 minutes',
+            'system_restarted_at': '09:08:57 PDT Mon Apr 10 2017',
+            'system_image': 'harddisk:test-image-PE1-13113029',
+            'last_reload_reason': 'Reload Command',
+            'license_type': 'RightToUse',
+            'license_level': 'advipservices',
+            'next_reload_license_level': 'advipservices',
+            'chassis': 'ASR1006',
+            'processor_type': 'RP2',
+            'chassis_sn': 'FOX1444GPXU',
+            'rtr_type': 'ASR1K',
+            'os': 'IOS-XE',
+            'curr_config_register': '0x2000',
+            'next_config_register': '0x2002',
+            'main_mem': '4138965',
+            'number_of_intfs': {
+                'Gigabit Ethernet': '5',
+            },
+            'mem_size': {
+                'non-volatile configuration': '32768',
+                'physical': '8388608',
+            },
+            'disks': {
+                'bootflash:.': {
+                    'disk_size': '1925119',
+                    'type_of_disk': 'eUSB flash',
+                },
+                'harddisk:.': {
+                    'disk_size': '78085207',
+                    'type_of_disk': 'SATA hard disk',
+                },
+                'webui:.': {
+                    'disk_size': '0',
+                    'type_of_disk': '',
+                },
+            }
+        }
+    }
 
     golden_output_asr1k = {'execute.return_value': '''\
         Cisco IOS XE Software, Version BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24
@@ -467,7 +478,52 @@ class test_show_version(unittest.TestCase):
         'version': {
             'chassis': 'ISR4451-X/K9',
             'chassis_sn': 'FGL273610NK',
+            'compiled_by': 'mcpre',
+            'compiled_date': 'Mon 10-Dec-18 13:10',
+            'returned_to_rom_at': '07:15:43 UTC Fri Feb 1 2019',
+            'returned_to_rom_by': 'Reload Command',
             'curr_config_register': '0x2102',
+            'license_package': {
+                'appxk9': {
+                    'license_level': 'appxk9',
+                    'license_type': 'RightToUse',
+                    'next_reload_license_level': 'appxk9'
+                },
+                'ipbase': {
+                    'license_level': 'ipbasek9',
+                    'license_type': 'Permanent',
+                    'next_reload_license_level': 'ipbasek9'
+                },
+                'securityk9': {
+                    'license_level': 'securityk9',
+                    'license_type': 'RightToUse',
+                    'next_reload_license_level': 'securityk9'
+                },
+                'uck9': {
+                    'license_level': 'None',
+                    'license_type': 'None',
+                    'next_reload_license_level': 'None'
+                }
+            },
+            'module': {
+                'esg': {
+                    'AdvUCSuiteK9': {
+                        'suite_current': 'None',
+                        'suite_next_reboot': 'None',
+                        'type': 'None'
+                    },
+                    'FoundationSuiteK9': {
+                        'suite_current': 'None',
+                        'suite_next_reboot': 'None',
+                        'type': 'None'
+                    },
+                    'appxk9': {},
+                    'cme-srst': {},
+                    'cube': {},
+                    'securityk9': {},
+                    'uck9': {}
+                }
+            },
             'disks': {
                 'bootflash:.': {
                     'disk_size': '7341807',
@@ -488,7 +544,8 @@ class test_show_version(unittest.TestCase):
                 'physical': '4194304'
             },
             'number_of_intfs': {
-                'Gigabit Ethernet': '4'
+                'Gigabit Ethernet': '4',
+                'Virtual Ethernet': '1'
             },
             'os': 'IOS-XE',
             'platform': 'ISR',
@@ -499,7 +556,7 @@ class test_show_version(unittest.TestCase):
             'system_restarted_at': '07:19:15 UTC Fri Feb 1 2019',
             'uptime': '2 days, 3 hours, 18 minutes',
             'uptime_this_cp': '2 days, 3 hours, 19 minutes',
-            'version': '16.6.5,',
+            'version': '16.6.5',
             'version_short': '16.6'
         }
     }
@@ -590,9 +647,15 @@ class test_show_version(unittest.TestCase):
 ''' }
 
     golden_parsed_output_asr901 = {
-        'version': 
-            {'chassis': 'A901-6CZ-FT-D',
+        'version': {
+            'chassis': 'A901-6CZ-FT-D',
             'chassis_sn': 'CAT1733U070',
+            'compiled_by': 'prod_rel_team',
+            'compiled_date': 'Mon 19-Mar-18 16:39',
+            'returned_to_rom_at': '15:57:52 CDT Mon Sep 24 2018',
+            'returned_to_rom_by': 'reload',
+            'last_reload_type': 'Normal Reload',
+            'processor_board_flash': '98304K',
             'curr_config_register': '0x2102',
             'hostname': 'LAB-ASR901T',
             'image_id': 'ASR901-UNIVERSALK9-M',
@@ -601,10 +664,24 @@ class test_show_version(unittest.TestCase):
             'license_level': 'AdvancedMetroIPAccess',
             'license_type': 'Smart License',
             'main_mem': '393216',
-            'mem_size': {'non-volatile configuration': '256'},
+            'mem_size': {
+                'non-volatile configuration': '256'
+            },
             'next_reload_license_level': 'AdvancedMetroIPAccess',
-            'number_of_intfs': {'Gigabit Ethernet': '12',
-                             'Ten Gigabit Ethernet': '2'},
+            'number_of_intfs': {
+                'Gigabit Ethernet': '12',
+                'Ten Gigabit Ethernet': '2',
+                'External Alarm': '1',
+                'FastEthernet': '1',
+                'terminal': '1',
+                'Channelized T1': '8'
+            },
+            'processor': {
+                'speed': '800MHz',
+                'core': 'E500v2',
+                'cpu_type': 'P2020',
+                'l2_cache': '512KB'
+            },
             'os': 'IOS',
             'platform': '901',
             'processor_type': 'P2020',
@@ -615,7 +692,9 @@ class test_show_version(unittest.TestCase):
             'system_restarted_at': '15:59:27 CDT Mon Sep 24 2018',
             'uptime': '26 weeks, 21 hours, 26 minutes',
             'version': '15.6(2)SP4',
-            'version_short': '15.6'}}
+            'version_short': '15.6'
+        }
+    }
     
     golden_output_asr901 = {'execute.return_value': '''
         show version
@@ -669,6 +748,214 @@ class test_show_version(unittest.TestCase):
         Configuration register is 0x2102
         '''}
 
+    golden_output_c4507 = {'execute.return_value': '''
+        Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2012 by Cisco Systems, Inc.
+        Compiled Tue 23-Oct-12 23:51 by prod_rel_team
+
+        ROM: 15.0(1r)SG5
+        switchname uptime is 6 years, 2 weeks, 13 hours, 31 minutes
+        Uptime for this control processor is 6 years, 2 weeks, 13 hours, 33 minutes
+        System returned to ROM by reload
+        System restarted at 09:57:20 GMT Tue Oct 15 2013
+        Running default software
+        Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
+
+        Last reload reason: Reload command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+
+        License Information for 'WS-X45-SUP7-E'
+            License Level: entservices   Type: Permanent
+            Next reboot license Level: entservices
+
+        cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        Processor board ID FXS1729E2TD
+        MPC8572 CPU at 1.5GHz, Supervisor 7
+        Last reset from Reload
+        9 Virtual Ethernet interfaces
+        240 Gigabit Ethernet interfaces
+        4 Ten Gigabit Ethernet interfaces
+        511K bytes of non-volatile configuration memory.
+
+        Configuration register is 0x2101 (will be 0x2102 at next reload)
+
+    '''}
+
+    golden_parsed_output_c4507 = {
+        'version': {
+            'chassis': 'WS-C4507R+E',
+            'chassis_sn': 'FXS1729E2TD',
+            'compiled_by': 'prod_rel_team',
+            'compiled_date': 'Tue 23-Oct-12 23:51',
+            'curr_config_register': '0x2101',
+            'hostname': 'switchname',
+            'image_id': 'cat4500e-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'jawa_revision': '7',
+            'last_reload_reason': 'Reload',
+            'license_level': 'entservices',
+            'license_type': 'Permanent',
+            'main_mem': '2097152',
+            'mem_size': {
+                'non-volatile configuration': '511'
+            },
+            'next_config_register': '0x2102',
+            'next_reload_license_level': 'entservices',
+            'number_of_intfs': {
+                'Gigabit Ethernet': '240',
+                'Ten Gigabit Ethernet': '4',
+                'Virtual Ethernet': '9'
+            },
+            'os': 'IOS-XE',
+            'platform': 'Catalyst 4500 L3 Switch',
+            'processor': {
+                'cpu_type': 'MPC8572',
+                'speed': '1.5GHz',
+                'supervisor': '7'
+            },
+            'processor_type': 'MPC8572',
+            'returned_to_rom_by': 'reload',
+            'rom': '15.0(1r)SG5',
+            'rtr_type': 'WS-C4507R+E',
+            'running_default_software': True,
+            'snowtrooper_revision': '0x0.0x1C',
+            'system_restarted_at': '09:57:20 GMT Tue Oct 15 2013',
+            'uptime': '6 years, 2 weeks, 13 hours, 31 minutes',
+            'uptime_this_cp': '6 years, 2 weeks, 13 hours, 33 minutes',
+            'version': '03.03.02.SG',
+            'version_short': '03.03'
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500e-UNIVERSALK9-M), Version 03.04.06.SG RELEASE SOFTWARE (fc1)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2015 by Cisco Systems, Inc.
+        Compiled Mon 04-May-15 02:44 by prod_rel_team
+        
+        
+        
+        Cisco IOS-XE software, Copyright (c) 2005-2010, 2012 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
+        
+        
+        
+        ROM: 15.0(1r)SG10
+        sample_4510r_e uptime is 2 years, 11 weeks, 3 days, 3 hours, 3 minutes
+        Uptime for this control processor is 2 years, 11 weeks, 1 day, 22 hours, 18 minutes
+        System returned to ROM by SSO Switchover
+        System restarted at 19:11:28 GMT Tue Aug 22 2017
+        System image file is "bootflash:cat4500e-universalk9.SPA.03.04.06.SG.151-2.SG6.bin"
+        Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
+        
+        Last reload reason: power-on
+        
+        
+        
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+        
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+        
+        
+        License Information for 'WS-X45-SUP7-E'
+            License Level: entservices   Type: Permanent
+            Next reboot license Level: entservices
+        
+        cisco WS-C4510R+E (MPC8572) processor (revision 11) with 2097152K/20480K bytes of memory.
+        Processor board ID JAD213101PP
+        MPC8572 CPU at 1.5GHz, Supervisor 7
+        Last reset from PowerUp
+        8 Virtual Ethernet interfaces
+        384 Gigabit Ethernet interfaces
+        8 Ten Gigabit Ethernet interfaces
+        511K bytes of non-volatile configuration memory.
+        
+        Configuration register is 0x2102
+        
+    '''}
+
+    golden_parsed_output_1 = {
+        'version': {
+            'version_short': '03.04',
+            'platform': 'Catalyst 4500 L3 Switch',
+            'version': '03.04.06.SG',
+            'image_id': 'cat4500e-UNIVERSALK9-M',
+            'os': 'IOS-XE',
+            'image_type': 'production image',
+            'compiled_date': 'Mon 04-May-15 02:44',
+            'compiled_by': 'prod_rel_team',
+            'rom': '15.0(1r)SG10',
+            'hostname': 'sample_4510r_e',
+            'uptime': '2 years, 11 weeks, 3 days, 3 hours, 3 minutes',
+            'uptime_this_cp': '2 years, 11 weeks, 1 day, 22 hours, 18 minutes',
+            'returned_to_rom_by': 'SSO Switchover',
+            'system_restarted_at': '19:11:28 GMT Tue Aug 22 2017',
+            'system_image': 'bootflash:cat4500e-universalk9.SPA.03.04.06.SG.151-2.SG6.bin',
+            'jawa_revision': '7',
+            'snowtrooper_revision': '0x0.0x1C',
+            'last_reload_reason': 'PowerUp',
+            'license_type': 'Permanent',
+            'license_level': 'entservices',
+            'next_reload_license_level': 'entservices',
+            'chassis': 'WS-C4510R+E',
+            'main_mem': '2097152',
+            'processor_type': 'MPC8572',
+            'rtr_type': 'WS-C4510R+E',
+            'chassis_sn': 'JAD213101PP',
+            'processor': {
+                'cpu_type': 'MPC8572',
+                'speed': '1.5GHz',
+                'supervisor': '7'
+            },
+            'number_of_intfs': {
+                'Virtual Ethernet': '8',
+                'Gigabit Ethernet': '384',
+                'Ten Gigabit Ethernet': '8'
+            },
+            'mem_size': {
+                'non-volatile configuration': '511'
+            },
+            'curr_config_register': '0x2102'
+        }
+    }
+
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -709,7 +996,21 @@ class test_show_version(unittest.TestCase):
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
 
-class test_dir(unittest.TestCase):
+    def test_golden_c4507(self):
+        self.maxDiff = None
+        self.dev_c4k = Mock(**self.golden_output_c4507)
+        obj = ShowVersion(device=self.dev_c4k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c4507)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_1)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
@@ -1064,8 +1365,15 @@ Directory of bootflash:/
         parsed_output = dir_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
+    def test_golden_asr1k_with_arg(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output_asr1k)
+        dir_obj = Dir(device=self.dev_asr1k)
+        parsed_output = dir_obj.parse(directory='bootflash:/')
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
-class test_show_redundancy(unittest.TestCase):
+
+class TestShowRedundancy(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
@@ -1292,7 +1600,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
 
-class test_show_redundancy_2(unittest.TestCase):
+class TestShowRedundancy2(unittest.TestCase):
     dev = Device(name='aDevice')
     
     empty_output = {'execute.return_value': ''}
@@ -1447,7 +1755,7 @@ class test_show_redundancy_2(unittest.TestCase):
 # Unit test for:
 #   * 'show inventory'
 # ====================
-class test_show_inventory(unittest.TestCase):
+class TestShowInventory(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -2551,7 +2859,7 @@ class test_show_inventory(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_platform(unittest.TestCase):
+class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
@@ -2562,6 +2870,131 @@ Switch#   Role        Priority      State
 -------------------------------------------
 *1       Active          3          Ready  
 '''}
+
+    golden_parsed_output_c8300 = {
+        "slot": {
+            "0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "subslot": {
+                            "0": {
+                                "4x1G-2xSFP+": {
+                                    "subslot": "0",
+                                    "name": "4x1G-2xSFP+",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            },
+                            "1": {
+                                "NIMX-M-1TE-SFP": {
+                                    "subslot": "1",
+                                    "name": "NIMX-M-1TE-SFP",
+                                    "state": "ok",
+                                    "insert_time": "1w5d"
+                                }
+                            }
+                        },
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "1": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "1",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "R0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "R0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "F0": {
+                "other": {
+                    "C8300-1N1S-4G2X": {
+                        "slot": "F0",
+                        "name": "C8300-1N1S-4G2X",
+                        "state": "ok, active",
+                        "insert_time": "1w5d",
+                        "cpld_ver": "19041222",
+                        "fw_ver": "20190618"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "PWR-4430-AC": {
+                        "slot": "P0",
+                        "name": "PWR-4430-AC",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            },
+            "P1": {
+                "other": {
+                    "Unknown": {
+                        "slot": "P1",
+                        "name": "Unknown",
+                        "state": "empty",
+                        "insert_time": "never"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "ACS-4450-FANASSY": {
+                        "slot": "P2",
+                        "name": "ACS-4450-FANASSY",
+                        "state": "ok",
+                        "insert_time": "1w5d"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c8300 = {'execute.return_value': '''\
+        Radium-Ultima#sh platform
+        Chassis type: C8300-1N1S-4G2X
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         C8300-1N1S-4G2X     ok                    1w5d         
+         0/0      4x1G-2xSFP+         ok                    1w5d         
+         0/1      NIMX-M-1TE-SFP      ok                    1w5d         
+        1         C8300-1N1S-4G2X     ok                    1w5d         
+        R0        C8300-1N1S-4G2X     ok, active            1w5d         
+        F0        C8300-1N1S-4G2X     ok, active            1w5d         
+        P0        PWR-4430-AC         ok                    1w5d         
+        P1        Unknown             empty                 never        
+        P2        ACS-4450-FANASSY    ok                    1w5d         
+         
+        Slot      CPLD Version        Firmware Version                       
+        --------- ------------------- ---------------------------------------
+        0         19041222            20190618                           
+        1         19041222            20190618                           
+        R0        19041222            20190618                           
+        F0        19041222            20190618      
+    '''}
 
     golden_parsed_output_c3850 = {
                                     'main': {
@@ -3188,6 +3621,103 @@ Switch#   Role        Priority      State
         F0        11112222            16.7(2r)            
     '''}
 
+    golden_parsed_output_c9500 = {
+        "slot": {
+            "1": {
+                "lc": {
+                    "C9500-32QC": {
+                        "slot": "1",
+                        "name": "C9500-32QC",
+                        "state": "ok",
+                        "insert_time": "1d18h",
+                        "subslot": {
+                            "0": {
+                                "C9500-32QC": {
+                                    "subslot": "0",
+                                    "name": "C9500-32QC",
+                                    "state": "ok",
+                                    "insert_time": "1d18h"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "R0": {
+                "rp": {
+                    "C9500-32QC": {
+                        "slot": "R0",
+                        "name": "C9500-32QC",
+                        "state": "ok, active",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P0": {
+                "other": {
+                    "C9K-PWR-650WAC-R": {
+                        "slot": "P0",
+                        "name": "C9K-PWR-650WAC-R",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P2": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P2",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            },
+            "P3": {
+                "other": {
+                    "C9K-T1-FANTRAY": {
+                        "slot": "P3",
+                        "name": "C9K-T1-FANTRAY",
+                        "state": "ok",
+                        "insert_time": "1d18h"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_c9500 = {'execute.return_value': '''\
+        show platform
+
+        Chassis type: C9500-32QC          
+
+
+
+        Slot      Type                State                 Insert time (ago) 
+
+        --------- ------------------- --------------------- ----------------- 
+
+        1         C9500-32QC          ok                    1d18h         
+
+         1/0      C9500-32QC          ok                    1d18h         
+
+        R0        C9500-32QC          ok, active            1d18h         
+
+        P0        C9K-PWR-650WAC-R    ok                    1d18h         
+
+        P2        C9K-T1-FANTRAY      ok                    1d18h         
+
+        P3        C9K-T1-FANTRAY      ok                    1d18h         
+
+
+
+        Slot      CPLD Version        Firmware Version                        
+
+        --------- ------------------- --------------------------------------- 
+
+        1         19061022            17.1.1[FC2]      
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -3199,6 +3729,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()       
+
+    def test_golden_c8300(self):
+        self.maxDiff = None
+        self.dev_c8300 = Mock(**self.golden_output_c8300)
+        platform_obj = ShowPlatform(device=self.dev_c8300)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c8300)
 
     def test_golden_c3850(self):
         self.maxDiff = None
@@ -3235,8 +3772,15 @@ Switch#   Role        Priority      State
         parsed_output_3 = platform_obj.parse()
         self.assertEqual(parsed_output_3,self.golden_parsed_output_3)
 
+    def test_golden_c9500(self):
+        self.maxDiff = None
+        self.dev_c9500 = Mock(**self.golden_output_c9500)
+        platform_obj = ShowPlatform(device=self.dev_c9500)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c9500)
 
-class test_show_boot(unittest.TestCase):
+
+class TestShowBoot(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
@@ -3291,6 +3835,84 @@ class test_show_boot(unittest.TestCase):
     '''
     }
 
+    golden_output_2900 = {'execute.return_value': '''
+        SW-GENIE#sho boot
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : yes
+        Auto upgrade path   : 
+        Boot optimization   : disabled
+        NVRAM/Config file
+            buffer size:   524288
+        Timeout for Config
+                Download:    0 seconds
+        Config Download 
+            via DHCP:       disabled (next boot: disabled)
+        -------------------
+        Switch 2
+        -------------------
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : no
+        Auto upgrade path   : 
+        -------------------
+        Switch 3
+        -------------------
+        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+        Config file         : flash:/config.text
+        Private Config file : flash:/private-config.text
+        Enable Break        : yes
+        Manual Boot         : no
+        Allow Dev Key         : yes
+        HELPER path-list    : 
+        Auto upgrade        : no
+        Auto upgrade path   : 
+        SW-GENIE# 
+    '''}
+
+    golden_parsed_output_2900 = {
+        'allow_dev_key': True,
+        'auto_upgrade': True,
+        'boot_optimization': False,
+        'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+        'config_download_via_dhcp': False,
+        'config_file': 'flash:/config.text',
+        'enable_break': True,
+        'manual_boot': False,
+        'next_boot': False,
+        'nvram_buffer_size': 524288,
+        'private_config_file': 'flash:/private-config.text',
+        'switches': {
+            2: {
+                'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
+            },
+            3: {'allow_dev_key': True,
+                'auto_upgrade': False,
+                'boot_path_list': 'flash:/c2960x-universalk9-mz.152-4.E8.bin',
+                'config_file': 'flash:/config.text',
+                'enable_break': True,
+                'manual_boot': False,
+                'private_config_file': 'flash:/private-config.text'
+            }
+        },
+        'timeout_config_download': '0 seconds'
+    }
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowBoot(device=self.dev1)
@@ -3310,9 +3932,16 @@ class test_show_boot(unittest.TestCase):
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+    
+    def test_golden_2900(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2900)
+        obj = ShowBoot(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
 
-class test_show_switch_detail(unittest.TestCase):
+class TestShowSwitchDetail(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
@@ -3459,7 +4088,7 @@ class test_show_switch_detail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-class test_show_switch(unittest.TestCase):
+class TestShowSwitch(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -3520,7 +4149,7 @@ class test_show_switch(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
-class test_show_module(unittest.TestCase):
+class TestShowModule(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -3577,7 +4206,7 @@ class test_show_module(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
-class test_show_platform_software_status_control_processor_brief(unittest.TestCase):
+class TestShowPlatformSoftwareStatusControlProcessorBrief(unittest.TestCase):
 
     dev = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
@@ -3922,7 +4551,7 @@ class test_show_platform_software_status_control_processor_brief(unittest.TestCa
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_platform_software_slot_active_monitor_Mem_Swap(unittest.TestCase):
+class TestShowPlatformSoftwareSlotActiveMonitorMemSwap(unittest.TestCase):
 
     dev = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
@@ -3963,7 +4592,7 @@ class test_show_platform_software_slot_active_monitor_Mem_Swap(unittest.TestCase
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
+class TestShowProcessesCpuSortedCPU(unittest.TestCase):
 
     dev = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
@@ -4058,7 +4687,7 @@ class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-class test_show_processes_cpu_platform(unittest.TestCase):
+class TestShowProcessesCpuPlatform(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': '      '}
 
@@ -5554,7 +6183,7 @@ class test_show_processes_cpu_platform(unittest.TestCase):
             parsed_output = cpu_platform_obj.parse()
 
 
-class test_show_env(unittest.TestCase):
+class TestShowEnv(unittest.TestCase):
 
     dev = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
@@ -6202,7 +6831,7 @@ class test_show_env(unittest.TestCase):
         parsed_output = obj.parse(include='Fan Speed')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-class test_show_processes_cpu(unittest.TestCase):
+class TestShowProcessesCpu(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -12658,7 +13287,7 @@ class test_show_processes_cpu(unittest.TestCase):
             parsed_output = obj.parse()
 
 
-class test_show_version_rp(unittest.TestCase):
+class TestShowVersionRp(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -13242,7 +13871,7 @@ class test_show_version_rp(unittest.TestCase):
             parsed_output = obj.parse()
 
 
-class test_show_platform_hardware(unittest.TestCase):
+class TestShowPlatformHardware(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -15601,7 +16230,7 @@ class test_show_platform_hardware(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_platform_hardware_plim(unittest.TestCase):
+class TestShowPlatformHardwarePlim(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -16019,7 +16648,7 @@ class test_show_platform_hardware_plim(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(port='0/0/0')
 
-class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
+class TestShowPlatformHardwareQfpBqsOpmMapping(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -16402,7 +17031,7 @@ class test_show_platform_hardware_qfp_bqs_opm_mapping(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(status='active', slot='0')
 
-class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
+class TestShowPlatformHardwareQfpBqsIpmMapping(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -16605,7 +17234,7 @@ class test_show_platform_hardware_qfp_bqs_ipm_mapping(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(status='active', slot='0')
 
-class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
+class TestShowPlatformHardwareSerdesStatistics(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -16886,7 +17515,7 @@ class test_show_platform_hardware_serdes_statistics(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(slot='0')
 
-class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
+class TestShowPlatformHardwareSerdesStatisticsInternal(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -17052,7 +17681,7 @@ class test_show_platform_hardware_serdes_statistics_internal(unittest.TestCase):
             parsed_output = obj.parse(slot='0')
 
 
-class test_show_platform_power(unittest.TestCase):
+class TestShowPlatformPower(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -17175,7 +17804,7 @@ class test_show_platform_power(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
+class TestShowPlatformHardwareQfpBqsStatisticsChannelAll(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -17720,7 +18349,7 @@ class show_platform_hardware_qfp_bqs_statistics_channel_all(unittest.TestCase):
         parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
         self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
 
-class show_platform_hardware_qfp_interface(unittest.TestCase):
+class ShowPlatformHardwareQfpInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -17883,7 +18512,7 @@ class show_platform_hardware_qfp_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
+class TestShowPlatformHardwareQfpStatisticsDrop(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -17943,7 +18572,7 @@ class test_show_platform_hardware_qfp_statistics_drop(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_active)
 
 
-class test_show_processes_cpu_history(unittest.TestCase):
+class TestShowProcessesCpuHistory(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -18216,6 +18845,149 @@ Time source is NTP, 15:54:30.599 EST Tue Oct 18 2016
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
+class TestShowProcessMemory(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'lsmi_io_pool': {
+            'free': 832,
+            'total': 6295128,
+            'used': 6294296,
+        },
+        'pid': {
+            0: {
+                'index': {
+                    1: {
+                        'allocated': 678985440,
+                        'freed': 347855496,
+                        'getbufs': 428,
+                        'holding': 304892096,
+                        'pid': 0,
+                        'process': '*Init*',
+                        'retbufs': 2134314,
+                        'tty': 0,
+                    },
+                    2: {
+                        'allocated': 800,
+                        'freed': 4965889216,
+                        'getbufs': 17,
+                        'holding': 800,
+                        'pid': 0,
+                        'process': '*Sched*',
+                        'retbufs': 17,
+                        'tty': 0,
+                    },
+                    3: {
+                        'allocated': 2675774192,
+                        'freed': 2559881512,
+                        'getbufs': 2111,
+                        'holding': 43465512,
+                        'pid': 0,
+                        'process': '*Dead*',
+                        'retbufs': 351,
+                        'tty': 0,
+                    },
+                    4: {
+                        'allocated': 0,
+                        'freed': 0,
+                        'getbufs': 0,
+                        'holding': 4070880,
+                        'pid': 0,
+                        'process': '*MallocLite*',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
+            },
+            1: {
+                'index': {
+                    1: {
+                        'allocated': 3415536,
+                        'freed': 879912,
+                        'getbufs': 0,
+                        'holding': 2565568,
+                        'pid': 1,
+                        'process': 'Chunk Manager',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
+            },
+        },
+        'processor_pool': {
+            'free': 9662451880,
+            'total': 10147887840,
+            'used': 485435960,
+        },
+        'reserve_p_pool': {
+            'free': 102316,
+            'total': 102404,
+            'used': 88,
+        },
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
+        Time source is NTP, 21:28:35.662 JST Mon May 11 2020
+
+        Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+
+        PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+        0   0  678985440  347855496  304892096        428    2134314 *Init*
+        0   0        800 4965889216        800         17         17 *Sched*
+        0   0 2675774192 2559881512   43465512       2111        351 *Dead*
+        0   0          0          0    4070880          0          0 *MallocLite*
+        1   0    3415536     879912    2565568          0          0 Chunk Manager
+    '''}
+
+    golden_parsed_output2 = {
+        'processor_pool': {
+            'total': 10147887840,
+            'used': 487331816,
+            'free': 9660556024,
+        },
+        'reserve_p_pool': {
+            'total': 102404,
+            'used': 88,
+            'free': 102316,
+        },
+        'lsmi_io_pool': {
+            'total': 6295128,
+            'used': 6294296,
+            'free': 832,
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''\
+        Processor Pool Total: 10147887840 Used:  487331816 Free: 9660556024
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

@@ -3485,7 +3485,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                             'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
         #    Network            Next Hop            Metric LocPrf Weight Path
-        #                       1.1.1.1                    100      0    i
+        #                       10.4.1.1                    100      0    i
         p17 = re.compile(r'^(?P<next_hop>[\w\.\:]+) +((?P<metric>[0-9]+))? +'
                             '(?P<locprf>[0-9]+) +(?P<weight>[0-9]+) '
                             '*(?P<path>[\S]+)$')
@@ -3538,7 +3538,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 continue
 
             # Network            Next Hop            Metric LocPrf Weight Path
-            #                    1.1.1.1                    300      1    i
+            #                    10.4.1.1                    300      1    i
 
             m = p17.match(line)
             if m:
@@ -3724,7 +3724,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     
             # *>i10.9.6.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
             # *> 2001:db8:cdc9:121::/64     2001:db8:20:1:5::5
-            # *>i[T][L15][L1x1][N[c12365][b1.1.1.1][s02.2.2.2]][P[p1.1.1.1/32]]/800
+            # *>i[T][L15][L1x1][N[c12365][b10.4.1.1][s10.16.2.2]][P[p10.4.1.1/32]]/800
 
             m = p13.match(line)
             if m:
@@ -4355,7 +4355,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
+        # assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
@@ -4532,8 +4532,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             if m:
                 router_id = str(m.groupdict()['router_id'])
                 local_as = int(m.groupdict()['local_as'])
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['router_id'] = router_id
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['local_as'] = local_as
+                sub = bgp_instance_summary_dict.setdefault('instance', {}).setdefault(instance, {})\
+                        .setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {})\
+                        .setdefault(address_family, {})
+                sub['router_id'] = router_id
+                sub['local_as'] = local_as
                 continue
 
             # BGP generic scan interval 60 secs
@@ -4898,7 +4901,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
         # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
-        # *> [1][1.1.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
+        # *> [1][10.4.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                            r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))'
                            r'(?: +(?P<next_hop>\S+))?$')
@@ -6414,5 +6417,79 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpInstanceNeighborsDetail):
         result_dict = super().cli(output=out)
 
         return result_dict
+
+
+class ShowBgpNeighbors(ShowBgpInstanceNeighborsDetail):
+
+    """Parser for show bgp neighbors
+                  show bgp neighbors {neighbor}
+                  show bgp vrf {vrf} neighbors
+                  show bgp vrf {vrf} neighbors {neighbor}
+                  show bgp {address_family} neighbors
+                  show bgp {address_family} neighbors {neighbor}
+                  show bgp vrf {vrf} {address_family} neighbors
+                  show bgp vrf {vrf} {address_family} neighbors {neighbor}
+    """
+
+    cli_command = ['show bgp neighbors',
+                   'show bgp neighbors {neighbor}',
+                   'show bgp vrf {vrf} neighbors',
+                   'show bgp vrf {vrf} neighbors {neighbor}',
+                   'show bgp {address_family} neighbors',
+                   'show bgp {address_family} neighbors {neighbor}',
+                   'show bgp vrf {vrf} {address_family} neighbors',
+                   'show bgp vrf {vrf} {address_family} neighbors {neighbor}']
+
+    def cli(self, neighbor='', vrf='', address_family='', output=None):
+
+        if neighbor:
+            if vrf and address_family:
+                cmd = self.cli_command[7].format(vrf=vrf, address_family=address_family,
+                                                 neighbor=neighbor)
+            elif address_family:
+                cmd = self.cli_command[5].format(address_family=address_family,
+                                                 neighbor=neighbor)
+            elif vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, neighbor=neighbor)
+            else:
+                cmd = self.cli_command[1].format(neighbor=neighbor)
+        else:
+            if vrf and address_family:
+                cmd = self.cli_command[6].format(vrf=vrf, address_family=address_family)
+            elif address_family:
+                cmd = self.cli_command[4].format(address_family=address_family)
+            elif vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+
+        out = output or self.device.execute(cmd)
+
+        return super().cli(output=out)
+
+
+class ShowBgpSummary(ShowBgpInstanceSummary):
+
+    ''' Parser for:
+        * 'show bgp summary'
+        * 'show bgp {address_family} summary'
+    '''
+
+    cli_command = ['show bgp {address_family} summary',
+                   'show bgp summary']
+
+    def cli(self, address_family='', output=None):
+
+        if address_family:
+            cmd = self.cli_command[0].format(address_family=address_family)
+        else:
+            cmd = self.cli_command[1]
+
+        out = output or self.device.execute(cmd)
+        if not address_family:
+            address_family = 'ipv4 unicast'
+
+        # Call super
+        return super().cli(output=out, address_family=address_family)
 
 # vim: ft=python ts=8 sw=4 et

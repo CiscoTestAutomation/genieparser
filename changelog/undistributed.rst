@@ -8,78 +8,65 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* NXOS:
+    * Added ShowErrdisableRecovery for
+        * show errdisable recovery
+    * Added ShowIsisHostnameDetail for commands:
+        * show isis hostname detail
+        * show isis hostname detail vrf {vrf}
+
 * IOSXE
-    * Added ShowRouteIpDistributor for commands;
-        * 'show route vrf {vrf} ipv4'
-        * 'show route ipv4'
-        * 'show route ipv4 {route}'
-        * 'show route ipv4 {protocol}'
-        * 'show route vrf {vrf} ipv4 {protocol}'
-        * 'show route vrf {vrf} ipv4 {route}'
-    * Added ShowRouteIpv6Distributor for commands;
-        * 'show route vrf {vrf} ipv6'
-        * 'show route ipv6'
-        * 'show route ipv6 {route}'
-        * 'show route ipv6 {protocol}'
-        * 'show route vrf {vrf} ipv6 {protocol}'
-        * 'show route vrf {vrf} ipv6 {route}'
+    * Added ShowProcessesMemory for:
+        * show processes memory
+        * show processes memory | include {include}
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
 
 * IOSXR
-    * Added ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary, ShowMsdpSaCache, ShowMsdpStatisticsPeer for commands:
-        * 'show msdp peer'
-        * 'show msdp vrf {vrf} peer'
-        * 'show msdp context'
-        * 'show msdp vrf {vrf} context'
-        * 'show msdp summary'
-        * 'show msdp vrf {vrf} summary'
-        * 'show msdp sa-cache'
-        * 'show msdp vrf {vrf} sa-cache'
-        * 'show msdp statistics peer'
-        * 'show msdp vrf {vrf} statistics peer'
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXR
-    * Enhanced ShowBgpInstanceNeighborsReceivedRoutes;
-        * Updated code to support various outputs
-        * Added unittest corresponding to the new supported output
-    * Enhanced ShowBgpInstanceSummary;
-        * Updated code to support various outputs
-        * Added unittest corresponding to the new supported output
-    * Enhanced ShowRouteIpv6:
-        * Updated regex to support various outputs
+    * Added ShowMplsInterfaces for:
+        * show mpls interfaces
+        * show mpls interfaces {interface}
+    * Added ShowMplsForwarding for:
+        * show mpls forwarding
+        * show mpls forwarding vrf {vrf}
+
+* IOS
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowIsis
+        * Updated regex to support more various output
+
 * NXOS
-    * ShowIpOspf
-        * Added missing keys to schema
-        * Added regex to capture more outputs
+    * Updated ShowAccessLists for:
+        * Updated few keys' names, one key's type by following ACL's Ops structure
+    * Updated ShowIpv6MldLocalGroups for:
+        * Added support for various device outputs
+    * Updated ShowIpv6MldGroups for:
+        * Added support for various device outputs
+    * Updated ShowIsisHostname for:
+        * Updated int to list for level key
 
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowAuthenticationSessions
-        * Changed keyword to Optional
-    * Updated ShowIpRoute for:
-        * show ip route vrf {vrf} {protocol}
-        * show ip route vrf {vrf}
-        * show ip route {protocol}
-        * show ip route
-    * Updated ShowIpRouteWord for:
-        * show ip route {route}
-        * show ip route vrf {vrf} {route}
-    * Updated ShowIpv6Route for:
-        * show ipv6 route vrf {vrf} {protocol}
-        * show ipv6 route vrf {vrf}
-        * show ipv6 route {protocol}
-        * show ipv6 route
-    * Updated ShowIpv6RouteWord for:
-        * show ipv6 route {route}
-        * show ipv6 route vrf {vrf} {route}
+    * Updated ShowPolicyMapTypeSuperParser
+	    * Changed key 'service_policy', 'policy_name', 'priority_level' to Optional
+		* Updated regex match queue_limit
+    * Updated ShowAccessLists, ShowAccessListsSummary
+        * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
 
 * IOSXR
-    * Updated ShowBgpSessions
-        * Updated regex to accommodate different formats
+    * Updated ShowRouteIpv4 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpDistributor, ShowRouteIpWord class
+    * Updated ShowRouteIpv6 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Changed key 'template' to Optional
+		* Added 'security_policy' and 'security_status' to 'server_policies'
+		* Added a regex to match Server Policies
+

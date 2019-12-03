@@ -13,6 +13,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
 
+# Common
+from genie.libs.parser.utils.common import Common
+
 # =========================================================
 # Schema for 'show flow monitor {name} cache format table'
 # =========================================================
@@ -162,6 +165,247 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 continue
 
         return ret_dict
+
+
+# =========================================================
+# Schema for 'show flow monitor {name} cache'
+# =========================================================
+class ShowFlowMonitorCacheSchema(MetaParser):
+    ''' Schema for 
+        "show flow monitor {name} cache" 
+        "show flow monitor {name} cache format record"
+    '''
+
+    schema = {
+        'cache_type': str,
+        'cache_size': int,
+        'current_entries': int,
+        Optional('high_water_mark'): int,
+        'flows_added': int,
+        'flows_aged': {
+            'total': int,
+            Optional('active_timeout_secs'): int,
+            Optional('active_timeout'): int,
+            Optional('inactive_timeout_secs'): int,
+            Optional('inactive_timeout'): int,
+            Optional('event_aged'): int,
+            Optional('watermark_aged'): int,
+            Optional('emergency_aged'): int,
+        },
+        Optional('entries'): {
+            Any(): {
+                'ip_vrf_id_input': str,
+                'ipv4_src_addr': str,
+                'ipv4_dst_addr': str,
+                'intf_input': str,
+                'intf_output': str,
+                'pkts': int,
+            },
+        },
+    }
+
+# =========================================================
+# Parser for 'show flow monitor {name} cache'
+# =========================================================
+class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
+    ''' Parser for
+        "show flow monitor {name} cache"
+    '''
+
+    cli_command = 'show flow monitor {name} cache'
+
+    def cli(self, name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        index = 0
+
+        # Cache type:                               Normal (Platform cache)
+        p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
+        
+        # Cache size:                                   16
+        p2 = re.compile(r'^Cache +size: +(?P<cache_size>\d+)$')
+
+        # Current entries:                               1
+        p3 = re.compile(r'^Current +entries: +(?P<current_entries>\d+)$')
+
+        # High Watermark:                                1
+        p4 = re.compile(r'^High +Watermark: +(?P<high_water_mark>\d+)$')
+
+        # Flows added:                                   1
+        p5 = re.compile(r'^Flows +added: +(?P<flows_added>\d+)$')
+
+        # Flows aged:                                   0
+        p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
+
+        # - Inactive timeout    (    15 secs)         15
+        # - Event aged                                 0
+        # - Watermark aged                             6
+        # - Emergency aged                             0
+        p7 = re.compile(r'^- +(?P<key>[\S\s]+?)( +\( +(?P<secs>\d+) +secs\))? +(?P<value>\d+)$')
+
+        # 0   (DEFAULT)   192.168.189.254    192.168.189.253    Null   Te0/0/0.1003     2
+        p8 = re.compile(r'^(?P<ip_vrf_id_input>\d+ +\(\S+\)) +(?P<ipv4_src_addr>\S+) '
+                        r'+(?P<ipv4_dst_addr>\S+) +(?P<intf_input>\S+) '
+                        r'+(?P<intf_output>\S+) +(?P<pkts>\d+)$')
+
+        # IP VRF ID INPUT:           0          (DEFAULT)
+        p9 = re.compile(r'^IP VRF ID INPUT: +(?P<id>[\S\s]+)$')
+
+        # IPV4 SOURCE ADDRESS:       192.168.189.254
+        p10 = re.compile(r'^IPV4 SOURCE ADDRESS: +(?P<src>\S+)$')
+
+        # IPV4 DESTINATION ADDRESS:  192.168.189.253
+        p11 = re.compile(r'^IPV4 DESTINATION ADDRESS: +(?P<dst>\S+)$')
+
+        # interface input:           Null
+        p12 = re.compile(r'^interface input: +(?P<input>\S+)$')
+
+        # interface output:          Te0/0/0.1003
+        p13 = re.compile(r'^interface output: +(?P<output>\S+)$')
+
+        # counter packets:           3
+        p14 = re.compile(r'^counter packets: +(?P<pkts>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Cache type:                               Normal (Platform cache)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'cache_type': group['cache_type']})
+                continue
+
+            # Cache size:                                   16
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'cache_size': int(group['cache_size'])})
+                continue
+            
+            # Current entries:                               1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'current_entries': int(group['current_entries'])})
+                continue
+
+            # High Watermark:                                1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'high_water_mark': int(group['high_water_mark'])})
+                continue
+
+            # Flows added:                                   1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'flows_added': int(group['flows_added'])})
+                continue
+
+            # Flows aged:                                   0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                aged_dict = ret_dict.setdefault('flows_aged', {})
+                aged_dict.update({'total': int(group['flows_aged'])})
+                continue
+
+            # - Inactive timeout    (    15 secs)         15
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(' ', '_')
+                aged_dict.update({key: int(group['value'])})
+
+                secs = group['secs']
+                if secs:
+                    aged_dict.update({key + '_secs': int(secs)})
+                continue
+
+            # 0   (DEFAULT)   192.168.189.254    192.168.189.253    Null   Te0/0/0.1003     2
+            m = p8.match(line)
+            if m:
+                index += 1
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+
+                entry_dict.update({'ip_vrf_id_input': group['ip_vrf_id_input']})
+                entry_dict.update({'ipv4_src_addr': group['ipv4_src_addr']})
+                entry_dict.update({'ipv4_dst_addr': group['ipv4_dst_addr']})
+                entry_dict.update({'intf_input': Common.convert_intf_name(group['intf_input'])})
+                entry_dict.update({'intf_output': Common.convert_intf_name(group['intf_output'])})
+                entry_dict.update({'pkts': int(group['pkts'])})
+                continue
+            
+            # IP VRF ID INPUT:           0          (DEFAULT)
+            m = p9.match(line)
+            if m:
+                index += 1
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({'ip_vrf_id_input': group['id']})
+                continue
+
+            # IPV4 SOURCE ADDRESS:       192.168.189.254
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv4_src_addr': group['src']})
+                continue
+
+            # IPV4 DESTINATION ADDRESS:  192.168.189.253
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'ipv4_dst_addr': group['dst']})
+                continue
+
+            # interface input:           Null
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'intf_input': Common.convert_intf_name(group['input'])})
+                continue
+
+            # interface output:          Te0/0/0.1003
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'intf_output': Common.convert_intf_name(group['output'])})
+                continue
+
+            # counter packets:           3
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'pkts': int(group['pkts'])})
+                continue
+
+        return ret_dict
+
+
+class ShowFlowMonitorCacheRecord(ShowFlowMonitorCache):
+    ''' Parser for
+        "show flow monitor {name} cache format record"
+    '''
+
+    cli_command = 'show flow monitor {name} cache format record'
+
+    def cli(self, name, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(name=name))
+        else:
+            out = output
+
+        return super().cli(name=name, output=out)
 
 
 class ShowFlowExporterStatisticsSchema(MetaParser):
