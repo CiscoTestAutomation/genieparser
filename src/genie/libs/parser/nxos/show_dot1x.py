@@ -253,9 +253,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
         p1 = re.compile(r'^Sysauthcontrol +(?P<SysControl>\w+)$')
         p2 = re.compile(r'^Dot1x +Protocol +Version +(?P<version>\d+)$')
         p3 = re.compile(r'^Dot1x +Info +for +(?P<intf>\w+\d+\/\d+)$')
-        # p4 = re.compile(r'^(?P<key>[\-\s\w]+) + \= +(?P<value>(\w+((:\w+)|(\s\w+)|(.\w+))*))$')
         p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(((\w)|(\())+((:\w+)|(\s\w+)|(.\w+))*)+(\))?)$')
-        # p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(\w+((:\w+)|(\s\w+))*))$')
 
         for line in out.splitlines():
             line = line.strip()
