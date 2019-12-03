@@ -37,7 +37,7 @@
 
 * NXOS
     * Updated ShowAccessLists for:
-        * Updated few keys' names by following ACL's Ops structure
+        * Updated few keys' names, one key's type by following ACL's Ops structure
     * Updated ShowIpv6MldLocalGroups for:
         * Added support for various device outputs
     * Updated ShowIpv6MldGroups for:
@@ -59,8 +59,8 @@
     * Updated ShowRouteIpv6 for:
         * Updated schema to support more ouput
         * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
-
     * Updated ShowAuthenticationSessionsInterfaceDetails
 	    * Changed key 'template' to Optional
 		* Added 'security_policy' and 'security_status' to 'server_policies'
 		* Added a regex to match Server Policies
+
