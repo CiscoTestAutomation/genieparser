@@ -11,23 +11,29 @@
 * NXOS:
     * Added ShowErrdisableRecovery for
         * show errdisable recovery
-		
+    * Added ShowIsisHostnameDetail for commands:
+        * show isis hostname detail
+        * show isis hostname detail vrf {vrf}
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
-		
-* NXOS
-    * Added ShowIsisHostnameDetail for commands:
-        * show isis hostname detail
-        * show isis hostname detail vrf {vrf}
-		
+
+* IOSXR
+    * Added ShowMplsInterfaces for:
+        * show mpls interfaces
+        * show mpls interfaces {interface}
+    * Added ShowMplsForwarding for:
+        * show mpls forwarding
+        * show mpls forwarding vrf {vrf}
+
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
-	
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
