@@ -426,14 +426,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                         mac_dict = ret_dict.setdefault('interfaces', {})
                         value_dict = mac_dict.setdefault(group['value'], {})
                         intf_dict = value_dict.setdefault('mac_address', {})
-                
+                        
                 elif (key not in known_list) and policies_flag:
                     policies_dict = mac_dict.setdefault('server_policies', {})
                     index_dict = policies_dict.setdefault(index, {})
                     index_dict.update({'name': group['argument']})
                     index_dict.update({'policies': group['value']})
                     index += 1
-                
+                    
                 continue
  
             # Template: CRITICAL_VLAN (priority 150)
