@@ -77,9 +77,14 @@ class InterfaceSchema(MetaParser):
 # Parser for '/dna/intent/api/v1/interface'
 # ============================================
 class Interface(InterfaceSchema):
-    """parser for /dna/intent/api/v1/interface, /dna/intent/api/v1/interface/{interface}"""
+    """
+    parser for 
+    /dna/intent/api/v1/interface, 
+    /dna/intent/api/v1/interface/{interface}
+    """
 
-    cli_command = ['/dna/intent/api/v1/interface', '/dna/intent/api/v1/interface/{interface}']
+    cli_command = ['/dna/intent/api/v1/interface', 
+                   '/dna/intent/api/v1/interface/{interface}']
 
     def cli(self,interface="", output=None):
         if output is None:
@@ -101,15 +106,17 @@ class Interface(InterfaceSchema):
             device_id = intf_dict['deviceId']
             if device_id not in id_to_hostname:
                 device_id_cmd = cmd.format(device_id=device_id)
-                device_id_response = self.device.get(device_id_cmd).json()['response']
-                hostname = device_id_response['hostname']
+                device_info = self.device.get(device_id_cmd).json()['response']
+                hostname = device_info['hostname']
                 id_to_hostname[device_id] = hostname
             else:
                 hostname = id_to_hostname[device_id]
 
-            result_dict.setdefault(device_id, {})
+            host_info = result_dict.setdefault(hostname, {})
             # remove None values
-            result_dict[device_id][intf_dict['portName']] = {k: v for k, v in intf_dict.items() if v is not None}
-            result_dict[device_id][intf_dict['portName']]['hostname'] = hostname
+            host_info[intf_dict['portName']] = {k: v 
+                                                for k, v in intf_dict.items() 
+                                                if v is not None}
+            host_info[intf_dict['portName']]['hostname'] = hostname
 
         return result_dict
