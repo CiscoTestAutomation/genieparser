@@ -23,6 +23,10 @@
     * Added ShowIsisHostnameDetail for commands:
         * show isis hostname detail
         * show isis hostname detail vrf {vrf}
+		
+* IOS
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
 	
 --------------------------------------------------------------------------------
                                 Fix
