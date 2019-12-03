@@ -522,7 +522,6 @@ class TestShowMplsInterfaces(unittest.TestCase):
             },
         },
     }
-    
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:R3#show mpls interfaces 
         Thu Aug 29 15:32:55.170 UTC
@@ -530,7 +529,24 @@ class TestShowMplsInterfaces(unittest.TestCase):
         -------------------------- -------- -------- -------- --------
         GigabitEthernet0/0/0/0     No       No       No       Yes
         GigabitEthernet0/0/0/1     No       No       No       Yes
+    '''}
 
+    golden_parsed_output2 = {
+        'interfaces': {
+            'GigabitEthernet0/0/0/0': {
+                'enabled': 'Yes',
+                'ldp': 'No',
+                'static': 'No',
+                'tunnel': 'No',
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:R3#show mpls interfaces GigabitEthernet0/0/0/0
+        Thu Aug 29 15:32:55.170 UTC
+        Interface                  LDP      Tunnel   Static   Enabled 
+        -------------------------- -------- -------- -------- --------
+        GigabitEthernet0/0/0/0     No       No       No       Yes
     '''}
 
     def test__empty(self):
@@ -545,6 +561,13 @@ class TestShowMplsInterfaces(unittest.TestCase):
         obj = ShowMplsInterfaces(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMplsInterfaces(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ==================================================
