@@ -181,6 +181,11 @@ distribute:
 	@echo ""
 
 json:
-	./sdk_generator/parser -datafile sdk_generator/github/parser_datafile.yaml -save_location sdk_generator/outputs/github_parser.json
-	./sdk_generator/parser -datafile sdk_generator/bitbucket/parser_datafile.yaml -save_location sdk_generator/outputs/bitbucket_parser.json
-	@cp sdk_generator/outputs/github_parser.json  ../genieparser/src/genie/libs/parser/parsers.json
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Generating Parser json file"
+	@echo ""
+	@python -c "from genie.make_json import make_genieparser; make_genieparser()"
+	@echo ""
+	@echo "Done."
+	@echo ""
