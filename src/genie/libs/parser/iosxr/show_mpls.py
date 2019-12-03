@@ -400,8 +400,8 @@ class ShowMplsForwarding(ShowMplsForwardingSchema):
                 out = self.device.execute(self.cli_command[1].format(vrf=vrf))
                 vrf_map.setdefault(vrf, out)
             else:
-                p = re.compile(r'vrf +(?P<vrf>[\S]+)')
-                vrf_info = self.device.execute('show running-config vrf')
+                p = re.compile(r'VRF +(?P<vrf>[\S]+);')
+                vrf_info = self.device.execute('show vrf all detail')
                 vrf_list = p.findall(vrf_info)
                 vrf_list.append('default')
                 for value in vrf_list:
