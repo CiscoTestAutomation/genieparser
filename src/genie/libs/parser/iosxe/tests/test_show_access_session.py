@@ -59,8 +59,7 @@ class test_show_access_session(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 class test_show_access_session_interface_details(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
+    maxDiff = None
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
@@ -107,7 +106,7 @@ class test_show_access_session_interface_details(unittest.TestCase):
     }
         
     golden_output = {'execute.return_value': '''\
-        NAC_SW_375#show access-session interface Gi1/0/21 details
+        dev1#show access-session interface Gi1/0/21 details
         Interface: GigabitEthernet1/0/21
         IIF-ID: 0x105B0C0000005F5
         MAC Address: 0800.37c8.2dbc
@@ -142,7 +141,6 @@ class test_show_access_session_interface_details(unittest.TestCase):
             parsed_output = obj.parse(interface='GigabitEthernet1/0/21')
 
     def test_golden(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output)
         obj = ShowAccessSessionInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/21')

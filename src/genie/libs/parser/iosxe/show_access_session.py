@@ -1,6 +1,7 @@
 """show_access_seesion.py
    supported commands:
      * show access-session
+     * show access-session interface {interface} details
 """
 # Python
 import re
