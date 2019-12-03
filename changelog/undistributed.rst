@@ -52,3 +52,7 @@
         * Updated schema to support more ouput
         * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
 
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Changed key 'template' to Optional
+		* Added 'security_policy' and 'security_status' to 'server_policies'
+		* Added a regex to match Server Policies
