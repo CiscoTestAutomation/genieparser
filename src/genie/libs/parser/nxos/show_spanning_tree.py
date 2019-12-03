@@ -843,3 +843,62 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 continue
 
         return ret_dict
+
+
+class ShowErrdisableRecoverySchema(MetaParser):
+    """Schema for show errdisable recovery"""
+    schema = {
+        'errdisable_reason': {
+            Any(): bool,
+        },
+        'timer_interval': int,
+    }
+
+
+class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
+    """Parser for show errdisable recovery"""
+
+    cli_command = ['show errdisable recovery']
+
+    def cli(self, output=None):
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+
+        # link-flap                       disabled
+        # udld                            disabled
+        # CMM miscabling                  disabled
+        p1 = re.compile(r'^(?P<name>[\w\s\-]+) '
+                        r'+(?P<status>[D|d]isabled|[e|E]nabled)$')
+        # Timer interval: 300
+        p2 = re.compile(r'^Timer +interval\: +(?P<interval>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # link-flap                       disabled
+            # udld                            disabled
+            # CMM miscabling                  disabled
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                name = group['name'].strip()
+                status = group['status'].lower()
+                status_dict = ret_dict.setdefault('errdisable_reason', {})
+                status_dict[name] = False if 'disabled' in status else True
+                continue
+
+            # Timer interval: 300
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['timer_interval'] = int(m2.groupdict()['interval'])
+
+                continue
+
+        return ret_dict

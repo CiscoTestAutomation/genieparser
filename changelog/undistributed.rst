@@ -8,15 +8,26 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* NXOS:
+    * Added ShowErrdisableRecovery for
+        * show errdisable recovery
+		
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
         * show processes memory | include {include}
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
+		
 * NXOS
     * Added ShowIsisHostnameDetail for commands:
         * show isis hostname detail
         * show isis hostname detail vrf {vrf}
-
+		
+* IOS
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
+	
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -38,6 +49,9 @@
     * Updated ShowPolicyMapTypeSuperParser
 	    * Changed key 'service_policy', 'policy_name', 'priority_level' to Optional
 		* Updated regex match queue_limit
+    * Updated ShowAccessLists, ShowAccessListsSummary
+        * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
+
 * IOSXR
     * Updated ShowRouteIpv4 for:
         * Updated schema to support more ouput
@@ -45,3 +59,8 @@
     * Updated ShowRouteIpv6 for:
         * Updated schema to support more ouput
         * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Changed key 'template' to Optional
+		* Added 'security_policy' and 'security_status' to 'server_policies'
+		* Added a regex to match Server Policies
+
