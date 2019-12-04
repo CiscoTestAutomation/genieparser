@@ -70,3 +70,6 @@
 		* Added 'security_policy' and 'security_status' to 'server_policies'
 		* Added a regex to match Server Policies
 
+* DNAC
+    * Updated Interface for:
+        * Supporting hostname in the schema
