@@ -2055,7 +2055,8 @@ class ShowFabricMulticastGlobals(ShowFabricMulticastGlobalsSchema):
         p6 = re.compile(r'^\s*Created +VNI +List: +(?P<created_vni_list>[\w\-]+)$')
 
         # Fwd Encap: (null)
-        p7 = re.compile(r'^\s*Fwd +Encap: +(?P<fwd_encap>[\w\\(\)]+)$')
+        # Fwd Encap: Invalid encapsulation
+        p7 = re.compile(r'^\s*Fwd +Encap: +(?P<fwd_encap>[\w\\(\)\s]+)$')
 
         # Overlay Distributed-DR: FALSE
         p8 = re.compile(r'^\s*Overlay +Distributed\-DR: +(?P<overlay_distributed_dr>[\w]+)$')
