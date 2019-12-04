@@ -52,6 +52,8 @@
         * Updated int to list for level key
     * Updated ShowFabricMulticastGlobals for:
         * Added support for various device outputs
+    * Updated ShowIsisInterface for:
+        * update regex to support more various output
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
