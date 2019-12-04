@@ -99,7 +99,7 @@ class ShowDot1xAllDetail(ShowDot1xAllDetailSchema):
         p2 = re.compile(r'^Dot1x +Protocol +Version +(?P<val>\d+)$')
         p3 = re.compile(r'^Dot1x +Info +for +(?P<intf>[\w\-\/]+)$')
         p4 = re.compile(r'^(?P<key>[\w\s]+) +\= +(?P<val>[\w\-]+)( *[\(\)\s\w]+)?$')
-        p5 = re.compile(r'^EAP +Method +\= +(?P<eap>[\w\-\(\)]+)$')
+        p5 = re.compile(r'^EAP +Method +\= +(?P<eap>\S+)$')
         p6 = re.compile(r'^Supplicant +\= +(?P<client>[\w\.]+)$')
         p7 = re.compile(r'^Session +ID +\= +(?P<session_id>[\w\-]+)$')
         p8 = re.compile(r'^Auth +SM +State +\= +(?P<state>[\w\-]+)$')
