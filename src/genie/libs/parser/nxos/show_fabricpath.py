@@ -1,5 +1,8 @@
+# Python (this imports the Python re module for RegEx)
+import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
+from genie.libs.parser.utils.common import Common
 
 # ==============================
 # Schema for 'show fabricpath isis adjacency'
@@ -10,16 +13,30 @@ class ShowFabricpathIsisAdjacencySchema(MetaParser):
 
 # These are the key-value pairs to add to the parsed dictionary
 
+    # schema = {
+    #     Any():
+    #         {'adj-hold-time-out': str,
+    #         'adj-intf-name-out': str,
+    #         'adj-sys-name-out': str,
+    #          'adj-state-out':str}
+    # }
     schema = {
-        Any():
-            {'adj-hold-time-out': str,
-            'adj-intf-name-out': str,
-            'adj-sys-name-out': str,
-             'adj-state-out':str}
+        'domain': {
+            Any(): {
+                Optional('interfaces'): {
+                    Any(): {
+                        'system_id': str,
+                        'snpa': str,
+                        'level': int,
+                        'state': str,
+                        'hold_time': str,
+                    }
+                }
+            }
+        }
     }
 
-# Python (this imports the Python re module for RegEx)
-import re
+
 
 # ==============================
 # Parser for 'show fabricpath isis adjacency'
@@ -45,33 +62,42 @@ class ShowFabricpathIsisAdjacency(ShowFabricpathIsisAdjacencySchema):
         # Defines the regex for the first line of device output, which is:
         # Sessions for VRF default, total: 3, established: 3
 
-        p1 = re.compile(r'Sessions +for +VRF +(?P<vrf>(\S+)),'
-                        ' +total: +(?P<total>(\d+)),'
-                        ' +established: +(?P<established>(\d+))$')
-
+        p1 = re.compile(r'Fabricpath IS-IS domain: +(?P<domain>(\S+)) +Fabricpath IS-IS adjacency database:$')
 
         # Defines the regex for the next line of device output, which is:
         # System ID       SNPA            Level  State  Hold Time  Interface
         # Switch-A           N/A             1      UP     00:00:28   port-channel1
 
-        p1 = re.compile(r'(?P<peer>(\S+)) + (?P<snpa>(\S+)) + (?P<level>(\d+)) +(?P<state>(UP|DOWN)) + (?P<time>(\S+)) + (?P<interface>(\S+))$')
-
-        # Defines the "for" loop, to pattern match each line of output
+        p2 = re.compile(
+            r'(?P<system_id>(\S+)) + (?P<snpa>(\S+)) + (?P<level>(\d+)) +(?P<state>(UP|DOWN)) + (?P<hold_time>(\S+)) + (?P<interface>(\S+))$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Processes the matched patterns for the second line of output
+            # IS-IS Process: test VRF: default
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                peer = group['peer']
-                peer_dict = {peer:{'adj-hold-time-out':'', 'adj-intf-name-out':'','adj-state-out':'','adj-sys-name-out':''}}
-                peer_dict[peer]['adj-intf-name-out'] = group['interface']
-                peer_dict[peer]['adj-hold-time-out'] = group['time']
-                peer_dict[peer]['adj-state-out'] = group['state']
-                peer_dict[peer]['adj-sys-name-out'] = group['peer']
-                parsed_dict.update(peer_dict)
-                continue
+                domain = group['domain']
+                intf_dict = parsed_dict.setdefault('domain', {}). \
+                    setdefault(domain, {})
+
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                system_id = group['system_id']
+                snpa = group['snpa']
+                level = int(group['level'])
+                state = group['state']
+                hold_time = group['hold_time']
+                interface = Common.convert_intf_name(group['interface'])
+                level_dict = intf_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                level_dict.update({'system_id': system_id})
+                level_dict.update({'snpa': snpa})
+                level_dict.update({'level': level})
+                level_dict.update({'state': state})
+                level_dict.update({'hold_time': hold_time})
+
 
         return parsed_dict

@@ -22,16 +22,16 @@ class test_show_fabricpath_isis_adjacency(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     # Specify the expected result for the parsed output
-    golden_parsed_output1 = {
-        'Switch-A': {'adj-hold-time-out': '00:00:28',
-                            'adj-intf-name-out': 'port-channel1',
-                            'adj-state-out': 'UP',
-                            'adj-sys-name-out': 'Switch-A'},
-         'Switch-B': {'adj-hold-time-out': '00:00:32',
-                            'adj-intf-name-out': 'port-channel326',
-                            'adj-state-out': 'UP',
-                            'adj-sys-name-out': 'Switch-B'},
-         }
+    golden_parsed_output1 = {'domain': {'default': {'interfaces': {'Port-channel1': {'hold_time': '00:00:28',
+                                                         'level': 1,
+                                                         'snpa': 'N/A',
+                                                         'state': 'UP',
+                                                         'system_id': 'Switch-A'},
+                                       'Port-channel326': {'hold_time': '00:00:32',
+                                                           'level': 1,
+                                                           'snpa': 'N/A',
+                                                           'state': 'UP',
+                                                           'system_id': 'Switch-B'}}}}}
 
     # Specify the expected unparsed output
     golden_output1 = {'execute.return_value': '''
