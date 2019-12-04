@@ -406,7 +406,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                         'metric_0': '40',
                                         'metric_2': '40',
                                         'csnp': '10',
-                                        'next_csnp': '00:00:06',
+                                        'next_csnp': 'Inactive',
                                         'hello': '10',
                                         'multi': '3',
                                         'next_iih': '00:00:04',
@@ -644,7 +644,7 @@ class TestShowIsisInterface(unittest.TestCase):
         Level-1 Designated IS: R2_xr
         Level-2 Designated IS: R2_xr
         Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
-        1              40     40     10 00:00:06      10   3       00:00:04
+        1              40     40     10 Inactive      10   3       00:00:04
         2              40     40     10 00:00:03      10   3       00:00:09
         Level  Adjs   AdjsUp Pri  Circuit ID         Since
         1         1        1  64  R2_xr.03           5d01h
