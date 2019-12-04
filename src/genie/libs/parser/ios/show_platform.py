@@ -122,10 +122,17 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
         r1 = re.compile(r'NAME\:\s*\"(?P<name>.+)\"\,\s*DESCR:\s*\"(?P<description>.+)\"')
 
+        # CISCO3945-CHASSIS
+        # Cisco Systems Cisco 6500 4-slot Chassis
+        r1_0 = re.compile(r'.*[Cc][Hh][Aa][Ss][Ss][Ii][Ss]')
+
         # 1
         # 2
         # 3
         r1_1 = re.compile(r'(?P<slot>\d+)')
+
+        # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+        r1_1_2 = re.compile(r'.* +on Slot +(?P<slot>\d+)$')
 
         # msfc sub-module of 1
         # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
@@ -143,9 +150,16 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # GigabitEthernet3 / 0 / 50
         r1_3_2 = re.compile(r'(?:Ten)?GigabitEthernet(?P<subslot>[\d\s\/]+)$')
 
+        # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
+        # Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3
+        r1_3_3 = re.compile(r'.* +on Slot +(?P<slot>\d+) +SubSlot +(?P<subslot>\d+)$')
+
         # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
         # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
         r1_4 = re.compile(r'.*ports\s+Supervisor\s+Engine.*')
+
+        # WS-C3750X-48T-S
+        r1_4_2 = re.compile(r'WS-C.*')
 
         # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
         # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
@@ -178,7 +192,27 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 vid = group.get('vid', '')
                 sn = group['sn']
 
-                if 'Chassis' in descr:
+                # NAME: "IOSv"
+                result = r1_6.match(name)
+                if result:
+                    slot = '1'
+                    slot_dict = parsed_output \
+                        .setdefault('slot', {}) \
+                        .setdefault(slot, {}) \
+                        .setdefault('rp', {}) \
+                        .setdefault(pid, {})
+
+                    slot_dict['name'] = name
+                    slot_dict['descr'] = descr
+                    slot_dict['pid'] = pid
+                    slot_dict['vid'] = vid
+                    slot_dict['sn'] = sn
+
+                    continue
+
+                # CISCO3945-CHASSIS
+                # Cisco Systems Cisco 6500 4-slot Chassis
+                if r1_0.match(descr):
                     chassis_dict = parsed_output.setdefault('main', {})\
                         .setdefault('chassis', {})\
                         .setdefault(pid, {})
@@ -194,15 +228,22 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # 2
                 # 3
                 result = r1_1.match(name)
-                if result:
+                # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                result2 = r1_1_2.match(name)
+
+                if result or result2:
                     flag_is_slot = True
-                    group = result.groupdict()
+                    if result:
+                        group = result.groupdict()
+                    elif result2:
+                        group = result2.groupdict()
                     slot = group['slot']
 
                     # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
                     # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
                     # PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511R12W
-                    if r1_4.match(descr) or 'WS-C' in pid:
+                    # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                    if r1_4.match(descr) or r1_4_2.match(pid) or ('R' in name):
                         slot_code = 'rp'
 
                     # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
@@ -275,9 +316,16 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # Transceiver Te2/1
                 # Transceiver Te2/15
                 # Transceiver Te5/1
+                # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
                 result = r1_3.match(name)
-                if result:
-                    group = result.groupdict()
+                result_3 = r1_3_3.match(name)
+
+                if result or result_3:
+                    if result:
+                        group = result.groupdict()
+                    elif result_3:
+                        group = result_3.groupdict()
+
                     slot = group['slot']
                     subslot = group['subslot']
 
@@ -293,24 +341,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['vid'] = vid
 
                     continue
-
-                # NAME: "IOSv"
-                result = r1_6.match(name)
-                if result:
-                    slot = '1'
-                    slot_dict = parsed_output\
-                        .setdefault('slot', {})\
-                        .setdefault(slot, {})\
-                        .setdefault('rp', {})\
-                        .setdefault(pid, {})
-                    
-                    slot_dict['name'] = name
-                    slot_dict['descr'] = descr
-                    slot_dict['pid'] = pid
-                    slot_dict['vid'] = vid
-                    slot_dict['sn'] = sn
-
-                    continue               
 
                 # Name could be:
                 # 2700W AC power supply for CISCO7604 2

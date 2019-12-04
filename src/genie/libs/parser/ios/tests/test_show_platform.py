@@ -1256,6 +1256,105 @@ class TestShowInventory(unittest.TestCase):
     },
 }
 
+    golden_output_5 = {'execute.return_value': '''
+    best-c3945-IOS3#show inventory
+    NAME: "CISCO3945-CHASSIS", DESCR: "CISCO3945-CHASSIS"
+    PID: CISCO3945-CHASSIS , VID: V02, SN: FGL161010K8
+
+    NAME: "Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0", DESCR: "Cisco Services Performance Engine 150 for Cisco 3900 ISR"
+    PID: C3900-SPE150/K9   , VID: V05 , SN: FOC16050QP6
+
+    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 0", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
+    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC16516WYC
+
+    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 1", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
+    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC17010GVE
+
+    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
+    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC16523QC1
+
+    NAME: "Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3", DESCR: "Two-Port Fast Ethernet High Speed WAN Interface Card"
+    PID: HWIC-2FE          , VID: V02 , SN: FOC16062824
+
+    NAME: "C3900 AC Power Supply 1", DESCR: "C3900 AC Power Supply 1"
+    PID: PWR-3900-AC       , VID: V03 , SN: QCS1604P0BT
+    '''}
+    golden_parsed_output_5 = {
+        'main': {
+            'chassis': {
+                'CISCO3945-CHASSIS': {
+                    'descr': 'CISCO3945-CHASSIS',
+                    'name': 'CISCO3945-CHASSIS',
+                    'pid': 'CISCO3945-CHASSIS',
+                    'sn': 'FGL161010K8',
+                    'vid': 'V02',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'rp': {
+                    'C3900-SPE150/K9': {
+                        'descr': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR',
+                        'name': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0',
+                        'pid': 'C3900-SPE150/K9',
+                        'sn': 'FOC16050QP6',
+                        'subslot': {
+                            '0': {
+                                'EHWIC-1GE-SFP-CU': {
+                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
+                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 0',
+                                    'pid': 'EHWIC-1GE-SFP-CU',
+                                    'sn': 'FOC16516WYC',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '1': {
+                                'EHWIC-1GE-SFP-CU': {
+                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
+                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 1',
+                                    'pid': 'EHWIC-1GE-SFP-CU',
+                                    'sn': 'FOC17010GVE',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2': {
+                                'EHWIC-1GE-SFP-CU': {
+                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
+                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2',
+                                    'pid': 'EHWIC-1GE-SFP-CU',
+                                    'sn': 'FOC16523QC1',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '3': {
+                                'HWIC-2FE': {
+                                    'descr': 'Two-Port Fast Ethernet High Speed WAN Interface Card',
+                                    'name': 'Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3',
+                                    'pid': 'HWIC-2FE',
+                                    'sn': 'FOC16062824',
+                                    'vid': 'V02 ',
+                                },
+                            },
+                        },
+                        'vid': 'V05 ',
+                    },
+                },
+            },
+            'C3900 AC Power Supply 1': {
+                'other': {
+                    'C3900 AC Power Supply 1': {
+                        'descr': 'C3900 AC Power Supply 1',
+                        'name': 'C3900 AC Power Supply 1',
+                        'pid': 'PWR-3900-AC',
+                        'sn': 'QCS1604P0BT',
+                        'vid': 'V03 ',
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1289,6 +1388,13 @@ class TestShowInventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_output_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 class test_show_bootvar(unittest.TestCase):

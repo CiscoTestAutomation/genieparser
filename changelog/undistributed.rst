@@ -72,3 +72,7 @@
 		* Added 'security_policy' and 'security_status' to 'server_policies'
 		* Added a regex to match Server Policies
 
+* IOS
+    * Updated ShowInventory for:
+        * Updated logic to support more output
+
