@@ -2008,7 +2008,7 @@ class test_show_fabric_multicast_globals(unittest.TestCase):
                 "peer_fabric_ctrl_addr": "0.0.0.0",
                 "advertise_vpc_rpf_routes": "disabled",
                 "created_vni_list":  "-",
-                "fwd_encap": "(null)",
+                "fwd_encap": "Invalid encapsulation",
                 "overlay_distributed_dr": False,
                 "overlay_spt_only": True,
             },
@@ -2023,7 +2023,7 @@ class test_show_fabric_multicast_globals(unittest.TestCase):
         Peer Fabric Control Address: 0.0.0.0
         Advertising vPC RPF routes: Disabled
         Created VNI List: -
-        Fwd Encap: (null)
+        Fwd Encap: Invalid encapsulation
         Overlay Distributed-DR: FALSE
         Overlay spt-only: TRUE
         '''}
