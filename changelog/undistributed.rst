@@ -50,6 +50,8 @@
         * Added support for various device outputs
     * Updated ShowIsisHostname for:
         * Updated int to list for level key
+    * Updated ShowFabricMulticastGlobals for:
+        * Added support for various device outputs
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
