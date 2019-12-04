@@ -663,11 +663,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         p16 = re.compile(r'^(?P<level>\S+) +Designated +IS: +(?P<designated_is>\S+)$')
 
         #   Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
-        #   1              40     40     10 00:00:06      10   3       00:00:04
+        #   1              40     40     10 Inactive      10   3       00:00:04
         #   2              40     40     10 00:00:03      10   3       00:00:09
         p17 = re.compile(r'^(?P<level>\d+) +(?P<metric_0>\d+) +(?P<metric_2>\d+) '
-                         r'+(?P<csnp>\d+) +(?P<next_csnp>[\d\:]+) +(?P<hello>\d+) '
-                         r'+(?P<multi>\d+) +(?P<next_iih>[\d\:]+)$')
+                         r'+(?P<csnp>\d+) +(?P<next_csnp>[\w\:]+) +(?P<hello>\d+) '
+                         r'+(?P<multi>\d+) +(?P<next_iih>[\w\:]+)$')
 
         #   Level  Adjs   AdjsUp Pri  Circuit ID         Since
         #   1         1        1  64  R2_xr.03           5d01h
