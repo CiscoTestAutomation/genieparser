@@ -12,9 +12,8 @@ from genie.libs.parser.iosxe.show_dot1x import ShowDot1xAllDetail, \
 
 
 class test_show_dot1x_all_details(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
+    maxDiff = None
 
     golden_parsed_output = {
         "version": 3,
@@ -138,6 +137,57 @@ class test_show_dot1x_all_details(unittest.TestCase):
             Auth BEND SM State    = IDLE
     '''
     }
+    
+    golden_output_2 = {'execute.return_value': '''\
+        Dot1x Info for GigabitEthernet1/6
+        -----------------------------------
+        PAE                       = AUTHENTICATOR
+        QuietPeriod               = 3
+        ServerTimeout             = 0
+        SuppTimeout               = 15
+        ReAuthMax                 = 2
+        MaxReq                    = 1
+        TxPeriod                  = 1
+        
+        Dot1x Authenticator Client List
+        -------------------------------
+        EAP Method                = (13)
+        Supplicant                = 6451.065c.f902
+        Session ID                = 0A90740B0000A7FD44A5F6A8
+            Auth SM State         = AUTHENTICATED
+            Auth BEND SM State    = IDLE
+        '''
+    }
+    
+    golden_parsed_output_2 = {
+        "interfaces": {
+            "GigabitEthernet1/6": {
+               "interface": "GigabitEthernet1/6",
+               "pae": "authenticator",
+               "timeout": {
+                    "quiet_period": 3,
+                    "server_timeout": 0,
+                    "supp_timeout": 15,
+                    "tx_period": 1
+                },
+                "max_reauth_req": 2,
+                "max_req": 1,
+                "clients": {
+                    "6451.065c.f902": {
+                        "client": "6451.065c.f902",
+                        "eap_method": "(13)",
+                        "session": {
+                            "0A90740B0000A7FD44A5F6A8": {
+                                    "session_id": "0A90740B0000A7FD44A5F6A8",
+                                    "auth_sm_state": "authenticated",
+                                    "auth_bend_sm_state": "idle"
+                                }
+                            }
+                        }
+                    }
+                }
+             }
+         }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -146,20 +196,23 @@ class test_show_dot1x_all_details(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output)
         obj = ShowDot1xAllDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_1)
         obj = ShowDot1xAllDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
-
+    def test_golden_2(self):      
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowDot1xAllDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+        
 class test_show_dot1x_all_statistics(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')

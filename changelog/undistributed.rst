@@ -54,6 +54,10 @@
         * Added support for various device outputs
     * Updated ShowIsisInterface for:
         * update regex to support more various output
+    * Updated ShowDot1xAllSummary
+	    * Updated 'system_auth_control', 'version' as Optional keys
+		* Added 'eap_method' as Optional key
+		* Updated regex to match new values
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
@@ -61,6 +65,9 @@
 		* Updated regex match queue_limit
     * Updated ShowAccessLists, ShowAccessListsSummary
         * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
+    * Updated ShowDot1xAllDetail
+	    * Modified regex for eap_method
+		* Updated 'system_auth_control', 'version' as Optional keys
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
