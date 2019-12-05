@@ -12,8 +12,6 @@ from genie.libs.parser.iosxe.show_dot1x import ShowDot1xAllDetail, \
 
 
 class test_show_dot1x_all_details(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
     maxDiff = None
 

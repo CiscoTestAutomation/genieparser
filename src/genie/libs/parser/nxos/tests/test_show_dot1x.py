@@ -214,8 +214,6 @@ class test_show_dot1x_all_summary(unittest.TestCase):
 #   ============================================    #
 
 class test_show_dot1x_all_details(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
     maxDiff = None
 
     parsed_output = {
