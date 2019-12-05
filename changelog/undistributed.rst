@@ -58,6 +58,8 @@
 	    * Updated 'system_auth_control', 'version' as Optional keys
 		* Added 'eap_method' as Optional key
 		* Updated regex to match new values
+    * Updated ShowIsisInterface for:
+        * Added optional key 'passive' to schema
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
