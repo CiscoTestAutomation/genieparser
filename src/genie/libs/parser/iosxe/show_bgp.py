@@ -775,11 +775,13 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('metric'): int,
                                                 Optional('inaccessible'): bool,
                                                 Optional('localpref'): int,
+                                                Optional('aggregate'): str,
                                                 Optional('weight'): str,
                                                 Optional('originator'): str,
                                                 Optional('refresh_epoch'): int,
                                                 Optional('recipient_pathid'): str,
                                                 Optional('transfer_pathid'): str,
+                                                Optional('aggregated_by'): str,
                                                 Optional('community'): str,
                                                 Optional('ext_community'): str,
                                                 Optional('recursive_via_connected'): bool,
@@ -849,29 +851,30 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch_flag = False
         route_info = ''
         route_status = ''
+        aggregated_by = ''
         imported_path_from = ''
         imported_safety_path = False
         refresh_epoch = None
         cmd_vrf = vrf if vrf else None
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
-        p1 = re.compile(r'^\s*For +address +family:'
-                         ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
+        p1 = re.compile(r'^For +address +family:'
+                        r' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
 
         # Paths: (1 available, best #1, table default)
         # Paths: (1 available, best #1, table VRF1)
         # Paths: (1 available, best #1, no table)
         # Paths: (1 available, best #1, table default, RIB-failure(17))
-        p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
+        p2 = re.compile(r'^Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
                         r'+(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +('
                         r'?P<vrf_id>\S+?)|no +table))?,?(?: +(.*))?)\)')
 
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
         # Route Distinguisher: 65109:3051
-        p2_1 = re.compile(r'^\s*Route +Distinguisher:'
-                          ' +(?P<route_distinguisher>[0-9\:]+)'
-                          '(?: +\(default +for +vrf +(?P<vrf_id>(\S+))\))?$')
+        p2_1 = re.compile(r'^Route +Distinguisher:'
+                          r' +(?P<route_distinguisher>[0-9\:]+)'
+                          r'(?: +\(default +for +vrf +(?P<vrf_id>(\S+))\))?$')
 
         # BGP routing table entry for 10.4.1.1/32, version 4
         # BGP routing table entry for [100:100]2001:11:11::11/128, version 2
@@ -879,119 +882,122 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # BGP routing table entry for 2001:DB8:1:1::/64, version 5
         # BGP routing table entry for 2001:2:2:2::2/128, version 2
         # BGP routing table entry for [5][65535:1][0][24][10.36.3.0]/17, version 3
-        p3_1 = re.compile(r'^\s*BGP +routing +table +entry +for +'
-                         '(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
-                         '[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
-                         '[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
-                         '[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
-                         '([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
-                         '|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
-                         '[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
-                         '[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
-                         '+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
-                         '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                         '[\:][0-9]+[\/][0-9]+)))\, +version +'
-                         '(?P<prefix_table_version>[0-9]+)$')
+        p3_1 = re.compile(r'^BGP +routing +table +entry +for +'
+                          r'(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
+                          r'[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
+                          r'[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
+                          r'[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
+                          r'([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
+                          r'|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
+                          r'[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
+                          r'[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
+                          r'+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                          r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                          r'[\:][0-9]+[\/][0-9]+)))\, +version +'
+                          r'(?P<prefix_table_version>[0-9]+)$')
 
         # BGP routing table entry for 65109:3051:VEID-1:Blk-1/136, version 2
-        p3_2 = re.compile(r'^\s*BGP +routing +table +entry +for'
-                           ' +(?:(?P<rd>([0-9\:\[\]]+)))?:(?P<router_id>(\S+)),?'
-                           ' +version +(?P<version>(\d+))$')
+        p3_2 = re.compile(r'^BGP +routing +table +entry +for'
+                          r' +(?:(?P<rd>([0-9\:\[\]]+)))?:(?P<router_id>(\S+)),?'
+                          r' +version +(?P<version>(\d+))$')
 
         # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
         # 10.16.2.2 (metric 11) (via default) from 10.16.2.2 (10.16.2.2)
         # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
         # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
         # 172.17.111.1 (via vrf SH_BGP_VRF100) from 172.17.111.1 (10.5.5.5)
-        p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
-                         '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
-                         '( +\((?P<inaccessible>inaccessible)\)))?'
-                         '( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
-                         'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
-                         ' +\((?P<originator>[0-9\.]+)\))$')
+        p4 = re.compile(r'^((?P<nexthop>[a-zA-Z0-9\.\:]+)'
+                        r'(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
+                        r'( +\((?P<inaccessible>inaccessible)\)))?'
+                        r'( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
+                        r'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
+                        r' +\((?P<originator>[0-9\.]+)\))$')
 
         # Origin incomplete, metric 0, localpref 100, valid, internal
         # Origin incomplete, metric 0, localpref 100, valid, internal, best
         # Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-        p5 = re.compile(r'^\s*Origin +(?P<origin>[a-zA-Z]+),'
-                         '(?: +metric +(?P<metric>[0-9]+),?)?'
-                         '(?: +localpref +(?P<locprf>[0-9]+),?)?'
-                         '(?: +weight +(?P<weight>[0-9]+),?)?'
-                         '(?: +(?P<valid>(valid),?))?'
-                         '(?: +(?P<sourced>(sourced),?))?'
-                         '(?: +(?P<state>(internal|external|local),?))?'
-                         '(?: +(?P<best>(best)))?$')
+        # Origin IGP, localpref 100, valid, external, atomic-aggregate
+        # Origin IGP, localpref 100, valid, external, atomic-aggregate, best
+        p5 = re.compile(r'^Origin +(?P<origin>[a-zA-Z]+),(?: +metric '
+                        r'+(?P<metric>[0-9]+),?)?(?: +localpref '
+                        r'+(?P<locprf>[0-9]+),?)?(?: +weight '
+                        r'+(?P<weight>[0-9]+),?)?(?: +(?P<valid>valid?,))?(?: '
+                        r'+(?P<sourced>sourced?,))?(?: +(?P<state>(internal|'
+                        r'external|local)\,?))?(?: '
+                        r'+(?P<aggregate>atomic-aggregate?))?(\,)?(?: '
+                        r'+(?P<best>best))?$')
 
         # Advertised to update-groups:
-        p6_1 = re.compile(r'^\s*Advertised +to +update-groups *:$')
+        p6_1 = re.compile(r'^Advertised +to +update-groups *:$')
 
 
         # Not advertised to any peer
-        p6_2 = re.compile(r'^\s*Not +advertised +to +any +peer$')
+        p6_2 = re.compile(r'^Not +advertised +to +any +peer$')
 
         # 3
         # 38         44         45
-        p6_3 = re.compile(r'^\s*           (?P<group1>(\d+))'
-                           '(?: +(?P<group2>(\d+)) +(?P<group3>(\d+)))?$')
+        p6_3 = re.compile(r'^(?P<group1>(\d+))'
+                          r'(?: +(?P<group2>(\d+)) +(?P<group3>(\d+)))?$')
 
         # Refresh Epoch 1
-        p7 = re.compile(r'^\s*Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
+        p7 = re.compile(r'^Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
 
         # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
-        p8 = re.compile(r'^\s*Extended +Community\:'
-                         ' +(?P<ext_community>([a-zA-Z0-9\-\:]+)) +ENCAP *:'
-                         '(?P<encap>(\d+)) +Router +(?P<router_mac>(\S+))$')
+        p8 = re.compile(r'^Extended +Community\:'
+                        r' +(?P<ext_community>([a-zA-Z0-9\-\:]+)) +ENCAP *:'
+                        r'(?P<encap>(\d+)) +Router +(?P<router_mac>(\S+))$')
 
         # Extended Community: SoO:65109:999 RT:65109:50
         # Extended Community: RT:0:3051 RT:65109:3051 L2VPN L2:0x0:MTU-1500
         # Extended Community: RT:65109:50 RT:65109:51 , recursive-via-connected
-        p8_2 = re.compile(r'^\s*Extended +Community *:'
-                           ' +(?P<ext_community>([a-zA-Z0-9\-\:\s]+))'
-                           '(?: *, +(?P<recursive>(recursive-via-connected)))?$')
+        p8_2 = re.compile(r'^Extended +Community *:'
+                          r' +(?P<ext_community>([a-zA-Z0-9\-\:\s]+))'
+                          r'(?: *, +(?P<recursive>(recursive-via-connected)))?$')
 
         # Community: 62000:1
-        p8_3 = re.compile(r'^\s*Community: +(?P<community>(\S+))$')
+        # Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
+        p8_3 = re.compile(r'^Community: +(?P<community>[\S+\s]+)$')
 
         # AGI version(0), VE Block Size(10) Label Base(16)
-        p8_4 = re.compile(r'^\s*AGI +version\((?P<agi_version>(\d+))\),'
-                           ' +VE +Block +Size\((?P<ve_block_size>(\d+))\)'
-                           ' +Label +Base\((?P<label_base>(\d+))\)$')
+        p8_4 = re.compile(r'^AGI +version\((?P<agi_version>(\d+))\),'
+                          r' +VE +Block +Size\((?P<ve_block_size>(\d+))\)'
+                          r' +Label +Base\((?P<label_base>(\d+))\)$')
 
         # Originator: 192.168.165.220, Cluster list: 0.0.0.61
         p8_5 = re.compile(r'^\s*Originator: +(?P<originator>(\S+)),'
-                           ' +Cluster +list: +(?P<cluster_list>(\S+))$')
+                          r' +Cluster +list: +(?P<cluster_list>(\S+))$')
 
         # rx pathid: 0, tx pathid: 0
-        p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>[0-9x]+)\,'
-                         ' +tx +pathid\:'
-                         ' +(?P<transfer_pathid>[0-9x]+)$')
+        p9 = re.compile(r'^rx +pathid\: +(?P<recipient_pathid>[0-9x]+)\,'
+                        r' +tx +pathid\:'
+                        r' +(?P<transfer_pathid>[0-9x]+)$')
 
         # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
-        p10 = re.compile(r'^\s*EVPN +ESI\: +(?P<evpn_esi>[0-9]+)\,'
-                          ' +Gateway +Address\: +'
-                          '(?P<gateway_address>[a-zA-Z0-9\.\:]+)\,'
-                          ' +local vtep\: +(?P<local_vtep>[a-zA-Z0-9\.\:]+)'
-                          '\, +[L|l]abel +(?P<label>[0-9]+)$')
+        p10 = re.compile(r'^EVPN +ESI\: +(?P<evpn_esi>[0-9]+)\,'
+                         r' +Gateway +Address\: +'
+                         r'(?P<gateway_address>[a-zA-Z0-9\.\:]+)\,'
+                         r' +local vtep\: +(?P<local_vtep>[a-zA-Z0-9\.\:]+)'
+                         r'\, +[L|l]abel +(?P<label>[0-9]+)$')
 
         # Local vxlan vtep:
-        p11 = re.compile(r'^\s*Local +vxlan +vtep\:$')
+        p11 = re.compile(r'^Local +vxlan +vtep\:$')
 
         # bdi:BDI200
-        p12 = re.compile(r'^\s*bdi\:(?P<bdi>[A-Z0-9]+)$')
+        p12 = re.compile(r'^bdi\:(?P<bdi>[A-Z0-9]+)$')
 
         # vrf:evpn1, vni:30000
-        p13 = re.compile(r'^\s*vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
-                          ' +vni\:(?P<vni>[0-9]+)$')
+        p13 = re.compile(r'^vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
+                         r' +vni\:(?P<vni>[0-9]+)$')
 
         # local router mac:001E.7A13.E9BF
-        p14 = re.compile(r'^\s*local +router +mac\:'
-                          '(?P<local_router_mac>[a-zA-Z0-9\.]+)$')
+        p14 = re.compile(r'^local +router +mac\:'
+                         r'(?P<local_router_mac>[a-zA-Z0-9\.]+)$')
 
         # encap:8
-        p15 = re.compile(r'^\s*encap\:(?P<encap>[0-9]+)$')
+        p15 = re.compile(r'^encap\:(?P<encap>[0-9]+)$')
 
         # vtep-ip:10.21.33.33
-        p16 = re.compile(r'^\s*vtep-ip\:(?P<vtep_ip>[0-9\.]+)$')
+        p16 = re.compile(r'^vtep-ip\:(?P<vtep_ip>[0-9\.]+)$')
 
         # Local
         # 65530
@@ -1001,12 +1007,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
         # 62000, (Received from a RR-client)
         # 2, imported safety path from 50000:2:172.17.0.0/16
-        p17=re.compile(r'^(?!.*(Community))\s*(?P<route_info>'
-            r'[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)(\,)?(?P<route_status>'
-            r'[A-Za-z0-9\.\:\/\(\)\s\[\]\-\&]+)?$')
+        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+        p17=re.compile(r'^(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)'
+                       r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\d\s\.]'
+                       r'+)\)(\,))?(?: +(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s'
+                       r'\[\]\-\&]+))?$')
 
         for line in output.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # For address family: IPv4 Unicast
             # For address family: L2VPN E-VPN
@@ -1257,9 +1265,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Origin incomplete, metric 0, localpref 100, valid, internal
             # Origin incomplete, metric 0, localpref 100, valid, internal, best
             # Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            # Origin IGP, localpref 100, valid, external, atomic-aggregate
+            # Origin IGP, localpref 100, valid, external, atomic-aggregate, best
             m = p5.match(line)
             if m:
                 status_codes = ''
+                if m.groupdict()['aggregate']:
+                    subdict['aggregate'] = m.groupdict()['aggregate']
                 if m.groupdict()['locprf']:
                      subdict['localpref'] = int(m.groupdict()['locprf'])
                 if m.groupdict()['metric']:
@@ -1274,6 +1286,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         subdict['origin_codes'] = 'e'
                     else:
                         subdict['origin_codes'] = 'i'
+
                 if m.groupdict()['valid']:
                     status_codes += '* '
                 if m.groupdict()['best']:
@@ -1305,6 +1318,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 if imported_safety_path:
                     subdict['imported_safety_path'] = imported_safety_path
 
+                # Add key to dictionary
+                if aggregated_by:
+                    subdict['aggregated_by'] = aggregated_by
+
                 continue
 
             # Advertised to update-groups:
@@ -1322,7 +1339,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 3
             # # 38         44         45
             m = p6_3.match(line)
-            if m:
+            if m and next_line_update_group:
                 group = m.groupdict()
                 if group['group2'] and group['group3']:
                     update_group = []
@@ -1332,6 +1349,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         update_group.sort()
                 else:
                     update_group = int(group['group1'])
+                next_line_update_group = False
                 continue
 
             # Refresh Epoch 1
@@ -1371,6 +1389,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # Community: 62000:1
+            # Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
             m = p8_3.match(line)
             if m:
                 subdict['community'] = m.groupdict()['community']
@@ -1463,6 +1482,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 200 33299 51178 47751 {27016}, imported path from 200:2:10.1.1.0/24 (global)
             # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
             # 62000, (Received from a RR-client)
+            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
             m = p17.match(line)
             if m and refresh_epoch_flag:
                 route_info = str(m.groupdict()['route_info'])
@@ -1478,6 +1498,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         imported_path_from = route_status.lstrip('imported safety path from')
                         imported_safety_path = True
                         route_status = ''
+
+                if m.groupdict()['aggregated_by']:
+                    aggregated_by = m.groupdict()['aggregated_by']
+
                 refresh_epoch_flag = False
                 continue
 

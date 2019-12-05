@@ -63,4 +63,7 @@
 	    * Changed key 'template' to Optional
 		* Added 'security_policy' and 'security_status' to 'server_policies'
 		* Added a regex to match Server Policies
-
+* IOSXE
+    * Updated ShowBgpDetailSuperParser
+        * Added keys to schema to accomodate different outputs
+        * Updated regex to catch different outputs
