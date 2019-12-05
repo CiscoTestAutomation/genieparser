@@ -65,5 +65,5 @@
 		* Added a regex to match Server Policies
 * IOSXE
     * Updated ShowBgpDetailSuperParser
-        * Added keys to schema to accomodate different outputs
+        * Added keys to schema to accommodate different outputs
         * Updated regex to catch different outputs
