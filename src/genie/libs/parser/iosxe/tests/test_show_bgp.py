@@ -5479,13 +5479,13 @@ class TestShowIpBgpDetail(unittest.TestCase):
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
             rx pathid: 0, tx pathid: 0
         Refresh Epoch 3
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
             10.105.5.1 (metric 2) (via vrf sample_vrf) from 10.105.5.1 (10.105.5.1)
             Origin IGP, metric 0, localpref 100, valid, internal, atomic-aggregate
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
             rx pathid: 0, tx pathid: 0
         Refresh Epoch 1
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
             10.105.6.84 (via vrf sample_vrf) from 10.105.6.84 (10.105.5.17)
             Origin IGP, localpref 100, valid, external, atomic-aggregate, best
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
@@ -5505,9 +5505,9 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                         'best_path': '3',
                                         'index': {
                                             1: {
-                                                'aggregate': 'atomic-aggregate',
-                                                'aggregated_by': '65251 '
-                                                                '10.160.0.61',
+                                                'atomic_aggregate': True,
+                                                'aggregated_by_as': '65251',
+                                                'aggregated_by_address': '10.160.0.61',
                                                 'community': '1:1 '
                                                             '65100:101 '
                                                             '65100:175 '
@@ -5543,9 +5543,9 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                 35]
                                             },
                                             2: {
-                                                'aggregate': 'atomic-aggregate',
-                                                'aggregated_by': '65251 '
-                                                                '10.160.0.61',
+                                                'atomic_aggregate': True,
+                                                'aggregated_by_as': '65251',
+                                                'aggregated_by_address': '200::01',
                                                 'community': '1:1 '
                                                             '65100:101 '
                                                             '65100:175 '
@@ -5583,9 +5583,9 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                 35]
                                             },
                                             3: {
-                                                'aggregate': 'atomic-aggregate',
-                                                'aggregated_by': '65251 '
-                                                                '10.160.0.61',
+                                                'atomic_aggregate': True,
+                                                'aggregated_by_as': '65251',
+                                                'aggregated_by_address': 'FE80:CD00:0:CDE:1257:0:211E:729C',
                                                 'community': '1:1 '
                                                             '65100:101 '
                                                             '65100:175 '

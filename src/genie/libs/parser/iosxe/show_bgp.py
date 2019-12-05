@@ -775,13 +775,14 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('metric'): int,
                                                 Optional('inaccessible'): bool,
                                                 Optional('localpref'): int,
-                                                Optional('aggregate'): str,
+                                                Optional('atomic_aggregate'): bool,
                                                 Optional('weight'): str,
                                                 Optional('originator'): str,
                                                 Optional('refresh_epoch'): int,
                                                 Optional('recipient_pathid'): str,
                                                 Optional('transfer_pathid'): str,
-                                                Optional('aggregated_by'): str,
+                                                Optional('aggregated_by_as'): str,
+                                                Optional('aggregated_by_address'): str,
                                                 Optional('community'): str,
                                                 Optional('ext_community'): str,
                                                 Optional('recursive_via_connected'): bool,
@@ -851,7 +852,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch_flag = False
         route_info = ''
         route_status = ''
-        aggregated_by = ''
+        aggregated_by_as = ''
+        aggregated_by_address = ''
         imported_path_from = ''
         imported_safety_path = False
         refresh_epoch = None
@@ -1008,8 +1010,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 62000, (Received from a RR-client)
         # 2, imported safety path from 50000:2:172.17.0.0/16
         # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
         p17=re.compile(r'^(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)'
-                       r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\d\s\.]'
+                       r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\w\s\.\:]'
                        r'+)\)(\,))?(?: +(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s'
                        r'\[\]\-\&]+))?$')
 
@@ -1271,7 +1275,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             if m:
                 status_codes = ''
                 if m.groupdict()['aggregate']:
-                    subdict['aggregate'] = m.groupdict()['aggregate']
+                    subdict['atomic_aggregate'] = True
                 if m.groupdict()['locprf']:
                      subdict['localpref'] = int(m.groupdict()['locprf'])
                 if m.groupdict()['metric']:
@@ -1319,8 +1323,11 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     subdict['imported_safety_path'] = imported_safety_path
 
                 # Add key to dictionary
-                if aggregated_by:
-                    subdict['aggregated_by'] = aggregated_by
+                if aggregated_by_as:
+                    subdict['aggregated_by_as'] = aggregated_by_as
+
+                if aggregated_by_address:
+                    subdict['aggregated_by_address'] = aggregated_by_address
 
                 continue
 
@@ -1483,6 +1490,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
             # 62000, (Received from a RR-client)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
             m = p17.match(line)
             if m and refresh_epoch_flag:
                 route_info = str(m.groupdict()['route_info'])
@@ -1500,7 +1509,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         route_status = ''
 
                 if m.groupdict()['aggregated_by']:
-                    aggregated_by = m.groupdict()['aggregated_by']
+                    output = m.groupdict()['aggregated_by'].split(' ')
+                    aggregated_by_as = output[0]
+                    aggregated_by_address = output[1]
 
                 refresh_epoch_flag = False
                 continue
