@@ -546,6 +546,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'bfd_ipv4': str,
                                 'bfd_ipv6': str,
                                 'mtr': str,
+                                Optional('passive'): str,
                                 Optional('mtu'): int,
                                 Optional('lsp_interval_ms'): int,
                                 'levels': {
@@ -650,6 +651,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         
         #   MTR is enabled
         p13 = re.compile(r'^MTR +is +(?P<mtr>\w+)$')
+
+        #   Passive level: level-1-2
+        p13_1 = re.compile(r'^Passive +level: +(?P<passive>\S+)$')
 
         #   Level      Metric
         #   1               1
@@ -800,6 +804,14 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = m.groupdict()
                 mtr = group['mtr']
                 intf_dict.update({'mtr': mtr})
+                continue
+
+            #   Passive level: level-1-2
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                passive = group['passive']
+                intf_dict.update({'passive': passive})
                 continue
 
             #   Level      Metric
