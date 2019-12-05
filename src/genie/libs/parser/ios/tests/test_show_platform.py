@@ -1258,11 +1258,11 @@ class TestShowInventory(unittest.TestCase):
 
     golden_output_5 = {'execute.return_value': '''
     best-c3945-IOS3#show inventory
-    NAME: "GENIE1234-CHASSIS", DESCR: "GENIE1234-CHASSIS"
-    PID: GENIE1234-CHASSIS , VID: V02, SN: FGL161010K8
+    NAME: "CISCO3945-CHASSIS", DESCR: "CISCO3945-CHASSIS"
+    PID: CISCO3945-CHASSIS , VID: V02, SN: FGL161010K8
 
     NAME: "Cisco Services Performance Engine 150 for Genie 1010 ISR on Slot 0", DESCR: "Cisco Services Performance Engine 150 for Genie 1010 ISR"
-    PID: G1010-SPE150/K9   , VID: V05 , SN: FOC16050QP6
+    PID: C3900-SPE150/K9   , VID: V05 , SN: FOC16050QP6
 
     NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 0", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
     PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC16516WYC
@@ -1276,16 +1276,16 @@ class TestShowInventory(unittest.TestCase):
     NAME: "Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3", DESCR: "Two-Port Fast Ethernet High Speed WAN Interface Card"
     PID: HWIC-2FE          , VID: V02 , SN: FOC16062824
 
-    NAME: "G1010 AC Power Supply 1", DESCR: "G1010 AC Power Supply 1"
+    NAME: "C3900 AC Power Supply 1", DESCR: "C3900 AC Power Supply 1"
     PID: PWR-3900-AC       , VID: V03 , SN: QCS1604P0BT
     '''}
     golden_parsed_output_5 = {
         'main': {
             'chassis': {
-                'GENIE1234-CHASSIS': {
-                    'descr': 'GENIE1234-CHASSIS',
-                    'name': 'GENIE1234-CHASSIS',
-                    'pid': 'GENIE1234-CHASSIS',
+                'CISCO3945-CHASSIS': {
+                    'descr': 'CISCO3945-CHASSIS',
+                    'name': 'CISCO3945-CHASSIS',
+                    'pid': 'CISCO3945-CHASSIS',
                     'sn': 'FGL161010K8',
                     'vid': 'V02',
                 },
@@ -1294,10 +1294,10 @@ class TestShowInventory(unittest.TestCase):
         'slot': {
             '0': {
                 'rp': {
-                    'G1010-SPE150/K9': {
+                    'C3900-SPE150/K9': {
                         'descr': 'Cisco Services Performance Engine 150 for Genie 1010 ISR',
                         'name': 'Cisco Services Performance Engine 150 for Genie 1010 ISR on Slot 0',
-                        'pid': 'G1010-SPE150/K9',
+                        'pid': 'C3900-SPE150/K9',
                         'sn': 'FOC16050QP6',
                         'subslot': {
                             '0': {
@@ -1341,11 +1341,11 @@ class TestShowInventory(unittest.TestCase):
                     },
                 },
             },
-            'G1010 AC Power Supply 1': {
+            'C3900 AC Power Supply 1': {
                 'other': {
-                    'G1010 AC Power Supply 1': {
-                        'descr': 'G1010 AC Power Supply 1',
-                        'name': 'G1010 AC Power Supply 1',
+                    'C3900 AC Power Supply 1': {
+                        'descr': 'C3900 AC Power Supply 1',
+                        'name': 'C3900 AC Power Supply 1',
                         'pid': 'PWR-3900-AC',
                         'sn': 'QCS1604P0BT',
                         'vid': 'V03 ',

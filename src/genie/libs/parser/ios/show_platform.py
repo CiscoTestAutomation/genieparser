@@ -124,7 +124,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # CISCO3945-CHASSIS
         # Cisco Systems Cisco 6500 4-slot Chassis
-        r1_0 = re.compile(r'.*[Cc][Hh][Aa][Ss][Ss][Ii][Ss]')
+        r1_0 = re.compile(r'.*(?:CHASSIS|Chassis|chassis)')
 
         # 1
         # 2
