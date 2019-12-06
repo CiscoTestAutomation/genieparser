@@ -60,6 +60,8 @@
 		* Updated regex to match new values
     * Updated ShowIsisInterface for:
         * Added optional key 'passive' to schema
+    * Updated ShowSpanningTreeDetail for:
+        * Added support for various device outputs
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser

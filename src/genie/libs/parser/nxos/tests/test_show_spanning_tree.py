@@ -845,7 +845,7 @@ DS1-R101# sh spanning-tree detail
    Port path cost 1, Port priority 128, Port Identifier 128.4194
    Designated root has priority 20602, address 0023.04ee.be1f
    Designated bridge has priority 20602, address 0026.981e.c642
-   Designated port id is 128.4194, designated path cost 0
+   Designated port id is 128.4194, designated path cost 0, Topology change is set
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
    Link type is point-to-point by default
@@ -1087,6 +1087,7 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 0,
                                 'bpdu_sent': 2725887
                             },
+                            'topology_change': True,
                             'designated_bridge_address': '0026.981e.c642',
                             'designated_bridge_priority': 20602,
                             'designated_path_cost': 0,
