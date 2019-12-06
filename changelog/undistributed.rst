@@ -82,7 +82,14 @@
 	    * Changed key 'template' to Optional
 		* Added 'security_policy' and 'security_status' to 'server_policies'
 		* Added a regex to match Server Policies
+
+* IOS
+    * Updated ShowInventory for:
+        * Updated logic to support more outputs
+
 * IOSXE
     * Updated ShowBgpDetailSuperParser
         * Added keys to schema to accommodate different outputs
         * Updated regex to catch different outputs
+    * Updated ShowInventory for:
+        * Update one key into Optional to support more outputs
