@@ -441,6 +441,128 @@ class TestShowVersion(unittest.TestCase):
                 }
             }
 
+    device_output = {'execute.return_value':
+             '''
+                 Cisco IOS Software, C3900 Software (C3900-TPGEN_UNIVERSALK9-M), Experimental Version 15.2(20120817:095748) [yosharma-pagent_v50_0 109]
+                 Copyright (c) 1986-2012 by Cisco Systems, Inc.
+                 Compiled Fri 17-Aug-12 16:39 by yosharma
+         
+                 ROM: System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)
+         
+                 best-c3945-IOS3 uptime is 12 weeks, 6 days, 15 hours, 46 minutes
+                 System returned to ROM by power-on
+                 System image file is "flash0:c3900-tpgen_universalk9-mz.PAGENT.5.0.0"
+                 Last reload type: Normal Reload
+         
+         
+                 This product contains cryptographic features and is subject to United
+                 States and local country laws governing import, export, transfer and
+                 use. Delivery of Cisco cryptographic products does not imply
+                 third-party authority to import, export, distribute or use encryption.
+                 Importers, exporters, distributors and users are responsible for
+                 compliance with U.S. and local country laws. By using this product you
+                 agree to comply with applicable laws and regulations. If you are unable
+                 to comply with U.S. and local laws, return this product immediately.
+         
+                 A summary of U.S. laws governing Cisco cryptographic products may be found at:
+                 http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+         
+                 If you require further assistance please contact us by sending email to
+                 export@cisco.com.
+         
+                 Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
+                 Processor board ID FGL161010K8
+                 2 FastEthernet interfaces
+                 6 Gigabit Ethernet interfaces
+                 1 terminal line
+                 1 Virtual Private Network (VPN) Module
+                 DRAM configuration is 72 bits wide with parity enabled.
+                 255K bytes of non-volatile configuration memory.
+                 2000880K bytes of ATA System CompactFlash 0 (Read/Write)
+         
+         
+                 License Info:
+         
+                 License UDI:
+         
+                 -------------------------------------------------
+                 Device#   PID                   SN
+                 -------------------------------------------------
+                 *0        C3900-SPE150/K9       FOC16050QP6     
+         
+         
+         
+                 Technology Package License Information for Module:'c3900' 
+         
+                 ----------------------------------------------------------------
+                 Technology    Technology-package          Technology-package
+                               Current       Type          Next reboot  
+                 -----------------------------------------------------------------
+                 ipbase        ipbasek9      Permanent     ipbasek9
+                 security      securityk9    Permanent     securityk9
+                 uc            None          None          None
+                 data          datak9        Permanent     datak9
+         
+                 Configuration register is 0x2102
+             '''
+         }
+
+    parsed_output = {
+    'version': {
+        'chassis': 'CISCO3945-CHASSIS',
+        'chassis_sn': 'FGL161010K8',
+        'compiled_by': 'yosharma',
+        'compiled_date': 'Fri 17-Aug-12 16:39',
+        'curr_config_register': '0x2102',
+        'hostname': 'best-c3945-IOS3',
+        'image_id': 'C3900-TPGEN_UNIVERSALK9-M',
+        'image_type': 'developer image',
+        'last_reload_type': 'Normal Reload',
+        'license_package': {
+            'data': {
+                'license_level': 'datak9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'datak9',
+            },
+            'ipbase': {
+                'license_level': 'ipbasek9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'ipbasek9',
+            },
+            'security': {
+                'license_level': 'securityk9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'securityk9',
+            },
+            'uc': {
+                'license_level': 'None',
+                'license_type': 'None',
+                'next_reload_license_level': 'None',
+            },
+        },
+        'main_mem': '1835264',
+        'mem_size': {
+            'non-volatile configuration': '255',
+        },
+        'number_of_intfs': {
+            'FastEthernet': '2',
+            'Gigabit Ethernet': '6',
+            'terminal': '1',
+        },
+        'os': 'IOS',
+        'platform': 'C3900',
+        'processor_board_flash': '2000880K',
+        'processor_type': 'C3900-SPE150/K9',
+        'returned_to_rom_by': 'power-on',
+        'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',
+        'rtr_type': 'CISCO3945-CHASSIS',
+        'system_image': 'flash0:c3900-tpgen_universalk9-mz.PAGENT.5.0.0',
+        'uptime': '12 weeks, 6 days, 15 hours, 46 minutes',
+        'version': '15.2(20120817:095748)',
+        'version_short': '15.2',
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -480,6 +602,14 @@ class TestShowVersion(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_ios_1)
+
+    def test_golden_ios_2(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.device_output)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')

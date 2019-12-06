@@ -92,4 +92,6 @@
         * Added keys to schema to accommodate different outputs
         * Updated regex to catch different outputs
     * Updated ShowInventory for:
-        * Update one key into Optional to support more outputs
+        * Updated one key into Optional to support more outputs
+    * Updated ShowVersion for:
+        * Added regex and updated logic to parse various outputs

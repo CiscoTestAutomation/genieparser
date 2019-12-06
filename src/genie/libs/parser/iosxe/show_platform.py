@@ -243,7 +243,11 @@ class ShowVersion(ShowVersionSchema):
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
                          r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
                          r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
-        
+
+        # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
+        p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
+                           r'+with +(?P<processor_type>.+) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+
         # chassis_sn
         p19 = re.compile(r'^[pP]rocessor +board +ID '
                          r'+(?P<chassis_sn>[a-zA-Z0-9]+)')
@@ -535,13 +539,20 @@ class ShowVersion(ShowVersionSchema):
             # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
             # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
             m = p18.match(line)
-            if m:
-                version_dict['version']['chassis'] \
-                    = m.groupdict()['chassis']
-                version_dict['version']['main_mem'] \
-                    = m.groupdict()['main_mem']
-                version_dict['version']['processor_type'] \
-                    = m.groupdict()['processor_type']
+
+            # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
+            m2 = p18_2.match(line)
+
+            if m or m2:
+                if m:
+                    group = m.groupdict()
+                elif m2:
+                    group = m2.groupdict()
+
+                version_dict['version']['chassis'] = group['chassis']
+                version_dict['version']['main_mem'] = group['main_mem']
+                version_dict['version']['processor_type'] = group['processor_type']
+
                 if 'C3850' in version_dict['version']['chassis'] or \
                    'C3650' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'Edison'
