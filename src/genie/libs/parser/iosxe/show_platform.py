@@ -1465,7 +1465,7 @@ class ShowInventorySchema(MetaParser):
                     },
                 },
             },
-        'slot':
+        Optional('slot'):
             {Any():
                 {Optional('rp'):
                     {Any():

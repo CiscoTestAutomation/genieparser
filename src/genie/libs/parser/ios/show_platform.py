@@ -124,6 +124,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # CISCO3945-CHASSIS
         # Cisco Systems Cisco 6500 4-slot Chassis
+        # IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0
         r1_0 = re.compile(r'.*(?:CHASSIS|Chassis|chassis)')
 
         # 1
@@ -192,23 +193,23 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 vid = group.get('vid', '')
                 sn = group['sn']
 
-                # NAME: "IOSv"
-                result = r1_6.match(name)
-                if result:
-                    slot = '1'
-                    slot_dict = parsed_output \
-                        .setdefault('slot', {}) \
-                        .setdefault(slot, {}) \
-                        .setdefault('rp', {}) \
-                        .setdefault(pid, {})
-
-                    slot_dict['name'] = name
-                    slot_dict['descr'] = descr
-                    slot_dict['pid'] = pid
-                    slot_dict['vid'] = vid
-                    slot_dict['sn'] = sn
-
-                    continue
+                # # NAME: "IOSv"
+                # result = r1_6.match(name)
+                # if result:
+                #     slot = '1'
+                #     slot_dict = parsed_output \
+                #         .setdefault('slot', {}) \
+                #         .setdefault(slot, {}) \
+                #         .setdefault('rp', {}) \
+                #         .setdefault(pid, {})
+                #
+                #     slot_dict['name'] = name
+                #     slot_dict['descr'] = descr
+                #     slot_dict['pid'] = pid
+                #     slot_dict['vid'] = vid
+                #     slot_dict['sn'] = sn
+                #
+                #     continue
 
                 # CISCO3945-CHASSIS
                 # Cisco Systems Cisco 6500 4-slot Chassis
