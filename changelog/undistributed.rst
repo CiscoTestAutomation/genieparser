@@ -52,6 +52,14 @@
         * Updated int to list for level key
     * Updated ShowFabricMulticastGlobals for:
         * Added support for various device outputs
+    * Updated ShowIsisInterface for:
+        * update regex to support more various output
+    * Updated ShowDot1xAllSummary
+	    * Updated 'system_auth_control', 'version' as Optional keys
+		* Added 'eap_method' as Optional key
+		* Updated regex to match new values
+    * Updated ShowIsisInterface for:
+        * Added optional key 'passive' to schema
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
@@ -59,6 +67,9 @@
 		* Updated regex match queue_limit
     * Updated ShowAccessLists, ShowAccessListsSummary
         * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
+    * Updated ShowDot1xAllDetail
+	    * Modified regex for eap_method
+		* Updated 'system_auth_control', 'version' as Optional keys
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
@@ -74,5 +85,11 @@
 
 * IOS
     * Updated ShowInventory for:
-        * Updated logic to support more output
+        * Updated logic to support more outputs
 
+* IOSXE
+    * Updated ShowBgpDetailSuperParser
+        * Added keys to schema to accommodate different outputs
+        * Updated regex to catch different outputs
+    * Updated ShowInventory for:
+        * Update one key into Optional to support more outputs
