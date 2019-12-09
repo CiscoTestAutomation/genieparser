@@ -6202,7 +6202,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p69 = re.compile(r'^\s*as-override$')
         p70 = re.compile(r'^\s*default-originate( +route-map +(?P<nbr_af_default_originate_route_map>.*))?$')
         p71 = re.compile(r'^\s*soo +(?P<nbr_af_soo>.*)$')
-        p72 = re.compile(r'^\s*template peer(?:-session)? +(?P<ps_name>.*)$')
+        p72 = re.compile(r'^\s*template peer(-session)? +(?P<ps_name>.*)$')
         p73 = re.compile(r'^\s*bfd$')
         p74 = re.compile(r'^\s*bfd$')
         p75 = re.compile(r'^\s*description +(?P<ps_description>.*)$')
@@ -6215,7 +6215,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p82 = re.compile(r'^\s*timers +(?P<ps_keepalive_interval>[0-9]+) +(?P<ps_hodltime>[0-9]+)$')
         p83 = re.compile(r'^\s*transport connection-mode +(?P<ps_transport_connection_mode>[a-z]+)$')
         p84 = re.compile(r'^\s*update-source +(?P<ps_update_source>[A-Za-z0-9\/\.]+)$')
-        p85 = re.compile(r'^\s*template peer(?:-session)? +(?P<pp_name>.*)$')
+        p85 = re.compile(r'^\s*template peer-session +(?P<pp_name>.*)$')
         p86 = re.compile(r'^\s*allowas-in( +(?P<pp_allowas_in_as_number>[0-9]+))?$')
         p87 = re.compile(r'^\s*as-override$')
         p88 = re.compile(r'^\s*default-originate( +route-map +(?P<pp_default_originate_route_map>.*))?$')
@@ -6898,88 +6898,82 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'] = {}
                             if nbr_af_name not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name']:
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name] = {}
+                                bgp_vrf_af_dict = bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]
                             continue
 
                         if 'nbr_af_name' in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
                             #   allowas-in [ <allowas-in-cnt> ]
                             m = p58.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_allowas_in'] = True
                                 if m.groupdict()['nbr_af_allowas_in_as_number']:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in_as_number'] = \
+                                    bgp_vrf_af_dict['nbr_af_allowas_in_as_number'] = \
                                         int(m.groupdict()['nbr_af_allowas_in_as_number'])
                                 continue
-                            elif 'nbr_af_allowas_in' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
-                                    False
+                            elif 'nbr_af_allowas_in' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_allowas_in'] = False
 
                             #   inherit peer-policy <nbr_af_inherit_peer_policy> <nbr_af_inherit_peer_seq>
                             m = p59.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_policy'] = \
+                                bgp_vrf_af_dict['nbr_af_inherit_peer_policy'] = \
                                     str(m.groupdict()['nbr_af_inherit_peer_policy'])
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_seq'] = \
+                                bgp_vrf_af_dict['nbr_af_inherit_peer_seq'] = \
                                     int(m.groupdict()['nbr_af_inherit_peer_seq'])
                                 continue
 
                             #   maximum-prefix <nbr_af_maximum_prefix_max_prefix_no> [ <nbr_af_maximum_prefix_threshold> ] [ restart <nbr_af_maximum_prefix_restart> ]
                             m = p60.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
+                                bgp_vrf_af_dict['nbr_af_maximum_prefix_max_prefix_no'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_max_prefix_no'])
                                 if m.groupdict()['nbr_af_maximum_prefix_threshold']:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
+                                    bgp_vrf_af_dict['nbr_af_maximum_prefix_threshold'] = \
                                         int(m.groupdict()['nbr_af_maximum_prefix_threshold'])
                                 if m.groupdict()['nbr_af_maximum_prefix_restart']:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_restart'] = \
+                                    bgp_vrf_af_dict['nbr_af_maximum_prefix_restart'] = \
                                         int(m.groupdict()['nbr_af_maximum_prefix_restart'])
                                 continue
 
                             #   maximum-prefix <nbr_af_maximum_prefix_max_prefix_no> [ <nbr_af_maximum_prefix_threshold> ] [ warning-only ]
                             m = p61.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
+                                bgp_vrf_af_dict['nbr_af_maximum_prefix_max_prefix_no'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_max_prefix_no'])
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
+                                bgp_vrf_af_dict['nbr_af_maximum_prefix_threshold'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_threshold'])
                                 if m.groupdict()['nbr_af_maximum_prefix_warning_only']:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
-                                        True
+                                    bgp_vrf_af_dict['nbr_af_maximum_prefix_warning_only'] = True
                                 else:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
-                                        False
+                                    bgp_vrf_af_dict['nbr_af_maximum_prefix_warning_only'] = False
                                 continue
 
                             #   route-map <nbr_af_route_map_name_in> in
                             m = p62.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_in'] = \
+                                bgp_vrf_af_dict['nbr_af_route_map_name_in'] = \
                                     str(m.groupdict()['nbr_af_route_map_name_in'])
                                 continue
 
                             #   route-map <nbr_af_route_map_name_out> out
                             m = p63.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_out'] = \
+                                bgp_vrf_af_dict['nbr_af_route_map_name_out'] = \
                                     str(m.groupdict()['nbr_af_route_map_name_out'])
                                 continue
 
                             #   route-reflector-client
                             m = p64.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_route_reflector_client'] = True
                                 continue
-                            elif 'nbr_af_route_reflector_client' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
-                                    False
+                            elif 'nbr_af_route_reflector_client' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_route_reflector_client'] = False
 
                             #   send-community
                             m = p65.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
-                                    'standard'
+                                bgp_vrf_af_dict['nbr_af_send_community'] = 'standard'
                                 send_community_standard_match = 'True'
                                 continue
 
@@ -6987,11 +6981,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             m = p66.match(line)
                             if m:
                                 if send_community_standard_match:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
-                                        'both'
+                                    bgp_vrf_af_dict['nbr_af_send_community'] = 'both'
                                 else:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
-                                        'extended'
+                                    bgp_vrf_af_dict['nbr_af_send_community'] = 'extended'
                                 continue
 
                             # rewrite-evpn-rt-asn
@@ -7004,51 +6996,42 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             #   route-reflector-client
                             m = p67.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_soft_reconfiguration'] = True
                                 continue
-                            elif 'nbr_af_soft_reconfiguration' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
-                                    False
+                            elif 'nbr_af_soft_reconfiguration' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_soft_reconfiguration'] = False
 
                             #   next-hop-self
                             m = p68.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_next_hop_self'] = True
                                 continue
-                            elif 'nbr_af_next_hop_self' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
-                                    False
+                            elif 'nbr_af_next_hop_self' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_next_hop_self'] = False
 
                             #   as-override
                             m = p69.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_as_override'] = True
                                 continue
-                            elif 'nbr_af_as_override' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
-                                    False
+                            elif 'nbr_af_as_override' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_as_override'] = False
 
                             #   default-originate [ route-map <nbr_af_default_originate_route_map> ]
                             m = p70.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
-                                    True
+                                bgp_vrf_af_dict['nbr_af_default_originate'] = True
                                 if m.groupdict()['nbr_af_default_originate_route_map']:
-                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate_route_map'] = \
+                                    bgp_vrf_af_dict['nbr_af_default_originate_route_map'] = \
                                         str(m.groupdict()['nbr_af_default_originate_route_map'])
                                 continue
-                            elif 'nbr_af_default_originate' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
-                                    False
+                            elif 'nbr_af_default_originate' not in bgp_vrf_af_dict:
+                                bgp_vrf_af_dict['nbr_af_default_originate'] = False
 
                             #   soo <nbr_af_soo>
                             m = p71.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soo'] = \
-                                    str(m.groupdict()['nbr_af_soo'])
+                                bgp_vrf_af_dict['nbr_af_soo'] = str(m.groupdict()['nbr_af_soo'])
                                 continue
 
                 #   template peer-session PEER-SESSION
@@ -7181,110 +7164,98 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         bgp_dict['bgp']['instance']['default']['pp_name'] = {}
                     if pp_name not in bgp_dict['bgp']['instance']['default']['pp_name']:
                         bgp_dict['bgp']['instance']['default']['pp_name'][pp_name] = {}
+                        bgp_pp_dict = bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]
                     continue
 
                 if pp_name:
                     #   allowas-in [ <allowas-in-cnt> ]
                     m = p86.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in'] = \
-                            True
+                        bgp_pp_dict['pp_allowas_in'] = True
                         if m.groupdict()['pp_allowas_in_as_number']:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in_as_number'] = \
+                            bgp_pp_dict['pp_allowas_in_as_number'] = \
                                 int(m.groupdict()['pp_allowas_in_as_number'])
                         continue
-                    elif 'pp_allowas_in' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in'] = \
-                            False
+                    elif 'pp_allowas_in' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_allowas_in'] = False
 
                     #   as-override
                     m = p87.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_as_override'] = \
-                            True
+                        bgp_pp_dict['pp_as_override'] = True
                         continue
-                    elif 'pp_as_override' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_as_override'] = \
-                            False
+                    elif 'pp_as_override' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_as_override'] = False
 
                     #   default-originate [ route-map <pp_default_originate_route_map> ]
                     m = p88.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate'] = \
-                            True
+                        bgp_pp_dict['pp_default_originate'] = True
                         if m.groupdict()['pp_default_originate_route_map']:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate_route_map'] = \
+                            bgp_pp_dict['pp_default_originate_route_map'] = \
                                 str(m.groupdict()['pp_default_originate_route_map'])
                         continue
-                    elif 'pp_default_originate' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate'] = \
-                            False
+                    elif 'pp_default_originate' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_default_originate'] = False
 
                     #   route-map <pp_route_map_name_in> in
                     m = p89.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_map_name_in'] = \
+                        bgp_pp_dict['pp_route_map_name_in'] = \
                             str(m.groupdict()['pp_route_map_name_in'])
                         continue
 
                     #   route-map <nbr_af_route_map_name_out> out
                     m = p90.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_map_name_out'] = \
+                        bgp_pp_dict['pp_route_map_name_out'] = \
                             str(m.groupdict()['pp_route_map_name_out'])
                         continue
 
                     #    maximum-prefix <pp_maximum_prefix_max_prefix_no> [ <pp_maximum_prefix_threshold> ] [ restart <pp_maximum_prefix_restart> ]
                     m = p91.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
+                        bgp_pp_dict['pp_maximum_prefix_max_prefix_no'] = \
                             int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
+                        bgp_pp_dict['pp_maximum_prefix_threshold'] = \
                             int(m.groupdict()['pp_maximum_prefix_threshold'])
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_restart'] = \
+                        bgp_pp_dict['pp_maximum_prefix_restart'] = \
                             int(m.groupdict()['pp_maximum_prefix_restart'])
                         continue
 
                     #   maximum-prefix <pp_maximum_prefix_max_prefix_no> [ <pp_maximum_prefix_threshold> ] [ warning-only ]
                     m = p92.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
+                        bgp_pp_dict['pp_maximum_prefix_max_prefix_no'] = \
                             int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
+                        bgp_pp_dict['pp_maximum_prefix_threshold'] = \
                             int(m.groupdict()['pp_maximum_prefix_threshold'])
                         if m.groupdict()['pp_maximum_prefix_warning_only']:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
-                                True
+                            bgp_pp_dict['pp_maximum_prefix_warning_only'] = True
                         else:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
-                                False
+                            bgp_pp_dict['pp_maximum_prefix_warning_only'] = False
                         continue
 
                     #   next-hop-self
                     m = p93.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_next_hop_self'] = \
-                            True
+                        bgp_pp_dict['pp_next_hop_self'] = True
                         continue
-                    elif 'pp_next_hop_self' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_next_hop_self'] = \
-                            False
+                    elif 'pp_next_hop_self' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_next_hop_self'] = False
 
                     #   route-reflector-client
                     m = p94.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_reflector_client'] = \
-                            True
+                        bgp_pp_dict['pp_route_reflector_client'] = True
                         continue
-                    elif 'pp_route_reflector_client' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_reflector_client'] = \
-                            False
+                    elif 'pp_route_reflector_client' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_route_reflector_client'] = False
 
                     #   send-community
                     m = p95.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
-                            'standard'
+                        bgp_pp_dict['pp_send_community'] = 'standard'
                         peer_policy_send_community_standard_match = 'True'
                         continue
 
@@ -7292,28 +7263,23 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     m = p96.match(line)
                     if m:
                         if peer_policy_send_community_standard_match:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
-                                'both'
+                            bgp_pp_dict['pp_send_community'] = 'both'
                         else:
-                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
-                                'extended'
+                            bgp_pp_dict['pp_send_community'] = 'extended'
                         continue
 
                     #   route-reflector-client
                     m = p97.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
-                            True
+                        bgp_pp_dict['pp_soft_reconfiguration'] = True
                         continue
-                    elif 'pp_soft_reconfiguration' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
-                            False
+                    elif 'pp_soft_reconfiguration' not in bgp_pp_dict:
+                        bgp_pp_dict['pp_soft_reconfiguration'] = False
 
                     #   soo <pp_soo>
                     m = p98.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soo'] = \
-                            str(m.groupdict()['pp_soo'])
+                        bgp_pp_dict['pp_soo'] = str(m.groupdict()['pp_soo'])
                         continue
 
         return bgp_dict
