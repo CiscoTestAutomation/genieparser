@@ -1,6 +1,7 @@
 
 # Python
 import unittest
+import genie.gre
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
@@ -17435,6 +17436,165 @@ class test_show_running_config_bgp(unittest.TestCase):
             route-target export 100:1
         '''}
 
+    device_output = {'execute.return_value': '''
+    
+!Command: show running-config bgp
+
+!Time: Wed Nov 20 22:48:58 2019
+
+
+
+version 7.3(2)D1(1D)
+
+feature bgp
+
+
+
+logging level bgp 3
+
+
+
+snmp-server enable traps bgp
+
+router bgp 1
+
+  router-id 100.0.1.1
+
+  graceful-restart restart-time 360
+
+  graceful-restart stalepath-time 120
+
+  log-neighbor-changes
+
+  address-family ipv4 unicast
+
+    maximum-paths 2
+
+    maximum-paths ibgp 2
+
+    additional-paths send
+
+    additional-paths receive
+
+  address-family ipv6 unicast
+
+    maximum-paths 2
+
+    maximum-paths ibgp 2
+
+    additional-paths send
+
+    additional-paths receive
+
+  template peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+    bfd
+
+    remote-as 2
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv4 unicast
+
+      send-community
+
+      maximum-prefix 40000 warning-only
+
+  template peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+    bfd
+
+    remote-as 2
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv6 unicast
+
+      send-community
+
+      maximum-prefix 40000 warning-only
+
+  template peer RJIL-NEXUS-EBGP-N9K-TOR-IPv4
+
+    bfd
+
+    remote-as 4
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv4 unicast
+
+      send-community
+
+  template peer RJIL-NEXUS-EBGP-N9K-TOR-IPv6
+
+    bfd
+
+    remote-as 4
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv6 unicast
+
+      send-community
+
+  template peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+    bfd
+
+    remote-as 1
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv4 unicast
+
+      send-community
+
+      maximum-prefix 40000 warning-only
+
+      next-hop-self
+
+  template peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+    bfd
+
+    remote-as 1
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv6 unicast
+
+      send-community
+
+      maximum-prefix 40000 warning-only
+
+      next-hop-self
+
+  template peer RJIL-NEXUS-N93180-PBR-IPv4
+
+    bfd
+
+    remote-as 10
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv4 unicast
+
+      send-community
+
+  template peer RJIL-NEXUS-N93180-PBR-IPv6
+
+    bfd
+
+    remote-as 10
+
+    password 3 9125d59c18a9b015
+
+    address-family ipv6 unicast
+
+      send-community
+      '''}
+
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -17448,6 +17608,22 @@ class test_show_running_config_bgp(unittest.TestCase):
         obj = ShowRunningConfigBgp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_g(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowRunningConfigBgp(device=self.device)
+
+        import re; re.reset()
+        parsed_output = obj.parse()
+        print(re.colour_output()); re.reset()
+
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        # self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
