@@ -68,6 +68,8 @@ class ShowVersionSchema(MetaParser):
                     Optional('rtr_type'): str,
                     'os': str,
                     'curr_config_register': str,
+                    Optional('device_num'): str,
+                    Optional('device_sn'): str,
                     Optional('next_config_register'): str,
                     Optional('main_mem'): str,
                     Optional('number_of_intfs'): {
@@ -364,6 +366,9 @@ class ShowVersion(ShowVersionSchema):
         # Suite License Information for Module:'esg'
         p45 = re.compile(r'^[Ss]uite +[Ll]icense +[Ii]nformation +for '
                          r'+[Mm]odule\:\'(?P<module>\S+)\'$')
+
+        #     *0        C3900-SPE150/K9       FOC16050QP6
+        p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<processor_type>[\S]+) +(?P<device_sn>[A-Z\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -872,6 +877,14 @@ class ShowVersion(ShowVersionSchema):
                 module_dict = version_dict['version'].setdefault('module', {})
                 suite_dict = module_dict.setdefault(m45.groupdict()['module'], {})
 
+                continue
+
+            # *0        C3900-SPE150/K9       FOC16050QP6
+            m46 = p46.match(line)
+            if m46:
+                group = m46.groupdict()
+                version_dict['version']['device_num'] = group['device_num']
+                version_dict['version']['device_sn'] = group['device_sn']
                 continue
 
         # table2 for C3850
