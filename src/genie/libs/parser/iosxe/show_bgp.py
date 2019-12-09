@@ -2253,6 +2253,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            cmd = ''
             show_output = output
 
         # Call super
@@ -2296,6 +2297,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            cmd = ''
             show_output = output
 
         # Call super
