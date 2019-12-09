@@ -62,6 +62,7 @@
         * Added optional key 'passive' to schema
     * Updated ShowSpanningTreeDetail for:
         * Added support for various device outputs
+        * Support fex hello time
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser

@@ -474,6 +474,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
             Optional('revision'): int,
             Optional('max_hop'): int,
             'hello_time': int,
+            Optional('fex_hello_time'): int,
             'max_age': int,
             'forwarding_delay': int,
             Optional('hold_count'): int,
@@ -486,7 +487,6 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     'topology_detected_flag': bool,
                     'topology_changes': int,
                     'time_since_topology_change': str,
-                    'root_of_the_spanning_tree': bool,
                     'times': {
                         'hold': int,
                         'topology_change': int,
@@ -503,7 +503,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     Optional('mst_id'): int,
                     Optional('vlan'): str,
                     Optional('vlan_id'): int,
-                    Optional('root_of_spanning_tree'): bool,
+                    Optional('root_of_the_spanning_tree'): bool,
                     Optional('topology_from_port'): str,
                     Optional('aging_timer'): int,
                     'interfaces': {
@@ -579,8 +579,9 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                         r'(?P<bridge_sysid>\d+),\s+address\s+'
                         r'(?P<bridge_address>\w+\.\w+\.\w+)$')
 
-        p3 = re.compile(r'^Configured\s+hello\s+time\s+(?P<hello_time>\d+),'
-                        r'\s+max\s+age\s+(?P<max_age>\d+),\s+forward\s+delay'
+        p3 = re.compile(r'^Configured\s+hello\s+time\s+(?P<hello_time>\d+)'
+                        r'(?:, +fex +hello +time +(?P<fex_hello_time>\d+))?'
+                        r',\s+max\s+age\s+(?P<max_age>\d+),\s+forward\s+delay'
                         r'\s+(?P<forwarding_delay>\d+)$')
 
         p3_1 = re.compile(r'^We\s+(?P<root_of_the_spanning_tree>\w+[\'\w+]*)\s+the\s+'
@@ -675,10 +676,11 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 continue
 
             #   Configured hello time 10, max age 40, forward delay 30
+            #   Configured hello time 10, fex hello time 10, max age 40, forward delay 30
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                domain_dict.update({k: int(v) for k, v in group.items()})
+                domain_dict.update({k: int(v) for k, v in group.items() if v})
                 continue
 
             # We are the root of the spanning tree
