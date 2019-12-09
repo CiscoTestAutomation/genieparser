@@ -2344,6 +2344,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = self.device.execute(cmd)
         else:
             show_output = output
+            cmd = ''
 
         # Call super
         return super().cli(output=show_output, vrf=vrf, rd=rd,
@@ -2378,6 +2379,7 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             # Execute command
             show_output = self.device.execute(cmd)
         else:
+            cmd = ''
             show_output = output
 
         # Call super
