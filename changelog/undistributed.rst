@@ -14,6 +14,14 @@
     * Added ShowIsisHostnameDetail for commands:
         * show isis hostname detail
         * show isis hostname detail vrf {vrf}
+    * Added ShowMacAddressTable for:
+        * show mac address-table vlan {vlan}
+        * show mac address-table interface {interface}
+        * show mac address-table interface {interface} vlan {vlan}
+        * show mac address-table address {address}
+        * show mac address-table address {address} vlan {vlan}
+        * show mac address-table address {address} interface {interface}
+        * show mac address-table address {address} interface {interface} vlan {vlan}
 
 * IOSXE
     * Added ShowProcessesMemory for:
