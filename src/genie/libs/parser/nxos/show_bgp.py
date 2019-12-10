@@ -7043,6 +7043,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         bgp_dict['bgp']['instance']['default']['ps_name'] = {}
                     if ps_name not in bgp_dict['bgp']['instance']['default']['ps_name']:
                         bgp_dict['bgp']['instance']['default']['ps_name'][ps_name] = {}
+                        bgp_ps_dict = bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]
                     continue
 
                 if ps_name:
@@ -7050,109 +7051,92 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     m = p73.match(line)
                     if m:
                         # Get keys
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_fall_over_bfd'] = True
+                        bgp_ps_dict['ps_fall_over_bfd'] = True
                         continue
-                    elif 'ps_fall_over_bfd' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_fall_over_bfd'] = False
+                    elif 'ps_fall_over_bfd' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_fall_over_bfd'] = False
 
                     #   capability suppress 4-byte-as
                     m = p74.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = True
+                        bgp_ps_dict['ps_suppress_four_byte_as_capability'] = True
                         continue
-                    elif 'ps_suppress_four_byte_as_capability' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = False
+                    elif 'ps_suppress_four_byte_as_capability' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_suppress_four_byte_as_capability'] = False
 
                     #   description <ps_description>
                     m = p75.match(line)
                     if m:
                         # Get keys
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_description'] = \
-                            str(m.groupdict()['ps_description'])
+                        bgp_ps_dict['ps_description'] = str(m.groupdict()['ps_description'])
                         continue
 
                     #   disable-connected-check
                     m = p76.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_disable_connected_check'] = True
+                        bgp_ps_dict['ps_disable_connected_check'] = True
                         continue
-                    elif 'ps_disable_connected_check' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_disable_connected_check'] = False
+                    elif 'ps_disable_connected_check' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_disable_connected_check'] = False
 
                     #   ebgp-multihop <ps_ebgp_multihop_max_hop>
                     m = p77.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop'] = True
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop_max_hop'] = \
-                            int(m.groupdict()['ps_ebgp_multihop_max_hop'])
+                        bgp_ps_dict['ps_ebgp_multihop'] = True
+                        bgp_ps_dict['ps_ebgp_multihop_max_hop'] = int(m.groupdict()['ps_ebgp_multihop_max_hop'])
                         continue
-                    elif 'ps_ebgp_multihop' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop'] = False
+                    elif 'ps_ebgp_multihop' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_ebgp_multihop'] = False
 
                     #    { local-as <ps_local_as_as_no> [ no-prepend [ replace-as [ dual-as ] ] ] }
                     m = p78.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_as_no'] = \
-                            str(m.groupdict()['ps_local_as_as_no'])
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
-                            True
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
-                            True
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
-                            True
+                        bgp_ps_dict['ps_local_as_as_no'] = str(m.groupdict()['ps_local_as_as_no'])
+                        bgp_ps_dict['ps_local_as_no_prepend'] = True
+                        bgp_ps_dict['ps_local_as_replace_as'] = True
+                        bgp_ps_dict['ps_local_as_dual_as'] = True
                         continue
-                    elif 'ps_local_as_no_prepend' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
-                            False
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
-                            False
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
-                            False
+                    elif 'ps_local_as_no_prepend' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_local_as_no_prepend'] = False
+                        bgp_ps_dict['ps_local_as_replace_as'] = False
+                        bgp_ps_dict['ps_local_as_dual_as'] = False
 
                     #   password <ps_password_text>
                     m = p79.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_password_text'] = \
-                            str(m.groupdict()['ps_password_text'])
+                        bgp_ps_dict['ps_password_text'] = str(m.groupdict()['ps_password_text'])
                         continue
 
                     #   { remote-as <ps_remote_as> }
                     m = p80.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_remote_as'] = \
-                            int(m.groupdict()['ps_remote_as'])
+                        bgp_ps_dict['ps_remote_as'] = int(m.groupdict()['ps_remote_as'])
                         continue
 
                     #   shutdown
                     m = p81.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_shutdown'] = \
-                            True
+                        bgp_ps_dict['ps_shutdown'] = True
                         continue
-                    elif 'ps_shutdown' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_shutdown'] = \
-                            False
+                    elif 'ps_shutdown' not in bgp_ps_dict:
+                        bgp_ps_dict['ps_shutdown'] = False
 
                     #   timers <ps_keepalive_interval> <ps_hodltime>
                     m = p82.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_keepalive_interval'] = \
-                            int(m.groupdict()['ps_keepalive_interval'])
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_hodltime'] = \
-                            int(m.groupdict()['ps_hodltime'])
+                        bgp_ps_dict['ps_keepalive_interval'] = int(m.groupdict()['ps_keepalive_interval'])
+                        bgp_ps_dict['ps_hodltime'] = int(m.groupdict()['ps_hodltime'])
                         continue
 
                     #   transport connection-mode <ps_transport_connection_mode>
                     m = p83.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_transport_connection_mode'] = \
-                            str(m.groupdict()['ps_transport_connection_mode'])
+                        bgp_ps_dict['ps_transport_connection_mode'] = str(m.groupdict()['ps_transport_connection_mode'])
                         continue
 
                     #   update-source <ps_update_source>
                     if m:
-                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_update_source'] = \
-                            str(m.groupdict()['ps_update_source'])
+                        bgp_ps_dict['ps_update_source'] = str(m.groupdict()['ps_update_source'])
                         continue
 
                 #   template peer-policy <pp_name>
