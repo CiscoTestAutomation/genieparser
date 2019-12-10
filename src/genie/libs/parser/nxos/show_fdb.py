@@ -6,12 +6,13 @@
         * show mac address-table aging-time
         * show mac address-table limit
         * show system internal l2fwder mac
-        * show mac address-table address <address>
-        * show mac address-table interface <interface>
-        * show mac address-table vlan <vlan>
-        * show mac address-table address <address> vlan <vlan>
-        * show mac address-table address <address> interface <interface>
-        * show mac address-table address <address> interface <interface> vlan <vlan>
+        * show mac address-table vlan {vlan}
+        * show mac address-table interface {interface}
+        * show mac address-table interface {interface} vlan {vlan}
+        * show mac address-table address {address}
+        * show mac address-table address {address} vlan {vlan}
+        * show mac address-table address {address} interface {interface}
+        * show mac address-table address {address} interface {interface} vlan {vlan}
 
 """
 # Python
