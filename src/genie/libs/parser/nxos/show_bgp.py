@@ -6262,6 +6262,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     bgp_dict['bgp']['instance']['default']['vrf'] = {}
                 if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
                     bgp_dict['bgp']['instance']['default']['vrf'][vrf] = {}
+                    bgp_vrf_default_dict = bgp_dict['bgp']['instance']['default']['vrf'][vrf]
                 continue
 
             if bgp_id:
@@ -6308,13 +6309,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'] = {}
                         if evpn_vni_rt not in bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt']:
                             bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt] = {}
+                            bgp_vni_rt_dict = \
+                                bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]
 
-                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
-                            ['evpn_vni_rt_type'] = m.groupdict()['evpn_vni_rt_type']
-                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
-                            ['evpn_vni_rt'] = evpn_vni_rt
+                        bgp_vni_rt_dict['evpn_vni_rt_type'] = m.groupdict()['evpn_vni_rt_type']
+                        bgp_vni_rt_dict['evpn_vni_rt'] = evpn_vni_rt
                         continue
 
+                # vrf VRF1
                 m = p3.match(line)
                 if m:
                     # Get keys
@@ -6327,13 +6329,19 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         bgp_dict['bgp']['instance']['default']['vrf'] = {}
                     if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf] = {}
+                        bgp_vrf_nondefault_dict = bgp_dict['bgp']['instance']['default']['vrf'][vrf]
                     continue
 
                 if vrf:
+                    if vrf is 'default':
+                        bgp_vrf_dict = bgp_vrf_default_dict
+                    else:
+                        bgp_vrf_dict = bgp_vrf_nondefault_dict
+
                     # rd auto
                     m = p3_1.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['rd'] =  m.groupdict()['rd']
+                        bgp_vrf_dict['rd'] = m.groupdict()['rd']
                         continue
 
                     #   bestpath cost-community ignore
@@ -6345,52 +6353,47 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         # Get keys
                         best_path = str(m.groupdict()['best_path'])
                         # Initialize variables
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['always_compare_med'] = \
-                            False
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_compare_routerid'] = \
-                            False
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_cost_community_ignore'] = \
-                            False
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_med_missing_at_worst'] = \
-                            False
+                        bgp_vrf_dict['always_compare_med'] = False
+                        bgp_vrf_dict['bestpath_compare_routerid'] = False
+                        bgp_vrf_dict['bestpath_cost_community_ignore'] = False
+                        bgp_vrf_dict['bestpath_med_missing_at_worst'] = False
                         if best_path == 'cost-community ignore':
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_cost_community_ignore'] = True
+                            bgp_vrf_dict['bestpath_cost_community_ignore'] = True
                         elif best_path == 'compare-routerid':
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_compare_routerid'] = True
+                            bgp_vrf_dict['bestpath_compare_routerid'] = True
                         elif best_path == 'med missing-as-worst':
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_med_missing_at_worst'] = True
+                            bgp_vrf_dict['bestpath_med_missing_at_worst'] = True
                         elif best_path == 'always-compare-med':
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['always_compare_med'] = True
+                            bgp_vrf_dict['always_compare_med'] = True
                         continue
 
                     #   cluster-id <cluster_id>
                     m = p5.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['cluster_id'] = \
-                            str(m.groupdict()['cluster_id'])
+                        bgp_vrf_dict['cluster_id'] = str(m.groupdict()['cluster_id'])
                         continue
 
                     #   confederation identifier <confederation_identifier>
                     m = p6.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['confederation_identifier'] = \
+                        bgp_vrf_dict['confederation_identifier'] = \
                             int(m.groupdict()['confederation_identifier'])
                         continue
 
                     #   confederation peers <confederation_peers_as>
                     m = p7.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['confederation_peers_as'] = \
+                        bgp_vrf_dict['confederation_peers_as'] = \
                             str(m.groupdict()['confederation_peers_as'])
                         continue
 
                     #   no graceful-restart
                     m = p8.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['graceful_restart'] = False
+                        bgp_vrf_dict['graceful_restart'] = False
                         continue
-                    elif 'graceful_restart' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['graceful_restart'] = True
+                    elif 'graceful_restart' not in bgp_vrf_dict:
+                        bgp_vrf_dict['graceful_restart'] = True
 
                     #   graceful-restart restart-time 121
                     #   graceful-restart stalepath-time 301
@@ -6399,89 +6402,84 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         graceful_restart_type = \
                             str(m.groupdict()['graceful_restart_type'])
                         if graceful_restart_type == 'restart-time':
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf][
-                                'graceful_restart_restart_time'] = \
+                            bgp_vrf_dict['graceful_restart_restart_time'] = \
                                     int(m.groupdict()['time'])
                         else:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf][
-                                'graceful_restart_stalepath_time'] = \
+                            bgp_vrf_dict['graceful_restart_stalepath_time'] = \
                                     int(m.groupdict()['time'])
                         continue
 
                     #   log-neighbor-changes
                     m = p10.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = True
+                        bgp_vrf_dict['log_neighbor_changes'] = True
                         continue
-                    elif 'log_neighbor_changes' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = False
+                    elif 'log_neighbor_changes' not in bgp_vrf_dict:
+                        bgp_vrf_dict['log_neighbor_changes'] = False
 
                     #   router-id <router-id>
                     m = p11.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['router_id'] = \
-                            str(m.groupdict()['router_id'])
+                        bgp_vrf_dict['router_id'] = str(m.groupdict()['router_id'])
                         continue
 
                     #   timers bgp <keepalive-interval> <holdtime>
                     m = p12.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['keepalive_interval'] = \
-                            int(m.groupdict()['keepalive_interval'])
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['holdtime'] = \
-                            int(m.groupdict()['holdtime'])
+                        bgp_vrf_dict['keepalive_interval'] = int(m.groupdict()['keepalive_interval'])
+                        bgp_vrf_dict['holdtime'] = int(m.groupdict()['holdtime'])
                         continue
 
                     #   no enforce-first-as
                     m = p13.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['enforce_first_as'] = False
+                        bgp_vrf_dict['enforce_first_as'] = False
                         continue
-                    elif 'enforce_first_as' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['enforce_first_as'] = True
+                    elif 'enforce_first_as' not in bgp_vrf_dict:
+                        bgp_vrf_dict['enforce_first_as'] = True
 
                     #   no fast-external-fallover
                     m = p14.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['fast_external_fallover'] = False
+                        bgp_vrf_dict['fast_external_fallover'] = False
                         continue
-                    elif 'fast_external_fallover' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['fast_external_fallover'] = True
+                    elif 'fast_external_fallover' not in bgp_vrf_dict:
+                        bgp_vrf_dict['fast_external_fallover'] = True
 
                     #   dynamic-med-interval 70
                     m = p15.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['dynamic_med_interval'] = \
+                        bgp_vrf_dict['dynamic_med_interval'] = \
                             int(m.groupdict()['dynamic_med_interval'])
                         continue
 
                     #   flush-routes
                     m = p16.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['flush_routes'] = True
+                        bgp_vrf_dict['flush_routes'] = True
                         continue
-                    elif 'flush_routes' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['flush_routes'] = False
+                    elif 'flush_routes' not in bgp_vrf_dict:
+                        bgp_vrf_dict['flush_routes'] = False
 
                     #   isolate
                     m = p17.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['isolate'] = True
+                        bgp_vrf_dict['isolate'] = True
                         continue
-                    elif 'isolate' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['isolate'] = False
+                    elif 'isolate' not in bgp_vrf_dict:
+                        bgp_vrf_dict['isolate'] = False
 
                     #   disable-policy-batching ipv4 prefix-list <WORD>
                     m = p18.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['disable_policy_batching_ipv4'] = \
+                        bgp_vrf_dict['disable_policy_batching_ipv4'] = \
                             str(m.groupdict()['disable_policy_batching_ipv4'])
                         continue
 
                     #   disable-policy-batching ipv4 prefix-list <WORD>
                     m = p19.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['disable_policy_batching_ipv6'] = \
+                        bgp_vrf_dict['disable_policy_batching_ipv6'] = \
                             str(m.groupdict()['disable_policy_batching_ipv6'])
                         continue
 
@@ -6491,7 +6489,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         if m:
                             # Get keys
                             af_name = str(m.groupdict()['af_name'])
-                            if 'af_name' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                            if 'af_name' not in bgp_vrf_dict:
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'] = {}
                             if af_name not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name']:
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name] = {}
@@ -7131,7 +7129,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     #   transport connection-mode <ps_transport_connection_mode>
                     m = p83.match(line)
                     if m:
-                        bgp_ps_dict['ps_transport_connection_mode'] = str(m.groupdict()['ps_transport_connection_mode'])
+                        bgp_ps_dict['ps_transport_connection_mode'] = \
+                            str(m.groupdict()['ps_transport_connection_mode'])
                         continue
 
                     #   update-source <ps_update_source>
