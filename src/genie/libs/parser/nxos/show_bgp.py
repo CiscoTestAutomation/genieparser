@@ -6399,8 +6399,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     #   graceful-restart stalepath-time 301
                     m = p9.match(line)
                     if m:
-                        graceful_restart_type = \
-                            str(m.groupdict()['graceful_restart_type'])
+                        graceful_restart_type = str(m.groupdict()['graceful_restart_type'])
                         if graceful_restart_type == 'restart-time':
                             bgp_vrf_dict['graceful_restart_restart_time'] = \
                                     int(m.groupdict()['time'])
@@ -6736,6 +6735,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'] = {}
                         if neighbor_id not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id']:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id] = {}
+                            bgp_vrf_neighbor_dict = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]
                         continue
 
                     #   Same line of configuration can be configured under the peer session section
@@ -6743,148 +6744,130 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         #   bfd
                         m = p43.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
-                                True
+                            bgp_vrf_neighbor_dict['nbr_fall_over_bfd'] = True
                             continue
-                        elif 'nbr_fall_over_bfd' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
-                                False
+                        elif 'nbr_fall_over_bfd' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_fall_over_bfd'] = False
 
                         #   capability suppress 4-byte-as
                         m = p44.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
-                                True
+                            bgp_vrf_neighbor_dict['nbr_suppress_four_byte_as_capability'] = True
                             continue
-                        elif 'nbr_suppress_four_byte_as_capability' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
-                                False
+                        elif 'nbr_suppress_four_byte_as_capability' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_suppress_four_byte_as_capability'] = False
 
                         #   description <nbr_description>
                         m = p45.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_description'] = \
+                            bgp_vrf_neighbor_dict['nbr_description'] = \
                                 str(m.groupdict()['nbr_description'])
                             continue
 
                         #   disable-connected-check
                         m = p46.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
-                                True
+                            bgp_vrf_neighbor_dict['nbr_disable_connected_check'] = True
                             continue
-                        elif 'nbr_disable_connected_check' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
-                                False
+                        elif 'nbr_disable_connected_check' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_disable_connected_check'] = False
 
                         #   ebgp-multihop <nbr_ebgp_multihop_max_hop>
                         m = p47.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
-                                True
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop_max_hop'] = \
+                            bgp_vrf_neighbor_dict['nbr_ebgp_multihop'] = True
+                            bgp_vrf_neighbor_dict['nbr_ebgp_multihop_max_hop'] = \
                                 int(m.groupdict()['nbr_ebgp_multihop_max_hop'])
                             continue
-                        elif 'nbr_ebgp_multihop' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
-                                False
+                        elif 'nbr_ebgp_multihop' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_ebgp_multihop'] = False
 
                         #   inherit peer-session <nbr_inherit_peer_session>
                         m = p48.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_inherit_peer_session'] = \
+                            bgp_vrf_neighbor_dict['nbr_inherit_peer_session'] = \
                                 str(m.groupdict()['nbr_inherit_peer_session'])
                             continue
 
                         #    { local-as <nbr_local_as_as_no> [ no-prepend [ replace-as [ dual-as ] ] ] }
                         m = p49.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_as_no'] = \
+                            bgp_vrf_neighbor_dict['nbr_local_as_as_no'] = \
                                 int(m.groupdict()['nbr_local_as_as_no'])
                             if 'nbr_local_as_no_prepend' in m.groupdict():
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
-                                    True
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
-                                    True
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
-                                    True
+                                bgp_vrf_neighbor_dict['nbr_local_as_no_prepend'] = True
+                                bgp_vrf_neighbor_dict['nbr_local_as_replace_as'] = True
+                                bgp_vrf_neighbor_dict['nbr_local_as_dual_as'] = True
                             continue
-                        elif 'nbr_local_as_no_prepend' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
-                                False
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
-                                False
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
-                                False
+                        elif 'nbr_local_as_no_prepend' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_local_as_no_prepend'] = False
+                            bgp_vrf_neighbor_dict['nbr_local_as_replace_as'] = False
+                            bgp_vrf_neighbor_dict['nbr_local_as_dual_as'] = False
 
                         #   { remote-as <nbr_remote_as> }
                         m = p50.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remote_as'] = \
+                            bgp_vrf_neighbor_dict['nbr_remote_as'] = \
                                 int(m.groupdict()['nbr_remote_as'])
                             continue
 
                         #   remove-private-as
                         m = p51.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
-                                True
+                            bgp_vrf_neighbor_dict['nbr_remove_private_as'] = True
                             continue
-                        elif 'nbr_remove_private_as' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
-                                False
+                        elif 'nbr_remove_private_as' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_remove_private_as'] = False
 
                         #   shutdown
                         m = p52.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
-                                True
+                            bgp_vrf_neighbor_dict['nbr_shutdown'] = True
                             continue
-                        elif 'nbr_shutdown' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
-                                False
+                        elif 'nbr_shutdown' not in bgp_vrf_neighbor_dict:
+                            bgp_vrf_neighbor_dict['nbr_shutdown'] = False
 
                         #   timers <nbr_keepalive_interval> <nbr_holdtime>
                         m = p53.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_keepalive_interval'] = \
+                            bgp_vrf_neighbor_dict['nbr_keepalive_interval'] = \
                                 int(m.groupdict()['nbr_keepalive_interval'])
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_holdtime'] = \
+                            bgp_vrf_neighbor_dict['nbr_holdtime'] = \
                                 int(m.groupdict()['nbr_holdtime'])
                             continue
 
                         #   update-source <nbr_update_source>
                         m = p54.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_update_source'] = \
+                            bgp_vrf_neighbor_dict['nbr_update_source'] = \
                                 str(m.groupdict()['nbr_update_source'])
                             continue
 
                         #   password <nbr_password_text>
                         m = p55.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_password_text'] = \
+                            bgp_vrf_neighbor_dict['nbr_password_text'] = \
                                 str(m.groupdict()['nbr_password_text'])
                             continue
 
                         #   transport connection-mode <nbr_transport_connection_mode>
                         m = p56.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
+                            bgp_vrf_neighbor_dict['nbr_transport_connection_mode'] = \
                                 str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
                         # peer-type fabric-external
                         m = p101.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
+                            bgp_vrf_neighbor_dict\
                                 ['nbr_peer_type'] = m.groupdict()['nbr_peer_type']
                             continue
 
                         # inherit peer GENIE-NEXUS-EBGP
                         m = p104.match(line)
                         if m:
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
+                            bgp_vrf_neighbor_dict\
                                 ['nbr_inherit_peer'] = m.groupdict()['nbr_inherit_peer']
                             continue
 
@@ -6892,14 +6875,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p57.match(line)
                         if m:
                             nbr_af_name = str(m.groupdict()['nbr_af_name'])
-                            if 'nbr_af_name' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'] = {}
-                            if nbr_af_name not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name']:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name] = {}
-                                bgp_vrf_af_dict = bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]
+                            if 'nbr_af_name' not in bgp_vrf_neighbor_dict:
+                                bgp_vrf_neighbor_dict['nbr_af_name'] = {}
+                            if nbr_af_name not in bgp_vrf_neighbor_dict['nbr_af_name']:
+                                bgp_vrf_neighbor_dict['nbr_af_name'][nbr_af_name] = {}
+                                bgp_vrf_af_dict = bgp_vrf_neighbor_dict['nbr_af_name'][nbr_af_name]
                             continue
 
-                        if 'nbr_af_name' in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                        if 'nbr_af_name' in bgp_vrf_neighbor_dict:
                             #   allowas-in [ <allowas-in-cnt> ]
                             m = p58.match(line)
                             if m:
@@ -6987,8 +6970,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             # rewrite-evpn-rt-asn
                             m = p100.match(line)
                             if m:
-                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id][
-                                    'nbr_af_name'][nbr_af_name]['nbr_af_rewrite_evpn_rt_asn'] = True
+                                bgp_vrf_af_dict['nbr_af_rewrite_evpn_rt_asn'] = True
                                 continue
 
                             #   route-reflector-client
