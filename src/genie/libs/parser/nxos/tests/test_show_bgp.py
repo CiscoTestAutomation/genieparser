@@ -17032,6 +17032,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                 {'default': 
                     {'bgp_id': 100,
                     'protocol_shutdown': False,
+                    'peer_name': {'PEER-TEMPLATE': {'peer_fall_over_bfd': False}},
                     'pp_name': {
                         'PP-1': {
                             'pp_allowas_in': False,
@@ -17313,203 +17314,139 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_update_source': 'loopback0'}},
                     'router_id': '10.1.1.1'}}}}}}
 
-    golden_output2 = {'execute.return_value': '''
-        show running-config bgp
-        !Command: show running-config bgp
-        !Running configuration last done at: Tue Jun 25 14:07:11 2019
-        !Time: Tue Jun 25 14:08:15 2019
-        version 9.2(2) Bios:version
-        feature bgp
-        router bgp 100
-          router-id 10.1.1.1
-          timers bgp 30 60
-          graceful-restart restart-time 250
-          graceful-restart stalepath-time 450
-          confederation identifier 100
-          confederation peers 65000
-          bestpath compare-routerid
-          bestpath always-compare-med
-          address-family ipv4 multicast
-            dampening route-map dampening_params
-            redistribute direct route-map ALL
-          address-family ipv4 unicast
-            dampening 25 1000 1500 255
-            redistribute direct route-map RMAP_Lo0
-            redistribute static route-map ALL
-            redistribute ospf 1 route-map RMAP_OSPF
-            aggregate-address 10.4.0.0/16
-            maximum-paths 8
-            nexthop route-map ALL
-            distance 19 199 219
-          address-family ipv6 multicast
-            dampening route-map dampening_params
-            redistribute direct route-map ALL
-          address-family ipv6 unicast
-          address-family vpnv4 unicast
-            nexthop trigger-delay critical 3333 non-critical 11111
-          address-family vpnv6 unicast
-          template peer PEER-TEMPLATE
-            address-family ipv4 unicast
-              soft-reconfiguration inbound
-          template peer-policy PP-1
-            send-community
-            send-community extended
-            soft-reconfiguration inbound
-          template peer-session PS-1
-            description ps_desc_test
-            disable-connected-check
-          neighbor 2001:db8:1900:1::1:101
-            inherit peer-session PS-1
-            remote-as 300
-            dont-capability-negotiate
-            update-source loopback0
-            ebgp-multihop 50
-            timers 30 90
-            address-family ipv6 unicast
-              route-map ALL in
-              route-map ALL out
-          neighbor 2001:db8:4:1::1:1
-            remote-as 100
-            password 3 a667d47acc18ea6b
-            update-source loopback0
-            timers 50 60
-            address-family ipv6 unicast
-              next-hop-self
-          neighbor 2001:db8:4104:1::1:1
-            remote-as 200
-            update-source loopback0
-            ebgp-multihop 5
-            address-family ipv6 unicast
-              next-hop-self
-          neighbor 10.51.1.101
-            remote-as 300
-            local-as 101
-            update-source loopback0
-            ebgp-multihop 5
-            address-family ipv4 multicast
-              route-map ALL in
-              route-map ALL out
-            address-family ipv4 unicast
-              route-map prefixlist in
-              route-map weight out
-              maximum-prefix 1000
-              default-originate
-            address-family ipv6 multicast
-              route-map ALL in
-              route-map ALL out
-            address-family vpnv4 unicast
-              send-community
-              send-community extended
-            address-family vpnv6 unicast
-              send-community
-              send-community extended
-          neighbor 192.168.4.1
-            bfd
-            remote-as 100
-            update-source loopback0
-            transport connection-mode passive
-            timers 10 60
-            address-family ipv4 unicast
-              send-community extended
-              route-reflector-client
-              maximum-prefix 123
-              default-originate route-map SOMENAME
-              next-hop-self
-              soft-reconfiguration inbound
-            address-family vpnv4 unicast
-              send-community
-              send-community extended
-            address-family vpnv6 unicast
-              send-community
-              send-community extended
-          neighbor 192.168.64.1
-            remote-as 200
-            update-source loopback0
-            ebgp-multihop 5
-            address-family ipv4 unicast
-              next-hop-self
-          vrf VRF1
-            neighbor 2001:db8:1c39:1::1:101
-              remote-as 70000
-              address-family ipv6 unicast
-            neighbor 10.76.1.101
-              remote-as 70000
-              disable-connected-check
-              address-family ipv4 unicast
-                as-override
-        vrf context VRF1
-          rd 100:1
-          address-family ipv4 unicast
-            route-target import 100:1
-            route-target export 100:1
-          address-family ipv6 unicast
-            route-target import 100:1
-            route-target export 100:1
-        '''}
-
-    device_output = {'execute.return_value': '''
-
-snmp-server enable traps bgp
-
-router bgp 1
-
-  router-id 100.0.1.1
-
-  graceful-restart restart-time 360
-
-  graceful-restart stalepath-time 120
-
-  log-neighbor-changes
-
-  address-family ipv4 unicast
-
-    maximum-paths 2
-
-    maximum-paths ibgp 2
-
-    additional-paths send
-
-    additional-paths receive
-
-  address-family ipv6 unicast
-
-    maximum-paths 2
-
-    maximum-paths ibgp 2
-
-    additional-paths send
-
-    additional-paths receive
-
-  template peer RJIL-NEXUS-EBGP-GRP-IPv4
-
-    bfd
-
-    remote-as 2
-
-    password 3 9125d59c18a9b015
-
-    address-family ipv4 unicast
-
-      send-community
-
-      maximum-prefix 40000 warning-only
-
-  template peer RJIL-NEXUS-EBGP-GRP-IPv6
-
-    bfd
-
-    remote-as 2
-
-    password 3 9125d59c18a9b015
-
-    address-family ipv6 unicast
-
-      send-community
-
-      maximum-prefix 40000 warning-only
-
-      '''}
+    # golden_output2 = {'execute.return_value': '''
+    #     show running-config bgp
+    #     !Command: show running-config bgp
+    #     !Running configuration last done at: Tue Jun 25 14:07:11 2019
+    #     !Time: Tue Jun 25 14:08:15 2019
+    #     version 9.2(2) Bios:version
+    #     feature bgp
+    #     router bgp 100
+    #       router-id 10.1.1.1
+    #       timers bgp 30 60
+    #       graceful-restart restart-time 250
+    #       graceful-restart stalepath-time 450
+    #       confederation identifier 100
+    #       confederation peers 65000
+    #       bestpath compare-routerid
+    #       bestpath always-compare-med
+    #       address-family ipv4 multicast
+    #         dampening route-map dampening_params
+    #         redistribute direct route-map ALL
+    #       address-family ipv4 unicast
+    #         dampening 25 1000 1500 255
+    #         redistribute direct route-map RMAP_Lo0
+    #         redistribute static route-map ALL
+    #         redistribute ospf 1 route-map RMAP_OSPF
+    #         aggregate-address 10.4.0.0/16
+    #         maximum-paths 8
+    #         nexthop route-map ALL
+    #         distance 19 199 219
+    #       address-family ipv6 multicast
+    #         dampening route-map dampening_params
+    #         redistribute direct route-map ALL
+    #       address-family ipv6 unicast
+    #       address-family vpnv4 unicast
+    #         nexthop trigger-delay critical 3333 non-critical 11111
+    #       address-family vpnv6 unicast
+    #       template peer PEER-TEMPLATE
+    #         address-family ipv4 unicast
+    #           soft-reconfiguration inbound
+    #       template peer-policy PP-1
+    #         send-community
+    #         send-community extended
+    #         soft-reconfiguration inbound
+    #       template peer-session PS-1
+    #         description ps_desc_test
+    #         disable-connected-check
+    #       neighbor 2001:db8:1900:1::1:101
+    #         inherit peer-session PS-1
+    #         remote-as 300
+    #         dont-capability-negotiate
+    #         update-source loopback0
+    #         ebgp-multihop 50
+    #         timers 30 90
+    #         address-family ipv6 unicast
+    #           route-map ALL in
+    #           route-map ALL out
+    #       neighbor 2001:db8:4:1::1:1
+    #         remote-as 100
+    #         password 3 a667d47acc18ea6b
+    #         update-source loopback0
+    #         timers 50 60
+    #         address-family ipv6 unicast
+    #           next-hop-self
+    #       neighbor 2001:db8:4104:1::1:1
+    #         remote-as 200
+    #         update-source loopback0
+    #         ebgp-multihop 5
+    #         address-family ipv6 unicast
+    #           next-hop-self
+    #       neighbor 10.51.1.101
+    #         remote-as 300
+    #         local-as 101
+    #         update-source loopback0
+    #         ebgp-multihop 5
+    #         address-family ipv4 multicast
+    #           route-map ALL in
+    #           route-map ALL out
+    #         address-family ipv4 unicast
+    #           route-map prefixlist in
+    #           route-map weight out
+    #           maximum-prefix 1000
+    #           default-originate
+    #         address-family ipv6 multicast
+    #           route-map ALL in
+    #           route-map ALL out
+    #         address-family vpnv4 unicast
+    #           send-community
+    #           send-community extended
+    #         address-family vpnv6 unicast
+    #           send-community
+    #           send-community extended
+    #       neighbor 192.168.4.1
+    #         bfd
+    #         remote-as 100
+    #         update-source loopback0
+    #         transport connection-mode passive
+    #         timers 10 60
+    #         address-family ipv4 unicast
+    #           send-community extended
+    #           route-reflector-client
+    #           maximum-prefix 123
+    #           default-originate route-map SOMENAME
+    #           next-hop-self
+    #           soft-reconfiguration inbound
+    #         address-family vpnv4 unicast
+    #           send-community
+    #           send-community extended
+    #         address-family vpnv6 unicast
+    #           send-community
+    #           send-community extended
+    #       neighbor 192.168.64.1
+    #         remote-as 200
+    #         update-source loopback0
+    #         ebgp-multihop 5
+    #         address-family ipv4 unicast
+    #           next-hop-self
+    #       vrf VRF1
+    #         neighbor 2001:db8:1c39:1::1:101
+    #           remote-as 70000
+    #           address-family ipv6 unicast
+    #         neighbor 10.76.1.101
+    #           remote-as 70000
+    #           disable-connected-check
+    #           address-family ipv4 unicast
+    #             as-override
+    #     vrf context VRF1
+    #       rd 100:1
+    #       address-family ipv4 unicast
+    #         route-target import 100:1
+    #         route-target export 100:1
+    #       address-family ipv6 unicast
+    #         route-target import 100:1
+    #         route-target export 100:1
+    #     '''}
 
     def test_golden1(self):
         self.maxDiff = None
@@ -17518,28 +17455,12 @@ router bgp 1
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    def test_golden2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output2)
-        obj = ShowRunningConfigBgp(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output2)
-
-    def test_wont_be_added(self):
-        self.maxDiff = None
-        self.device = Mock(**self.device_output)
-        obj = ShowRunningConfigBgp(device=self.device)
-
-        import re; re.reset()
-        parsed_output = obj.parse()
-        print(re.colour_output()); re.reset()
-
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
-        # self.assertEqual(parsed_output,self.golden_parsed_output2)
+    # def test_golden2(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output2)
+    #     obj = ShowRunningConfigBgp(device=self.device)
+    #     parsed_output = obj.parse()
+    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

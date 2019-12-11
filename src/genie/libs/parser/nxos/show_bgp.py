@@ -5942,6 +5942,22 @@ class ShowRunningConfigBgpSchema(MetaParser):
                              'pp_soft_reconfiguration': bool,
                              Optional('pp_soo'): str,
                              }},
+                    Optional('peer_name'):
+                        {Any():
+                             {Optional('peer_fall_over_bfd'): bool,
+                              Optional('peer_remote_as'): int,
+                              Optional('peer_password_text'): str,
+                              Optional('peer_af_name'): {
+                                  Any(): {
+                                      Optional('peer_af_send_community'): str,
+                                      Optional('peer_maximum_prefix_max_prefix_no'): int,
+                                      Optional('peer_maximum_prefix_threshold'): int,
+                                      Optional('peer_maximum_prefix_warning_only'): bool,
+                                      Optional('peer_next_hop_self'): bool,
+                                    }
+                                 },
+                              },
+                        },
                     'vrf':
                         {Any():
                             {
@@ -6202,7 +6218,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p69 = re.compile(r'^\s*as-override$')
         p70 = re.compile(r'^\s*default-originate( +route-map +(?P<nbr_af_default_originate_route_map>.*))?$')
         p71 = re.compile(r'^\s*soo +(?P<nbr_af_soo>.*)$')
-        p72 = re.compile(r'^\s*template peer(-session)? +(?P<ps_name>.*)$')
+        p72 = re.compile(r'^\s*template peer-session +(?P<ps_name>.*)$')
         p73 = re.compile(r'^\s*bfd$')
         p74 = re.compile(r'^\s*bfd$')
         p75 = re.compile(r'^\s*description +(?P<ps_description>.*)$')
@@ -6229,6 +6245,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p96 = re.compile(r'^\s*send-community +extended$')
         p97 = re.compile(r'^\s*soft-reconfiguration inbound( +(?P<nbr_af_soft_reconfiguration_extra>.*))?$')
         p98 = re.compile(r'^\s*soo +(?P<pp_soo>.*)$')
+        peer_1 = re.compile(r'template peer +(?P<peer_name>\S+)')
         # Init vars
         bgp_dict = {}
         bgp_id = ''
@@ -6240,6 +6257,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         nbr_af_name = ''
         ps_name = ''
         pp_name = ''
+        peer_name = ''
         vni_flag = False
 
         for line in out.splitlines():
@@ -6482,7 +6500,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             str(m.groupdict()['disable_policy_batching_ipv6'])
                         continue
 
-                    if neighbor_id == '':
+                    if neighbor_id == '' and peer_name == '' or \
+                            'af_name' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
                         #   address-family ipv4 multicast
                         m = p20.match(line)
                         if m:
@@ -6594,6 +6613,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p28_3.match(line)
                         if m:
                             bgp_af_dict['af_default_originate'] = True
+                            continue
 
                         #    maximum-paths eibgp <af_maximum_paths_eibgp>
                         m = p29.match(line)
@@ -7193,8 +7213,11 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     if m:
                         bgp_pp_dict['pp_maximum_prefix_max_prefix_no'] = \
                             int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
-                        bgp_pp_dict['pp_maximum_prefix_threshold'] = \
-                            int(m.groupdict()['pp_maximum_prefix_threshold'])
+
+                        if m.groupdict()['pp_maximum_prefix_threshold']:
+                            bgp_pp_dict['pp_maximum_prefix_threshold'] = \
+                                int(m.groupdict()['pp_maximum_prefix_threshold'])
+
                         if m.groupdict()['pp_maximum_prefix_warning_only']:
                             bgp_pp_dict['pp_maximum_prefix_warning_only'] = True
                         else:
@@ -7246,6 +7269,85 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     if m:
                         bgp_pp_dict['pp_soo'] = str(m.groupdict()['pp_soo'])
                         continue
+
+                # template peer PEER
+                m = peer_1.match(line)
+                if m:
+                    peer_name = m.groupdict()['peer_name']
+                    if 'peer_name' not in bgp_dict['bgp']['instance']['default']:
+                        bgp_dict['bgp']['instance']['default']['peer_name'] = {}
+                    if peer_name not in bgp_dict['bgp']['instance']['default']['peer_name']:
+                        bgp_dict['bgp']['instance']['default']['peer_name'][peer_name] = {}
+                        bgp_peer_dict = bgp_dict['bgp']['instance']['default']['peer_name'][peer_name]
+                    continue
+
+                if peer_name != '':
+                    #   bfd
+                    m = p73.match(line)
+                    if m:
+                        # Get keys
+                        bgp_peer_dict['peer_fall_over_bfd'] = True
+                        continue
+                    elif 'peer_fall_over_bfd' not in bgp_peer_dict:
+                        bgp_peer_dict['peer_fall_over_bfd'] = False
+                        continue
+
+                    #   { remote-as <remote_as> }
+                    m = p80.match(line)
+                    if m:
+                        bgp_peer_dict['peer_remote_as'] = int(m.groupdict()['ps_remote_as'])
+                        continue
+
+                    #   password <password_text>
+                    m = p79.match(line)
+                    if m:
+                        bgp_peer_dict['peer_password_text'] = str(m.groupdict()['ps_password_text'])
+                        continue
+
+                    #   address-family <af_name>
+                    m = p57.match(line)
+                    if m:
+                        peer_af_name = str(m.groupdict()['nbr_af_name'])
+                        if 'peer_af_name' not in bgp_peer_dict:
+                            bgp_peer_dict['peer_af_name'] = {}
+                        if peer_af_name not in bgp_peer_dict['peer_af_name']:
+                            bgp_peer_dict['peer_af_name'][peer_af_name] = {}
+                            bgp_peer_af_dict = bgp_peer_dict['peer_af_name'][peer_af_name]
+                        continue
+
+                    if 'peer_af_name' in bgp_peer_dict:
+
+                        #   send-community
+                        m = p65.match(line)
+                        if m:
+                            bgp_peer_af_dict['peer_af_send_community'] = 'standard'
+                            send_community_standard_match = 'True'
+                            continue
+
+                        #   maximum-prefix <pp_maximum_prefix_max_prefix_no> [ <pp_maximum_prefix_threshold> ] [ warning-only ]
+                        m = p92.match(line)
+                        if m:
+                            bgp_peer_af_dict['peer_maximum_prefix_max_prefix_no'] = \
+                                int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
+
+                            if m.groupdict()['pp_maximum_prefix_threshold']:
+                                bgp_peer_af_dict['peer_maximum_prefix_threshold'] = \
+                                    int(m.groupdict()['pp_maximum_prefix_threshold'])
+
+                            if m.groupdict()['pp_maximum_prefix_warning_only']:
+                                bgp_peer_af_dict['peer_maximum_prefix_warning_only'] = True
+                            else:
+                                bgp_peer_af_dict['peer_maximum_prefix_warning_only'] = False
+                            continue
+
+                        #   next-hop-self
+                        m = p68.match(line)
+                        if m:
+                            bgp_peer_af_dict['peer_next_hop_self'] = True
+                            continue
+                        elif 'peer_next_hop_self' not in bgp_peer_af_dict:
+                            bgp_peer_af_dict['peer_next_hop_self'] = False
+                            continue
 
         return bgp_dict
 
