@@ -81,6 +81,8 @@
     * Updated ShowDot1xAllDetail
 	    * Modified regex for eap_method
 		* Updated 'system_auth_control', 'version' as Optional keys
+    * Updated ShowLispServiceMapCache, ShowLispServiceDatabase
+        * EID-table default no longer breaks parsing
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
