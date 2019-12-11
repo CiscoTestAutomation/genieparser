@@ -5926,9 +5926,9 @@ class ShowRunningConfigBgpSchema(MetaParser):
                     Optional('pp_name'):
                         {Any():
                             {Optional('pp_allowas_in'): bool,
-                             'pp_allowas_in_as_number': int,
-                             'pp_as_override': bool,
-                             'pp_default_originate': bool,
+                             Optional('pp_allowas_in_as_number'): int,
+                             Optional('pp_as_override'): bool,
+                             Optional('pp_default_originate'): bool,
                              Optional('pp_default_originate_route_map'): str,
                              Optional('pp_route_map_name_in'): str,
                              Optional('pp_route_map_name_out'): str,
@@ -5936,8 +5936,8 @@ class ShowRunningConfigBgpSchema(MetaParser):
                              Optional('pp_maximum_prefix_threshold'): int,
                              Optional('pp_maximum_prefix_restart'): int,
                              Optional('pp_maximum_prefix_warning_only'): bool,
-                             'pp_next_hop_self': bool,
-                             'pp_route_reflector_client': bool,
+                             Optional('pp_next_hop_self'): bool,
+                             Optional('pp_route_reflector_client'): bool,
                              Optional('pp_send_community'): str,
                              'pp_soft_reconfiguration': bool,
                              Optional('pp_soo'): str,
@@ -6215,7 +6215,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p82 = re.compile(r'^\s*timers +(?P<ps_keepalive_interval>[0-9]+) +(?P<ps_hodltime>[0-9]+)$')
         p83 = re.compile(r'^\s*transport connection-mode +(?P<ps_transport_connection_mode>[a-z]+)$')
         p84 = re.compile(r'^\s*update-source +(?P<ps_update_source>[A-Za-z0-9\/\.]+)$')
-        p85 = re.compile(r'^\s*template peer-session +(?P<pp_name>.*)$')
+        p85 = re.compile(r'^\s*template peer-policy +(?P<pp_name>.*)$')
         p86 = re.compile(r'^\s*allowas-in( +(?P<pp_allowas_in_as_number>[0-9]+))?$')
         p87 = re.compile(r'^\s*as-override$')
         p88 = re.compile(r'^\s*default-originate( +route-map +(?P<pp_default_originate_route_map>.*))?$')
