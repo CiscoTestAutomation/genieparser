@@ -511,8 +511,6 @@ class TestShowVersion(unittest.TestCase):
 
     parsed_output = {
     'version': {
-        'device_num': '*0',
-        'device_sn': 'FOC16050QP6',
         'chassis': 'CISCO3945-CHASSIS',
         'chassis_sn': 'FGL161010K8',
         'compiled_by': 'prod_rel_team',
@@ -523,6 +521,14 @@ class TestShowVersion(unittest.TestCase):
         'image_type': 'production image',
         'last_reload_reason': 'Reload Command',
         'last_reload_type': 'Normal Reload',
+        'license_udi': {
+            'device_num': {
+                '*0': {
+                    'pid': 'C3900-SPE150/K9',
+                    'sn': 'FOC16050QP6'
+                }
+            }
+        },
         'license_package': {
             'data': {
                 'license_level': 'datak9',

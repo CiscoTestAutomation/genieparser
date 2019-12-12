@@ -68,7 +68,14 @@ class ShowVersionSchema(MetaParser):
                     Optional('rtr_type'): str,
                     'os': str,
                     'curr_config_register': str,
-                    Optional('device_num'): str,
+                    Optional('license_udi'): {
+                        Optional('device_num'): {
+                            Any(): {
+                                'pid': str,
+                                'sn': str,
+                            }
+                        },
+                    },
                     Optional('device_sn'): str,
                     Optional('next_config_register'): str,
                     Optional('main_mem'): str,
@@ -367,8 +374,11 @@ class ShowVersion(ShowVersionSchema):
         p45 = re.compile(r'^[Ss]uite +[Ll]icense +[Ii]nformation +for '
                          r'+[Mm]odule\:\'(?P<module>\S+)\'$')
 
+        # License UDI:
+        p46_0 = re.compile(r'^License UDI:$')
+
         #     *0        C3900-SPE150/K9       FOC16050QP6
-        p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<processor_type>[\S]+) +(?P<device_sn>[A-Z\d]+)$')
+        p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -879,12 +889,21 @@ class ShowVersion(ShowVersionSchema):
 
                 continue
 
+            # License UDI:
+            m46_0 = p46_0.match(line)
+            if m46_0:
+                if 'license_udi' not in version_dict:
+                    license_udi_dict = version_dict['version'].setdefault('license_udi', {})
+                continue
+
             # *0        C3900-SPE150/K9       FOC16050QP6
             m46 = p46.match(line)
             if m46:
                 group = m46.groupdict()
-                version_dict['version']['device_num'] = group['device_num']
-                version_dict['version']['device_sn'] = group['device_sn']
+                license_udi_sub = license_udi_dict.setdefault('device_num', {}).\
+                    setdefault(group['device_num'], {})
+                license_udi_sub['pid'] = group['pid']
+                license_udi_sub['sn'] = group['sn']
                 continue
 
         # table2 for C3850
