@@ -1,13 +1,179 @@
 import unittest
+import genie.gre
 from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.ios.cat6k.show_platform import ShowModule
+from genie.libs.parser.ios.cat6k.show_platform import ShowModule, ShowVersion
 
 
-class test_show_module(unittest.TestCase):
+class TestShowVersion(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+    golden_output = {'execute.return_value': '''
+    cat6k_tb1#show version
+    Cisco Internetwork Operating System Software 
+    IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2006 by cisco Systems, Inc.
+    Compiled Thu 23-Nov-06 06:26 by kellythw
+    Image text-base: 0x40101040, data-base: 0x42D98000
+    
+    ROM: System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
+    BOOTLDR: s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+    
+    cat6k_tb1 uptime is 21 weeks, 5 days, 41 minutes
+    Time since cat6k_tb1 switched to active is 21 weeks, 5 days, 40 minutes
+    System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
+    System image file is "disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7"
+    
+    
+    This product contains cryptographic features and is subject to United
+    States and local country laws governing import, export, transfer and
+    use. Delivery of Cisco cryptographic products does not imply
+    third-party authority to import, export, distribute or use encryption.
+    Importers, exporters, distributors and users are responsible for
+    compliance with U.S. and local country laws. By using this product you
+    agree to comply with applicable laws and regulations. If you are unable
+    to comply with U.S. and local laws, return this product immediately.
+    
+    A summary of U.S. laws governing Cisco cryptographic products may be found at:
+    http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+    
+    If you require further assistance please contact us by sending email to
+    export@cisco.com.
+    
+    cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
+    Processor board ID FXS1821Q2H9
+    SR71000 CPU at 600Mhz, Implementation 0x504, Rev 1.2, 512KB L2 Cache
+    Last reset from s/w reset
+    SuperLAT software (copyright 1990 by Meridian Technology Corp).
+    X.25 software, Version 3.0.0.
+    Bridging software.
+    TN3270 Emulation software.
+    1 Virtual Ethernet/IEEE 802.3 interface
+    50 Gigabit Ethernet/IEEE 802.3 interfaces
+    1917K bytes of non-volatile configuration memory.
+    8192K bytes of packet buffer memory.
+    
+    65536K bytes of Flash internal SIMM (Sector size 512K).
+    Configuration register is 0x2102
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVersion(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_module_1(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVersion(device=self.device)
+        import re; re.reset()
+        parsed_output = obj.parse()
+        print(re.colour_output()); re.reset()
+
+        import pprint
+        # pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_output)
+
+
+class TestDir(unittest.TestCase):
+    golden_output = {'execute.return_value': '''
+    cat6k_tb1#dir
+    Directory of disk0:/
+    
+        1  -rw-    82524740  Oct 28 2009 19:07:04 +00:00  s72033-adventerprisek9_wan-mz.122-18.SXF7
+        2  -rw-   200200276   Feb 3 2010 22:27:04 +00:00  s72033-adventerprisek9_wan_dbg-vz.CARSON_INTEG_100202
+        3  -rw-   201459508   Feb 3 2010 23:18:40 +00:00  s72033-adventerprisek9_wan_dbg-vz.SIERRA_INTEG_100202
+        4  -rw-        4485  Jul 21 2015 14:11:10 +00:00  cat6k_tb1-confg
+        5  -rw-        4734  Nov 27 2017 21:32:46 +00:00  config_cat6k_tb1_native
+    
+    512065536 bytes total (27852800 bytes free)
+    '''}
+
+
+class TestShowRedundancy(unittest.TestCase):
+    golden_output = {'execute.return_value': '''
+    cat6k_tb1#show redundancy
+    Redundant System Information :
+    ------------------------------
+           Available system uptime = 21 weeks, 5 days, 1 hour, 3 minutes
+    Switchovers system experienced = 0
+                  Standby failures = 0
+            Last switchover reason = none
+    
+                     Hardware Mode = Simplex
+        Configured Redundancy Mode = sso
+         Operating Redundancy Mode = sso
+                  Maintenance Mode = Disabled
+                    Communications = Down      Reason: Simplex mode
+    
+    Current Processor Information :
+    -------------------------------
+                   Active Location = slot 1
+            Current Software state = ACTIVE
+           Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
+                     Image Version = Cisco Internetwork Operating System Software 
+    IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2006 by cisco Systems, Inc.
+    Compiled Thu 23-Nov-06 06:26 by kellythw
+                              BOOT = 
+                       CONFIG_FILE = 
+                           BOOTLDR = 
+            Configuration register = 0x2102
+    
+    Peer (slot: unavailable) information is not available because it is in 'DISABLED' state
+
+    '''}
+
+
+class TestShowInventory(unittest.TestCase):
+    golden_output = {'execute.return_value': '''
+    cat6k_tb1#show inventory
+    NAME: "WS-C6503-E", DESCR: "Cisco Systems Catalyst 6500 3-slot Chassis System"
+    PID: WS-C6503-E        , VID: V03, SN: FXS1821Q2H9
+    
+    NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+    PID: CLK-7600          , VID:    , SN: FXS181101V4
+    
+    NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+    PID: CLK-7600          , VID:    , SN: FXS181101V4
+    
+    NAME: "1", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
+    PID: WS-SUP720-3BXL    , VID: V05, SN: SAL11434P2C
+    
+    NAME: "msfc sub-module of 1", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 3.1"
+    PID: WS-SUP720         , VID:    , SN: SAL11434N9G
+    
+    NAME: "switching engine sub-module of 1", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8"
+    PID: WS-F6K-PFC3BXL    , VID: V01, SN: SAL11434LYG
+    
+    NAME: "2", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6"
+    PID: WS-X6748-GE-TX    , VID: V02, SN: SAL1128UPQ9
+    
+    NAME: "switching engine sub-module of 2", DESCR: "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1"
+    PID: WS-F6700-DFC3CXL  , VID: V01, SN: SAL1214LAG5
+    
+    NAME: "WS-C6503-E-FAN 1", DESCR: "Enhanced 3-slot Fan Tray 1"
+    PID: WS-C6503-E-FAN    , VID: V02, SN: DCH183500KW
+    
+    NAME: "PS 1 PWR-1400-AC", DESCR: "AC power supply, 1400 watt 1"
+    PID: PWR-1400-AC       , VID: V01, SN: ABC0830J127
+    '''}
+
+
+class TestShowModule(unittest.TestCase):
     device = Device(name="aDevice")
 
     empty_output = {"execute.return_value": ""}
