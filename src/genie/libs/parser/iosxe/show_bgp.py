@@ -2235,6 +2235,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
     def cli(self, address_family='', vrf='', rd='', output=None):
 
+        cmd = ''
         if output is None:
             # Build command
             if vrf:
@@ -2253,7 +2254,6 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             # Execute command
             show_output = self.device.execute(cmd)
         else:
-            cmd = ''
             show_output = output
 
         # Call super
@@ -2329,6 +2329,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
     
     def cli(self, address_family='', vrf='', rd='', output=None):
 
+        cmd = ''
         if output is None:
             # Build command
             if address_family and rd:
@@ -2345,7 +2346,6 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = self.device.execute(cmd)
         else:
             show_output = output
-            cmd = ''
 
         # Call super
         return super().cli(output=show_output, vrf=vrf, rd=rd,
@@ -2371,6 +2371,7 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
     exclude = ['msg_rcvd', 'msg_sent', 'up_down']
     def cli(self, address_family='', output=None):
 
+        cmd = ''
         if output is None:
             # Build command
             if address_family:
@@ -2380,7 +2381,6 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             # Execute command
             show_output = self.device.execute(cmd)
         else:
-            cmd = ''
             show_output = output
 
         # Call super
