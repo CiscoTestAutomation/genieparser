@@ -441,6 +441,140 @@ class TestShowVersion(unittest.TestCase):
                 }
             }
 
+    device_output = {'execute.return_value':'''
+    best-c3945-IOS3#show version
+    Cisco IOS Software, C3900 Software (C3900-UNIVERSALK9-M), Version 15.0(1)M7, RELEASE SOFTWARE (fc2)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2011 by Cisco Systems, Inc.
+    Compiled Fri 05-Aug-11 00:32 by prod_rel_team
+    
+    ROM: System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)
+    
+    best-c3945-IOS3 uptime is 1 hour, 20 minutes
+    System returned to ROM by reload at 10:26:47 EST Mon Dec 9 2019
+    System restarted at 10:27:57 EST Mon Dec 9 2019
+    System image file is "flash0:c3900-universalk9-mz.SPA.150-1.M7.bin"
+    Last reload type: Normal Reload
+    Last reload reason: Reload Command
+    
+    
+    
+    This product contains cryptographic features and is subject to United
+    States and local country laws governing import, export, transfer and
+    use. Delivery of Cisco cryptographic products does not imply
+    third-party authority to import, export, distribute or use encryption.
+    Importers, exporters, distributors and users are responsible for
+    compliance with U.S. and local country laws. By using this product you
+    agree to comply with applicable laws and regulations. If you are unable
+    to comply with U.S. and local laws, return this product immediately.
+              
+    A summary of U.S. laws governing Cisco cryptographic products may be found at:
+    http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+              
+    If you require further assistance please contact us by sending email to
+    export@cisco.com.
+              
+    Cisco CISCO3945-CHASSIS (revision 1.1) with C3900-SPE150/K9 with 2027520K/69632K bytes of memory.
+    Processor board ID FGL161010K8
+    2 FastEthernet interfaces
+    3 Gigabit Ethernet interfaces
+    1 Virtual Private Network (VPN) Module
+    DRAM configuration is 72 bits wide with parity enabled.
+    255K bytes of non-volatile configuration memory.
+    2000880K bytes of ATA System CompactFlash 0 (Read/Write)
+              
+              
+    License Info:
+              
+    License UDI:
+              
+    -------------------------------------------------
+    Device#   PID                   SN
+    -------------------------------------------------
+    *0        C3900-SPE150/K9       FOC16050QP6     
+              
+              
+              
+    Technology Package License Information for Module:'c3900' 
+              
+    -----------------------------------------------------------------
+    Technology    Technology-package           Technology-package
+                  Current       Type           Next reboot  
+    ------------------------------------------------------------------
+    ipbase        ipbasek9      Permanent      ipbasek9
+    security      securityk9    Permanent      securityk9
+    uc            None          None           None
+    data          datak9        Permanent      datak9
+              
+    Configuration register is 0x2102
+    '''}
+
+    parsed_output = {
+    'version': {
+        'chassis': 'CISCO3945-CHASSIS',
+        'chassis_sn': 'FGL161010K8',
+        'compiled_by': 'prod_rel_team',
+        'compiled_date': 'Fri 05-Aug-11 00:32',
+        'curr_config_register': '0x2102',
+        'hostname': 'best-c3945-IOS3',
+        'image_id': 'C3900-UNIVERSALK9-M',
+        'image_type': 'production image',
+        'last_reload_reason': 'Reload Command',
+        'last_reload_type': 'Normal Reload',
+        'license_udi': {
+            'device_num': {
+                '*0': {
+                    'pid': 'C3900-SPE150/K9',
+                    'sn': 'FOC16050QP6'
+                }
+            }
+        },
+        'license_package': {
+            'data': {
+                'license_level': 'datak9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'datak9',
+            },
+            'ipbase': {
+                'license_level': 'ipbasek9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'ipbasek9',
+            },
+            'security': {
+                'license_level': 'securityk9',
+                'license_type': 'Permanent',
+                'next_reload_license_level': 'securityk9',
+            },
+            'uc': {
+                'license_level': 'None',
+                'license_type': 'None',
+                'next_reload_license_level': 'None',
+            },
+        },
+        'main_mem': '2027520',
+        'mem_size': {
+            'non-volatile configuration': '255',
+        },
+        'number_of_intfs': {
+            'FastEthernet': '2',
+            'Gigabit Ethernet': '3',
+        },
+        'os': 'IOS',
+        'platform': 'C3900',
+        'processor_board_flash': '2000880K',
+        'processor_type': 'C3900-SPE150/K9',
+        'returned_to_rom_at': '10:26:47 EST Mon Dec 9 2019',
+        'returned_to_rom_by': 'reload',
+        'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',
+        'rtr_type': 'CISCO3945-CHASSIS',
+        'system_image': 'flash0:c3900-universalk9-mz.SPA.150-1.M7.bin',
+        'system_restarted_at': '10:27:57 EST Mon Dec 9 2019',
+        'uptime': '1 hour, 20 minutes',
+        'version': '15.0(1)M7',
+        'version_short': '15.0',
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -480,6 +614,14 @@ class TestShowVersion(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_ios_1)
+
+    def test_golden_ios_2(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.device_output)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
 
 class test_dir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -1256,101 +1398,65 @@ class TestShowInventory(unittest.TestCase):
     golden_output_5 = {'execute.return_value': '''
     best-c3945-IOS3#show inventory
     NAME: "CISCO3945-CHASSIS", DESCR: "CISCO3945-CHASSIS"
-    PID: CISCO3945-CHASSIS , VID: V02, SN: FGL161010K8
-
-    NAME: "Cisco Services Performance Engine 150 for Genie 1010 ISR on Slot 0", DESCR: "Cisco Services Performance Engine 150 for Genie 1010 ISR"
+    PID: CISCO3945-CHASSIS , VID: V05 , SN: FGL161010K8
+    
+    NAME: "Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0", DESCR: "Cisco Services Performance Engine 150 for Cisco 3900 ISR"
     PID: C3900-SPE150/K9   , VID: V05 , SN: FOC16050QP6
-
-    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 0", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
-    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC16516WYC
-
-    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 1", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
-    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC17010GVE
-
-    NAME: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2", DESCR: "Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu"
-    PID: EHWIC-1GE-SFP-CU  , VID: V01, SN: FOC16523QC1
-
+    
     NAME: "Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3", DESCR: "Two-Port Fast Ethernet High Speed WAN Interface Card"
     PID: HWIC-2FE          , VID: V02 , SN: FOC16062824
-
+    
     NAME: "C3900 AC Power Supply 1", DESCR: "C3900 AC Power Supply 1"
     PID: PWR-3900-AC       , VID: V03 , SN: QCS1604P0BT
     '''}
     golden_parsed_output_5 = {
-        'main': {
-            'chassis': {
-                'CISCO3945-CHASSIS': {
-                    'descr': 'CISCO3945-CHASSIS',
-                    'name': 'CISCO3945-CHASSIS',
-                    'pid': 'CISCO3945-CHASSIS',
-                    'sn': 'FGL161010K8',
-                    'vid': 'V02',
-                },
+    'main': {
+        'chassis': {
+            'CISCO3945-CHASSIS': {
+                'descr': 'CISCO3945-CHASSIS',
+                'name': 'CISCO3945-CHASSIS',
+                'pid': 'CISCO3945-CHASSIS',
+                'sn': 'FGL161010K8',
+                'vid': 'V05 ',
             },
         },
-        'slot': {
-            '0': {
-                'rp': {
-                    'C3900-SPE150/K9': {
-                        'descr': 'Cisco Services Performance Engine 150 for Genie 1010 ISR',
-                        'name': 'Cisco Services Performance Engine 150 for Genie 1010 ISR on Slot 0',
-                        'pid': 'C3900-SPE150/K9',
-                        'sn': 'FOC16050QP6',
-                        'subslot': {
-                            '0': {
-                                'EHWIC-1GE-SFP-CU': {
-                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
-                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 0',
-                                    'pid': 'EHWIC-1GE-SFP-CU',
-                                    'sn': 'FOC16516WYC',
-                                    'vid': 'V01',
-                                },
-                            },
-                            '1': {
-                                'EHWIC-1GE-SFP-CU': {
-                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
-                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 1',
-                                    'pid': 'EHWIC-1GE-SFP-CU',
-                                    'sn': 'FOC17010GVE',
-                                    'vid': 'V01',
-                                },
-                            },
-                            '2': {
-                                'EHWIC-1GE-SFP-CU': {
-                                    'descr': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu',
-                                    'name': 'Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2',
-                                    'pid': 'EHWIC-1GE-SFP-CU',
-                                    'sn': 'FOC16523QC1',
-                                    'vid': 'V01',
-                                },
-                            },
-                            '3': {
-                                'HWIC-2FE': {
-                                    'descr': 'Two-Port Fast Ethernet High Speed WAN Interface Card',
-                                    'name': 'Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3',
-                                    'pid': 'HWIC-2FE',
-                                    'sn': 'FOC16062824',
-                                    'vid': 'V02 ',
-                                },
+    },
+    'slot': {
+        '0': {
+            'rp': {
+                'C3900-SPE150/K9': {
+                    'descr': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR',
+                    'name': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0',
+                    'pid': 'C3900-SPE150/K9',
+                    'sn': 'FOC16050QP6',
+                    'subslot': {
+                        '3': {
+                            'HWIC-2FE': {
+                                'descr': 'Two-Port Fast Ethernet High Speed WAN Interface Card',
+                                'name': 'Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3',
+                                'pid': 'HWIC-2FE',
+                                'sn': 'FOC16062824',
+                                'vid': 'V02 ',
                             },
                         },
-                        'vid': 'V05 ',
                     },
-                },
-            },
-            'C3900 AC Power Supply 1': {
-                'other': {
-                    'C3900 AC Power Supply 1': {
-                        'descr': 'C3900 AC Power Supply 1',
-                        'name': 'C3900 AC Power Supply 1',
-                        'pid': 'PWR-3900-AC',
-                        'sn': 'QCS1604P0BT',
-                        'vid': 'V03 ',
-                    },
+                    'vid': 'V05 ',
                 },
             },
         },
-    }
+        'C3900 AC Power Supply 1': {
+            'other': {
+                'C3900 AC Power Supply 1': {
+                    'descr': 'C3900 AC Power Supply 1',
+                    'name': 'C3900 AC Power Supply 1',
+                    'pid': 'PWR-3900-AC',
+                    'sn': 'QCS1604P0BT',
+                    'vid': 'V03 ',
+                },
+            },
+        },
+    },
+}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
