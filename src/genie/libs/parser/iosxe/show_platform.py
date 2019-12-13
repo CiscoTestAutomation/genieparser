@@ -76,7 +76,6 @@ class ShowVersionSchema(MetaParser):
                             }
                         },
                     },
-                    Optional('device_sn'): str,
                     Optional('next_config_register'): str,
                     Optional('main_mem'): str,
                     Optional('number_of_intfs'): {
