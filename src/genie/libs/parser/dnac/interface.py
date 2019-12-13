@@ -36,42 +36,46 @@ class InterfaceSchema(MetaParser):
     """schema for /dna/intent/api/v1/interface, /dna/intent/api/v1/interface/{interface}"""
 
     schema = {
-               Any(): {
-                   Any(): {
-                           "adminStatus": str,
-                           Optional("className"): str,
-                           Optional("description"): str,
-                           "deviceId": str,
-                           Optional("duplex"): str,
-                           Optional("id"): str,
-                           "ifIndex": str,
-                           "hostname": str,
-                           Optional("instanceTenantId"): str,
-                           Optional("instanceUuid"): str,
-                           "interfaceType": str,
-                           Optional("ipv4Address"): str,
-                           Optional("ipv4Mask"): str,
-                           "isisSupport": str,
-                           "lastUpdated": str,
-                           Optional("macAddress"): str,
-                           Optional("mappedPhysicalInterfaceId"): str,
-                           Optional("mappedPhysicalInterfaceName"): str,
-                           Optional("mediaType"): str,
-                           Optional("nativeVlanId"): str,
-                           "ospfSupport": str,
-                           "pid": str,
-                           "portMode": str,
-                           "portName": str,
-                           Optional("portType"): str,
-                           "serialNo": str,
-                           "series": str,
-                           Optional("speed"): str,
-                           "status": str,
-                           Optional("vlanId"): str,
-                           Optional("voiceVlan"): str
-                   }
-               }
-             }
+        'hostname': {
+            Any(): {
+                'interfaces': {
+                    Any(): {
+                        "adminStatus": str,
+                        Optional("className"): str,
+                        Optional("description"): str,
+                        "deviceId": str,
+                        Optional("duplex"): str,
+                        Optional("id"): str,
+                        "ifIndex": str,
+                        Optional("instanceTenantId"): str,
+                        Optional("instanceUuid"): str,
+                        "interfaceType": str,
+                        Optional("ipv4Address"): str,
+                        Optional("ipv4Mask"): str,
+                        "isisSupport": str,
+                        "lastUpdated": str,
+                        Optional("macAddress"): str,
+                        Optional("mappedPhysicalInterfaceId"): str,
+                        Optional("mappedPhysicalInterfaceName"): str,
+                        Optional("mediaType"): str,
+                        Optional("nativeVlanId"): str,
+                        "ospfSupport": str,
+                        "pid": str,
+                        "portMode": str,
+                        "portName": str,
+                        Optional("portType"): str,
+                        "serialNo": str,
+                        "series": str,
+                        Optional("speed"): str,
+                        "status": str,
+                        Optional("vlanId"): str,
+                        Optional("voiceVlan"): str
+                    }
+                }
+            }
+        }
+    }
+
 
 # ============================================
 # Parser for '/dna/intent/api/v1/interface'
@@ -112,11 +116,10 @@ class Interface(InterfaceSchema):
             else:
                 hostname = id_to_hostname[device_id]
 
-            host_info = result_dict.setdefault(hostname, {})
+            host_info = result_dict.setdefault('hostname', {}).setdefault(hostname, {}).setdefault('interfaces', {})
             # remove None values
             host_info[intf_dict['portName']] = {k: v 
                                                 for k, v in intf_dict.items() 
                                                 if v is not None}
-            host_info[intf_dict['portName']]['hostname'] = hostname
 
         return result_dict
