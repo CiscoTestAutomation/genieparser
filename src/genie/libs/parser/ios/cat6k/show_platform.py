@@ -14,12 +14,12 @@ class ShowVersionSchema(MetaParser):
     """
     schema = {
                 'version': {
-                    'version_short': str,
                     'os': str,
-                    Optional('code_name'): str,
                     'platform': str,
                     'version': str,
                     'image_id': str,
+                    'compiled_by': str,
+                    'compiled_date': str,
                     'rom': str,
                     'rom_version': str,
                     'image': {
@@ -29,38 +29,30 @@ class ShowVersionSchema(MetaParser):
                     'bootldr_version': str,
                     'hostname': str,
                     'uptime': str,
-                    'uptime_this_cp': str,
                     'returned_to_rom_by': str,
                     'system_image': str,
-                    'last_reload_reason': str,
                     'chassis': str,
                     'processor_type': str,
                     'main_mem': str,
                     'processor_board_id': str,
+                    'cpu': {
+                      'name': str,
+                      'speed': str,
+                      'implementation': str,
+                      'l2_cache': str,
+                    },
+                    'last_reset': str,
+                    'softwares': list,
+                    'interfaces': {
+                      'virtual_ethernet_ieee': int,
+                      'gigabit_ethernet_ieee': int,
+                    },
+                    'memory': {
+                      'non_volatile_conf': int,
+                      'packet_buffer': int,
+                      'flash_internal_SIMM': int,
+                    },
                     'curr_config_register': str,
-                    'compiled_date': str,
-                    'compiled_by': str,
-                    'mac_address': str,
-                    'mb_assembly_num': str,
-                    'mb_sn': str,
-                    'model_rev_num': str,
-                    'mb_rev_num': str,
-                    'model_num': str,
-                    'system_sn': str,
-                    Optional('mem_size'): {
-                        Any(): str,
-                    },
-                    'license_level': str,
-                    'next_reload_license_level': str,
-                    'smart_licensing_status': str,
-                    Optional('number_of_intfs'): {
-                        Any(): str,
-                    },
-                    Optional('disks'): {
-                        Any(): {
-                            'disk_size': str,
-                        }
-                    },
                 }
             }
 
@@ -71,7 +63,7 @@ class ShowVersion(ShowVersionSchema):
     """
 
     cli_command = ['show version']
-    exclude = ['uptime_this_cp', 'uptime']
+    exclude = ['uptime']
 
     def cli(self, output=None):
 
@@ -105,137 +97,120 @@ class ShowVersion(ShowVersionSchema):
                         r'data-base: (?P<data_base>\S+)$')
 
         # ROM: System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
-        p4 = re.compile(r'^ROM: +(?P<rom>.+) +(?P<version>[\S\s]+)$')
+        p6 = re.compile(r'^ROM: +(?P<rom>.+) +(?P<rom_version>[\S\s]+)$')
 
         # BOOTLDR: s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-        p5 = re.compile(r'^BOOTLDR: +(?P<version>[\S\s]+)$')
+        p7 = re.compile(r'^BOOTLDR: +(?P<bootldr_version>[\S\s]+)$')
 
         # cat6k_tb1 uptime is 21 weeks, 5 days, 41 minutes
-        p6 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
+        p8 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
 
         # System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
-        p7 = re.compile(r'^System +returned +to +ROM +by '
+        p9 = re.compile(r'^System +returned +to +ROM +by '
                         r'+(?P<returned_to_rom_by>[\S\s]+)$')
 
-        # System image file is "harddisk:test-image-PE1-13113029"
-        p9 = re.compile(r'^System +image +file +is '
-                        r'+\"(?P<system_image>.+)\"')
+        # System image file is "disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7"
+        p10 = re.compile(r'^System +image +file +is '
+                         r'+\"(?P<system_image>.+)\"')
 
-        # Last reload reason: Reload Command
-        p10 = re.compile(r'^Last +reload +reason\: '
-                         r'+(?P<last_reload_reason>[\S\s]+)$')
+        # cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
+        p11 = re.compile(r'^cisco +(?P<chassis>[\S]+) +\((?P<processor_type>[\S]+)\)'
+                         r' +processor \(.+\) +with +(?P<main_mem>\d+).+ +bytes +of +memory.$')
 
-        # AIR License Level: AIR DNA Advantage
-        p11 = re.compile(r'^AIR +License +Level: +(?P<license_level>.+)$')
+        # Processor board ID FXS1821Q2H9
+        p12 = re.compile(r'^Processor +board +ID +(?P<processor_board_id>.+)$')
 
-        # Next reload AIR license Level: AIR DNA Advantage
-        p12 = re.compile(r'^Next +reload +AIR +license +Level: +(?P<next_reload_license_level>.+)$')
+        # SR71000 CPU at 600Mhz, Implementation 0x504, Rev 1.2, 512KB L2 Cache
+        p13 = re.compile(r'^(?P<cpu_name>\S+) +(CPU|cpu|Cpu) +at '
+                         r'+(?P<speed>\S+)\, Implementation (?P<implementation>\S+), '
+                         r'Rev (?P<rev>\S+), +(?P<l2_cache>\S+) +L2 +[Cc]ache$')
 
-        # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
-        p13 = re.compile(r'^Smart +Licensing +Status: +(?P<smart_licensing_status>.+)$')
+        # Last reset from s/w reset
+        p14 = re.compile(r'^Last reset from (?P<reset>\S+) reset$')
 
-        # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
-        p14 = re.compile(r'^cisco +(?P<chassis>[\S]+) '
-                         r'+\((?P<processor_type>[\S]+)\) +processor +with '
-                         r'+(?P<main_mem>\d+).+ +bytes +of +memory.$')
+        # SuperLAT software (copyright 1990 by Meridian Technology Corp).
+        p15 = re.compile(r'^SuperLAT software .+$')
 
-        # Processor board ID CAT2242L6CG
-        p15 = re.compile(r'^Processor +board +ID '
-                         r'+(?P<processor_board_id>.+)$')
+        # X.25 software, Version 3.0.0.
+        p16 = re.compile(r'^X.25 software.+$')
 
-        # 44 Virtual Ethernet interfaces
-        p16 = re.compile(r'^(?P<virtual_ethernet_interfaces>\d+) +Virtual'
-                         r' +Ethernet +interfaces$')
+        # Bridging software.
+        p17 = re.compile(r'^Bridging software.$')
 
-        # 32 Forty Gigabit Ethernet interfaces
-        p17 = re.compile(r'^(?P<forty_gigabit_ethernet_interfaces>\d+)'
-                         r' +Forty +Gigabit +Ethernet +interfaces$')
+        # TN3270 Emulation software.
+        p18 = re.compile(r'^TN3270 Emulation software.$')
 
-        # 16 Hundred Gigabit Ethernet interfaces
-        p18 = re.compile(r'^(?P<hundred_gigabit_ethernet_interfaces>\d+)'
-                         r' +Hundred +Gigabit +Ethernet +interfaces$')
+        # 1 Virtual Ethernet/IEEE 802.3 interface
+        p19 = re.compile(r'^(?P<interfaces>\d+) +Virtual '
+                         r'+Ethernet/IEEE 802.3 +interface$')
 
-        # 32768K bytes of non-volatile configuration memory.
-        p19 = re.compile(r'^(?P<non_volatile_memory>\d+)K'
+        # 50 Gigabit Ethernet/IEEE 802.3 interfaces
+        p20 = re.compile(r'^(?P<interfaces>\d+) +Gigabit '
+                         r'+Ethernet/IEEE 802.3 +interfaces$')
+
+        # 1917K bytes of non-volatile configuration memory.
+        p21 = re.compile(r'^(?P<memory>\d+)K'
                          r' +bytes +of +non-volatile +configuration +memory.$')
 
-        # 16002848K bytes of physical memory.
-        p20 = re.compile(r'^(?P<physical_memory>\d+)K'
-                         r' +bytes +of +physical +memory.$')
+        # 8192K bytes of packet buffer memory.
+        p22 = re.compile(r'^(?P<memory>\d+)K'
+                         r' +bytes +of +packet +buffer +memory.$')
 
-        # 11161600K bytes of Bootflash at bootflash:.
-        p21 = re.compile(r'^(?P<bootflash_size>\d+)K'
-                         r' +bytes +of +Bootflash +at +bootflash:.$')
-
-        # 1638400K bytes of Crash Files at crashinfo:.
-        p22 = re.compile(r'^(?P<crash_size>\d+)K'
-                         r' +bytes +of +Crash +Files +at +crashinfo:.$')
-
-        # Base Ethernet MAC Address          : 70:b3:17:60:05:00
-        p23 = re.compile(r'^Base +Ethernet +MAC +Address +: '
-                         r'+(?P<mac_address>\S+)$')
-
-        # Motherboard Assembly Number        : 47A7
-        p24 = re.compile(r'^Motherboard +Assembly +Number +: '
-                         r'+(?P<mb_assembly_num>\S+)$')
-
-        # Motherboard Serial Number          : CAT2242L6CG
-        p25 = re.compile(r'^Motherboard +Serial +Number +: '
-                         r'+(?P<mb_sn>\S+)$')
-
-        # Model Revision Number              : V02
-        p26 = re.compile(r'^Model +Revision +Number +: '
-                         r'+(?P<model_rev_num>\S+)$')
-
-        # Motherboard Revision Number        : 4
-        p27 = re.compile(r'^Motherboard +Revision +Number +: '
-                         r'+(?P<mb_rev_num>\d+)$')
-
-        # Model Number                       : C9500-32QC
-        p28 = re.compile(r'^Model +Number +: +(?P<model_num>\S+)$')
-
-        # System Serial Number               : CAT2242L6CG
-        p29 = re.compile(r'^System +Serial +Number +\: +(?P<system_sn>\S+)$')
+        # 65536K bytes of Flash internal SIMM (Sector size 512K).
+        p23 = re.compile(r'^(?P<memory>\d+)K bytes of Flash internal '
+                         r'SIMM \(Sector size (?P<size>\d+)K\).$')
 
         # Configuration register is 0x102
         p30 = re.compile(r'^Configuration +register +is '
                          r'+(?P<curr_config_register>[\S]+)')
 
-
-
-        # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
-        p32 = re.compile(r'^Cisco +(?P<os>\S+) +software.*$')
-
         for line in out.splitlines():
             line = line.strip()
 
-            # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
-            m = p0.match(line)
-            if m:
-                version_short = m.groupdict()['ver_short']
-                if 'version' not in ver_dict:
-                    version_dict = ver_dict.setdefault('version', {})
-                version_dict['version_short'] = version_short
-                continue
-
-            # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
+            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
             m = p1.match(line)
             if m:
-                version_dict['code_name'] = m.groupdict()['code_name']
-                version_dict['platform'] = m.groupdict()['platform']
-                version_dict['image_id'] = m.groupdict()['image_id']
-                version_dict['version'] = m.groupdict()['version']
-                continue
-
-            # Copyright (c) 1986-2016 by Cisco Systems, Inc.
-            m = p2.match(line)
-            if m:
+                if 'version' not in ver_dict:
+                    version_dict = ver_dict.setdefault('version', {})
+                for k in ['os', 'platform', 'image_id', 'version']:
+                    version_dict[k] = m.groupdict()[k]
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport
-            m = p3.match(line)
-            if m:
+            # Copyright (c) 1986-2016 by Cisco Systems, Inc.
+            m_2 = p2.match(line)
+            m_3 = p3.match(line)
+            if m_2 or m_3:
                 continue
+
+            # Compiled Thu 23-Nov-06 06:26 by kellythw
+            m = p4.match(line)
+            if m:
+                for k in ['compiled_by', 'compiled_date']:
+                    version_dict[k] = m.groupdict()[k]
+                continue
+
+            # Image text-base: 0x40101040, data-base: 0x42D98000
+            m = p5.match(line)
+            if m:
+                if 'image' not in version_dict:
+                    image_dict = version_dict.setdefault('image', {})
+                for k in ['text_base', 'data_base']:
+                    image_dict[k] = m.groupdict()[k]
+                continue
+
+            # ROM: System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
+            m = p6.match(line)
+            if m:
+                for k in ['rom', 'rom_version']:
+                    version_dict[k] = m.groupdict()[k]
+                continue
+
+            # BOOTLDR: s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+            m = p7.match(line)
+            if m:
+                version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
+
 
             # ROM: IOS-XE ROMMON
             m = p4.match(line)
