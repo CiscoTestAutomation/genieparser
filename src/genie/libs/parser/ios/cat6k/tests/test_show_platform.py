@@ -15,7 +15,7 @@ class TestShowVersion(unittest.TestCase):
         cls.maxDiff = None
 
     empty_output = {"execute.return_value": ""}
-    golden_output = {'execute.return_value': '''
+    golden_output_cat6k = {'execute.return_value': '''
     cat6k_tb1#show version
     Cisco Internetwork Operating System Software 
     IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
@@ -72,8 +72,8 @@ class TestShowVersion(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_module_1(self):
-        self.device = Mock(**self.golden_output)
+    def test_show_version_1(self):
+        self.device = Mock(**self.golden_output_cat6k)
         obj = ShowVersion(device=self.device)
         import re; re.reset()
         parsed_output = obj.parse()

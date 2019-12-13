@@ -7,893 +7,442 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
-# genie.parsergen
-try:
-    import genie.parsergen
-except (ImportError, OSError):
-    pass
-
-# import parser utils
-from genie.libs.parser.utils.common import Common
-
 
 class ShowVersionSchema(MetaParser):
-    """Schema for show version"""
+    """
+    Schema for show version
+    """
     schema = {
                 'version': {
                     'version_short': str,
+                    'os': str,
+                    Optional('code_name'): str,
                     'platform': str,
                     'version': str,
                     'image_id': str,
                     'rom': str,
-                    'image_type': str,
-                    Optional('bootldr'): str,
+                    'rom_version': str,
+                    'image': {
+                      'text_base': str,
+                      'data_base': str,
+                    },
+                    'bootldr_version': str,
                     'hostname': str,
                     'uptime': str,
-                    Optional('uptime_this_cp'): str,
-                    Optional('jawa_revision'): str,
-                    Optional('snowtrooper_revision'): str,
-                    Optional('running_default_software'): bool,
-                    Optional('processor_board_flash'): str,
-                    Optional('last_reload_type'): str,
-                    Optional('returned_to_rom_by'):  str,
-                    Optional('returned_to_rom_at'): str,
-                    Optional('compiled_date'): str,
-                    Optional('sp_by'): str,
-                    Optional('compiled_by'): str,
-                    Optional('image_text_base'): str,
-                    Optional('image_data_base'): str,
-                    Optional('system_restarted_at'): str,
-                    Optional('system_image'): str,
-                    Optional('last_reload_reason'): str,
-                    Optional('license_type'): str,
-                    Optional('license_level'): str,
-                    Optional('next_reload_license_level'): str,
-                    Optional('chassis'): str,
-                    Optional('processor_type'): str,
-                    Optional('chassis_sn'): str,
-                    Optional('rtr_type'): str,
-                    'os': str,
+                    'uptime_this_cp': str,
+                    'returned_to_rom_by': str,
+                    'system_image': str,
+                    'last_reload_reason': str,
+                    'chassis': str,
+                    'processor_type': str,
+                    'main_mem': str,
+                    'processor_board_id': str,
                     'curr_config_register': str,
-                    Optional('next_config_register'): str,
-                    Optional('main_mem'): str,
-                    Optional('number_of_intfs'): {
+                    'compiled_date': str,
+                    'compiled_by': str,
+                    'mac_address': str,
+                    'mb_assembly_num': str,
+                    'mb_sn': str,
+                    'model_rev_num': str,
+                    'mb_rev_num': str,
+                    'model_num': str,
+                    'system_sn': str,
+                    Optional('mem_size'): {
                         Any(): str,
                     },
-                    Optional('mem_size'): {
+                    'license_level': str,
+                    'next_reload_license_level': str,
+                    'smart_licensing_status': str,
+                    Optional('number_of_intfs'): {
                         Any(): str,
                     },
                     Optional('disks'): {
                         Any(): {
-                            Optional('disk_size'): str,
-                            Optional('type_of_disk'): str,
+                            'disk_size': str,
                         }
-                    },
-                    Optional('switch_num'): {
-                        Any(): {
-                            Optional('uptime'): str,
-                            Optional('mac_address'): str,
-                            Optional('mb_assembly_num'): str,
-                            Optional('mb_sn'): str,
-                            Optional('model_rev_num'): str,
-                            Optional('mb_rev_num'): str,
-                            Optional('model_num'): str,
-                            Optional('system_sn'): str,
-                            Optional('mode'): str,
-                            Optional('model'): str,
-                            Optional('sw_image'): str,
-                            Optional('ports'): str,
-                            Optional('sw_ver'): str,
-                            Optional('active'): bool,
-                        }
-                    },
-                    Optional('processor'): {
-                        Optional('cpu_type'): str,
-                        Optional('speed'): str,
-                        Optional('core'): str,
-                        Optional('l2_cache'): str,
-                        Optional('supervisor'): str,
-                    },
-                    Optional('license_package'): {
-                        Any(): {
-                            'license_level': str,
-                            'license_type': str,
-                            'next_reload_license_level': str,
-                        },
-                    },
-                    Optional('module'): {
-                        Any(): {
-                            Any(): {
-                                Optional('suite'): str,
-                                Optional('suite_current'): str,
-                                Optional('type'): str,
-                                Optional('suite_next_reboot'): str,
-                            },
-                        },
                     },
                 }
             }
 
 
 class ShowVersion(ShowVersionSchema):
-    """ Parser for show version"""
+    """
+    Parser for show version
+    """
 
-    cli_command = 'show version'
-    exclude = ['system_restarted_at', 'uptime_this_cp', 'uptime']
+    cli_command = ['show version']
+    exclude = ['uptime_this_cp', 'uptime']
 
     def cli(self, output=None):
+
         if output is None:
-            out = self.device.execute(self.cli_command)
+            # Execute command to get output from device
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
+        ver_dict = {}
         version_dict = {}
-        active_dict = {}
-        rtr_type = ''
-        suite_flag = False
-        license_flag = False
 
         # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
         p1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
                         r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
                         r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
 
-        # match version: 12.2(18)SXF7
-        p2 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
-
         # Technical Support: http://www.cisco.com/techsupport
-        p3 = re.compile(r'^Technical +Support: +http\:\/\/www'
+        p2 = re.compile(r'^Technical +Support: +http\:\/\/www'
                         r'\.cisco\.com\/techsupport')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
-        p4 = re.compile(r'^Copyright +(.*)$')
+        p3 = re.compile(r'^Copyright +(.*)$')
 
-        # Compiled Mon 10-Apr-17 04:35 by mcpre
-        # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
-        p36 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
-                         r'+(?P<compiled_by>\w+)$')
+        # Compiled Thu 23-Nov-06 06:26 by kellythw
+        p4 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
+                        r'+(?P<compiled_by>\S+)$')
 
-        # rom
-        p6 = re.compile(r'^ROM\: +(?P<rom>.+)$')
+        # Image text-base: 0x40101040, data-base: 0x42D98000
+        p5 = re.compile(r'^Image text-base: (?P<text_base>\S+), '
+                        r'data-base: (?P<data_base>\S+)$')
 
-        # ROM: Bootstrap program is IOSv
-        p7 = re.compile(r'^Bootstrap +program +is +(?P<os>.+)$')
+        # ROM: System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
+        p4 = re.compile(r'^ROM: +(?P<rom>.+) +(?P<version>[\S\s]+)$')
 
-        # bootldr
-        p8 = re.compile(r'^BOOTLDR\: +(?P<bootldr>.+)$')
+        # BOOTLDR: s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+        p5 = re.compile(r'^BOOTLDR: +(?P<version>[\S\s]+)$')
 
-        # hostname & uptime
-        p9 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
+        # cat6k_tb1 uptime is 21 weeks, 5 days, 41 minutes
+        p6 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
 
-        # uptime_this_cp
-        p10 = re.compile(r'^[Uu]ptime +for +this +control +processor '
-                         r'+is +(?P<uptime_this_cp>.+)$')
+        # System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
+        p7 = re.compile(r'^System +returned +to +ROM +by '
+                        r'+(?P<returned_to_rom_by>[\S\s]+)$')
 
-        # system_restarted_at
-        p11 = re.compile(r'^[Ss]ystem +restarted +at '
-                         r'+(?P<system_restarted_at>.+)$')
-
-        # system_image
-        # System image file is "tftp://10.1.6.241//auto/genie-ftp/Edison/cat3k_caa-universalk9.BLD__20170410_174845.SSA.bin"
         # System image file is "harddisk:test-image-PE1-13113029"
-        p12 = re.compile(r'^[Ss]ystem +image +file +is '
-                         r'+\"(?P<system_image>.+)\"')
+        p9 = re.compile(r'^System +image +file +is '
+                        r'+\"(?P<system_image>.+)\"')
 
-        # last_reload_reason
-        p13 = re.compile(r'^[Ll]ast +reload +reason\: '
-                         r'+(?P<last_reload_reason>.+)$')
+        # Last reload reason: Reload Command
+        p10 = re.compile(r'^Last +reload +reason\: '
+                         r'+(?P<last_reload_reason>[\S\s]+)$')
 
-        # last_reload_reason
-        # Last reset from power-on
-        p14 = re.compile(r'^[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')
+        # AIR License Level: AIR DNA Advantage
+        p11 = re.compile(r'^AIR +License +Level: +(?P<license_level>.+)$')
 
-        # license_type
-        p15 = re.compile(r'^[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')
+        # Next reload AIR license Level: AIR DNA Advantage
+        p12 = re.compile(r'^Next +reload +AIR +license +Level: +(?P<next_reload_license_level>.+)$')
 
-        # license_level
-        p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
+        # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
+        p13 = re.compile(r'^Smart +Licensing +Status: +(?P<smart_licensing_status>.+)$')
 
-        # next_reload_license_level
-        p17 = re.compile(r'^[Nn]ext +(reload|reboot) +license +Level\: '
-                         r'+(?P<next_reload_license_level>.+)$')
+        # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
+        p14 = re.compile(r'^cisco +(?P<chassis>[\S]+) '
+                         r'+\((?P<processor_type>[\S]+)\) +processor +with '
+                         r'+(?P<main_mem>\d+).+ +bytes +of +memory.$')
 
-        # chassis, processor_type, main_mem and rtr_type
-        # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
-        # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
-        # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory.
-        # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
-        # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
-        # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
-        # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
-        p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
-                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
-                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+        # Processor board ID CAT2242L6CG
+        p15 = re.compile(r'^Processor +board +ID '
+                         r'+(?P<processor_board_id>.+)$')
 
-        # chassis_sn
-        p19 = re.compile(r'^[pP]rocessor +board +ID '
-                         r'+(?P<chassis_sn>[a-zA-Z0-9]+)')
+        # 44 Virtual Ethernet interfaces
+        p16 = re.compile(r'^(?P<virtual_ethernet_interfaces>\d+) +Virtual'
+                         r' +Ethernet +interfaces$')
 
-        # number_of_intfs
-        p20 = re.compile(r'^(?P<number_of_ports>\d+) +(?P<interface>.+) '
-                         r'+(interface(?:s)?|line|port(?:s)?)$')
+        # 32 Forty Gigabit Ethernet interfaces
+        p17 = re.compile(r'^(?P<forty_gigabit_ethernet_interfaces>\d+)'
+                         r' +Forty +Gigabit +Ethernet +interfaces$')
 
-        # mem_size
-        p21 = re.compile(r'^(?P<mem_size>\d+)K +bytes +of '
-                         r'+(?P<memories>.+) +[Mm]emory\.')
+        # 16 Hundred Gigabit Ethernet interfaces
+        p18 = re.compile(r'^(?P<hundred_gigabit_ethernet_interfaces>\d+)'
+                         r' +Hundred +Gigabit +Ethernet +interfaces$')
 
-        # disks, disk_size and type_of_disk
-        p22 = re.compile(r'^(?P<disk_size>\d+)K bytes of '
-                         r'(?P<type_of_disk>.*) at (?P<disks>.+)$')
+        # 32768K bytes of non-volatile configuration memory.
+        p19 = re.compile(r'^(?P<non_volatile_memory>\d+)K'
+                         r' +bytes +of +non-volatile +configuration +memory.$')
 
-        # os
-        # Cisco IOS Software,
-        p23 = re.compile(r'^[Cc]isco +(?P<os>[a-zA-Z\-]+) '
-                         r'+[Ss]oftware\,')
+        # 16002848K bytes of physical memory.
+        p20 = re.compile(r'^(?P<physical_memory>\d+)K'
+                         r' +bytes +of +physical +memory.$')
 
-        # curr_config_register
-        p24 = re.compile(r'^[Cc]onfiguration +register +is '
-                         r'+(?P<curr_config_register>[a-zA-Z0-9]+)')
+        # 11161600K bytes of Bootflash at bootflash:.
+        p21 = re.compile(r'^(?P<bootflash_size>\d+)K'
+                         r' +bytes +of +Bootflash +at +bootflash:.$')
 
-        # next_config_register
-        p25 = re.compile(r'^[Cc]onfiguration +register +is +[a-zA-Z0-9]+ '
-                         r'+\(will be (?P<next_config_register>[a-zA-Z0-9]+) '
-                         r'at next reload\)')
+        # 1638400K bytes of Crash Files at crashinfo:.
+        p22 = re.compile(r'^(?P<crash_size>\d+)K'
+                         r' +bytes +of +Crash +Files +at +crashinfo:.$')
 
-        # switch_number
-        p26 = re.compile(r'^[Ss]witch +0(?P<switch_number>\d+)$')
+        # Base Ethernet MAC Address          : 70:b3:17:60:05:00
+        p23 = re.compile(r'^Base +Ethernet +MAC +Address +: '
+                         r'+(?P<mac_address>\S+)$')
 
-        # uptime
-        p27 = re.compile(r'^[Ss]witch +uptime +\: +(?P<uptime>.+)$')
+        # Motherboard Assembly Number        : 47A7
+        p24 = re.compile(r'^Motherboard +Assembly +Number +: '
+                         r'+(?P<mb_assembly_num>\S+)$')
 
-        # mac_address
-        p28 = re.compile(r'^[Bb]ase +[Ee]thernet +MAC +[Aa]ddress '
-                         r'+\: +(?P<mac_address>.+)$')
+        # Motherboard Serial Number          : CAT2242L6CG
+        p25 = re.compile(r'^Motherboard +Serial +Number +: '
+                         r'+(?P<mb_sn>\S+)$')
 
-        # mb_assembly_num
-        p29 = re.compile(r'^[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: '
-                         r'+(?P<mb_assembly_num>.+)$')
+        # Model Revision Number              : V02
+        p26 = re.compile(r'^Model +Revision +Number +: '
+                         r'+(?P<model_rev_num>\S+)$')
 
-        # mb_sn
-        p30 = re.compile(r'^[Mm]otherboard +[Ss]erial +[Nn]umber +\: '
-                         r'+(?P<mb_sn>.+)$')
+        # Motherboard Revision Number        : 4
+        p27 = re.compile(r'^Motherboard +Revision +Number +: '
+                         r'+(?P<mb_rev_num>\d+)$')
 
-        # model_rev_num
-        p31 = re.compile(r'^[Mm]odel +[Rr]evision +[Nn]umber +\: '
-                         r'+(?P<model_rev_num>.+)$')
+        # Model Number                       : C9500-32QC
+        p28 = re.compile(r'^Model +Number +: +(?P<model_num>\S+)$')
 
-        # mb_rev_num
-        p32 = re.compile(r'^[Mm]otherboard +[Rr]evision +[Nn]umber +\: '
-                         r'+(?P<mb_rev_num>.+)$')
+        # System Serial Number               : CAT2242L6CG
+        p29 = re.compile(r'^System +Serial +Number +\: +(?P<system_sn>\S+)$')
 
-        # model_num
-        p33 = re.compile(r'^[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
-
-        # system_sn
-        p34 = re.compile(r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
-
-        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-        p35 = re.compile(r'(?P<os>([A-Z]+)) \(\S+\)\s+(?P<platform>\S+)\s+'
-                         r'Software\s+\((?P<image_id>\S+)\), Version (?P<version>\S+),'
-                         r'\s*RELEASE\s+SOFTWARE\s+\(\S+\)')
+        # Configuration register is 0x102
+        p30 = re.compile(r'^Configuration +register +is '
+                         r'+(?P<curr_config_register>[\S]+)')
 
 
-        # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
-        # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
-        # System returned to ROM by reload
-        # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
-        # System returned to ROM by power-on
-        p37 = re.compile(r'^System +returned +to +ROM +by '
-                         r'+(?P<returned_to_rom_by>[\w\s\-]+)(?: +at '
-                         r'+(?P<returned_to_rom_at>[\w\s\:]+))?(?: +\(SP +by '
-                         r'+(?P<sp_by>[\S\s\-]+)\))?$')
 
-        # Last reload type: Normal Reload
-        p38 = re.compile(r'^Last +reload +type\: +(?P<last_reload_type>[\S ]+)$')
-
-        # P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
-        p39 = re.compile(r'^(?P<cpu_name>\S+) +(CPU|cpu|Cpu) +at '
-                         r'+(?P<speed>\S+)\,(( +(?P<core>\S+) +core\, '
-                         r'+(?P<l2_cache>\S+) +L2 +[Cc]ache)|( +Supervisor '
-                         r'+(?P<supervisor>\S+)))$')
-
-        # 98304K bytes of processor board System flash (Read/Write)
-        p40 = re.compile(r'^(?P<processor_board_flash>\S+) +bytes .+$')
-
-        # Running default software
-        p41 = re.compile(
-            r'^Running +(?P<running_default_software>\S+) +software$')
-
-        # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
-        p42 = re.compile(r'^Jawa +Revision +(?P<jawa_revision>\S+)\, '
-                         r'+Snowtrooper +Revision +(?P<snowtrooper_rev>\S+)$')
-
-        # ipbase           ipbasek9         Smart License    ipbasek9
-        # securityk9       securityk9       RightToUse       securityk9
-        p43 = re.compile(r'^(?P<technology>\w[\w\-]+)(?: {2,}'
-                         r'(?P<license_level>\w+) {2,}(?P<license_type>\w+(?: '
-                         r'+\w+)?) {2,}(?P<next_boot>\w+))?$')
-
-        # Suite                 Suite Current         Type           Suite Next reboot
-        # Technology    Technology-package           Technology-package
-        p44 = re.compile(r'^(?P<aname>Suite|Technology) +((Suite +Current)|'
-                         r'(Technology\-package))')
-
-        # Suite License Information for Module:'esg'
-        p45 = re.compile(r'^[Ss]uite +[Ll]icense +[Ii]nformation +for '
-                         r'+[Mm]odule\:\'(?P<module>\S+)\'$')
+        # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
+        p32 = re.compile(r'^Cisco +(?P<os>\S+) +software.*$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # version
-            # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
-            # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
+            # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
+            m = p0.match(line)
+            if m:
+                version_short = m.groupdict()['ver_short']
+                if 'version' not in ver_dict:
+                    version_dict = ver_dict.setdefault('version', {})
+                version_dict['version_short'] = version_short
+                continue
+
+            # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
             m = p1.match(line)
             if m:
-                version = m.groupdict()['version']
-                # 16.6.5
-                m2 = p2.match(version)
-                if m2:
-                    if 'version' not in version_dict:
-                        version_dict['version'] = {}
-                    version_dict['version']['version_short'] = \
-                        m2.groupdict()['ver_short']
-                    version_dict['version']['platform'] = \
-                        m.groupdict()['platform'].strip()
-                    version_dict['version']['version'] = \
-                        m.groupdict()['version']
-                    version_dict['version']['image_id'] = \
-                        m.groupdict()['image_id']
-                    version_dict['version']['os'] = m.groupdict()['os']
-                    continue
-
-            # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
-            # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
-            # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
-            m = p3.match(line)
-            if m:
-                version = m.groupdict()['version']
-                # 16.6.5
-
-                m2 = p2.match(version)
-
-                if m2:
-                    if 'version' not in version_dict:
-                        version_dict['version'] = {}
-                    version_dict['version']['version_short'] = \
-                        m2.groupdict()['ver_short']
-                    version_dict['version']['platform'] = \
-                        m.groupdict()['platform']
-                    version_dict['version']['version'] = \
-                        m.groupdict()['version']
-                    version_dict['version']['image_id'] = \
-                        m.groupdict()['image_id']
-                    if m.groupdict()['os']:
-                        version_dict['version']['os'] = m.groupdict()['os']
-                    continue
+                version_dict['code_name'] = m.groupdict()['code_name']
+                version_dict['platform'] = m.groupdict()['platform']
+                version_dict['image_id'] = m.groupdict()['image_id']
+                version_dict['version'] = m.groupdict()['version']
+                continue
 
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.
-            m = p4.match(line)
+            m = p2.match(line)
             if m:
-                version_dict.setdefault('version', {}).setdefault('image_type', 'developer image')
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport
-            m = p5.match(line)
+            m = p3.match(line)
             if m:
-                version_dict.setdefault('version', {}).setdefault('image_type', 'production image')
                 continue
 
-            # rom
-            m = p6.match(line)
+            # ROM: IOS-XE ROMMON
+            m = p4.match(line)
             if m:
                 rom = m.groupdict()['rom']
-                version_dict['version']['rom'] = rom
-
-                # ROM: Bootstrap program is IOSv
-                m = p7.match(rom)
-                if m:
-                    if 'os' not in version_dict['version']:
-                        version_dict['version']['os'] = \
-                            m.groupdict()['os']
+                version_dict['rom'] = rom
                 continue
 
-            # bootldr
+            # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
+            m = p5.match(line)
+            if m:
+                version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
+                continue
+
+            # SF2 uptime is 1 day, 18 hours, 48 minutes
+            m = p6.match(line)
+            if m:
+                version_dict['hostname'] = m.groupdict()['hostname']
+                version_dict['uptime'] = m.groupdict()['uptime']
+                continue
+
+            # Uptime for this control processor is 1 day, 18 hours, 49 minutes
+            m = p7.match(line)
+            if m:
+                version_dict['uptime_this_cp'] = m.groupdict()['uptime_this_cp']
+                continue
+
+            # System returned to ROM by Reload Command
             m = p8.match(line)
             if m:
-                version_dict['version']['bootldr'] = \
-                    m.groupdict()['bootldr']
+                version_dict['returned_to_rom_by'] = m.groupdict()['returned_to_rom_by']
                 continue
 
-            # hostname & uptime
+            # System image file is "bootflash:/ecr.bin"
             m = p9.match(line)
             if m:
-                version_dict['version']['hostname'] = \
-                    m.groupdict()['hostname']
-                version_dict['version']['uptime'] = \
-                    m.groupdict()['uptime']
+                version_dict['system_image'] = m.groupdict()['system_image']
                 continue
 
-            # uptime_this_cp
+            # Last reload reason: Reload Command
             m = p10.match(line)
             if m:
-                version_dict['version']['uptime_this_cp'] = \
-                    m.groupdict()['uptime_this_cp']
-                uptime_this_cp = m.groupdict()['uptime_this_cp']
+                version_dict['last_reload_reason'] = m.groupdict()['last_reload_reason']
                 continue
 
-            # system_restarted_at
+            # AIR License Level: AIR DNA Advantage
             m = p11.match(line)
             if m:
-                version_dict['version']['system_restarted_at'] = \
-                    m.groupdict()['system_restarted_at']
+                version_dict['license_level'] = m.groupdict()['license_level']
                 continue
 
-            # system_image
-            # System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
-            # System image file is "harddisk:test-image-PE1-13113029"
+            # Next reload AIR license Level: AIR DNA Advantage
             m = p12.match(line)
             if m:
-                version_dict['version']['system_image'] = \
-                    m.groupdict()['system_image']
+                version_dict['next_reload_license_level'] = m.groupdict()['next_reload_license_level']
                 continue
 
-            # last_reload_reason
+            # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
             m = p13.match(line)
             if m:
-                version_dict['version']['last_reload_reason'] = \
-                    m.groupdict()['last_reload_reason']
+                version_dict['smart_licensing_status'] = m.groupdict()['smart_licensing_status']
                 continue
 
-            # last_reload_reason
-            # Last reset from power-on
+            # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
             m = p14.match(line)
             if m:
-                version_dict['version']['last_reload_reason'] = \
-                    m.groupdict()['last_reload_reason']
+                version_dict['chassis'] = m.groupdict()['chassis']
+                version_dict['processor_type'] = m.groupdict()['processor_type']
+                version_dict['main_mem'] = m.groupdict()['main_mem']
                 continue
 
-            # license_type
+            # Processor board ID CAT2242L6CG
             m = p15.match(line)
             if m:
-                version_dict['version']['license_type'] = \
-                    m.groupdict()['license_type']
+                version_dict['processor_board_id'] = m.groupdict()['processor_board_id']
                 continue
 
-            # license_level
-            # License Level: entservices   Type: Permanent
-            # License Level: AdvancedMetroIPAccess
+            # 44 Virtual Ethernet interfaces
             m = p16.match(line)
             if m:
-                group = m.groupdict()
-                if 'Type:' in group['license_level']:
-                    # entservices   Type: Permanent
-                    p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: '
-                                       r'+(?P<license_type>\S+)')
-                    lic_type = group['license_level'].strip()
-                    m_1 = p16_1.match(lic_type)
-                    group = m_1.groupdict()
-                    version_dict['version']['license_type'] = group['license_type']
-                    version_dict['version']['license_level'] = group['license_level']
-                else:
-                    version_dict['version']['license_level'] = group['license_level']
+                if 'number_of_intfs' not in version_dict:
+                    intf_dict = version_dict.setdefault('number_of_intfs', {})
+                intf_dict['virtual_ethernet_interfaces'] = m.groupdict()['virtual_ethernet_interfaces'].lower().replace(
+                    ' ', '')
                 continue
 
-            # next_reload_license_level
-            # Next reboot license Level: entservices
-            # Next reload license Level: advipservices
+            # 32 Forty Gigabit Ethernet interfaces
             m = p17.match(line)
             if m:
-                version_dict['version']['next_reload_license_level'] = \
-                    m.groupdict()['next_reload_license_level']
+                if 'number_of_intfs' not in version_dict:
+                    intf_dict = version_dict.setdefault('number_of_intfs', {})
+                intf_dict['forty_gigabit_ethernet_interfaces'] = m.groupdict()['forty_gigabit_ethernet_interfaces']
                 continue
 
-            # chassis, processor_type, main_mem and rtr_type
-            # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
-            # cisco CSR1000V (VXE) processor (revision VXE) with 1987991K/3075K bytes of memory.
-            # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory.
-            # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
-            # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
-            # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
+            # 16 Hundred Gigabit Ethernet interfaces
             m = p18.match(line)
             if m:
-                version_dict['version']['chassis'] \
-                    = m.groupdict()['chassis']
-                version_dict['version']['main_mem'] \
-                    = m.groupdict()['main_mem']
-                version_dict['version']['processor_type'] \
-                    = m.groupdict()['processor_type']
-                if 'C3850' in version_dict['version']['chassis'] or \
-                        'C3650' in version_dict['version']['chassis']:
-                    version_dict['version']['rtr_type'] = rtr_type = 'Edison'
-                elif 'ASR1' in version_dict['version']['chassis']:
-                    version_dict['version']['rtr_type'] = rtr_type = 'ASR1K'
-                elif 'CSR1000V' in version_dict['version']['chassis']:
-                    version_dict['version']['rtr_type'] = rtr_type = 'CSR1000V'
-                elif 'C11' in version_dict['version']['chassis']:
-                    version_dict['version']['rtr_type'] = rtr_type = 'ISR'
-                else:
-                    version_dict['version']['rtr_type'] = rtr_type = version_dict['version']['chassis']
+                if 'number_of_intfs' not in version_dict:
+                    intf_dict = version_dict.setdefault('number_of_intfs', {})
+                intf_dict['hundred_gigabit_ethernet_interfaces'] = m.groupdict()['hundred_gigabit_ethernet_interfaces']
                 continue
 
-            # chassis_sn
+            # 32768K bytes of non-volatile configuration memory.
             m = p19.match(line)
             if m:
-                version_dict['version']['chassis_sn'] \
-                    = m.groupdict()['chassis_sn']
+                if 'mem_size' not in version_dict:
+                    mem_dict = version_dict.setdefault('mem_size', {})
+                mem_dict['non_volatile_memory'] = m.groupdict()['non_volatile_memory']
                 continue
 
-            # number_of_intfs
-            # 1 External Alarm interface
-            # 1 FastEthernet interface
-            # 12 Gigabit Ethernet interfaces
-            # 2 Ten Gigabit Ethernet interfaces
-            # 1 terminal line
-            # 8 Channelized T1 ports
+            # 16002848K bytes of physical memory.
             m = p20.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                if 'number_of_intfs' not in version_dict['version']:
-                    version_dict['version']['number_of_intfs'] = {}
-                version_dict['version']['number_of_intfs'][interface] = \
-                    m.groupdict()['number_of_ports']
+                if 'mem_size' not in version_dict:
+                    mem_dict = version_dict.setdefault('mem_size', {})
+                mem_dict['physical_memory'] = m.groupdict()['physical_memory']
                 continue
 
-            # mem_size
+            # 11161600K bytes of Bootflash at bootflash:.
             m = p21.match(line)
             if m:
-                memories = m.groupdict()['memories']
-                if 'mem_size' not in version_dict['version']:
-                    version_dict['version']['mem_size'] = {}
-                version_dict['version']['mem_size'][memories] = \
-                    m.groupdict()['mem_size']
+                if 'disks' not in version_dict:
+                    disk_dict = version_dict.setdefault('disks', {})
+                disk_dict.setdefault('bootflash:', {})['disk_size'] = \
+                    m.groupdict()['bootflash_size']
                 continue
 
-            # disks, disk_size and type_of_disk
+            # 1638400K bytes of Crash Files at crashinfo:.
             m = p22.match(line)
             if m:
-                disks = m.groupdict()['disks']
-                if 'disks' not in version_dict['version']:
-                    version_dict['version']['disks'] = {}
-                if disks not in version_dict['version']['disks']:
-                    version_dict['version']['disks'][disks] = {}
-                version_dict['version']['disks'][disks]['disk_size'] = \
-                    m.groupdict()['disk_size']
-                version_dict['version']['disks'][disks]['type_of_disk'] = \
-                    m.groupdict()['type_of_disk']
+                if 'disks' not in version_dict:
+                    disk_dict = version_dict.setdefault('disks', {})
+                disk_dict.setdefault('crashinfo:', {})['disk_size'] = \
+                    m.groupdict()['crash_size']
                 continue
 
-            # os
+            # Base Ethernet MAC Address          : 70:b3:17:60:05:00
             m = p23.match(line)
             if m:
-                version_dict['version']['os'] = m.groupdict()['os']
-
+                mac_address = m.groupdict()['mac_address']
+                version_dict['mac_address'] = mac_address
                 continue
 
-            # curr_config_register
+            # Motherboard Assembly Number        : 47A7
             m = p24.match(line)
             if m:
-                version_dict['version']['curr_config_register'] \
-                    = m.groupdict()['curr_config_register']
+                mb_assembly_num = m.groupdict()['mb_assembly_num']
+                version_dict['mb_assembly_num'] = mb_assembly_num
+                continue
 
-            # next_config_register
+            # Motherboard Serial Number          : CAT2242L6CG
             m = p25.match(line)
             if m:
-                version_dict['version']['next_config_register'] \
-                    = m.groupdict()['next_config_register']
+                mb_sn = m.groupdict()['mb_sn']
+                version_dict['mb_sn'] = mb_sn
                 continue
 
-            # switch_number
+            # Model Revision Number              : V02
             m = p26.match(line)
             if m:
-                switch_number = m.groupdict()['switch_number']
-                if 'Edison' in rtr_type:
-                    if 'switch_num' not in version_dict['version']:
-                        version_dict['version']['switch_num'] = {}
-                    if switch_number not in version_dict['version']['switch_num']:
-                        version_dict['version']['switch_num'][switch_number] = {}
+                model_rev_num = m.groupdict()['model_rev_num']
+                version_dict['model_rev_num'] = model_rev_num
                 continue
 
-            # uptime
+            # Motherboard Revision Number        : 4
             m = p27.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    continue
-                version_dict['version']['switch_num'][switch_number]['uptime'] = m.groupdict()['uptime']
+                mb_rev_num = m.groupdict()['mb_rev_num']
+                version_dict['mb_rev_num'] = mb_rev_num
                 continue
 
-            # mac_address
+            # Model Number                       : C9500-32QC
             m = p28.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('mac_address', m.groupdict()['mac_address'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()['mac_address']
+                model_num = m.groupdict()['model_num']
+                version_dict['model_num'] = model_num
                 continue
 
-            # mb_assembly_num
+            # System Serial Number               : CAT2242L6CG
             m = p29.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('mb_assembly_num', m.groupdict()['mb_assembly_num'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['mb_assembly_num'] = m.groupdict()[
-                    'mb_assembly_num']
+                system_sn = m.groupdict()['system_sn']
+                version_dict['system_sn'] = system_sn
                 continue
 
-            # mb_sn
+            # Configuration register is 0x102
             m = p30.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('mb_sn', m.groupdict()['mb_sn'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['mb_sn'] = m.groupdict()['mb_sn']
+                curr_config_register = m.groupdict()['curr_config_register']
+                version_dict['curr_config_register'] = curr_config_register
                 continue
 
-            # model_rev_num
+            # Compiled Thu 31-Oct-19 17:43 by makale
             m = p31.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('model_rev_num', m.groupdict()['model_rev_num'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()['model_rev_num']
+                version_dict['compiled_date'] = m.groupdict()['compiled_date']
+                version_dict['compiled_by'] = m.groupdict()['compiled_by']
                 continue
 
-            # mb_rev_num
+            # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
             m = p32.match(line)
             if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('mb_rev_num', m.groupdict()['mb_rev_num'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['mb_rev_num'] = m.groupdict()['mb_rev_num']
+                os = m.groupdict()['os']
+                version_dict['os'] = os
                 continue
 
-            # model_num
-            m = p33.match(line)
-            if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('model_num', m.groupdict()['model_num'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['model_num'] = m.groupdict()['model_num']
-                continue
-
-            # system_sn
-            m = p34.match(line)
-            if m:
-                if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault('system_sn', m.groupdict()['system_sn'])
-                    continue
-                version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
-                continue
-
-            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-            m = p35.match(line)
-            if m:
-                group = m.groupdict()
-                os = group['os']
-                platform = group['platform']
-                image_id = group['image_id']
-                version = group['version']
-
-                # 16.6.5
-                result = p2.match(version)
-                version_short_dict = result.groupdict()
-                version_short = version_short_dict['ver_short']
-
-                version_dict2 = version_dict.setdefault('version', {})
-
-                version_dict2['os'] = os
-                version_dict2['version_short'] = version_short
-                version_dict2['platform'] = platform
-                version_dict2['version'] = version
-                version_dict2['image_id'] = image_id
-
-                continue
-
-            # Compiled Mon 10-Apr-17 04:35 by mcpre
-            # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
-            m36 = p36.match(line)
-            if m36:
-                group = m36.groupdict()
-                version_dict['version']['compiled_date'] = group['compiled_date']
-                version_dict['version']['compiled_by'] = group['compiled_by']
-
-                continue
-
-            # System returned to ROM by reload at 15:57:52 CDT Mon Sep 24 2018
-            # System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
-            # System returned to ROM by reload
-            # System returned to ROM by power cycle at 23:31:24 PDT Thu Sep 27 2007 (SP by power on)
-            # System returned to ROM by power-on
-            m37 = p37.match(line)
-            if m37:
-                group = m37.groupdict()
-
-                if group['returned_to_rom_at']:
-                    version_dict['version']['returned_to_rom_by'] = group['returned_to_rom_by']
-                    version_dict['version']['returned_to_rom_at'] = group['returned_to_rom_at']
-                else:
-                    version_dict['version']['returned_to_rom_by'] = group['returned_to_rom_by']
-
-                if group['sp_by']:
-                    version_dict['version']['sp_by'] = group['sp_by']
-
-                continue
-
-            # Last reload type: Normal Reload
-            m38 = p38.match(line)
-            if m38:
-                version_dict['version']['last_reload_type'] = m38.groupdict()['last_reload_type']
-
-                continue
-
-            # P2020 CPU at 800MHz, E500v2 core, 512KB L2 Cache
-            # MPC8572 CPU at 1.5GHz, Supervisor 7
-            m39 = p39.match(line)
-            if m39:
-                group = m39.groupdict()
-                cpu_dict = version_dict['version'].setdefault('processor', {})
-                if group['supervisor']:
-                    cpu_dict['cpu_type'] = group['cpu_name']
-                    cpu_dict['speed'] = group['speed']
-                    cpu_dict['supervisor'] = group['supervisor']
-                else:
-                    cpu_dict['cpu_type'] = group['cpu_name']
-                    cpu_dict['speed'] = group['speed']
-                    cpu_dict['core'] = group['core']
-                    cpu_dict['l2_cache'] = group['l2_cache']
-
-                continue
-
-            # 98304K bytes of processor board System flash (Read/Write)
-            m40 = p40.match(line)
-            if m40:
-                flash_dict = version_dict['version']
-                in_kb = m40.groupdict()['processor_board_flash']
-                flash_dict['processor_board_flash'] = in_kb
-
-                continue
-
-            # Running default software
-            m41 = p41.match(line)
-            if m41:
-                version_dict['version']['running_default_software'] = True
-
-                continue
-
-            # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
-            m42 = p42.match(line)
-            if m42:
-                version_dict['version']['jawa_revision'] = m42.groupdict()['jawa_revision']
-                version_dict['version']['snowtrooper_revision'] = m42.groupdict()['snowtrooper_rev']
-
-                continue
-
-            # ipbase           ipbasek9         Smart License    ipbasek9
-            # securityk9       securityk9       RightToUse       securityk9
-            m43 = p43.match(line)
-            if m43:
-                group = m43.groupdict()
-
-                if license_flag:
-                    lic_initial_dict = version_dict['version'].setdefault('license_package', {})
-                    license_dict = lic_initial_dict.setdefault(group['technology'], {})
-
-                    if group['license_type']:
-                        license_dict.update({'license_type': group['license_type']})
-
-                    if group['license_level']:
-                        license_dict.update({'license_level': group['license_level']})
-
-                    if group['next_boot']:
-                        license_dict.update(
-                            {'next_reload_license_level': group['next_boot']})
-
-                if suite_flag:
-                    suite_lic_dict = suite_dict.setdefault(group['technology'], {})
-
-                    if group['license_level']:
-                        suite_lic_dict.update(
-                            {'suite_current': group['license_level']})
-
-                    if group['license_type']:
-                        suite_lic_dict.update({'type': group['license_type'].strip()})
-
-                    if group['next_boot']:
-                        suite_lic_dict.update({'suite_next_reboot': group['next_boot']})
-
-                continue
-
-            # Suite                 Suite Current         Type           Suite Next reboot
-            # Technology    Technology-package           Technology-package
-            m44 = p44.match(line)
-            if m44:
-                if 'Suite' in m44.groupdict()['aname']:
-                    suite_flag = True
-
-                if 'Technology' in m44.groupdict()['aname']:
-                    license_flag = True
-                    suite_flag = False
-
-                continue
-
-            # Suite License Information for Module:'esg'
-            m45 = p45.match(line)
-            if m45:
-                module_dict = version_dict['version'].setdefault('module', {})
-                suite_dict = module_dict.setdefault(m45.groupdict()['module'], {})
-
-                continue
-
-        # table2 for C3850
-        tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
-                                                 header_fields=
-                                                 ["Switch",
-                                                  "Ports",
-                                                  "Model             ",
-                                                  'SW Version       ',
-                                                  "SW Image              ",
-                                                  "Mode   "],
-                                                 label_fields=
-                                                 ["switch_num",
-                                                  "ports",
-                                                  "model",
-                                                  "sw_ver",
-                                                  'sw_image',
-                                                  'mode'],
-                                                 index=[0, ],
-                                                 table_terminal_pattern=r"^\n",
-                                                 device_output=out,
-                                                 device_os='iosxe')
-
-        # switch_number
-        # license table for Cat3850
-        tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
-                                                header_fields=
-                                                ["Current            ",
-                                                 "Type            ",
-                                                 "Next reboot  "],
-                                                label_fields=
-                                                ["license_level",
-                                                 "license_type",
-                                                 "next_reload_license_level"],
-                                                table_terminal_pattern=r"^\n",
-                                                device_output=out,
-                                                device_os='iosxe')
-
-        if tmp.entries:
-            res = tmp
-            for key in res.entries.keys():
-                for k, v in res.entries[key].items():
-                    version_dict['version'][k] = v
-            if tmp2.entries:
-                res2 = tmp2
-                for key in res2.entries.keys():
-                    if 'switch_num' not in version_dict['version']:
-                        version_dict['version']['switch_num'] = {}
-                    if '*' in key:
-                        p = re.compile(r'\**\ *(?P<new_key>\d)')
-                        m = p.match(key)
-                        switch_no = m.groupdict()['new_key']
-                        if m:
-                            if switch_no not in version_dict['version']['switch_num']:
-                                version_dict['version']['switch_num'][switch_no] = {}
-                            for k, v in res2.entries[key].items():
-                                if 'switch_num' != k:
-                                    version_dict['version']['switch_num'][switch_no][k] = v
-                            version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
-                            version_dict['version']['switch_num'][switch_no]['active'] = True
-                            version_dict['version']['switch_num'][switch_no]. \
-                                update(active_dict) if active_dict else None
-                    else:
-                        for k, v in res2.entries[key].items():
-                            if key not in version_dict['version']['switch_num']:
-                                version_dict['version']['switch_num'][key] = {}
-                            if 'switch_num' != k:
-                                version_dict['version']['switch_num'][key][k] = v
-                        version_dict['version']['switch_num'][key]['active'] = False
-
-        return version_dict
+        return ver_dict
 
 
 class ShowModuleSchema(MetaParser):
