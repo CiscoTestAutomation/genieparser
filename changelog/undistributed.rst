@@ -14,6 +14,14 @@
     * Added ShowIsisHostnameDetail for commands:
         * show isis hostname detail
         * show isis hostname detail vrf {vrf}
+    * Added ShowMacAddressTable for:
+        * show mac address-table vlan {vlan}
+        * show mac address-table interface {interface}
+        * show mac address-table interface {interface} vlan {vlan}
+        * show mac address-table address {address}
+        * show mac address-table address {address} vlan {vlan}
+        * show mac address-table address {address} interface {interface}
+        * show mac address-table address {address} interface {interface} vlan {vlan}
 
 * IOSXE
     * Added ShowProcessesMemory for:
@@ -60,6 +68,9 @@
 		* Updated regex to match new values
     * Updated ShowIsisInterface for:
         * Added optional key 'passive' to schema
+    * Updated ShowSpanningTreeDetail for:
+        * Added support for various device outputs
+        * Support fex hello time
 
 * IOSXE
     * Updated ShowPolicyMapTypeSuperParser
@@ -70,6 +81,8 @@
     * Updated ShowDot1xAllDetail
 	    * Modified regex for eap_method
 		* Updated 'system_auth_control', 'version' as Optional keys
+    * Updated ShowLispServiceMapCache, ShowLispServiceDatabase
+        * EID-table default no longer breaks parsing
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
