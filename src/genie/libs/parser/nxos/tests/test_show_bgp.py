@@ -17448,6 +17448,4948 @@ class test_show_running_config_bgp(unittest.TestCase):
     #         route-target export 100:1
     #     '''}
 
+    device_output = {'execute.return_value': '''
+        !Command: show running-config bgp
+
+    !Time: Wed Nov 20 22:48:58 2019
+
+
+
+    version 7.3(2)D1(1D)
+
+    feature bgp
+
+
+
+    logging level bgp 3
+
+
+
+    snmp-server enable traps bgp
+
+    router bgp 1
+
+      router-id 100.0.1.1
+
+      graceful-restart restart-time 360
+
+      graceful-restart stalepath-time 120
+
+      log-neighbor-changes
+
+      address-family ipv4 unicast
+
+        maximum-paths 2
+
+        maximum-paths ibgp 2
+
+        additional-paths send
+
+        additional-paths receive
+
+      address-family ipv6 unicast
+
+        maximum-paths 2
+
+        maximum-paths ibgp 2
+
+        additional-paths send
+
+        additional-paths receive
+
+      template peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+        bfd
+
+        remote-as 2
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv4 unicast
+
+          send-community
+
+          maximum-prefix 40000 warning-only
+
+      template peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+        bfd
+
+        remote-as 2
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv6 unicast
+
+          send-community
+
+          maximum-prefix 40000 warning-only
+
+      template peer RJIL-NEXUS-EBGP-N9K-TOR-IPv4
+
+        bfd
+
+        remote-as 4
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv4 unicast
+
+          send-community
+
+      template peer RJIL-NEXUS-EBGP-N9K-TOR-IPv6
+
+        bfd
+
+        remote-as 4
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv6 unicast
+
+          send-community
+
+      template peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+        bfd
+
+        remote-as 1
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv4 unicast
+
+          send-community
+
+          maximum-prefix 40000 warning-only
+
+          next-hop-self
+
+      template peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+        bfd
+
+        remote-as 1
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv6 unicast
+
+          send-community
+
+          maximum-prefix 40000 warning-only
+
+          next-hop-self
+
+      template peer RJIL-NEXUS-N93180-PBR-IPv4
+
+        bfd
+
+        remote-as 10
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv4 unicast
+
+          send-community
+
+      template peer RJIL-NEXUS-N93180-PBR-IPv6
+
+        bfd
+
+        remote-as 10
+
+        password 3 9125d59c18a9b015
+
+        address-family ipv6 unicast
+
+          send-community
+
+      neighbor 1920:0:0:20::2
+
+        inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+        address-family ipv6 unicast
+
+      neighbor 5000:0:1:1::2
+
+        inherit peer RJIL-NEXUS-EBGP-N9K-TOR-IPv6
+
+        address-family ipv6 unicast
+
+      neighbor 5000:0:1:2::2
+
+        inherit peer RJIL-NEXUS-EBGP-N9K-TOR-IPv6
+
+        address-family ipv6 unicast
+
+      neighbor 5200:1:1:1::2
+
+        inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+        address-family ipv6 unicast
+
+          route-map RJIL-VRF-GLOBAL-SAR-IPv6-OUT out
+
+      neighbor 5200:1:1:2::2
+
+        inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+        address-family ipv6 unicast
+
+          route-map RJIL-VRF-GLOBAL-SAR-IPv6-OUT out
+
+      neighbor 50.1.1.2
+
+        inherit peer RJIL-NEXUS-EBGP-N9K-TOR-IPv4
+
+        address-family ipv4 unicast
+
+      neighbor 50.1.2.2
+
+        inherit peer RJIL-NEXUS-EBGP-N9K-TOR-IPv4
+
+        address-family ipv4 unicast
+
+      neighbor 52.1.1.2
+
+        inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+        address-family ipv4 unicast
+
+          no route-map test1 in
+
+          route-map RJIL-VRF-GLOBAL-SAR-IPv4-OUT out
+
+      neighbor 52.1.2.2
+
+        inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+        address-family ipv4 unicast
+
+          route-map RJIL-VRF-GLOBAL-SAR-IPv4-OUT out
+
+      neighbor 192.168.1.2
+
+        inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+        address-family ipv4 unicast
+
+      vrf Rel-1
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+          default-information originate
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+          default-information originate
+
+        neighbor 3000:0:1:1::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:1::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:1::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 9701:100:20:1::2
+
+          inherit peer RJIL-NEXUS-N93180-PBR-IPv6
+
+          address-family ipv6 unicast
+
+            no route-map RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT out
+
+        neighbor 9701:100:20:2::2
+
+          inherit peer RJIL-NEXUS-N93180-PBR-IPv6
+
+          address-family ipv6 unicast
+
+            no route-map RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT out
+
+        neighbor 30.1.1.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+            route-map test in
+
+        neighbor 30.2.1.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.1.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 95.1.1.2
+
+          remote-as 20
+
+          address-family ipv4 unicast
+
+            route-map test in
+
+        neighbor 97.1.1.2
+
+          inherit peer RJIL-NEXUS-N93180-PBR-IPv4
+
+          address-family ipv4 unicast
+
+            no route-map test in
+
+            no route-map RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT out
+
+        neighbor 97.1.2.2
+
+          inherit peer RJIL-NEXUS-N93180-PBR-IPv4
+
+          address-family ipv4 unicast
+
+            no route-map RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT out
+
+      vrf Rel-10
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:10::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:10::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:10::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.10.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.10.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.10.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-11
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:11::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:11::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:11::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.11.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.11.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.11.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-12
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:12::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:12::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:12::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.12.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.12.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.12.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-13
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:13::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:13::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:13::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.13.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.13.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.13.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-14
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:14::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:14::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:14::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.14.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.14.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.14.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-15
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:15::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:15::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:15::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.15.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.15.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.15.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-16
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:16::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:16::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:16::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.16.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.16.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.16.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-17
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:17::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:17::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:17::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.17.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.17.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.17.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-18
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 2405:200:801:1300::91
+
+          remote-as 2
+
+          address-family ipv6 unicast
+
+        neighbor 2405:200:801:1300::93
+
+          remote-as 2
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:1:18::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:18::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:18::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.18.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.18.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.18.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-19
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:19::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:19::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:19::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.19.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.19.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.19.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-2
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:2::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:2::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:2::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.2.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.2.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.2.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-20
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:20::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:20::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:20::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.20.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.20.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.20.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-3
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:3::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:3::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:3::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.3.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.3.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.3.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-4
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:4::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:4::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:4::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.4.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.4.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.4.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-5
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:5::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:5::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:5::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.5.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.5.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.5.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-6
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:6::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:6::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:6::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.6.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.6.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.6.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-7
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:7::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:7::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:7::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.7.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.7.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.7.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-8
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:8::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:8::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:8::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.8.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.8.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.8.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+      vrf Rel-9
+
+        address-family ipv4 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv4
+
+          redistribute static route-map RJIL-CONNECTED-IPv4
+
+          maximum-paths 2
+
+        address-family ipv6 unicast
+
+          redistribute direct route-map RJIL-CONNECTED-IPv6
+
+          redistribute static route-map RJIL-CONNECTED-IPv6
+
+          maximum-paths 2
+
+        neighbor 3000:0:1:9::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 3000:0:2:9::
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 7000:0:0:9::2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv6
+
+          address-family ipv6 unicast
+
+        neighbor 30.1.9.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 30.2.9.2
+
+          inherit peer RJIL-NEXUS-EBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+        neighbor 70.1.9.2
+
+          inherit peer RJIL-NEXUS-IBGP-GRP-IPv4
+
+          address-family ipv4 unicast
+
+
+
+
+
+
+    N7K-1# 
+        '''}
+
+    parsed_output = {
+        'bgp': {
+            'instance': {
+                'default': {
+                    'bgp_id': 1,
+                    'peer_name': {
+                        'RJIL-NEXUS-EBGP-GRP-IPv4': {
+                            'peer_af_name': {
+                                'ipv4 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_maximum_prefix_max_prefix_no': 40000,
+                                    'peer_maximum_prefix_warning_only': True,
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 2,
+                        },
+                        'RJIL-NEXUS-EBGP-GRP-IPv6': {
+                            'peer_af_name': {
+                                'ipv6 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_maximum_prefix_max_prefix_no': 40000,
+                                    'peer_maximum_prefix_warning_only': True,
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 2,
+                        },
+                        'RJIL-NEXUS-EBGP-N9K-TOR-IPv4': {
+                            'peer_af_name': {
+                                'ipv4 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 4,
+                        },
+                        'RJIL-NEXUS-EBGP-N9K-TOR-IPv6': {
+                            'peer_af_name': {
+                                'ipv6 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 4,
+                        },
+                        'RJIL-NEXUS-IBGP-GRP-IPv4': {
+                            'peer_af_name': {
+                                'ipv4 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_maximum_prefix_max_prefix_no': 40000,
+                                    'peer_maximum_prefix_warning_only': True,
+                                    'peer_next_hop_self': True,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 1,
+                        },
+                        'RJIL-NEXUS-IBGP-GRP-IPv6': {
+                            'peer_af_name': {
+                                'ipv6 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_maximum_prefix_max_prefix_no': 40000,
+                                    'peer_maximum_prefix_warning_only': True,
+                                    'peer_next_hop_self': True,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 1,
+                        },
+                        'RJIL-NEXUS-N93180-PBR-IPv4': {
+                            'peer_af_name': {
+                                'ipv4 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 10,
+                        },
+                        'RJIL-NEXUS-N93180-PBR-IPv6': {
+                            'peer_af_name': {
+                                'ipv6 unicast': {
+                                    'peer_af_send_community': 'standard',
+                                    'peer_next_hop_self': False,
+                                },
+                            },
+                            'peer_fall_over_bfd': True,
+                            'peer_password_text': '3 9125d59c18a9b015',
+                            'peer_remote_as': 10,
+                        },
+                    },
+                    'protocol_shutdown': False,
+                    'vrf': {
+                        'Rel-1': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_default_originate': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_in': 'test',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:1::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:1::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:1::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '95.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_in': 'test',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remote_as': 20,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '97.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_in': 'test',
+                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-N93180-PBR-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '97.1.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-N93180-PBR-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '9701:100:20:1::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-N93180-PBR-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '9701:100:20:2::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-N93180-PBR-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-10': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.10.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.10.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:10::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:10::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.10.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:10::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-11': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.11.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.11.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:11::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:11::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.11.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:11::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-12': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.12.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.12.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:12::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:12::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.12.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:12::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-13': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.13.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.13.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:13::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:13::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.13.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:13::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-14': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.14.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.14.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:14::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:14::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.14.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:14::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-15': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.15.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.15.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:15::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:15::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.15.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:15::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-16': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.16.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.16.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:16::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:16::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.16.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:16::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-17': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.17.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.17.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:17::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:17::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.17.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:17::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-18': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '2405:200:801:1300::91': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remote_as': 2,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '2405:200:801:1300::93': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remote_as': 2,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.1.18.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.18.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:18::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:18::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.18.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:18::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-19': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.19.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.19.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:19::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:19::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.19.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:19::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-2': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:2::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:2::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:2::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-20': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.20.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.20.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:20::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:20::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.20.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:20::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-3': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.3.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.3.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:3::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:3::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.3.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:3::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-4': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.4.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.4.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:4::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:4::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.4.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:4::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-5': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.5.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.5.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:5::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:5::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.5.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:5::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-6': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.6.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.6.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:6::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:6::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.6.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:6::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-7': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.7.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.7.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:7::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:7::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.7.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:7::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-8': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.8.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.8.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:8::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:8::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.8.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:8::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'Rel-9': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_redist_connected': True,
+                                    'af_redist_connected_route_policy': 'RJIL-CONNECTED-IPv6',
+                                    'af_redist_static': True,
+                                    'af_redist_static_route_policy': 'RJIL-CONNECTED-IPv6',
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'isolate': False,
+                            'log_neighbor_changes': False,
+                            'neighbor_id': {
+                                '30.1.9.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '30.2.9.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:1:9::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '3000:0:2:9::': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '70.1.9.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '7000:0:0:9::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                        },
+                        'default': {
+                            'af_name': {
+                                'ipv4 unicast': {
+                                    'af_additional_paths_receive': True,
+                                    'af_additional_paths_send': True,
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_maximum_paths_ibgp': 2,
+                                },
+                                'ipv6 unicast': {
+                                    'af_additional_paths_receive': True,
+                                    'af_additional_paths_send': True,
+                                    'af_client_to_client_reflection': True,
+                                    'af_maximum_paths_ebgp': 2,
+                                    'af_maximum_paths_ibgp': 2,
+                                },
+                            },
+                            'enforce_first_as': True,
+                            'fast_external_fallover': True,
+                            'flush_routes': False,
+                            'graceful_restart': True,
+                            'graceful_restart_restart_time': 360,
+                            'graceful_restart_stalepath_time': 120,
+                            'isolate': False,
+                            'log_neighbor_changes': True,
+                            'neighbor_id': {
+                                '192.168.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '1920:0:0:20::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-IBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '50.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-N9K-TOR-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '50.1.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-N9K-TOR-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '5000:0:1:1::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-N9K-TOR-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '5000:0:1:2::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-N9K-TOR-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '52.1.1.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_in': 'test1',
+                                            'nbr_af_route_map_name_out': 'RJIL-VRF-GLOBAL-SAR-IPv4-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '52.1.2.2': {
+                                    'nbr_af_name': {
+                                        'ipv4 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-VRF-GLOBAL-SAR-IPv4-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv4',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '5200:1:1:1::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-VRF-GLOBAL-SAR-IPv6-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                                '5200:1:1:2::2': {
+                                    'nbr_af_name': {
+                                        'ipv6 unicast': {
+                                            'nbr_af_allowas_in': False,
+                                            'nbr_af_as_override': False,
+                                            'nbr_af_default_originate': False,
+                                            'nbr_af_next_hop_self': False,
+                                            'nbr_af_route_map_name_out': 'RJIL-VRF-GLOBAL-SAR-IPv6-OUT',
+                                            'nbr_af_route_reflector_client': False,
+                                            'nbr_af_soft_reconfiguration': False,
+                                        },
+                                    },
+                                    'nbr_disable_connected_check': False,
+                                    'nbr_ebgp_multihop': False,
+                                    'nbr_fall_over_bfd': False,
+                                    'nbr_inherit_peer': 'RJIL-NEXUS-EBGP-GRP-IPv6',
+                                    'nbr_local_as_dual_as': False,
+                                    'nbr_local_as_no_prepend': False,
+                                    'nbr_local_as_replace_as': False,
+                                    'nbr_remove_private_as': False,
+                                    'nbr_shutdown': False,
+                                    'nbr_suppress_four_byte_as_capability': False,
+                                },
+                            },
+                            'router_id': '100.0.1.1',
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -17461,6 +22403,13 @@ class test_show_running_config_bgp(unittest.TestCase):
     #     obj = ShowRunningConfigBgp(device=self.device)
     #     parsed_output = obj.parse()
     #     self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_temp(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowRunningConfigBgp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
