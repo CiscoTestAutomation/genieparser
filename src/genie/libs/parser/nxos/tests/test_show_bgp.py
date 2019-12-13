@@ -1,7 +1,6 @@
 
 # Python
 import unittest
-import genie.gre
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
@@ -19162,8 +19161,8 @@ class test_show_running_config_bgp(unittest.TestCase):
                                             'nbr_af_as_override': False,
                                             'nbr_af_default_originate': False,
                                             'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_in': 'test',
-                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
+                                            'no_nbr_af_route_map_name_in': 'test',
+                                            'no_nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
                                             'nbr_af_route_reflector_client': False,
                                             'nbr_af_soft_reconfiguration': False,
                                         },
@@ -19186,7 +19185,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                             'nbr_af_as_override': False,
                                             'nbr_af_default_originate': False,
                                             'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
+                                            'no_nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv4-OUT',
                                             'nbr_af_route_reflector_client': False,
                                             'nbr_af_soft_reconfiguration': False,
                                         },
@@ -19209,7 +19208,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                             'nbr_af_as_override': False,
                                             'nbr_af_default_originate': False,
                                             'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
+                                            'no_nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
                                             'nbr_af_route_reflector_client': False,
                                             'nbr_af_soft_reconfiguration': False,
                                         },
@@ -19232,7 +19231,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                             'nbr_af_as_override': False,
                                             'nbr_af_default_originate': False,
                                             'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
+                                            'no_nbr_af_route_map_name_out': 'RJIL-DEFAULT-ROUTE-NEXUS-TCP-OPT-IPv6-OUT',
                                             'nbr_af_route_reflector_client': False,
                                             'nbr_af_soft_reconfiguration': False,
                                         },
@@ -22347,7 +22346,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                             'nbr_af_as_override': False,
                                             'nbr_af_default_originate': False,
                                             'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_in': 'test1',
+                                            'no_nbr_af_route_map_name_in': 'test1',
                                             'nbr_af_route_map_name_out': 'RJIL-VRF-GLOBAL-SAR-IPv4-OUT',
                                             'nbr_af_route_reflector_client': False,
                                             'nbr_af_soft_reconfiguration': False,

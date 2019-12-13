@@ -6078,6 +6078,8 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                             Optional('nbr_af_maximum_prefix_warning_only'): bool,
                                             Optional('nbr_af_route_map_name_in'): str,
                                             Optional('nbr_af_route_map_name_out'): str,
+                                            Optional('no_nbr_af_route_map_name_in'): str,
+                                            Optional('no_nbr_af_route_map_name_out'): str,
                                             Optional('nbr_af_route_reflector_client'): bool,
                                             Optional('nbr_af_send_community'): str,
                                             Optional('nbr_af_rewrite_evpn_rt_asn'): bool,
@@ -6952,15 +6954,23 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             #   route-map <nbr_af_route_map_name_in> in
                             m = p62.match(line)
                             if m:
-                                bgp_vrf_af_dict['nbr_af_route_map_name_in'] = \
-                                    str(m.groupdict()['nbr_af_route_map_name_in'])
+                                if 'no' in line:
+                                    bgp_vrf_af_dict['no_nbr_af_route_map_name_in'] = \
+                                        str(m.groupdict()['nbr_af_route_map_name_in'])
+                                else:
+                                    bgp_vrf_af_dict['nbr_af_route_map_name_in'] = \
+                                        str(m.groupdict()['nbr_af_route_map_name_in'])
                                 continue
 
                             #   route-map <nbr_af_route_map_name_out> out
                             m = p63.match(line)
                             if m:
-                                bgp_vrf_af_dict['nbr_af_route_map_name_out'] = \
-                                    str(m.groupdict()['nbr_af_route_map_name_out'])
+                                if 'no' in line:
+                                    bgp_vrf_af_dict['no_nbr_af_route_map_name_out'] = \
+                                        str(m.groupdict()['nbr_af_route_map_name_out'])
+                                else:
+                                    bgp_vrf_af_dict['nbr_af_route_map_name_out'] = \
+                                        str(m.groupdict()['nbr_af_route_map_name_out'])
                                 continue
 
                             #   route-reflector-client
