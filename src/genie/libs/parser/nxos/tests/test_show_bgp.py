@@ -17027,426 +17027,478 @@ class test_show_running_config_bgp(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'bgp': 
-            {'instance': 
-                {'default': 
-                    {'bgp_id': 100,
-                    'protocol_shutdown': False,
-                    'peer_name': {'PEER-TEMPLATE': {'peer_fall_over_bfd': False}},
-                    'pp_name': {
-                        'PP-1': {
-                            'pp_allowas_in': False,
-                            'pp_as_override': False,
-                            'pp_default_originate': False,
-                            'pp_next_hop_self': False,
-                            'pp_route_reflector_client': False,
-                            'pp_send_community': 'both',
-                            'pp_soft_reconfiguration': True,
+    'bgp': {
+        'instance': {
+            'default': {
+                'bgp_id': 100,
+                'peer_name': {
+                    'PEER-TEMPLATE': {
+                        'peer_fall_over_bfd': False,
+                    },
+                },
+                'pp_name': {
+                    'PP-1': {
+                        'pp_allowas_in': False,
+                        'pp_as_override': False,
+                        'pp_default_originate': False,
+                        'pp_next_hop_self': False,
+                        'pp_route_reflector_client': False,
+                        'pp_send_community': 'both',
+                        'pp_soft_reconfiguration': True,
+                    },
+                },
+                'protocol_shutdown': False,
+                'ps_name': {
+                    'PS-1': {
+                        'ps_description': 'ps_desc_test',
+                        'ps_disable_connected_check': True,
+                        'ps_ebgp_multihop': False,
+                        'ps_fall_over_bfd': False,
+                        'ps_local_as_dual_as': False,
+                        'ps_local_as_no_prepend': False,
+                        'ps_local_as_replace_as': False,
+                        'ps_shutdown': False,
+                        'ps_suppress_four_byte_as_capability': False,
+                    },
+                },
+                'vrf': {
+                    'VRF1': {
+                        'af_name': {
+                            'ipv6 unicast': {
+                                'af_client_to_client_reflection': True,
+                            },
+                        },
+                        'enforce_first_as': True,
+                        'fast_external_fallover': True,
+                        'flush_routes': False,
+                        'graceful_restart': True,
+                        'isolate': False,
+                        'log_neighbor_changes': False,
+                        'neighbor_id': {
+                            '10.76.1.101': {
+                                'nbr_af_name': {
+                                    'ipv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_as_override': True,
+                                        'nbr_af_default_originate': False,
+                                        'nbr_af_next_hop_self': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                    'ipv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_as_override': False,
+                                        'nbr_af_default_originate': False,
+                                        'nbr_af_next_hop_self': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                },
+                                'nbr_disable_connected_check': True,
+                                'nbr_ebgp_multihop': False,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 70000,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                            },
+                            '2001:db8:1c39:1::1:101': {
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': False,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 70000,
+                                'nbr_suppress_four_byte_as_capability': False,
+                            },
                         },
                     },
-                    'ps_name': 
-                        {'PS-1': 
-                            {'ps_description': 'ps_desc_test',
-                            'ps_disable_connected_check': True,
-                            'ps_ebgp_multihop': False,
-                            'ps_fall_over_bfd': False,
-                            'ps_local_as_dual_as': False,
-                            'ps_local_as_no_prepend': False,
-                            'ps_local_as_replace_as': False,
-                            'ps_shutdown': False,
-                            'ps_suppress_four_byte_as_capability': False}},
-                    'vrf': 
-                        {'VRF1': 
-                            {'enforce_first_as': True,
-                            'fast_external_fallover': True,
-                            'flush_routes': False,
-                            'graceful_restart': True,
-                            'isolate': False,
-                            'log_neighbor_changes': False,
-                            'neighbor_id': 
-                                {'10.76.1.101': 
-                                    {'nbr_af_name': 
-                                        {'ipv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_as_override': True,
-                                            'nbr_af_default_originate': False,
-                                            'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False},
-                                        'ipv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_as_override': False,
-                                            'nbr_af_default_originate': False,
-                                            'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False}},
-                                    'nbr_disable_connected_check': True,
-                                    'nbr_ebgp_multihop': False,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 70000,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False},
-                                '2001:db8:1c39:1::1:101': 
-                                    {'nbr_af_name': 
-                                        {'ipv6 unicast': {}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': False,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 70000,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False}}},
-                        'default': 
-                            {'af_name': 
-                                {'ipv4 multicast': 
-                                    {'af_client_to_client_reflection': True,
-                                    'af_redist_connected': True,
-                                    'af_redist_connected_route_policy': 'ALL'},
-                                'ipv4 unicast': 
-                                    {'af_aggregate_address_ipv4_address': '10.4.0.0',
-                                    'af_aggregate_address_ipv4_mask': 16,
-                                    'af_client_to_client_reflection': True,
-                                    'af_dampening': True,
-                                    'af_dampening_half_life_time': 25,
-                                    'af_dampening_max_suppress_time': 255,
-                                    'af_dampening_reuse_time': 1000,
-                                    'af_dampening_suppress_time': 1500,
-                                    'af_distance_extern_as': 19,
-                                    'af_distance_internal_as': 199,
-                                    'af_distance_local': 219,
-                                    'af_maximum_paths_ebgp': 8,
-                                    'af_nexthop_route_map': 'ALL',
-                                    'af_redist_connected': True,
-                                    'af_redist_connected_route_policy': 'RMAP_Lo0',
-                                    'af_redist_ospf': '1',
-                                    'af_redist_ospf_route_policy': 'RMAP_OSPF',
-                                    'af_redist_static': True,
-                                    'af_redist_static_route_policy': 'ALL'},
-                                'ipv6 multicast': 
-                                    {'af_client_to_client_reflection': True,
-                                    'af_redist_connected': True,
-                                    'af_redist_connected_route_policy': 'ALL'},
-                                'ipv6 unicast': {},
-                                'vpnv4 unicast': 
-                                    {'af_nexthop_trigger_delay_critical': 3333,
-                                    'af_nexthop_trigger_delay_non_critical': 11111,
-                                    'af_nexthop_trigger_enable': True},
-                                'vpnv6 unicast': 
-                                    {'af_client_to_client_reflection': True}},
-                                    'always_compare_med': True,
-                                    'bestpath_compare_routerid': False,
-                                    'bestpath_cost_community_ignore': False,
-                                    'bestpath_med_missing_at_worst': False,
-                                    'confederation_identifier': 100,
-                                    'confederation_peers_as': '65000',
-                                    'enforce_first_as': True,
-                                    'fast_external_fallover': True,
-                                    'flush_routes': False,
-                                    'graceful_restart': True,
-                                    'graceful_restart_restart_time': 250,
-                                    'graceful_restart_stalepath_time': 450,
-                                    'holdtime': 60,
-                                    'isolate': False,
-                                    'keepalive_interval': 30,
-                                    'log_neighbor_changes': False,
-                            'neighbor_id': 
-                                {'192.168.4.1': 
-                                    {'nbr_af_name': 
-                                        {'ipv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_as_override': False,
-                                            'nbr_af_default_originate': True,
-                                            'nbr_af_default_originate_route_map': 'SOMENAME',
-                                            'nbr_af_maximum_prefix_max_prefix_no': 123,
-                                            'nbr_af_next_hop_self': True,
-                                            'nbr_af_route_reflector_client': True,
-                                            'nbr_af_send_community': 'both',
-                                            'nbr_af_soft_reconfiguration': True},
-                                        'vpnv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_send_community': 'both'},
-                                        'vpnv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_send_community': 'both'}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': False,
-                                    'nbr_fall_over_bfd': True,
-                                    'nbr_holdtime': 60,
-                                    'nbr_keepalive_interval': 10,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 100,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_transport_connection_mode': 'passive',
-                                    'nbr_update_source': 'loopback0'},
-                                '2001:db8:4:1::1:1': 
-                                    {'nbr_af_name': 
-                                        {'ipv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_next_hop_self': True,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': False,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_holdtime': 60,
-                                    'nbr_keepalive_interval': 50,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_password_text': '3 a667d47acc18ea6b',
-                                    'nbr_remote_as': 100,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_update_source': 'loopback0'},
-                                '192.168.64.1': 
-                                    {'nbr_af_name': 
-                                        {'ipv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_next_hop_self': True,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': True,
-                                    'nbr_ebgp_multihop_max_hop': 5,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 200,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_update_source': 'loopback0'},
-                                '2001:db8:4104:1::1:1': 
-                                    {'nbr_af_name': 
-                                        {'ipv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_next_hop_self': True,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': True,
-                                    'nbr_ebgp_multihop_max_hop': 5,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 200,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_update_source': 'loopback0'},
-                                '10.51.1.101': 
-                                    {'nbr_af_name': 
-                                        {'ipv4 multicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_map_name_in': 'ALL',
-                                            'nbr_af_route_map_name_out': 'ALL'},
-                                        'ipv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_as_override': False,
-                                            'nbr_af_default_originate': True,
-                                            'nbr_af_maximum_prefix_max_prefix_no': 1000,
-                                            'nbr_af_next_hop_self': False,
-                                            'nbr_af_route_map_name_in': 'prefixlist',
-                                            'nbr_af_route_map_name_out': 'weight',
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_soft_reconfiguration': False},
-                                        'ipv6 multicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_map_name_in': 'ALL',
-                                            'nbr_af_route_map_name_out': 'ALL'},
-                                        'vpnv4 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_send_community': 'both'},
-                                        'vpnv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_reflector_client': False,
-                                            'nbr_af_send_community': 'both'}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': True,
-                                    'nbr_ebgp_multihop_max_hop': 5,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_local_as_as_no': 101,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 300,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_update_source': 'loopback0'},
-                                '2001:db8:1900:1::1:101': 
-                                    {'nbr_af_name': 
-                                        {'ipv6 unicast': 
-                                            {'nbr_af_allowas_in': False,
-                                            'nbr_af_route_map_name_in': 'ALL',
-                                            'nbr_af_route_map_name_out': 'ALL'}},
-                                    'nbr_disable_connected_check': False,
-                                    'nbr_ebgp_multihop': True,
-                                    'nbr_ebgp_multihop_max_hop': 50,
-                                    'nbr_fall_over_bfd': False,
-                                    'nbr_holdtime': 90,
-                                    'nbr_inherit_peer_session': 'PS-1',
-                                    'nbr_keepalive_interval': 30,
-                                    'nbr_local_as_dual_as': False,
-                                    'nbr_local_as_no_prepend': False,
-                                    'nbr_local_as_replace_as': False,
-                                    'nbr_remote_as': 300,
-                                    'nbr_remove_private_as': False,
-                                    'nbr_shutdown': False,
-                                    'nbr_suppress_four_byte_as_capability': False,
-                                    'nbr_update_source': 'loopback0'}},
-                    'router_id': '10.1.1.1'}}}}}}
+                    'default': {
+                        'af_name': {
+                            'ipv4 multicast': {
+                                'af_client_to_client_reflection': True,
+                                'af_redist_connected': True,
+                                'af_redist_connected_route_policy': 'ALL',
+                            },
+                            'ipv4 unicast': {
+                                'af_aggregate_address_ipv4_address': '10.4.0.0',
+                                'af_aggregate_address_ipv4_mask': 16,
+                                'af_client_to_client_reflection': True,
+                                'af_dampening': True,
+                                'af_dampening_half_life_time': 25,
+                                'af_dampening_max_suppress_time': 255,
+                                'af_dampening_reuse_time': 1000,
+                                'af_dampening_suppress_time': 1500,
+                                'af_distance_extern_as': 19,
+                                'af_distance_internal_as': 199,
+                                'af_distance_local': 219,
+                                'af_maximum_paths_ebgp': 8,
+                                'af_nexthop_route_map': 'ALL',
+                                'af_redist_connected': True,
+                                'af_redist_connected_route_policy': 'RMAP_Lo0',
+                                'af_redist_ospf': '1',
+                                'af_redist_ospf_route_policy': 'RMAP_OSPF',
+                                'af_redist_static': True,
+                                'af_redist_static_route_policy': 'ALL',
+                            },
+                            'ipv6 multicast': {
+                                'af_client_to_client_reflection': True,
+                                'af_redist_connected': True,
+                                'af_redist_connected_route_policy': 'ALL',
+                            },
+                            'ipv6 unicast': {
+                            },
+                            'vpnv4 unicast': {
+                                'af_nexthop_trigger_delay_critical': 3333,
+                                'af_nexthop_trigger_delay_non_critical': 11111,
+                                'af_nexthop_trigger_enable': True,
+                            },
+                            'vpnv6 unicast': {
+                                'af_client_to_client_reflection': True,
+                            },
+                        },
+                        'always_compare_med': True,
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
+                        'confederation_identifier': 100,
+                        'confederation_peers_as': '65000',
+                        'enforce_first_as': True,
+                        'fast_external_fallover': True,
+                        'flush_routes': False,
+                        'graceful_restart': True,
+                        'graceful_restart_restart_time': 250,
+                        'graceful_restart_stalepath_time': 450,
+                        'holdtime': 60,
+                        'isolate': False,
+                        'keepalive_interval': 30,
+                        'log_neighbor_changes': False,
+                        'neighbor_id': {
+                            '10.51.1.101': {
+                                'nbr_af_name': {
+                                    'ipv4 multicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_map_name_in': 'ALL',
+                                        'nbr_af_route_map_name_out': 'ALL',
+                                    },
+                                    'ipv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_as_override': False,
+                                        'nbr_af_default_originate': True,
+                                        'nbr_af_maximum_prefix_max_prefix_no': 1000,
+                                        'nbr_af_next_hop_self': False,
+                                        'nbr_af_route_map_name_in': 'prefixlist',
+                                        'nbr_af_route_map_name_out': 'weight',
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                    'ipv6 multicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_map_name_in': 'ALL',
+                                        'nbr_af_route_map_name_out': 'ALL',
+                                    },
+                                    'vpnv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_send_community': 'both',
+                                    },
+                                    'vpnv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_send_community': 'both',
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': True,
+                                'nbr_ebgp_multihop_max_hop': 5,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_local_as_as_no': 101,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 300,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_update_source': 'loopback0',
+                            },
+                            '192.168.4.1': {
+                                'nbr_af_name': {
+                                    'ipv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_as_override': False,
+                                        'nbr_af_default_originate': True,
+                                        'nbr_af_default_originate_route_map': 'SOMENAME',
+                                        'nbr_af_maximum_prefix_max_prefix_no': 123,
+                                        'nbr_af_next_hop_self': True,
+                                        'nbr_af_route_reflector_client': True,
+                                        'nbr_af_send_community': 'both',
+                                        'nbr_af_soft_reconfiguration': True,
+                                    },
+                                    'vpnv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_send_community': 'both',
+                                    },
+                                    'vpnv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_send_community': 'both',
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': False,
+                                'nbr_fall_over_bfd': True,
+                                'nbr_holdtime': 60,
+                                'nbr_keepalive_interval': 10,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 100,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_transport_connection_mode': 'passive',
+                                'nbr_update_source': 'loopback0',
+                            },
+                            '192.168.64.1': {
+                                'nbr_af_name': {
+                                    'ipv4 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_next_hop_self': True,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': True,
+                                'nbr_ebgp_multihop_max_hop': 5,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 200,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_update_source': 'loopback0',
+                            },
+                            '2001:db8:1900:1::1:101': {
+                                'nbr_af_name': {
+                                    'ipv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_route_map_name_in': 'ALL',
+                                        'nbr_af_route_map_name_out': 'ALL',
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': True,
+                                'nbr_ebgp_multihop_max_hop': 50,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_holdtime': 90,
+                                'nbr_inherit_peer_session': 'PS-1',
+                                'nbr_keepalive_interval': 30,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 300,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_update_source': 'loopback0',
+                            },
+                            '2001:db8:4104:1::1:1': {
+                                'nbr_af_name': {
+                                    'ipv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_next_hop_self': True,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': True,
+                                'nbr_ebgp_multihop_max_hop': 5,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_remote_as': 200,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_update_source': 'loopback0',
+                            },
+                            '2001:db8:4:1::1:1': {
+                                'nbr_af_name': {
+                                    'ipv6 unicast': {
+                                        'nbr_af_allowas_in': False,
+                                        'nbr_af_next_hop_self': True,
+                                        'nbr_af_route_reflector_client': False,
+                                        'nbr_af_soft_reconfiguration': False,
+                                    },
+                                },
+                                'nbr_disable_connected_check': False,
+                                'nbr_ebgp_multihop': False,
+                                'nbr_fall_over_bfd': False,
+                                'nbr_holdtime': 60,
+                                'nbr_keepalive_interval': 50,
+                                'nbr_local_as_dual_as': False,
+                                'nbr_local_as_no_prepend': False,
+                                'nbr_local_as_replace_as': False,
+                                'nbr_password_text': '3 a667d47acc18ea6b',
+                                'nbr_remote_as': 100,
+                                'nbr_remove_private_as': False,
+                                'nbr_shutdown': False,
+                                'nbr_suppress_four_byte_as_capability': False,
+                                'nbr_update_source': 'loopback0',
+                            },
+                        },
+                        'router_id': '10.1.1.1',
+                    },
+                },
+            },
+        },
+    },
+}
 
-    # golden_output2 = {'execute.return_value': '''
-    #     show running-config bgp
-    #     !Command: show running-config bgp
-    #     !Running configuration last done at: Tue Jun 25 14:07:11 2019
-    #     !Time: Tue Jun 25 14:08:15 2019
-    #     version 9.2(2) Bios:version
-    #     feature bgp
-    #     router bgp 100
-    #       router-id 10.1.1.1
-    #       timers bgp 30 60
-    #       graceful-restart restart-time 250
-    #       graceful-restart stalepath-time 450
-    #       confederation identifier 100
-    #       confederation peers 65000
-    #       bestpath compare-routerid
-    #       bestpath always-compare-med
-    #       address-family ipv4 multicast
-    #         dampening route-map dampening_params
-    #         redistribute direct route-map ALL
-    #       address-family ipv4 unicast
-    #         dampening 25 1000 1500 255
-    #         redistribute direct route-map RMAP_Lo0
-    #         redistribute static route-map ALL
-    #         redistribute ospf 1 route-map RMAP_OSPF
-    #         aggregate-address 10.4.0.0/16
-    #         maximum-paths 8
-    #         nexthop route-map ALL
-    #         distance 19 199 219
-    #       address-family ipv6 multicast
-    #         dampening route-map dampening_params
-    #         redistribute direct route-map ALL
-    #       address-family ipv6 unicast
-    #       address-family vpnv4 unicast
-    #         nexthop trigger-delay critical 3333 non-critical 11111
-    #       address-family vpnv6 unicast
-    #       template peer PEER-TEMPLATE
-    #         address-family ipv4 unicast
-    #           soft-reconfiguration inbound
-    #       template peer-policy PP-1
-    #         send-community
-    #         send-community extended
-    #         soft-reconfiguration inbound
-    #       template peer-session PS-1
-    #         description ps_desc_test
-    #         disable-connected-check
-    #       neighbor 2001:db8:1900:1::1:101
-    #         inherit peer-session PS-1
-    #         remote-as 300
-    #         dont-capability-negotiate
-    #         update-source loopback0
-    #         ebgp-multihop 50
-    #         timers 30 90
-    #         address-family ipv6 unicast
-    #           route-map ALL in
-    #           route-map ALL out
-    #       neighbor 2001:db8:4:1::1:1
-    #         remote-as 100
-    #         password 3 a667d47acc18ea6b
-    #         update-source loopback0
-    #         timers 50 60
-    #         address-family ipv6 unicast
-    #           next-hop-self
-    #       neighbor 2001:db8:4104:1::1:1
-    #         remote-as 200
-    #         update-source loopback0
-    #         ebgp-multihop 5
-    #         address-family ipv6 unicast
-    #           next-hop-self
-    #       neighbor 10.51.1.101
-    #         remote-as 300
-    #         local-as 101
-    #         update-source loopback0
-    #         ebgp-multihop 5
-    #         address-family ipv4 multicast
-    #           route-map ALL in
-    #           route-map ALL out
-    #         address-family ipv4 unicast
-    #           route-map prefixlist in
-    #           route-map weight out
-    #           maximum-prefix 1000
-    #           default-originate
-    #         address-family ipv6 multicast
-    #           route-map ALL in
-    #           route-map ALL out
-    #         address-family vpnv4 unicast
-    #           send-community
-    #           send-community extended
-    #         address-family vpnv6 unicast
-    #           send-community
-    #           send-community extended
-    #       neighbor 192.168.4.1
-    #         bfd
-    #         remote-as 100
-    #         update-source loopback0
-    #         transport connection-mode passive
-    #         timers 10 60
-    #         address-family ipv4 unicast
-    #           send-community extended
-    #           route-reflector-client
-    #           maximum-prefix 123
-    #           default-originate route-map SOMENAME
-    #           next-hop-self
-    #           soft-reconfiguration inbound
-    #         address-family vpnv4 unicast
-    #           send-community
-    #           send-community extended
-    #         address-family vpnv6 unicast
-    #           send-community
-    #           send-community extended
-    #       neighbor 192.168.64.1
-    #         remote-as 200
-    #         update-source loopback0
-    #         ebgp-multihop 5
-    #         address-family ipv4 unicast
-    #           next-hop-self
-    #       vrf VRF1
-    #         neighbor 2001:db8:1c39:1::1:101
-    #           remote-as 70000
-    #           address-family ipv6 unicast
-    #         neighbor 10.76.1.101
-    #           remote-as 70000
-    #           disable-connected-check
-    #           address-family ipv4 unicast
-    #             as-override
-    #     vrf context VRF1
-    #       rd 100:1
-    #       address-family ipv4 unicast
-    #         route-target import 100:1
-    #         route-target export 100:1
-    #       address-family ipv6 unicast
-    #         route-target import 100:1
-    #         route-target export 100:1
-    #     '''}
+    golden_output2 = {'execute.return_value': '''
+        show running-config bgp
+        !Command: show running-config bgp
+        !Running configuration last done at: Tue Jun 25 14:07:11 2019
+        !Time: Tue Jun 25 14:08:15 2019
+        version 9.2(2) Bios:version
+        feature bgp
+        router bgp 100
+          router-id 10.1.1.1
+          timers bgp 30 60
+          graceful-restart restart-time 250
+          graceful-restart stalepath-time 450
+          confederation identifier 100
+          confederation peers 65000
+          bestpath compare-routerid
+          bestpath always-compare-med
+          address-family ipv4 multicast
+            dampening route-map dampening_params
+            redistribute direct route-map ALL
+          address-family ipv4 unicast
+            dampening 25 1000 1500 255
+            redistribute direct route-map RMAP_Lo0
+            redistribute static route-map ALL
+            redistribute ospf 1 route-map RMAP_OSPF
+            aggregate-address 10.4.0.0/16
+            maximum-paths 8
+            nexthop route-map ALL
+            distance 19 199 219
+          address-family ipv6 multicast
+            dampening route-map dampening_params
+            redistribute direct route-map ALL
+          address-family ipv6 unicast
+          address-family vpnv4 unicast
+            nexthop trigger-delay critical 3333 non-critical 11111
+          address-family vpnv6 unicast
+          template peer PEER-TEMPLATE
+            address-family ipv4 unicast
+              soft-reconfiguration inbound
+          template peer-policy PP-1
+            send-community
+            send-community extended
+            soft-reconfiguration inbound
+          template peer-session PS-1
+            description ps_desc_test
+            disable-connected-check
+          neighbor 2001:db8:1900:1::1:101
+            inherit peer-session PS-1
+            remote-as 300
+            dont-capability-negotiate
+            update-source loopback0
+            ebgp-multihop 50
+            timers 30 90
+            address-family ipv6 unicast
+              route-map ALL in
+              route-map ALL out
+          neighbor 2001:db8:4:1::1:1
+            remote-as 100
+            password 3 a667d47acc18ea6b
+            update-source loopback0
+            timers 50 60
+            address-family ipv6 unicast
+              next-hop-self
+          neighbor 2001:db8:4104:1::1:1
+            remote-as 200
+            update-source loopback0
+            ebgp-multihop 5
+            address-family ipv6 unicast
+              next-hop-self
+          neighbor 10.51.1.101
+            remote-as 300
+            local-as 101
+            update-source loopback0
+            ebgp-multihop 5
+            address-family ipv4 multicast
+              route-map ALL in
+              route-map ALL out
+            address-family ipv4 unicast
+              route-map prefixlist in
+              route-map weight out
+              maximum-prefix 1000
+              default-originate
+            address-family ipv6 multicast
+              route-map ALL in
+              route-map ALL out
+            address-family vpnv4 unicast
+              send-community
+              send-community extended
+            address-family vpnv6 unicast
+              send-community
+              send-community extended
+          neighbor 192.168.4.1
+            bfd
+            remote-as 100
+            update-source loopback0
+            transport connection-mode passive
+            timers 10 60
+            address-family ipv4 unicast
+              send-community extended
+              route-reflector-client
+              maximum-prefix 123
+              default-originate route-map SOMENAME
+              next-hop-self
+              soft-reconfiguration inbound
+            address-family vpnv4 unicast
+              send-community
+              send-community extended
+            address-family vpnv6 unicast
+              send-community
+              send-community extended
+          neighbor 192.168.64.1
+            remote-as 200
+            update-source loopback0
+            ebgp-multihop 5
+            address-family ipv4 unicast
+              next-hop-self
+          vrf VRF1
+            neighbor 2001:db8:1c39:1::1:101
+              remote-as 70000
+              address-family ipv6 unicast
+            neighbor 10.76.1.101
+              remote-as 70000
+              disable-connected-check
+              address-family ipv4 unicast
+                as-override
+        vrf context VRF1
+          rd 100:1
+          address-family ipv4 unicast
+            route-target import 100:1
+            route-target export 100:1
+          address-family ipv6 unicast
+            route-target import 100:1
+            route-target export 100:1
+        '''}
 
     device_output = {'execute.return_value': '''
         !Command: show running-config bgp
@@ -22397,12 +22449,12 @@ class test_show_running_config_bgp(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    # def test_golden2(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output2)
-    #     obj = ShowRunningConfigBgp(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output2)
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowRunningConfigBgp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_temp(self):
         self.maxDiff = None
