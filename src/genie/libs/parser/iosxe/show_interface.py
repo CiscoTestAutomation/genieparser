@@ -3150,7 +3150,8 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
 
         #Interface                      Status         Protocol Description
         #Gi0/0                          up             up 
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
+        # p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)([\s+](\S+))?) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
 
         for line in out.splitlines():
             line = line.strip()
