@@ -86,6 +86,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         return ret_dict
 
+
 class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
 

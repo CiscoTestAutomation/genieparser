@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 from ats.topology import Device
-import genie.gre
+
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
@@ -13,7 +13,7 @@ from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisNeighbors
 
 
-class TestShowIsisHostname(unittest.TestCase):    
+class TestShowIsisHostname(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
 
@@ -1605,6 +1605,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+
 class TestShowRunSecIsis(unittest.TestCase):
     device = Device(name='aDevice')
 
@@ -1692,10 +1693,10 @@ class TestShowRunSecIsis(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+
 # ====================================
 #  Unit test for 'show isis neighbors'
 # ====================================
-
 class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
