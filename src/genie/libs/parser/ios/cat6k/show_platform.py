@@ -122,7 +122,7 @@ class ShowVersion(ShowVersionSchema):
         p12 = re.compile(r'^Processor +board +ID +(?P<processor_board_id>.+)$')
 
         # SR71000 CPU at 600Mhz, Implementation 0x504, Rev 1.2, 512KB L2 Cache
-        p13 = re.compile(r'^(?P<cpu_name>\S+) +(CPU|cpu|Cpu) +at '
+        p13 = re.compile(r'^(?P<name>\S+) +(CPU|cpu|Cpu) +at '
                          r'+(?P<speed>\S+)\, Implementation (?P<implementation>\S+), '
                          r'Rev (?P<rev>\S+), +(?P<l2_cache>\S+) +L2 +[Cc]ache$')
 
@@ -142,11 +142,11 @@ class ShowVersion(ShowVersionSchema):
         p18 = re.compile(r'^TN3270 Emulation software.$')
 
         # 1 Virtual Ethernet/IEEE 802.3 interface
-        p19 = re.compile(r'^(?P<interfaces>\d+) +Virtual '
+        p19 = re.compile(r'^(?P<interface>\d+) +Virtual '
                          r'+Ethernet/IEEE 802.3 +interface$')
 
         # 50 Gigabit Ethernet/IEEE 802.3 interfaces
-        p20 = re.compile(r'^(?P<interfaces>\d+) +Gigabit '
+        p20 = re.compile(r'^(?P<interface>\d+) +Gigabit '
                          r'+Ethernet/IEEE 802.3 +interfaces$')
 
         # 1917K bytes of non-volatile configuration memory.
@@ -259,7 +259,7 @@ class ShowVersion(ShowVersionSchema):
             # Last reset from s/w reset
             m = p14.match(line)
             if m:
-                version_dict['reset'] = m.groupdict()['reset']
+                version_dict['last_reset'] = m.groupdict()['reset']
                 continue
 
             # SuperLAT software (copyright 1990 by Meridian Technology Corp).
@@ -288,166 +288,41 @@ class ShowVersion(ShowVersionSchema):
             m = p19.match(line)
             if m:
                 if 'interface' not in version_dict:
-
-
-
-
-
-
-
-
-            # Last reload reason: Reload Command
-            m = p10.match(line)
-            if m:
-                version_dict['last_reload_reason'] = m.groupdict()['last_reload_reason']
+                    version_dict.setdefault('interfaces', {})
+                version_dict['interfaces']['virtual_ethernet_ieee'] = \
+                    int(m.groupdict()['interface'])
                 continue
 
-            # AIR License Level: AIR DNA Advantage
-            m = p11.match(line)
-            if m:
-                version_dict['license_level'] = m.groupdict()['license_level']
-                continue
-
-            # Next reload AIR license Level: AIR DNA Advantage
-            m = p12.match(line)
-            if m:
-                version_dict['next_reload_license_level'] = m.groupdict()['next_reload_license_level']
-                continue
-
-            # Smart Licensing Status: UNREGISTERED/EVAL EXPIRED
-            m = p13.match(line)
-            if m:
-                version_dict['smart_licensing_status'] = m.groupdict()['smart_licensing_status']
-                continue
-
-
-            # 44 Virtual Ethernet interfaces
-            m = p16.match(line)
-            if m:
-                if 'number_of_intfs' not in version_dict:
-                    intf_dict = version_dict.setdefault('number_of_intfs', {})
-                intf_dict['virtual_ethernet_interfaces'] = m.groupdict()['virtual_ethernet_interfaces'].lower().replace(
-                    ' ', '')
-                continue
-
-            # 32 Forty Gigabit Ethernet interfaces
-            m = p17.match(line)
-            if m:
-                if 'number_of_intfs' not in version_dict:
-                    intf_dict = version_dict.setdefault('number_of_intfs', {})
-                intf_dict['forty_gigabit_ethernet_interfaces'] = m.groupdict()['forty_gigabit_ethernet_interfaces']
-                continue
-
-            # 16 Hundred Gigabit Ethernet interfaces
-            m = p18.match(line)
-            if m:
-                if 'number_of_intfs' not in version_dict:
-                    intf_dict = version_dict.setdefault('number_of_intfs', {})
-                intf_dict['hundred_gigabit_ethernet_interfaces'] = m.groupdict()['hundred_gigabit_ethernet_interfaces']
-                continue
-
-            # 32768K bytes of non-volatile configuration memory.
-            m = p19.match(line)
-            if m:
-                if 'mem_size' not in version_dict:
-                    mem_dict = version_dict.setdefault('mem_size', {})
-                mem_dict['non_volatile_memory'] = m.groupdict()['non_volatile_memory']
-                continue
-
-            # 16002848K bytes of physical memory.
+            # 50 Gigabit Ethernet/IEEE 802.3 interfaces
             m = p20.match(line)
             if m:
-                if 'mem_size' not in version_dict:
-                    mem_dict = version_dict.setdefault('mem_size', {})
-                mem_dict['physical_memory'] = m.groupdict()['physical_memory']
+                version_dict['interfaces']['gigabit_ethernet_ieee'] = \
+                    int(m.groupdict()['interface'])
                 continue
 
-            # 11161600K bytes of Bootflash at bootflash:.
-            m = p21.match(line)
-            if m:
-                if 'disks' not in version_dict:
-                    disk_dict = version_dict.setdefault('disks', {})
-                disk_dict.setdefault('bootflash:', {})['disk_size'] = \
-                    m.groupdict()['bootflash_size']
-                continue
+            # 1917K bytes of non-volatile configuration memory.
+            m21 = p21.match(line)
+            # 8192K bytes of packet buffer memory.
+            m22 = p22.match(line)
+            # 65536K bytes of Flash internal SIMM (Sector size 512K).
+            m23 = p23.match(line)
 
-            # 1638400K bytes of Crash Files at crashinfo:.
-            m = p22.match(line)
-            if m:
-                if 'disks' not in version_dict:
-                    disk_dict = version_dict.setdefault('disks', {})
-                disk_dict.setdefault('crashinfo:', {})['disk_size'] = \
-                    m.groupdict()['crash_size']
-                continue
+            if m21 or m22 or m23:
+                if 'memory' not in version_dict:
+                    mem_dict = version_dict.setdefault('memory', {})
 
-            # Base Ethernet MAC Address          : 70:b3:17:60:05:00
-            m = p23.match(line)
-            if m:
-                mac_address = m.groupdict()['mac_address']
-                version_dict['mac_address'] = mac_address
-                continue
-
-            # Motherboard Assembly Number        : 47A7
-            m = p24.match(line)
-            if m:
-                mb_assembly_num = m.groupdict()['mb_assembly_num']
-                version_dict['mb_assembly_num'] = mb_assembly_num
-                continue
-
-            # Motherboard Serial Number          : CAT2242L6CG
-            m = p25.match(line)
-            if m:
-                mb_sn = m.groupdict()['mb_sn']
-                version_dict['mb_sn'] = mb_sn
-                continue
-
-            # Model Revision Number              : V02
-            m = p26.match(line)
-            if m:
-                model_rev_num = m.groupdict()['model_rev_num']
-                version_dict['model_rev_num'] = model_rev_num
-                continue
-
-            # Motherboard Revision Number        : 4
-            m = p27.match(line)
-            if m:
-                mb_rev_num = m.groupdict()['mb_rev_num']
-                version_dict['mb_rev_num'] = mb_rev_num
-                continue
-
-            # Model Number                       : C9500-32QC
-            m = p28.match(line)
-            if m:
-                model_num = m.groupdict()['model_num']
-                version_dict['model_num'] = model_num
-                continue
-
-            # System Serial Number               : CAT2242L6CG
-            m = p29.match(line)
-            if m:
-                system_sn = m.groupdict()['system_sn']
-                version_dict['system_sn'] = system_sn
+                if m21:
+                    mem_dict['non_volatile_conf'] = int(m21.groupdict()['memory'])
+                elif m22:
+                    mem_dict['packet_buffer'] = int(m22.groupdict()['memory'])
+                elif m23:
+                    mem_dict['flash_internal_SIMM'] = int(m23.groupdict()['memory'])
                 continue
 
             # Configuration register is 0x102
             m = p30.match(line)
             if m:
-                curr_config_register = m.groupdict()['curr_config_register']
-                version_dict['curr_config_register'] = curr_config_register
-                continue
-
-            # Compiled Thu 31-Oct-19 17:43 by makale
-            m = p31.match(line)
-            if m:
-                version_dict['compiled_date'] = m.groupdict()['compiled_date']
-                version_dict['compiled_by'] = m.groupdict()['compiled_by']
-                continue
-
-            # Cisco IOS-XE software, Copyright (c) 2005-2019 by cisco Systems, Inc.
-            m = p32.match(line)
-            if m:
-                os = m.groupdict()['os']
-                version_dict['os'] = os
+                version_dict['curr_config_register'] = m.groupdict()['curr_config_register']
                 continue
 
         return ver_dict

@@ -33,6 +33,8 @@
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowVersion for ios/cat6k:
+        * show version
 
 --------------------------------------------------------------------------------
                                 Fix
