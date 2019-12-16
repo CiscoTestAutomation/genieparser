@@ -1562,11 +1562,11 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
                          '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+        # LISP IPv4 Mapping Cache for EID-table default (IID 101), 2 entries
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
         p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC)) +Mapping +Cache +for'
-                         ' +EID\-table +(vrf|Vlan) +(?P<vrf>([a-zA-Z0-9\s]+))'
+                         ' +EID\-table +(default|(vrf|Vlan) +(?P<vrf>(\S+)))'
                          ' +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
                          ' +entries$')
 
@@ -1603,14 +1603,14 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                     instance_id = group['instance_id']
                 continue
 
-            # LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+            # LISP IPv4 Mapping Cache for EID-table default (IID 101), 2 entries
             # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
             # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 address_type = group['type']
-                vrf_name = group['vrf']
+                vrf_name = group['vrf'] if group['vrf'] else 'default'
                 # Create dict
                 service_dict = lisp_dict.setdefault('service', {}).\
                                 setdefault(service, {})
@@ -2261,11 +2261,11 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
                          '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        # LISP ETR IPv4 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        # LISP ETR IPv4 Mapping Database for EID-table default (IID 101), LSBs: 0x1
         # LISP ETR IPv6 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
         # LISP ETR MAC Mapping Database for EID-table Vlan 101 (IID 1), LSBs: 0x1
         p2 = re.compile(r'LISP +ETR +(IPv4|IPv6|MAC) +Mapping +Database +for'
-                         ' +EID-table +(vrf|Vlan) +(?P<vrf>(\S+))'
+                         ' +EID\-table +(default|(vrf|Vlan) +(?P<vrf>(\S+)))'
                          ' +\(IID +(?P<instance_id>(\d+))\),'
                          ' +LSBs: +(?P<lsb>(\S+))$')
 
@@ -2307,7 +2307,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                etr_eid_vrf = group['vrf']
+                etr_eid_vrf = group['vrf'] if group['vrf'] else 'default'
                 lsb = group['lsb']
                 # Create lisp_dict
                 lisp_dict = parsed_dict.\
