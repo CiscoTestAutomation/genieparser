@@ -45,6 +45,10 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigBgp for:
+        * Updated logic to support more variouos outputs
+
 * IOSXR
     * Updated ShowIsis
         * Updated regex to support more various output
@@ -108,3 +112,4 @@
         * Updated one key into Optional to support more outputs
     * Updated ShowVersion for:
         * Added regex and updated logic to parse various outputs
+
