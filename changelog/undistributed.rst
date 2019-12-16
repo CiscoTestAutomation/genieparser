@@ -83,6 +83,10 @@
 		* Updated 'system_auth_control', 'version' as Optional keys
     * Updated ShowLispServiceMapCache, ShowLispServiceDatabase
         * EID-table default no longer breaks parsing
+    * Updated ShowClnsIsNeighborsDetail
+        * update regex to support more various output
+    * Updated ShowIsisDatabaseDetail
+        * update schema to support more various output
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
