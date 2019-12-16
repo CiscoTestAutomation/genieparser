@@ -50,6 +50,18 @@
 		* Updated 'system_auth_control', 'version' as Optional keys
     * Updated ShowLispServiceMapCache, ShowLispServiceDatabase
         * EID-table default no longer breaks parsing
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
+
+* IOSXR
+    * Updated ShowRouteIpv4 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpDistributor, ShowRouteIpWord class
+    * Updated ShowRouteIpv6 for:
+        * Updated schema to support more ouput
+        * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Change in order of Server Policies no longer breaks parsing
     * Updated ShowClnsIsNeighborsDetail
         * Changed regex and schema to support type 'L1L2'
     * Updated ShowIsisDatabaseDetail
