@@ -39,6 +39,7 @@ class ShowVersionSchema(MetaParser):
                       'name': str,
                       'speed': str,
                       'implementation': str,
+                      'rev': str,
                       'l2_cache': str,
                     },
                     'last_reset': str,
@@ -210,45 +211,90 @@ class ShowVersion(ShowVersionSchema):
             m = p7.match(line)
             if m:
                 version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
-
-
-            # ROM: IOS-XE ROMMON
-            m = p4.match(line)
-            if m:
-                rom = m.groupdict()['rom']
-                version_dict['rom'] = rom
                 continue
 
-            # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
-            m = p5.match(line)
-            if m:
-                version_dict['bootldr_version'] = m.groupdict()['bootldr_version']
-                continue
-
-            # SF2 uptime is 1 day, 18 hours, 48 minutes
-            m = p6.match(line)
+            # cat6k_tb1 uptime is 21 weeks, 5 days, 41 minutes
+            m = p8.match(line)
             if m:
                 version_dict['hostname'] = m.groupdict()['hostname']
                 version_dict['uptime'] = m.groupdict()['uptime']
                 continue
 
-            # Uptime for this control processor is 1 day, 18 hours, 49 minutes
-            m = p7.match(line)
-            if m:
-                version_dict['uptime_this_cp'] = m.groupdict()['uptime_this_cp']
-                continue
-
-            # System returned to ROM by Reload Command
-            m = p8.match(line)
+            # System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
+            m = p9.match(line)
             if m:
                 version_dict['returned_to_rom_by'] = m.groupdict()['returned_to_rom_by']
                 continue
 
-            # System image file is "bootflash:/ecr.bin"
-            m = p9.match(line)
+            # System image file is "disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7"
+            m = p10.match(line)
             if m:
                 version_dict['system_image'] = m.groupdict()['system_image']
                 continue
+
+            # cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
+            m = p11.match(line)
+            if m:
+                version_dict['chassis'] = m.groupdict()['chassis']
+                version_dict['processor_type'] = m.groupdict()['processor_type']
+                version_dict['main_mem'] = m.groupdict()['main_mem']
+                continue
+
+            # Processor board ID FXS1821Q2H9
+            m = p12.match(line)
+            if m:
+                version_dict['processor_board_id'] = m.groupdict()['processor_board_id']
+                continue
+
+            # SR71000 CPU at 600Mhz, Implementation 0x504, Rev 1.2, 512KB L2 Cache
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if 'cpu' not in version_dict:
+                    cpu_dict = version_dict.setdefault('cpu', {})
+                for k in ['name', 'speed', 'implementation', 'rev', 'l2_cache']:
+                    cpu_dict[k] = group[k]
+                continue
+
+            # Last reset from s/w reset
+            m = p14.match(line)
+            if m:
+                version_dict['reset'] = m.groupdict()['reset']
+                continue
+
+            # SuperLAT software (copyright 1990 by Meridian Technology Corp).
+            # X.25 software, Version 3.0.0.
+            # Bridging software.
+            # TN3270 Emulation software.
+            m15 = p15.match(line)
+            m16 = p16.match(line)
+            m17 = p17.match(line)
+            m18 = p18.match(line)
+            if m15 or m16 or m17 or m18:
+                if 'softwares' not in version_dict:
+                    version_dict['softwares'] = []
+                else:
+                    if m15:
+                        version_dict['softwares'].append('SuperLAT')
+                    elif m16:
+                        version_dict['softwares'].append('X.25')
+                    elif m17:
+                        version_dict['softwares'].append('Bridging')
+                    elif m18:
+                        version_dict['softwares'].append('TN3270 Emulation')
+                continue
+
+            # 1 Virtual Ethernet/IEEE 802.3 interface
+            m = p19.match(line)
+            if m:
+                if 'interface' not in version_dict:
+
+
+
+
+
+
+
 
             # Last reload reason: Reload Command
             m = p10.match(line)
@@ -274,19 +320,6 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['smart_licensing_status'] = m.groupdict()['smart_licensing_status']
                 continue
 
-            # cisco C9500-32QC (X86) processor with 1863083K/6147K bytes of memory.
-            m = p14.match(line)
-            if m:
-                version_dict['chassis'] = m.groupdict()['chassis']
-                version_dict['processor_type'] = m.groupdict()['processor_type']
-                version_dict['main_mem'] = m.groupdict()['main_mem']
-                continue
-
-            # Processor board ID CAT2242L6CG
-            m = p15.match(line)
-            if m:
-                version_dict['processor_board_id'] = m.groupdict()['processor_board_id']
-                continue
 
             # 44 Virtual Ethernet interfaces
             m = p16.match(line)
