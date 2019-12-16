@@ -1015,7 +1015,7 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
                 'system_id': {
                     'R7':{
                         'type':{
-                            2:{
+                            'L2':{
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'priority': 64,
@@ -1067,6 +1067,128 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
         System Id       Interface     State  Type Priority  Circuit Id         Format
     '''}
 
+    golden_parsed_output_3 = {
+        'tag': {
+            'test': {
+                'system_id': {
+                    'R2_xr': {
+                        'type': {
+                            'L1L2': {
+                                'area_address': ['49.0001'],
+                                'circuit_id': 'R1_xe.01',
+                                'format': 'Phase V',
+                                'interface': 'GigabitEthernet2.115',
+                                'ip_address': ['10.12.115.2*'],
+                                'ipv6_address': ['FE80::F816:3EFF:FE67:2452'],
+                                'nsf': 'capable',
+                                'priority': 64,
+                                'state': 'up',
+                                'topology': ['ipv4', 'ipv6'],
+                                'uptime': '3d04h',
+                            },
+                        },
+                    },
+                    'R3_nx': {
+                        'type': {
+                            'L1L2': {
+                                'area_address': ['49.0001'],
+                                'circuit_id': 'R1_xe.02',
+                                'format': 'Phase V',
+                                'interface': 'GigabitEthernet3.115',
+                                'ip_address': ['10.13.115.3*'],
+                                'ipv6_address': ['FE80::5C01:FF:FE02:7'],
+                                'nsf': 'capable',
+                                'priority': 64,
+                                'state': 'up',
+                                'topology': ['ipv4', 'ipv6'],
+                                'uptime': '3d04h',
+                            },
+                        },
+                    },
+                },
+            },
+            'test1': {
+                'system_id': {
+                    '2222.2222.2222': {
+                        'type': {
+                            'L1L2': {
+                                'area_address': ['49.0001'],
+                                'circuit_id': '2222.2222.2222.01',
+                                'format': 'Phase V',
+                                'interface': 'GigabitEthernet2.415',
+                                'ip_address': ['10.12.115.2*'],
+                                'ipv6_address': ['FE80::F816:3EFF:FE67:2452'],
+                                'nsf': 'capable',
+                                'priority': 128,
+                                'state': 'init',
+                                'topology': ['ipv4', 'ipv6'],
+                                'uptime': '3d04h',
+                            },
+                        },
+                    },
+                    'R3_nx': {
+                        'type': {
+                            'L1L2': {
+                                'area_address': ['49.0001'],
+                                'circuit_id': 'R1_xe.02',
+                                'format': 'Phase V',
+                                'interface': 'GigabitEthernet3.415',
+                                'ip_address': ['10.13.115.3*'],
+                                'ipv6_address': ['FE80::5C01:FF:FE02:7'],
+                                'nsf': 'capable',
+                                'priority': 64,
+                                'state': 'up',
+                                'topology': ['ipv4', 'ipv6'],
+                                'uptime': '3d04h',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_3 = {'execute.return_value': '''
+        show clns is-neighbors detail
+
+        Tag test:
+        System Id       Interface     State  Type Priority  Circuit Id         Format
+        R2_xr           Gi2.115       Up     L1L2 64/64     R1_xe.01           Phase V
+          Area Address(es): 49.0001
+          IP Address(es):  10.12.115.2*
+          IPv6 Address(es): FE80::F816:3EFF:FE67:2452
+          Uptime: 3d04h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet2.115
+        R3_nx           Gi3.115       Up     L1L2 64/64     R1_xe.02           Phase V
+          Area Address(es): 49.0001
+          IP Address(es):  10.13.115.3*
+          IPv6 Address(es): FE80::5C01:FF:FE02:7
+          Uptime: 3d04h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet3.115
+
+        Tag test1:
+        System Id       Interface     State  Type Priority  Circuit Id         Format
+        2222.2222.2222  Gi2.415       Init   L1L2 128/128    2222.2222.2222.01  Phase V
+          Area Address(es): 49.0001
+          IP Address(es):  10.12.115.2*
+          IPv6 Address(es): FE80::F816:3EFF:FE67:2452
+          Uptime: 3d04h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet2.415
+        R3_nx           Gi3.415       Up     L1L2 64/64     R1_xe.02           Phase V
+          Area Address(es): 49.0001
+          IP Address(es):  10.13.115.3*
+          IPv6 Address(es): FE80::5C01:FF:FE02:7
+          Uptime: 3d04h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet3.415
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowClnsIsNeighborsDetail(device=self.device1)
@@ -1084,8 +1206,15 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowClnsIsNeighborsDetail(device=self.device)
-        parsed_output = obj.parse()        
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowClnsIsNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 # =========================================================
