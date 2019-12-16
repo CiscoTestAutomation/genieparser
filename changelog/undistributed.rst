@@ -84,9 +84,9 @@
     * Updated ShowLispServiceMapCache, ShowLispServiceDatabase
         * EID-table default no longer breaks parsing
     * Updated ShowClnsIsNeighborsDetail
-        * update regex to support more various output
+        * Changed regex and schema to support type 'L1L2'
     * Updated ShowIsisDatabaseDetail
-        * update schema to support more various output
+        * Changed schema to support more various output
 
 * IOSXR
     * Updated ShowRouteIpv4 for:
