@@ -301,7 +301,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         hold_dict = {}
         mac_dict = {}
         policies_dict = {}
-        index_dict = {}
         policies_flag = False
         index = 1
 
