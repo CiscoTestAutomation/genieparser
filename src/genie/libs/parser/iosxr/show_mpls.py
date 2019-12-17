@@ -2,6 +2,11 @@
 
 IOSXR parsers for the following show commands:
     * 'show mpls ldp neighbor brief'
+    * 'show mpls label table detail'
+    * 'show mpls interfaces'
+    * 'show mpls interfaces {interface}'
+    * 'show mpls forwarding'
+    * 'show mpls forwarding vrf {vrf}'
 '''
 
 # Python
@@ -11,11 +16,12 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
 # ======================================================
-
 class ShowMplsLdpNeighborBriefSchema(MetaParser):
     
     """Schema for show mpls ldp neighbor brief"""
@@ -43,6 +49,7 @@ class ShowMplsLdpNeighborBriefSchema(MetaParser):
             },
         },
     }
+
 
 class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
@@ -168,10 +175,10 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
+
 # ======================================================
 # Parser for 'show mpls label table detail'
 # ======================================================
-
 class ShowMplsLabelTableDetailSchema(MetaParser):
     
     """Schema for show mpls label table detail"""
@@ -281,3 +288,272 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 continue
 
         return mpls_dict
+
+
+# ======================================================
+# Schema for 'show mpls interfaces'
+# ======================================================
+class ShowMplsInterfacesSchema(MetaParser):
+    schema = {
+        'interfaces': {
+            Any(): {
+                'ldp': str,
+                'tunnel': str,
+                'static': str,
+                'enabled': str,
+            }
+        },
+    }
+
+
+# ======================================================
+# Parser for 'show mpls interfaces'
+# ======================================================
+class ShowMplsInterfaces(ShowMplsInterfacesSchema):
+    cli_command = ['show mpls interfaces',
+        'show mpls interfaces {interface}']
+
+    def cli(self, interface=None, output=None):
+
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(
+                                          interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # GigabitEthernet0/0/0/0     No       No       No       Yes
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<ldp>No|Yes) +'
+                r'(?P<tunnel>No|Yes) +(?P<static>No|Yes) +'
+                r'(?P<enabled>No|Yes)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # GigabitEthernet0/0/0/0     No       No       No       Yes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group.get('interface'))
+                ldp = group.get('ldp')
+                tunnel = group.get('tunnel')
+                static = group.get('static')
+                enabled = group.get('enabled')
+                interface_dict = ret_dict.setdefault('interfaces', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'ldp' : ldp})
+                interface_dict.update({'tunnel': tunnel})
+                interface_dict.update({'static': static})
+                interface_dict.update({'enabled': enabled})
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Schema for
+#   * 'show mpls forwarding vrf {vrf}'
+# ======================================================
+class ShowMplsForwardingVrfSchema(MetaParser):
+    schema = {
+        'vrf': {
+            Any(): {
+                'local_label': {
+                    Any(): {
+                        'outgoing_label': {
+                            Any(): {
+                                'prefix_or_id': {
+                                    Any(): {
+                                        'outgoing_interface': {
+                                            Any(): {
+                                                Optional('next_hop'): str,
+                                                'bytes_switched': int,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================================================
+# Parser for
+#   * 'show mpls forwarding vrf {vrf}'
+# ======================================================
+class ShowMplsForwardingVrf(ShowMplsForwardingVrfSchema):
+
+    cli_command = ['show mpls forwarding vrf {vrf}']
+
+    def cli(self, vrf, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(vrf=vrf))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
+        p1 = re.compile(r'^((?P<local_label>\d+) +)?(?P<outgoing_label>\S+) '
+                        r'+(?P<prefix_or_id>.+?) +(?P<outgoing_interface>\S+) '
+                        r'+(?P<next_hop>\S+) +(?P<bytes_switched>\d+)$')
+
+        # 24006  Aggregate   VRF1: Per-VRF Aggr[V]   \
+        p2 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>\S+) '
+                        r'+(?P<prefix_or_id>.+?) +\\$')
+
+        # VRF1                         832
+        p3 = re.compile(r'^(?P<outgoing_interface>\S+) +((?P<next_hop>\S+) +)?'
+                        r'(?P<bytes_switched>\d+)$')
+
+        # Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
+        p4 = re.compile(r'^(?P<outgoing_interface>\S+) +(?P<next_hop>\S+) +\\$')
+
+        # 3747484
+        p5 = re.compile(r'^(?P<bytes_switched>\d+)$')
+
+        pre_label = ''
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # 16001  Pop         SR Pfx (idx 1)     Gi0/0/0/0    10.1.3.1        0
+            #        Unlabelled  10.13.90.0/24      Gi0/0/0/1.90 10.23.90.3      0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                local_label = group.get('local_label') or pre_label
+                outgoing_label = group.get('outgoing_label')
+                prefix_or_id = group.get('prefix_or_id').strip()
+                outgoing_interface = Common.convert_intf_name(group.get('outgoing_interface'))
+                next_hop = group.get('next_hop')
+                bytes_switched = group.get('bytes_switched')
+
+                local_label_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                    setdefault('local_label', {}).setdefault(local_label, {}). \
+                    setdefault('outgoing_label', {}).setdefault(outgoing_label, {}). \
+                    setdefault('prefix_or_id', {}).setdefault(prefix_or_id, {}). \
+                    setdefault('outgoing_interface', {}).setdefault(outgoing_interface, {})
+
+                if next_hop:
+                    local_label_dict.update({'next_hop': next_hop})
+                local_label_dict.update({'bytes_switched': int(bytes_switched)})
+
+                pre_label = local_label or pre_label
+                continue
+
+            # 24006  Aggregate   VRF1: Per-VRF Aggr[V]   \
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_label = group.get('local_label') or pre_label
+                outgoing_label = group.get('outgoing_label')
+                prefix_or_id = group.get('prefix_or_id').strip()
+                pre_label = local_label or pre_label
+                continue
+
+            # VRF1                         832
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface = Common.convert_intf_name(
+                    group.get('outgoing_interface'))
+                next_hop = group.get('next_hop')
+                bytes_switched = group.get('bytes_switched')
+
+                local_label_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                    setdefault('local_label', {}).setdefault(local_label, {}). \
+                    setdefault('outgoing_label', {}).setdefault(outgoing_label, {}). \
+                    setdefault('prefix_or_id', {}).setdefault(prefix_or_id, {}). \
+                    setdefault('outgoing_interface', {}).setdefault(outgoing_interface, {})
+
+                if next_hop:
+                    local_label_dict.update({'next_hop': next_hop})
+                local_label_dict.update({'bytes_switched': int(bytes_switched)})
+                continue
+
+            # Gi0/0/0/0.390 fe80::f816:3eff:fe53:2cc7   \
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                outgoing_interface = Common.convert_intf_name(group.get('outgoing_interface'))
+                next_hop = group.get('next_hop')
+                continue
+
+            # 3747484
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                bytes_switched = group.get('bytes_switched')
+
+                local_label_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                    setdefault('local_label', {}).setdefault(local_label, {}). \
+                    setdefault('outgoing_label', {}).setdefault(outgoing_label, {}). \
+                    setdefault('prefix_or_id', {}).setdefault(prefix_or_id, {}). \
+                    setdefault('outgoing_interface', {}).setdefault(outgoing_interface, {})
+
+                if next_hop:
+                    local_label_dict.update({'next_hop': next_hop})
+                local_label_dict.update({'bytes_switched': int(bytes_switched)})
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Schema for
+#   * 'show mpls forwarding'
+# ======================================================
+class ShowMplsForwardingSchema(MetaParser):
+    schema = {
+        'local_label': {
+            Any(): {
+                'outgoing_label': {
+                    Any(): {
+                        'prefix_or_id': {
+                            Any(): {
+                                'outgoing_interface': {
+                                    Any(): {
+                                        Optional('next_hop'): str,
+                                        'bytes_switched': int,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================================================
+# Parser for 
+#   * 'show mpls forwarding'
+# ======================================================
+class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
+
+    cli_command = ['show mpls forwarding']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        vrf = 'default'
+        ret_dict = super().cli(vrf=vrf, output=out).get(
+                    'vrf', {}).get('default', {})
+
+        return ret_dict

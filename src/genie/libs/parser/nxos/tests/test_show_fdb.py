@@ -714,7 +714,117 @@ class test_show_mac_address_table(unittest.TestCase):
       4000     5e00.c000.0007   static   ~~~         F      F    sup-eth1(R)
 
     '''
-                     }
+    }
+
+    golden_output_address_interface_vlan = {'execute.return_value': '''
+        N95_1# show mac address-table address 5e00.c000.0007 interface ethernet1/2 vlan 1006
+        Legend: 
+            * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+            age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+            (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+           VLAN     MAC Address      Type      age     Secure NTFY Ports
+        ---------+-----------------+--------+---------+------+----+---------------
+        G 1006     5e00.c000.0007   static   -         F      F    Eth1/2
+        '''}
+
+    golden_parsed_output_address_interface_vlan = {
+        'mac_table': {
+            'vlans': {
+                '1006': {
+                    'vlan': '1006',
+                    'mac_addresses': {
+                        '5e00.c000.0007': {
+                            'mac_address': '5e00.c000.0007',
+                            'entry': 'G',
+                            'interfaces': {
+                                'Ethernet1/2': {
+                                    'interface': 'Ethernet1/2',
+                                    'mac_type': 'static',
+                                    'age': '-'
+                                }
+                            },
+                            'secure': 'F',
+                            'ntfy': 'F'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_address_interface = {'execute.return_value': '''
+        N95_1# show mac address-table address 5e00.c000.0007 interface ethernet1/2
+        Legend: 
+            * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+            age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+            (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+           VLAN     MAC Address      Type      age     Secure NTFY Ports
+        ---------+-----------------+--------+---------+------+----+---------------
+        G  102     5e00.c000.0007   static   -         F      F    Eth1/2
+        G  107     5e00.c000.0007   static   -         F      F    Eth1/2
+        G 1006     5e00.c000.0007   static   -         F      F    Eth1/2
+        '''}
+
+    golden_parsed_output_address_interface = {
+        'mac_table': {
+            'vlans': {
+                '102': {
+                    'vlan': '102',
+                    'mac_addresses': {
+                        '5e00.c000.0007': {
+                            'mac_address': '5e00.c000.0007',
+                            'entry': 'G',
+                            'interfaces': {
+                                'Ethernet1/2': {
+                                    'interface': 'Ethernet1/2',
+                                    'mac_type': 'static',
+                                    'age': '-'
+                                }
+                            },
+                            'secure': 'F',
+                            'ntfy': 'F'
+                        }
+                    }
+                },
+                '107': {
+                    'vlan': '107',
+                    'mac_addresses': {
+                        '5e00.c000.0007': {
+                            'mac_address': '5e00.c000.0007',
+                            'entry': 'G',
+                            'interfaces': {
+                                'Ethernet1/2': {
+                                    'interface': 'Ethernet1/2',
+                                    'mac_type': 'static',
+                                    'age': '-'
+                                }
+                            },
+                            'secure': 'F',
+                            'ntfy': 'F'
+                        }
+                    }
+                },
+                '1006': {
+                    'vlan': '1006',
+                    'mac_addresses': {
+                        '5e00.c000.0007': {
+                            'mac_address': '5e00.c000.0007',
+                            'entry': 'G',
+                            'interfaces': {
+                                'Ethernet1/2': {
+                                    'interface': 'Ethernet1/2',
+                                    'mac_type': 'static',
+                                    'age': '-'
+                                }
+                            },
+                            'secure': 'F',
+                            'ntfy': 'F'
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_golden(self):
         self.maxDiff = None
@@ -728,6 +838,18 @@ class test_show_mac_address_table(unittest.TestCase):
         obj = ShowMacAddressTable(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_address_interface_vlan(self):
+        self.device = Mock(**self.golden_output_address_interface_vlan)
+        obj = ShowMacAddressTable(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_address_interface_vlan)
+
+    def test_address_interface(self):
+        self.device = Mock(**self.golden_output_address_interface)
+        obj = ShowMacAddressTable(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_address_interface)
 
 
 class test_show_mac_address_table_limit(unittest.TestCase):

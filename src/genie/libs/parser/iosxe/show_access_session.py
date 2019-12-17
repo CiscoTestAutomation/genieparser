@@ -1,6 +1,7 @@
 """show_access_seesion.py
    supported commands:
      * show access-session
+     * show access-session interface {interface} details
 """
 # Python
 import re
@@ -17,6 +18,10 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+# import iosxe parser
+from genie.libs.parser.iosxe.show_authentication_sessions import \
+						ShowAuthenticationSessionsInterfaceDetails
 
 # ====================================
 # Parser for 'show access-session'
@@ -104,3 +109,20 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 continue
 
         return ret_dict
+       
+class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails):
+    '''
+        Parser for the following show commands:
+            * show access-session interface {interface} details
+    '''
+    cli_command = 'show access-session interface {interface} details'
+    def cli(self, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            show_output = self.device.execute(cmd)
+        else:
+           show_output = output
+
+        # Call super
+        return super().cli(output=show_output, interface=interface)
