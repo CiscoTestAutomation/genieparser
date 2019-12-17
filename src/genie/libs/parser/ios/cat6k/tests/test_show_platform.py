@@ -7,7 +7,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.ios.cat6k.show_platform import ShowModule, \
                                                       ShowVersion, \
-                                                      Dir
+                                                      Dir, \
+                                                      ShowRedundancy
 
 
 class TestShowVersion(unittest.TestCase):
@@ -194,7 +195,9 @@ class TestDir(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowRedundancy(unittest.TestCase):
+    empty_output = {"execute.return_value": ""}
     golden_output = {'execute.return_value': '''
     cat6k_tb1#show redundancy
     Redundant System Information :
@@ -228,6 +231,45 @@ class TestShowRedundancy(unittest.TestCase):
     Peer (slot: unavailable) information is not available because it is in 'DISABLED' state
 
     '''}
+    golden_parsed_output = {
+    'red_sys_info': {
+        'available_system_uptime': '21 weeks, 5 days, 1 hour, 3 minutes',
+        'communications': 'Down',
+        'communications_reason': 'Simplex mode',
+        'conf_red_mode': 'sso',
+        'hw_mode': 'Simplex',
+        'last_switchover_reason': 'none',
+        'maint_mode': 'Disabled',
+        'oper_red_mode': 'sso',
+        'standby_failures': '0',
+        'switchovers_system_experienced': '0',
+    },
+    'slot': {
+        'slot 1': {
+            'compiled_by': 'kellythw',
+            'compiled_date': 'Thu 23-Nov-06 06:26',
+            'config_register': '0x2102',
+            'curr_sw_state': 'ACTIVE',
+            'image_id': 's72033_rp-ADVENTERPRISEK9_WAN-M',
+            'image_ver': 'Cisco Internetwork Operating System Software',
+            'os': 'IOS',
+            'platform': 's72033_rp',
+            'uptime_in_curr_state': '21 weeks, 5 days, 1 hour, 2 minutes',
+            'version': '12.2(18)SXF7',
+        },
+    },
+}
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRedundancy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_redundancy_1(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRedundancy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class TestShowInventory(unittest.TestCase):

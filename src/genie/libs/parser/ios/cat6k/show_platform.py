@@ -416,6 +416,300 @@ class Dir(DirSchema):
         return dir_dict
 
 
+class ShowRedundancySchema(MetaParser):
+    """
+    Schema for command:
+        * show redundancy
+    """
+    schema = {
+                'red_sys_info': {
+                    'available_system_uptime': str,
+                    'switchovers_system_experienced': str,
+                    'standby_failures': str,
+                    'last_switchover_reason': str,
+                    'hw_mode': str,
+                    'conf_red_mode': str,
+                    'oper_red_mode': str,
+                    'maint_mode': str,
+                    'communications': str,
+                    Optional('communications_reason'): str,
+                    },
+                'slot': {
+                    Any(): {
+                        'curr_sw_state': str,
+                        'uptime_in_curr_state': str,
+                        'image_ver': str,
+                        Optional('os'): str,
+                        Optional('platform'): str,
+                        Optional('image_id'): str,
+                        Optional('version'): str,
+                        Optional('boot'): str,
+                        Optional('config_file'): str,
+                        Optional('bootldr'): str,
+                        'config_register': str,
+                        'compiled_by': str,
+                        'compiled_date': str,
+                    }
+                }
+            }
+
+
+class ShowRedundancy(ShowRedundancySchema):
+    """
+    Parser for command:
+        * show redundancy
+    """
+    cli_command = ['show redundancy']
+    exclude = ['available_system_uptime', 'uptime_in_curr_state']
+
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        redundancy_dict = {}
+
+        # Available system uptime = 21 weeks, 5 days, 1 hour, 3 minutes
+        p1 = re.compile(
+            r'Available +system +uptime += +(?P<available_system_uptime>[\S\s]+)$')
+
+        # Switchovers system experienced = 0
+        p2 = re.compile(
+            r'Switchovers +system +experienced += +(?P<switchovers_system_experienced>\d+)$')
+
+        # Standby failures = 0
+        p3 = re.compile(
+            r'Standby +failures += +(?P<standby_failures>\d+)$')
+
+        # Last switchover reason = none
+        p4 = re.compile(
+            r'^Last +switchover +reason += +(?P<last_switchover_reason>[\S\s]+)$')
+
+        # Hardware Mode = Simplex
+        p5 = re.compile(
+            r'^Hardware +Mode += +(?P<hw_mode>\S+)$')
+
+        # Configured Redundancy Mode = sso
+        p6 = re.compile(
+            r'Configured +Redundancy +Mode += +(?P<conf_red_mode>\S+)$')
+
+        # Operating Redundancy Mode = sso
+        p7 = re.compile(
+            r'^Operating +Redundancy +Mode += +(?P<oper_red_mode>\S+)$')
+
+        # Maintenance Mode = Disabled
+        p8 = re.compile(
+            r'^Maintenance +Mode += +(?P<maint_mode>\S+)$')
+
+        # Communications = Down      Reason: Simplex mode
+        p9 = re.compile(r'^Communications += +(?P<communications>\S+)\s+Reason: +(?P<communications_reason>[\S\s]+)$')
+
+        # Active Location = slot 1
+        p10 = re.compile(r'^Active +Location += +(?P<slot>[\S\s]+)$')
+
+        # Current Software state = ACTIVE
+        p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>\S+)$')
+
+        # Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
+        p12 = re.compile(r'^Uptime +in +current +state += +(?P<uptime_in_curr_state>[\S\s]+)$')
+
+        # Image Version = Cisco Internetwork Operating System Software
+        p13 = re.compile(r'^Image +Version += +(?P<image_ver>.+)$')
+
+        # BOOT = bootflash:/ecr.bin;
+        p14 = re.compile(r'^BOOT += +(?P<boot>.+)$')
+
+        # Configuration register = 0x102
+        p15 = re.compile(r'^Configuration +register = (?P<config_register>\S+)$')
+
+        # Compiled Thu 31-Oct-19 17:43 by makale
+        p16 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
+                         r'+(?P<compiled_by>\S+)$')
+
+        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+        p17 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
+                        r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
+                        r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
+
+        # Technical Support: http://www.cisco.com/techsupport
+        p18 = re.compile(r'^Technical +Support: +http\:\/\/www'
+                        r'\.cisco\.com\/techsupport')
+
+        # Copyright (c) 1986-2016 by Cisco Systems, Inc.
+        p19 = re.compile(r'^Copyright +(.*)$')
+
+        # CONFIG_FILE =
+        p20 = re.compile(r'^CONFIG_FILE = +(?P<config_file>\S+)$')
+
+        # BOOTLDR =
+        p21 = re.compile(r'^BOOTLDR = +(?P<bootldr>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Available system uptime = 1 day, 18 hours, 48 minutes
+            m = p1.match(line)
+            if m:
+                red_dict = redundancy_dict.setdefault('red_sys_info', {})
+                red_dict['available_system_uptime'] = \
+                    m.groupdict()['available_system_uptime']
+                continue
+
+            # Switchovers system experienced = 0
+            m = p2.match(line)
+            if m:
+                red_dict['switchovers_system_experienced'] = \
+                    m.groupdict()['switchovers_system_experienced']
+                continue
+
+            # Standby failures = 0
+            m = p3.match(line)
+            if m:
+                red_dict['standby_failures'] = \
+                    m.groupdict()['standby_failures']
+                continue
+
+            # Last switchover reason = none
+            m = p4.match(line)
+            if m:
+                red_dict['last_switchover_reason'] = \
+                    m.groupdict()['last_switchover_reason']
+                continue
+
+            # Hardware Mode = Simplex
+            m = p5.match(line)
+            if m:
+                red_dict['hw_mode'] = \
+                    m.groupdict()['hw_mode']
+                continue
+
+            # Configured Redundancy Mode = Non-redundant
+            m = p6.match(line)
+            if m:
+                red_dict['conf_red_mode'] = \
+                    m.groupdict()['conf_red_mode']
+                continue
+
+            # Operating Redundancy Mode = Non-redundant
+            m = p7.match(line)
+            if m:
+                red_dict['oper_red_mode'] = \
+                    m.groupdict()['oper_red_mode']
+                continue
+
+            # Maintenance Mode = Disabled
+            m = p8.match(line)
+            if m:
+                red_dict['maint_mode'] = \
+                    m.groupdict()['maint_mode']
+                continue
+
+            # Communications = Down      Reason: Failure
+            m = p9.match(line)
+            if m:
+                red_dict['communications'] = \
+                    m.groupdict()['communications']
+                red_dict['communications_reason'] = \
+                    m.groupdict()['communications_reason']
+                continue
+
+            # Active Location = slot 1
+            m = p10.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                if 'slot' not in redundancy_dict:
+                    slot_dict = redundancy_dict.setdefault(
+                        'slot', {}).setdefault(slot, {})
+                continue
+
+            # Current Software state = ACTIVE
+            m = p11.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['curr_sw_state'] = \
+                        m.groupdict()['curr_sw_state']
+                continue
+
+            # Uptime in current state = 1 day, 18 hours, 48 minutes
+            m = p12.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['uptime_in_curr_state'] = \
+                        m.groupdict()['uptime_in_curr_state']
+                continue
+
+            # Image Version = Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
+            m = p13.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['image_ver'] = \
+                        m.groupdict()['image_ver']
+                continue
+
+            # BOOT = bootflash:/ecr.bin;
+            m = p14.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['boot'] = \
+                        m.groupdict()['boot']
+                continue
+
+            # Configuration register = 0x102
+            m = p15.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['config_register'] = \
+                        m.groupdict()['config_register']
+                continue
+
+            # Compiled Thu 31-Oct-19 17:43 by makale
+            m = p16.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['compiled_by'] = \
+                        m.groupdict()['compiled_by']
+                    slot_dict['compiled_date'] = \
+                        m.groupdict()['compiled_date']
+                continue
+
+            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+            m = p17.match(line)
+            if m:
+                for k in ['os', 'platform', 'image_id', 'version']:
+                    slot_dict[k] = m.groupdict()[k]
+                continue
+
+            # Technical Support: http://www.cisco.com/techsupport
+            # Copyright (c) 1986-2016 by Cisco Systems, Inc.
+            m_18 = p18.match(line)
+            m_19 = p19.match(line)
+            if m_18 or m_19:
+                continue
+
+            # CONFIG_FILE =
+            m = p20.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['config_file'] = \
+                        m.groupdict()['config_file']
+                continue
+
+            # BOOTLDR =
+            m = p21.match(line)
+            if m:
+                if 'slot' in redundancy_dict:
+                    slot_dict['bootldr'] = \
+                        m.groupdict()['bootldr']
+                continue
+
+        return redundancy_dict
+
+
+
+
 class ShowModuleSchema(MetaParser):
     """ Schema for commands:
         * show module
