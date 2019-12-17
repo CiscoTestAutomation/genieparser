@@ -328,6 +328,94 @@ class ShowVersion(ShowVersionSchema):
         return ver_dict
 
 
+class DirSchema(MetaParser):
+    """
+    Schema for command:
+        * dir
+    """
+    schema = {
+                'dir': {
+                    'dir': str,
+                    Any(): {
+                        'files': {
+                            Any(): {
+                                Optional('index'): str,
+                                Optional('permissions'): str,
+                                'size': str,
+                                Optional('last_modified_date'): str
+                            }
+                        },
+                        Optional('bytes_total'): str,
+                        Optional('bytes_free'): str
+                    }
+                }
+            }
+
+
+class Dir(DirSchema):
+    """
+    Parser for command:
+        * dir
+    """
+
+    cli_command = ['dir', 'dir {directory}']
+    exclude = ['last_modified_date', 'bytes_free', 'files']
+
+    def cli(self, directory='', output=None):
+
+        if output is None:
+            if directory:
+                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        dir_dict = {}
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # dir
+            p1 = re.compile(
+                r'^\s*[Dd]irectory +of +(?P<dir>.+)$')
+            m = p1.match(line)
+            if m:
+                dir1 = m.groupdict()['dir']
+                if 'dir' not in dir_dict:
+                    dir_dict['dir'] = {}
+                if dir1 not in dir_dict['dir']:
+                    dir_dict['dir'][dir1] = {}
+                    dir_dict['dir']['dir'] = dir1
+                continue
+
+            # filename, index, permissions, size and last_modified_date
+            p2 = re.compile(
+                r'\s*(?P<index>\d+) +(?P<permissions>\S+) +(?P<size>\d+) +(?P<last_modified_date>\S+ +\d+ +\d+ +\d+\:\d+\:\d+ +\S+) +(?P<filename>.+)$')
+            m = p2.match(line)
+            if m:
+                filename = m.groupdict()['filename']
+                if 'files' not in dir_dict['dir'][dir1]:
+                    dir_dict['dir'][dir1]['files'] = {}
+                if filename not in dir_dict['dir'][dir1]['files']:
+                    dir_dict['dir'][dir1]['files'][filename] = {}
+                dir_dict['dir'][dir1]['files'][filename]['index'] = m.groupdict()['index']
+                dir_dict['dir'][dir1]['files'][filename]['permissions'] = m.groupdict()['permissions']
+                dir_dict['dir'][dir1]['files'][filename]['size'] = m.groupdict()['size']
+                dir_dict['dir'][dir1]['files'][filename]['last_modified_date'] = m.groupdict()['last_modified_date']
+                continue
+
+            # bytes_total and bytes_free
+            p3 = re.compile(
+                r'\s*(?P<bytes_total>\d+) +bytes +total +\((?P<bytes_free>\d+) +bytes +free\)')
+            m = p3.match(line)
+            if m:
+                dir_dict['dir'][dir1]['bytes_total'] = m.groupdict()['bytes_total']
+                dir_dict['dir'][dir1]['bytes_free'] = m.groupdict()['bytes_free']
+                continue
+
+        return dir_dict
+
+
 class ShowModuleSchema(MetaParser):
     """ Schema for commands:
         * show module
