@@ -106,7 +106,7 @@ class TestShowVersion(unittest.TestCase):
         'returned_to_rom_by': 'power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)',
         'rom': 'System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE',
         'rom_version': '(fc1)',
-        'softwares': ['SuperLAT', 'X.25 software, Version 3.0.0.', 'Bridging', 'TN3270 Emulation'],
+        'softwares': ['SuperLAT software (copyright 1990 by Meridian Technology Corp).', 'X.25 software, Version 3.0.0.', 'Bridging software.', 'TN3270 Emulation software.'],
         'system_image': 'disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7',
         'uptime': '21 weeks, 5 days, 41 minutes',
         'version': '12.2(18)SXF7',

@@ -130,16 +130,16 @@ class ShowVersion(ShowVersionSchema):
         p14 = re.compile(r'^Last reset from (?P<reset>\S+) reset$')
 
         # SuperLAT software (copyright 1990 by Meridian Technology Corp).
-        p15 = re.compile(r'^SuperLAT software .+$')
+        p15 = re.compile(r'^(?P<software>SuperLAT software .+)$')
 
         # X.25 software, Version 3.0.0.
-        p16 = re.compile(r'^X.25 software.+$')
+        p16 = re.compile(r'^(?P<software>X.25 software.+)$')
 
         # Bridging software.
-        p17 = re.compile(r'^Bridging software.$')
+        p17 = re.compile(r'^(?P<software>Bridging software.)$')
 
         # TN3270 Emulation software.
-        p18 = re.compile(r'^TN3270 Emulation software.$')
+        p18 = re.compile(r'^(?P<software>TN3270 Emulation software.)$')
 
         # 1 Virtual Ethernet/IEEE 802.3 interface
         p19 = re.compile(r'^(?P<interface>\d+) +Virtual '
@@ -273,13 +273,13 @@ class ShowVersion(ShowVersionSchema):
                 if 'softwares' not in version_dict:
                     version_dict['softwares'] = []
                 if m15:
-                    version_dict['softwares'].append('SuperLAT')
+                    version_dict['softwares'].append(m15.groupdict()['software'])
                 elif m16:
-                    version_dict['softwares'].append('X.25 software, Version 3.0.0.')
+                    version_dict['softwares'].append(m16.groupdict()['software'])
                 elif m17:
-                    version_dict['softwares'].append('Bridging')
+                    version_dict['softwares'].append(m17.groupdict()['software'])
                 elif m18:
-                    version_dict['softwares'].append('TN3270 Emulation')
+                    version_dict['softwares'].append(m18.groupdict()['software'])
                 continue
 
             # 1 Virtual Ethernet/IEEE 802.3 interface
