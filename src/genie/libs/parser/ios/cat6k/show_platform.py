@@ -45,8 +45,8 @@ class ShowVersionSchema(MetaParser):
                     'last_reset': str,
                     'softwares': list,
                     'interfaces': {
-                      'virtual_ethernet_ieee': int,
-                      'gigabit_ethernet_ieee': int,
+                      'virtual_ethernet': int,
+                      'gigabit_ethernet': int,
                     },
                     'memory': {
                       'non_volatile_conf': int,
@@ -272,15 +272,14 @@ class ShowVersion(ShowVersionSchema):
             if m15 or m16 or m17 or m18:
                 if 'softwares' not in version_dict:
                     version_dict['softwares'] = []
-                else:
-                    if m15:
-                        version_dict['softwares'].append('SuperLAT')
-                    elif m16:
-                        version_dict['softwares'].append('X.25')
-                    elif m17:
-                        version_dict['softwares'].append('Bridging')
-                    elif m18:
-                        version_dict['softwares'].append('TN3270 Emulation')
+                if m15:
+                    version_dict['softwares'].append('SuperLAT')
+                elif m16:
+                    version_dict['softwares'].append('X.25 software, Version 3.0.0.')
+                elif m17:
+                    version_dict['softwares'].append('Bridging')
+                elif m18:
+                    version_dict['softwares'].append('TN3270 Emulation')
                 continue
 
             # 1 Virtual Ethernet/IEEE 802.3 interface
@@ -288,14 +287,14 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'interface' not in version_dict:
                     version_dict.setdefault('interfaces', {})
-                version_dict['interfaces']['virtual_ethernet_ieee'] = \
+                version_dict['interfaces']['virtual_ethernet'] = \
                     int(m.groupdict()['interface'])
                 continue
 
             # 50 Gigabit Ethernet/IEEE 802.3 interfaces
             m = p20.match(line)
             if m:
-                version_dict['interfaces']['gigabit_ethernet_ieee'] = \
+                version_dict['interfaces']['gigabit_ethernet'] = \
                     int(m.groupdict()['interface'])
                 continue
 
