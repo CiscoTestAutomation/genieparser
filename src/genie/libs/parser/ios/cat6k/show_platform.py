@@ -235,9 +235,8 @@ class ShowVersion(ShowVersionSchema):
             # cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
             m = p11.match(line)
             if m:
-                version_dict['chassis'] = m.groupdict()['chassis']
-                version_dict['processor_type'] = m.groupdict()['processor_type']
-                version_dict['main_mem'] = m.groupdict()['main_mem']
+                for k in ['chassis', 'processor_type', 'main_mem']:
+                    version_dict[k] = m.groupdict()[k]
                 continue
 
             # Processor board ID FXS1821Q2H9
@@ -389,8 +388,9 @@ class Dir(DirSchema):
                 continue
 
             # filename, index, permissions, size and last_modified_date
-            p2 = re.compile(
-                r'\s*(?P<index>\d+) +(?P<permissions>\S+) +(?P<size>\d+) +(?P<last_modified_date>\S+ +\d+ +\d+ +\d+\:\d+\:\d+ +\S+) +(?P<filename>.+)$')
+            p2 = re.compile(r'\s*(?P<index>\d+) +(?P<permissions>\S+) +(?P<size>\d+) '
+                            r'+(?P<last_modified_date>\S+ +\d+ +\d+ +\d+\:\d+\:\d+ +\S+) '
+                            r'+(?P<filename>.+)$')
             m = p2.match(line)
             if m:
                 filename = m.groupdict()['filename']
@@ -398,10 +398,9 @@ class Dir(DirSchema):
                     dir_dict['dir'][dir1]['files'] = {}
                 if filename not in dir_dict['dir'][dir1]['files']:
                     dir_dict['dir'][dir1]['files'][filename] = {}
-                dir_dict['dir'][dir1]['files'][filename]['index'] = m.groupdict()['index']
-                dir_dict['dir'][dir1]['files'][filename]['permissions'] = m.groupdict()['permissions']
-                dir_dict['dir'][dir1]['files'][filename]['size'] = m.groupdict()['size']
-                dir_dict['dir'][dir1]['files'][filename]['last_modified_date'] = m.groupdict()['last_modified_date']
+                    dir_file_dict = dir_dict['dir'][dir1]['files'][filename]
+                for k in ['index', 'permissions', 'size', 'last_modified_date']:
+                    dir_file_dict[k] = m.groupdict()[k]
                 continue
 
             # bytes_total and bytes_free
@@ -505,7 +504,8 @@ class ShowRedundancy(ShowRedundancySchema):
             r'^Maintenance +Mode += +(?P<maint_mode>\S+)$')
 
         # Communications = Down      Reason: Simplex mode
-        p9 = re.compile(r'^Communications += +(?P<communications>\S+)\s+Reason: +(?P<communications_reason>[\S\s]+)$')
+        p9 = re.compile(r'^Communications += +(?P<communications>\S+)\s'
+                        r'+Reason: +(?P<communications_reason>[\S\s]+)$')
 
         # Active Location = slot 1
         p10 = re.compile(r'^Active +Location += +(?P<slot>[\S\s]+)$')
@@ -514,7 +514,8 @@ class ShowRedundancy(ShowRedundancySchema):
         p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>\S+)$')
 
         # Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
-        p12 = re.compile(r'^Uptime +in +current +state += +(?P<uptime_in_curr_state>[\S\s]+)$')
+        p12 = re.compile(r'^Uptime +in +current +state += '
+                         r'+(?P<uptime_in_curr_state>[\S\s]+)$')
 
         # Image Version = Cisco Internetwork Operating System Software
         p13 = re.compile(r'^Image +Version += +(?P<image_ver>.+)$')
@@ -582,38 +583,32 @@ class ShowRedundancy(ShowRedundancySchema):
             # Hardware Mode = Simplex
             m = p5.match(line)
             if m:
-                red_dict['hw_mode'] = \
-                    m.groupdict()['hw_mode']
+                red_dict['hw_mode'] = m.groupdict()['hw_mode']
                 continue
 
             # Configured Redundancy Mode = Non-redundant
             m = p6.match(line)
             if m:
-                red_dict['conf_red_mode'] = \
-                    m.groupdict()['conf_red_mode']
+                red_dict['conf_red_mode'] = m.groupdict()['conf_red_mode']
                 continue
 
             # Operating Redundancy Mode = Non-redundant
             m = p7.match(line)
             if m:
-                red_dict['oper_red_mode'] = \
-                    m.groupdict()['oper_red_mode']
+                red_dict['oper_red_mode'] = m.groupdict()['oper_red_mode']
                 continue
 
             # Maintenance Mode = Disabled
             m = p8.match(line)
             if m:
-                red_dict['maint_mode'] = \
-                    m.groupdict()['maint_mode']
+                red_dict['maint_mode'] = m.groupdict()['maint_mode']
                 continue
 
             # Communications = Down      Reason: Failure
             m = p9.match(line)
             if m:
-                red_dict['communications'] = \
-                    m.groupdict()['communications']
-                red_dict['communications_reason'] = \
-                    m.groupdict()['communications_reason']
+                red_dict['communications'] = m.groupdict()['communications']
+                red_dict['communications_reason'] = m.groupdict()['communications_reason']
                 continue
 
             # Active Location = slot 1
@@ -629,8 +624,7 @@ class ShowRedundancy(ShowRedundancySchema):
             m = p11.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['curr_sw_state'] = \
-                        m.groupdict()['curr_sw_state']
+                    slot_dict['curr_sw_state'] = m.groupdict()['curr_sw_state']
                 continue
 
             # Uptime in current state = 1 day, 18 hours, 48 minutes
@@ -645,34 +639,29 @@ class ShowRedundancy(ShowRedundancySchema):
             m = p13.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['image_ver'] = \
-                        m.groupdict()['image_ver']
+                    slot_dict['image_ver'] = m.groupdict()['image_ver']
                 continue
 
             # BOOT = bootflash:/ecr.bin;
             m = p14.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['boot'] = \
-                        m.groupdict()['boot']
+                    slot_dict['boot'] = m.groupdict()['boot']
                 continue
 
             # Configuration register = 0x102
             m = p15.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['config_register'] = \
-                        m.groupdict()['config_register']
+                    slot_dict['config_register'] = m.groupdict()['config_register']
                 continue
 
             # Compiled Thu 31-Oct-19 17:43 by makale
             m = p16.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['compiled_by'] = \
-                        m.groupdict()['compiled_by']
-                    slot_dict['compiled_date'] = \
-                        m.groupdict()['compiled_date']
+                    slot_dict['compiled_by'] = m.groupdict()['compiled_by']
+                    slot_dict['compiled_date'] = m.groupdict()['compiled_date']
                 continue
 
             # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
@@ -693,16 +682,14 @@ class ShowRedundancy(ShowRedundancySchema):
             m = p20.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['config_file'] = \
-                        m.groupdict()['config_file']
+                    slot_dict['config_file'] = m.groupdict()['config_file']
                 continue
 
             # BOOTLDR =
             m = p21.match(line)
             if m:
                 if 'slot' in redundancy_dict:
-                    slot_dict['bootldr'] = \
-                        m.groupdict()['bootldr']
+                    slot_dict['bootldr'] = m.groupdict()['bootldr']
                 continue
 
         return redundancy_dict
