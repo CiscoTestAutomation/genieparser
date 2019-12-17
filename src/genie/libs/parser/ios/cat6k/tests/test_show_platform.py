@@ -1,5 +1,4 @@
 import unittest
-import genie.gre
 from unittest.mock import Mock
 from ats.topology import Device
 
