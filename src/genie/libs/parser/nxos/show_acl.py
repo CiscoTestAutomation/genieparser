@@ -130,6 +130,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
+        else:
+            out = output
 
         # IP access list acl_name
         # IP access list test22
