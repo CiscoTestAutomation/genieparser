@@ -632,6 +632,114 @@ class TestShowIsis(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output_3 = {
+        'instance': {
+            'test': {
+                'process_id': 'test',
+                'instance': '0',
+                'vrf': {
+                    'default': {
+                        'system_id': '4444.4444.4444',
+                        'is_levels': 'level-1',
+                        'manual_area_address': ['49.0002'],
+                        'routing_area_address': ['49.0002'],
+                        'non_stop_forwarding': 'Disabled',
+                        'most_recent_startup_mode': 'Cold Restart',
+                        'te_connection_status': 'Down',
+                        'topology': {
+                            'IPv4 Unicast': {
+                                'vrf': {
+                                    'default': {
+                                        'level': {
+                                            1: {
+                                                'generate_style': 'Wide',
+                                                'accept_style': 'Wide',
+                                                'metric': 10,
+                                                'ispf_status': 'Disabled',
+                                            },
+                                        },
+                                        'protocols_redistributed': False,
+                                        'distance': 115,
+                                        'adv_passive_only': False,
+                                    },
+                                },
+                            },
+                            'IPv6 Unicast': {
+                                'vrf': {
+                                    'default': {
+                                        'level': {
+                                            1: {
+                                                'metric': 10,
+                                                'ispf_status': 'Disabled',
+                                            },
+                                        },
+                                        'protocols_redistributed': False,
+                                        'distance': 115,
+                                        'adv_passive_only': False,
+                                    },
+                                },
+                            },
+                        },
+                        'interfaces': {
+                            'Loopback0': {
+                                'running_state': 'running actively',
+                                'configuration_state': 'active in configuration',
+                            },
+                            'GigabitEthernet0/0/0/0': {
+                                'running_state': 'running actively',
+                                'configuration_state': 'active in configuration',
+                            },
+                            'GigabitEthernet0/0/0/1': {
+                                'running_state': 'running actively',
+                                'configuration_state': 'active in configuration',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_3 = {'execute.return_value': '''
+        show isis
+        Mon Nov 25 22:23:10.670 UTC
+
+        IS-IS Router: test
+        System Id: 4444.4444.4444
+        Instance Id: 0
+        IS Levels: level-1
+        Manual area address(es):
+            49.0002
+        Routing for area address(es):
+            49.0002
+        Non-stop forwarding: Disabled
+        Most recent startup mode: Cold Restart
+        TE connection status: Down
+        Topologies supported by IS-IS:
+            IPv4 Unicast
+            Level-1
+                Metric style (generate/accept): Wide/Wide
+                Metric: 10
+                ISPF status: Disabled
+            No protocols redistributed
+            Distance: 115
+            Advertise Passive Interface Prefixes Only: No
+            IPv6 Unicast
+            Level-1
+                Metric: 10
+                ISPF status: Disabled
+            No protocols redistributed
+            Distance: 115
+            Advertise Passive Interface Prefixes Only: No
+        SRLB not allocated
+        SRGB not allocated
+        Interfaces supported by IS-IS:
+            Loopback0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/1 is running actively (active in configuration)
+
+    '''}
+    
+
     def test_show_isis_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsis(device=self.device)
@@ -649,6 +757,13 @@ class TestShowIsis(unittest.TestCase):
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_show_isis_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
 
 class TestShowIsisSpfLog(unittest.TestCase):
     ''' Unit Tests for command/parser
