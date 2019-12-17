@@ -708,6 +708,79 @@ class ShowRedundancy(ShowRedundancySchema):
         return redundancy_dict
 
 
+class ShowInventorySchema(MetaParser):
+    """
+    Schema for:
+        * 'show inventory'
+    """
+
+    schema = {
+        'index': {
+            Any():
+                {'name': str,
+                 'descr': str,
+                 Optional('pid'): str,
+                 Optional('vid'): str,
+                 Optional('sn'): str,
+                },
+            }
+        }
+
+
+class ShowInventory(ShowInventorySchema):
+    """
+    Parser for:
+        * show inventory
+    """
+    cli_command = ['show inventory']
+
+    def cli(self, output=None):
+
+        if output is None:
+            # Build command
+            cmd = self.cli_command[0]
+            # Execute command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        index = 0
+
+        # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
+        p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
+                         ' +DESCR: +\"(?P<descr>.*)\"$')
+
+        # PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A
+        p2 = re.compile(r'^PID: +(?P<pid>\S+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
+                         ' +SN:(?: +(?P<sn>(\S+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
+            m = p1.match(line)
+            if m:
+                index += 1
+                group = m.groupdict()
+                final_dict = ret_dict.setdefault('index', {}).setdefault(index, {})
+                for key in group.keys():
+                    if group[key]:
+                        final_dict[key] = group[key]
+                continue
+
+            # PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for key in group.keys():
+                    if group[key]:
+                        final_dict[key] = group[key]
+                continue
+
+        return ret_dict
+
 
 
 class ShowModuleSchema(MetaParser):
