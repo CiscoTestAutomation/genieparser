@@ -40,6 +40,10 @@
 * IOSXE
     * Updated ShowAuthenticationSessionsInterfaceDetails
 	    * Change in order of Server Policies no longer breaks parsing
+    * Updated ShowClnsIsNeighborsDetail
+        * Changed regex and schema to support type 'L1L2'
+    * Updated ShowIsisDatabaseDetail
+        * Changed schema to support more various output
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
