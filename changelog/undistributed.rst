@@ -39,4 +39,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowAuthenticationSessionsInterfaceDetails
-	    * Change in order of Server Policies no longer breaks parsing 
+	    * Change in order of Server Policies no longer breaks parsing
+* DNAC
+    * Updated Interface for:
+        * Supporting hostname in the schema
