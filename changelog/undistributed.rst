@@ -23,6 +23,8 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+    *Added ShowMplsLabelRange for:
+        * show mpls label range
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:

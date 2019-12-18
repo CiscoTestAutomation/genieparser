@@ -1,6 +1,7 @@
 ''' show_mpls.py
 
 IOSXR parsers for the following show commands:
+    * 'show mpls label range'
     * 'show mpls ldp neighbor brief'
     * 'show mpls label table detail'
     * 'show mpls interfaces'
@@ -18,6 +19,52 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+# ======================================================
+# Parser for 'show mpls label range'
+# ======================================================
+class ShowMplsLabelRangeSchema(MetaParser):
+
+    """Schema for show mpls label range"""
+
+    schema =  {
+        'range_for_dynamic_labels':
+			{'min_range': int,
+			'max_range': int 	 
+			},	 
+	    }
+
+class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
+
+    '''Parser for show mpls label range'''
+
+    cli_command = 'show mpls label range'
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # Init vars        
+        mpls_dict = {}
+        #Range for dynamic labels: Min/Max: 24000/1048575
+        
+        p1 = re.compile(r'Range +for +dynamic +labels: +Min/Max: +(?P<min_range>\d+)/(?P<max_range>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Range for dynamic labels: Min/Max: 24000/1048575
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                range_dict = mpls_dict.setdefault('range_for_dynamic_labels', {})
+                range_dict.update({'min_range': int(group['min_range'])})
+                range_dict.update({'max_range': int(group['max_range'])})
+                continue
+            
+        return mpls_dict
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'

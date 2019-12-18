@@ -10,11 +10,48 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mpls
-from genie.libs.parser.iosxr.show_mpls import (ShowMplsLdpNeighborBrief, 
+from genie.libs.parser.iosxr.show_mpls import (ShowMplsLabelRange,
+                                               ShowMplsLdpNeighborBrief, 
                                                ShowMplsLabelTableDetail,
                                                ShowMplsInterfaces,
                                                ShowMplsForwarding,
                                                ShowMplsForwardingVrf)
+
+# ==================================================
+#  Unit test for 'show mpls label range'
+# ==================================================
+class TestShowMplsLabelRange(unittest.TestCase):
+
+    '''Unit test for 'show mpls label range' '''
+
+    device = Device(name ='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'range_for_dynamic_labels': {
+            'min_range': 24000,
+            'max_range': 1048575
+        },
+    }
+
+    golden_output = {'execute.return_value':'''
+    RP/0/RP0/CPU0:R3#show mpls label range 
+    Thu Aug 29 5:24:12.183 UTC
+    Range for dynamic labels: Min/Max: 24000/1048575
+    '''}
+
+    def test_show_mpls_label_range_empty(self):  
+        self.device = Mock(**self.empty_output)
+        obj = ShowMplsLabelRange(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_label_range_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsLabelRange(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 # ==================================================
