@@ -182,9 +182,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
+    maxDiff = None
 
     golden_parsed_output_3 = {
         'interfaces': {
@@ -945,6 +944,79 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
             }
         }
     }
+
+    golden_output_14 = {'execute.return_value': '''
+        
+        Test_NAC_SW#show authentication sessions interface GigabitEthernet1/0/6
+        details
+                    Interface:  GigabitEthernet1/0/6
+                       IIF-ID:  0x1FB8CAD0
+                  MAC Address:  0024.9b47.bf33
+                 IPv6 Address:  Unknown
+                 IPv4 Address:  Unknown
+                    User-Name:  User1
+                       Status:  Authorized
+                       Domain:  DATA
+               Oper host mode:  multi-auth
+             Oper control dir:  both
+              Session timeout:  N/A
+            Common Session ID:  0A788905000029BE6BFF02FE
+              Acct Session ID:  0x00004bca
+                       Handle:  0x010009d6
+               Current Policy:  Test_DOT1X-DEFAULT_V1
+        Method status list:
+               Method           State
+                dot1x           Authc Success
+                  mab           Stopped
+    Server Policies:
+          Security Policy:  None
+          Security Status:  Link Unsecured
+              ACS ACL: xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69
+    '''}
+
+    golden_parsed_output_14 = {
+        'interfaces': {
+            'GigabitEthernet1/0/6': {
+                'mac_address': {
+                    '0024.9b47.bf33': {
+                        'ipv6_address': 'Unknown',
+                        'iif_id': '0x1FB8CAD0',
+                        'ipv4_address': 'Unknown',
+                        'user_name': 'User1',
+                        'status': 'Authorized',
+                        'domain': 'DATA',
+                        'oper_host_mode': 'multi-auth',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'common_session_id': '0A788905000029BE6BFF02FE',
+                        'acct_session_id': '0x00004bca',
+                        'handle': '0x010009d6',
+                        'current_policy': 'Test_DOT1X-DEFAULT_V1',
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Authc Success'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Stopped'
+                            }
+                        },   
+                        'server_policies': {
+                            1: {
+                                'security_policy': 'None',
+                                'security_status': 'Link Unsecured',
+                                'name': 'ACS ACL',
+                                'policies': 'xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
@@ -953,74 +1025,70 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
             parsed_output = obj.parse(interface='GigabitEthernet3/0/2')
 
     def test_golden_4(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_3)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet3/0/2')
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
     def test_golden_5(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_4)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
     def test_golden_6(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_5)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_5)
 
     def test_golden_7(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_6)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet2/0/47')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
     
     def test_golden_8(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_7)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_golden_9(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_8)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
         
     def test_golden_10(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_10)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
         
     def test_golden_11(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_11)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_11)
         
     def test_golden_12(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_12)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_12)
         
     def test_golden_13(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_13)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_13)
+
+    def test_golden_14(self):
+        self.dev_c3850 = Mock(**self.golden_output_14)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_14)
 
 if __name__ == '__main__':
     unittest.main()

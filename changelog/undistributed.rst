@@ -13,3 +13,6 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessionsInterfaceDetails
+	    * Change in order of Server Policies no longer breaks parsing 
