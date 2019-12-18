@@ -17499,7 +17499,6 @@ class test_show_running_config_bgp(unittest.TestCase):
             route-target export 100:1
         '''}
 
-
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
