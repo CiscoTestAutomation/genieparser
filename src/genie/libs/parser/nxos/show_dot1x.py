@@ -176,8 +176,8 @@ class ShowDot1xAllDetailsSchema(MetaParser):
             show dot1x all details
     '''
     schema = {
-        'system_auth_control': bool,
-        'version': int,
+        Optional('system_auth_control'): bool,
+        Optional('version'): int,
         Optional ('interfaces'): {
             Any() : {
                 'pae': str,
@@ -218,6 +218,7 @@ class ShowDot1xAllDetailsSchema(MetaParser):
                 Optional('clients') : {
                     Any() : {
                         Optional('client'): str,
+                        Optional('eap_method'): str,
                         Optional('auth_method'): str, 
                         Optional('session'): {
                             Optional('reauth_action'): str,
@@ -247,11 +248,39 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             out = output
         
         ret_dict = {}
-
+        eap_method = ''
+        # Sysauthcontrol Enabled
         p1 = re.compile(r'^Sysauthcontrol +(?P<SysControl>\w+)$')
+        
+        # Dot1x Protocol Version 2
         p2 = re.compile(r'^Dot1x +Protocol +Version +(?P<version>\d+)$')
+        
+        # Dot1x Info for Ethernet1/2
         p3 = re.compile(r'^Dot1x +Info +for +(?P<intf>\w+\d+\/\d+)$')
-        p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(\w+((:\w+)|(\s\w+))*))$')
+        
+        # EAP Method                = (13)
+        # PAE = AUTHENTICATOR
+        # MaxReq = 3
+        # PortControl = AUTO
+        # ReAuthentication = Enabled
+        # Port Status = AUTHORIZED
+        # HostMode = SINGLE HOST
+        # ReAuthMax = 2
+        # Mac-Auth-Bypass = Disabled
+        # QuietPeriod = 60
+        # RateLimitPeriod = 0
+        # ServerTimeout = 30
+        # SuppTimeout = 30
+        # TxPeriod = 30
+        # TimeToNextReauth = 17
+        # ReAuthPeriod = 60
+        # Supplicant = 54:BE:EF:E5:00:00
+        # Authentication Method = EAP
+        # ReAuthAction = Reauthenticate
+        # Authenticated By = Remote Server
+        # Auth SM State = AUTHENTICATED
+        # Auth BEND SM State = IDLE
+        p4 = re.compile(r'^(?P<key>[\-\s\w]+) +\= +(?P<value>(((\w)|(\())+((:\w+)|(\s\w+)|(.\w+))*)+(\))?)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -283,7 +312,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             m = p4.match(line)
             if m:
                 value = m.groupdict()
-                key = value['key']
+                key = value['key'].strip()
                 val = value['value'].lower()
 
                 # PAE = AUTHENTICATOR
@@ -400,13 +429,18 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
                 elif key.lower() == 'supplicant':
                     client_dict = intf_dict.setdefault('clients', {}).setdefault(val, {})
                     client_dict['client'] = val
+                    if eap_method:
+                        client_dict['eap_method'] = eap_method
+                    
+                # EAP Method                = (13)
+                elif key.lower() == 'eap method':
+                    eap_method = val
 
                 # Authentication Method = EAP
                 elif key.lower() == 'authentication method':
                     client_dict.setdefault('auth_method', val)
 
-            ### Session ###
-                        
+            ### Session ###  
                 # ReAuthAction = Reauthenticate
                 elif key.lower() == 'reauthaction':
                     # if 'session' not in intf_dict: 

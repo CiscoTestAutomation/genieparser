@@ -406,7 +406,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                         'metric_0': '40',
                                         'metric_2': '40',
                                         'csnp': '10',
-                                        'next_csnp': '00:00:06',
+                                        'next_csnp': 'Inactive',
                                         'hello': '10',
                                         'multi': '3',
                                         'next_iih': '00:00:04',
@@ -644,7 +644,7 @@ class TestShowIsisInterface(unittest.TestCase):
         Level-1 Designated IS: R2_xr
         Level-2 Designated IS: R2_xr
         Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
-        1              40     40     10 00:00:06      10   3       00:00:04
+        1              40     40     10 Inactive      10   3       00:00:04
         2              40     40     10 00:00:03      10   3       00:00:09
         Level  Adjs   AdjsUp Pri  Circuit ID         Since
         1         1        1  64  R2_xr.03           5d01h
@@ -689,6 +689,159 @@ class TestShowIsisInterface(unittest.TestCase):
             2  2        40      no   UP    DN       no       UP       yes
     '''}
 
+    golden_parsed_output1 = {
+        "instance": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "interfaces": {
+                            "Ethernet1/1": {
+                                "name": "Ethernet1/1",
+                                "status": "protocol-up/link-up/admin-up",
+                                "ipv4": "10.5.7.7",
+                                "ipv4_subnet": "10.5.7.0/24",
+                                "ipv6": {
+                                    "2001:db8:10:5:7::7/64": {
+                                        "state": "VALID"
+                                    }
+                                },
+                                "ipv6_subnet": "2001:db8:10:5::/64",
+                                "ipv6_link_local_address": "fe80::5c00:40ff:fe06:7",
+                                "authentication": {
+                                    "level_1": {
+                                        "auth_check": "set"
+                                    },
+                                    "level_2": {
+                                        "auth_check": "set"
+                                    }
+                                },
+                                "index": "0x0002",
+                                "local_circuit_id": "0x01",
+                                "circuit_type": "L1-2",
+                                "bfd_ipv4": "locally disabled",
+                                "bfd_ipv6": "locally disabled",
+                                "mtr": "enabled",
+                                "passive": "level-1-2",
+                                "mtu": 1500,
+                                "lsp_interval_ms": 33,
+                                "levels": {
+                                    "1": {
+                                        "metric_0": "40",
+                                        "metric_2": "40",
+                                        "csnp": "10",
+                                        "next_csnp": "Inactive",
+                                        "hello": "10",
+                                        "multi": "3",
+                                        "next_iih": "Inactive",
+                                        "adjs": "0",
+                                        "adjs_up": "0",
+                                        "pri": "64",
+                                        "circuit_id": "0000.0000.0000.00",
+                                        "since": "2w2d"
+                                    },
+                                    "2": {
+                                        "metric_0": "40",
+                                        "metric_2": "40",
+                                        "csnp": "10",
+                                        "next_csnp": "Inactive",
+                                        "hello": "10",
+                                        "multi": "3",
+                                        "next_iih": "Inactive",
+                                        "adjs": "0",
+                                        "adjs_up": "0",
+                                        "pri": "64",
+                                        "circuit_id": "0000.0000.0000.00",
+                                        "since": "2w2d"
+                                    }
+                                },
+                                "topologies": {
+                                    "0": {
+                                        "level": {
+                                            "1": {
+                                                "metric": "40",
+                                                "metric_cfg": "no",
+                                                "fwdng": "UP",
+                                                "ipv4_mt": "DN",
+                                                "ipv4_cfg": "yes",
+                                                "ipv6_mt": "DN",
+                                                "ipv6_cfg": "yes"
+                                            },
+                                            "2": {
+                                                "metric": "40",
+                                                "metric_cfg": "no",
+                                                "fwdng": "UP",
+                                                "ipv4_mt": "DN",
+                                                "ipv4_cfg": "yes",
+                                                "ipv6_mt": "DN",
+                                                "ipv6_cfg": "yes"
+                                            }
+                                        }
+                                    },
+                                    "2": {
+                                        "level": {
+                                            "1": {
+                                                "metric": "40",
+                                                "metric_cfg": "no",
+                                                "fwdng": "UP",
+                                                "ipv4_mt": "DN",
+                                                "ipv4_cfg": "no",
+                                                "ipv6_mt": "DN",
+                                                "ipv6_cfg": "yes"
+                                            },
+                                            "2": {
+                                                "metric": "40",
+                                                "metric_cfg": "no",
+                                                "fwdng": "UP",
+                                                "ipv4_mt": "DN",
+                                                "ipv4_cfg": "no",
+                                                "ipv6_mt": "DN",
+                                                "ipv6_cfg": "yes"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output1 = {'execute.return_value': '''\
+        show isis interface
+        IS-IS process: test VRF: default
+        Ethernet1/1, Interface status: protocol-up/link-up/admin-up
+          IP address: 10.5.7.7, IP subnet: 10.5.7.0/24
+          IPv6 address:
+            2001:db8:10:5:7::7/64 [VALID]
+          IPv6 subnet:  2001:db8:10:5::/64
+          IPv6 link-local address: fe80::5c00:40ff:fe06:7
+          Level1
+            No auth type and keychain
+            Auth check set
+          Level2
+            No auth type and keychain
+            Auth check set
+          Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L1-2
+          BFD IPv4 is locally disabled for Interface Ethernet1/1
+          BFD IPv6 is locally disabled for Interface Ethernet1/1
+          MTR is enabled
+          Passive level: level-1-2
+          LSP interval: 33 ms, MTU: 1500
+          Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
+          1              40     40     10 Inactive      10   3       Inactive
+          2              40     40     10 Inactive      10   3       Inactive
+          Level  Adjs   AdjsUp Pri  Circuit ID         Since
+          1         0        0  64  0000.0000.0000.00  2w2d
+          2         0        0  64  0000.0000.0000.00  2w2d
+          Topologies enabled:
+            L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+            1  0        40      no   UP    DN       yes      DN       yes
+            1  2        40      no   UP    DN       no       DN       yes
+            2  0        40      no   UP    DN       yes      DN       yes
+            2  2        40      no   UP    DN       no       DN       yes
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisInterface(device=self.device)
@@ -700,6 +853,12 @@ class TestShowIsisInterface(unittest.TestCase):
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIsisInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 class TestShowIsisSpfLogDetail(unittest.TestCase):
