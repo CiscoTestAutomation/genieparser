@@ -4,6 +4,7 @@ IOSXR parsers for the following show commands:
     * 'show mpls label range'
     * 'show mpls ldp neighbor brief'
     * 'show mpls label table detail'
+    * 'show mpls label table private'
     * 'show mpls interfaces'
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
@@ -222,13 +223,15 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
-
 # ======================================================
-# Parser for 'show mpls label table detail'
+# Schema for 'show mpls label table detail'
 # ======================================================
 class ShowMplsLabelTableDetailSchema(MetaParser):
     
-    """Schema for show mpls label table detail"""
+    """Schema for 
+    show mpls label table detail
+    show mpls label table private
+    """
 
     schema = {
         'table': {
@@ -256,11 +259,15 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
         }
     }
 
-
+# ======================================================
+# Parser for 'show mpls label table detail'
+# ======================================================
 class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
-    """Parser for show mpls label table detail"""
-
+    """
+    Parser for show mpls label table detail
+    """
+    #the val
     cli_command = ['show mpls label table detail']
 
     def cli(self, output=None):
@@ -336,6 +343,23 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
         return mpls_dict
 
+# ======================================================
+# Parser for 'show mpls label table private'
+# ======================================================
+class ShowMplsLabelTablePrivate(ShowMplsLabelTableDetail):
+
+    """
+    Parser for show mpls label table private
+    """
+
+    cli_command = ['show mpls label table private']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        return super().cli(output=out)
 
 # ======================================================
 # Schema for 'show mpls interfaces'
