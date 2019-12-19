@@ -166,7 +166,6 @@ class ShowVpc(ShowVpcSchema):
         # 20 Po20 up failed vPC type-1 configuration -
         # 1 Po1 down success success -
         # 11 Po11 up success success 1,10-28,30-5 DF: Partial
-
         p19 = re.compile(r'^(?P<vpc_id>\d+) +(?P<vpc_ifindex>\S+) '
             '+(?P<vpc_port_state>\S+) +(?P<vpc_consistency>\S+) '
             '+(?P<vpc_consistency_status>success|[\S\s]+) '
