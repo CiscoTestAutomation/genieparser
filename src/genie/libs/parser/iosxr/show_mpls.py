@@ -267,7 +267,6 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
     """
     Parser for show mpls label table detail
     """
-    #the val
     cli_command = ['show mpls label table detail']
 
     def cli(self, output=None):
