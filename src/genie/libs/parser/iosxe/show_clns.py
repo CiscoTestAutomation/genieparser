@@ -427,7 +427,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
                 tag_process = group['tag_process']
                 tag = group['tag']
                 if tag_process == '<Null Tag>':
-                    tag_process = ''
+                    tag_process = 'null'
                 clns_dict = result_dict.setdefault('instance', {}).setdefault(tag_process, {})
 
                 if tag:
