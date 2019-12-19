@@ -20,13 +20,13 @@ from genie.libs.parser.iosxr.show_isis import (
     ShowIsisSpfLogDetail,
     ShowIsisDatabaseDetail,
     ShowIsisSegmentRoutingLabelTable,
-    ShowIsisFRRSummary
+    ShowIsisFastRerouteSummary
 )
 
 # ==================================================
 #  Unit test for 'show isis fast-reroute summary'
 # ==================================================
-class TestShowIsisFRRSummary(unittest.TestCase):
+class TestShowIsisFastRerouteSummary(unittest.TestCase):
 
     ''' Unit test for 'show isis fast-reroute summary' '''
     
@@ -127,13 +127,13 @@ class TestShowIsisFRRSummary(unittest.TestCase):
 
     def test_show_isis_fast_reroute_summary_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIsisFRRSummary(device=self.device)
+        obj = ShowIsisFastRerouteSummary(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_isis_fast_reroute_summary_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowIsisFRRSummary(device=self.device)
+        obj = ShowIsisFastRerouteSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

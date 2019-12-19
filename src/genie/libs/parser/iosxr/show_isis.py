@@ -31,7 +31,7 @@ from genie.libs.parser.utils.common import Common
 # Schema for 'show isis fast-reroute summary'
 #============================================
 
-class ShowIsisFRRSummarySchema(MetaParser):
+class ShowIsisFastRerouteSummarySchema(MetaParser):
     ''' 'Schema for 'show isis fast-reroute summary' '''
 
     schema = {
@@ -67,7 +67,7 @@ class ShowIsisFRRSummarySchema(MetaParser):
 # Parser for 'show isis fast-reroute summary'
 #============================================
 
-class ShowIsisFRRSummary(ShowIsisFRRSummarySchema):
+class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
     ''' 'Parser for 'show isis fast-reroute summary' '''
 
 
@@ -81,12 +81,14 @@ class ShowIsisFRRSummary(ShowIsisFRRSummarySchema):
 
         #Init vars
         ret_dict = {}
+        label_list = ['critical_priority', 'high_priority', 'medium_priority', 'low_priority', 'total']
+
 
         # IS-IS SR IPv4 Unicast FRR summary
         p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>(IPv6|IPv4) +Unicast) +FRR +summary')
 
-        # Prefixes reacheable in L1
-        p2 = re.compile(r'Prefixes +reachable +in +(?P<level>.+)')
+        # Prefixes reachable in L1
+        p2 = re.compile(r'Prefixes +reachable +in +(?P<level>\S+)')
 
         #                       Critical   High       Medium     Low        Total     
         #                       Priority   Priority   Priority   Priority             
@@ -94,15 +96,14 @@ class ShowIsisFRRSummary(ShowIsisFRRSummarySchema):
         # All paths protected     0          0          0          0          0         
         # Some paths protected    0          0          0          0          0         
         # Unprotected             0          0          4          6          10       
-        p3 = re.compile(r'(?P<name>[a-zA-z\s]+) +(?P<critical_priority>\d+) +(?P<high_priority>\d+) +(?P<medium_priority>\d+) +(?P<low_priority>\d+) +(?P<total>\d+)')
+        p3 = re.compile(r'(?P<name>[\S\s]+) +(?P<critical_priority>\d+) +(?P<high_priority>\d+) +(?P<medium_priority>\d+) +(?P<low_priority>\d+) +(?P<total>\d+)')
 
         # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
-        p4 = re.compile(r'Protection +coverage +(?P<critical_priority>\d+\.\d+\%) +(?P<high_priority>\d+\.\d+\%) +(?P<medium_priority>\d+\.\d+\%) +(?P<low_priority>\d+\.\d+\%) +(?P<total>\d+\.\d+\%)')
+        p4 = re.compile(r'Protection +coverage +(?P<critical_priority>[\d\.\%]+) +(?P<high_priority>[\d\.\%]+) +(?P<medium_priority>[\d\.\%]+) +(?P<low_priority>[\d\.\%]+) +(?P<total>[\d\.\%]+)')
 
         for line in out.splitlines():
             line = line.strip()
 
-            label_list = ['critical_priority', 'high_priority', 'medium_priority', 'low_priority', 'total']
             
             # IS-IS SR IPv4 Unicast FRR summary
             m = p1.match(line)
@@ -113,7 +114,7 @@ class ShowIsisFRRSummary(ShowIsisFRRSummarySchema):
                 instance_dict = ret_dict.setdefault('instance', {}).setdefault(instance, {}).\
                     setdefault('topology',{}).setdefault(topology, {})
 
-            # Prefixes reacheable in L1
+            # Prefixes reachable in L1
             m = p2.match(line)
             if m:
                group = m.groupdict()
