@@ -74,3 +74,8 @@
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
+		
+* NXOS
+    * Updated ShowVpc:
+        * Supporting parser for vpc+ outputs
+		
