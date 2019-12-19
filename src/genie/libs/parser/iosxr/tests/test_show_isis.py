@@ -20,7 +20,122 @@ from genie.libs.parser.iosxr.show_isis import (
     ShowIsisSpfLogDetail,
     ShowIsisDatabaseDetail,
     ShowIsisSegmentRoutingLabelTable,
+    ShowIsisFRRSummary
 )
+
+# ==================================================
+#  Unit test for 'show isis fast-reroute summary'
+# ==================================================
+class TestShowIsisFRRSummary(unittest.TestCase):
+
+    ''' Unit test for 'show isis fast-reroute summary' '''
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance':{
+            'SR':{
+                'topology':{
+                    'IPv4 Unicast':{
+                        'frr_summary':{
+                            'L1':{
+                                'all_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'some_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'unprotected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 4,
+                                    'low_priority' : 6,
+                                    'total' : 10,
+                                },
+                                'protection_coverage':{
+                                    'critical_priority' : '0.00%',
+                                    'high_priority' : '0.00%',
+                                    'medium_priority' : '0.00%',
+                                    'low_priority' : '0.00%',
+                                    'total' : '0.00%',
+                                },
+                            },
+                            'L2':{
+                                'all_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'some_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'unprotected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 1,
+                                    'low_priority' : 0,
+                                    'total' : 1,
+                                },
+                                'protection_coverage':{
+                                    'critical_priority' : '0.00%',
+                                    'high_priority' : '0.00%',
+                                    'medium_priority' : '0.00%',
+                                    'low_priority' : '0.00%',
+                                    'total' : '0.00%',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RP0/CPU0:R3#show isis fast-reroute summary 
+    Thu Aug 29 15:31:09.046 UTC
+
+    IS-IS SR IPv4 Unicast FRR summary
+ 
+                          Critical   High       Medium     Low        Total     
+                          Priority   Priority   Priority   Priority             
+    Prefixes reachable in L1
+        All paths protected     0          0          0          0          0         
+        Some paths protected    0          0          0          0          0         
+        Unprotected             0          0          4          6          10        
+        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+    Prefixes reachable in L2
+        All paths protected     0          0          0          0          0         
+        Some paths protected    0          0          0          0          0         
+        Unprotected             0          0          1          0          1         
+        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
+    '''}
+
+    def test_show_isis_fast_reroute_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisFRRSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_fast_reroute_summary_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIsisFRRSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 # ==================================================
 #  Unit test for 'show isis adjacency'

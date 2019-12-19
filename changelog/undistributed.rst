@@ -23,6 +23,8 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+    * Added ShowIsisFRRSummary for:
+        * show isis fast-reroute summary
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
