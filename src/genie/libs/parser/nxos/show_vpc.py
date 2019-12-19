@@ -85,8 +85,13 @@ class ShowVpc(ShowVpcSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
+<<<<<<< HEAD
         ret_dict = {}
         up_vlan_bitset = peer_up_vlan_bitset = ''
+=======
+        ret_dict = {}
+        up_vlan_bitset = peer_up_vlan_bitset = ''
+>>>>>>> adding sample output along with regex
         vlan_type = None
         vpc_dict = {}
         # vPC domain id                     : 1
