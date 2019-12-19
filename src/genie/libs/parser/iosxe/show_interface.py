@@ -3150,12 +3150,14 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
 
         #Interface                      Status         Protocol Description
         #Gi0/0                          up             up 
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
+        #Gi0/1                          admin down     down     to router2
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)([\s+](\S+))?) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
 
         for line in out.splitlines():
             line = line.strip()
             #Interface                      Status         Protocol Description
             #Gi0/0                          up             up 
+            #Gi0/1                          admin down     down     to router2
             m = p1.match(line)
             if m and m.groupdict()['protocol'] != 'Protocol':
                 group = m.groupdict()
