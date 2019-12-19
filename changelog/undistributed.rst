@@ -46,6 +46,9 @@
         * Changed schema to support more various output
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
+
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
