@@ -18,8 +18,8 @@ from genie.libs.parser.nxos.show_vpc import ShowVpc
 #=========================================================
 class test_show_vpc(unittest.TestCase):
 
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'vpc_domain_id': '1',
@@ -431,49 +431,42 @@ class test_show_vpc(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_golden_3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_5(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_golden_6(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
     def test_golden_7(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output7)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
