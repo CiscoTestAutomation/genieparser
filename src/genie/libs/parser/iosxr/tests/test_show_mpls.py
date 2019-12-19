@@ -235,7 +235,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
 # ==================================================
 class TestShowMplsLabelTableDetail(unittest.TestCase):
     
-    ''' 'Unit test for 'show mpls label table detail' '''
+    '''Unit test for 'show mpls label table detail' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -515,70 +515,6 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
           (SR Adj Segment IPv4, vers:0, index=1, type=0, intf=Gi0/0/0/1, nh=10.3.4.4)
         0     24007   ISIS(A):SR                      InUse  Yes
           (SR Adj Segment IPv4, vers:0, index=3, type=0, intf=Gi0/0/0/1, nh=10.3.4.4)
-    '''}
-
-    golden_parsed_output3 = {
-        'table':{
-            0:{
-                'label':{
-                    0:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    1:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    2:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    13:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    15000:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'No'
-                        },
-                    16000:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'No'
-                        },
-                    24000:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    24001:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    },
-                },
-            },
-        }
-
-    golden_output3 = {'execute.return_value': '''
-    RP/0/RP0/CPU0:R3#show mpls label table private 
-    Thu Aug 29 15:35:09.897 UTC
-    Table Label   Owner                           State  Rewrite
-    ----- ------- ------------------------------- ------ -------
-    0     0       LSD(A)                          InUse  Yes
-    0     1       LSD(A)                          InUse  Yes
-    0     2       LSD(A)                          InUse  Yes
-    0     13      LSD(A)                          InUse  Yes
-    0     15000   LSD(A)                          InUse  No
-    0     16000   ISIS(A):SR                      InUse  No
-    0     24000   ISIS(A):SR                      InUse  Yes
-    0     24001   ISIS(A):SR                      InUse  Yes
     '''}
 
     def test_show_mpls_label_table_detail_empty(self):
