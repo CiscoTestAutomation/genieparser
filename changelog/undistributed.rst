@@ -48,17 +48,14 @@
         * Changed regex and schema to support type 'L1L2'
     * Updated ShowIsisDatabaseDetail
         * Changed schema to support more various output
-<<<<<<< HEAD
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
 		
-=======
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
 
->>>>>>> b2aed7b96ddd7630be6c374608a53366aa5ecefa
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
