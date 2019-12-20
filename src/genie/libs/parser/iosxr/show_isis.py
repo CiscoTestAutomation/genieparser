@@ -40,22 +40,24 @@ class ShowIsisFastRerouteSummarySchema(MetaParser):
                 'topology':{
                     Any():{
                         'frr_summary':{
-                            Any():{
+                            'level':{    
                                 Any():{
-                                    'critical_priority': int,
-                                    'high_priority': int,
-                                    'medium_priority': int,
-                                    'low_priority': int,
-                                    'total': int,
+                                    Any():{
+                                        'critical_priority': int,
+                                        'high_priority': int,
+                                        'medium_priority': int,
+                                        'low_priority': int,
+                                        'total': int,
+                                    },
+                                    'protection_coverage':{
+                                        'critical_priority': str,
+                                        'high_priority': str,
+                                        'medium_priority': str,
+                                        'low_priority': str,
+                                        'total': str,
+                                    },
                                 },
-                                'protection_coverage':{
-                                    'critical_priority': str,
-                                    'high_priority': str,
-                                    'medium_priority': str,
-                                    'low_priority': str,
-                                    'total': str,
-                                },
-                            },
+                            },    
                         },
                     },
                 },
@@ -85,10 +87,10 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
 
 
         # IS-IS SR IPv4 Unicast FRR summary
-        p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>(IPv6|IPv4) +Unicast) +FRR +summary')
+        p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>(IPv6|IPv4) +\S+) +FRR +summary')
 
         # Prefixes reachable in L1
-        p2 = re.compile(r'Prefixes +reachable +in +(?P<level>\S+)')
+        p2 = re.compile(r'Prefixes +reachable +in +L(?P<level>\d+)')
 
         #                       Critical   High       Medium     Low        Total     
         #                       Priority   Priority   Priority   Priority             
@@ -119,7 +121,7 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
             if m:
                group = m.groupdict()
                frr_sum_dict = instance_dict.setdefault('frr_summary',{})\
-                   .setdefault(group['level'], {})
+                   .setdefault('level', {}).setdefault(int(group['level']), {})
                continue
 
             #                       Critical   High       Medium     Low        Total     
@@ -145,7 +147,7 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
                for key in label_list:
                   coverage_dict.update({key: group[key]})
                continue
-            
+
         return ret_dict
 
 #==================================
