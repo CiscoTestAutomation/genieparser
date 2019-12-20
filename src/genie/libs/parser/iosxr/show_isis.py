@@ -85,7 +85,7 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
 
 
         # IS-IS SR IPv4 Unicast FRR summary
-        p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>(IPv6|IPv4)\s+\S+) +FRR +summary')
+        p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>\S+\s+\S+) +FRR +summary')
 
         # Prefixes reachable in L1
         p2 = re.compile(r'Prefixes +reachable +in +L(?P<level>\d+)')
