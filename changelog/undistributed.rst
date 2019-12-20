@@ -23,6 +23,8 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+    *Added ShowMplsLabelRange for:
+        * show mpls label range
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
 
@@ -46,6 +48,9 @@
         * Changed regex and schema to support type 'L1L2'
     * Updated ShowIsisDatabaseDetail
         * Changed schema to support more various output
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
+		
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
