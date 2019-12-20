@@ -14,6 +14,7 @@ IOSXR parsers for the following show commands:
     * show isis private all
     * show isis spf-log detail
     * show isis database detail
+    * show isis fast-reroute summary 
     * show isis instance {instance} hostname
 """
 
@@ -26,6 +27,124 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
+#============================================
+# Schema for 'show isis fast-reroute summary'
+#============================================
+
+class ShowIsisFastRerouteSummarySchema(MetaParser):
+    ''' 'Schema for 'show isis fast-reroute summary' '''
+
+    schema = {
+        'instance':{
+            Any():{
+                'topology':{
+                    Any():{
+                        'level':{    
+                            Any():{
+                                Any():{
+                                    'critical_priority': int,
+                                    'high_priority': int,
+                                    'medium_priority': int,
+                                    'low_priority': int,
+                                    'total': int,
+                                },
+                                'protection_coverage':{
+                                    'critical_priority': str,
+                                    'high_priority': str,
+                                    'medium_priority': str,
+                                    'low_priority': str,
+                                    'total': str,
+                                },
+                            },
+                        },    
+                    },
+                },
+            },
+        }, 
+    }
+
+#============================================
+# Parser for 'show isis fast-reroute summary'
+#============================================
+
+class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
+    ''' 'Parser for 'show isis fast-reroute summary' '''
+
+
+    cli_command = ['show isis fast-reroute summary']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else: 
+            out = output
+
+        #Init vars
+        ret_dict = {}
+        label_list = ['critical_priority', 'high_priority', 'medium_priority', 'low_priority', 'total']
+
+
+        # IS-IS SR IPv4 Unicast FRR summary
+        p1 = re.compile(r'IS-IS +(?P<instance>\S+) +(?P<topology>\S+\s+\S+) +FRR +summary')
+
+        # Prefixes reachable in L1
+        p2 = re.compile(r'Prefixes +reachable +in +L(?P<level>\d+)')
+
+        #                       Critical   High       Medium     Low        Total     
+        #                       Priority   Priority   Priority   Priority             
+        #--------------------------------------------------------------------------------
+        # All paths protected     0          0          0          0          0         
+        # Some paths protected    0          0          0          0          0         
+        # Unprotected             0          0          4          6          10       
+        p3 = re.compile(r'(?P<name>[\S\s]+) +(?P<critical_priority>\d+) +(?P<high_priority>\d+) +(?P<medium_priority>\d+) +(?P<low_priority>\d+) +(?P<total>\d+)')
+
+        # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+        p4 = re.compile(r'Protection +coverage +(?P<critical_priority>[\d\.\%]+) +(?P<high_priority>[\d\.\%]+) +(?P<medium_priority>[\d\.\%]+) +(?P<low_priority>[\d\.\%]+) +(?P<total>[\d\.\%]+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # IS-IS SR IPv4 Unicast FRR summary
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group ['instance']
+                topology = group ['topology']
+                instance_dict = ret_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                    setdefault('topology',{}).setdefault(topology, {})
+
+            # Prefixes reachable in L1
+            m = p2.match(line)
+            if m:
+               group = m.groupdict()
+               frr_sum_dict = instance_dict.setdefault('level', {}).setdefault(int(group['level']), {})
+               continue
+
+            #                       Critical   High       Medium     Low        Total     
+            #                       Priority   Priority   Priority   Priority             
+            #--------------------------------------------------------------------------------
+            # All paths protected     0          0          0          0          0         
+            # Some paths protected    0          0          0          0          0         
+            # Unprotected             0          0          4          6          10       
+            m = p3.match(line)
+            if m:
+               group = m.groupdict()
+               label_name = group['name'].strip().lower().replace(' ','_')
+               label_dict = frr_sum_dict.setdefault(label_name, {})
+               for key in label_list:
+                   label_dict.update({key: int(group[key])})
+               continue 
+            
+            # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+            m = p4.match(line)
+            if m:
+               group = m.groupdict()
+               coverage_dict = frr_sum_dict.setdefault('protection_coverage', {})
+               for key in label_list:
+                  coverage_dict.update({key: group[key]})
+               continue
+
+        return ret_dict
 
 #==================================
 # Schema for 'show isis adjacency'
