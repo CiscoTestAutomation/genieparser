@@ -385,42 +385,44 @@ class test_show_vpc(unittest.TestCase):
                 'vpc_port_state': 'up',
                 'vpc_consistency': 'success',
                 'vpc_consistency_status': 'success',
-                'up_vlan_bitset': '1,10-28,30-5',
-                'vPC_Attrib': 'DF: Partial,4,56-82,138, FP MAC:530,2587 312.0.0'
+                'up_vlan_bitset': '1,10-28,30-54,56-82,138,530,2587',
+                'vPC_Attrib': 'DF: Partial,FP MAC:312.0.0'
             }
         }
     }
 
     golden_output7 = {'execute.return_value': '''
         Legend:
-        (*) - local vPC is down, forwarding via vPC peer-link
+                        (*) - local vPC is down, forwarding via vPC peer-link
         
-        vPC domain id : 312
-        vPC+ switch id : 312
-        Peer status : peer adjacency formed ok
-        vPC keep-alive status : peer is alive
-        vPC fabricpath status : peer is reachable through fabricpath
-        Configuration consistency status : success
-        Per-vlan consistency status : success
-        Type-2 consistency status : success
-        vPC role : primary
-        Number of vPCs configured : 8
-        Peer Gateway : Disabled
-        Dual-active excluded VLANs : -
-        Graceful Consistency Check : Enabled
-        Auto-recovery status : Enabled (timeout = 300 seconds)
+        vPC domain id                     : 312
+        vPC+ switch id                    : 312
+        Peer status                       : peer adjacency formed ok
+        vPC keep-alive status             : peer is alive
+        vPC fabricpath status             : peer is reachable through fabricpath
+        Configuration consistency status  : success
+        Per-vlan consistency status       : success
+        Type-2 consistency status         : success
+        vPC role                          : primary
+        Number of vPCs configured         : 8
+        Peer Gateway                      : Disabled
+        Dual-active excluded VLANs        : -
+        Graceful Consistency Check        : Enabled
+        Auto-recovery status              : Enabled (timeout = 300 seconds)
         
         vPC Peer-link status
-        id Port Status Active vlans
-        
-        1 Po1 up 1,10-28,30-54,56-82,138,530,2587
+        ---------------------------------------------------------------------
+        id   Port   Status Active vlans
+        --   ----   ------ --------------------------------------------------
+        1    Po1    up     1,10-28,30-54,56-82,138,530,2587
         
         vPC status
-        id Port Status Consistency Reason Active vlans vPC+ Attrib
-        
-        11 Po11 up success success 1,10-28,30-5 DF: Partial,
-        4,56-82,138, FP MAC:
-        530,2587 312.0.0
+        ---------------------------------------------------------------------------
+        id     Port        Status Consistency Reason       Active vlans vPC+ Attrib
+        --     ----------  ------ ----------- ------       ------------ -----------
+        11     Po11        up     success     success      1,10-28,30-5 DF: Partial,
+                                                           4,56-82,138, FP MAC:
+                                                           530,2587     312.0.0
     '''
     }
     
