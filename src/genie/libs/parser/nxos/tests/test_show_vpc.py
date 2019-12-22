@@ -386,7 +386,7 @@ class test_show_vpc(unittest.TestCase):
                 'vpc_consistency': 'success',
                 'vpc_consistency_status': 'success',
                 'up_vlan_bitset': '1,10-28,30-54,56-82,138,530,2587',
-                'vPC_Attrib': 'DF: Partial,FP MAC:312.0.0'
+                'vpc_plus_attrib': 'DF: Partial,FP MAC:312.0.0'
             }
         }
     }

@@ -535,12 +535,12 @@ class ShowVpc(ShowVpcSchema):
             # 530,2587     312.0.0
             match = p36.match(line)
             if match:
-                group = match.groupdict()
+                group = match.groupdict()               
                 if vlan_type == 'vpc_status' and vpc_dict.get('vpc_plus_attrib'):
                     vpc_dict['vpc_plus_attrib'] += group['additional_vpc_plus_attrib'].strip()
                     vpc_dict.update({'vpc_plus_attrib': vpc_dict['vpc_plus_attrib']})
                     up_vlan_bitset += group['additional_vlan']
-                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
+                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})                                  
                 continue
 
         return ret_dict
