@@ -27,8 +27,14 @@
         * show mpls label range
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
+<<<<<<< HEAD
     * Added ShowBgpEgressEngineering for:
         * show bgp egress-engineering
+=======
+    * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
+        * show traffic-collector external-interface
+        * show traffic-collector ipv4 counters prefix <prefix> detail
+>>>>>>> show_traffic_collector undistributed file
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
