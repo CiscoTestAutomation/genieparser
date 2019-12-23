@@ -30,7 +30,101 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
                                               ShowBgpSessions,
                                               ShowBgpInstanceAllSessions,
                                               ShowBgpNeighbors,
-                                              ShowBgpSummary)
+                                              ShowBgpSummary,
+                                              ShowBgpEgressEngineering)
+
+
+# ================================================================================
+# Unit test for 'show bgp egress-engineering'
+# ================================================================================
+class TestShowBgpEgressEngineering(unittest.TestCase):
+        
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output =  {
+        'peer_set':{
+            'prefix':{
+                '192.168.1.2/32':{
+                    'SID': '10b87210',
+                    'nexthop': '192.168.1.2',
+                    'version': 2,
+                    'rn_version': 2,
+                    'flags': '0x00000002',
+                    'local_asn': 1,
+                    'remote_asn': 2,
+                    'local_rid': '1.1.1.3',
+                    'remote_rid': '1.1.1.4',
+                    'first_hop': '192.168.1.2',
+                    'nhid':3,
+                    'label': 24002,
+                    'refcount': 3,
+                    'rpc_set': '10b9d408'
+                },
+                '192.168.1.3/32':{
+                    'SID': '10be61d4',
+                    'nexthop': '192.168.1.3',
+                    'version': 3,
+                    'rn_version': 3,
+                    'flags': '0x00000002',
+                    'local_asn': 1,
+                    'remote_asn': 3,
+                    'local_rid': '1.1.1.3',
+                    'remote_rid': '1.1.1.5',
+                    'first_hop': '192.168.1.3',
+                    'nhid':4,
+                    'label': 24003,
+                    'refcount': 3,
+                    'rpc_set': '10be6250'
+                },
+            },
+        },
+    }    
+    golden_output = {'execute.return_value': '''
+            RP/0/RSP0/CPU0:router_C# show bgp egress-engineering 
+
+            Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+                Nexthop: 192.168.1.2
+                Version: 2, rn_version: 2
+                Flags: 0x00000002
+            Local ASN: 1
+            Remote ASN: 2
+            Local RID: 1.1.1.3
+            Remote RID: 1.1.1.4
+            First Hop: 192.168.1.2
+                    NHID: 3
+                Label: 24002, Refcount: 3
+                rpc_set: 10b9d408
+
+            Egress Engineering Peer Set: 192.168.1.3/32 (10be61d4)
+                Nexthop: 192.168.1.3
+                Version: 3, rn_version: 3
+                Flags: 0x00000002
+            Local ASN: 1
+            Remote ASN: 3
+            Local RID: 1.1.1.3
+            Remote RID: 1.1.1.5
+            First Hop: 192.168.1.3
+                    NHID: 4
+                Label: 24003, Refcount: 3
+                rpc_set: 10be6250
+        '''}
+    
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowBgpEgressEngineering(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpEgressEngineering(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
 
 
 # ==================================

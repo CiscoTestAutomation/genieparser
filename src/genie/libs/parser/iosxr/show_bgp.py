@@ -41,6 +41,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp sessions'
     * 'show bgp instance all sessions'
     * 'show bgp instance {instance} sessions'
+    * 'show bgp egress-engineering'
 """
 
 # Python
@@ -62,6 +63,106 @@ from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# ========================================
+# Parser for 'show bgp egress-engineering'
+# ========================================
+
+class ShowBgpEgressEngineeringSchema(MetaParser):
+    
+    ''' Schema for show bgp egress-engineering '''
+    schema = {
+        'peer_set':{
+            'prefix':{
+                Any():{
+                    'SID': str,
+                    'nexthop': str,
+                    'version': int,
+                    'rn_version':int,
+                    'flags':str,
+                    'local_asn': int,
+                    'remote_asn': int,
+                    'local_rid':str,
+                    'remote_rid': str,
+                    'first_hop':str,
+                    'nhid':int,
+                    'label': int,
+                    'refcount':int,
+                    'rpc_set':str
+                },
+            },
+        },
+    }
+
+class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
+
+    ''' Parser for show bgp egress-engineering'''
+
+    cli_command = ['show bgp egress-engineering']
+    
+
+    def cli (self, output=None):
+        if output is None:
+            out=self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<SID>\S+)')
+
+        #   Version: 2, rn_version: 2
+        p2 = re.compile(r'(?P<key_1>[\w\s]+): (?P<value_1>\d+), (?P<key_2>[\w\s]+): (?P<value_2>\d+)')
+
+        #    Local ASN: 1
+        #     Remote ASN: 2
+        #     Local RID: 1.1.1.3
+        #     Remote RID: 1.1.1.4
+        #     First Hop: 192.168.1.2
+        #         NHID: 3
+        p3 = re.compile(r'(?P<key>[\w\s]+): (?P<value>[\S]+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict = ret_dict.setdefault( 'peer_set',{}).setdefault('prefix', {}).\
+                    setdefault(group['prefix'], {})
+                value= group['SID'].strip('()')
+                peer_dict.update({'SID' :value })
+                continue
+
+            # Version: 2, rn_version: 2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                values = list(group.values())
+                for val in range(0, len(values), 2):
+                    peer_dict.update({values[val].strip().lower().\
+                        replace(' ','_') : int(values[val+1])})
+                continue
+
+            #Local ASN: 1
+            #     Remote ASN: 2
+            #     Local RID: 1.1.1.3
+            #     Remote RID: 1.1.1.4
+            #     First Hop: 192.168.1.2
+            #         NHID: 3
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['value'].isdigit():
+                    peer_dict.update({group['key'].strip().lower().replace(' ','_') : int(group['value'])})
+                else:
+                    peer_dict.update({group['key'].strip().lower().\
+                        replace(' ','_') : group['value']})
+                continue
+        
+        return ret_dict
+    
 
 # =======================================
 # Parser for 'show bgp instances'
