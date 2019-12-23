@@ -3,6 +3,9 @@ show_traffic_collector.py
 
 Parser for the following show commands:
 
+* 'show traffic-collector external-interface'
+* 'show traffic-collector ipv4 counters prefix <prefix> detail'
+
 '''
 
 # Python
@@ -105,7 +108,7 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
 
     ''' Parser for show traffic-collector ipv4 counters prefix <prefix> detail '''
 
-    cli_command = ['Parser for show traffic-collector ipv4 counters prefix {prefix} detail']
+    cli_command = ['show traffic-collector ipv4 counters prefix {prefix} detail']
 
     def cli(self, prefix, output=None):
         if output is None:
@@ -146,17 +149,17 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
                 group = m.groupdict()
                 counters_dict = ret_dict.setdefault('ipv4_counters', {})
                 for key in label_list:
-                    
                     value = int (group[key]) if key is 'label'else group[key]
                     counters_dict.update({key: value})
-
                 continue
 
             #Base:
+            #TM Counters:
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                type_dict = counters_dict.setdefault('counters_type', {}).setdefault(group['counters_type'].strip().lower().replace(' ','_'), {})
+                type_dict = counters_dict.setdefault('counters_type', {}).\
+                    setdefault(group['counters_type'].strip().lower().replace(' ','_'), {})
                 continue
             
             # Average over the last 5 collection intervals:
