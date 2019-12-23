@@ -9,8 +9,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # c7600 show_platform
 from genie.libs.parser.ios.c7600.show_platform import ShowVersion, Dir
 
+# cat6k
+from genie.libs.parser.ios.cat6k.show_platform import Dir as Dir_cat6k
 
-# telnet 172.27.115.176 6034
+
 class TestShowVersion(unittest.TestCase):
     device_empty = Device(name='empty')
     device_c7600 = Device(name='c7600')
@@ -118,7 +120,7 @@ class TestShowVersion(unittest.TestCase):
         self.device_empty = Mock(**self.empty_output)
         obj = ShowVersion(device=self.device_empty)
         with self.assertRaises(SchemaEmptyParserError):
-            parsered_output = obj.parse()
+            empty_parsed_output = obj.parse()
 
     def test_c7600(self):
         self.maxDiff = None
@@ -128,66 +130,66 @@ class TestShowVersion(unittest.TestCase):
         self.assertEqual(parsed_output, self.parsed_output_c7600)
 
 
-# class TestDir(unittest.TestCase):
-#     empty_output = {'execute.return_value': ''}
-#     output_c7600 = {'execute.return_value': '''
-#         Directory of disk0:/
-#
-#         2  -rw-         373   May 9 2013 10:00:08 -07:00  default_config
-#         3  -rw-         421   May 9 2013 10:00:20 -07:00  golden_config
-#         4  -rw-   188183700   May 9 2013 10:11:56 -07:00  ISSUCleanGolden
-#         5  -rw-   210179540  Oct 18 2018 07:22:24 -07:00  s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2
-#
-#     1024589824 bytes total (626180096 bytes free)
-#     '''}
-#     parsed_output = {
-#     'dir': {
-#         'dir': 'disk0:/',
-#         'disk0:/': {
-#             'bytes_free': '626180096',
-#             'bytes_total': '1024589824',
-#             'files': {
-#                 'ISSUCleanGolden': {
-#                     'index': '4',
-#                     'last_modified_date': 'May 9 2013 10:11:56 -07:00',
-#                     'permissions': '-rw-',
-#                     'size': '188183700',
-#                 },
-#                 'default_config': {
-#                     'index': '2',
-#                     'last_modified_date': 'May 9 2013 10:00:08 -07:00',
-#                     'permissions': '-rw-',
-#                     'size': '373',
-#                 },
-#                 'golden_config': {
-#                     'index': '3',
-#                     'last_modified_date': 'May 9 2013 10:00:20 -07:00',
-#                     'permissions': '-rw-',
-#                     'size': '421',
-#                 },
-#                 's72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2': {
-#                     'index': '5',
-#                     'last_modified_date': 'Oct 18 2018 07:22:24 -07:00',
-#                     'permissions': '-rw-',
-#                     'size': '210179540',
-#                 },
-#             },
-#         },
-#     },
-# }
-#
-#     def test_empty(self):
-#         self.dev1 = Mock(**self.empty_output)
-#         version_obj = Dir(device=self.dev1)
-#         with self.assertRaises(AttributeError):
-#             parsered_output = version_obj.parse()
-#
-#     def test_c7600(self):
-#         self.maxDiff = None
-#         self.device = Mock(**self.output_c7600)
-#         obj = Dir(device=self.device)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output, self.parsed_output)
+class TestDir(unittest.TestCase):
+    empty_output = {'execute.return_value': ''}
+    output_c7600 = {'execute.return_value': '''
+        Directory of disk0:/
+
+        2  -rw-         373   May 9 2013 10:00:08 -07:00  default_config
+        3  -rw-         421   May 9 2013 10:00:20 -07:00  golden_config
+        4  -rw-   188183700   May 9 2013 10:11:56 -07:00  ISSUCleanGolden
+        5  -rw-   210179540  Oct 18 2018 07:22:24 -07:00  s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2
+
+    1024589824 bytes total (626180096 bytes free)
+    '''}
+    parsed_output = {
+    'dir': {
+        'dir': 'disk0:/',
+        'disk0:/': {
+            'bytes_free': '626180096',
+            'bytes_total': '1024589824',
+            'files': {
+                'ISSUCleanGolden': {
+                    'index': '4',
+                    'last_modified_date': 'May 9 2013 10:11:56 -07:00',
+                    'permissions': '-rw-',
+                    'size': '188183700',
+                },
+                'default_config': {
+                    'index': '2',
+                    'last_modified_date': 'May 9 2013 10:00:08 -07:00',
+                    'permissions': '-rw-',
+                    'size': '373',
+                },
+                'golden_config': {
+                    'index': '3',
+                    'last_modified_date': 'May 9 2013 10:00:20 -07:00',
+                    'permissions': '-rw-',
+                    'size': '421',
+                },
+                's72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2': {
+                    'index': '5',
+                    'last_modified_date': 'Oct 18 2018 07:22:24 -07:00',
+                    'permissions': '-rw-',
+                    'size': '210179540',
+                },
+            },
+        },
+    },
+}
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        version_obj = Dir_cat6k(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            empty_parsed_output = version_obj.parse()
+
+    def test_c7600(self):
+        self.maxDiff = None
+        self.device = Mock(**self.output_c7600)
+        obj = Dir_cat6k(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
 
 # class TestShowRedundancy(unittest.TestCase):
 #
@@ -250,8 +252,8 @@ class TestShowVersion(unittest.TestCase):
 #     def test_empty(self):
 #         self.dev1 = Mock(**self.empty_output)
 #         version_obj = ShowRedundancy(device=self.dev1)
-#         with self.assertRaises(AttributeError):
-#             parsered_output = version_obj.parse()
+#         with self.assertRaises(SchemaEmptyParserError):
+#             empty_parsed_output = version_obj.parse()
 #
 # class TestShowInventory(unittest.TestCase):
 #
@@ -309,8 +311,8 @@ class TestShowVersion(unittest.TestCase):
 #     def test_empty(self):
 #         self.dev1 = Mock(**self.empty_output)
 #         version_obj = ShowInventory(device=self.dev1)
-#         with self.assertRaises(AttributeError):
-#             parsered_output = version_obj.parse()
+#         with self.assertRaises(SchemaEmptyParserError):
+#             empty_parsed_output = version_obj.parse()
 #
 # class TestShowModule(unittest.TestCase):
 #     dev1 = Device(name='empty')
@@ -350,8 +352,8 @@ class TestShowVersion(unittest.TestCase):
 #     def test_empty(self):
 #         self.dev1 = Mock(**self.empty_output)
 #         version_obj = ShowModule(device=self.dev1)
-#         with self.assertRaises(AttributeError):
-#             parsered_output = version_obj.parse()
+#         with self.assertRaises(SchemaEmptyParserError):
+#             empty_parsed_output = version_obj.parse()
 
 
 # if __name__ == '__main__':
