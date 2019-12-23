@@ -18616,8 +18616,8 @@ class TestShowInterfacesStats(unittest.TestCase):
 class TestShowInterfacesDescription(unittest.TestCase):
     """unit test for show interfaces description """
 
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
     golden_output = {'execute.return_value': '''
         Interface                      Status         Protocol Description
         Gi0/0                          up             up       
@@ -18857,6 +18857,36 @@ class TestShowInterfacesDescription(unittest.TestCase):
             }
         }
     }
+   
+    golden_interface_output1 = {'execute.return_value': '''
+        Interface                      Status         Protocol Description
+        
+        Gi0/0                          up             up       OOB Management
+        
+        Gi0/1                          admin down     down     to router2
+        
+        Lo0                            up             up       Loopback   
+    '''}
+    
+    golden_parsed_interface_output1 = {
+        "interfaces": {
+            "GigabitEthernet0/0": {
+                "status": "up",
+                "protocol": "up",
+                "description": "OOB Management"
+            },
+            "GigabitEthernet0/1": {
+                "status": "admin down",
+                "protocol": "down",
+                "description": "to router2"
+            },
+            "Loopback0": {
+                "status": "up",
+                "protocol": "up",
+                "description": "Loopback"
+            }
+        }
+    }
     
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -18865,18 +18895,22 @@ class TestShowInterfacesDescription(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowInterfacesDescription(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
         
     def test_golden_interface(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_interface_output)
         obj = ShowInterfacesDescription(device=self.device)
         parsed_output = obj.parse(interface='Gi0/0')
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+        
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfacesDescription(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
 
 if __name__ == '__main__':
