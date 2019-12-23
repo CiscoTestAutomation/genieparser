@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import xml.etree.ElementTree as ET
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.ops.base import Context
 
