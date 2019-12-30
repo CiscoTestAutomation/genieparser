@@ -11,6 +11,8 @@ NXOS parsers for the following show commands:
     * show isis adjacency vrf {vrf}
     * show isis hostname
     * show isis hostname vrf {vrf}
+    * show isis hostname detail
+    * show isis hostname detail vrf {vrf}
     * show isis database detail
     * show isis database detail vrf {vrf}
 """
@@ -544,6 +546,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 'bfd_ipv4': str,
                                 'bfd_ipv6': str,
                                 'mtr': str,
+                                Optional('passive'): str,
                                 Optional('mtu'): int,
                                 Optional('lsp_interval_ms'): int,
                                 'levels': {
@@ -649,6 +652,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         #   MTR is enabled
         p13 = re.compile(r'^MTR +is +(?P<mtr>\w+)$')
 
+        #   Passive level: level-1-2
+        p13_1 = re.compile(r'^Passive +level: +(?P<passive>\S+)$')
+
         #   Level      Metric
         #   1               1
         p14 = re.compile(r'^(?P<level>\d+) +(?P<metric>\d+)$')
@@ -661,11 +667,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         p16 = re.compile(r'^(?P<level>\S+) +Designated +IS: +(?P<designated_is>\S+)$')
 
         #   Level   Metric-0   Metric-2   CSNP  Next CSNP  Hello   Multi   Next IIH
-        #   1              40     40     10 00:00:06      10   3       00:00:04
+        #   1              40     40     10 Inactive      10   3       00:00:04
         #   2              40     40     10 00:00:03      10   3       00:00:09
         p17 = re.compile(r'^(?P<level>\d+) +(?P<metric_0>\d+) +(?P<metric_2>\d+) '
-                         r'+(?P<csnp>\d+) +(?P<next_csnp>[\d\:]+) +(?P<hello>\d+) '
-                         r'+(?P<multi>\d+) +(?P<next_iih>[\d\:]+)$')
+                         r'+(?P<csnp>\d+) +(?P<next_csnp>[\w\:]+) +(?P<hello>\d+) '
+                         r'+(?P<multi>\d+) +(?P<next_iih>[\w\:]+)$')
 
         #   Level  Adjs   AdjsUp Pri  Circuit ID         Since
         #   1         1        1  64  R2_xr.03           5d01h
@@ -798,6 +804,14 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = m.groupdict()
                 mtr = group['mtr']
                 intf_dict.update({'mtr': mtr})
+                continue
+
+            #   Passive level: level-1-2
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                passive = group['passive']
+                intf_dict.update({'passive': passive})
                 continue
 
             #   Level      Metric
@@ -945,7 +959,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         p4 = re.compile(r'^Log +entry +\(current\/max\): +(?P<curr>\d+)\/(?P<max>\d+)$')
 
         # Log entry: 01, Ago: 00:01:26, Date: Tue Oct 15 21:53:39 2019
-        p5 = re.compile(r'^Log +entry: +(?P<entry>\d+), +Ago: +(?P<ago>[\d\:]+), '
+        # Log entry: 20, Ago: 0.800060, Date: Wed Nov 27 16:04:29 2019
+        p5 = re.compile(r'^Log +entry: +(?P<entry>\d+), +Ago: +(?P<ago>[\d\.\:]+), '
                         r'+Date: +(?P<date>[\S\s]+)$')
 
         #   Level  Instance    Init      SPF       IS Update  URIB Update  Total
@@ -1151,7 +1166,7 @@ class ShowIsisHostnameSchema(MetaParser):
                             'hostname': {
                                 Any(): {
                                     'hostname': str,
-                                    'level': int,
+                                    'level': list,
                                     Optional('local_router'): bool,
                                 },
                             },
@@ -1219,7 +1234,11 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                                          setdefault(group['system_id'], {})
 
                 hostname_dict.update({'hostname': group['dynamic_hostname']})
-                hostname_dict.update({'level': int(group['level'])})
+                level_list = hostname_dict.get('level', [])
+                level = int(group['level'])
+                if level not in level_list:
+                    level_list.append(level)
+                hostname_dict.update({'level': level_list})
 
                 if group['star']:
                     hostname_dict.update({'local_router': True})
@@ -1227,6 +1246,99 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
         return result_dict
 
+class ShowIsisHostnameDetailSchema(MetaParser):
+    """Schema for 
+            * show isis hostname detail
+            * show isis hostname detail vrf {vrf}"""
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'hostname_db': {
+                            'hostname': {
+                                Any(): {
+                                    'hostname': str,
+                                    'level': list,
+                                    Optional('local_router'): bool,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowIsisHostnameDetail(ShowIsisHostnameDetailSchema):
+    """Parser for 
+            * show isis hostname detail
+            * show isis hostname detail vrf {vrf}"""
+
+    cli_command = ['show isis hostname detail', 
+                   'show isis hostname detail vrf {vrf}']
+    
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        # initial return dictionary
+        result_dict = {}
+
+        # IS-IS Process: test dynamic hostname table VRF: default
+        p1 = re.compile(r'^IS-IS +Process: +(?P<process_id>\S+) +dynamic '
+                        r'+hostname +table +VRF: +(?P<vrf>\S+)$')
+
+        #  Level  LSP ID                Dynamic hostname
+        #  1      7777.7777.7777.00-00* R7
+        #  2      2222.2222.2222.00-00  R2
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<lsp_id>[\d\-\.]+)(?P<star>\*)? '
+                        r'+(?P<dynamic_hostname>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  IS-IS Process: test dynamic hostname table VRF: default
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id = group['process_id']
+                vrf = group['vrf']
+
+                vrf_dict = result_dict.setdefault('instance', {}).\
+                                       setdefault(process_id, {}).\
+                                       setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
+                continue
+
+            #  1      7777.7777.7777.00-00* R7
+            #  2      2222.2222.2222.00-00  R2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                hostname_dict = vrf_dict.setdefault('hostname_db', {}).\
+                                         setdefault('hostname', {}).\
+                                         setdefault(group['lsp_id'], {})
+
+                hostname_dict.update({'hostname': group['dynamic_hostname']})
+                level_list = hostname_dict.get('level', [])
+                level = int(group['level'])
+                if level not in level_list:
+                    level_list.append(level)
+                hostname_dict.update({'level': level_list})
+
+                if group['star']:
+                    hostname_dict.update({'local_router': True})
+                continue
+        
+        return result_dict
 
 class ShowIsisDatabaseDetailSchema(MetaParser):
     """Schema for show isis database detail"""

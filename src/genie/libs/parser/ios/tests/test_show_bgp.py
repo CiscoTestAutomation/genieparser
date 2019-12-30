@@ -25,27 +25,27 @@ from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary,\
 
 # iosxe tests/test_show_bgp
 from genie.libs.parser.iosxe.tests.test_show_bgp import \
-                                test_show_bgp_all_detail as test_show_bgp_all_detail_iosxe,\
-                                test_show_bgp_all_neighbors_policy as test_show_bgp_all_neighbors_policy_iosxe,\
-                                test_show_bgp_all_neighbors_advertised_routes as test_show_bgp_all_neighbors_advertised_routes_iosxe,\
-                                test_show_bgp_all_summary as test_show_bgp_all_summary_iosxe,\
-                                test_show_bgp_all_cluster_ids as test_show_bgp_all_cluster_ids_iosxe,\
-                                test_show_bgp_all_neighbors as test_show_bgp_all_neighbors_iosxe,\
-                                test_show_bgp_neighbors_received_routes as test_show_bgp_neighbors_received_routes_iosxe,\
-                                test_show_ip_bgp_template_peer_session as test_show_ip_bgp_template_peer_session_iosxe,\
-                                test_show_bgp_all_neighbors_routes as test_show_bgp_all_neighbors_routes_iosxe,\
-                                test_show_ip_bgp_template_peer_policy as test_show_ip_bgp_template_peer_policy_iosxe,\
-                                test_show_ip_bgp_all_dampening_parameters as test_show_ip_bgp_all_dampening_parameters_iosxe,\
-                                test_show_bgp_all as test_show_bgp_all_iosxe, \
-                                test_show_bgp_summary as test_show_bgp_summary_iosxe, \
-                                test_show_ip_bgp as test_show_bgp_iosxe
+                                TestShowBgpAllDetail as TestShowBgpAllDetail_iosxe,\
+                                TestShowBgpAllNeighborsPolicy as TestShowBgpAllNeighborsPolicy_iosxe,\
+                                TestShowBgpAllNeighborsAdvertisedRoutes as TestShowBgpAllNeighborsAdvertisedRoutes_iosxe,\
+                                TestShowBgpAllSummary as TestShowBgpAllSummary_iosxe,\
+                                TestShowBgpAllClusterIds as TestShowBgpAllClusterIds_iosxe,\
+                                TestShowBgpAllNeighbors as TestShowBgpAllNeighbors_iosxe,\
+                                TestShowBgpNeighborsReceivedRoutes as TestShowBgpNeighborsReceivedRoutes_iosxe,\
+                                TestShowIpBgpTemplatePeerSession as TestShowIpBgpTemplatePeerSession_iosxe,\
+                                TestShowBgpAllNeighborsRoutes as TestShowBgpAllNeighborsRoutes_iosxe,\
+                                TestShowIpBgpTemplatePeerPolicy as TestShowIpBgpTemplatePeerPolicy_iosxe,\
+                                TestShowIpBgpAllDampeningParameters as TestShowIpBgpAllDampeningParameters_iosxe,\
+                                TestShowBgpAll as TestShowBgpAll_iosxe, \
+                                TestShowBgpSummary as TestShowBgpSummary_iosxe, \
+                                TestShowIpBgp as test_show_bgp_iosxe
 
 # ===================================
 # Unit test for 'show bgp all detail'
 # ===================================
-class test_show_ip_bgp(test_show_bgp_iosxe):
+class TestShowIpBgp(test_show_bgp_iosxe):
 
-    def test_show_ip_bgp(self):
+    def TestShowIpBgp(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpBgp(device=self.device)
@@ -56,23 +56,23 @@ class test_show_ip_bgp(test_show_bgp_iosxe):
 # ===================================
 # Unit test for 'show bgp all detail'
 # ===================================
-class test_show_bgp_all_detail(test_show_bgp_all_detail_iosxe):
+class TestShowBgpAllDetail(TestShowBgpAllDetail_iosxe):
 
-    def test_show_bgp_all_detail_golden1(self):
+    def TestShowBgpAllDetail_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_bgp_all_detail_golden2(self):
+    def TestShowBgpAllDetail_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_show_bgp_all_detail_empty(self):
+    def TestShowBgpAllDetail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -81,9 +81,9 @@ class test_show_bgp_all_detail(test_show_bgp_all_detail_iosxe):
 # ====================================================
 # Unit test for 'show bgp all neighbors <WORD> policy'
 # ====================================================
-class test_show_bgp_all_neighbors_policy(test_show_bgp_all_neighbors_policy_iosxe):
+class TestShowBgpAllNeighborsPolicy(TestShowBgpAllNeighborsPolicy_iosxe):
 
-    def test_show_bgp_all_neighbors_policy_golden(self):
+    def TestShowBgpAllNeighborsPolicy_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpAllNeighborsPolicy(device=self.device)
@@ -97,14 +97,14 @@ class test_show_bgp_all_neighbors_policy(test_show_bgp_all_neighbors_policy_iosx
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(neighbor='10.106.102.3')
 
-    def test_show_bgp_all_neighbors_policy_golden3(self):
+    def TestShowBgpAllNeighborsPolicy_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllNeighborsPolicy(device=self.device)
         parsed_output = obj.parse(neighbor='10.4.6.6')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-    def test_show_bgp_all_neighbors_policy_empty(self):
+    def TestShowBgpAllNeighborsPolicy_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsPolicy(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -113,9 +113,9 @@ class test_show_bgp_all_neighbors_policy(test_show_bgp_all_neighbors_policy_iosx
 # ===============================================================
 # Unit test for 'show bgp all neighbors <WORD> advertised-routes'
 # ===============================================================
-class test_show_bgp_all_neighbors_advertised_routes(test_show_bgp_all_neighbors_advertised_routes_iosxe):
+class TestShowBgpAllNeighborsAdvertisedRoutes(TestShowBgpAllNeighborsAdvertisedRoutes_iosxe):
 
-    def test_show_bgp_all_neighbors_advertised_routes_golden1(self):
+    def TestShowBgpAllNeighborsAdvertisedRoutes_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
@@ -136,7 +136,7 @@ class test_show_bgp_all_neighbors_advertised_routes(test_show_bgp_all_neighbors_
         parsed_output = obj.parse(neighbor='10.4.6.6')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
-    def test_show_bgp_all_neighbors_advertised_routes_empty(self):
+    def TestShowBgpAllNeighborsAdvertisedRoutes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsAdvertisedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -146,7 +146,7 @@ class test_show_bgp_all_neighbors_advertised_routes(test_show_bgp_all_neighbors_
 # Unit test for 'show bgp all summary'
 # ===============================================================
 
-class test_show_bgp_all_summary(test_show_bgp_all_summary_iosxe):
+class TestShowBgpAllSummary(TestShowBgpAllSummary_iosxe):
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -171,7 +171,7 @@ class test_show_bgp_all_summary(test_show_bgp_all_summary_iosxe):
 # ===============================================================
 # Unit test for 'show bgp all cluster-ids'
 # ===============================================================
-class test_show_bgp_all_cluster_ids(test_show_bgp_all_cluster_ids_iosxe):
+class TestShowBgpAllClusterIds(TestShowBgpAllClusterIds_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -200,7 +200,7 @@ class test_show_bgp_all_cluster_ids(test_show_bgp_all_cluster_ids_iosxe):
 # =============================================================
 # Unit test for 'show bgp all neighbors'
 # =============================================================
-class test_show_bgp_all_neighbors(test_show_bgp_all_neighbors_iosxe):
+class TestShowBgpAllNeighbors(TestShowBgpAllNeighbors_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -218,7 +218,7 @@ class test_show_bgp_all_neighbors(test_show_bgp_all_neighbors_iosxe):
 # =============================================================
 # Unit test for 'show bgp all neighbors <WORD> received-routes'
 # =============================================================
-class test_show_bgp_neighbors_received_routes(test_show_bgp_neighbors_received_routes_iosxe):
+class TestShowBgpNeighborsReceivedRoutes(TestShowBgpNeighborsReceivedRoutes_iosxe):
 
     def test_show_bgp_vrf_all_neighbors_received_routes_golden1(self):
         self.maxDiff = None
@@ -243,7 +243,7 @@ class test_show_bgp_neighbors_received_routes(test_show_bgp_neighbors_received_r
 # ================================================================
 #  unit test for show ip bgp template peer-session <WORD>"""
 # =================================================================
-class test_show_ip_bgp_template_peer_session(test_show_ip_bgp_template_peer_session_iosxe):
+class TestShowIpBgpTemplatePeerSession(TestShowIpBgpTemplatePeerSession_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -272,7 +272,7 @@ class test_show_ip_bgp_template_peer_session(test_show_ip_bgp_template_peer_sess
 # ====================================================
 # Unit test for 'show bgp all neighbors <WORD> routes'
 # ====================================================
-class test_show_bgp_all_neighbors_routes(test_show_bgp_all_neighbors_routes_iosxe):
+class TestShowBgpAllNeighborsRoutes(TestShowBgpAllNeighborsRoutes_iosxe):
 
     def test_show_bgp_vrf_all_neighbors_routes_golden1(self):
         self.maxDiff = None
@@ -304,7 +304,7 @@ class test_show_bgp_all_neighbors_routes(test_show_bgp_all_neighbors_routes_iosx
 # ================================================================
 #  unit test for show ip bgp template peer-policy <WORD>"""
 # =================================================================
-class test_show_ip_bgp_template_peer_policy(test_show_ip_bgp_template_peer_policy_iosxe):
+class TestShowIpBgpTemplatePeerPolicy(TestShowIpBgpTemplatePeerPolicy_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -337,7 +337,7 @@ class test_show_ip_bgp_template_peer_policy(test_show_ip_bgp_template_peer_polic
 # ===================================================================
 #   unit test for show ip bgp all dampening parameters
 # ===================================================================
-class test_show_ip_bgp_all_dampening_parameters(test_show_ip_bgp_all_dampening_parameters_iosxe):
+class TestShowIpBgpAllDampeningParameters(TestShowIpBgpAllDampeningParameters_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -383,7 +383,7 @@ class test_show_ip_bgp_all_dampening_parameters(test_show_ip_bgp_all_dampening_p
 # ===================================================================
 #   unit test for show bgp all
 # ===================================================================
-class test_show_bgp_all(test_show_bgp_all_iosxe):
+class TestShowBgpAll(TestShowBgpAll_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -416,22 +416,22 @@ class test_show_bgp_all(test_show_bgp_all_iosxe):
 # Unit test for 'show bgp summary'
 # ===============================================================
 
-class test_show_bgp_summary(test_show_bgp_summary_iosxe):
+class TestShowBgpSummary(TestShowBgpSummary_iosxe):
 
-    def test_show_bgp_summary_empty(self):
+    def TestShowBgpSummary_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpSummary(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_summary_obj.parse()
 
-    def test_show_bgp_summary_golden1(self):
+    def TestShowBgpSummary_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_bgp_summary_golden2(self):
+    def TestShowBgpSummary_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpSummary(device=self.device)

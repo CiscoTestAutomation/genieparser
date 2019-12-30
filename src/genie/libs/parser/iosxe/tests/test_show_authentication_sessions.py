@@ -571,7 +571,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                     IIF-ID:  0x17B5937E
                 MAC Address:  b4a8.b968.f35b
                 IPv6 Address:  Unknown
-                IPv4 Address:  1.1.1.1
+                IPv4 Address:  10.4.1.1
                     User-Name:  B4-A8-B9-68-F3-5B
                     Status:  Authorized
                     Domain:  VOICE
@@ -607,7 +607,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'domain': 'VOICE',
                         'handle': '0x90000003',
                         'iif_id': '0x17B5937E',
-                        'ipv4_address': '1.1.1.1',
+                        'ipv4_address': '10.4.1.1',
                         'ipv6_address': 'Unknown',
                         'method_status': {
                             'dot1x': {
@@ -646,6 +646,306 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
             }
         }
     }
+    
+    golden_output_10 = {'execute.return_value': '''
+        Interface: *GigabitEthernet1/0/17*
+        IIF-ID: 0x1534B4E2
+        MAC Address: 0024.9b47.c281
+        IPv6 Address: Unknown
+        IPv4 Address: Unknown
+        User-Name: host/Laptop123.test.com
+        Status: Authorized
+        Domain: DATA
+        Oper host mode: multi-auth
+        Oper control dir: both
+        Session timeout: N/A
+        Common Session ID: 0A8628020000007168945FE6
+        Acct Session ID: 0x0000008d
+        Handle: 0x86000067
+        Current Policy: Test_DOT1X-DEFAULT_V1
+        
+        
+        Server Policies:
+        *ACS ACL:* *xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69*
+        Security Policy: None
+        Security Status: Link Unsecured
+        
+        
+        Method status list:
+        Method State
+        dot1x Authc Success
+        mab Stopped
+    '''}
+ 
+    golden_parsed_output_10 = {
+        'interfaces': {
+            'GigabitEthernet1/0/17': {
+                'mac_address': {
+                    '0024.9b47.c281': {
+                        'acct_session_id': '0x0000008d',
+                        'common_session_id': '0A8628020000007168945FE6',
+                        'current_policy': 'Test_DOT1X-DEFAULT_V1',
+                        'domain': 'DATA',
+                        'handle': '0x86000067',
+                        'iif_id': '0x1534B4E2',
+                        'ipv4_address': 'Unknown',
+                        'ipv6_address': 'Unknown',
+                        'user_name': 'host/Laptop123.test.com',
+                        'status': 'Authorized',
+                        'oper_host_mode': 'multi-auth',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'server_policies': {
+                            1: {
+                                'name': 'ACS ACL',
+                                'policies': 'xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69',
+                                'security_policy': 'None',
+                                'security_status': 'Link Unsecured'
+                            }
+                        },
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Authc Success'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Stopped'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
+    golden_output_11 = {'execute.return_value': '''
+        Test_NAC_SW#show authentication sessions interface GigabitEthernet1/0/6
+        details
+                    Interface:  GigabitEthernet1/0/6
+                       IIF-ID:  0x1FB8CAD0
+                  MAC Address:  0024.9b47.bf33
+                 IPv6 Address:  Unknown
+                 IPv4 Address:  Unknown
+                    User-Name:  User1
+                       Status:  Authorized
+                       Domain:  DATA
+               Oper host mode:  multi-auth
+             Oper control dir:  both
+              Session timeout:  N/A
+            Common Session ID:  0A788905000029BE6BFF02FE
+              Acct Session ID:  0x00004bca
+                       Handle:  0x010009d6
+               Current Policy:  Test_DOT1X-DEFAULT_V1
+        
+        
+        Server Policies:
+                      ACS ACL: xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69
+        
+        *      Security Policy:  None      Security Status:  Link Unsecured*
+        
+        
+        Method status list:
+               Method           State
+                dot1x           Authc Success
+                  mab           Stopped
+        
+        Method status list:
+               Method           State
+                dot1x           Authc Success
+                  mab           Stopped
+    '''}
+  
+    golden_parsed_output_11 = {
+        'interfaces': {
+            'GigabitEthernet1/0/6': {
+                'mac_address': {
+                    '0024.9b47.bf33': {
+                        'acct_session_id': '0x00004bca',
+                        'common_session_id': '0A788905000029BE6BFF02FE',
+                        'current_policy': 'Test_DOT1X-DEFAULT_V1',
+                        'domain': 'DATA',
+                        'handle': '0x010009d6',
+                        'iif_id': '0x1FB8CAD0',
+                        'ipv4_address': 'Unknown',
+                        'ipv6_address': 'Unknown',
+                        'user_name': 'User1',
+                        'status': 'Authorized',
+                        'oper_host_mode': 'multi-auth',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Authc Success'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Stopped'
+                            }
+                        },   
+                        'server_policies': {
+                            1: {
+                                'name': 'ACS ACL',
+                                'policies': 'xACSACLx-IP-Test_ACL_PERMIT_ALL-565bad69',
+                                'security_policy': 'None',
+                                'security_status': 'Link Unsecured'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    golden_output_12 = {'execute.return_value': '''
+        Test_NAC_SW#show authentication sessions interface GigabitEthernet1/0/48
+        details
+                    Interface:  GigabitEthernet1/0/48
+                       IIF-ID:  0x1AE25879
+                  MAC Address:  006b.f16b.efa0
+                 IPv6 Address:  Unknown
+                 IPv4 Address:  Unknown
+                    User-Name:  00-6B-F1-6B-EF-A0
+                       Status:  Authorized
+                       Domain:  DATA
+               Oper host mode:  multi-auth
+             Oper control dir:  both
+              Session timeout:  N/A
+            Common Session ID:  0A788905000021FBF8593E6C
+              Acct Session ID:  0x00004d7a
+                       Handle:  0xa60001eb
+               Current Policy:  Test_DOT1X-DEFAULT_V1
+        
+        
+        Server Policies:
+                      ACS ACL: xACSACLx-IP-Test_ACL_WAPs-598d0d01
+        
+        
+        Method status list:
+               Method           State
+                dot1x           Stopped
+                  mab           Authc Success
+    '''}
+  
+    golden_parsed_output_12 = {
+        'interfaces': {
+            'GigabitEthernet1/0/48': {
+                'mac_address': {
+                    '006b.f16b.efa0': {
+                        'acct_session_id': '0x00004d7a',
+                        'common_session_id': '0A788905000021FBF8593E6C',
+                        'current_policy': 'Test_DOT1X-DEFAULT_V1',
+                        'domain': 'DATA',
+                        'handle': '0xa60001eb',
+                        'iif_id': '0x1AE25879',
+                        'ipv4_address': 'Unknown',
+                        'ipv6_address': 'Unknown',
+                        'user_name': '00-6B-F1-6B-EF-A0',
+                        'status': 'Authorized',
+                        'oper_host_mode': 'multi-auth',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Stopped'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Authc Success'
+                            }
+                        },   
+                        'server_policies': {
+                            1: {
+                                'name': 'ACS ACL',
+                                'policies': 'xACSACLx-IP-Test_ACL_WAPs-598d0d01'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    golden_output_13 = {'execute.return_value': '''
+        Test_NAC_SW#sh authentication sessions int *Gi1/0/17* details
+        Interface: *GigabitEthernet1/0/17*
+        IIF-ID: 0x11910563
+        MAC Address: 00e1.6d14.958a
+        IPv6 Address: Unknown
+        IPv4 Address: Unknown
+        User-Name: 00-E1-6D-14-95-8A
+        Status: Authorized
+        Domain: VOICE
+        Oper host mode: multi-auth
+        Oper control dir: both
+        Session timeout: N/A
+        Common Session ID: 0A8628020000003463B40D0F
+        Acct Session ID: 0x00000028
+        Handle: 0x3000002a
+        Current Policy: Test_DOT1X-DEFAULT_V1
+        
+        
+        Server Policies:
+        *ACS ACL: xACSACLx-IP-Test_ACL_CiscoPhones-583e3751*
+        
+        
+        Method status list:
+        Method State
+        dot1x Stopped
+        mab Authc Success
+    '''}
+
+    golden_parsed_output_13 = {
+        'interfaces': {
+            'GigabitEthernet1/0/17': {
+                'mac_address': {
+                    '00e1.6d14.958a': {
+                        'acct_session_id': '0x00000028',
+                        'common_session_id': '0A8628020000003463B40D0F',
+                        'current_policy': 'Test_DOT1X-DEFAULT_V1',
+                        'domain': 'VOICE',
+                        'handle': '0x3000002a',
+                        'iif_id': '0x11910563',
+                        'ipv4_address': 'Unknown',
+                        'ipv6_address': 'Unknown',
+                        'user_name': '00-E1-6D-14-95-8A',
+                        'status': 'Authorized',
+                        'oper_host_mode': 'multi-auth',
+                        'oper_control_dir': 'both',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Stopped'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Authc Success'
+                            }
+                        },   
+                        'server_policies': {
+                            1: {
+                                'name': 'ACS ACL',
+                                'policies': 'xACSACLx-IP-Test_ACL_CiscoPhones-583e3751'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
@@ -693,6 +993,34 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
+        
+    def test_golden_10(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_10)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
+        
+    def test_golden_11(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_11)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_11)
+        
+    def test_golden_12(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_12)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_12)
+        
+    def test_golden_13(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_13)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_13)
 
 if __name__ == '__main__':
     unittest.main()

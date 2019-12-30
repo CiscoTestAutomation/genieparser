@@ -68,6 +68,14 @@ class ShowVersionSchema(MetaParser):
                     Optional('rtr_type'): str,
                     'os': str,
                     'curr_config_register': str,
+                    Optional('license_udi'): {
+                        Optional('device_num'): {
+                            Any(): {
+                                'pid': str,
+                                'sn': str,
+                            }
+                        },
+                    },
                     Optional('next_config_register'): str,
                     Optional('main_mem'): str,
                     Optional('number_of_intfs'): {
@@ -243,7 +251,11 @@ class ShowVersion(ShowVersionSchema):
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
                          r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
                          r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
-        
+
+        # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
+        p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
+                           r'+with +(?P<processor_type>.+) +with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+
         # chassis_sn
         p19 = re.compile(r'^[pP]rocessor +board +ID '
                          r'+(?P<chassis_sn>[a-zA-Z0-9]+)')
@@ -360,6 +372,12 @@ class ShowVersion(ShowVersionSchema):
         # Suite License Information for Module:'esg'
         p45 = re.compile(r'^[Ss]uite +[Ll]icense +[Ii]nformation +for '
                          r'+[Mm]odule\:\'(?P<module>\S+)\'$')
+
+        # License UDI:
+        p46_0 = re.compile(r'^License UDI:$')
+
+        #     *0        C3900-SPE150/K9       FOC16050QP6
+        p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -535,13 +553,20 @@ class ShowVersion(ShowVersionSchema):
             # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
             # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
             m = p18.match(line)
-            if m:
-                version_dict['version']['chassis'] \
-                    = m.groupdict()['chassis']
-                version_dict['version']['main_mem'] \
-                    = m.groupdict()['main_mem']
-                version_dict['version']['processor_type'] \
-                    = m.groupdict()['processor_type']
+
+            # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
+            m2 = p18_2.match(line)
+
+            if m or m2:
+                if m:
+                    group = m.groupdict()
+                elif m2:
+                    group = m2.groupdict()
+
+                version_dict['version']['chassis'] = group['chassis']
+                version_dict['version']['main_mem'] = group['main_mem']
+                version_dict['version']['processor_type'] = group['processor_type']
+
                 if 'C3850' in version_dict['version']['chassis'] or \
                    'C3650' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'Edison'
@@ -861,6 +886,23 @@ class ShowVersion(ShowVersionSchema):
                 module_dict = version_dict['version'].setdefault('module', {})
                 suite_dict = module_dict.setdefault(m45.groupdict()['module'], {})
 
+                continue
+
+            # License UDI:
+            m46_0 = p46_0.match(line)
+            if m46_0:
+                if 'license_udi' not in version_dict:
+                    license_udi_dict = version_dict['version'].setdefault('license_udi', {})
+                continue
+
+            # *0        C3900-SPE150/K9       FOC16050QP6
+            m46 = p46.match(line)
+            if m46:
+                group = m46.groupdict()
+                license_udi_sub = license_udi_dict.setdefault('device_num', {}).\
+                    setdefault(group['device_num'], {})
+                license_udi_sub['pid'] = group['pid']
+                license_udi_sub['sn'] = group['sn']
                 continue
 
         # table2 for C3850
@@ -1465,7 +1507,7 @@ class ShowInventorySchema(MetaParser):
                     },
                 },
             },
-        'slot':
+        Optional('slot'):
             {Any():
                 {Optional('rp'):
                     {Any():
@@ -5194,7 +5236,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
             out = output
 
         #           888886666611111                    11111          
-        # 777775555599999666664444466666333335555544444666667777777777
+        # 7777755555996510966664444466666333335555544444666667777777777
         p1 = re.compile(r'^ *\d+( +\d+)* *$')
 
         #          0    5    0    5    0    5    0    5    0    5    0
@@ -5281,4 +5323,122 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
                         
                 count += 1
 
+        return ret_dict
+
+class ShowProcessesMemorySchema(MetaParser):
+    schema = {
+        'processor_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'reserve_p_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'lsmi_io_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        Optional('pid'): {
+            Any(): {
+                'index': {
+                    Any(): {
+                        'pid': int,
+                        'tty': int,
+                        'allocated': int,
+                        'freed': int,
+                        'holding': int,
+                        'getbufs': int,
+                        'retbufs': int,
+                        'process': str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowProcessesMemory(ShowProcessesMemorySchema):
+
+    cli_command = [
+        'show processes memory',
+        'show processes memory | include {include}'
+    ]
+
+    def cli(self, include=None, output=None):
+
+        ret_dict = {}
+        pid_index = {}
+        
+        if not output:
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+        p1 = re.compile(r'^Processor +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+        
+        # reserve P Pool Total:     102404 Used:         88 Free:     102316
+        p2 = re.compile(r'^reserve +P +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+
+        # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+        p3 = re.compile(r'^lsmpi_io +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+        
+        # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+        # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+        p4 = re.compile(r'^(?P<pid>\d+) +(?P<tty>\d+) +(?P<allocated>\d+) +'
+                r'(?P<freed>\d+) +(?P<holding>\d+) +(?P<getbufs>\d+) +'
+                r'(?P<retbufs>\d+) +(?P<process>[\S ]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('processor_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # reserve P Pool Total:     102404 Used:         88 Free:     102316
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+            # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pid = int(group['pid'])
+                index = pid_index.get(pid, 0) + 1
+                pid_dict = ret_dict.setdefault('pid', {}). \
+                    setdefault(pid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+                pid_index.update({pid: index})
+                pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
+                continue
+            
         return ret_dict
