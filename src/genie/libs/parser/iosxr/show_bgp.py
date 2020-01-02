@@ -110,15 +110,17 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
         ret_dict = {}
 
         #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
-        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<peer_set_id>\S+)')
+        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) '
+        '+(?P<peer_set_id>\S+)')
 
         #   Version: 2, rn_version: 2
-        p2 = re.compile(r'(?P<key_1>[\w\s]+): (?P<value_1>[\S\s]+), (?P<key_2>[\w\s]+): (?P<value_2>\d+)')
+        p2 = re.compile(r'(?P<key_1>[\w\s]+): +(?P<value_1>[\S\s]+), +(?P<key_2>[\w\s]+): '
+        '+(?P<value_2>\d+)')
 
         #    Local ASN: 1
         #     Remote ASN: 2
-        #     Local RID: 1.1.1.3
-        #     Remote RID: 1.1.1.4
+        #     Local RID: 10.4.1.3
+        #     Remote RID: 10.4.1.4
         #     First Hop: 192.168.1.2
         #         NHID: 3
         p3 = re.compile(r'(?P<key>[\w\s]+): (?P<value>[\S\s]+)')
@@ -150,9 +152,9 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
 
             #Local ASN: 1
             #     Remote ASN: 2
-            #     Local RID: 1.1.1.3
-            #     Remote RID: 1.1.1.4
-            #  First Hop: 88.88.88.1, 91.10.0.1, 92.10.0.1
+            #     Local RID: 10.4.1.3
+            #     Remote RID: 10.4.1.4
+            #  First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
             #   NHID: 9, 10, 11
             #   IFH: 0x110, 0x130, 0x150
             m = p3.match(line)

@@ -53,8 +53,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'flags': '0x00000002',
                 'local_asn': 1,
                 'remote_asn': 2,
-                'local_rid': '1.1.1.3',
-                'remote_rid': '1.1.1.4',
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.4',
                 'first_hop': ['192.168.1.2'],
                 'nhid':[3],
                 'label': 24002,
@@ -69,8 +69,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'flags': '0x00000002',
                 'local_asn': 1,
                 'remote_asn': 3,
-                'local_rid': '1.1.1.3',
-                'remote_rid': '1.1.1.5',
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.5',
                 'first_hop': ['192.168.1.3'],
                 'nhid':[4],
                 'label': 24003,
@@ -82,9 +82,9 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
 
     golden_parsed_output2 =  {
         'peer_set':{
-            '21.2.0.2/32':{
+            '10.19.0.2/32':{
                 'peer_set_id': '0xa968758',
-                'nexthop': '21.2.0.2',
+                'nexthop': '10.19.0.2',
                 'version': 2,
                 'rn_version': 2,
                 'flags': '0x00000006',
@@ -92,8 +92,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'remote_asn': 200,
                 'local_rid': '192.168.2.1',
                 'remote_rid': '192.168.1.2',
-                'local_address': '21.2.0.1',
-                'first_hop': ['21.2.0.2'],
+                'local_address': '10.19.0.1',
+                'first_hop': ['10.19.0.2'],
                 'nhid':[2],
                 'label': 24002,
                 'ifh': ['0x1000060'],
@@ -101,9 +101,9 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'rpc_set': '0xe91d2fd8',
                 'id': 1
             }, 
-            '30.30.30.30/32':{
+            '10.30.30.30/32':{
                 'peer_set_id': '0xa9686b4',
-                'nexthop': '30.30.30.30',
+                'nexthop': '10.30.30.30',
                 'version': 3,
                 'rn_version': 3,
                 'flags': '0x00000006',
@@ -111,8 +111,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'remote_asn': 300,
                 'local_rid': '192.168.2.1',
                 'remote_rid': '192.168.1.3',
-                'local_address': '13.13.13.13',
-                'first_hop': ['88.88.88.1', '91.10.0.1', '92.10.0.1'],
+                'local_address': '10.166.13.13',
+                'first_hop': ['10.121.88.1', '10.1.0.1', '10.204.0.1'],
                 'nhid':[9, 10, 11],
                 'ifh': ['0x110', '0x130', '0x150'],
                 'label': 24008,
@@ -120,9 +120,9 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'rpc_set': '0xe91d4160',
                 'id': 10
             },
-            '88.88.88.1/32':{
+            '10.121.88.1/32':{
                 'peer_set_id': '0xa9684c8',
-                'nexthop': '88.88.88.1',
+                'nexthop': '10.121.88.1',
                 'version': 6,
                 'rn_version': 6,
                 'flags': '0x0000000a',
@@ -130,8 +130,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'remote_asn': 300,
                 'local_rid': '192.168.2.1',
                 'remote_rid': '192.168.1.3',
-                'local_address': '88.88.88.2',
-                'first_hop': ['88.88.88.1'],
+                'local_address': '10.121.88.2',
+                'first_hop': ['10.121.88.1'],
                 'nhid':[9],
                 'ifh': ['0x110'],
                 'label': 24004,
@@ -139,9 +139,9 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'rpc_set': '0xe91d4060',
                 'id': 7
             },
-            '91.10.0.1/32':{
+            '10.1.0.1/32':{
                 'peer_set_id': '0xa96856c',
-                'nexthop': '91.10.0.1',
+                'nexthop': '10.1.0.1',
                 'version': 5,
                 'rn_version': 6,
                 'flags': '0x0000000a',
@@ -149,8 +149,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'remote_asn': 300,
                 'local_rid': '192.168.2.1',
                 'remote_rid': '192.168.1.3',
-                'local_address': '91.10.0.2',
-                'first_hop': ['91.10.0.1'],
+                'local_address': '10.1.0.2',
+                'first_hop': ['10.1.0.1'],
                 'nhid':[10],
                 'ifh': ['0x130'],
                 'label': 24006,
@@ -158,9 +158,9 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'rpc_set': '0xe91d40e0',
                 'id': 9
             },
-            '92.10.0.1/32':{
+            '10.204.0.1/32':{
                 'peer_set_id': '0xa968610',
-                'nexthop': '92.10.0.1',
+                'nexthop': '10.204.0.1',
                 'version': 4,
                 'rn_version': 6,
                 'flags': '0x0000000a',
@@ -168,8 +168,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                 'remote_asn': 300,
                 'local_rid': '192.168.2.1',
                 'remote_rid': '192.168.1.3',
-                'local_address': '92.10.0.2',
-                'first_hop': ['92.10.0.1'],
+                'local_address': '10.204.0.2',
+                'first_hop': ['10.204.0.1'],
                 'nhid':[11],
                 'ifh': ['0x150'],
                 'label': 24010,
@@ -189,8 +189,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
               Flags: 0x00000002
           Local ASN: 1
          Remote ASN: 2
-          Local RID: 1.1.1.3
-         Remote RID: 1.1.1.4
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.4
           First Hop: 192.168.1.2
                NHID: 3
               Label: 24002, Refcount: 3
@@ -202,8 +202,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
               Flags: 0x00000002
           Local ASN: 1
          Remote ASN: 3
-          Local RID: 1.1.1.3
-         Remote RID: 1.1.1.5
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.5
           First Hop: 192.168.1.3
                NHID: 4
               Label: 24003, Refcount: 3
@@ -215,72 +215,72 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
         RP/0/0/CPU0:R1#show bgp egress-engineering 
         Wed Apr 25 15:45:31.170
 
-     Egress Engineering Peer Set: 21.2.0.2/32 (0xa968758)
-            Nexthop: 21.2.0.2
+     Egress Engineering Peer Set: 10.19.0.2/32 (0xa968758)
+            Nexthop: 10.19.0.2
             Version: 2, rn_version: 2
               Flags: 0x00000006
           Local ASN: 100
          Remote ASN: 200
           Local RID: 192.168.2.1
          Remote RID: 192.168.1.2
-      Local Address: 21.2.0.1
-          First Hop: 21.2.0.2
+      Local Address: 10.19.0.1
+          First Hop: 10.19.0.2
                NHID: 2
                 IFH: 0x1000060
               Label: 24002, Refcount: 3
             rpc_set: 0xe91d2fd8, ID: 1
-     Egress Engineering Peer Set: 30.30.30.30/32 (0xa9686b4)
-            Nexthop: 30.30.30.30
+     Egress Engineering Peer Set: 10.30.30.30/32 (0xa9686b4)
+            Nexthop: 10.30.30.30
             Version: 3, rn_version: 3
               Flags: 0x00000006
           Local ASN: 100
          Remote ASN: 300
           Local RID: 192.168.2.1
          Remote RID: 192.168.1.3
-      Local Address: 13.13.13.13
-          First Hop: 88.88.88.1, 91.10.0.1, 92.10.0.1
+      Local Address: 10.166.13.13
+          First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
                NHID: 9, 10, 11
                 IFH: 0x110, 0x130, 0x150
               Label: 24008, Refcount: 3
             rpc_set: 0xe91d4160, ID: 10
-     Egress Engineering Peer Set: 88.88.88.1/32 (0xa9684c8)
-            Nexthop: 88.88.88.1
+     Egress Engineering Peer Set: 10.121.88.1/32 (0xa9684c8)
+            Nexthop: 10.121.88.1
             Version: 6, rn_version: 6
               Flags: 0x0000000a
           Local ASN: 100
          Remote ASN: 300
           Local RID: 192.168.2.1
          Remote RID: 192.168.1.3
-      Local Address: 88.88.88.2
-          First Hop: 88.88.88.1
+      Local Address: 10.121.88.2
+          First Hop: 10.121.88.1
                NHID: 9
                 IFH: 0x110
               Label: 24004, Refcount: 3
             rpc_set: 0xe91d4060, ID: 7
-     Egress Engineering Peer Set: 91.10.0.1/32 (0xa96856c)
-            Nexthop: 91.10.0.1
+     Egress Engineering Peer Set: 10.1.0.1/32 (0xa96856c)
+            Nexthop: 10.1.0.1
             Version: 5, rn_version: 6
               Flags: 0x0000000a
           Local ASN: 100
          Remote ASN: 300
           Local RID: 192.168.2.1
          Remote RID: 192.168.1.3
-      Local Address: 91.10.0.2
-          First Hop: 91.10.0.1
+      Local Address: 10.1.0.2
+          First Hop: 10.1.0.1
                NHID: 10
                 IFH: 0x130
               Label: 24006, Refcount: 3
             rpc_set: 0xe91d40e0, ID: 9
-     Egress Engineering Peer Set: 92.10.0.1/32 (0xa968610)
-            Nexthop: 92.10.0.1
+     Egress Engineering Peer Set: 10.204.0.1/32 (0xa968610)
+            Nexthop: 10.204.0.1
             Version: 4, rn_version: 6
               Flags: 0x0000000a
           Local ASN: 100
          Remote ASN: 300
           Local RID: 192.168.2.1
          Remote RID: 192.168.1.3
-      Local Address: 92.10.0.2
-          First Hop: 92.10.0.1
+      Local Address: 10.204.0.2
+          First Hop: 10.204.0.1
                NHID: 11
                 IFH: 0x150
               Label: 24010, Refcount: 3

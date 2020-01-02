@@ -151,7 +151,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # VRF: VRF501
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
 
-        # R    1.0.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
+        # R    10.1.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
         # B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
         # i L2 10.154.219.32/32 [115/100030] via 10.4.1.1, 1d06h, HundredGigE0/0/1/1 (!)
         # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
@@ -172,7 +172,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
                 r'(?P<interface>[\w\/\.\-]+)$')
 
-        # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
+        # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
         p4 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*(?P<code2>\S+))? +'
@@ -240,7 +240,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
             
-            # R    1.0.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
+            # R    10.1.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -318,7 +318,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     next_hop_list_dict.update({'updated': updated})
                 continue
             
-            # L    2.2.2.2/32 is directly connected, 3w5d, Loopback0
+            # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
             m = p4.match(line)
             if m:
