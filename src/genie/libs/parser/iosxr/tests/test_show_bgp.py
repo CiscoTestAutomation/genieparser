@@ -47,7 +47,7 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
         'peer_set':{
             'prefix':{
                 '192.168.1.2/32':{
-                    'SID': '10b87210',
+                    'begp_peer': '10b87210',
                     'nexthop': '192.168.1.2',
                     'version': 2,
                     'rn_version': 2,
@@ -63,7 +63,7 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                     'rpc_set': '10b9d408'
                 },
                 '192.168.1.3/32':{
-                    'SID': '10be61d4',
+                    'bgp_peer': '10be61d4',
                     'nexthop': '192.168.1.3',
                     'version': 3,
                     'rn_version': 3,

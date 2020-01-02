@@ -74,7 +74,7 @@ class ShowBgpEgressEngineeringSchema(MetaParser):
         'peer_set':{
             'prefix':{
                 Any():{
-                    'SID': str,
+                    'begp_peer': str,
                     'nexthop': str,
                     'version': int,
                     'rn_version':int,
@@ -109,7 +109,7 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
         ret_dict = {}
 
         #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
-        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<SID>\S+)')
+        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<bgp_peer>\S+)')
 
         #   Version: 2, rn_version: 2
         p2 = re.compile(r'(?P<key_1>[\w\s]+): (?P<value_1>\d+), (?P<key_2>[\w\s]+): (?P<value_2>\d+)')
@@ -131,8 +131,8 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
                 group = m.groupdict()
                 peer_dict = ret_dict.setdefault( 'peer_set',{}).setdefault('prefix', {}).\
                     setdefault(group['prefix'], {})
-                value= group['SID'].strip('()')
-                peer_dict.update({'SID' :value })
+                value= group['bgp_peer'].strip('()')
+                peer_dict.update({'bgp_peer' :value })
                 continue
 
             # Version: 2, rn_version: 2
