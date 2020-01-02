@@ -28,7 +28,7 @@ class ShowTrafficCollecterExternalInterfaceSchema(MetaParser):
         """Schema for show traffic-collector external-interface"""
 
         schema = {
-            'external_interfaces':{
+            'interface':{
                 Any():{
                     'status': str
                 },
@@ -64,7 +64,7 @@ class ShowTrafficCollecterExternalInterface(ShowTrafficCollecterExternalInterfac
             if m:
                 group = m.groupdict()
 
-                interface_dict = ret_dict.setdefault('external_interfaces',{}).setdefault(group['interface'],{})
+                interface_dict = ret_dict.setdefault('interface',{}).setdefault(group['interface'],{})
                 interface_dict.update({'status': group['status']})
                 continue
         
@@ -80,22 +80,24 @@ class ShowTrafficCollecterIpv4CountersPrefixDetailSchema(MetaParser):
 
     schema = {
         'ipv4_counters':{
-            'prefix': str,
-            'label': int,
-            'state': str,
-            'counters_type':{
+            'prefix': {
                 Any():{
-                    Any():{
-                        'packet':int,
-                        'packet_rate': str,
-                        'byte':int,
-                        'byte_rate': str
-                    },
-                    'history_of_counters':{
-                        'time_slot':{
-                            Any():{
-                                'packets': int,
-                                'bytes': int,
+                    'label': int,
+                    'state': str,
+                    'counters':{
+                        Any():{
+                            'average':{
+                                'last_collection_intervals': int,
+                                'packet':int,
+                                'packet_rate': str,
+                                'byte':int,
+                                'byte_rate': str
+                                },
+                            'history_of_counters':{
+                                Any():{
+                                    'packets': int,
+                                    'bytes': int,
+                                },
                             },
                         },
                     },
@@ -123,7 +125,8 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
         p1 = re.compile(r'Prefix: +(?P<prefix>[\d\.\/]+) +Label: +(?P<label>\d+) +State: (?P<state>\S+)')
 
         #Base:
-        p2 = re.compile(r'(?P<counters_type>(Base|TM Counters)):')
+        #TM Counters:
+        p2 = re.compile(r'(?P<counters>(Base|TM Counters)):')
 
         # Average over the last 5 collection intervals:
         p3 = re.compile(r'Average +over +the +last +(?P<interval>\d+) +collection +intervals:')
@@ -145,9 +148,10 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
             # Prefix: 1.1.1.10/32  Label: 16010 State: Active
             m = p1.match(line)
             if m:
-                label_list = ['prefix', 'label', 'state']
+                label_list = ['label', 'state']
                 group = m.groupdict()
-                counters_dict = ret_dict.setdefault('ipv4_counters', {})
+                counters_dict = ret_dict.setdefault('ipv4_counters', {}).\
+                    setdefault('prefix', {}).setdefault(group['prefix'], {})
                 for key in label_list:
                     value = int (group[key]) if key is 'label'else group[key]
                     counters_dict.update({key: value})
@@ -158,15 +162,16 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                type_dict = counters_dict.setdefault('counters_type', {}).\
-                    setdefault(group['counters_type'].strip().lower().replace(' ','_'), {})
+                type_dict = counters_dict.setdefault('counters', {}).\
+                    setdefault(group['counters'].strip().lower().replace(' ','_'), {})
                 continue
             
             # Average over the last 5 collection intervals:
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                interval_dict = type_dict.setdefault('average_of_last_{}_collection_intervals'.format(group['interval']), {})
+                interval_dict = type_dict.setdefault('average', {})
+                interval_dict.update({'last_collection_intervals': int(group['interval'])})
                 continue
             
             
@@ -190,8 +195,9 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
             if m:
                 label_list = ['packets', 'bytes']
                 group = m.groupdict()
-                history_dict = type_dict.setdefault('history_of_counters', {})
-                time_dict = history_dict.setdefault('time_slot', {}).setdefault(group['time_slot'], {})
+                time_dict = type_dict.setdefault('history_of_counters', {}).\
+                    setdefault(group['time_slot'], {})
+                #time_dict = history_dict.setdefault(group['time_slot'], {})
                 for key in label_list:
                     value = int(group[key])
                     time_dict.update({key: value})
