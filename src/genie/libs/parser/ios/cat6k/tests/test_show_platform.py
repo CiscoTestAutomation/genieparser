@@ -18,54 +18,7 @@ class TestShowVersion(unittest.TestCase):
         cls.maxDiff = None
 
     empty_output = {"execute.return_value": ""}
-    output_c7600 = {'execute.return_value': '''
-        Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2013 by Cisco Systems, Inc.
-        Compiled Wed 26-Jun-13 02:21 by alnguyen
-
-        ROM: System Bootstrap, Version 12.2(17r)SX7, RELEASE SOFTWARE (fc1)
-        BOOTLDR: Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
-
-        ipcore-ssr-uut2 uptime is 22 weeks, 6 days, 2 hours, 1 minute
-        Uptime for this control processor is 22 weeks, 6 days, 1 hour, 57 minutes
-        System returned to ROM by  power cycle at 03:04:03 PDT Thu May 18 2017 (SP by power on)
-        System image file is "disk0:s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2"
-        Last reload type: Normal Reload
-        Last reload reason: abort at PC 0x433A11BC
-
-
-
-        This product contains cryptographic features and is subject to United
-        States and local country laws governing import, export, transfer and
-        use. Delivery of Cisco cryptographic products does not imply
-        third-party authority to import, export, distribute or use encryption.
-        Importers, exporters, distributors and users are responsible for
-        compliance with U.S. and local country laws. By using this product you
-        agree to comply with applicable laws and regulations. If you are unable
-        to comply with U.S. and local laws, return this product immediately.
-
-        A summary of U.S. laws governing Cisco cryptographic products may be found at:
-        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
-
-        If you require further assistance please contact us by sending email to
-        export@cisco.com.
-
-        cisco CISCO7606 (R7000) processor (revision 1.0) with 983008K/65536K bytes of memory.
-        Processor board ID FOX11140RN8
-        SR71000 CPU at 600MHz, Implementation 1284, Rev 1.2, 512KB L2 Cache
-        Last reset from s/w reset
-        1 Enhanced FlexWAN controller (4 Serial).
-        1 Virtual Ethernet interface
-        52 Gigabit Ethernet interfaces
-        4 Serial interfaces
-        1917K bytes of non-volatile configuration memory.
-        8192K bytes of packet buffer memory.
-
-        65536K bytes of Flash internal SIMM (Sector size 512K).
-        Configuration register is 0x2
-
-        '''}
+    
     output_cat6k = {'execute.return_value': '''
     cat6k_tb1#show version
     Cisco Internetwork Operating System Software 
@@ -230,17 +183,6 @@ class TestDir(unittest.TestCase):
         },
     },
 }
-
-    output_c7600 = {'execute.return_value': '''
-        Directory of disk0:/
-    
-        2  -rw-         373   May 9 2013 10:00:08 -07:00  default_config
-        3  -rw-         421   May 9 2013 10:00:20 -07:00  golden_config
-        4  -rw-   188183700   May 9 2013 10:11:56 -07:00  ISSUCleanGolden
-        5  -rw-   210179540  Oct 18 2018 07:22:24 -07:00  s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2
-    
-    1024589824 bytes total (626180096 bytes free)
-    '''}
 
 
     def test_empty(self):
