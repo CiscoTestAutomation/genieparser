@@ -72,23 +72,24 @@ class ShowBgpEgressEngineeringSchema(MetaParser):
     ''' Schema for show bgp egress-engineering '''
     schema = {
         'peer_set':{
-            'prefix':{
-                Any():{
-                    'begp_peer': str,
-                    'nexthop': str,
-                    'version': int,
-                    'rn_version':int,
-                    'flags':str,
-                    'local_asn': int,
-                    'remote_asn': int,
-                    'local_rid':str,
-                    'remote_rid': str,
-                    'first_hop':str,
-                    'nhid':int,
-                    'label': int,
-                    'refcount':int,
-                    'rpc_set':str
-                },
+            Any():{
+                'peer_set_id': str,
+                'nexthop': str,
+                'version': int,
+                'rn_version':int,
+                'flags':str,
+                'local_asn': int,
+                'remote_asn': int,
+                'local_rid':str,
+                'remote_rid': str,
+                Optional('local_address'): str,
+                'first_hop':list,
+                'nhid':list,
+                Optional('ifh'): list,
+                'label': int,
+                'refcount':int,
+                'rpc_set':str,
+                Optional('id'): int
             },
         },
     }
@@ -109,10 +110,10 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
         ret_dict = {}
 
         #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
-        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<bgp_peer>\S+)')
+        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) +(?P<peer_set_id>\S+)')
 
         #   Version: 2, rn_version: 2
-        p2 = re.compile(r'(?P<key_1>[\w\s]+): (?P<value_1>\d+), (?P<key_2>[\w\s]+): (?P<value_2>\d+)')
+        p2 = re.compile(r'(?P<key_1>[\w\s]+): (?P<value_1>[\S\s]+), (?P<key_2>[\w\s]+): (?P<value_2>\d+)')
 
         #    Local ASN: 1
         #     Remote ASN: 2
@@ -120,7 +121,7 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
         #     Remote RID: 1.1.1.4
         #     First Hop: 192.168.1.2
         #         NHID: 3
-        p3 = re.compile(r'(?P<key>[\w\s]+): (?P<value>[\S]+)')
+        p3 = re.compile(r'(?P<key>[\w\s]+): (?P<value>[\S\s]+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -129,10 +130,10 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                peer_dict = ret_dict.setdefault( 'peer_set',{}).setdefault('prefix', {}).\
+                peer_dict = ret_dict.setdefault( 'peer_set',{}).\
                     setdefault(group['prefix'], {})
-                value= group['bgp_peer'].strip('()')
-                peer_dict.update({'bgp_peer' :value })
+                value = group['peer_set_id'].strip('()')
+                peer_dict.update({'peer_set_id' :value })
                 continue
 
             # Version: 2, rn_version: 2
@@ -141,26 +142,38 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
                 group = m.groupdict()
                 values = list(group.values())
                 for val in range(0, len(values), 2):
+                    update_value = int(values[val+1]) if values[val+1].isdigit() else values[val+1]
                     peer_dict.update({values[val].strip().lower().\
-                        replace(' ','_') : int(values[val+1])})
+                        replace(' ','_') : update_value})
+
                 continue
 
             #Local ASN: 1
             #     Remote ASN: 2
             #     Local RID: 1.1.1.3
             #     Remote RID: 1.1.1.4
-            #     First Hop: 192.168.1.2
-            #         NHID: 3
+            #  First Hop: 88.88.88.1, 91.10.0.1, 92.10.0.1
+            #   NHID: 9, 10, 11
+            #   IFH: 0x110, 0x130, 0x150
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                if group['value'].isdigit():
-                    peer_dict.update({group['key'].strip().lower().replace(' ','_') : int(group['value'])})
+                if group['key'].strip().lower().replace(' ','_') == 'first_hop'\
+                or group['key'].strip().lower().replace(' ','_') == 'nhid'\
+                or group['key'].strip().lower().replace(' ','_') == 'ifh':
+                    update_value = group['value'].strip(',').split(',')
+                    update_value = [int(item.strip()) if item.strip().isdigit() \
+                        else item.strip() for item in update_value]
+                elif group['value'].isdigit():
+                    update_value = int(group['value']) 
                 else:
-                    peer_dict.update({group['key'].strip().lower().\
-                        replace(' ','_') : group['value']})
+                    update_value = group['value'] 
+
+                peer_dict.update({group['key'].strip().lower().\
+                    replace(' ','_') : update_value})
+                    
                 continue
-        
+        #print (ret_dict)
         return ret_dict
     
 
