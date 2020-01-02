@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Parser
 from genie.libs.parser.iosxe.show_vrf import ShowVrf, \

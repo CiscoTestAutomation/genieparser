@@ -29,11 +29,11 @@ abstract.declare_package(__name__)
 #    for PyPI/public/customer users
 try:
     # new internal cisco-only pkg since devnet release
-    from ats.cisco.stats import CesMonitor
+    from pyats.cisco.stats import CesMonitor
 except Exception:
     try:
         # legacy pyats version, stats was inside utils module
-        from ats.utils.stats import CesMonitor
+        from pyats.utils.stats import CesMonitor
     except Exception:
         CesMonitor = None
 

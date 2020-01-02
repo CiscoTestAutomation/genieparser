@@ -8,7 +8,7 @@ import re
 import xmltodict
 
 try:
-    from ats import tcl
+    from pyats import tcl
 except Exception:
     pass
 

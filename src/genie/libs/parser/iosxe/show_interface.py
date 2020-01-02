@@ -21,7 +21,7 @@ import unittest
 from genie import parsergen
 from collections import defaultdict
 
-from ats.log.utils import banner
+from pyats.log.utils import banner
 import xmltodict
 try:
     import iptools
@@ -30,7 +30,7 @@ except (ImportError, OSError):
     pass
 
 try:
-    from ats import tcl
+    from pyats import tcl
 except Exception:
     pass
 

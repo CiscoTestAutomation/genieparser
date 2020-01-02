@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -582,7 +582,7 @@ class TestShowClnsProtocol(unittest.TestCase):
 
     golden_parsed_output_2 = {
         "instance": {
-            "": {
+            "null": {
                 "process_handle": "0x10000",
                 "is_type": "level-1",
                 "system_id": "0000.0000.0007",
@@ -631,7 +631,7 @@ class TestShowClnsProtocol(unittest.TestCase):
 
     golden_parsed_output_3 = {
         "instance": {
-            "": {
+            "null": {
                 "process_handle": "0x10000",
                 "is_type": "level-1",
                 "system_id": "0000.0000.0002",

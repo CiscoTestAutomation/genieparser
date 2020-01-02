@@ -23,6 +23,10 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+    *Added ShowMplsLabelRange for:
+        * show mpls label range
+    * Added ShowIsisFRRSummary for:
+        * show isis fast-reroute summary
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
@@ -47,6 +51,11 @@
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
 		
+    * Updated ShowClnsProtocol
+        * Changed 'Null Tag' to 'null' 
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
+
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema

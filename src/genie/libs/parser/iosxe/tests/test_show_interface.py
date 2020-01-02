@@ -9,7 +9,7 @@ from textwrap import dedent
 
 ats_mock = Mock()
 with patch.dict('sys.modules',
-        {'ats' : ats_mock}, autospec=True):
+        {'pyats' : ats_mock}, autospec=True):
     import genie.parsergen
     from genie.parsergen import oper_fill
     from genie.parsergen import oper_check
@@ -17,7 +17,7 @@ with patch.dict('sys.modules',
 
 import xml.etree.ElementTree as ET
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 

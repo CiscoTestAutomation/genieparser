@@ -13,7 +13,7 @@ import unittest
 from genie import parsergen
 from collections import defaultdict
 
-from ats.log.utils import banner
+from pyats.log.utils import banner
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util import merge_dict, keynames_convert
