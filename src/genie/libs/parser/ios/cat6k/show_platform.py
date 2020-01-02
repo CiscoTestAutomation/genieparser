@@ -503,14 +503,14 @@ class ShowRedundancy(ShowRedundancySchema):
             r'^Maintenance +Mode += +(?P<maint_mode>\S+)$')
 
         # Communications = Down      Reason: Simplex mode
-        p9 = re.compile(r'^Communications += +(?P<communications>\S+)\s'
-                        r'+Reason: +(?P<communications_reason>[\S\s]+)$')
+        p9 = re.compile(r'^Communications += +(?P<communications>\S+)'
+                        r'(\s+Reason: +(?P<communications_reason>[\S\s]+))?$')
 
         # Active Location = slot 1
-        p10 = re.compile(r'^Active +Location += +(?P<slot>[\S\s]+)$')
+        p10 = re.compile(r'^(Active|Standby) +Location += +(?P<slot>[\S ]+)$')
 
         # Current Software state = ACTIVE
-        p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>\S+)$')
+        p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>[\S ]+)$')
 
         # Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
         p12 = re.compile(r'^Uptime +in +current +state += '
@@ -606,20 +606,23 @@ class ShowRedundancy(ShowRedundancySchema):
             # Communications = Down      Reason: Failure
             m = p9.match(line)
             if m:
-                red_dict['communications'] = m.groupdict()['communications']
-                red_dict['communications_reason'] = m.groupdict()['communications_reason']
+                group = m.groupdict()
+                red_dict['communications'] = group['communications']
+                communications_reason = group.get('communications_reason')
+                if communications_reason:
+                    red_dict['communications_reason'] = group['communications_reason']
                 continue
 
             # Active Location = slot 1
             m = p10.match(line)
             if m:
                 slot = m.groupdict()['slot']
-                if 'slot' not in redundancy_dict:
-                    slot_dict = redundancy_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                slot_dict = redundancy_dict.setdefault(
+                    'slot', {}).setdefault(slot, {})
                 continue
 
             # Current Software state = ACTIVE
+            # Current Software state = STANDBY HOT
             m = p11.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -787,6 +790,7 @@ class ShowModuleSchema(MetaParser):
                     Optional('fw_ver'): str,
                     Optional('sw_ver'): str,
                     'status': str,
+                    Optional('online_diag_status'): str,
                     Optional('subslot'): {
                         Any(): {
                             'hw_ver': str,
@@ -807,6 +811,7 @@ class ShowModuleSchema(MetaParser):
                     Optional('fw_ver'): str,
                     Optional('sw_ver'): str,
                     'status': str,
+                    Optional('online_diag_status'): str,
                     Optional('subslot'): {
                         Any(): {
                             'hw_ver': str,
@@ -883,6 +888,9 @@ class ShowModule(ShowModuleSchema):
         # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
         r5 = re.compile(r'(?P<mod>\d+)\s+(?P<sub_mod>.+)\s+(?P<model>\S+)\s+'
                          '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
+
+        # 1  Pass
+        r6 = re.compile(r'(?P<mod>\d+) +(?P<online_diag_status>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1015,6 +1023,21 @@ class ShowModule(ShowModuleSchema):
                 submodule_dict['serial_number'] = serial
                 submodule_dict['model'] = model
 
+                continue
+            
+            # 1  Pass
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                mod = group['mod']
+
+                slot_code = [*parsed_output.get('slot', {}).get(mod, {}).keys()][0]
+
+                parsed_output\
+                    .setdefault('slot', {})\
+                    .setdefault(mod, {})\
+                    .setdefault(slot_code, {})\
+                    .setdefault('online_diag_status', group['online_diag_status'])
                 continue
 
         return parsed_output

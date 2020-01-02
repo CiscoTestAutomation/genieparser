@@ -8,7 +8,10 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # import cat6k parser
-from genie.libs.parser.ios.cat6k.show_platform import Dir as Dir_cat6k
+from genie.libs.parser.ios.cat6k.show_platform import (Dir as Dir_cat6k,
+                                                       ShowRedundancy as ShowRedundancy_cat6k,
+                                                       ShowInventory as ShowInventory_cat6k,
+                                                       ShowModule as ShowModule_cat6k)
 
 
 class ShowVersionSchema(MetaParser):
@@ -346,3 +349,23 @@ class Dir(Dir_cat6k):
     """
     pass
 
+class ShowRedundancy(ShowRedundancy_cat6k):
+    """
+    Parser for command:
+        * show redundancy
+    """
+    pass
+
+class ShowInventory(ShowInventory_cat6k):
+    """
+    Parser for command:
+        * show inventory
+    """
+    pass
+
+class ShowModule(ShowModule_cat6k):
+    """
+    Parser for command:
+        * show module
+    """
+    pass
