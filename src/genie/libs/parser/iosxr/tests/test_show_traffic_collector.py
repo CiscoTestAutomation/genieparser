@@ -23,10 +23,10 @@ class TestShowTrafficCollectorExternalInterface(unittest.TestCase):
 
     golden_parsed_output = {
         'interface':{
-            'Te0/1/0/3':{
+            'TenGigabitEthernet0/1/0/3':{
                 'status': 'Enabled'
             },
-            'Te0/1/0/4':{
+            'TenGigabitEthernet0/1/0/4':{
                 'status': 'Enabled'
             },
         },
@@ -73,10 +73,8 @@ class TestShowTrafficCollecterIpv4CountersPrefixDetail(unittest.TestCase):
                         'base':{
                             'average':{
                                 'last_collection_intervals': 5,
-                                'packet':9496937,
-                                'packet_rate': 'pps',
-                                'byte':9363979882,
-                                'byte_rate': 'Bps'
+                                'packet_rate':9496937,
+                                'byte_rate':9363979882,
                             },
                             'history_of_counters':{
                                 '23:01 - 23:02':{
@@ -104,10 +102,8 @@ class TestShowTrafficCollecterIpv4CountersPrefixDetail(unittest.TestCase):
                         'tm_counters':{
                             'average':{
                                 'last_collection_intervals': 5,
-                                'packet':9528754,
-                                'packet_rate': 'pps',
-                                'byte':9357236821,
-                                'byte_rate': 'Bps'
+                                'packet_rate':9528754,
+                                'byte_rate':9357236821,
                             },
                             'history_of_counters':{
                                 '23:01 - 23:02':{
