@@ -356,8 +356,8 @@ class test_show_vpc(unittest.TestCase):
     '''}
 
     golden_parsed_output_7 = {
-        'vpc_domain_id': '312',
-        'vpc_plus_switch_id': '312',
+        'vpc_domain_id': 'Unknown',
+        'vpc_plus_switch_id': 'Unknown',
         'vpc_peer_status': 'peer adjacency formed ok',
         'vpc_peer_keepalive_status': 'peer is alive',
         'vpc_fabricpath_status': 'peer is reachable through fabricpath',
@@ -375,7 +375,7 @@ class test_show_vpc(unittest.TestCase):
                 'peer_link_id': 1,
                 'peer_link_ifindex': 'Port-channel1',
                 'peer_link_port_state': 'up',
-                'peer_up_vlan_bitset': '1,10-28,30-54,56-82,138,530,2587'
+                'peer_up_vlan_bitset': '1,2,3,4,5,6,7'
             }
         },
         'vpc': {
@@ -385,7 +385,7 @@ class test_show_vpc(unittest.TestCase):
                 'vpc_port_state': 'up',
                 'vpc_consistency': 'success',
                 'vpc_consistency_status': 'success',
-                'up_vlan_bitset': '1,10-28,30-54,56-82,138,530,2587',
+                'up_vlan_bitset': '1,2,3,4,5,6,7,8,9,10,11',
                 'vpc_plus_attrib': 'DF: Partial,FP MAC:312.0.0'
             }
         }
@@ -395,8 +395,8 @@ class test_show_vpc(unittest.TestCase):
         Legend:
                         (*) - local vPC is down, forwarding via vPC peer-link
         
-        vPC domain id                     : 312
-        vPC+ switch id                    : 312
+        vPC domain id                     : Unknown
+        vPC+ switch id                    : Unknown
         Peer status                       : peer adjacency formed ok
         vPC keep-alive status             : peer is alive
         vPC fabricpath status             : peer is reachable through fabricpath
@@ -414,15 +414,15 @@ class test_show_vpc(unittest.TestCase):
         ---------------------------------------------------------------------
         id   Port   Status Active vlans
         --   ----   ------ --------------------------------------------------
-        1    Po1    up     1,10-28,30-54,56-82,138,530,2587
+        1    Po1    up     1,2,3,4,5,6,7
         
         vPC status
         ---------------------------------------------------------------------------
         id     Port        Status Consistency Reason       Active vlans vPC+ Attrib
         --     ----------  ------ ----------- ------       ------------ -----------
-        11     Po11        up     success     success      1,10-28,30-5 DF: Partial,
-                                                           4,56-82,138, FP MAC:
-                                                           530,2587     312.0.0
+        11     Po11        up     success     success      1,2,3,4,5,6, DF: Partial,
+                                                           7,8,9,       FP MAC:
+                                                           10,11        312.0.0
     '''
     }
     
