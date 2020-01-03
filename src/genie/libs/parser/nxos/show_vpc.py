@@ -85,7 +85,6 @@ class ShowVpc(ShowVpcSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-
         ret_dict = {}
         up_vlan_bitset = peer_up_vlan_bitset = ''
         vlan_type = None
@@ -172,7 +171,6 @@ class ShowVpc(ShowVpcSchema):
             '+(?P<vpc_consistency_status>success|[\S\s]+) '
             '+(?P<up_vlan_bitset>[\d\,\-]+)'
             '(?: +(?P<vpc_plus_attrib>(.*)+))?$')
-            
         # vPC Peer-link status
         p20 = re.compile(r'^vPC +(p|P)eer-link +status$')
 
@@ -220,14 +218,13 @@ class ShowVpc(ShowVpcSchema):
         
         # vPC+ switch id : 312
         p34 = re.compile(r'^vPC[+] +switch +id\s*: +(?P<vpc_plus_switch_id>[\w\s]+)$')
-        
+
         # vPC fabricpath status : peer is reachable through fabricpath
         p35 = re.compile(r'^vPC+ fabricpath+ status\s*: +(?P<vpc_fabricpath_status>[\w\s]+)$')
-        
+
         # 4,56-82,138, FP MAC:
         # 530,2587     312.0.0
         p36 = re.compile(r'^(?P<additional_vlan>[\d\-\,]+) (?P<additional_vpc_plus_attrib>[\S\-\,\s\.\:]+)$')
-
         for line in output.splitlines():
             line = line.strip()
 
@@ -530,17 +527,16 @@ class ShowVpc(ShowVpcSchema):
                 group = match.groupdict()
                 ret_dict.update({'vpc_fabricpath_status': group['vpc_fabricpath_status']})
                 continue
-                
+
             # 4,56-82,138, FP MAC:
             # 530,2587     312.0.0
             match = p36.match(line)
             if match:
-                group = match.groupdict()               
+                group = match.groupdict()
                 if vlan_type == 'vpc_status' and vpc_dict.get('vpc_plus_attrib'):
                     vpc_dict['vpc_plus_attrib'] += group['additional_vpc_plus_attrib'].strip()
                     vpc_dict.update({'vpc_plus_attrib': vpc_dict['vpc_plus_attrib']})
                     up_vlan_bitset += group['additional_vlan']
                     vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})                                  
                 continue
-
         return ret_dict
