@@ -4,6 +4,7 @@
      *  show bundle 
      *  show bundle <interface>
      *  show lacp
+     *  show lacp <interface>
 """
 # Python
 import re

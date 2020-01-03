@@ -621,7 +621,10 @@ class test_show_bundle(unittest.TestCase):
 # unit test for show lacp
 ####################################################
 class test_show_lacp(unittest.TestCase):
-    """unit test for show lacp"""
+    """unit test for 
+    show lacp
+    show lacp <interface>
+    """
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
