@@ -626,7 +626,9 @@ class test_show_lacp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
+
+
+    golden_parsed_output1 = {
         "interfaces": {
             "Bundle-Ether1": {
                 "name": "Bundle-Ether1",
@@ -795,7 +797,7 @@ class test_show_lacp(unittest.TestCase):
         }
     }
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:iosxrv9000-1#show lacp
         Tue Apr  3 20:32:49.966 UTC
         State: a - Port is marked as Aggregatable.
@@ -843,18 +845,127 @@ class test_show_lacp(unittest.TestCase):
           Gi0/0/0/4             Current    Slow   Selected   Distrib   None    None  
         '''}
 
+    golden_parsed_output2 =  {
+        "interfaces": {
+            "Bundle-Ether8": {
+                "name": "Bundle-Ether8",
+                "bundle_id": 8,
+                "lacp_mode": "active",
+                "port": {
+                    "TenGigabitEthernet0/0/0/0": {
+                        "interface": "TenGigabitEthernet0/0/0/0",
+                        "bundle_id": 8,
+                        "rate": 1,
+                        "state": "ascdAF--",
+                        "port_id": "0x8000,0x0002",
+                        "key": "0x0008",
+                        "system_id": "0x8000,40-55-39-12-5a-fc",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
+                        "partner": {
+                            "rate": 1,
+                            "state": "ascdAF--",
+                            "port_id": "0x0001,0x0006",
+                            "key": "0x0008",
+                            "system_id": "0x0001,cc-ef-48-06-1d-04",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
+                        },
+                        "receive": "Current",
+                        "period": "Fast",
+                        "selection": "Selected",
+                        "mux": "Distrib",
+                        "a_churn": "None",
+                        "p_churn": "None"
+                    },
+                    "TenGigabitEthernet0/1/0/0": {
+                        "interface": "TenGigabitEthernet0/1/0/0",
+                        "bundle_id": 8,
+                        "rate": 1,
+                        "state": "ascdAF--",
+                        "port_id": "0x8000,0x0001",
+                        "key": "0x0008",
+                        "system_id": "0x8000,40-55-39-12-5a-fc",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
+                        "partner": {
+                            "rate": 1,
+                            "state": "ascdAF--",
+                            "port_id": "0x8000,0x0004",
+                            "key": "0x0008",
+                            "system_id": "0x0001,cc-ef-48-06-1d-04",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
+                        },
+                        "receive": "Current",
+                        "period": "Fast",
+                        "selection": "Selected",
+                        "mux": "Distrib",
+                        "a_churn": "None",
+                        "p_churn": "None"
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:iosxrv9000-1#show lacp Bundle-Ether8
+        Tue Apr  3 20:32:49.966 UTC
+        State: a - Port is marked as Aggregatable.
+               s - Port is Synchronized with peer.
+               c - Port is marked as Collecting.
+               d - Port is marked as Distributing.
+               A - Device is in Active mode.
+               F - Device requests PDUs from the peer at fast rate.
+               D - Port is using default values for partner information.
+               E - Information about partner has expired.
+
+        Bundle-Ether8
+
+          Port          (rate)  State    Port ID       Key    System ID
+          --------------------  -------- ------------- ------ ------------------------
+        Local
+          Te0/0/0/0         1s  ascdAF-- 0x8000,0x0002 0x0008 0x8000,40-55-39-12-5a-fc
+           Partner          1s  ascdAF-- 0x0001,0x0006 0x0008 0x0001,cc-ef-48-06-1d-04
+          Te0/1/0/0         1s  ascdAF-- 0x8000,0x0001 0x0008 0x8000,40-55-39-12-5a-fc
+           Partner          1s  ascdAF-- 0x8000,0x0004 0x0008 0x0001,cc-ef-48-06-1d-04
+
+          Port                  Receive    Period Selection  Mux       A Churn P Churn
+          --------------------  ---------- ------ ---------- --------- ------- -------
+        Local
+          Te0/0/0/0             Current    Fast   Selected   Distrib   None    None   
+          Te0/1/0/0             Current    Fast   Selected   Distrib   None    None   
+
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowLacp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
+    def test_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowLacp(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLacp(device=self.device)
+        parsed_output = obj.parse(interface='Bundle-Ether8')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

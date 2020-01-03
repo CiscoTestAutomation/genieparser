@@ -600,13 +600,19 @@ class ShowLacpSchema(MetaParser):
 
 
 class ShowLacp(ShowLacpSchema):
-    """parser for show lacp"""
+    """parser for 
+    show lacp
+    show lacp <inteface>
+    """
 
-    cli_command = 'show lacp'
+    cli_command = ['show lacp', 'show lacp {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface is None:
+                out = self.device.execute(self.cli_command[0])
+            else:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
         else:
             out = output
 
