@@ -1,7 +1,7 @@
 import unittest
 import genie.gre
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
@@ -66,6 +66,7 @@ class TestShowVersion(unittest.TestCase):
            Configuration register is 0x2
 
            '''}
+
     parsed_output_c7600 = {
         'version': {
             'bootldr_version': 'Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301',
@@ -86,9 +87,10 @@ class TestShowVersion(unittest.TestCase):
                 'speed': '600MHz',
             },
             'curr_config_register': '0x2',
+            'hostname': 'ipcore-ssr-uut2',
             'image_id': 's72033_rp-ADVENTERPRISEK9_DBG-M',
             'interfaces': {
-                'gigabit_ethenet': 52,
+                'gigabit_ethernet': 52,
                 'serial': 4,
                 'virtual_ethernet': 1,
             },
