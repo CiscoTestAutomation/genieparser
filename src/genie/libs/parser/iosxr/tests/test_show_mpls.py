@@ -516,6 +516,122 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
         0     24007   ISIS(A):SR                      InUse  Yes
           (SR Adj Segment IPv4, vers:0, index=3, type=0, intf=Gi0/0/0/1, nh=10.3.4.4)
     '''}
+    golden_parsed_output3 = {
+        'table':{
+            0:{
+                'label':{
+                    0:{
+                        'owner': 'LSD',
+                        'state': 'InUse',
+                        'rewrite': 'Yes',
+                    },
+                    1:{
+                        'owner': 'LSD',
+                        'state': 'InUse',
+                        'rewrite': 'Yes',
+                    },
+                    2:{
+                        'owner': 'LSD',
+                        'state': 'InUse',
+                        'rewrite': 'Yes',
+                    },
+                    13:{
+                        'owner': 'LSD',
+                        'state': 'InUse',
+                        'rewrite': 'Yes',
+                    },
+                    44:{
+                        'owner': 'Static',
+                        'state': 'InUse',
+                        'rewrite': 'No',
+                        'label_type': {
+                            'IPv4':{
+                                'vers':0,
+                                'default': True,
+                                'prefix': '2.2.2.2/3'
+                            },
+                        },
+                    },
+                    1999:{
+                        'owner': 'Static',
+                        'state': 'InUse',
+                        'rewrite': 'No',
+                        'label_type': {
+                            'IPv4':{
+                                'vers':0,
+                                'default': True,
+                                'prefix': '1.1.1.1/24'
+                            },
+                        },
+                    },
+                    16001:{
+                        'owner': 'LDP:lsd_test_ut',
+                        'state': 'InUse',
+                        'rewrite': 'No',
+                        'new_owner':{
+                            'owner': 'Static:lsd_test_ut',
+                            'state': 'InUse',
+                            'rewrite': 'No'
+                        },
+                        'label_type': {
+                            'IPv4':{
+                                'vers':0,
+                                'default': False,
+                                'prefix': '9.10.10.10/15'
+                            },
+                        },
+                    },
+                    19990:{
+                        'owner': 'Static',
+                        'state': 'InUse',
+                        'rewrite': 'No',
+                        'label_type': {
+                            'IPv4':{
+                                'vers':0,
+                                'default': True,
+                                'prefix': '1.1.1.4/24'
+                            },
+                        },
+                    },
+                    19999:{
+                        'owner': 'Static',
+                        'state': 'InUse',
+                        'rewrite': 'No',
+                        'label_type': {
+                            'IPv4':{
+                                'vers':0,
+                                'default': True,
+                                'prefix': '1.1.1.3/24'
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output3 = {'execute.return_value':''' 
+        RP/0/0/CPU0:Apr 30 16:30:55.494 : mpls_lsd[276]: app_bit:40  app_bit_pnd:0
+        show mpls label table detail
+        Tue Apr 30 16:31:05.102 EDT
+        Table Label   Owner                        State  Rewrite
+        ----- ------- ---------------------------- ------ -------
+        0     0       LSD                          InUse  Yes
+        0     1       LSD                          InUse  Yes
+        0     2       LSD                          InUse  Yes
+        0     13      LSD                          InUse  Yes
+        0     44      Static                       InUse  No
+          (IPv4, vers:0, default, 2.2.2.2/3)
+        0     1999    Static                       InUse  No
+          (IPv4, vers:0, default, 1.1.1.1/24)
+        0     16001   LDP:lsd_test_ut              InUse  No
+                      Static:lsd_test_ut           InUse  No
+          (IPv4, vers:0, , 9.10.10.10/15)
+        0     19990   Static                       InUse  No
+          (IPv4, vers:0, default, 1.1.1.4/24)
+        0     19999   Static                       InUse  No
+          (IPv4, vers:0, default, 1.1.1.3/24)
+    '''}
 
     def test_show_mpls_label_table_detail_empty(self):
         self.device = Mock(**self.empty_output)
@@ -536,6 +652,13 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
         obj = ShowMplsLabelTableDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_show_mpls_label_table_detail_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMplsLabelTableDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ==================================================
 #  Unit test for 'show mpls label table private'
