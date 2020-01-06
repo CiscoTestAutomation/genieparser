@@ -76,19 +76,19 @@ class ShowBgpEgressEngineeringSchema(MetaParser):
                 'peer_set_id': str,
                 'nexthop': str,
                 'version': int,
-                'rn_version':int,
-                'flags':str,
+                'rn_version': int,
+                'flags': str,
                 'local_asn': int,
                 'remote_asn': int,
-                'local_rid':str,
+                'local_rid': str,
                 'remote_rid': str,
                 Optional('local_address'): str,
-                'first_hop':list,
-                'nhid':list,
+                'first_hop': list,
+                'nhid': list,
                 Optional('ifh'): list,
                 'label': int,
-                'refcount':int,
-                'rpc_set':str,
+                'refcount': int,
+                'rpc_set': str,
                 Optional('id'): int
             },
         },
@@ -175,7 +175,7 @@ class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
                     replace(' ','_') : update_value})
                     
                 continue
-        #print (ret_dict)
+
         return ret_dict
     
 
