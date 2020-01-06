@@ -27,6 +27,8 @@
         * show mpls label range
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
+    * Added ShowBgpEgressEngineering for:
+        * show bgp egress-engineering
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:

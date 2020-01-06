@@ -596,10 +596,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'nlpid': '0xCC 0x8E',
-                            'ip_address': '2.2.2.2',
+                            'ip_address': '10.16.2.2',
                             'ipv4_internal_reachability': {
-                                '2.2.2.2/32': {
-                                    'ip_prefix': '2.2.2.2',
+                                '10.16.2.2/32': {
+                                    'ip_prefix': '10.16.2.2',
                                     'prefix_len': '32',
                                     'metric': 10,
                                 },
@@ -681,8 +681,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0001',
                             'nlpid': '0xCC 0x8E',
-                            'router_id': '3.3.3.3',
-                            'ip_address': '3.3.3.3',
+                            'router_id': '10.36.3.3',
+                            'ip_address': '10.36.3.3',
                             'topology': {
                                 'ipv6': {
                                     'code': '0x2',
@@ -713,8 +713,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'ipv4_internal_reachability': {
-                                '3.3.3.3/32': {
-                                    'ip_prefix': '3.3.3.3',
+                                '10.36.3.3/32': {
+                                    'ip_prefix': '10.36.3.3',
                                     'prefix_len': '32',
                                     'metric': 1,
                                 },
@@ -886,10 +886,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'nlpid': '0xCC 0x8E',
-                            'ip_address': '2.2.2.2',
+                            'ip_address': '10.16.2.2',
                             'ipv4_internal_reachability': {
-                                '2.2.2.2/32': {
-                                    'ip_prefix': '2.2.2.2',
+                                '10.16.2.2/32': {
+                                    'ip_prefix': '10.16.2.2',
                                     'prefix_len': '32',
                                     'metric': 10,
                                 },
@@ -903,8 +903,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     'prefix_len': '24',
                                     'metric': 10,
                                 },
-                                '3.3.3.3/32': {
-                                    'ip_prefix': '3.3.3.3',
+                                '10.36.3.3/32': {
+                                    'ip_prefix': '10.36.3.3',
                                     'prefix_len': '32',
                                     'metric': 11,
                                 },
@@ -991,8 +991,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0001',
                             'nlpid': '0xCC 0x8E',
-                            'router_id': '3.3.3.3',
-                            'ip_address': '3.3.3.3',
+                            'router_id': '10.36.3.3',
+                            'ip_address': '10.36.3.3',
                             'topology': {
                                 'ipv6': {
                                     'code': '0x2',
@@ -1023,8 +1023,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'ipv4_internal_reachability': {
-                                '3.3.3.3/32': {
-                                    'ip_prefix': '3.3.3.3',
+                                '10.36.3.3/32': {
+                                    'ip_prefix': '10.36.3.3',
                                     'prefix_len': '32',
                                     'metric': 1,
                                 },
@@ -1152,8 +1152,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0001',
                             'nlpid': '0xCC 0x8E',
-                            'router_id': '3.3.3.3',
-                            'ip_address': '3.3.3.3',
+                            'router_id': '10.36.3.3',
+                            'ip_address': '10.36.3.3',
                             'topology': {
                                 'ipv6': {
                                     'code': '0x2',
@@ -1176,8 +1176,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'ipv4_internal_reachability': {
-                                '3.3.3.3/32': {
-                                    'ip_prefix': '3.3.3.3',
+                                '10.36.3.3/32': {
+                                    'ip_prefix': '10.36.3.3',
                                     'prefix_len': '32',
                                     'metric': 1,
                                 },
@@ -1311,8 +1311,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                             'overload_bit': 0,
                             'area_address': '49.0001',
                             'nlpid': '0xCC 0x8E',
-                            'router_id': '3.3.3.3',
-                            'ip_address': '3.3.3.3',
+                            'router_id': '10.36.3.3',
+                            'ip_address': '10.36.3.3',
                             'topology': {
                                 'ipv6': {
                                     'code': '0x2',
@@ -1335,8 +1335,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                             },
                             'ipv4_internal_reachability': {
-                                '3.3.3.3/32': {
-                                    'ip_prefix': '3.3.3.3',
+                                '10.36.3.3/32': {
+                                    'ip_prefix': '10.36.3.3',
                                     'prefix_len': '32',
                                     'metric': 1,
                                 },
@@ -1408,8 +1408,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R1_xe.01
           Metric: 10         IS-Extended R2_xr.03
           NLPID:        0xCC 0x8E
-          IP Address:   2.2.2.2
-          Metric: 10         IP 2.2.2.2/32
+          IP Address:   10.16.2.2
+          Metric: 10         IP 10.16.2.2/32
           Metric: 10         IP 10.12.115.0/24
           Metric: 10         IP 10.23.115.0/24
           Hostname: R2_xr
@@ -1427,8 +1427,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         R3_nx.00-00           0x00000193   0x8022                1018/1200      0/0/0
           Area Address: 49.0001
           NLPID:        0xCC 0x8E
-          Router ID:    3.3.3.3
-          IP Address:   3.3.3.3
+          Router ID:    10.36.3.3
+          IP Address:   10.36.3.3
           Topology:     IPv6 (0x2)
                         IPv4 (0x0)
           Hostname: R3_nx
@@ -1436,7 +1436,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         IS (MT-IPv6) R1_xe.02
           Metric: 40         IS-Extended R2_xr.03
           Metric: 40         IS-Extended R1_xe.02
-          Metric: 1          IP 3.3.3.3/32
+          Metric: 1          IP 10.36.3.3/32
           Metric: 40         IP 10.13.115.0/24
           Metric: 40         IP 10.23.115.0/24
           Metric: 1          IPv6 (MT-IPv6) 2001:3:3:3::3/128
@@ -1473,11 +1473,11 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R1_xe.01
           Metric: 10         IS-Extended R2_xr.03
           NLPID:        0xCC 0x8E
-          IP Address:   2.2.2.2
-          Metric: 10         IP 2.2.2.2/32
+          IP Address:   10.16.2.2
+          Metric: 10         IP 10.16.2.2/32
           Metric: 10         IP 10.12.115.0/24
           Metric: 10         IP 10.23.115.0/24
-          Metric: 11         IP 3.3.3.3/32
+          Metric: 11         IP 10.36.3.3/32
           Metric: 20         IP 10.13.115.0/24
           Hostname: R2_xr
           Metric: 10         IS (MT-IPv6) R1_xe.01
@@ -1496,8 +1496,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         R3_nx.00-00           0x00000192   0x8221                1132/1199      0/0/0
           Area Address: 49.0001
           NLPID:        0xCC 0x8E
-          Router ID:    3.3.3.3
-          IP Address:   3.3.3.3
+          Router ID:    10.36.3.3
+          IP Address:   10.36.3.3
           Topology:     IPv6 (0x2)
                         IPv4 (0x0)
           Hostname: R3_nx
@@ -1505,7 +1505,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         IS (MT-IPv6) R1_xe.02
           Metric: 40         IS-Extended R2_xr.03
           Metric: 40         IS-Extended R1_xe.02
-          Metric: 1          IP 3.3.3.3/32
+          Metric: 1          IP 10.36.3.3/32
           Metric: 40         IP 10.13.115.0/24
           Metric: 40         IP 10.23.115.0/24
           Metric: 1          IPv6 (MT-IPv6) 2001:3:3:3::3/128
@@ -1535,14 +1535,14 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         R3_nx.00-00           0x00000191   0x7535                1068/1199      0/0/0
           Area Address: 49.0001
           NLPID:        0xCC 0x8E
-          Router ID:    3.3.3.3
-          IP Address:   3.3.3.3
+          Router ID:    10.36.3.3
+          IP Address:   10.36.3.3
           Topology:     IPv6 (0x2)
                         IPv4 (0x0)
           Hostname: R3_nx
           Metric: 40         IS (MT-IPv6) R1_xe.02
           Metric: 40         IS-Extended R1_xe.02
-          Metric: 1          IP 3.3.3.3/32
+          Metric: 1          IP 10.36.3.3/32
           Metric: 40         IP 10.13.115.0/24
           Metric: 40         IP 10.23.115.0/24
           Metric: 1          IPv6 (MT-IPv6) 2001:3:3:3::3/128
@@ -1572,14 +1572,14 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         R3_nx.00-00           0x00000191   0x7535                 958/1199      0/0/0
           Area Address: 49.0001
           NLPID:        0xCC 0x8E
-          Router ID:    3.3.3.3
-          IP Address:   3.3.3.3
+          Router ID:    10.36.3.3
+          IP Address:   10.36.3.3
           Topology:     IPv6 (0x2)
                         IPv4 (0x0)
           Hostname: R3_nx
           Metric: 40         IS (MT-IPv6) R1_xe.02
           Metric: 40         IS-Extended R1_xe.02
-          Metric: 1          IP 3.3.3.3/32
+          Metric: 1          IP 10.36.3.3/32
           Metric: 40         IP 10.13.115.0/24
           Metric: 40         IP 10.23.115.0/24
           Metric: 1          IPv6 (MT-IPv6) 2001:3:3:3::3/128
