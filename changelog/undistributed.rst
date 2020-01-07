@@ -38,7 +38,12 @@
         * dir
         * show redundancy
         * show inventory
-
+    * Added parsers for ios/c7600:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+        * show module
 
 --------------------------------------------------------------------------------
                                 Fix

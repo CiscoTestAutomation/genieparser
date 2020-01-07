@@ -13,49 +13,60 @@ class ShowVersionSchema(MetaParser):
     Schema for show version
     """
     schema = {
-                'version': {
-                    'os': str,
-                    'platform': str,
-                    'version': str,
-                    'image_id': str,
-                    'compiled_by': str,
-                    'compiled_date': str,
-                    'rom': str,
-                    'rom_version': str,
-                    'image': {
-                      'text_base': str,
-                      'data_base': str,
-                    },
-                    'bootldr_version': str,
-                    'hostname': str,
-                    'uptime': str,
-                    'returned_to_rom_by': str,
-                    'system_image': str,
-                    'chassis': str,
-                    'processor_type': str,
-                    'main_mem': str,
-                    'processor_board_id': str,
-                    'cpu': {
-                      'name': str,
-                      'speed': str,
-                      'implementation': str,
-                      'rev': str,
-                      'l2_cache': str,
-                    },
-                    'last_reset': str,
-                    'softwares': list,
-                    'interfaces': {
-                      'virtual_ethernet': int,
-                      'gigabit_ethernet': int,
-                    },
-                    'memory': {
-                      'non_volatile_conf': int,
-                      'packet_buffer': int,
-                      'flash_internal_SIMM': int,
-                    },
-                    'curr_config_register': str,
-                }
+        'version': {
+            'os': str,
+            'platform': str,
+            'version': str,
+            'image_id': str,
+            'compiled_by': str,
+            'compiled_date': str,
+            'rom': str,
+            'rom_version': str,
+            Optional('image'): {
+                'text_base': str,
+                'data_base': str,
+            },
+            'bootldr_version': str,
+            'hostname': str,
+            'uptime': str,
+            'returned_to_rom_by': str,
+            'system_image': str,
+            'chassis': str,
+            'processor_type': str,
+            'main_mem': str,
+            'processor_board_id': str,
+            'cpu': {
+                'name': str,
+                'speed': str,
+                'implementation': str,
+                'rev': str,
+                'l2_cache': str,
+            },
+            'last_reset': str,
+            Optional('softwares'): list,
+            'interfaces': {
+                'virtual_ethernet': int,
+                'gigabit_ethernet': int,
+                'serial': int,
+            },
+            'memory': {
+                'non_volatile_conf': int,
+                'packet_buffer': int,
+                'flash_internal_SIMM': int,
+            },
+            'curr_config_register': str,
+            'last_reload': {
+                        'type': str,
+                        'reason': str,
+            },
+            'control_processor_uptime': str,
+            'controller': {
+                'type': str,
+                'counts': int,
+                'serial': int,
             }
+        }
+    }
 
 
 class ShowVersion(ShowVersionSchema):
@@ -81,6 +92,12 @@ class ShowVersion(ShowVersionSchema):
         p1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
                         r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
                         r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
+        
+        # Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
+        p1_1 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
+                        r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
+                        r'+Experimental)? +[Vv]ersion '
+                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
 
         # Technical Support: http://www.cisco.com/techsupport
         p2 = re.compile(r'^Technical +Support: +http\:\/\/www'
@@ -105,6 +122,9 @@ class ShowVersion(ShowVersionSchema):
 
         # cat6k_tb1 uptime is 21 weeks, 5 days, 41 minutes
         p8 = re.compile(r'^(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
+
+        # Uptime for this control processor is 22 weeks, 6 days, 1 hour, 57 minutes
+        p8_2 = re.compile(r'^Uptime for this control processor is (?P<uptime>.+)$')
 
         # System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
         p9 = re.compile(r'^System +returned +to +ROM +by '
@@ -164,12 +184,40 @@ class ShowVersion(ShowVersionSchema):
         # Configuration register is 0x102
         p30 = re.compile(r'^Configuration +register +is '
                          r'+(?P<curr_config_register>[\S]+)')
+        
+        # 1 Enhanced FlexWAN controller (4 Serial).
+        p31 = re.compile(r'^(?P<counts>\d+) (?P<type>[\S\s]+) '
+                         r'controller \((?P<serial>\d+) Serial\).$')
+        
+        # 1 Virtual Ethernet interface
+        p31_1 = re.compile(r'^(?P<interface>\d+) Virtual Ethernet interface$')
+
+        # 52 Gigabit Ethernet interfaces
+        p31_2 = re.compile(r'^(?P<interface>\d+) Gigabit Ethernet interfaces$')
+
+        # 4 Serial interfaces
+        p31_3 = re.compile(r'^(?P<interface>\d+) Serial interfaces$')
+
+        # Last reload type: Normal Reload
+        p32_1 = re.compile(r'^Last reload type: (?P<type>[\S\s]+)$')
+
+        # Last reload reason: abort at PC 0x433A11BC
+        p32_2 = re.compile(r'^Last reload reason: (?P<reason>[\S\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
             m = p1.match(line)
+            if m:
+                if 'version' not in ver_dict:
+                    version_dict = ver_dict.setdefault('version', {})
+                for k in ['os', 'platform', 'image_id', 'version']:
+                    version_dict[k] = m.groupdict()[k]
+                continue
+            
+            # Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
+            m = p1_1.match(line)
             if m:
                 if 'version' not in ver_dict:
                     version_dict = ver_dict.setdefault('version', {})
@@ -218,6 +266,12 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 version_dict['hostname'] = m.groupdict()['hostname']
                 version_dict['uptime'] = m.groupdict()['uptime']
+                continue
+
+            # Uptime for this control processor is 22 weeks, 6 days, 1 hour, 57 minutes
+            m = p8_2.match(line)
+            if m:
+                version_dict['control_processor_uptime'] = m.groupdict()['uptime']
                 continue
 
             # System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
@@ -321,6 +375,57 @@ class ShowVersion(ShowVersionSchema):
             m = p30.match(line)
             if m:
                 version_dict['curr_config_register'] = m.groupdict()['curr_config_register']
+                continue
+
+            # 1 Enhanced FlexWAN controller (4 Serial).
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                if 'controller' not in version_dict:
+                    controller_dict = version_dict.setdefault('controller', {})
+                controller_dict['type'] = group['type']
+                controller_dict['counts'] = int(group['counts'])
+                controller_dict['serial'] = int(group['serial'])
+                continue
+
+            # 1 Virtual Ethernet interface
+            m = p31_1.match(line)
+            if m:
+                if 'interfaces' not in version_dict:
+                    intf_dict = version_dict.setdefault('interfaces', {})
+                intf_dict['virtual_ethernet'] = int(m.groupdict()['interface'])
+                continue
+
+            # 52 Gigabit Ethernet interfaces
+            m = p31_2.match(line)
+            if m:
+                if 'interfaces' not in version_dict:
+                    intf_dict = version_dict.setdefault('interfaces', {})
+                intf_dict['gigabit_ethernet'] = int(m.groupdict()['interface'])
+                continue
+
+            # 4 Serial interfaces
+            m = p31_3.match(line)
+            if m:
+                if 'interfaces' not in version_dict:
+                    intf_dict = version_dict.setdefault('interfaces', {})
+                intf_dict['serial'] = int(m.groupdict()['interface'])
+                continue
+
+            # Last reload type: Normal Reload
+            m = p32_1.match(line)
+            if m:
+                if 'last_reload' not in version_dict:
+                    last_reload_dict = version_dict.setdefault('last_reload', {})
+                last_reload_dict['type'] = m.groupdict()['type']
+                continue
+
+            # Last reload reason: abort at PC 0x433A11BC
+            m = p32_2.match(line)
+            if m:
+                if 'last_reload' not in version_dict:
+                    last_reload_dict = version_dict.setdefault('last_reload', {})
+                last_reload_dict['reason'] = m.groupdict()['reason']
                 continue
 
         return ver_dict
@@ -503,14 +608,16 @@ class ShowRedundancy(ShowRedundancySchema):
             r'^Maintenance +Mode += +(?P<maint_mode>\S+)$')
 
         # Communications = Down      Reason: Simplex mode
-        p9 = re.compile(r'^Communications += +(?P<communications>\S+)\s'
-                        r'+Reason: +(?P<communications_reason>[\S\s]+)$')
+        # Communications = Up
+        p9 = re.compile(r'^Communications += +(?P<communications>\S+)'
+                        r'(\s+Reason: +(?P<communications_reason>[\S\s]+))?$')
 
         # Active Location = slot 1
-        p10 = re.compile(r'^Active +Location += +(?P<slot>[\S\s]+)$')
+        # Standby Location = slot 5
+        p10 = re.compile(r'^\S+ +Location += +(?P<slot>[\S ]+)$')
 
         # Current Software state = ACTIVE
-        p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>\S+)$')
+        p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>[\S ]+)$')
 
         # Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
         p12 = re.compile(r'^Uptime +in +current +state += '
@@ -606,20 +713,23 @@ class ShowRedundancy(ShowRedundancySchema):
             # Communications = Down      Reason: Failure
             m = p9.match(line)
             if m:
-                red_dict['communications'] = m.groupdict()['communications']
-                red_dict['communications_reason'] = m.groupdict()['communications_reason']
+                group = m.groupdict()
+                red_dict['communications'] = group['communications']
+                communications_reason = group.get('communications_reason')
+                if communications_reason:
+                    red_dict['communications_reason'] = group['communications_reason']
                 continue
 
             # Active Location = slot 1
             m = p10.match(line)
             if m:
                 slot = m.groupdict()['slot']
-                if 'slot' not in redundancy_dict:
-                    slot_dict = redundancy_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                slot_dict = redundancy_dict.setdefault(
+                    'slot', {}).setdefault(slot, {})
                 continue
 
             # Current Software state = ACTIVE
+            # Current Software state = STANDBY HOT
             m = p11.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -787,6 +897,7 @@ class ShowModuleSchema(MetaParser):
                     Optional('fw_ver'): str,
                     Optional('sw_ver'): str,
                     'status': str,
+                    Optional('online_diag_status'): str,
                     Optional('subslot'): {
                         Any(): {
                             'hw_ver': str,
@@ -807,6 +918,7 @@ class ShowModuleSchema(MetaParser):
                     Optional('fw_ver'): str,
                     Optional('sw_ver'): str,
                     'status': str,
+                    Optional('online_diag_status'): str,
                     Optional('subslot'): {
                         Any(): {
                             'hw_ver': str,
@@ -883,6 +995,9 @@ class ShowModule(ShowModuleSchema):
         # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
         r5 = re.compile(r'(?P<mod>\d+)\s+(?P<sub_mod>.+)\s+(?P<model>\S+)\s+'
                          '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
+
+        # 1  Pass
+        r6 = re.compile(r'(?P<mod>\d+) +(?P<online_diag_status>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1015,6 +1130,21 @@ class ShowModule(ShowModuleSchema):
                 submodule_dict['serial_number'] = serial
                 submodule_dict['model'] = model
 
+                continue
+            
+            # 1  Pass
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                mod = group['mod']
+
+                slot_code = [*parsed_output.get('slot', {}).get(mod, {}).keys()][0]
+
+                parsed_output\
+                    .setdefault('slot', {})\
+                    .setdefault(mod, {})\
+                    .setdefault(slot_code, {})\
+                    .setdefault('online_diag_status', group['online_diag_status'])
                 continue
 
         return parsed_output
