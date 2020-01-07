@@ -614,7 +614,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
         # Active Location = slot 1
         # Standby Location = slot 5
-        p10 = re.compile(r'^(Active|Standby) +Location += +(?P<slot>[\S ]+)$')
+        p10 = re.compile(r'^\S+ +Location += +(?P<slot>[\S ]+)$')
 
         # Current Software state = ACTIVE
         p11 = re.compile(r'^Current +Software +state += +(?P<curr_sw_state>[\S ]+)$')
