@@ -1010,7 +1010,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 62000, (Received from a RR-client)
         # 2, imported safety path from 50000:2:172.17.0.0/16
         # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
-        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
         # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
         p17=re.compile(r'^(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)'
                        r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\w\s\.\:]'
@@ -1490,7 +1490,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
             # 62000, (Received from a RR-client)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
-            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
             m = p17.match(line)
             if m and refresh_epoch_flag:
