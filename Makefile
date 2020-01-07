@@ -185,7 +185,7 @@ json:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating Parser json file"
 	@echo ""
-	@python -c "from genie.make_json import make_genieparser; make_genieparser()"
+	@python -c "from genie.json.make_json import make_genieparser; make_genieparser()"
 	@echo ""
 	@echo "Done."
 	@echo ""
