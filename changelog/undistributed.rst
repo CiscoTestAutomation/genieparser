@@ -8,12 +8,6 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-* NXOS:
-    * Added ShowErrdisableRecovery for
-        * show errdisable recovery
-    * Added ShowIsisHostnameDetail for commands:
-        * show isis hostname detail
-        * show isis hostname detail vrf {vrf}
 
 * IOSXE
     * Added ShowProcessesMemory for:
@@ -29,46 +23,46 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
+    *Added ShowMplsLabelRange for:
+        * show mpls label range
+    * Added ShowIsisFRRSummary for:
+        * show isis fast-reroute summary
+    * Added ShowBgpEgressEngineering for:
+        * show bgp egress-engineering
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added parsers for ios/cat6k:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+    * Added parsers for ios/c7600:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+        * show module
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* IOSXR
-    * Updated ShowIsis
-        * Updated regex to support more various output
-
-* NXOS
-    * Updated ShowAccessLists for:
-        * Updated few keys' names, one key's type by following ACL's Ops structure
-    * Updated ShowIpv6MldLocalGroups for:
-        * Added support for various device outputs
-    * Updated ShowIpv6MldGroups for:
-        * Added support for various device outputs
-    * Updated ShowIsisHostname for:
-        * Updated int to list for level key
-    * Updated ShowFabricMulticastGlobals for:
-        * Added support for various device outputs
-
 * IOSXE
-    * Updated ShowPolicyMapTypeSuperParser
-	    * Changed key 'service_policy', 'policy_name', 'priority_level' to Optional
-		* Updated regex match queue_limit
-    * Updated ShowAccessLists, ShowAccessListsSummary
-        * Changed protocol names 'tcp; udp; pim' of l3 into 'ipv4' or 'ipv6'
-
-* IOSXR
-    * Updated ShowRouteIpv4 for:
-        * Updated schema to support more ouput
-        * Removed ShowRouteIpDistributor, ShowRouteIpWord class
-    * Updated ShowRouteIpv6 for:
-        * Updated schema to support more ouput
-        * Removed ShowRouteIpv6Distributor, ShowRouteIpv6Word class
     * Updated ShowAuthenticationSessionsInterfaceDetails
-	    * Changed key 'template' to Optional
-		* Added 'security_policy' and 'security_status' to 'server_policies'
-		* Added a regex to match Server Policies
+	    * Change in order of Server Policies no longer breaks parsing
+    * Updated ShowClnsIsNeighborsDetail
+        * Changed regex and schema to support type 'L1L2'
+    * Updated ShowIsisDatabaseDetail
+        * Changed schema to support more various output
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
+		
+    * Updated ShowClnsProtocol
+        * Changed 'Null Tag' to 'null' 
+    * Updated ShowInterfacesDescription
+	    * Modified regex to fix parsing as per customer output
 
+* DNAC
+    * Updated Interface for:
+        * Supporting hostname in the schema

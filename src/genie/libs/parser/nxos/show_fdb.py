@@ -1,11 +1,18 @@
-"""show_fdb.py
-   supported commands:
-     *  show mac address-table vni <WORD> | grep <WORD>
-     *  show mac address-table local vni <WORD>
-     *  show mac address-table
-     *  show mac address-table aging-time
-     *  show mac address-table limit
-     *  show system internal l2fwder mac
+""" show_fdb.py
+    supported commands:
+        * show mac address-table vni <WORD> | grep <WORD>
+        * show mac address-table local vni <WORD>
+        * show mac address-table
+        * show mac address-table aging-time
+        * show mac address-table limit
+        * show system internal l2fwder mac
+        * show mac address-table vlan {vlan}
+        * show mac address-table interface {interface}
+        * show mac address-table interface {interface} vlan {vlan}
+        * show mac address-table address {address}
+        * show mac address-table address {address} vlan {vlan}
+        * show mac address-table address {address} interface {interface}
+        * show mac address-table address {address} interface {interface} vlan {vlan}
 
 """
 # Python
@@ -22,7 +29,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Use
 from genie.libs.parser.utils.common import Common
 
-class ShowMacAddressTableVniSchema(MetaParser):
+class ShowMacAddressTableBaseSchema(MetaParser):
     """Schema for:
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'
@@ -59,7 +66,7 @@ class ShowMacAddressTableVniSchema(MetaParser):
             },
         }
 
-class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
+class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
     """Base parser for:
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'
@@ -120,7 +127,7 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
         return ret_dict
 
 
-class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
+class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableBaseSchema):
     """Parser for:
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'"""
@@ -149,15 +156,41 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
         return ret_dict
 
 
-class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
+class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableBaseSchema):
     """Parser for show mac address-table"""
 
-    cli_command = 'show mac address-table'
+    cli_command = [
+        'show mac address-table',
+        'show mac address-table vlan {vlan}',
+        'show mac address-table interface {interface}',
+        'show mac address-table interface {interface} vlan {vlan}',
+        'show mac address-table address {address}',
+        'show mac address-table address {address} vlan {vlan}',
+        'show mac address-table address {address} interface {interface}',
+        'show mac address-table address {address} interface {interface} vlan {vlan}'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, address=None, interface=None, vlan=None, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if address and interface and vlan:
+                cmd = self.cli_command[7].format(address=address, interface=interface, vlan=vlan)
+            elif address and interface:
+                cmd = self.cli_command[6].format(address=address, interface=interface)
+            elif address and vlan:
+                cmd = self.cli_command[5].format(address=address, vlan=vlan)
+            elif address:
+                cmd = self.cli_command[4].format(address=address)
+            elif interface and vlan:
+                cmd = self.cli_command[3].format(interface=interface, vlan=vlan)
+            elif interface:
+                cmd = self.cli_command[2].format(interface=interface)
+            elif vlan:
+                cmd = self.cli_command[1].format(vlan=vlan)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -311,7 +344,7 @@ class ShowMacAddressTableLimit(ShowMacAddressTableLimitSchema):
         return ret_dict
 
 
-class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
+class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableBaseSchema):
     """Parser for show system internal l2fwder mac"""
 
     cli_command = 'show system internal l2fwder mac'

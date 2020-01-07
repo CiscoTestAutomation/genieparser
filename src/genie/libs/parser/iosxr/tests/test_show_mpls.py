@@ -3,18 +3,55 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mpls
-from genie.libs.parser.iosxr.show_mpls import (ShowMplsLdpNeighborBrief, 
+from genie.libs.parser.iosxr.show_mpls import (ShowMplsLabelRange,
+                                               ShowMplsLdpNeighborBrief, 
                                                ShowMplsLabelTableDetail,
                                                ShowMplsInterfaces,
                                                ShowMplsForwarding,
                                                ShowMplsForwardingVrf)
+
+# ==================================================
+#  Unit test for 'show mpls label range'
+# ==================================================
+class TestShowMplsLabelRange(unittest.TestCase):
+
+    '''Unit test for 'show mpls label range' '''
+
+    device = Device(name ='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'range_for_dynamic_labels': {
+            'min_range': 24000,
+            'max_range': 1048575
+        },
+    }
+
+    golden_output = {'execute.return_value':'''
+    RP/0/RP0/CPU0:R3#show mpls label range 
+    Thu Aug 29 5:24:12.183 UTC
+    Range for dynamic labels: Min/Max: 24000/1048575
+    '''}
+
+    def test_show_mpls_label_range_empty(self):  
+        self.device = Mock(**self.empty_output)
+        obj = ShowMplsLabelRange(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_label_range_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsLabelRange(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 # ==================================================
@@ -800,7 +837,7 @@ class TestShowMplsForwarding(unittest.TestCase):
                 "outgoing_label": {
                     "Unlabelled": {
                         "prefix_or_id": {
-                            "1.1.1.1/32": {
+                            "10.4.1.1/32": {
                                 "outgoing_interface": {
                                     "GigabitEthernet0/0/0/0.90": {
                                         "next_hop": "10.12.90.1",
@@ -915,7 +952,7 @@ class TestShowMplsForwarding(unittest.TestCase):
                 "outgoing_label": {
                     "Unlabelled": {
                         "prefix_or_id": {
-                            "1.1.1.1/32[V]": {
+                            "10.4.1.1/32[V]": {
                                 "outgoing_interface": {
                                     "GigabitEthernet0/0/0/0.390": {
                                         "next_hop": "10.12.90.1",
@@ -946,7 +983,7 @@ class TestShowMplsForwarding(unittest.TestCase):
                 "outgoing_label": {
                     "Unlabelled": {
                         "prefix_or_id": {
-                            "3.3.3.3/32[V]": {
+                            "10.36.3.3/32[V]": {
                                 "outgoing_interface": {
                                     "GigabitEthernet0/0/0/1.390": {
                                         "next_hop": "10.23.90.3",
@@ -962,7 +999,7 @@ class TestShowMplsForwarding(unittest.TestCase):
                 "outgoing_label": {
                     "Unlabelled": {
                         "prefix_or_id": {
-                            "1.0.0.0/8": {
+                            "10.1.0.0/8": {
                                 "outgoing_interface": {
                                     "GigabitEthernet0/0/0/0.120": {
                                         "next_hop": "10.12.120.1",
@@ -1003,7 +1040,7 @@ class TestShowMplsForwarding(unittest.TestCase):
         Local  Outgoing    Prefix             Outgoing     Next Hop        Bytes
         Label  Label       or ID              Interface                    Switched
         ------ ----------- ------------------ ------------ --------------- ------------
-        24000  Unlabelled  1.1.1.1/32         Gi0/0/0/0.90 10.12.90.1      9321675
+        24000  Unlabelled  10.4.1.1/32         Gi0/0/0/0.90 10.12.90.1      9321675
         24002  Pop         10.13.110.0/24     Gi0/0/0/0.110 10.12.110.1     0
         24003  Unlabelled  10.13.115.0/24     Gi0/0/0/0.115 10.12.115.1     0
         24004  Unlabelled  10.13.90.0/24      Gi0/0/0/0.90 10.12.90.1      0
@@ -1016,11 +1053,11 @@ class TestShowMplsForwarding(unittest.TestCase):
         24007  Unlabelled  2001:3:3:3::3/128[V]   \
                                             Gi0/0/0/1.390 fe80::5c00:ff:fe02:7   \
                                                                         3762357
-        24008  Unlabelled  1.1.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      6281421
+        24008  Unlabelled  10.4.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      6281421
         24009  Aggregate   VRF1: Per-VRF Aggr[V]   \
                                             VRF1                         0
-        24010  Unlabelled  3.3.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      7608898
-        24011  Unlabelled  1.0.0.0/8          Gi0/0/0/0.120 10.12.120.1     0
+        24010  Unlabelled  10.36.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      7608898
+        24011  Unlabelled  10.1.0.0/8          Gi0/0/0/0.120 10.12.120.1     0
         24012  Unlabelled  10.13.120.0/24     Gi0/0/0/0.120 10.12.120.1     0
             Unlabelled  10.13.120.0/24     Gi0/0/0/1.120 10.23.120.3     0
     '''}
@@ -1109,7 +1146,7 @@ class TestShowMplsForwardingVrf(unittest.TestCase):
                         "outgoing_label": {
                             "Unlabelled": {
                                 "prefix_or_id": {
-                                    "1.1.1.1/32[V]": {
+                                    "10.4.1.1/32[V]": {
                                         "outgoing_interface": {
                                             "GigabitEthernet0/0/0/0.390": {
                                                 "next_hop": "10.12.90.1",
@@ -1140,7 +1177,7 @@ class TestShowMplsForwardingVrf(unittest.TestCase):
                         "outgoing_label": {
                             "Unlabelled": {
                                 "prefix_or_id": {
-                                    "3.3.3.3/32[V]": {
+                                    "10.36.3.3/32[V]": {
                                         "outgoing_interface": {
                                             "GigabitEthernet0/0/0/1.390": {
                                                 "next_hop": "10.23.90.3",
@@ -1171,10 +1208,10 @@ class TestShowMplsForwardingVrf(unittest.TestCase):
         24007  Unlabelled  2001:3:3:3::3/128[V]   \
                                               Gi0/0/0/1.390 fe80::5c00:ff:fe02:7   \
                                                                           3929713
-        24008  Unlabelled  1.1.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      6560001
+        24008  Unlabelled  10.4.1.1/32[V]      Gi0/0/0/0.390 10.12.90.1      6560001
         24009  Aggregate   VRF1: Per-VRF Aggr[V]   \
                                               VRF1                         0
-        24010  Unlabelled  3.3.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      7947290
+        24010  Unlabelled  10.36.3.3/32[V]      Gi0/0/0/1.390 10.23.90.3      7947290
     '''}
 
     def test__empty(self):

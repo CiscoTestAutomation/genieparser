@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 from genie.libs.parser.nxos.show_spanning_tree import (ShowSpanningTreeMst,
@@ -607,7 +607,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
 
          MST0000 is executing the mstp compatible Spanning Tree protocol
       Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
-      Configured hello time 10, max age 40, forward delay 30
+      Configured hello time 10, fex hello time 10, max age 40, forward delay 30
       We are the root of the spanning tree
       Topology change flag not set, detected flag not set
       Number of topology changes 0 last change occurred 142:22:13 ago
@@ -733,6 +733,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                 }
             },
             'hello_time': 10,
+            'fex_hello_time': 10,
             'max_age': 40,
             'forwarding_delay': 30
         }
@@ -822,7 +823,6 @@ DS1-R101# sh spanning-tree detail
  VLAN0122 is executing the rstp compatible Spanning Tree protocol
   Bridge Identifier has priority 20480, sysid 122, address 0023.04ee.be1f
   Configured hello time 2, max age 20, forward delay 15
-  We are the root of the spanning tree
   Topology change flag not set, detected flag not set
   Number of topology changes 9 last change occurred 123:10:02 ago
           from port-channel31
@@ -845,7 +845,7 @@ DS1-R101# sh spanning-tree detail
    Port path cost 1, Port priority 128, Port Identifier 128.4194
    Designated root has priority 20602, address 0023.04ee.be1f
    Designated bridge has priority 20602, address 0026.981e.c642
-   Designated port id is 128.4194, designated path cost 0
+   Designated port id is 128.4194, designated path cost 0, Topology change is set
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
    Link type is point-to-point by default
@@ -1087,6 +1087,7 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 0,
                                 'bpdu_sent': 2725887
                             },
+                            'topology_change': True,
                             'designated_bridge_address': '0026.981e.c642',
                             'designated_bridge_priority': 20602,
                             'designated_path_cost': 0,
@@ -1109,7 +1110,6 @@ DS1-R101# sh spanning-tree detail
                             }
                         }
                     },
-                    'root_of_the_spanning_tree': True,
                     'time_since_topology_change': '123:10:02',
                     'timers': {
                         'hello': 0,
