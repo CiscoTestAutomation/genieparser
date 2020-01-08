@@ -73,4 +73,4 @@
 * IOS
     * Updated ShowVersion for:
         * Optional key issue for ios/cat6k platform
-        * Updating symbolic link to parse platform specific outputs
+        * * Updating symbolic link to platform specific unittests
