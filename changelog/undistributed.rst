@@ -66,3 +66,8 @@
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
+
+* IOS
+    * Updated ShowVersion for:
+        * Optional key issue for ios/cat6k platform
+        * Updating symbolic link to parse platform specific outputs
