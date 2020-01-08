@@ -238,13 +238,11 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
             Any(): {
                 'label': {
                     Any(): {
-                        'owner': str,
-                        'state': str,
-                        'rewrite': str,
-                        Optional('new_owner'):{
-                            'owner': str,
-                            'state': str,
-                            'rewrite': str
+                        'owner': {
+                            Any():{
+                                'state': str,
+                                'rewrite': str,
+                            },
                         },
                         Optional('label_type'): {
                             Any(): {
@@ -290,8 +288,8 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         # ----- ------- ------------------------------- ------ -------
         # 0     0       LSD(A)                          InUse  Yes
         # 0     16000   ISIS(A):SR                      InUse  No
-        # 0     16001   LDP:lsd_test_ut              InUse  No
-        #       Static:lsd_test_ut           InUse  No
+        # 0     16001   LDP:lsd_test_ut                 InUse  No
+        #               Static:lsd_test_ut              InUse  No
         p1 = re.compile(r'(?P<table>\d+\s+)?(?P<label>\d+\s+)?(?P<owner>[\S]+)'
         '\s+(?P<state>\S+)\s+(?P<rewrite>\w+)$')
 
@@ -317,23 +315,23 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             # Table Label   Owner                           State  Rewrite
             # ----- ------- ------------------------------- ------ -------
             # 0     0       LSD(A)                          InUse  Yes
-            # 0     16001   LDP:lsd_test_ut              InUse  No
-            #       Static:lsd_test_ut                  InUse  No
+            # 0     16001   LDP:lsd_test_ut                 InUse  No
+            #       Static:lsd_test_ut                      InUse  No
             m = p1.match(line)
             if m:
-                label_list = ['owner', 'state', 'rewrite']
-                if (m.groupdict()['table']) != None and\
-                    (m.groupdict()['label']) != None :
+                label_list = ['state', 'rewrite']
+                if (m.groupdict()['table']) and (m.groupdict()['label']):
                     table = int(m.groupdict()['table'].strip())
                     label = int(m.groupdict()['label'].strip())
-                    final_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
-                        setdefault('label', {}).setdefault(label, {})
-                else:
-                    final_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
-                        setdefault('label', {}).setdefault(label, {}).setdefault('new_owner', {})
+                    final_dict = mpls_dict.setdefault('table', {}).\
+                                setdefault(table, {}).\
+                                setdefault('label', {}).\
+                                setdefault(label, {}).\
+                                setdefault('owner', {})
                 
+                owner_dict = final_dict.setdefault(m.groupdict()['owner'], {})
                 for key in label_list:
-                    final_dict.update({key:m.groupdict()[key]})
+                    owner_dict.update({key:m.groupdict()[key]})
                 continue
 
             # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
@@ -377,7 +375,6 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 latest_dict.update({'default':True if m.groupdict()['default'] != None\
                     else False})
                 latest_dict.update({'prefix':m.groupdict()['prefix']})
-
 
         return mpls_dict
 

@@ -235,92 +235,133 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
 # ==================================================
 class TestShowMplsLabelTableDetail(unittest.TestCase):
     
-    '''Unit test for 'show mpls label table detail' '''
+    '''Unit test for show mpls label table detail'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'table': {
-            0: {
-                'label': {
-                    0: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    1: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    2: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    13: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    16000: {
-                        'label_type': {
-                            'Lbl-blk SRGB': {
-                                'size': 8000,
-                                'start_label': 16000,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'No',
-                        'state': 'InUse'},
-                    24000: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 0,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.1.2.2',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24001: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 2,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.1.2.2',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24002: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 1,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.1.2.2',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24003: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 3,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.1.2.2',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'}
-                }
-            }
-        }
+        'table':{
+           0:{
+              'label':{
+                 0:{
+                    'owner':{
+                       'LSD(A)':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                 },
+                 1:{
+                    'owner':{
+                       'LSD(A)':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                 },
+                 2:{
+                    'owner':{
+                       'LSD(A)':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                 },
+                 13:{
+                    'owner':{
+                       'LSD(A)':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                 },
+                 16000:{
+                    'owner':{
+                       'ISIS(A):SR':{
+                          'state':'InUse',
+                          'rewrite':'No'
+                       },
+                    },
+                    'label_type':{
+                       'Lbl-blk SRGB':{
+                          'vers':0,
+                          'start_label':16000,
+                          'size':8000
+                       },
+                    },
+                 },
+                 24000:{
+                    'owner':{
+                       'ISIS(A):SR':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                    'label_type':{
+                       'SR Adj Segment IPv4':{
+                          'vers':0,
+                          'index':0,
+                          'type':0,
+                          'interface':'Gi0/0/0/1',
+                          'nh':'10.1.2.2'
+                       },
+                    },
+                 },
+                 24001:{
+                    'owner':{
+                       'ISIS(A):SR':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                    'label_type':{
+                       'SR Adj Segment IPv4':{
+                          'vers':0,
+                          'index':2,
+                          'type':0,
+                          'interface':'Gi0/0/0/1',
+                          'nh':'10.1.2.2'
+                       },
+                    },
+                 },
+                 24002:{
+                    'owner':{
+                       'ISIS(A):SR':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       },
+                    },
+                    'label_type':{
+                       'SR Adj Segment IPv4':{
+                          'vers':0,
+                          'index':1,
+                          'type':0,
+                          'interface':'Gi0/0/0/1',
+                          'nh':'10.1.2.2'
+                       },
+                    },
+                 },
+                 24003:{
+                    'owner':{
+                       'ISIS(A):SR':{
+                          'state':'InUse',
+                          'rewrite':'Yes'
+                       }
+                    },
+                    'label_type':{
+                       'SR Adj Segment IPv4':{
+                          'vers':0,
+                          'index':3,
+                          'type':0,
+                          'interface':'Gi0/0/0/1',
+                          'nh':'10.1.2.2'
+                       },
+                    },
+                 },
+              },
+           },
+        },
     }
 
     golden_output1 = {'execute.return_value': '''
@@ -345,145 +386,211 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'table': {
-            0: {
-                'label': {
-                    0: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    1: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    2: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    13: {
-                        'owner': 'LSD(A)',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    15000: {
-                        'label_type': {
-                            'Lbl-blk SRLB': {
-                                'size': 1000,
-                                'start_label': 15000,
-                                'vers': 0,
-                                'app_notify': 0}
-                        },
-                        'owner': 'LSD(A)',
-                        'rewrite': 'No',
-                        'state': 'InUse'},
-                    16000: {
-                        'label_type': {
-                            'Lbl-blk SRGB': {
-                                'size': 7000,
-                                'start_label': 16000,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'No',
-                        'state': 'InUse'},
-                    24000: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 0,
-                                'interface': 'Gi0/0/0/0',
-                                'nh': '10.1.3.1',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24001: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 2,
-                                'interface': 'Gi0/0/0/0',
-                                'nh': '10.1.3.1',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24002: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 1,
-                                'interface': 'Gi0/0/0/0',
-                                'nh': '10.1.3.1',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24003: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 3,
-                                'interface': 'Gi0/0/0/0',
-                                'nh': '10.1.3.1',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24004: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 0,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.3.4.4',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24005: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 2,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.3.4.4',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24006: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 1,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.3.4.4',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'},
-                    24007: {
-                        'label_type': {
-                            'SR Adj Segment IPv4': {
-                                'index': 3,
-                                'interface': 'Gi0/0/0/1',
-                                'nh': '10.3.4.4',
-                                'type': 0,
-                                'vers': 0}
-                        },
-                        'owner': 'ISIS(A):SR',
-                        'rewrite': 'Yes',
-                        'state': 'InUse'}
+       'table':{
+          0:{
+             'label':{
+                0:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                1:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                2:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                13:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                15000:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'Lbl-blk SRLB':{
+                         'vers':0,
+                         'start_label':15000,
+                         'size':1000,
+                         'app_notify':0
+                      }
+                   }
+                },
+                16000:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'Lbl-blk SRGB':{
+                         'vers':0,
+                         'start_label':16000,
+                         'size':7000
+                      }
+                   }
+                },
+                24000:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':0,
+                         'type':0,
+                         'interface':'Gi0/0/0/0',
+                         'nh':'10.1.3.1'
+                      }
+                   }
+                },
+                24001:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':2,
+                         'type':0,
+                         'interface':'Gi0/0/0/0',
+                         'nh':'10.1.3.1'
+                      }
+                   }
+                },
+                24002:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':1,
+                         'type':0,
+                         'interface':'Gi0/0/0/0',
+                         'nh':'10.1.3.1'
+                      }
+                   }
+                },
+                24003:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':3,
+                         'type':0,
+                         'interface':'Gi0/0/0/0',
+                         'nh':'10.1.3.1'
+                      }
+                   }
+                },
+                24004:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':0,
+                         'type':0,
+                         'interface':'Gi0/0/0/1',
+                         'nh':'10.3.4.4'
+                      }
+                   }
+                },
+                24005:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':2,
+                         'type':0,
+                         'interface':'Gi0/0/0/1',
+                         'nh':'10.3.4.4'
+                      }
+                   }
+                },
+                24006:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':1,
+                         'type':0,
+                         'interface':'Gi0/0/0/1',
+                         'nh':'10.3.4.4'
+                      }
+                   }
+                },
+                24007:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   },
+                   'label_type':{
+                      'SR Adj Segment IPv4':{
+                         'vers':0,
+                         'index':3,
+                         'type':0,
+                         'interface':'Gi0/0/0/1',
+                         'nh':'10.3.4.4'
+                      }
+                   }
                 }
-            }
-        }
+             }
+          }
+       }
     }
 
     golden_output2 = {'execute.return_value': '''
@@ -517,97 +624,123 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
           (SR Adj Segment IPv4, vers:0, index=3, type=0, intf=Gi0/0/0/1, nh=10.3.4.4)
     '''}
     golden_parsed_output3 = {
-        'table':{
-            0:{
-                'label':{
-                    0:{
-                        'owner': 'LSD',
-                        'state': 'InUse',
-                        'rewrite': 'Yes',
-                    },
-                    1:{
-                        'owner': 'LSD',
-                        'state': 'InUse',
-                        'rewrite': 'Yes',
-                    },
-                    2:{
-                        'owner': 'LSD',
-                        'state': 'InUse',
-                        'rewrite': 'Yes',
-                    },
-                    13:{
-                        'owner': 'LSD',
-                        'state': 'InUse',
-                        'rewrite': 'Yes',
-                    },
-                    44:{
-                        'owner': 'Static',
-                        'state': 'InUse',
-                        'rewrite': 'No',
-                        'label_type': {
-                            'IPv4':{
-                                'vers':0,
-                                'default': True,
-                                'prefix': '2.2.2.2/3'
-                            },
-                        },
-                    },
-                    1999:{
-                        'owner': 'Static',
-                        'state': 'InUse',
-                        'rewrite': 'No',
-                        'label_type': {
-                            'IPv4':{
-                                'vers':0,
-                                'default': True,
-                                'prefix': '1.1.1.1/24'
-                            },
-                        },
-                    },
-                    16001:{
-                        'owner': 'LDP:lsd_test_ut',
-                        'state': 'InUse',
-                        'rewrite': 'No',
-                        'new_owner':{
-                            'owner': 'Static:lsd_test_ut',
-                            'state': 'InUse',
-                            'rewrite': 'No'
-                        },
-                        'label_type': {
-                            'IPv4':{
-                                'vers':0,
-                                'default': False,
-                                'prefix': '9.10.10.10/15'
-                            },
-                        },
-                    },
-                    19990:{
-                        'owner': 'Static',
-                        'state': 'InUse',
-                        'rewrite': 'No',
-                        'label_type': {
-                            'IPv4':{
-                                'vers':0,
-                                'default': True,
-                                'prefix': '1.1.1.4/24'
-                            },
-                        },
-                    },
-                    19999:{
-                        'owner': 'Static',
-                        'state': 'InUse',
-                        'rewrite': 'No',
-                        'label_type': {
-                            'IPv4':{
-                                'vers':0,
-                                'default': True,
-                                'prefix': '1.1.1.3/24'
-                            },
-                        },
-                    },
+       'table':{
+          0:{
+             'label':{
+                0:{
+                   'owner':{
+                      'LSD':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
                 },
-            },
-        },
+                1:{
+                   'owner':{
+                      'LSD':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                2:{
+                   'owner':{
+                      'LSD':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                13:{
+                   'owner':{
+                      'LSD':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                44:{
+                   'owner':{
+                      'Static':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'IPv4':{
+                         'vers':0,
+                         'default':True,
+                         'prefix':'2.2.2.2/3'
+                      }
+                   }
+                },
+                1999:{
+                   'owner':{
+                      'Static':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'IPv4':{
+                         'vers':0,
+                         'default':True,
+                         'prefix':'1.1.1.1/24'
+                      }
+                   }
+                },
+                16001:{
+                   'owner':{
+                      'LDP:lsd_test_ut':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      },
+                      'Static:lsd_test_ut':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'IPv4':{
+                         'vers':0,
+                         'default':False,
+                         'prefix':'9.10.10.10/15'
+                      }
+                   }
+                },
+                19990:{
+                   'owner':{
+                      'Static':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'IPv4':{
+                         'vers':0,
+                         'default':True,
+                         'prefix':'1.1.1.4/24'
+                      }
+                   }
+                },
+                19999:{
+                   'owner':{
+                      'Static':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   },
+                   'label_type':{
+                      'IPv4':{
+                         'vers':0,
+                         'default':True,
+                         'prefix':'1.1.1.3/24'
+                      }
+                   }
+                }
+             }
+          }
+       }
     }
 
     golden_output3 = {'execute.return_value':''' 
@@ -668,53 +801,77 @@ class TestShowMplsLabelTablePrivate(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'table':{
-            0:{
-                'label':{
-                    0:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    1:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    2:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    13:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    15000:{
-                        'owner': 'LSD(A)',
-                        'state': 'InUse',
-                        'rewrite': 'No'
-                        },
-                    16000:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'No'
-                        },
-                    24000:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    24001:{
-                        'owner': 'ISIS(A):SR',
-                        'state': 'InUse',
-                        'rewrite': 'Yes'
-                        },
-                    },
+       'table':{
+          0:{
+             'label':{
+                0:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
                 },
-            },
-        }
+                1:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                2:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                13:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                15000:{
+                   'owner':{
+                      'LSD(A)':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   }
+                },
+                16000:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'No'
+                      }
+                   }
+                },
+                24000:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                },
+                24001:{
+                   'owner':{
+                      'ISIS(A):SR':{
+                         'state':'InUse',
+                         'rewrite':'Yes'
+                      }
+                   }
+                }
+             }
+          }
+       }
+    }
 
     golden_output = {'execute.return_value': '''
     RP/0/RP0/CPU0:R3#show mpls label table private 
