@@ -665,7 +665,6 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
 # ==================================================
 class TestShowMplsLabelTablePrivate(unittest.TestCase):
 
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
