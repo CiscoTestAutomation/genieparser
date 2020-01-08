@@ -29,6 +29,9 @@
         * show isis fast-reroute summary
     * Added ShowBgpEgressEngineering for:
         * show bgp egress-engineering
+    * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
+        * show traffic-collector external-interface
+        * show traffic-collector ipv4 counters prefix <prefix> detail
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
