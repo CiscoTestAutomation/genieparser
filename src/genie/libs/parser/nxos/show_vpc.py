@@ -25,7 +25,9 @@ class ShowVpcSchema(MetaParser):
     schema = {
         'vpc_domain_id': str,
         'vpc_peer_status': str,
+        Optional('vpc_plus_switch_id'): str,
         'vpc_peer_keepalive_status': str,
+        Optional('vpc_fabricpath_status'): str,
         'vpc_configuration_consistency_status': str,
         Optional('vpc_configuration_consistency_reason'): str,
         Optional('vpc_per_vlan_consistency_status'): str,        
@@ -64,7 +66,8 @@ class ShowVpcSchema(MetaParser):
                 'vpc_port_state': str,
                 'vpc_consistency': str,
                 'vpc_consistency_status': str,
-                'up_vlan_bitset': str
+                'up_vlan_bitset': str,
+                Optional('vpc_plus_attrib'): str
             }
         }
     }
@@ -85,6 +88,7 @@ class ShowVpc(ShowVpcSchema):
         ret_dict = {}
         up_vlan_bitset = peer_up_vlan_bitset = ''
         vlan_type = None
+        vpc_dict = {}
         # vPC domain id                     : 1
         # vPC domain id                     : Not configured
         p1 = re.compile(r'^vPC +domain +id\s*: +(?P<domain_id>[\w\s]+)$')
@@ -161,11 +165,12 @@ class ShowVpc(ShowVpcSchema):
         # 1     Po1           up     success     success               1,100-102,200-
         # 20 Po20 up failed vPC type-1 configuration -
         # 1 Po1 down success success -
+        # 11 Po11 up success success 1,10-28,30-5 DF: Partial
         p19 = re.compile(r'^(?P<vpc_id>\d+) +(?P<vpc_ifindex>\S+) '
             '+(?P<vpc_port_state>\S+) +(?P<vpc_consistency>\S+) '
             '+(?P<vpc_consistency_status>success|[\S\s]+) '
-            '+(?P<up_vlan_bitset>[\d\,\-]+)$')        
-
+            '+(?P<up_vlan_bitset>[\d\,\-]+)'
+            '(?: +(?P<vpc_plus_attrib>(.*)+))?$')
         # vPC Peer-link status
         p20 = re.compile(r'^vPC +(p|P)eer-link +status$')
 
@@ -211,7 +216,15 @@ class ShowVpc(ShowVpcSchema):
         
         p33 = re.compile(r'^(?P<additional_vlan>(?!--)[\d\,\-]+)$')
         
+        # vPC+ switch id : 312
+        p34 = re.compile(r'^vPC[+] +switch +id\s*: +(?P<vpc_plus_switch_id>[\w\s]+)$')
 
+        # vPC fabricpath status : peer is reachable through fabricpath
+        p35 = re.compile(r'^vPC+ fabricpath+ status\s*: +(?P<vpc_fabricpath_status>[\w\s]+)$')
+
+        # 4,56-82,138, FP MAC:
+        # 530,2587     312.0.0
+        p36 = re.compile(r'^(?P<additional_vlan>[\d\-\,]+) (?P<additional_vpc_plus_attrib>[\S\-\,\s\.\:]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -383,6 +396,8 @@ class ShowVpc(ShowVpcSchema):
                 vpc_dict. \
                 update({'vpc_consistency_status': group['vpc_consistency_status'].strip()})
                 vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
+                if group['vpc_plus_attrib'] is not None:
+                    vpc_dict.update({'vpc_plus_attrib': group['vpc_plus_attrib']})
                 continue
             
             # vPC peer-link status
@@ -498,5 +513,30 @@ class ShowVpc(ShowVpcSchema):
                     up_vlan_bitset += group['additional_vlan']
                     vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
-        
+                
+            # vPC+ switch id : 312
+            match = p34.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'vpc_plus_switch_id': group['vpc_plus_switch_id']})
+                continue
+                
+            # vPC fabricpath status : peer is reachable through fabricpath
+            match = p35.match(line)
+            if match:
+                group = match.groupdict()
+                ret_dict.update({'vpc_fabricpath_status': group['vpc_fabricpath_status']})
+                continue
+
+            # 4,56-82,138, FP MAC:
+            # 530,2587     312.0.0
+            match = p36.match(line)
+            if match:
+                group = match.groupdict()
+                if vlan_type == 'vpc_status' and vpc_dict.get('vpc_plus_attrib'):
+                    vpc_dict['vpc_plus_attrib'] += group['additional_vpc_plus_attrib'].strip()
+                    vpc_dict.update({'vpc_plus_attrib': vpc_dict['vpc_plus_attrib']})
+                    up_vlan_bitset += group['additional_vlan']
+                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})                                  
+                continue
         return ret_dict
