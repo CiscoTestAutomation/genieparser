@@ -16,7 +16,9 @@ from genie.libs.parser.iosxr.show_mpls import (ShowMplsLabelRange,
                                                ShowMplsLabelTablePrivate,
                                                ShowMplsInterfaces,
                                                ShowMplsForwarding,
-                                               ShowMplsForwardingVrf)
+                                               ShowMplsForwardingVrf,
+                                               ShowMplsLdpNeighbor,
+                                               ShowMplsLdpNeighborDetail)
 
 # ==================================================
 #  Unit test for 'show mpls label range'
@@ -53,6 +55,406 @@ class TestShowMplsLabelRange(unittest.TestCase):
         obj = ShowMplsLabelRange(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==================================================
+#  Unit test for 'show mpls ldp neighbor'
+# ==================================================
+class test_show_mpls_ldp_neighbor(unittest.TestCase):
+    
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output ={
+        'peers':{
+            '2.2.0.2':{
+                'label_space_id':{
+                    0:{
+                        'tcp_connection': '2.2.0.2:646 - 2.2.0.9:38143',
+                        'graceful_restart': 'No',
+                        'session_holdtime': 180,
+                        'state': 'Oper',
+    			        'msg_sent': 24710,
+    			        'msg_rcvd': 24702,
+    			        'downstream': True,
+                        'uptime': '2w0d',
+                        'ldp_discovery_sources': {
+                            'interface':{
+                                'GigabitEthernet0/0/0/0':{}
+                            },
+                        },
+                        'address_bound': ['2.2.0.2', '2.2.27.2', '2.2.28.2', '2.2.29.2']
+                    },
+                },
+            },
+            '2.2.0.7':{
+                'label_space_id':{
+                    0:{
+                        'tcp_connection': '2.2.0.7:646 - 2.2.0.9:19323',
+                        'graceful_restart': 'No',
+                        'session_holdtime': 180,
+                        'state': 'Oper',
+    			        'msg_sent': 24664,
+    			        'msg_rcvd': 24686,
+    			        'downstream': True,
+                        'uptime': '2w0d',
+                        'ldp_discovery_sources': {
+                            'interface':{
+                                'GigabitEthernet0/0/0/1':{}
+                            },
+                        },
+                        'address_bound': ['2.2.0.7', '2.2.27.7', '2.2.78.7', '2.2.79.7'],
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RP0/CPU0:R9#show mpls ldp neighbor 
+    Thu Jan  2 20:51:12.829 UTC
+    
+    Peer LDP Identifier: 2.2.0.2:0
+      TCP connection: 2.2.0.2:646 - 2.2.0.9:38143
+      Graceful Restart: No
+      Session Holdtime: 180 sec
+      State: Oper; Msgs sent/rcvd: 24710/24702; Downstream-Unsolicited
+      Up time: 2w0d
+      LDP Discovery Sources:
+        IPv4: (1)
+          GigabitEthernet0/0/0/0
+        IPv6: (0)
+      Addresses bound to this peer:
+        IPv4: (4)
+          2.2.0.2        2.2.27.2       2.2.28.2       2.2.29.2       
+        IPv6: (0)
+
+    Peer LDP Identifier: 2.2.0.7:0
+      TCP connection: 2.2.0.7:646 - 2.2.0.9:19323
+      Graceful Restart: No
+      Session Holdtime: 180 sec
+      State: Oper; Msgs sent/rcvd: 24664/24686; Downstream-Unsolicited
+      Up time: 2w0d
+      LDP Discovery Sources:
+        IPv4: (1)
+          GigabitEthernet0/0/0/1
+        IPv6: (0)
+      Addresses bound to this peer:
+        IPv4: (4)
+          2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
+        IPv6: (0)
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpNeighbor(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_ldp_neighbor_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsLdpNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==================================================
+#  Unit test for 'show mpls ldp neighbor detail'
+# ==================================================
+class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
+
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+    
+    golden_parsed_output1 ={
+        'peers':{
+            '200.80.173.21':{
+                'label_space_id':{
+                    0:{
+                        'local_ldp_ident': '200.80.173.2:0',
+                        'tcp_connection': '200.80.173.21.51310 - 200.80.173.2.646',
+                        'password': 'not required, none, in use',
+                        'state': 'Oper',
+    			        'msg_sent': 3697,
+    			        'msg_rcvd': 3665,
+    			        'downstream': True,
+                        'last_tib_rev_sent': 1397,
+                        'uptime': '2d02h',
+                        'uid': 21,
+                        'peer_id': 20,
+                        'ldp_discovery_sources': {
+                            'interface':{
+                                'GigabitEthernet0/0.290':{
+                                    'ip_address':{
+                                        '200.80.169.101':{
+                                            'holdtime_ms': 15000,
+                                            'hello_interval_ms': 5000,
+                                        }
+                                    }  
+                                },
+                                'GigabitEthernet1/0.390':{
+                                    'ip_address':{
+                                        '200.80.169.133':{
+                                            'holdtime_ms': 15000,
+                                            'hello_interval_ms': 5000,
+                                        }
+                                    }  
+                                },
+                            },
+                        },
+                        'address_bound': ['200.80.173.21', '200.80.169.133', '200.80.169.101'],
+                        'peer_holdtime_ms': 180000,
+                        'ka_interval_ms': 60000,
+                        'peer_state': 'estab'
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+    Router# show mpls ldp neighbor detail 
+    Peer LDP Ident: 200.80.173.21:0; Local LDP Ident 200.80.173.2:0
+	TCP connection: 200.80.173.21.51310 - 200.80.173.2.646
+	Password: not required, none, in use
+	State: Oper; Msgs sent/rcvd: 3697/3665; Downstream; Last TIB rev sent 1397
+	Up time: 2d02h; UID: 21; Peer Id 20;
+	LDP discovery sources:
+	  GigabitEthernet0/0.290; Src IP addr: 200.80.169.101 
+	    holdtime: 15000 ms, hello interval: 5000 ms
+	  GigabitEthernet1/0.390; Src IP addr: 200.80.169.133 
+	    holdtime: 15000 ms, hello interval: 5000 ms
+        Addresses bound to peer LDP Ident:
+          200.80.173.21   200.80.169.133  200.80.169.101  
+	Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+    '''}
+
+    golden_parsed_output2 = {
+        'peers':{
+            '2.2.0.7':{
+                'label_space_id':{
+                    0:{
+                        'tcp_connection': '2.2.0.7:646 - 2.2.0.9:19323',
+                        'graceful_restart': 'No',
+                        'session_holdtime': 180,
+                        'state': 'Oper',
+    			        'msg_sent': 24671,
+    			        'msg_rcvd': 24693,
+    			        'downstream': True,
+                        'uptime': '2w1d',
+                        'ldp_discovery_sources': {
+                            'interface':{
+                                'GigabitEthernet0/0/0/1':{}
+                            },    
+                        },
+                        'address_bound': ['2.2.0.7', '2.2.27.7', '2.2.78.7', '2.2.79.7'],
+                        'peer_holdtime': 180,
+                        'ka_interval': 60,
+                        'peer_state': 'Estab',
+                        'nsr': 'Disabled',
+    			        'capabilities': {
+    			        	'sent': {
+    			        		'point_to_multipoint': '0x508',
+    			        		'multipoint_to_multipoint': '0x509',
+    			        		'typed_wildcard': '0x50b',
+    			        	},
+    			        	'received': {
+    			        		'point_to_multipoint': '0x508',
+    			        		'multipoint_to_multipoint': '0x509',
+    			        		'typed_wildcard': '0x50b',
+    			        	},
+    			        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value' : ''' 
+    RP/0/RP0/CPU0:R9#show mpls ldp neighbor GigabitEthernet0/0/0/1 detail 
+    Thu Jan  2 20:56:36.689 UTC
+
+    Peer LDP Identifier: 2.2.0.7:0
+        TCP connection: 2.2.0.7:646 - 2.2.0.9:19323
+        Graceful Restart: No
+        Session Holdtime: 180 sec
+        State: Oper; Msgs sent/rcvd: 24671/24693; Downstream-Unsolicited
+        Up time: 2w1d
+        LDP Discovery Sources:
+          IPv4: (1)
+            GigabitEthernet0/0/0/1
+          IPv6: (0)
+        Addresses bound to this peer:
+          IPv4: (4)
+            2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
+          IPv6: (0)
+        Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+        NSR: Disabled
+        Capabilities:
+          Sent: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+          Received: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+    '''}
+
+    golden_parsed_output3 = {
+        'peers':{
+    		'10.16.16.16':{
+                'label_space_id':{
+                    0:{
+                        'tcp_connection': '10.16.16.16.11013 - 10.15.15.15.646',
+    			        'local_ldp_ident': '10.15.15.15:0',
+    			        'state': 'Oper',
+    			        'msg_sent': 53,
+    			        'msg_rcvd': 51,
+    			        'downstream': True,
+                        'last_tib_rev_sent': 74,
+                        'uptime': '00:11:32',
+                        'uid': 1,
+                        'peer_id': 0,
+    			        'ldp_discovery_sources': {
+    			        	'targeted_hello':{
+    			        		'10.15.15.15':{
+    			        			'10.16.16.16':{
+    			        				'active': False,
+                                        'hello_interval_ms': 10000,
+                                        'holdtime_str': 'infinite',
+    			        			},
+    			        		},
+    			        	},
+    			        },
+    			        'address_bound': ['10.0.0.2', '10.16.16.16', '10.101.101.101', '11.0.0.1'],
+    			        'peer_holdtime_ms': 180000,
+    			        'ka_interval_ms': 60000,
+    			        'peer_state': 'estab',
+    			        'clients': 'Dir Adj Client',
+    			        'session_protection':{
+    			        	'session_state': 'Protecting',
+                            'duration_str': 'infinite',
+    			        },
+                    },
+                },
+    		},
+    	},
+    }
+
+    golden_output3 = {'execute.return_value': '''
+    
+    Router# show mpls ldp neighbor detail
+    Peer LDP Ident: 10.16.16.16:0; Local LDP Ident 10.15.15.15:0
+        TCP connection: 10.16.16.16.11013 - 10.15.15.15.646
+        State: Oper; Msgs sent/rcvd: 53/51; Downstream; Last TIB rev sent 74
+        Up time: 00:11:32; UID: 1; Peer Id 0;
+        LDP discovery sources:
+          Targeted Hello 10.15.15.15 -> 10.16.16.16, active, passive;
+            holdtime: infinite, hello interval: 10000 ms
+        Addresses bound to peer LDP Ident:
+          10.0.0.2        10.16.16.16     10.101.101.101 11.0.0.1        
+        Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+        Clients: Dir Adj Client
+        LDP Session Protection enabled, state: Protecting
+            duration: infinite
+
+     '''}
+
+    golden_parsed_output4 = {
+        'peers':{
+            '2.2.2.2':{
+                'label_space_id':{
+                    0:{
+                        'tcp_connection': '2.2.2.2:11707 - 1.1.1.1:646',
+                        'graceful_restart': 'No',
+                        'session_holdtime': 180,
+                        'state': 'Oper',
+    			        'msg_sent': 33,
+    			        'msg_rcvd': 29,
+    			        'downstream': False,
+                        'uptime': '00:13:37',
+                        'ldp_discovery_sources': {
+                            'interface':{
+                                'POS0/2/0/1':{}
+                            },
+                            'targeted_hello':{
+    			        		'1.1.1.1':{
+    			        			'2.2.2.2':{
+    			        				'active': True,
+    			        			},
+    			        		},
+    			        	},
+                        },
+                        'address_bound': ['23.0.0.2', '2.0.0.2', '123.0.4.2', '10.42.37.119',
+                                            '10.2.2.2'],
+    			        'peer_holdtime': 180,
+    			        'ka_interval': 60,
+    			        'peer_state': 'Estab',
+                        'inbound_label_filtering': 'accept acl \'pfx_acl2\'',
+                        'clients': 'Dir Adj Client',
+    			        'session_protection':{
+    			        	'session_state': 'Ready',
+                            'duration_int': 30,
+    			        },
+                    },
+                },
+            },
+        },
+    }
+
+
+    golden_output4 = {'execute.return_value': '''
+    
+    RP/0/0/CPU0:router# show mpls ldp neighbor detail
+    
+      Peer LDP Identifier: 2.2.2.2:0
+        TCP connection: 2.2.2.2:11707 - 1.1.1.1:646
+        Graceful Restart: No
+        Session Holdtime: 180 sec
+        State: Oper; Msgs sent/rcvd: 33/29
+        Up time: 00:13:37
+        LDP Discovery Sources: 
+           POS0/2/0/1
+          Targeted Hello (1.1.1.1 ->2.2.2.2, active)
+        Addresses bound to this peer:
+          23.0.0.2 2.0.0.2        123.0.4.2       10.42.37.119    
+          10.2.2.2        
+        Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+        Clients: Dir Adj Client
+        Inbound label filtering: accept acl 'pfx_acl2'
+        Session Protection:
+          Enabled, state: Ready
+          Duration: 30 seconds
+     '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpNeighborDetail(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_ldp_neighbor_detail_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_mpls_ldp_neighbor_detail_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_mpls_ldp_neighbor_detail_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_mpls_ldp_neighbor_detail_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 # ==================================================
