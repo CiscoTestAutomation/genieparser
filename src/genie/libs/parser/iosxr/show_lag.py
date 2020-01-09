@@ -159,6 +159,7 @@ class ShowBundle(ShowBundleSchema):
             out = output
 
         result_dict = {}
+        interface_flag = False
 
         # Bundle-Ether1
         # Bundle-Ether 2
@@ -270,17 +271,26 @@ class ShowBundle(ShowBundleSchema):
         p13_7 = re.compile(r'^Destination +address: *(?P<destination_address>[\w\s\.]+)$')
 
         # Port                  Device           State        Port ID         B/W, kbps
+        p14 = re.compile(r'Port +Device +State +Port +ID +B/W, +kbps')
+                
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-        p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
+        p14_1 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
                           ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
-        p15 = re.compile(r'^Link +is +(?P<link_state>.*)$')
-
         # Partner System ID/Key do not match that of the Selected links
-        p15_1 = re.compile(r'(?P<link_state>Partner System ID/Key '
-                            'do not match that of the Selected links)')
+        # Reason unavailable (diagnostics error)
+        # Link cannot be used (unknown reason)
+        # Link is down
+        # Link is being removed from the bundle
+        # Link is in the process of being created
+        # Bundle is in the process of being created
+        # Bundle is in the process of being deleted
+        # Bundle has been shut down
+        # Bundle is in the process of being replicated to this location
+        # Incompatible with other links in the bundle (bandwidth out of range)Loopback: Actor and Partner have the same System ID and Key
+        p15 = re.compile(r'(?P<link_state>[a-zA-Z(/):\s-]+)')
 
         for line in out.splitlines():
             if line:
@@ -291,6 +301,7 @@ class ShowBundle(ShowBundleSchema):
             # Bundle-Ether1
             m = p1.match(line)
             if m:
+                interface_flag = False
                 group = m.groupdict()
                 name = m.group()
                 bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
@@ -538,32 +549,34 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Port                  Device           State        Port ID         B/W, kbps
-            # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
             m = p14.match(line)
+            if m:
+                port_dict = bundle_dict.setdefault('port', {})
+                continue
+                
+            # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
+            m = p14_1.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group.pop('interface'))
                 bw_kbps = int(group.pop('bw_kbps'))
-                port_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {})
-                port_dict.update({'interface': interface})
-                port_dict.update({'bw_kbps': bw_kbps})
-                port_dict.update({k : v for k, v in group.items()})
+                interface_dict = port_dict.setdefault(interface, {})
+                interface_dict.update({'interface': interface})
+                interface_dict.update({'bw_kbps': bw_kbps})
+                interface_dict.update({k : v for k, v in group.items()})
+                interface_flag = True
                 continue
 
             # Link is Active
             # Link is Standby due to maximum-active links configuration
             m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                port_dict.update({'link_state': group['link_state']})
+            if interface_flag:
+                interface_flag = False
+                if m:
+                    group = m.groupdict()
+                    interface_dict.update({'link_state': group['link_state']})
 
-                continue
-
-            # Partner System ID/Key do not match that of the Selected links
-            m = p15_1.match(line)
-            if m:
-                group = m.groupdict()
-                port_dict.update({'link_state': group['link_state']})
+                    continue
 
         return result_dict
 
@@ -575,7 +588,7 @@ class ShowBundleReasons(ShowBundle):
     """
 
     cli_command = ['show bundle {interface} reasons',
-    'show bundle reasons']
+                    'show bundle reasons']
 
     def cli(self, interface='', output=None):
         if output is None:
