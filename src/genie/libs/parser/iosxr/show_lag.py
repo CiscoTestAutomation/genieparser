@@ -610,7 +610,7 @@ class ShowLacp(ShowLacpSchema):
 
     def cli(self, interface=None, output=None):
         if output is None:
-            if interface :
+            if interface:
                 out = self.device.execute(self.cli_command[1].format(interface=interface))
             else:
                 out = self.device.execute(self.cli_command[0])
