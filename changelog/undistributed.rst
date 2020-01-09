@@ -25,6 +25,8 @@
         * show mpls forwarding vrf {vrf}
     *Added ShowMplsLabelRange for:
         * show mpls label range
+    * Added ShowMplsLabelTablePrivate for:
+        * show mpls label table private    
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
     * Added ShowBgpEgressEngineering for:
