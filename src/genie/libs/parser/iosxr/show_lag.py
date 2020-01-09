@@ -3,6 +3,8 @@
      *  show lacp system-id
      *  show bundle 
      *  show bundle <interface>
+     *  show bundle reasons
+     *  show bundle <interface> reasons 
      *  show lacp
      *  show lacp <interface>
 """
@@ -275,6 +277,10 @@ class ShowBundle(ShowBundleSchema):
         # Link is Active
         # Link is Standby due to maximum-active links configuration
         p15 = re.compile(r'^Link +is +(?P<link_state>.*)$')
+
+        # Partner System ID/Key do not match that of the Selected links
+        p15_1 = re.compile(r'(?P<link_state>Partner System ID/Key '
+                            'do not match that of the Selected links)')
 
         for line in out.splitlines():
             if line:
@@ -551,8 +557,38 @@ class ShowBundle(ShowBundleSchema):
                 group = m.groupdict()
                 port_dict.update({'link_state': group['link_state']})
 
+                continue
+
+            # Partner System ID/Key do not match that of the Selected links
+            m = p15_1.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict.update({'link_state': group['link_state']})
+
         return result_dict
 
+class ShowBundleReasons(ShowBundle):
+
+    """Parser for 
+    show bundle reasons
+    show bundle {interface} reasons
+    """
+
+    cli_command = ['show bundle {interface} reasons',
+    'show bundle reasons']
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(interface=interface, output=out)
+        
 
 class ShowLacpSchema(MetaParser):
     """Schema for show lacp"""

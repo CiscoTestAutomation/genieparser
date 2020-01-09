@@ -5,7 +5,7 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_lag import ShowLacpSystemId, ShowBundle, ShowLacp
+from genie.libs.parser.iosxr.show_lag import ShowLacpSystemId, ShowBundle, ShowBundleReasons, ShowLacp
 
 
 ###################################################
@@ -615,6 +615,216 @@ class test_show_bundle(unittest.TestCase):
         obj = ShowBundle(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+###################################################
+# unit test for show bundle
+####################################################
+class test_show_bundle_reasons(unittest.TestCase):
+
+    """unit test for 
+    show bundle
+    show bundle {interface} reasons
+    """
+    
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None 
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Bundle-Ether12": {
+                "name": "Bundle-Ether12",
+                "bundle_id": 12,
+                "oper_status": "up",
+                "local_links": {
+                    "active": 2,
+                    "standby": 0,
+                    "configured": 2
+                },
+                "local_bandwidth_kbps": {
+                    "effective": 2000000,
+                    "available": 2000000
+                },
+                "mac_address": "0006.c179.dbfa",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
+                "min_active_link": 1,
+                "min_active_bw_kbps": 1,
+                "max_active_link": 24,
+                "wait_while_timer_ms": 2000,
+                "load_balance": {
+                    "link_order_signaling": "Not configured",
+                    "hash_type": "Default",
+                    "locality_threshold": "None"
+                },
+                "lacp": {
+                    "lacp": "Operational",
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
+                },
+                "mlacp": {
+                    "mlacp": "Not configured"
+                },
+                "ipv4_bfd": {
+                    "ipv4_bfd": "Not configured"
+                },
+                "ipv6_bfd": {
+                    "ipv6_bfd": "Not configured"
+                },
+                "port": {
+                    "GigabitEthernet0/0/0/2": {
+                        "interface": "GigabitEthernet0/0/0/2",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0002",
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
+                    },
+                    "GigabitEthernet0/0/0/3": {
+                        "interface": "GigabitEthernet0/0/0/3",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0001",
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
+                    }
+                }
+            },
+            "Bundle-Ether23": {
+                "name": "Bundle-Ether23",
+                "bundle_id": 23,
+                "oper_status": "up",
+                "local_links": {
+                    "active": 1,
+                    "standby": 0,
+                    "configured": 2
+                },
+                "local_bandwidth_kbps": {
+                    "effective": 1000000,
+                    "available": 1000000
+                },
+                "mac_address": "0006.c179.dbf9",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
+                "min_active_link": 1,
+                "min_active_bw_kbps": 1,
+                "max_active_link": 24,
+                "wait_while_timer_ms": 2000,
+                "load_balance": {
+                    "link_order_signaling": "Not configured",
+                    "hash_type": "Default",
+                    "locality_threshold": "None"
+                },
+                "lacp": {
+                    "lacp": "Operational",
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
+                },
+                "mlacp": {
+                    "mlacp": "Not configured"
+                },
+                "ipv4_bfd": {
+                    "ipv4_bfd": "Not configured"
+                },
+                "ipv6_bfd": {
+                    "ipv6_bfd": "Not configured"
+                },
+                "port": {
+                    "GigabitEthernet0/0/0/4": {
+                        "interface": "GigabitEthernet0/0/0/4",
+                        "device": "Local",
+                        "state": "Configured",
+                        "port_id": "0x8000, 0x0004",
+                        "bw_kbps": 1000000,
+                        "link_state": "Partner System ID/Key do not match that of the Selected links"
+                    },
+                    "GigabitEthernet0/0/0/5": {
+                        "interface": "GigabitEthernet0/0/0/5",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0003",
+                        "bw_kbps": 1000000,
+                        "link_state": "Active"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': ''' 
+    RP/0/RP0/CPU0:R2_xr#show bundle reasons
+    Thu Jan  2 20:40:07.953 UTC
+
+    Bundle-Ether12
+      Status:                                    Up
+      Local links <active/standby/configured>:   2 / 0 / 2
+      Local bandwidth <effective/available>:     2000000 (2000000) kbps
+      MAC address (source):                      0006.c179.dbfa (Chassis pool)
+      Inter-chassis link:                        No
+      Minimum active links / bandwidth:          1 / 1 kbps
+      Maximum active links:                      24
+      Wait while timer:                          2000 ms
+      Load balancing:                            
+        Link order signaling:                    Not configured
+        Hash type:                               Default
+        Locality threshold:                      None
+      LACP:                                      Operational
+        Flap suppression timer:                  Off
+        Cisco extensions:                        Disabled
+        Non-revertive:                           Disabled
+      mLACP:                                     Not configured
+      IPv4 BFD:                                  Not configured
+      IPv6 BFD:                                  Not configured
+
+      Port                  Device           State        Port ID         B/W, kbps
+      --------------------  ---------------  -----------  --------------  ----------
+      Gi0/0/0/2             Local            Active       0x8000, 0x0002     1000000
+          Link is Active
+      Gi0/0/0/3             Local            Active       0x8000, 0x0001     1000000
+          Link is Active
+
+    Bundle-Ether23
+      Status:                                    Up
+      Local links <active/standby/configured>:   1 / 0 / 2
+      Local bandwidth <effective/available>:     1000000 (1000000) kbps
+      MAC address (source):                      0006.c179.dbf9 (Chassis pool)
+      Inter-chassis link:                        No
+      Minimum active links / bandwidth:          1 / 1 kbps
+      Maximum active links:                      24
+      Wait while timer:                          2000 ms
+      Load balancing:                            
+        Link order signaling:                    Not configured
+        Hash type:                               Default
+        Locality threshold:                      None
+      LACP:                                      Operational
+        Flap suppression timer:                  Off
+        Cisco extensions:                        Disabled
+        Non-revertive:                           Disabled
+      mLACP:                                     Not configured
+      IPv4 BFD:                                  Not configured
+      IPv6 BFD:                                  Not configured
+
+      Port                  Device           State        Port ID         B/W, kbps
+      --------------------  ---------------  -----------  --------------  ----------
+      Gi0/0/0/4             Local            Configured   0x8000, 0x0004     1000000
+          Partner System ID/Key do not match that of the Selected links
+      Gi0/0/0/5             Local            Active       0x8000, 0x0003     1000000
+          Link is Active
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBundle(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBundle(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 ###################################################

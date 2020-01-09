@@ -34,6 +34,9 @@
     * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
         * show traffic-collector external-interface
         * show traffic-collector ipv4 counters prefix <prefix> detail
+    * Added ShowBundleReasons for:  
+        * show bundle reasons
+        * show bundle {interface} reasons
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
@@ -70,6 +73,8 @@
 * IOSXR
     * Updated ShowLacp
         * Change in order to parse show lacp {interface}.
+    * Updated ShowBundle
+        * Change in order to parse show bundle {interface} reasons 
 
 * DNAC
     * Updated Interface for:
