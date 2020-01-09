@@ -623,13 +623,11 @@ class test_show_bundle(unittest.TestCase):
 class test_show_lacp(unittest.TestCase):
     """unit test for 
     show lacp
-    show lacp <interface>
+    show lacp {interface}
     """
     
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-
-
+    maxDiff = None 
 
     golden_parsed_output1 = {
         "interfaces": {
@@ -957,14 +955,12 @@ class test_show_lacp(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowLacp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowLacp(device=self.device)
         parsed_output = obj.parse(interface='Bundle-Ether8')
