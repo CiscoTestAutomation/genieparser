@@ -67,6 +67,9 @@
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+* IOSXR
+    * Updated ShowLacp
+        * Change in order to parse show lacp {interface}.
 
 * DNAC
     * Updated Interface for:
