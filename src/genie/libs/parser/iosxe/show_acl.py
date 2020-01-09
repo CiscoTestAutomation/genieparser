@@ -475,8 +475,9 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 if 'ttl' in left:
                     ttl_group = re.search('ttl +(\w+) +(\d+)', left)
-                    l3_dict['ttl_operator'] = ttl_group.groups()[0]
-                    l3_dict['ttl'] = int(ttl_group.groups()[1])
+                    if ttl_group:
+                        l3_dict['ttl_operator'] = ttl_group.groups()[0]
+                        l3_dict['ttl'] = int(ttl_group.groups()[1])
 
                 if 'precedence' in left:
                     prec = re.search('precedence +(\w+)', left).groups()[0]

@@ -175,7 +175,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
             30 permit ip host 10.34.2.2 host 10.2.54.2
             40 permit ip host 10.3.4.31 host 10.3.32.3 log
     '''}
-
+    
     golden_parsed_output_ios = {
         "101": {
             "name": "101",
@@ -301,6 +301,240 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         }
     }
 
+    golden_output_customer1 = {'execute.return_value': '''
+        Extended IP access list acl1
+        10 permit icmp any any echo
+        20 permit icmp any any echo-reply (1195 matches)
+        30 permit icmp any any ttl-exceeded
+        40 permit icmp any any unreachable
+        50 permit icmp any any packet-too-big
+        60 deny icmp any any
+        80 permit udp any host 224.0.0.102 eq 1985
+    '''
+    }
+    
+    golden_parsed_output_customer1 = {
+        'acl1': {
+            'name': 'acl1',
+            'type': 'ipv4-acl-type',
+            'aces': {
+                '10': {
+                    'name': '10',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '20': {
+                    'name': '20',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'statistics': {
+                        'matched_packets': 1195
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '30': {
+                    'name': '30',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '40': {
+                    'name': '40',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '50': {
+                    'name': '50',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '60': {
+                    'name': '60',
+                    'actions': {
+                        'forwarding': 'deny',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '80': {
+                    'name': '80',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'udp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'host 224.0.0.102': {
+                                        'destination_network': 'host 224.0.0.102'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'udp': {
+                                'established': False,
+                                'destination_port': {
+                                    'operator': {
+                                        'operator': 'eq',
+                                        'port': 1985
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+                                 
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -321,7 +555,13 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_ios)
 
-
+    def test_golden_customer1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_customer1)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='acl1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer1)
+        
 if __name__ == '__main__':
     unittest.main()
 
