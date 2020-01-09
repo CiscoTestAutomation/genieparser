@@ -10,7 +10,7 @@ from genie.libs.parser.ios.show_acl import ShowAccessLists
 from genie.libs.parser.iosxe.tests.test_show_acl import TestShowAccessLists as TestShowAccessListsIosxe
 
 class TestShowAccessLists(TestShowAccessListsIosxe):
-
+    maxDiff = None
     golden_output_standard = {'execute.return_value': '''\
         Switch# show ip access-lists
         Standard IP access list 1
@@ -534,7 +534,87 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         }
     }
                                  
+    golden_output_customer2 = {'execute.return_value': '''
+    Extended IP access list acl1
+        10 permit icmp any any
+        20 permit udp any host 224.0.0.102 eq 1985 (67 matches)
+        30 permit ip object-group dummydpd-local object-group dummydpd-remote
+    '''
+    }
     
+    golden_parsed_output_customer2 = {
+        'acl1': {
+            'name': 'acl1',
+            'type': 'ipv4-acl-type',
+            'aces': {
+                '10': {
+                    'name': '10',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '20': {
+                    'name': '20',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'udp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'host 224.0.0.102': {
+                                        'destination_network': 'host 224.0.0.102'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'udp': {
+                                'established': False,
+                                'destination_port': {
+                                    'range': {
+                                        'lower_port': 1985,
+                                        'upper_port': 67
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+                                                
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -542,25 +622,28 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
             parsed_output = obj.parse()
 
     def test_golden_standard(self):
-        self.maxDiff = None
         self.dev1 = Mock(**self.golden_output_standard)
         obj = ShowAccessLists(device=self.dev1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_standard)
 
     def test_golden_ios(self):
-        self.maxDiff = None
         self.dev1 = Mock(**self.golden_output_ios)
         obj = ShowAccessLists(device=self.dev1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_ios)
 
     def test_golden_customer1(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_customer1)
         obj = ShowAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse(acl='acl1')
         self.assertEqual(parsed_output, self.golden_parsed_output_customer1)
+        
+    def test_golden_customer2(self):
+        self.dev_c3850 = Mock(**self.golden_output_customer2)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='acl1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer2)
         
 if __name__ == '__main__':
     unittest.main()

@@ -556,6 +556,8 @@ class ShowAccessLists(ShowAccessListsSchema):
                     else:  
                         val1 = group['dst_port'].split()[0]
                         val2 = group['dst_port'].split()[1]
+                        if '(' in val2:
+                            val2 = val2.strip('(')
                         if val1.isdigit():
                             val1 = int(val1)
                         else:
