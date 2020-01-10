@@ -270,11 +270,9 @@ class ShowBundle(ShowBundleSchema):
         # Destination address:  Not Configured
         p13_7 = re.compile(r'^Destination +address: *(?P<destination_address>[\w\s\.]+)$')
 
-        # Port                  Device           State        Port ID         B/W, kbps
-        p14 = re.compile(r'Port +Device +State +Port +ID +B/W, +kbps')
-                
+        # Port                  Device           State        Port ID         B/W, kbps                
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-        p14_1 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
+        p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
                           ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
 
         # Link is Active
@@ -290,7 +288,7 @@ class ShowBundle(ShowBundleSchema):
         # Bundle has been shut down
         # Bundle is in the process of being replicated to this location
         # Incompatible with other links in the bundle (bandwidth out of range)Loopback: Actor and Partner have the same System ID and Key
-        p15 = re.compile(r'(?P<link_state>[a-zA-Z(/):\s-]+)')
+        p15 = re.compile(r'(?P<link_state>[\S\s]+)')
 
         for line in out.splitlines():
             if line:
@@ -549,32 +547,27 @@ class ShowBundle(ShowBundleSchema):
                 continue
 
             # Port                  Device           State        Port ID         B/W, kbps
-            m = p14.match(line)
-            if m:
-                port_dict = bundle_dict.setdefault('port', {})
-                continue
-                
             # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
-            m = p14_1.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group.pop('interface'))
                 bw_kbps = int(group.pop('bw_kbps'))
-                interface_dict = port_dict.setdefault(interface, {})
-                interface_dict.update({'interface': interface})
-                interface_dict.update({'bw_kbps': bw_kbps})
-                interface_dict.update({k : v for k, v in group.items()})
+                port_dict = bundle_dict.setdefault('port', {}).setdefault(interface, {})
+                port_dict.update({'interface': interface})
+                port_dict.update({'bw_kbps': bw_kbps})
+                port_dict.update({k : v for k, v in group.items()})
                 interface_flag = True
                 continue
 
             # Link is Active
             # Link is Standby due to maximum-active links configuration
-            m = p15.match(line)
             if interface_flag:
                 interface_flag = False
+                m = p15.match(line)
                 if m:
                     group = m.groupdict()
-                    interface_dict.update({'link_state': group['link_state']})
+                    port_dict.update({'link_state': group['link_state']})
 
                     continue
 
