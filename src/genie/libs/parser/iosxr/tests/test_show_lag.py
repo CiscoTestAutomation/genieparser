@@ -904,7 +904,7 @@ class test_show_bundle_reasons(unittest.TestCase):
     def test_golden_2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowBundle(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(interface="Bundle-Ether23")
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 

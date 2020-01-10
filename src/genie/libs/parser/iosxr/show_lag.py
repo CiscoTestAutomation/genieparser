@@ -270,7 +270,7 @@ class ShowBundle(ShowBundleSchema):
         # Destination address:  Not Configured
         p13_7 = re.compile(r'^Destination +address: *(?P<destination_address>[\w\s\.]+)$')
 
-        # Port                  Device           State        Port ID         B/W, kbps                
+        # Port                  Device           State        Port ID         B/W, kbps
         # Gi0/0/0/0             Local            Active       0x000a, 0x0001     1000000
         p14 = re.compile(r'^(?P<interface>[\S]+) +(?P<device>[\S]+) +(?P<state>[\w]+)'
                           ' +(?P<port_id>[\w]+, *[\w]+) +(?P<bw_kbps>[\d]+)$')
