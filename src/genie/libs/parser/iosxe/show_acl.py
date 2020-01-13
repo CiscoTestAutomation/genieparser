@@ -320,6 +320,18 @@ class ShowAccessLists(ShowAccessListsSchema):
         p_mac_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>(host *)?[\w\.]+) '
             r'+(?P<dst>(host *)?[\w\.]+)( *(?P<left>.*))?$')
+            
+        # 70 permit ip object-group grt-interface-nets object-group grt-interface-nets
+        # 90 permit esp object-group vpn-endpoints-dummydpd host 1.1.1.1 (14 matches)
+        # 100 permit ahp object-group vpn-endpoints-dummydpd host 1.1.1.1
+        # 110 permit udp object-group vpn-endpoints-dummydpd host 1.1.1.1 eq isakmp (122 matches)
+        p_ip_object_group = re.compile(
+            r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
+            r'+(?P<src>(?:object-group+)(?: '
+            r'+\S+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
+            r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:host|object-group+)'
+            r'(?: +\d+\.\d+\.\d+\.\d+)?(?: [a-zA-Z\-]*(?!.*[eq])+)?)?(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
+            r'+(?P<dst_port>(?:\S?)+))?(?P<left>.+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -422,7 +434,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             # permit udp any any eq domain sequence 10
             # permit esp any any dscp cs7 log sequence 60
             m_v6 = p_ipv6_acl.match(line)
-            m = m_v4 if m_v4 else m_v6
+            m_object_group = p_ip_object_group.match(line) 
+            m = m_v4 if m_v4 else m_v6 if m_v6 else m_object_group
             if m:
                 group = m.groupdict()
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(group['seq'], {})

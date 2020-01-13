@@ -309,7 +309,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         40 permit icmp any any unreachable
         50 permit icmp any any packet-too-big
         60 deny icmp any any
-        80 permit udp any host 224.0.0.102 eq 1985
+        80 permit udp any host 1.1.1.1 eq 1985
     '''
     }
     
@@ -511,8 +511,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                     }
                                 },
                                 'destination_network': {
-                                    'host 224.0.0.102': {
-                                        'destination_network': 'host 224.0.0.102'
+                                    'host 1.1.1.1': {
+                                        'destination_network': 'host 1.1.1.1'
                                     }
                                 }
                             }
@@ -537,7 +537,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
     golden_output_customer2 = {'execute.return_value': '''
     Extended IP access list acl1
         10 permit icmp any any
-        20 permit udp any host 224.0.0.102 eq 1985 (67 matches)
+        20 permit udp any host 1.1.1.1 eq 1985 (67 matches)
         30 permit ip object-group dummydpd-local object-group dummydpd-remote
     '''
     }
@@ -592,8 +592,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                     }
                                 },
                                 'destination_network': {
-                                    'host 224.0.0.102': {
-                                        'destination_network': 'host 224.0.0.102'
+                                    'host 1.1.1.1': {
+                                        'destination_network': 'host 1.1.1.1'
                                     }
                                 }
                             }
@@ -610,11 +610,377 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                             }
                         }
                     }
-                }
+                },
+                '30': {
+                    'name': '30',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    'object-group dummydpd-local': {
+                                        'source_network': 'object-group dummydpd-local'
+                                    }
+                                },
+                                'destination_network': {
+                                    'object-group dummydpd-remote': {
+                                        'destination_network': 'object-group dummydpd-remote'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'ipv4': {
+                                'established': False
+                            }
+                        }
+                    }
+                }                   
             }
         }
     }
-                                                
+
+    golden_output_customer3 = {'execute.return_value': '''
+    Extended IP access list acl1
+        10 permit icmp any any echo
+        20 permit icmp any any echo-reply (198 matches)
+        40 permit icmp any any unreachable
+        50 permit icmp any any packet-too-big
+        60 deny icmp any any
+        70 permit ip object-group grt-interface-nets object-group grt-interface-nets
+        80 permit udp any host 1.1.1.1 eq 1985
+        90 permit esp object-group vpn-endpoints-dummydpd host 1.1.1.1 (14 matches)
+        100 permit ahp object-group vpn-endpoints-dummydpd host 1.1.1.1
+        110 permit udp object-group vpn-endpoints-dummydpd host 1.1.1.1 eq isakmp (122 matches)
+    '''
+    }
+    
+    golden_parsed_output_customer3 = {
+        'acl1': {
+            'name': 'acl1',
+            'type': 'ipv4-acl-type',
+            'aces': {
+                '10': {
+                    'name': '10',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                            }
+                        }
+                    }
+                },
+                '20': {
+                    'name': '20',
+                    'actions': {
+                        'forwarding': 'permit',
+                        'logging': 'log-none'
+                    },
+                    'statistics': {
+                        'matched_packets': 198
+                    },
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'icmp',
+                                'source_network': {
+                                    'any': {
+                                        'source_network': 'any'
+                                    }
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any'
+                                    }
+                                }
+                            }
+                        },
+                        'l4': {
+                            'icmp': {
+                                'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '40': {
+                            'name': '40',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'icmp',
+                                        'source_network': {
+                                            'any': {
+                                                'source_network': 'any'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'any': {
+                                                'destination_network': 'any'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'icmp': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '50': {
+                            'name': '50',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'icmp',
+                                        'source_network': {
+                                            'any': {
+                                                'source_network': 'any'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'any': {
+                                                'destination_network': 'any'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'icmp': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '60': {
+                            'name': '60',
+                            'actions': {
+                                'forwarding': 'deny',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'icmp',
+                                        'source_network': {
+                                            'any': {
+                                                'source_network': 'any'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'any': {
+                                                'destination_network': 'any'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'icmp': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '70': {
+                            'name': '70',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'ipv4',
+                                        'source_network': {
+                                            'object-group grt-interface-nets': {
+                                                'source_network': 'object-group grt-interface-nets'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'object-group grt-interface-nets': {
+                                                'destination_network': 'object-group grt-interface-nets'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'ipv4': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '80': {
+                            'name': '80',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'udp',
+                                        'source_network': {
+                                            'any': {
+                                                'source_network': 'any'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'host 1.1.1.1': {
+                                                'destination_network': 'host 1.1.1.1'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'udp': {
+                                        'established': False,
+                                        'destination_port': {
+                                            'operator': {
+                                                'operator': 'eq',
+                                                'port': 1985
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '90': {
+                            'name': '90',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'statistics': {
+                                'matched_packets': 14
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'esp',
+                                        'source_network': {
+                                            'object-group vpn-endpoints-dummydpd': {
+                                                'source_network': 'object-group vpn-endpoints-dummydpd'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'host 1.1.1.1': {
+                                                'destination_network': 'host 1.1.1.1'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'esp': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '100': {
+                            'name': '100',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'ahp',
+                                        'source_network': {
+                                            'object-group vpn-endpoints-dummydpd': {
+                                                'source_network': 'object-group vpn-endpoints-dummydpd'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'host 1.1.1.1': {
+                                                'destination_network': 'host 1.1.1.1'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'ahp': {
+                                        'established': False
+                                    }
+                                }
+                            }
+                        },
+                        '110': {
+                            'name': '110',
+                            'actions': {
+                                'forwarding': 'permit',
+                                'logging': 'log-none'
+                            },
+                            'statistics': {
+                                'matched_packets': 122
+                            },
+                            'matches': {
+                                'l3': {
+                                    'ipv4': {
+                                        'protocol': 'udp',
+                                        'source_network': {
+                                            'object-group vpn-endpoints-dummydpd': { 
+                                                'source_network': 'object-group vpn-endpoints-dummydpd'
+                                            }
+                                        },
+                                        'destination_network': {
+                                            'host 1.1.1.1': {
+                                                'destination_network': 'host 1.1.1.1'
+                                            }
+                                        }
+                                    }
+                                },
+                                'l4': {
+                                    'udp': {
+                                        'established': False,
+                                        'destination_port': {
+                                            'operator': {
+                                                'operator': 'eq',
+                                                'port': 500
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+                                        
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -644,6 +1010,12 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         obj = ShowAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse(acl='acl1')
         self.assertEqual(parsed_output, self.golden_parsed_output_customer2)
+        
+    def test_golden_customer3(self):
+        self.dev_c3850 = Mock(**self.golden_output_customer3)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse(acl='acl1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_customer3)
         
 if __name__ == '__main__':
     unittest.main()
