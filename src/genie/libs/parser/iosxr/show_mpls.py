@@ -84,81 +84,85 @@ class ShowMplsLdpNeighborSchema(MetaParser):
      """
 
     schema = {
-        'peers':{
-    		Any():{
-                'label_space_id':{
-                    Any():{
-                        'tcp_connection': str,
-    			        Optional('local_ldp_ident'): str,
-    			        Optional('graceful_restart'): str,
-    			        Optional('session_holdtime'): int,
-                        Optional('session_holdtime_ms'): int,
-                        Optional('password'): str,
-    			        'state': str,
-    			        'msg_sent': int,
-    			        'msg_rcvd': int,
-    			        'downstream': bool,
-                        Optional('last_tib_rev_sent'): int,
-                        'uptime': str,
-                        Optional('uid'): int,
-                        Optional('peer_id'): int,
-    			        'ldp_discovery_sources': {
-    			        	Optional('interface'):{
-    			        		Any():{
-    			        			Optional('ip_address'):{
-                                        Any():{
-                                            Optional('holdtime_ms'): int,
-                                            Optional('hello_interval_ms'): int,
-                                            Optional('holdtime'): int,
-                                            Optional('hello_interval'): int,
-                                            Optional('holdtime_str'): str,
-                                        },
-                                    },
-    			        		},
-    			        	},
-    			        	Optional('targeted_hello'):{
-    			        		Any():{
-    			        			Any():{
-    			        				Optional('active'): bool,
-                                        Optional('holdtime_ms'): int,
-                                        Optional('hello_interval_ms'): int,
-                                        Optional('holdtime'): int,
-                                        Optional('hello_interval'): int,
-                                        Optional('holdtime_str'): str,
-    			        			},
-    			        		},
-    			        	},
-    			        },
-    			        Optional('address_bound'): list,
-    			        Optional('peer_holdtime'): int,
-    			        Optional('ka_interval'): int,
-    			        Optional('peer_holdtime_ms'): int,
-    			        Optional('ka_interval_ms'): int,
-    			        Optional('peer_state'): str,
-    			        Optional('clients'): str,
-    			        Optional('inbound_label_filtering'): str,
-    			        Optional('session_protection'):{
-    			        	'session_state': str,
-    			        	Optional('duration_int'): int,
-                            Optional('duration_str'): str,
-    			        },
-    			        Optional('nsr'): str,
-    			        Optional('capabilities'): {
-    			        	'sent': {
-    			        		Optional('point_to_multipoint'): str,
-    			        		Optional('multipoint_to_multipoint'): str,
-    			        		Optional('typed_wildcard'): str,
-    			        	},
-    			        	Optional('received'): {
-    			        		'point_to_multipoint': str,
-    			        		'multipoint_to_multipoint': str,
-    			        		'typed_wildcard': str,
-    			        	},
-    			        },
-                    },
-                },
-    		},
-    	},
+        'vrf':{
+            Any():{ 
+                'peers':{
+    	        	Any():{
+                        'label_space_id':{
+                            Any():{
+                                'tcp_connection': str,
+    	        		        Optional('local_ldp_ident'): str,
+    	        		        Optional('graceful_restart'): str,
+    	        		        Optional('session_holdtime'): int,
+                                Optional('session_holdtime_ms'): int,
+                                Optional('password'): str,
+    	        		        'state': str,
+    	        		        'msg_sent': int,
+    	        		        'msg_rcvd': int,
+    	        		        'neighbor': str,
+                                Optional('last_tib_rev_sent'): int,
+                                'uptime': str,
+                                Optional('uid'): int,
+                                Optional('peer_id'): int,
+                                Optional('address_family'):{
+                                    Any():{
+    	        		                'ldp_discovery_sources': {
+    	        		                	Optional('interface'):{
+    	        		                		Any():{
+    	        		                			Optional('ip_address'):{
+                                                        Any():{
+                                                            Optional('holdtime_ms'): int,
+                                                            Optional('hello_interval_ms'): int,
+                                                            Optional('holdtime'): int,
+                                                            Optional('hello_interval'): int,
+                                                            Optional('holdtime_str'): str,
+                                                        },
+                                                    },
+    	        		                		},
+    	        		                	},
+    	        		                	Optional('targeted_hello'):{
+    	        		                		Any():{
+    	        		                			Any():{
+    	        		                				Optional('active'): bool,
+                                                        Optional('holdtime_ms'): int,
+                                                        Optional('hello_interval_ms'): int,
+                                                        Optional('holdtime'): int,
+                                                        Optional('hello_interval'): int,
+                                                        Optional('holdtime_str'): str,
+    	        		                			},
+    	        		                		},
+    	        		                	},
+    	        		                },
+                	        		    Optional('address_bound'): list,
+                                    }
+                                },
+    	        		        Optional('peer_holdtime'): int,
+    	        		        Optional('ka_interval'): int,
+    	        		        Optional('peer_holdtime_ms'): int,
+    	        		        Optional('ka_interval_ms'): int,
+    	        		        Optional('peer_state'): str,
+    	        		        Optional('clients'): str,
+    	        		        Optional('inbound_label_filtering'): str,
+    	        		        Optional('session_protection'):{
+    	        		        	'session_state': str,
+    	        		        	Optional('duration_int'): int,
+                                    Optional('duration_str'): str,
+    	        		        },
+    	        		        Optional('nsr'): str,
+    	        		        Optional('capabilities'): {
+    	        		        	Optional('sent'): {
+    	        		        		Any(): str,
+    	        		        	},
+    	        		        	Optional('received'): {
+    	        		        		Any(): str,
+    	        		        	},
+    	        		        },
+                            },
+                        },
+    	        	},
+    	        },
+            }
+        }
     }
 
 class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
@@ -168,15 +172,23 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
      show mpls ldp neighbor {interface}
       """
 
-    cli_command = ['show mpls ldp neighbor', 'show mpls ldp neighbor {interface}']
+    cli_command = ['show mpls ldp neighbor', 'show mpls ldp neighbor',
+     'show mpls ldp neighbor {interface}', 'show mpls ldp neighbor vrf {vrf} {interface}']
 
-    def cli(self, interface=None, output=None):
+    def cli(self, vrf="default", interface=None, output=None):
         if output is None:
-            if interface:
-                out = self.device.execute(self.cli_command[1].\
+            if vrf != '' and interface:
+                out = self.device.execute(self.cli_command[3].\
+                    format(vrf=vrf, interface=interface))
+            elif vrf == '' and interface:
+                out = self.device.execute(self.cli_command[2].\
                     format(interface=interface))
+            elif vrf != '' and not interface:
+                out = self.device.execute(self.cli_command[1].\
+                    format(vrf=vrf))
             else:
                 out = self.device.execute(self.cli_command[0])
+
         else:
             out = output
 
@@ -212,7 +224,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     State: Oper; Msgs sent/rcvd: 24710/24702; Downstream-Unsolicited
         p6 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd:'
         ' *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+)(;'
-        ' +(?P<downstream>[\w\s/-]+))?(; +Last +TIB +rev +sent +'
+        ' +(?P<neighbor>[\w\s/-]+))?(; +Last +TIB +rev +sent +'
         '(?P<last_tib_rev_sent>\d+))?$')
 
         #  Up time: 04:26:14
@@ -221,13 +233,15 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         '+UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+);?)?$')
 
         #     LDP discovery sources:
-        #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         #       ATM3/0.1
         #
         #      IPv4: (1)
         #       GigabitEthernet0/0/0/1
         #      IPv6: (0)
-        p8 = re.compile(r'(?P<interface>[A-Za-z]+[\d/.]+)((,|;)'
+        p8 = re.compile(r'(?P<address_family>(IPv4|IPv6)): +\((?P<number>\d)\)')
+
+        #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
+        p9 = re.compile(r'(?P<interface>[A-Za-z]+[\d/.]+)((,|;)'
         ' +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
         #'Targeted Hello (3.3.3.3 ->172.20.22.22, active, passive)'
@@ -240,13 +254,13 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #'Targeted Hello 1.1.1.1 ->2.2.2.2, active'
         #'Targeted Hello 3.3.3.3 ->172.20.22.22'
         # 'Targeted Hello (3.3.3.3 ->172.20.22.22)'
-        p9 = re.compile(r'Targeted +Hello +\(?(?P<ldp_ip>[\d/.]+)'
+        p10 = re.compile(r'Targeted +Hello +\(?(?P<ldp_ip>[\d/.]+)'
         '\s*->\s*(?P<tdp_ip>[\d/.]+),?\s*'
         '(?P<key1>(active|passive))?,?\s*(?P<key2>passive)?;?\)?')
 
         # holdtime: 15000 ms, hello interval: 5000 ms
         # holdtime: infinite, hello interval: 10000 ms
-        p10 = re.compile(r'^holdtime: *(?P<holdtime>(\d+|\w+)) '
+        p11 = re.compile(r'^holdtime: *(?P<holdtime>(\d+|\w+)) '
         '*(?P<hold_rate>(ms|sec))?, +hello +interval: '
         '*(?P<hello_interval>\d+) +(?P<hello_rate>(ms|sec))$')
 
@@ -254,48 +268,48 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         # IPv4: (4)
         #   2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
         # IPv6: (0)
-        p11 = re.compile(r'(?P<address_bound_peer_ldp>[\d\.\s]+)$')
+        p12 = re.compile(r'(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
-        p12 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +'
+        p13 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +'
         '(?P<peer_rate>(ms|sec)); +KA +interval: '
         '*(?P<ka_interval>\d+) +(?P<ka_rate>(ms|sec));'
         ' +Peer +state: +(?P<peer_state>\S+)$')
         
         # Clients: Dir Adj Client
-        p13 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
+        p14 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
 
         # Inbound label filtering: accept acl 'pfx_acl2'
-        p14 = re.compile(r'^Inbound +label +filtering: +'
+        p15 = re.compile(r'^Inbound +label +filtering: +'
         '(?P<inbound_label_filtering>[\S\s]+)$') 
 
         #Enabled, state: Ready
         #LDP Session Protection: enabled, state: protecting
-        p15 = re.compile(r'(LDP +Session +Protection:? )?(E|e)nabled, +state: '
+        p16 = re.compile(r'(LDP +Session +Protection:? )?(E|e)nabled, +state: '
         '+(?P<session_state>\w+)$')
 
         #Duration: 30 seconds
         #duration: infinite
-        p16 = re.compile(r'(D|d)uration: +(?P<duration>(\d+|\w+)) *(seconds)?')
+        p17 = re.compile(r'(D|d)uration: +(?P<duration>(\d+|\w+)) *(seconds)?')
 
         # NSR: Disabled
         # LDP NSR: Enabled
-        p17 = re.compile(r'(LDP\s+)?NSR: +(?P<nsr>\w+)$')
+        p18 = re.compile(r'(LDP\s+)?NSR: +(?P<nsr>\w+)$')
 
         #  Capabilities:
         #  Capabilities Sent:
-        p18 = re.compile(r'^Capabilities+(\sSent)?:')
+        p19 = re.compile(r'^Capabilities+(\sSent)?:')
 
         #  Capabilities Recieved:
         #  Recieved:
-        p19 = re.compile(r'(Capabilities\s+)?Received:')
+        p20 = re.compile(r'(Capabilities\s+)?Received:')
 
         # 0x508  (MP: Point-to-Multipoint (P2MP))
         # 0x509  (MP: Multipoint-to-Multipoint (MP2MP))
-        p20 = re.compile(r'(?P<key>\S+) +\(MP: +(?P<value>\S+) +\(\S+\)\)')
+        p21 = re.compile(r'(?P<key>\S+) +(?P<value>\(MP: +\S+ +\(\S+\)\))')
 
         # 0x50b  (Typed Wildcard FEC)
-        p21 = re.compile(r'(?P<key>\S+) +\(Typed +Wildcard +FEC\)')
+        p22 = re.compile(r'(?P<key>\S+) +(?P<value>\(Typed +Wildcard +FEC\))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -304,7 +318,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             m = p1.match(line)
             if m: 
                 group = m.groupdict()
-                peer_dict = mpls_dict.setdefault('peers', {}).\
+                peer_dict = mpls_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('peers', {}).\
                     setdefault(group['peer_ldp'], {}).\
                     setdefault('label_space_id', {}).\
                     setdefault(int(group['label_space_id']), {})
@@ -351,11 +365,8 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 peer_dict.update({'state': group['state']})
                 peer_dict.update({'msg_sent': int(group['msg_sent'])})
                 peer_dict.update({'msg_rcvd': int(group['msg_rcvd'])})
-                if group['downstream']:
-                    peer_dict.update({'downstream': True if 'downstream' in\
-                         group['downstream'].lower() else False})
-                else:
-                    peer_dict.update({'downstream': False})
+                if group['neighbor']:
+                    peer_dict.update({'neighbor': group['neighbor']})
                 if group['last_tib_rev_sent']:
                     peer_dict.update({'last_tib_rev_sent': int(group['last_tib_rev_sent'])})
                 continue
@@ -381,10 +392,20 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             #      IPv4: (1)
             #       GigabitEthernet0/0/0/1
             #      IPv6: (0)
+            # import pdb; pdb.set_trace()
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                ldp_source_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
+                if int(group['number']) !=0:
+                    address_dict = peer_dict.setdefault('address_family', {}).\
+                                        setdefault(group['address_family'], {})
+                                        
+                continue
+            # import pdb; pdb.set_trace()
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_source_dict = address_dict.setdefault('ldp_discovery_sources',{}).\
                                             setdefault('interface',{}).\
                                             setdefault(group['interface'],{})
                 interface_flag = True
@@ -404,10 +425,10 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             #'Targeted Hello 1.1.1.1 ->2.2.2.2, active'
             #'Targeted Hello 3.3.3.3 ->172.20.22.22'
             # 'Targeted Hello (3.3.3.3 ->172.20.22.22)'
-            m = p9.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
-                target_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
+                target_dict = address_dict.setdefault('ldp_discovery_sources',{}).\
                                         setdefault('targeted_hello',{}).\
                                         setdefault(group['ldp_ip'],{}).\
                                         setdefault(group['tdp_ip'], {})
@@ -422,7 +443,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
             # holdtime: 15000 ms, hello interval: 5000 ms
             # holdtime: infinite, hello interval: 10000 ms
-            m = p10.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 #if interface_flag:
@@ -446,21 +467,22 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                     target_flag = False
                 
                 continue
-
+            
+            #import pdb; pdb.set_trace()
             #   2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
-            m = p11.match(line)
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 address_bound_list = group['address_bound_peer_ldp'].split()
-                if 'address_bound' not in peer_dict:
-                    peer_dict.update({'address_bound': address_bound_list})
+                if 'address_bound' not in address_dict:
+                    address_dict.update({'address_bound': address_bound_list})
                 else:
-                    peer_dict['address_bound'].extend(address_bound_list)
+                    address_dict['address_bound'].extend(address_bound_list)
             
                 continue
             
             # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
-            m = p12.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 peer_key = 'peer_holdtime' if group['peer_rate'] == 'sec' \
@@ -474,7 +496,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 continue
             
             # Clients: Dir Adj Client
-            m = p13.match(line)
+            m = p14.match(line)
             if m: 
                 group = m.groupdict()
                 peer_dict.update({'clients': group['clients']})
@@ -482,7 +504,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 continue
             
             # Inbound label filtering: accept acl 'pfx_acl2'
-            m = p14.match(line)
+            m = p15.match(line)
             if m: 
                 group = m.groupdict()
                 peer_dict.update({'inbound_label_filtering': group['inbound_label_filtering']})
@@ -491,7 +513,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             
             #Enabled, state: Ready
             #LDP Session Protection: enabled, state: protecting
-            m = p15.match(line)
+            m = p16.match(line)
             if m:
                 group = m.groupdict()
                 session_dict = peer_dict.setdefault('session_protection', {})
@@ -500,7 +522,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 continue
             #Duration: 30 seconds
             #duration: infinite
-            m = p16.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 if group['duration'].isdigit():
@@ -512,7 +534,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
             # NSR: Disabled
             # LDP NSR: Enabled
-            m = p17.match(line)
+            m = p18.match(line)
             if m:
                 group = m.groupdict()
                 peer_dict.update({'nsr': group['nsr']})
@@ -521,7 +543,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
             #  Capabilities:
             #  Capabilities Sent:
-            m = p18.match(line)
+            m = p19.match(line)
             if m:
                 sent_flag = True
                 sent_dict = peer_dict.setdefault('capabilities',{}).\
@@ -530,7 +552,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
             #  Capabilities Recieved:
             #  Recieved:
-            m = p19.match(line)
+            m = p20.match(line)
             if m:
                 receive_flag = True
                 sent_flag = False
@@ -540,26 +562,24 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 continue
             # 0x508  (MP: Point-to-Multipoint (P2MP))
             # 0x509  (MP: Multipoint-to-Multipoint (MP2MP))
-            m = p20.match(line)
-            if m:
-                group = m.groupdict() 
-                if sent_flag:
-                    sent_dict.update({group['value'].lower().replace('-','_')\
-                        : group['key']})
-                if receive_flag:
-                    recieved_dict.update({group['value'].lower().replace('-','_')\
-                        : group['key']})
-                
-                continue
-            
-            # 0x50b  (Typed Wildcard FEC)
             m = p21.match(line)
             if m:
                 group = m.groupdict() 
                 if sent_flag:
-                    sent_dict.update({'typed_wildcard': group['key']})
+                    sent_dict.update({group['key'] :group['value']})
                 if receive_flag:
-                    recieved_dict.update({'typed_wildcard': group['key']})
+                    recieved_dict.update({group['key'] :group['value']})
+                
+                continue
+            
+            # 0x50b  (Typed Wildcard FEC)
+            m = p22.match(line)
+            if m:
+                group = m.groupdict() 
+                if sent_flag:
+                    sent_dict.update({group['key'] :group['value']})
+                if receive_flag:
+                    recieved_dict.update({group['key'] :group['value']})
                 
                 continue
         
@@ -569,21 +589,27 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
     """Parser for show mpls ldp neighbor detail,
                   show mpls ldp neighbor {interface} detail"""
 
-    cli_command = ['show mpls ldp neighbor detail', 
-    'show mpls ldp neighbor {interface} detail']
+    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp neighbor vrf {vrf} detail', 
+    'show mpls ldp neighbor {interface} detail', 'show mpls ldp neighbor vrf {vrf} {interface} detail']
 
-    def cli(self, interface=None, output=None):
+    def cli(self, vrf="default", interface=None, output=None):
         if output is None:
-            if interface:
-                out =  self.device.execute(self.cli_command[1].\
+            if vrf != '' and interface:
+                out = self.device.execute(self.cli_command[3].\
+                    format(vrf=vrf, interface=interface))
+            elif vrf == '' and interface:
+                out = self.device.execute(self.cli_command[2].\
                     format(interface=interface))
+            elif vrf != '' and not interface:
+                out = self.device.execute(self.cli_command[1].\
+                    format(vrf=vrf))
             else:
-                out =  self.device.execute(self.cli_command[0])
-        else:                
+                out = self.device.execute(self.cli_command[0])
+
+        else:
             out = output
 
         return super().cli(interface=interface, output=out)
-
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
