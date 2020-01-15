@@ -37,7 +37,8 @@
     * Added ShowBundleReasons for:  
         * show bundle reasons
         * show bundle {interface} reasons
-
+    * Added ShowSSHistory for:
+	* show ssh history
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
