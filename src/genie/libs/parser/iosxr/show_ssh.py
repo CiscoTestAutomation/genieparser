@@ -17,11 +17,12 @@ from genie.libs.parser.utils.common import Common
 # =====================================
 # Schema for 'show ssh session details'
 # =====================================
-class ShowSSHSchema(MetaParser):
+class ShowSshSchema(MetaParser):
     ''' Schema for "show ssh session details" '''
 
     schema = {
         'session': {
+            'version': str,
             Optional('incoming'): {
                 Any(): {
                     'id': int,
@@ -50,7 +51,7 @@ class ShowSSHSchema(MetaParser):
 # =====================================
 # Parser for 'show ssh session details'
 # =====================================
-class ShowSSH(ShowSSHSchema):
+class ShowSsh(ShowSshSchema):
  
     ''' Parser for "show ssh session details"'''
  
@@ -65,14 +66,19 @@ class ShowSSH(ShowSSHSchema):
         # Init vars
         parsed_dict = {}
 
-        p1 = re.compile(r'^(?P<id>(\d+))\s+(?P<key_exchange>([\w+|-]+))'
-                         '\s+(?P<pubkey>([\w+|-]+))\s+(?P<incipher>([\w+|-]+))'
-                         '\s+(?P<outcipher>([\w+|-]+))\s+(?P<inmac>([\w+|-]+))'
-                         '\s+(?P<outmac>([\w+|-]+))$')
+        # 1       ecdh-sha2-nistp256     ssh-rsa              aes128-ctr  aes128-ctr  hmac-sha2-256 hmac-sha2-256
+        # 1       ecdh-sha2-nistp521     ecdsa-sha2-nistp256  aes128-ctr  aes128-ctr  hmac-sha2-512 hmac-sha2-512
+        p1 = re.compile(r'^(?P<id>(\d+))\s+(?P<key_exchange>(\S+))'
+                         '\s+(?P<pubkey>(\S+))\s+(?P<incipher>(\S+))'
+                         '\s+(?P<outcipher>(\S+))\s+(?P<inmac>(\S+))'
+                         '\s+(?P<outmac>(\S+))$')
 
-        p2 = re.compile('^Incoming Session')
+        p2 = re.compile(r'^Incoming Session')
 
-        p3 = re.compile('^Outgoing connection')
+        p3 = re.compile(r'^Outgoing connection')
+
+        # SSH version : Cisco-2.0
+        p4 = re.compile(r'^SSH version : (?P<version>(\S+))')
     
         isIncoming = None
  
@@ -85,7 +91,7 @@ class ShowSSH(ShowSSHSchema):
                 group_id = group['id']
                 group['id'] = int(group_id)
                 
-                ret_dict = parsed_dict.setdefault('session', {})\
+                parsed_dict.setdefault('session', {})\
                     .setdefault('incoming' if isIncoming else 'outgoing', {})\
                     .setdefault(group_id, group)
                 continue
@@ -98,6 +104,13 @@ class ShowSSH(ShowSSHSchema):
             m = p3.match(line)
             if m:
                 isIncoming = False
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict.setdefault('session', {})\
+                    .setdefault('version', group['version'])
                 continue
  
         return parsed_dict

@@ -10,7 +10,7 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.iosxr.show_ssh import ShowSSH
+from genie.libs.parser.iosxr.show_ssh import ShowSsh
  
 
 # ===============================
@@ -23,6 +23,7 @@ class test_show_ssh(unittest.TestCase):
     
     golden_parsed_output = {
         'session': {
+            'version': 'Cisco-2.0',
             'incoming': {
                 '1': {
                     'id': 1,
@@ -63,14 +64,14 @@ class test_show_ssh(unittest.TestCase):
 
     def test_show_ssh_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowSSH(device=self.device)
+        obj = ShowSsh(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_ssh_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowSSH(device=self.device)
+        obj = ShowSsh(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
