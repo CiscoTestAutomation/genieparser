@@ -88,6 +88,10 @@
     * Updated ShowVersion for:
         * Optional key issue for ios/cat6k platform
         * Updating symbolic link to platform specific unittests
+    * Updated ShowAccessLists
+	    * Updated for the case of empty ttl_groups
+		* Updated for udp ACL with incremented counter
+		* Added support for access-lists with object-group references
 
 * IOSXE
     * Updating symbolic link to platform specific unittests
