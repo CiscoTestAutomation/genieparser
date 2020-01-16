@@ -172,18 +172,18 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
      show mpls ldp neighbor {interface}
       """
 
-    cli_command = ['show mpls ldp neighbor', 'show mpls ldp neighbor',
-     'show mpls ldp neighbor {interface}', 'show mpls ldp neighbor vrf {vrf} {interface}']
+    cli_command = ['show mpls ldp neighbor', 'show mpls ldp vrf {vrf} neighbor',
+     'show mpls ldp neighbor {interface}', 'show mpls ldp vrf {vrf} neighbor {interface}']
 
-    def cli(self, vrf="default", interface=None, output=None):
+    def cli(self, vrf="", interface=None, output=None):
         if output is None:
-            if vrf != '' and interface:
+            if vrf and interface:
                 out = self.device.execute(self.cli_command[3].\
                     format(vrf=vrf, interface=interface))
-            elif vrf == '' and interface:
+            elif not vrf and interface:
                 out = self.device.execute(self.cli_command[2].\
                     format(interface=interface))
-            elif vrf != '' and not interface:
+            elif vrf and not interface:
                 out = self.device.execute(self.cli_command[1].\
                     format(vrf=vrf))
             else:
@@ -191,25 +191,28 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         else:
             out = output
+        
+        if not vrf:
+            vrf = 'default'
 
         # initial return dictionary
         mpls_dict = {}
         target_flag = False
         interface_flag = False
         receive_flag = False
-        sent_flage = False 
+        sent_flag = False 
 
-        # Peer LDP Identifier: 2.2.0.2:0
+        # Peer LDP Identifier: 10.16.0.2:0
         # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
         p1 = re.compile(r'^Peer +LDP +(Ident|Identifier): *'
         '(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+)(; '
         '+Local +LDP +(Ident|Identifier) +(?P<local_ldp>\S+)$)?')
 
-        # TCP connection: 2.2.0.2:646 - 2.2.0.9:38143
+        # TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
         p2 = re.compile(r'^TCP +connection: *(?P<tcp_connection>[\S\s]+)$')
         
         # Graceful Restart: No
-        p3 = re.compile(r'^Graceful +Restart: +(?P<graceful_restart>\w+)$')
+        p3 = re.compile(r'^Graceful +Restart: +(?P<graceful_restart>[\S\s]+)$')
 
         # Session Holdtime: 180 sec
         p4 = re.compile(r'Session Holdtime: +(?P<session_holdtime>\d+)'
@@ -241,22 +244,22 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         p8 = re.compile(r'(?P<address_family>(IPv4|IPv6)): +\((?P<number>\d)\)')
 
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
-        p9 = re.compile(r'(?P<interface>[A-Za-z]+[\d/.]+)((,|;)'
+        p9 = re.compile(r'(?P<interface>[A-Za-z-]+[\d/.]+)((,|;)'
         ' +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
-        #'Targeted Hello (3.3.3.3 ->172.20.22.22, active, passive)'
-        # 'Targeted Hello 200.80.173.2 ->200.80.173.4, active, passive;'
-        #'Targeted Hello (1.1.1.1 ->2.2.2.2, active)'
-        #'Targeted Hello (1.1.1.1 ->2.2.2.2, passive)'
-        #'Targeted Hello 1.1.1.1 ->2.2.2.2, passive'
-        #'Targeted Hello 1.1.1.1 ->2.2.2.2, passive;'
-        #'Targeted Hello 1.1.1.1 ->2.2.2.2, active;'
-        #'Targeted Hello 1.1.1.1 ->2.2.2.2, active'
-        #'Targeted Hello 3.3.3.3 ->172.20.22.22'
-        # 'Targeted Hello (3.3.3.3 ->172.20.22.22)'
+        #'Targeted Hello (10.36.3.3 ->172.20.22.22, active, passive)'
+        # 'Targeted Hello 192.168.189.2 ->192.168.189.4, active, passive;'
+        #'Targeted Hello (10.4.1.1 ->10.16.2.2, active)'
+        #'Targeted Hello (10.4.1.1 ->10.16.2.2, passive)'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive;'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, active;'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, active'
+        #'Targeted Hello 10.36.3.3 ->172.20.22.22'
+        # 'Targeted Hello (10.36.3.3 ->172.20.22.22)'
         p10 = re.compile(r'Targeted +Hello +\(?(?P<ldp_ip>[\d/.]+)'
         '\s*->\s*(?P<tdp_ip>[\d/.]+),?\s*'
-        '(?P<key1>(active|passive))?,?\s*(?P<key2>passive)?;?\)?')
+        '(?P<key1>[\S\s]+)+(,|;)? +(?P<key2>passive)?')
 
         # holdtime: 15000 ms, hello interval: 5000 ms
         # holdtime: infinite, hello interval: 10000 ms
@@ -266,7 +269,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         # Addresses bound to this peer:
         # IPv4: (4)
-        #   2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
+        #   10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
         # IPv6: (0)
         p12 = re.compile(r'(?P<address_bound_peer_ldp>[\d\.\s]+)$')
 
@@ -306,14 +309,14 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         # 0x508  (MP: Point-to-Multipoint (P2MP))
         # 0x509  (MP: Multipoint-to-Multipoint (MP2MP))
-        p21 = re.compile(r'(?P<key>\S+) +(?P<value>\(MP: +\S+ +\(\S+\)\))')
+        p21 = re.compile(r'(?P<key>\S+) +\((?P<value>MP: +\S+ +\(\S+\))\)')
 
         # 0x50b  (Typed Wildcard FEC)
-        p22 = re.compile(r'(?P<key>\S+) +(?P<value>\(Typed +Wildcard +FEC\))')
+        p22 = re.compile(r'(?P<key>\S+) +\((?P<value>Typed +Wildcard +FEC)\)')
 
         for line in out.splitlines():
             line = line.strip()
-            # Peer LDP Identifier: 2.2.0.2:0
+            # Peer LDP Identifier: 10.16.0.2:0
             # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
             m = p1.match(line)
             if m: 
@@ -326,7 +329,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                     peer_dict.update({'local_ldp_ident':group['local_ldp'] })
                 continue
             
-            # TCP connection: 2.2.0.2:646 - 2.2.0.9:38143
+            # TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
             m = p2.match(line)
             if m: 
                 group = m.groupdict()
@@ -382,32 +385,30 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                     peer_dict.update({'uid': int(group['uid'])})
                 if group['peer_id']:
                     peer_dict.update({'peer_id': int(group['peer_id'])})
-                
+                continue
+
+            #      IPv4: (1)
+            #       GigabitEthernet0/0/0/1
+            #      IPv6: (0)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if int(group['number']) !=0:
+                    address_dict = peer_dict.setdefault('address_family', {}).\
+                                        setdefault(group['address_family'].lower(), {})      
                 continue
 
             # LDP discovery sources:
             #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
             #       ATM3/0.1
             #
-            #      IPv4: (1)
-            #       GigabitEthernet0/0/0/1
-            #      IPv6: (0)
-            # import pdb; pdb.set_trace()
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                if int(group['number']) !=0:
-                    address_dict = peer_dict.setdefault('address_family', {}).\
-                                        setdefault(group['address_family'], {})
-                                        
-                continue
-            # import pdb; pdb.set_trace()
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 ldp_source_dict = address_dict.setdefault('ldp_discovery_sources',{}).\
                                             setdefault('interface',{}).\
                                             setdefault(group['interface'],{})
+                target_flag = False
                 interface_flag = True
                 if group['src_ip_address']:
                     ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
@@ -415,16 +416,16 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                     
                 continue
         
-            #'Targeted Hello (3.3.3.3 ->172.20.22.22, active, passive)'
-            #'Targeted Hello 200.80.173.2 ->200.80.173.4, active, passive;'
-            #'Targeted Hello (1.1.1.1 ->2.2.2.2, active)'
-            #'Targeted Hello (1.1.1.1 ->2.2.2.2, passive)'
-            #'Targeted Hello 1.1.1.1 ->2.2.2.2, passive'
-            #'Targeted Hello 1.1.1.1 ->2.2.2.2, passive;'
-            #'Targeted Hello 1.1.1.1 ->2.2.2.2, active;'
-            #'Targeted Hello 1.1.1.1 ->2.2.2.2, active'
-            #'Targeted Hello 3.3.3.3 ->172.20.22.22'
-            # 'Targeted Hello (3.3.3.3 ->172.20.22.22)'
+            #'Targeted Hello (10.36.3.3 ->172.20.22.22, active, passive)'
+            #'Targeted Hello 192.168.189.2 ->192.168.189.4, active, passive;'
+            #'Targeted Hello (10.4.1.1 ->10.16.2.2, active)'
+            #'Targeted Hello (10.4.1.1 ->10.16.2.2, passive)'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive;'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, active;'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, active'
+            #'Targeted Hello 10.36.3.3 ->172.20.22.22'
+            # 'Targeted Hello (10.36.3.3 ->172.20.22.22)'
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -434,10 +435,10 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                                         setdefault(group['tdp_ip'], {})
                 interface_flag = False
                 target_flag = True
-                if group['key1'] == 'active' and group['key2'] == None:
-                    target_dict.update({group['key1']: True})
+                if group['key1'] == 'active' and not group['key2']:
+                    target_dict.update({'active': True})
                 else:
-                    target_dict.update({group['key1']: False}) 
+                    target_dict.update({'active': False}) 
 
                 continue
 
@@ -468,8 +469,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                 
                 continue
             
-            #import pdb; pdb.set_trace()
-            #   2.2.0.7        2.2.27.7       2.2.78.7       2.2.79.7       
+            #   10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -582,25 +582,25 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
                     recieved_dict.update({group['key'] :group['value']})
                 
                 continue
-        
+
         return mpls_dict
 
 class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
     """Parser for show mpls ldp neighbor detail,
                   show mpls ldp neighbor {interface} detail"""
 
-    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp neighbor vrf {vrf} detail', 
-    'show mpls ldp neighbor {interface} detail', 'show mpls ldp neighbor vrf {vrf} {interface} detail']
+    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp vrf {vrf} neighbor  detail', 
+    'show mpls ldp neighbor {interface} detail', 'show mpls ldp vrf {vrf} {interface} detail']
 
-    def cli(self, vrf="default", interface=None, output=None):
+    def cli(self, vrf="", interface=None, output=None):
         if output is None:
-            if vrf != '' and interface:
+            if vrf and interface:
                 out = self.device.execute(self.cli_command[3].\
                     format(vrf=vrf, interface=interface))
-            elif vrf == '' and interface:
+            elif not vrf and interface:
                 out = self.device.execute(self.cli_command[2].\
                     format(interface=interface))
-            elif vrf != '' and not interface:
+            elif vrf and not interface:
                 out = self.device.execute(self.cli_command[1].\
                     format(vrf=vrf))
             else:
@@ -609,7 +609,7 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
         else:
             out = output
 
-        return super().cli(interface=interface, output=out)
+        return super().cli(vrf=vrf, interface=interface, output=out)
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
@@ -848,8 +848,8 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             '\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
             '\s+nh=(?P<nh>\S+)\)$')
             
-        # (IPv4, vers:0, default, 1.1.1.1/24)
-        # (IPv4, vers:0, , 12.10.10.10/15)
+        # (IPv4, vers:0, default, 10.4.1.1/24)
+        # (IPv4, vers:0, , 10.229.10.10/15)
         p4 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
         ' +(?P<default>default)?, +(?P<prefix>\S+)\)$')
 
@@ -907,8 +907,8 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 latest_dict.update({'nh':m.groupdict()['nh']})
                 continue
 
-            # (IPv4, vers:0, default, 1.1.1.1/24)
-            # (IPv4, vers:0, , 12.10.10.10/15)
+            # (IPv4, vers:0, default, 10.4.1.1/24)
+            # (IPv4, vers:0, , 10.229.10.10/15)
             m = p4.match(line)
             if m:
                 label_type = m.groupdict()['label_type']
