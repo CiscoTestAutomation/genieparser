@@ -73,8 +73,10 @@ class ShowSsh(ShowSshSchema):
                          '\s+(?P<outcipher>(\S+))\s+(?P<inmac>(\S+))'
                          '\s+(?P<outmac>(\S+))$')
 
+        # Incoming Session
         p2 = re.compile(r'^Incoming Session')
 
+        # Outgoing connection
         p3 = re.compile(r'^Outgoing connection')
 
         # SSH version : Cisco-2.0
