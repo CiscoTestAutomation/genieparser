@@ -1,6 +1,5 @@
 # Python
 import unittest
-import genie.gre
 from unittest.mock import Mock
 
 # ATS
