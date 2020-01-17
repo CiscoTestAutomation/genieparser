@@ -25,6 +25,8 @@
         * show mpls forwarding vrf {vrf}
     *Added ShowMplsLabelRange for:
         * show mpls label range
+    * Added ShowMplsLabelTablePrivate for:
+        * show mpls label table private    
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
     * Added ShowBgpEgressEngineering for:
@@ -32,6 +34,9 @@
     * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
         * show traffic-collector external-interface
         * show traffic-collector ipv4 counters prefix <prefix> detail
+    * Added ShowBundleReasons for:  
+        * show bundle reasons
+        * show bundle {interface} reasons
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
@@ -65,12 +70,27 @@
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+* IOSXR
+    * Updated ShowLacp
+        * Change in order to parse show lacp {interface}.
+    * Updated ShowBundle
+        * Change in order to parse show bundle {interface} reasons 
 
 * DNAC
     * Updated Interface for:
         * Supporting hostname in the schema
+		
+* NXOS
+    * Updated ShowVpc:
+        * Supporting parser for vpc+ outputs
 
 * IOS
     * Updated ShowVersion for:
         * Optional key issue for ios/cat6k platform
-        * * Updating symbolic link to platform specific unittests
+        * Updating symbolic link to platform specific unittests
+
+* IOSXE
+    * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updating symbolic link to platform specific unittests

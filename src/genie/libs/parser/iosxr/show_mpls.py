@@ -4,6 +4,7 @@ IOSXR parsers for the following show commands:
     * 'show mpls label range'
     * 'show mpls ldp neighbor brief'
     * 'show mpls label table detail'
+    * 'show mpls label table private'
     * 'show mpls interfaces'
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
@@ -222,22 +223,27 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
-
 # ======================================================
-# Parser for 'show mpls label table detail'
+# Schema for 'show mpls label table detail'
 # ======================================================
 class ShowMplsLabelTableDetailSchema(MetaParser):
     
-    """Schema for show mpls label table detail"""
+    """Schema for 
+    show mpls label table detail
+    show mpls label table private
+    """
 
     schema = {
         'table': {
             Any(): {
                 'label': {
                     Any(): {
-                        'owner': str,
-                        'state': str,
-                        'rewrite': str,
+                        'owner': {
+                            Any():{
+                                'state': str,
+                                'rewrite': str,
+                            },
+                        },
                         Optional('label_type'): {
                             Any(): {
                                 Optional('vers'): int,
@@ -248,6 +254,8 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
                                 Optional('type'): int,
                                 Optional('interface'): str,
                                 Optional('nh'): str,
+                                Optional('default'): bool,
+                                Optional('prefix'): str,
                             },
                         }
                     },
@@ -256,11 +264,14 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
         }
     }
 
-
+# ======================================================
+# Parser for 'show mpls label table detail'
+# ======================================================
 class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
-    """Parser for show mpls label table detail"""
-
+    """
+    Parser for show mpls label table detail
+    """
     cli_command = ['show mpls label table detail']
 
     def cli(self, output=None):
@@ -277,8 +288,10 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         # ----- ------- ------------------------------- ------ -------
         # 0     0       LSD(A)                          InUse  Yes
         # 0     16000   ISIS(A):SR                      InUse  No
-        p1 = re.compile(r'^(?P<table>\d+)\s+(?P<label>\d+)\s+(?P<owner>[\S]+)\s+(?P<state>\S+)'
-            '\s+(?P<rewrite>\S+)$')
+        # 0     16001   LDP:lsd_test_ut                 InUse  No
+        #               Static:lsd_test_ut              InUse  No
+        p1 = re.compile(r'(?P<table>\d+\s+)?(?P<label>\d+\s+)?(?P<owner>[\S]+)'
+        '\s+(?P<state>\S+)\s+(?P<rewrite>\w+)$')
 
         # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
         # (Lbl-blk SRLB, vers:0, (start_label=15000, size=1000, app_notify=0)
@@ -290,6 +303,11 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         p3 = re.compile(r'^\((?P<sr_label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
             '\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
             '\s+nh=(?P<nh>\S+)\)$')
+            
+        # (IPv4, vers:0, default, 1.1.1.1/24)
+        # (IPv4, vers:0, , 12.10.10.10/15)
+        p4 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
+        ' +(?P<default>default)?, +(?P<prefix>\S+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -297,16 +315,23 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             # Table Label   Owner                           State  Rewrite
             # ----- ------- ------------------------------- ------ -------
             # 0     0       LSD(A)                          InUse  Yes
-            # 0     16000   ISIS(A):SR                      InUse  No
+            # 0     16001   LDP:lsd_test_ut                 InUse  No
+            #       Static:lsd_test_ut                      InUse  No
             m = p1.match(line)
             if m:
-                table = int(m.groupdict()['table'])
-                label = int(m.groupdict()['label'])
-                final_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
-                    setdefault('label', {}).setdefault(label, {})
-                label_list = ['owner', 'state', 'rewrite']
+                label_list = ['state', 'rewrite']
+                if (m.groupdict()['table']) and (m.groupdict()['label']):
+                    table = int(m.groupdict()['table'].strip())
+                    label = int(m.groupdict()['label'].strip())
+                    final_dict = mpls_dict.setdefault('table', {}).\
+                                setdefault(table, {}).\
+                                setdefault('label', {}).\
+                                setdefault(label, {}).\
+                                setdefault('owner', {})
+                
+                owner_dict = final_dict.setdefault(m.groupdict()['owner'], {})
                 for key in label_list:
-                    final_dict.update({key:m.groupdict()[key]})
+                    owner_dict.update({key:m.groupdict()[key]})
                 continue
 
             # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
@@ -314,7 +339,9 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             m = p2.match(line)
             if m:
                 label_type = m.groupdict()['label_type']
-                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
                 label_list = ['vers', 'start_label', 'size']
                 for key in label_list:
                     latest_dict.update({key:int(m.groupdict()[key])})
@@ -326,7 +353,9 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             m = p3.match(line)
             if m:
                 label_type = m.groupdict()['sr_label_type']
-                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
                 label_list = ['vers', 'index', 'type']
                 for key in label_list:
                     latest_dict.update({key:int(m.groupdict()[key])})
@@ -334,8 +363,38 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 latest_dict.update({'nh':m.groupdict()['nh']})
                 continue
 
+            # (IPv4, vers:0, default, 1.1.1.1/24)
+            # (IPv4, vers:0, , 12.10.10.10/15)
+            m = p4.match(line)
+            if m:
+                label_type = m.groupdict()['label_type']
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict.update({'vers':int(m.groupdict()['vers'])})
+                latest_dict.update({'default':True if m.groupdict()['default'] != None\
+                    else False})
+                latest_dict.update({'prefix':m.groupdict()['prefix']})
+
         return mpls_dict
 
+# ======================================================
+# Parser for 'show mpls label table private'
+# ======================================================
+class ShowMplsLabelTablePrivate(ShowMplsLabelTableDetail):
+
+    """
+    Parser for show mpls label table private
+    """
+
+    cli_command = ['show mpls label table private']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        return super().cli(output=out)
 
 # ======================================================
 # Schema for 'show mpls interfaces'

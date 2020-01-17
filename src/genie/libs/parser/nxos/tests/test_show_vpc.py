@@ -18,8 +18,8 @@ from genie.libs.parser.nxos.show_vpc import ShowVpc
 #=========================================================
 class test_show_vpc(unittest.TestCase):
 
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'vpc_domain_id': '1',
@@ -355,6 +355,77 @@ class test_show_vpc(unittest.TestCase):
         N95_1# 
     '''}
 
+    golden_parsed_output_7 = {
+        'vpc_domain_id': 'Unknown',
+        'vpc_plus_switch_id': 'Unknown',
+        'vpc_peer_status': 'peer adjacency formed ok',
+        'vpc_peer_keepalive_status': 'peer is alive',
+        'vpc_fabricpath_status': 'peer is reachable through fabricpath',
+        'vpc_configuration_consistency_status': 'success',
+        'vpc_per_vlan_consistency_status': 'success',
+        'vpc_type_2_consistency_status': 'success',
+        'vpc_role': 'primary',
+        'num_of_vpcs': 8,
+        'peer_gateway': 'Disabled',
+        'dual_active_excluded_vlans': '-',
+        'vpc_graceful_consistency_check_status': 'Enabled',
+        'vpc_auto_recovery_status': 'Enabled (timeout = 300 seconds)',
+        'peer_link': {
+            1: {
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel1',
+                'peer_link_port_state': 'up',
+                'peer_up_vlan_bitset': '1,2,3,4,5,6,7'
+            }
+        },
+        'vpc': {
+            11: {
+                'vpc_id': 11,
+                'vpc_ifindex': 'Port-channel11',
+                'vpc_port_state': 'up',
+                'vpc_consistency': 'success',
+                'vpc_consistency_status': 'success',
+                'up_vlan_bitset': '1,2,3,4,5,6,7,8,9,10,11',
+                'vpc_plus_attrib': 'DF: Partial,FP MAC:312.0.0'
+            }
+        }
+    }
+
+    golden_output7 = {'execute.return_value': '''
+        Legend:
+                        (*) - local vPC is down, forwarding via vPC peer-link
+        
+        vPC domain id                     : Unknown
+        vPC+ switch id                    : Unknown
+        Peer status                       : peer adjacency formed ok
+        vPC keep-alive status             : peer is alive
+        vPC fabricpath status             : peer is reachable through fabricpath
+        Configuration consistency status  : success
+        Per-vlan consistency status       : success
+        Type-2 consistency status         : success
+        vPC role                          : primary
+        Number of vPCs configured         : 8
+        Peer Gateway                      : Disabled
+        Dual-active excluded VLANs        : -
+        Graceful Consistency Check        : Enabled
+        Auto-recovery status              : Enabled (timeout = 300 seconds)
+        
+        vPC Peer-link status
+        ---------------------------------------------------------------------
+        id   Port   Status Active vlans
+        --   ----   ------ --------------------------------------------------
+        1    Po1    up     1,2,3,4,5,6,7
+        
+        vPC status
+        ---------------------------------------------------------------------------
+        id     Port        Status Consistency Reason       Active vlans vPC+ Attrib
+        --     ----------  ------ ----------- ------       ------------ -----------
+        11     Po11        up     success     success      1,2,3,4,5,6, DF: Partial,
+                                                           7,8,9,       FP MAC:
+                                                           10,11        312.0.0
+    '''
+    }
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVpc(device=self.device)
@@ -362,46 +433,46 @@ class test_show_vpc(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_golden_3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_5(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_golden_6(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
         obj = ShowVpc(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
+    def test_golden_7(self):
+        self.device = Mock(**self.golden_output7)
+        obj = ShowVpc(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+        
 if __name__ == '__main__':
     unittest.main()
