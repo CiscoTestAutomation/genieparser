@@ -47,7 +47,7 @@ class ShowVersionSchema(MetaParser):
             'interfaces': {
                 'virtual_ethernet': int,
                 'gigabit_ethernet': int,
-                'serial': int,
+                Optional('serial'): int,
             },
             'memory': {
                 'non_volatile_conf': int,
@@ -55,12 +55,12 @@ class ShowVersionSchema(MetaParser):
                 'flash_internal_SIMM': int,
             },
             'curr_config_register': str,
-            'last_reload': {
-                        'type': str,
-                        'reason': str,
+            Optional('last_reload'): {
+                'type': str,
+                'reason': str,
             },
-            'control_processor_uptime': str,
-            'controller': {
+            Optional('control_processor_uptime'): str,
+            Optional('controller'): {
                 'type': str,
                 'counts': int,
                 'serial': int,

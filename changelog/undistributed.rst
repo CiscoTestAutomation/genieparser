@@ -83,4 +83,15 @@
 * NXOS
     * Updated ShowVpc:
         * Supporting parser for vpc+ outputs
-		
+
+* IOS
+    * Updated ShowVersion for:
+        * Optional key issue for ios/cat6k platform
+        * Updating symbolic link to platform specific unittests
+
+* IOSXE
+    * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updating symbolic link to platform specific unittests
+    
