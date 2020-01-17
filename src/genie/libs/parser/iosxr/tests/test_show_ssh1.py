@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-import genie.gre     
+  
 # pyATS
 from pyats.topology import Device
 from pyats.topology import loader
@@ -53,16 +53,13 @@ class test_show_ssh1(unittest.TestCase):
     '''}
     
     def test_show_ssh1_full(self):
-        import re
-        re.reset()   
+ 
         
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowSSHHistory(device=self.device)
         parsed_output = obj.parse()  
         
-        print(re.colour_output())
-        re.reset()        
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
     def test_show_ssh1_empty(self):
