@@ -309,7 +309,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         40 permit icmp any any unreachable
         50 permit icmp any any packet-too-big
         60 deny icmp any any
-        80 permit udp any host 1.1.1.1 eq 1985
+        80 permit udp any host 10.4.1.1 eq 1985
     '''
     }
     
@@ -342,7 +342,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'echo'
                             }
                         }
                     }
@@ -374,7 +375,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'echo-reply'
                             }
                         }
                     }
@@ -403,7 +405,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'ttl-exceeded'
                             }
                         }
                     }
@@ -432,7 +435,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'unreachable'
                             }
                         }
                     }
@@ -461,7 +465,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'packet-too-big'
                             }
                         }
                     }
@@ -511,8 +516,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                     }
                                 },
                                 'destination_network': {
-                                    'host 1.1.1.1': {
-                                        'destination_network': 'host 1.1.1.1'
+                                    'host 10.4.1.1': {
+                                        'destination_network': 'host 10.4.1.1'
                                     }
                                 }
                             }
@@ -537,7 +542,7 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
     golden_output_customer2 = {'execute.return_value': '''
     Extended IP access list acl1
         10 permit icmp any any
-        20 permit udp any host 1.1.1.1 eq 1985 (67 matches)
+        20 permit udp any host 10.4.1.1 eq 1985 (67 matches)
         30 permit ip object-group dummydpd-local object-group dummydpd-remote
     '''
     }
@@ -582,6 +587,9 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         'forwarding': 'permit',
                         'logging': 'log-none'
                     },
+                    'statistics': {
+                        'matched_packets': 67
+                    },
                     'matches': {
                         'l3': {
                             'ipv4': {
@@ -592,8 +600,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                     }
                                 },
                                 'destination_network': {
-                                    'host 1.1.1.1': {
-                                        'destination_network': 'host 1.1.1.1'
+                                    'host 10.4.1.1': {
+                                        'destination_network': 'host 10.4.1.1'
                                     }
                                 }
                             }
@@ -602,9 +610,9 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                             'udp': {
                                 'established': False,
                                 'destination_port': {
-                                    'range': {
-                                        'lower_port': 1985,
-                                        'upper_port': 67
+                                    'operator': {
+                                        'operator': 'eq',
+                                        'port': 1985
                                     }
                                 }
                             }
@@ -652,10 +660,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
         50 permit icmp any any packet-too-big
         60 deny icmp any any
         70 permit ip object-group grt-interface-nets object-group grt-interface-nets
-        80 permit udp any host 1.1.1.1 eq 1985
-        90 permit esp object-group vpn-endpoints-dummydpd host 1.1.1.1 (14 matches)
-        100 permit ahp object-group vpn-endpoints-dummydpd host 1.1.1.1
-        110 permit udp object-group vpn-endpoints-dummydpd host 1.1.1.1 eq isakmp (122 matches)
+        80 permit udp any host 10.4.1.1 eq 1985
+        90 permit esp object-group vpn-endpoints-dummydpd host 10.4.1.1 (14 matches)
+        100 permit ahp object-group vpn-endpoints-dummydpd host 10.4.1.1
+        110 permit udp object-group vpn-endpoints-dummydpd host 10.4.1.1 eq isakmp (122 matches)
     '''
     }
     
@@ -688,7 +696,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'echo'
                             }
                         }
                     }
@@ -720,7 +729,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                         },
                         'l4': {
                             'icmp': {
-                                'established': False
+                                'established': False,
+                                'msg_type': 'echo-reply'
                                     }
                                 }
                             }
@@ -749,7 +759,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                 },
                                 'l4': {
                                     'icmp': {
-                                        'established': False
+                                        'established': False,
+                                        'msg_type': 'unreachable'
                                     }
                                 }
                             }
@@ -778,7 +789,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                 },
                                 'l4': {
                                     'icmp': {
-                                        'established': False
+                                        'established': False,
+                                        'msg_type': 'packet-too-big'
                                     }
                                 }
                             }
@@ -857,8 +869,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                             }
                                         },
                                         'destination_network': {
-                                            'host 1.1.1.1': {
-                                                'destination_network': 'host 1.1.1.1'
+                                            'host 10.4.1.1': {
+                                                'destination_network': 'host 10.4.1.1'
                                             }
                                         }
                                     }
@@ -895,8 +907,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                             }
                                         },
                                         'destination_network': {
-                                            'host 1.1.1.1': {
-                                                'destination_network': 'host 1.1.1.1'
+                                            'host 10.4.1.1': {
+                                                'destination_network': 'host 10.4.1.1'
                                             }
                                         }
                                     }
@@ -924,8 +936,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                             }
                                         },
                                         'destination_network': {
-                                            'host 1.1.1.1': {
-                                                'destination_network': 'host 1.1.1.1'
+                                            'host 10.4.1.1': {
+                                                'destination_network': 'host 10.4.1.1'
                                             }
                                         }
                                     }
@@ -956,8 +968,8 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                                             }
                                         },
                                         'destination_network': {
-                                            'host 1.1.1.1': {
-                                                'destination_network': 'host 1.1.1.1'
+                                            'host 10.4.1.1': {
+                                                'destination_network': 'host 10.4.1.1'
                                             }
                                         }
                                     }

@@ -100,7 +100,8 @@ class ShowAccessListsSchema(MetaParser):
                                         'operator': str,                                        
                                         'port': int,
                                     }
-                                }
+                                },
+                                Optional('msg_type'): str,
                             }
                         },
                     },
@@ -280,6 +281,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 30 deny tcp any any
         # 30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
         # 10 permit ip any any(10031 matches)
+        # 20 permit udp any host 10.4.1.1 eq 1985 (67 matches)
         # 10 permit tcp any any eq 443
         # 30 deny ip any any
         # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
@@ -287,13 +289,15 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 30 deny ip any any
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
+        # 30 permit icmp any any ttl-exceeded
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
             r'+(?P<src>(?:any|host|\d+\.\d+\.\d+\.\d+)(?: '
             r'+\d+\.\d+\.\d+\.\d+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:any|host|\d+\.\d+\.\d+\.\d+)'
             r'(?: +\d+\.\d+\.\d+\.\d+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
-            r'+(?P<dst_port>(?:\S ?)+\S))?(?P<left>.+)?$')
+            r'+(?P<dst_port>(?:\S?)+\S))?(?: +(?P<msg_type>ttl-exceeded|unreachable|'
+            r'packet-too-big|echo-reply|echo|router-advertisement|mld-query+))?(?P<left>.+)?$')
 
         # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
         # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
@@ -315,23 +319,25 @@ class ShowAccessLists(ShowAccessListsSchema):
             r' +(?P<src_port>[\S ]+\S))? +(?P<dst>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
             r'(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))(?: '
             r'+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\w+ ?)'
-            r'+\w+))?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
+            r'+\w+))?(?: +(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
+            r'router-advertisement|mld-query+))?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
 
         p_mac_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>(host *)?[\w\.]+) '
             r'+(?P<dst>(host *)?[\w\.]+)( *(?P<left>.*))?$')
             
         # 70 permit ip object-group grt-interface-nets object-group grt-interface-nets
-        # 90 permit esp object-group vpn-endpoints-dummydpd host 1.1.1.1 (14 matches)
-        # 100 permit ahp object-group vpn-endpoints-dummydpd host 1.1.1.1
-        # 110 permit udp object-group vpn-endpoints-dummydpd host 1.1.1.1 eq isakmp (122 matches)
+        # 90 permit esp object-group vpn-endpoints-dummydpd host 10.4.1.1 (14 matches)
+        # 100 permit ahp object-group vpn-endpoints-dummydpd host 10.4.1.1
+        # 110 permit udp object-group vpn-endpoints-dummydpd host 10.4.1.1 eq isakmp (122 matches)
         p_ip_object_group = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
             r'+(?P<src>(?:object-group+)(?: '
             r'+\S+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:host|object-group+)'
             r'(?: +\d+\.\d+\.\d+\.\d+)?(?: [a-zA-Z\-]*(?!.*[eq])+)?)?(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
-            r'+(?P<dst_port>(?:\S?)+))?(?P<left>.+)?$')
+            r'+(?P<dst_port>(?:\S?)+))?(?: +(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
+            r'router-advertisement|mld-query+))?(?P<left>.+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -519,7 +525,10 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 l4_dict['established'] = True \
                     if 'established' in left else False
-
+                    
+                if group['msg_type']:
+                    l4_dict['msg_type'] = group['msg_type']
+                    
                 # source_port operator
                 if src_port and src_operator:
                     if 'range' not in src_operator:

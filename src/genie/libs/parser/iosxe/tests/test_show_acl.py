@@ -1341,7 +1341,8 @@ IPv6 access list OutFilter_IPv6
                     "matches": {
                          "l4": {
                               "icmp": {
-                                   "established": False
+                                   "established": False,
+                                   "msg_type": "mld-query"
                               }
                          },
                          "l3": {
@@ -1506,7 +1507,8 @@ IPv6 access list OutFilter_IPv6
                     "matches": {
                          "l4": {
                               "icmp": {
-                                   "established": False
+                                   "established": False,
+                                   "msg_type": "packet-too-big"
                               }
                          },
                          "l3": {
@@ -1535,7 +1537,8 @@ IPv6 access list OutFilter_IPv6
                     "matches": {
                          "l4": {
                               "icmp": {
-                                   "established": False
+                                   "established": False,
+                                   "msg_type": "router-advertisement"
                               }
                          },
                          "l3": {
