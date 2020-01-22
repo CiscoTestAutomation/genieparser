@@ -101,5 +101,5 @@
 
 * IOSXR
     * Updated and added regex to accommodate more outputs
-    * Added unittest from customer output
+    * Added new output to unittest
     

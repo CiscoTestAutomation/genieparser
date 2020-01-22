@@ -903,7 +903,6 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                             r'+(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
-                # import pdb;pdb.set_trace()
                 serial_num = str(m.groupdict()['serial_number'])
                 if top_assembly_flag:
                     top_assembly_dict['serial_number'] = serial_num
