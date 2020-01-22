@@ -818,6 +818,17 @@ class AdminShowDiagChassisSchema(MetaParser):
             'part': str,
             'dev': str,
             'serial_number': str,
+        },
+        Optional('part_number'): str,
+        Optional('part_revision'): str,
+        Optional('hw_version'): str,
+        Optional('top_assembly_block'): {
+            'serial_number': str,
+            'part_number': str,
+            'part_revision': str,
+            'mfg_deviation': str,
+            'hw_version': str,
+            'mfg_bits': str,
         }
     }
 
@@ -833,6 +844,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
         
         # Init vars
         admin_show_diag_dict = {}
+        top_assembly_flag = False
+        main_flag = False
         
         for line in out.splitlines():
             line = line.strip()
@@ -876,7 +889,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # RACK NUM: 0
-            p2 = re.compile(r'\s*RACK NUM: *(?P<rack_num>[0-9]+)$')
+            p2 = re.compile(r'RACK NUM\: *(?P<rack_num>[0-9]+)$')
             m = p2.match(line)
             if m:
                 admin_show_diag_dict['rack_num'] = \
@@ -885,15 +898,26 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             
             # S/N:   FOX1810G8LR
-            p3 = re.compile(r'\s*S\/N: *(?P<sn>[a-zA-Z0-9]+)$')
+            # Serial Number   : FOC23158L99
+            p3 = re.compile(r'^(S\/N|Serial +Number)(\s+)?(\:)? '
+                            r'+(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
-                admin_show_diag_dict['sn'] = \
-                    str(m.groupdict()['sn'])
+                # import pdb;pdb.set_trace()
+                serial_num = str(m.groupdict()['serial_number'])
+                if top_assembly_flag:
+                    top_assembly_dict['serial_number'] = serial_num
+                elif main_flag:
+                    main_dict['serial_number'] = serial_num
+                else:
+                    admin_show_diag_dict['sn'] = serial_num
+
                 continue
             
             # PID:   ASR-9006-AC-V2
-            p4 = re.compile(r'\s*PID: *(?P<pid>[a-zA-Z0-9\-]+)$')
+            # Product ID      : NCS-5501
+            p4 = re.compile(r'(PID|Product ID)(\s+)?\: '
+                            r'+(?P<pid>[a-zA-Z0-9\-]+)$')
             m = p4.match(line)
             if m:
                 admin_show_diag_dict['pid'] = \
@@ -901,7 +925,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
             
             # VID:   V02
-            p5 = re.compile(r'\s*VID: *(?P<vid>[a-zA-Z0-9\-]+)$')
+            # VID             : V01
+            p5 = re.compile(r'VID(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
             m = p5.match(line)
             if m:
                 admin_show_diag_dict['vid'] = \
@@ -909,7 +934,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # Desc:  ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p6 = re.compile(r'\s*Desc: *(?P<desc>[a-zA-Z0-9\-\s]+)$')
+            p6 = re.compile(r'Desc\: *(?P<desc>[a-zA-Z0-9\-\s]+)$')
             m = p6.match(line)
             if m:
                 admin_show_diag_dict['desc'] = \
@@ -917,7 +942,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # CLEI:  IPMUP00BRB
-            p7 = re.compile(r'\s*CLEI: *(?P<clei>[a-zA-Z0-9\-]+)$')
+            # CLEI Code       : INM1J10ARA
+            p7 = re.compile(r'CLEI( +Code\s+)?: +(?P<clei>[a-zA-Z0-9\-]+)$')
             m = p7.match(line)
             if m:
                 admin_show_diag_dict['clei'] = \
@@ -925,7 +951,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
             
             # Top Assy. Number:   68-4235-02
-            p8 = re.compile(r'\s*Top +Assy. +Number:'
+            p8 = re.compile(r'Top +Assy. +Number\:'
                              ' *(?P<top_assy_num>[a-zA-Z0-9\-\s]+)$')
             m = p8.match(line)
             if m:
@@ -934,7 +960,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
             
             # PCA:   73-7806-01 rev B0
-            p9 = re.compile(r'^\s*PCA: +(?P<pca>[\S ]+)$')
+            p9 = re.compile(r'^PCA\: +(?P<pca>[\S ]+)$')
             m = p9.match(line)
             if m:
                 admin_show_diag_dict['pca'] = \
@@ -942,7 +968,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # ECI:   459651
-            p10 = re.compile(r'^\s*ECI: +(?P<eci>[\S ]+)$')
+            p10 = re.compile(r'^ECI\: +(?P<eci>[\S ]+)$')
             m = p10.match(line)
             if m:
                 admin_show_diag_dict['eci'] = \
@@ -950,7 +976,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # MAIN: board type 500060
-            p11 = re.compile(r'^\s*MAIN: +board +type +(?P<board_type>[\S ]+)$')
+            p11 = re.compile(r'^MAIN\: +board +type +(?P<board_type>[\S ]+)$')
             m = p11.match(line)
             if m:
                 main_dict = admin_show_diag_dict.setdefault('main', {})
@@ -959,7 +985,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # 800-25021-05 rev B0
-            p12 = re.compile(r'^\s*\S+ +rev +\S+')
+            p12 = re.compile(r'^\S+ +rev +\S+')
             m = p12.match(line)
             if m:
                 main_dict = admin_show_diag_dict.setdefault('main', {})
@@ -972,16 +998,80 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             if m:
                 dev = m.groupdict()['dev']
                 main_dict = admin_show_diag_dict.setdefault('main', {})
+                main_flag = True
                 main_dict['dev'] = dev
                 continue
+            
+            # 0 Rack 0-IDPROM Info
+            p15 = re.compile(r'(?P<rack_num>[0-9]+) +Rack +\d\-IDPROM +Info$')
 
-            # S/N SAD093507J8
-            p14 = re.compile(r'\s*S\/N +(?P<serial_number>\S+)$')
-            m = p14.match(line)
-            if m:
-                main_dict = admin_show_diag_dict.setdefault('main', {})
-                main_dict['serial_number'] = \
-                    str(m.groupdict()['serial_number'])
+            m15 = p15.match(line)
+            if m15:
+                admin_show_diag_dict['rack_num'] = \
+                    int(m15.groupdict()['rack_num'])
+                continue
+
+            # Top +Assembly +Block\:$
+            p16 = re.compile(r'Top +Assembly +Block\:$')
+            m16 = p16.match(line)
+            if m16:
+                top_assembly_flag = True
+                top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
+
+                continue
+            
+            # Part Number     : 73-101057-02
+            p17 = re.compile(r'^Part +(n|N)umber(\s+)?\: +(?P<part_number>\S+)$')
+            m17 = p17.match(line)
+            if m17:
+                part_num = str(m17.groupdict()['part_number'])
+                if top_assembly_flag:
+                    top_assembly_dict['part_number'] = part_num
+                else:
+                    admin_show_diag_dict['part_number'] = part_num
+                
+                continue
+
+            # Part Revision   : D0
+            p18 = re.compile(r'^Part +(r|R)evision(\s+)?\: +(?P<part_revision>\S+)$')
+            m18 = p18.match(line)
+            if m18:
+                part_rev = str(m18.groupdict()['part_revision'])
+                if top_assembly_flag:
+                    top_assembly_dict['part_revision'] = part_rev
+                else:
+                    admin_show_diag_dict['part_revision'] = part_rev
+                
+                continue
+            
+            # H/W Version     : 1.0
+            p19 = re.compile(r'^H\/W +[v|V]ersion(\s+)?\: +(?P<hw_version>\S+)$')
+            m19 = p19.match(line)
+            if m19:
+                hw_ver = str(m19.groupdict()['hw_version'])
+                if top_assembly_flag:
+                    top_assembly_dict['hw_version'] = hw_ver
+                else:
+                    admin_show_diag_dict['hw_version'] = hw_ver
+
+            # Mfg Deviation   : 0
+            p20 = re.compile(r'^[M|m]fg +[D|d]eviation(\s+)?\: '
+                             r'+(?P<mfg_deviation>\S+)$')
+            m20 = p20.match(line)
+            if m20:
+                mfg_dev = str(m20.groupdict()['mfg_deviation'])
+                top_assembly_dict['mfg_deviation'] = mfg_dev
+                
+                continue
+
+            # Mfg Bits        : 1
+            p21 = re.compile(r'^[M|m]fg +Bits(\s+)?\: +(?P<mfg_bits>\S+)$')
+            m21 = p21.match(line)
+
+            if m21:
+                mfg_bit = str(m21.groupdict()['mfg_bits'])
+                top_assembly_dict['mfg_bits'] = mfg_bit
+                top_assembly_flag = False
                 continue
 
         return admin_show_diag_dict

@@ -1292,6 +1292,46 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         'chassis_feature': 'CRS-16/S-B'
     }
 
+    golden_output3 = {'execute.return_value': '''
+
+        Diag Information For : 
+        0 Rack 0-IDPROM Info
+            Product ID      : NCS-5501
+            VID             : V01
+            Serial Number   : FOC23158L99
+            CLEI Code       : INM1J10ARA
+            Part Number     : 73-101057-02
+            Part Revision   : D0
+            H/W Version     : 1.0
+        Top Assembly Block:
+            Serial Number   : FOC2317R0HW
+            Part Number     : 68-6098-01
+            Part Revision   : F0
+            Mfg Deviation   : 0
+            H/W Version     : 1.0
+            Mfg Bits        : 1
+    '''
+    }
+
+    golden_parsed_output3 = {
+        'clei': 'INM1J10ARA',
+        'hw_version': '1.0',
+        'part_number': '73-101057-02',
+        'part_revision': 'D0',
+        'pid': 'NCS-5501',
+        'rack_num': 0,
+        'sn': 'FOC23158L99',
+        'top_assembly_block': {
+            'hw_version': '1.0',
+            'mfg_bits': '1',
+            'mfg_deviation': '0',
+            'part_number': '68-6098-01',
+            'part_revision': 'F0',
+            'serial_number': 'FOC2317R0HW'
+        },
+        'vid': 'V01'
+    }
+
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
         diag_chassis_obj = AdminShowDiagChassis(device=self.device)
@@ -1318,6 +1358,13 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output, self.device_parsed_output)
+
+    def test_admin_show_diag_chassis_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = AdminShowDiagChassis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       
