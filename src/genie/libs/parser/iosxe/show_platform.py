@@ -100,25 +100,10 @@ class ShowBootvar(ShowBootvarSchema):
                 continue
 
             # CONFIG_FILE variable =
-            m = p2.match(line)
-            if m:
-                ret_dict.update(m.groupdict())
-                continue
-
             # BOOTLDR variable does not exist
-            m = p3.match(line)
-            if m:
-                ret_dict.update(m.groupdict())
-                continue
-
             # Configuration register is 0x2
-            m = p4.match(line)
-            if m:
-                ret_dict.update(m.groupdict())
-                continue
-
             # Standby not ready to show bootvar
-            m = p5.match(line)
+            m = p2.match(line) or p3.match(line) or p4.match(line) or p5.match(line)
             if m:
                 ret_dict.update(m.groupdict())
                 continue
