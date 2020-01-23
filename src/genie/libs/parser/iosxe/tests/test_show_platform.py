@@ -8,6 +8,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
+                                                  ShowBootvar,\
                                                   ShowRedundancy,\
                                                   ShowRedundancyStates,\
                                                   ShowInventory,\
@@ -34,6 +35,52 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
                                                   ShowProcessesMemory
+
+
+# ============================
+# Unit test for 'show bootvar'
+# ============================
+class test_show_bootvar(unittest.TestCase):
+    '''Unit test for "show bootvar" '''
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output1 = {
+        'boot_images':
+            {'bootflash:12351822-iedge-asr-uut':
+                {'var': 12},
+            'harddisk:/ISSUCleanGolden':
+                {'var': 12},
+            },
+        'bootldr': 'does not exist',
+        'config_register': '0x2',
+        'standby_state': 'not ready'}
+
+    def test_show_bootvar_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBootvar(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_bootvar_full1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 class TestShowVersion(unittest.TestCase):

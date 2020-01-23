@@ -15,6 +15,8 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowBootvar for:
+        * 'show bootvar'
 
 * IOSXR
     * Added ShowMplsInterfaces for:

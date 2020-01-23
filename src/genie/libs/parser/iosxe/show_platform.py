@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 
+    * 'show bootvar'
     * 'show version'
     * 'dir'
     * 'show redundancy'
@@ -30,6 +31,99 @@ except (ImportError, OSError):
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+
+class ShowBootvarSchema(MetaParser):
+    '''Schema for:
+        * 'show bootvar'
+    '''
+    schema = {
+        'boot_images':
+            {Any():
+                {'var': int,
+                },
+            },
+        Optional('config_file'): str,
+        'bootldr': str,
+        'config_register': str,
+        'standby_state': str,
+    }
+
+
+class ShowBootvar(ShowBootvarSchema):
+    '''Parser for:
+        * 'show bootvar'
+    '''
+
+    cli_command = 'show bootvar'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init
+        ret_dict = {}
+
+        # BOOT variable = harddisk:asr1000rpx86-universalk9.BLD_V172_THROTTLE_LATEST_20200115_153927_V17_2_0_71.SSA_asr-MIB-1.bin,12;
+        # BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+        p1 = re.compile(r'BOOT +variable +\= +(?P<vars>(.*))$')
+
+        # CONFIG_FILE variable =
+        p2 = re.compile(r'CONFIG_FILE +variable +\= +(?P<config_file>(.*))$')
+
+        # BOOTLDR variable does not exist
+        p3 = re.compile(r'BOOTLDR +variable +(?P<bootldr>(.*))$')
+
+        # Configuration register is 0x2
+        p4 = re.compile(r'Configuration +register +is +(?P<config_register>(\S+))$')
+
+        # Standby not ready to show bootvar
+        p5 = re.compile(r'Standby +(?P<standby_state>[\S\s]+) +to +show +bootvar$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BOOT variable = harddisk:asr1000rpx86-universalk9.BLD_V172_THROTTLE_LATEST_20200115_153927_V17_2_0_71.SSA_asr-MIB-1.bin,12;
+            # BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+            m = p1.match(line)
+            if m:
+                for img in m.groupdict()['vars'].split(';'):
+                    if img:
+                        name, var = img.split(',')
+                        boot_dict = ret_dict.setdefault('boot_images', {}).\
+                                             setdefault(name, {})
+                        boot_dict['var'] = int(var)
+                continue
+
+            # CONFIG_FILE variable =
+            m = p2.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            # BOOTLDR variable does not exist
+            m = p3.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            # Configuration register is 0x2
+            m = p4.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+            # Standby not ready to show bootvar
+            m = p5.match(line)
+            if m:
+                ret_dict.update(m.groupdict())
+                continue
+
+        return ret_dict
 
 
 class ShowVersionSchema(MetaParser):
