@@ -46,6 +46,7 @@ class ShowBootvarSchema(MetaParser):
         'config_file': Any(),
         'bootldr': str,
         'config_register': str,
+        Optional('next_reload_config_register'): str,
         'standby_state': str,
     }
 
@@ -78,7 +79,11 @@ class ShowBootvar(ShowBootvarSchema):
         p3 = re.compile(r'BOOTLDR +variable +(?P<bootldr>(.*))$')
 
         # Configuration register is 0x2
-        p4 = re.compile(r'Configuration +register +is +(?P<config_register>(\S+))$')
+        # Configuration register is 0x2 (will be 0x2102 at next reload)
+        p4 = re.compile(r'Configuration +register +is'
+                         ' +(?P<config_register>(\S+))(?: +\(will +be'
+                         ' +(?P<next_reload_config_register>(\S+)) +at +next'
+                         ' +reload\))?$')
 
         # Standby not ready to show bootvar
         p5 = re.compile(r'Standby +(?P<standby_state>[\S\s]+) +to +show +bootvar$')

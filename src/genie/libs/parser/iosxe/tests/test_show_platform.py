@@ -76,7 +76,7 @@ class test_show_bootvar(unittest.TestCase):
         BOOT variable =
         CONFIG_FILE variable =
         BOOTLDR variable does not exist
-        Configuration register is 0x2
+        Configuration register is 0x2 (will be 0x2102 at next reload)
 
         Standby not ready to show bootvar
 
@@ -88,6 +88,7 @@ class test_show_bootvar(unittest.TestCase):
         'bootldr': 'does not exist',
         'config_file': None,
         'config_register': '0x2',
+        'next_reload_config_register': '0x2102',
         'standby_state': 'not ready'}
 
     def test_show_bootvar_empty(self):
