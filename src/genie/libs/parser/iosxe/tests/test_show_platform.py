@@ -67,6 +67,26 @@ class test_show_bootvar(unittest.TestCase):
                 {'var': 12},
             },
         'bootldr': 'does not exist',
+        'config_file': None,
+        'config_register': '0x2',
+        'standby_state': 'not ready'}
+
+    golden_output2 = {'execute.return_value': '''
+        show bootvar
+        BOOT variable =
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output2 = {
+        'boot_images': {},
+        'bootldr': 'does not exist',
+        'config_file': None,
         'config_register': '0x2',
         'standby_state': 'not ready'}
 
@@ -81,6 +101,12 @@ class test_show_bootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_bootvar_full1(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 class TestShowVersion(unittest.TestCase):

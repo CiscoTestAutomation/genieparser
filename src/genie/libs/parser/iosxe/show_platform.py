@@ -40,10 +40,10 @@ class ShowBootvarSchema(MetaParser):
     schema = {
         'boot_images':
             {Any():
-                {'var': int,
+                {Optional('var'): int,
                 },
             },
-        Optional('config_file'): str,
+        'config_file': Any(),
         'bootldr': str,
         'config_register': str,
         'standby_state': str,
@@ -69,10 +69,10 @@ class ShowBootvar(ShowBootvarSchema):
 
         # BOOT variable = harddisk:asr1000rpx86-universalk9.BLD_V172_THROTTLE_LATEST_20200115_153927_V17_2_0_71.SSA_asr-MIB-1.bin,12;
         # BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
-        p1 = re.compile(r'BOOT +variable +\= +(?P<vars>(.*))$')
+        p1 = re.compile(r'BOOT +variable +\=(?: +(?P<boot_images>(.*)))?$')
 
         # CONFIG_FILE variable =
-        p2 = re.compile(r'CONFIG_FILE +variable +\= +(?P<config_file>(.*))$')
+        p2 = re.compile(r'CONFIG_FILE +variable +\=(?: +(?P<config_file>(.*)))?$')
 
         # BOOTLDR variable does not exist
         p3 = re.compile(r'BOOTLDR +variable +(?P<bootldr>(.*))$')
@@ -91,12 +91,15 @@ class ShowBootvar(ShowBootvarSchema):
             # BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
             m = p1.match(line)
             if m:
-                for img in m.groupdict()['vars'].split(';'):
-                    if img:
-                        name, var = img.split(',')
-                        boot_dict = ret_dict.setdefault('boot_images', {}).\
-                                             setdefault(name, {})
-                        boot_dict['var'] = int(var)
+                if m.groupdict()['boot_images']:
+                    for img in m.groupdict()['boot_images'].split(';'):
+                        if img:
+                            name, var = img.split(',')
+                            boot_dict = ret_dict.setdefault('boot_images', {}).\
+                                                 setdefault(name, {})
+                            boot_dict['var'] = int(var)
+                else:
+                    ret_dict['boot_images'] = {}
                 continue
 
             # CONFIG_FILE variable =
