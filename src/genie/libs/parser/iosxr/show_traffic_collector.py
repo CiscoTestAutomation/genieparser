@@ -122,7 +122,7 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
         #Init vars
         ret_dict = {}
 
-        # Prefix: 1.1.1.10/32  Label: 16010 State: Active
+        # Prefix: 10.4.1.10/32  Label: 16010 State: Active
         p1 = re.compile(r'Prefix: +(?P<prefix>[\d\.\/]+) +'
         'Label: +(?P<label>\d+) +State: (?P<state>\S+)')
 
@@ -146,7 +146,7 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
         for line in out.splitlines():
             line = line.strip()
 
-            # Prefix: 1.1.1.10/32  Label: 16010 State: Active
+            # Prefix: 10.4.1.10/32  Label: 16010 State: Active
             m = p1.match(line)
             if m:
                 label_list = ['label', 'state']
