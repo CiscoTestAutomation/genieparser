@@ -16,7 +16,9 @@ from genie.libs.parser.iosxr.show_mpls import (ShowMplsLabelRange,
                                                ShowMplsLabelTablePrivate,
                                                ShowMplsInterfaces,
                                                ShowMplsForwarding,
-                                               ShowMplsForwardingVrf)
+                                               ShowMplsForwardingVrf,
+                                               ShowMplsLdpNeighbor,
+                                               ShowMplsLdpNeighborDetail)
 
 # ==================================================
 #  Unit test for 'show mpls label range'
@@ -53,6 +55,528 @@ class TestShowMplsLabelRange(unittest.TestCase):
         obj = ShowMplsLabelRange(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==================================================
+#  Unit test for 'show mpls ldp neighbor'
+# ==================================================
+class test_show_mpls_ldp_neighbor(unittest.TestCase):
+    
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output ={
+        'vrf':{
+            'default':{
+                'peers':{
+                    '10.16.0.2':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '10.16.0.2:646 - 10.16.0.9:38143',
+                                'graceful_restart': 'No',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 24710,
+            			        'msg_rcvd': 24702,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '2w0d',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'GigabitEthernet0/0/0/0':{}
+                                            },
+                                        },
+                                        'address_bound': ['10.16.0.2', '10.16.27.2', '10.16.28.2', '10.16.29.2']
+                                    }
+                                }
+                            },
+                        },
+                    },
+                    '10.16.0.7':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '10.16.0.7:646 - 10.16.0.9:19323',
+                                'graceful_restart': 'No',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 24664,
+            			        'msg_rcvd': 24686,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '2w0d',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'GigabitEthernet0/0/0/1':{}
+                                            },
+                                        },
+                                        'address_bound': ['10.16.0.7', '10.16.27.7', '10.16.78.7', '10.16.79.7'],
+                                    }
+                                }
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RP0/CPU0:R9#show mpls ldp neighbor 
+    Thu Jan  2 20:51:12.829 UTC
+    
+    Peer LDP Identifier: 10.16.0.2:0
+      TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
+      Graceful Restart: No
+      Session Holdtime: 180 sec
+      State: Oper; Msgs sent/rcvd: 24710/24702; Downstream-Unsolicited
+      Up time: 2w0d
+      LDP Discovery Sources:
+        IPv4: (1)
+          GigabitEthernet0/0/0/0
+        IPv6: (0)
+      Addresses bound to this peer:
+        IPv4: (4)
+          10.16.0.2        10.16.27.2       10.16.28.2       10.16.29.2       
+        IPv6: (0)
+
+    Peer LDP Identifier: 10.16.0.7:0
+      TCP connection: 10.16.0.7:646 - 10.16.0.9:19323
+      Graceful Restart: No
+      Session Holdtime: 180 sec
+      State: Oper; Msgs sent/rcvd: 24664/24686; Downstream-Unsolicited
+      Up time: 2w0d
+      LDP Discovery Sources:
+        IPv4: (1)
+          GigabitEthernet0/0/0/1
+        IPv6: (0)
+      Addresses bound to this peer:
+        IPv4: (4)
+          10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7  
+        IPv6: (0)
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpNeighbor(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_ldp_neighbor_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowMplsLdpNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==================================================
+#  Unit test for 'show mpls ldp neighbor detail'
+# ==================================================
+class test_show_mpls_ldp_neighbor_detail(unittest.TestCase):
+
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output1 = {
+        'vrf': {
+            'default':{
+                'peers':{
+                    '192.168.70.6':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '192.168.70.6:15332 - 192.168.1.1:646',
+                                'graceful_restart': 'Yes (Reconnect Timeout: 120 sec, Recovery: 180 sec)',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 851,
+            			        'msg_rcvd': 232,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '00:02:44',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'Bundle-Ether1.3':{}
+                                            },
+                                            'targeted_hello':{
+    	        		                		'192.168.1.1':{
+    	        		                			'192.168.70.6':{
+    	        		                				'active': False,
+    	        		                			},
+    	        		                		},
+                                            }    
+                                        },
+                                        'address_bound': ['10.10.10.1', '10.126.249.223', '10.126.249.224', '10.76.23.2',
+                                                            '10.219.1.2', '10.19.1.2', '10.76.1.2', '10.135.1.2',
+                                                            '10.151.1.2', '192.168.106.1', '192.168.205.1', '192.168.51.1',
+                                                            '192.168.196.1', '192.168.171.1', '192.168.70.6'],
+                                    }
+                                },
+                                'peer_holdtime': 180,
+                                'ka_interval': 60,
+                                'peer_state': 'Estab',
+                                'nsr': 'Operational',
+                                'clients': 'Session Protection',
+                                'session_protection':{
+    	        		        	'session_state': 'Ready',
+    	        		            'duration_int': 86400,
+                                },
+            			        'capabilities': {
+            			        	'sent': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        	'received': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        },
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+
+    golden_output1 = { 'execute.return_value' : ''' 
+        RP/0/RP0/CPU0:R2#show mpls ldp neighbor detail
+
+        Peer LDP Identifier: 192.168.70.6:0
+          TCP connection: 192.168.70.6:15332 - 192.168.1.1:646
+          Graceful Restart: Yes (Reconnect Timeout: 120 sec, Recovery: 180 sec)
+          Session Holdtime: 180 sec
+          State: Oper; Msgs sent/rcvd: 851/232; Downstream-Unsolicited
+          Up time: 00:02:44
+          LDP Discovery Sources:
+            IPv4: (2)
+              Bundle-Ether1.3
+              Targeted Hello (192.168.1.1 -> 192.168.70.6, active/passive)
+            IPv6: (0)
+          Addresses bound to this peer:
+            IPv4: (15)
+              10.10.10.1     10.126.249.223  10.126.249.224  10.76.23.2
+              10.219.1.2       10.19.1.2       10.76.1.2       10.135.1.2
+              10.151.1.2       192.168.106.1    192.168.205.1    192.168.51.1
+              192.168.196.1     192.168.171.1    192.168.70.6
+            IPv6: (0)
+          Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+          NSR: Operational
+          Clients: Session Protection
+          Session Protection:
+            Enabled, state: Ready
+            Duration: 86400 sec
+          Capabilities:
+            Sent:
+              0x508  (MP: Point-to-Multipoint (P2MP))
+              0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+              0x50b  (Typed Wildcard FEC)
+            Received:
+              0x508  (MP: Point-to-Multipoint (P2MP))
+              0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+              0x50b  (Typed Wildcard FEC)
+    '''    
+    }
+
+    golden_parsed_output2 = {
+        'vrf': {
+            'all':{
+                'peers':{
+                    '192.168.70.6':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '192.168.70.6:15332 - 192.168.1.1:646',
+                                'graceful_restart': 'Yes (Reconnect Timeout: 120 sec, Recovery: 180 sec)',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 851,
+            			        'msg_rcvd': 232,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '00:02:44',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'Bundle-Ether1.3':{}
+                                            },
+                                            'targeted_hello':{
+    	        		                		'192.168.1.1':{
+    	        		                			'192.168.70.6':{
+    	        		                				'active': False,
+    	        		                			},
+    	        		                		},
+                                            }    
+                                        },
+                                        'address_bound': ['10.10.10.1', '10.126.249.223', '10.126.249.224', '10.76.23.2',
+                                                            '10.219.1.2', '10.19.1.2', '10.76.1.2', '10.135.1.2',
+                                                            '10.151.1.2', '192.168.106.1', '192.168.205.1', '192.168.51.1',
+                                                            '192.168.196.1', '192.168.171.1', '192.168.70.6'],
+                                    }
+                                },
+                                'peer_holdtime': 180,
+                                'ka_interval': 60,
+                                'peer_state': 'Estab',
+                                'nsr': 'Operational',
+                                'clients': 'Session Protection',
+                                'session_protection':{
+    	        		        	'session_state': 'Ready',
+    	        		            'duration_int': 86400,
+                                },
+            			        'capabilities': {
+            			        	'sent': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        	'received': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        },
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+
+    golden_output2 = { 'execute.return_value' : ''' 
+        RP/0/RP0/CPU0:R2#show mpls ldp vrf all neighbor detail
+
+        Peer LDP Identifier: 192.168.70.6:0
+          TCP connection: 192.168.70.6:15332 - 192.168.1.1:646
+          Graceful Restart: Yes (Reconnect Timeout: 120 sec, Recovery: 180 sec)
+          Session Holdtime: 180 sec
+          State: Oper; Msgs sent/rcvd: 851/232; Downstream-Unsolicited
+          Up time: 00:02:44
+          LDP Discovery Sources:
+            IPv4: (2)
+              Bundle-Ether1.3
+              Targeted Hello (192.168.1.1 -> 192.168.70.6, active/passive)
+            IPv6: (0)
+          Addresses bound to this peer:
+            IPv4: (15)
+              10.10.10.1     10.126.249.223  10.126.249.224  10.76.23.2
+              10.219.1.2       10.19.1.2       10.76.1.2       10.135.1.2
+              10.151.1.2       192.168.106.1    192.168.205.1    192.168.51.1
+              192.168.196.1     192.168.171.1    192.168.70.6
+            IPv6: (0)
+          Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+          NSR: Operational
+          Clients: Session Protection
+          Session Protection:
+            Enabled, state: Ready
+            Duration: 86400 sec
+          Capabilities:
+            Sent:
+              0x508  (MP: Point-to-Multipoint (P2MP))
+              0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+              0x50b  (Typed Wildcard FEC)
+            Received:
+              0x508  (MP: Point-to-Multipoint (P2MP))
+              0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+              0x50b  (Typed Wildcard FEC)
+    '''    
+    }
+
+    golden_parsed_output3 = {
+        'vrf': {
+            'default':{
+                'peers':{
+                    '10.16.0.7':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '10.16.0.7:646 - 10.16.0.9:19323',
+                                'graceful_restart': 'No',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 24671,
+            			        'msg_rcvd': 24693,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '2w1d',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'GigabitEthernet0/0/0/1':{}
+                                            },    
+                                        },
+                                        'address_bound': ['10.16.0.7', '10.16.27.7', '10.16.78.7', '10.16.79.7'],
+                                    }
+                                },
+                                'peer_holdtime': 180,
+                                'ka_interval': 60,
+                                'peer_state': 'Estab',
+                                'nsr': 'Disabled',
+            			        'capabilities': {
+            			        	'sent': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        	'received': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        },
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+    golden_output3 = {'execute.return_value' : ''' 
+    RP/0/RP0/CPU0:R9#show mpls ldp neighbor GigabitEthernet0/0/0/1 detail 
+    Thu Jan  2 20:56:36.689 UTC
+
+    Peer LDP Identifier: 10.16.0.7:0
+        TCP connection: 10.16.0.7:646 - 10.16.0.9:19323
+        Graceful Restart: No
+        Session Holdtime: 180 sec
+        State: Oper; Msgs sent/rcvd: 24671/24693; Downstream-Unsolicited
+        Up time: 2w1d
+        LDP Discovery Sources:
+          IPv4: (1)
+            GigabitEthernet0/0/0/1
+          IPv6: (0)
+        Addresses bound to this peer:
+          IPv4: (4)
+            10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
+          IPv6: (0)
+        Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+        NSR: Disabled
+        Capabilities:
+          Sent: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+          Received: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+    '''}
+
+    golden_parsed_output4 = {
+        'vrf': {
+            'Vpn1':{
+                'peers':{
+                    '10.16.0.7':{
+                        'label_space_id':{
+                            0:{
+                                'tcp_connection': '10.16.0.7:646 - 10.16.0.9:19323',
+                                'graceful_restart': 'No',
+                                'session_holdtime': 180,
+                                'state': 'Oper',
+            			        'msg_sent': 24671,
+            			        'msg_rcvd': 24693,
+            			        'neighbor': 'Downstream-Unsolicited',
+                                'uptime': '2w1d',
+                                'address_family':{
+                                    'ipv4':{
+                                        'ldp_discovery_sources': {
+                                            'interface':{
+                                                'GigabitEthernet0/0/0/1':{}
+                                            },    
+                                        },
+                                        'address_bound': ['10.16.0.7', '10.16.27.7', '10.16.78.7', '10.16.79.7'],
+                                    }
+                                },
+                                'peer_holdtime': 180,
+                                'ka_interval': 60,
+                                'peer_state': 'Estab',
+                                'nsr': 'Disabled',
+            			        'capabilities': {
+            			        	'sent': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        	'received': {
+            			        		'0x508': 'MP: Point-to-Multipoint (P2MP)',
+            			        		'0x509': 'MP: Multipoint-to-Multipoint (MP2MP)',
+            			        		'0x50b': 'Typed Wildcard FEC',
+            			        	},
+            			        },
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+
+    golden_output4 = {'execute.return_value' : ''' 
+    RP/0/RP0/CPU0:R9#show mpls ldp neighbor vrf Vpn1 GigabitEthernet0/0/0/1 detail 
+    Thu Jan  2 20:56:36.689 UTC
+
+    Peer LDP Identifier: 10.16.0.7:0
+        TCP connection: 10.16.0.7:646 - 10.16.0.9:19323
+        Graceful Restart: No
+        Session Holdtime: 180 sec
+        State: Oper; Msgs sent/rcvd: 24671/24693; Downstream-Unsolicited
+        Up time: 2w1d
+        LDP Discovery Sources:
+          IPv4: (1)
+            GigabitEthernet0/0/0/1
+          IPv6: (0)
+        Addresses bound to this peer:
+          IPv4: (4)
+            10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
+          IPv6: (0)
+        Peer holdtime: 180 sec; KA interval: 60 sec; Peer state: Estab
+        NSR: Disabled
+        Capabilities:
+          Sent: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+          Received: 
+            0x508  (MP: Point-to-Multipoint (P2MP))
+            0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            0x50b  (Typed Wildcard FEC)
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowMplsLdpNeighborDetail(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mpls_ldp_neighbor_detail_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_mpls_ldp_neighbor_detail_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_mpls_ldp_neighbor_detail_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_mpls_ldp_neighbor_detail_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowMplsLdpNeighborDetail(device=self.device)
+        parsed_output = obj.parse(vrf='Vpn1' ,interface='GigabitEthernet0/0/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+
+
 
 
 # ==================================================
@@ -670,7 +1194,7 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
                       'IPv4':{
                          'vers':0,
                          'default':True,
-                         'prefix':'2.2.2.2/3'
+                         'prefix':'10.16.2.2/3'
                       }
                    }
                 },
@@ -685,7 +1209,7 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
                       'IPv4':{
                          'vers':0,
                          'default':True,
-                         'prefix':'1.1.1.1/24'
+                         'prefix':'10.4.1.1/24'
                       }
                    }
                 },
@@ -704,7 +1228,7 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
                       'IPv4':{
                          'vers':0,
                          'default':False,
-                         'prefix':'9.10.10.10/15'
+                         'prefix':'10.106.10.10/15'
                       }
                    }
                 },
@@ -719,7 +1243,7 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
                       'IPv4':{
                          'vers':0,
                          'default':True,
-                         'prefix':'1.1.1.4/24'
+                         'prefix':'10.4.1.4/24'
                       }
                    }
                 },
@@ -734,7 +1258,7 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
                       'IPv4':{
                          'vers':0,
                          'default':True,
-                         'prefix':'1.1.1.3/24'
+                         'prefix':'10.4.1.3/24'
                       }
                    }
                 }
@@ -754,16 +1278,16 @@ class TestShowMplsLabelTableDetail(unittest.TestCase):
         0     2       LSD                          InUse  Yes
         0     13      LSD                          InUse  Yes
         0     44      Static                       InUse  No
-          (IPv4, vers:0, default, 2.2.2.2/3)
+          (IPv4, vers:0, default, 10.16.2.2/3)
         0     1999    Static                       InUse  No
-          (IPv4, vers:0, default, 1.1.1.1/24)
+          (IPv4, vers:0, default, 10.4.1.1/24)
         0     16001   LDP:lsd_test_ut              InUse  No
                       Static:lsd_test_ut           InUse  No
-          (IPv4, vers:0, , 9.10.10.10/15)
+          (IPv4, vers:0, , 10.106.10.10/15)
         0     19990   Static                       InUse  No
-          (IPv4, vers:0, default, 1.1.1.4/24)
+          (IPv4, vers:0, default, 10.4.1.4/24)
         0     19999   Static                       InUse  No
-          (IPv4, vers:0, default, 1.1.1.3/24)
+          (IPv4, vers:0, default, 10.4.1.3/24)
     '''}
 
     def test_show_mpls_label_table_detail_empty(self):

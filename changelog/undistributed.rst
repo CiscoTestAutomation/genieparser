@@ -27,6 +27,12 @@
         * show mpls label range
     * Added ShowMplsLabelTablePrivate for:
         * show mpls label table private    
+    * Added ShowMplsLdpNeighbor for:
+        * show mpls ldp neighbor
+        * show mpls ldp neighbor {interface}
+    * Added ShowMplsLdpNeighborDetail for:
+        * show mpls ldp neighbor detail
+        * show mpls ldp neighbor {interface} detail
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
     * Added ShowBgpEgressEngineering for:
@@ -85,4 +91,19 @@
 * NXOS
     * Updated ShowVpc:
         * Supporting parser for vpc+ outputs
-		
+
+* IOS
+    * Updated ShowVersion for:
+        * Optional key issue for ios/cat6k platform
+        * Updating symbolic link to platform specific unittests
+    * Updated ShowAccessLists
+	    * Updated for the case of empty ttl_groups
+		* Updated for udp ACL with incremented counter
+		* Added support for access-lists with object-group references
+
+* IOSXE
+    * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updating symbolic link to platform specific unittests
+    
