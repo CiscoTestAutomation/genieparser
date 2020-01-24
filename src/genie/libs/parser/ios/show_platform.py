@@ -173,6 +173,9 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # PID: CLK-7600          ,                     VID:    , SN: FXS170802GL
         r2 = re.compile(r'PID:\s*(?P<pid>.+)\s*\,\s*VID:\s*(?P<vid>.*)\,\s*SN:\s*(?P<sn>.+)')
 
+        # Declaring slot_dict
+        slot_dict = {}
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -202,7 +205,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     chassis_dict['name'] = name
                     chassis_dict['descr'] = descr
-                    chassis_dict['pid'] = pid                    
+                    chassis_dict['pid'] = pid
                     chassis_dict['vid'] = vid
                     chassis_dict['sn'] = sn
 
@@ -239,7 +242,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                         .setdefault(slot, {})\
                         .setdefault(slot_code, {})\
                         .setdefault(pid, {})
-                    
+
                     slot_dict['name'] = name
                     slot_dict['descr'] = descr
                     slot_dict['pid'] = pid
