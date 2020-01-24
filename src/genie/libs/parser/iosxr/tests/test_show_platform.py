@@ -21,7 +21,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 #  Unit test for 'show version'       
 # ==============================
 
-class test_show_version(unittest.TestCase):
+class TestShowVersion(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -217,7 +217,7 @@ class test_show_version(unittest.TestCase):
 #  Unit test for 'show sdr detail'       
 # ================================
 
-class test_show_sdr_detail(unittest.TestCase):
+class TestShowSdrDetail(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -374,7 +374,7 @@ class test_show_sdr_detail(unittest.TestCase):
 #  Unit test for 'show platform'       
 # ==============================
 
-class test_show_platform(unittest.TestCase):
+class TestShowPlatform(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -600,7 +600,7 @@ class test_show_platform(unittest.TestCase):
 #  Unit test for 'show platform vm'       
 # =================================
 
-class test_show_platform_vm(unittest.TestCase):
+class TestShowPlatformVm(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -677,7 +677,7 @@ class test_show_platform_vm(unittest.TestCase):
 #  Unit test for 'show install active summary'       
 # ============================================
 
-class test_show_install_active_summary(unittest.TestCase):
+class TestShowInstallActiveSummary(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -733,7 +733,7 @@ class test_show_install_active_summary(unittest.TestCase):
 #  Unit test for 'show inventory'
 # ===============================
 
-class test_show_inventory(unittest.TestCase):
+class TestShowInventory(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1298,13 +1298,13 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         0 Rack 0-IDPROM Info
             Product ID      : NCS-5501
             VID             : V01
-            Serial Number   : FOC23158L99
+            Serial Number   : FOC23158XXX
             CLEI Code       : INM1J10ARA
             Part Number     : 73-101057-02
             Part Revision   : D0
             H/W Version     : 1.0
         Top Assembly Block:
-            Serial Number   : FOC2317R0HW
+            Serial Number   : FOC231XXXHW
             Part Number     : 68-6098-01
             Part Revision   : F0
             Mfg Deviation   : 0
@@ -1320,14 +1320,14 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         'part_revision': 'D0',
         'pid': 'NCS-5501',
         'rack_num': 0,
-        'sn': 'FOC23158L99',
+        'sn': 'FOC23158XXX',
         'top_assembly_block': {
             'hw_version': '1.0',
             'mfg_bits': '1',
             'mfg_deviation': '0',
             'part_number': '68-6098-01',
             'part_revision': 'F0',
-            'serial_number': 'FOC2317R0HW'
+            'serial_number': 'FOC231XXXHW'
         },
         'vid': 'V01'
     }
@@ -1370,7 +1370,7 @@ class TestAdminShowDiagChassis(unittest.TestCase):
 #  Unit test for 'show redundancy summary'       
 # ========================================
 
-class test_show_redundancy_summary(unittest.TestCase):
+class TestShowRedundancySummary(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1436,7 +1436,7 @@ class test_show_redundancy_summary(unittest.TestCase):
 #  Unit test for 'show redundancy'       
 # ================================
 
-class test_show_redundancy(unittest.TestCase):
+class TestShowRedundancy(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1546,7 +1546,7 @@ class test_show_redundancy(unittest.TestCase):
 #  Unit test for 'dir'       
 # ====================
 
-class test_dir(unittest.TestCase):
+class TestDir(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1711,7 +1711,7 @@ class test_dir(unittest.TestCase):
 #  Unit test for 'show install inactive summary'
 # ==============================================
 
-class test_show_install_inactive_summary(unittest.TestCase):
+class TestShowInstallInactiveSummary(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1837,7 +1837,7 @@ class test_show_install_inactive_summary(unittest.TestCase):
 #  Unit test for 'show install commit summary'
 # ==============================================
 
-class test_show_install_commit_summary(unittest.TestCase):
+class TestShowInstallCommitSummary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
