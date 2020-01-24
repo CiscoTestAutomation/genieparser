@@ -98,4 +98,9 @@
 
 * IOSXR
     * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updated regex to accommodate more outputs
+    * Added extra key to schema
+    * Added new unittest
     
