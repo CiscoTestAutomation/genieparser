@@ -87,5 +87,32 @@ class ShowRouterIsisAdjacency(ShowRouterIsisAdjacencySchema):
 # =============================================
 # Parser for 'show router isis adjacency detail'
 # =============================================
-# class ShowRouterIsisAdjacencyDetailSchema(MetaParser):
+class ShowRouterIsisAdjacencyDetailSchema(MetaParser):
     """Schema for show router isis adjacency detail"""
+
+    schema = {
+        'hostname': {
+            Any(): {
+                'system_id': str,
+                'interface': str,
+                'state': str,
+                'nbr_sys_typ': str,
+                'hold_time': int,
+                'adj_level': str,
+                'topology': str,
+                'ipv6_neighbor': str,
+                'ipv4_neighbor': str,
+                'ipv4_adj_sid': str,
+                'restart_support': str,
+                'restart_supressed': str,
+                'number_of_restarts': int,
+                'last_restart_at': str,
+                'snpa': str,
+                'up_time': str,
+                'priority': int,
+                'l_circ_typ': str,
+                'max_hold': int,
+                'mt_enabled': str,
+            }
+        }
+    }
