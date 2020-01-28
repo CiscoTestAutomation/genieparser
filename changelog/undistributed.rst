@@ -110,4 +110,9 @@
 * IOSXR
     * Updated and added regex to accommodate more outputs
     * Added new output to unittest
+
+* IOSXR
+    * Updated regex to accommodate more outputs
+    * Added extra key to schema
+    * Added new unittest
     
