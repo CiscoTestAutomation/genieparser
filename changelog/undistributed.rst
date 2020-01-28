@@ -27,6 +27,12 @@
         * show mpls label range
     * Added ShowMplsLabelTablePrivate for:
         * show mpls label table private    
+    * Added ShowMplsLdpNeighbor for:
+        * show mpls ldp neighbor
+        * show mpls ldp neighbor {interface}
+    * Added ShowMplsLdpNeighborDetail for:
+        * show mpls ldp neighbor detail
+        * show mpls ldp neighbor {interface} detail
     * Added ShowIsisFRRSummary for:
         * show isis fast-reroute summary
     * Added ShowBgpEgressEngineering for:
@@ -37,6 +43,8 @@
     * Added ShowBundleReasons for:  
         * show bundle reasons
         * show bundle {interface} reasons
+    * Added ShowSsh for:
+        * show ssh session details
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
@@ -98,6 +106,10 @@
 
 * IOSXR
     * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updated and added regex to accommodate more outputs
+    * Added new output to unittest
 
 * IOSXR
     * Updated regex to accommodate more outputs

@@ -66,7 +66,7 @@ class TestShowTrafficCollecterIpv4CountersPrefixDetail(unittest.TestCase):
     golden_parsed_output = {
         'ipv4_counters':{
             'prefix':{
-                '1.1.1.10/32':{
+                '10.4.1.10/32':{
                     'label': 16010,
                     'state': 'Active',
                     'counters':{
@@ -137,8 +137,8 @@ class TestShowTrafficCollecterIpv4CountersPrefixDetail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
     
-    RP/0/RSP0/CPU0:router# show traffic-collector ipv4 counters prefix 1.1.1.10/32 detail
-    Prefix: 1.1.1.10/32  Label: 16010 State: Active
+    RP/0/RSP0/CPU0:router# show traffic-collector ipv4 counters prefix 10.4.1.10/32 detail
+    Prefix: 10.4.1.10/32  Label: 16010 State: Active
     Base:
     Average over the last 5 collection intervals:
         Packet rate: 9496937 pps, Byte rate: 9363979882 Bps
@@ -171,7 +171,7 @@ class TestShowTrafficCollecterIpv4CountersPrefixDetail(unittest.TestCase):
     def test_show_traffic_collector_ipv4_counter_prefix_detail_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowTrafficCollecterIpv4CountersPrefixDetail(device=self.device)
-        parsed_output = obj.parse(prefix='1.1.1.10/32')
+        parsed_output = obj.parse(prefix='10.4.1.10/32')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
