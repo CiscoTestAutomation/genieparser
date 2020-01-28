@@ -4,7 +4,8 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
-from genie.libs.parser.sros.show_isis import ShowRouterIsisAdjacency
+from genie.libs.parser.sros.show_isis import ShowRouterIsisAdjacency,\
+                                        ShowRouterIsisAdjacencyDetail
 
 
 
@@ -29,31 +30,45 @@ class TestShowRouterIsisAdjacency(unittest.TestCase):
     '''}
 
     sample_parsed_output = {
-        'adjacencies': 3,
-        'system_id': {
-            'COPQON05R07': {
-                'hold': 24,
-                'interface': 'To-COPQON05R07-LAG-7',
-                'mt_id': 0,
-                'state': 'Up',
-                'usage': 'L2',
-            },
-            'COTKON04XR1': {
-                'hold': 24,
-                'interface': 'To-COTKON04XR1-LAG-4',
-                'mt_id': 0,
-                'state': 'Up',
-                'usage': 'L2',
-            },
-            'COTKPQ03R07': {
-                'hold': 24,
-                'interface': 'To-COTKPQ03R07-LAG-9',
-                'mt_id': 0,
-                'state': 'Up',
-                'usage': 'L2',
+    'instance': {
+        '0': {
+            'level': {
+                'L2': {
+                    'interfaces': {
+                        'To-COPQON05R07-LAG-7': {
+                            'system_id': {
+                                'COPQON05R07': {
+                                    'hold': 24,
+                                    'mt_id': 0,
+                                    'state': 'Up',
+                                },
+                            },
+                        },
+                        'To-COTKON04XR1-LAG-4': {
+                            'system_id': {
+                                'COTKON04XR1': {
+                                    'hold': 24,
+                                    'mt_id': 0,
+                                    'state': 'Up',
+                                },
+                            },
+                        },
+                        'To-COTKPQ03R07-LAG-9': {
+                            'system_id': {
+                                'COTKPQ03R07': {
+                                    'hold': 24,
+                                    'mt_id': 0,
+                                    'state': 'Up',
+                                },
+                            },
+                        },
+                    },
+                    'total_adjacency_count': 3,
+                },
             },
         },
-    }
+    },
+}
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -140,6 +155,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
         self.dev = Mock(**self.sample_output)
         obj = ShowRouterIsisAdjacencyDetail(device=self.dev)
         parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         # self.assertEqual(parsed_output,self.sample_parsed_output)
 
 
