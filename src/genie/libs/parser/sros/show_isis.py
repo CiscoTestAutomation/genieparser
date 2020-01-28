@@ -179,29 +179,34 @@ class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
 
         parsed_dict = {}
 
-        p = re.compile(r'^: +(?P<hostname>\S+)\n'
-                       r' +SystemID +: +(?P<system_id>\S+) +SNPA +: +(?P<snpa>\S+)\n'
-                       r' +Interface +: +(?P<interface>\S+) +Up Time +: +(?P<up_time>[\S]+ [\S]+)\n'
-                       r' +State +: +(?P<state>\S+) +Priority +: +(?P<priority>\d+)\n'
-                       r' +Nbr Sys Typ +: +(?P<nbr_sys_typ>\S+) +L. Circ Typ +: +(?P<l_circ_typ>\S+)\n'
-                       r' +Hold Time +: +(?P<hold_time>\d+) +Max Hold +: +(?P<max_hold>\d+)\n'
-                       r' +Adj Level +: +(?P<adj_level>\S+) +MT Enabled +: +(?P<mt_enabled>\S+)\n'
-                       r' +Topology +: +(?P<topology>\S+)\n'
-                       r' +IPv6 Neighbor +: +(?P<ipv6_neighbor>\S+)\n'
-                       r' +IPv4 Neighbor +: +(?P<ipv4_neighbor>\S+)\n'
-                       r' +IPv4 Adj SID +: +(?P<ipv4_adj_sid>\S+ \d+)\n'
-                       r' +Restart Support +: +(?P<restart_support>\S+)\n'
-                       r' +Restart Status +: +(?P<restart_status>[ \S]+)\n'
-                       r' +Restart Supressed +: +(?P<restart_supressed>\S+)\n'
-                       r' +Number of Restarts: (?P<number_of_restarts>\d+)\n'
-                       r'  +Last Restart at +: +(?P<last_restart_at>\S+)\n')
+        p = re.compile(r'^: +(?P<hostname>\S+)'
+                       r' +SystemID +: +(?P<system_id>\S+) +SNPA +: +(?P<snpa>\S+)'
+                       r' +Interface +: +(?P<interface>\S+) +Up Time +: +(?P<up_time>[\S]+ [\S]+)'
+                       r' +State +: +(?P<state>\S+) +Priority +: +(?P<priority>\d+)'
+                       r' +Nbr Sys Typ +: +(?P<nbr_sys_typ>\S+) +L. Circ Typ +: +(?P<l_circ_typ>\S+)'
+                       r' +Hold Time +: +(?P<hold_time>\d+) +Max Hold +: +(?P<max_hold>\d+)'
+                       r' +Adj Level +: +(?P<adj_level>\S+) +MT Enabled +: +(?P<mt_enabled>\S+)'
+                       r' +Topology +: +(?P<topology>\S+)'
+                       r' +IPv6 Neighbor +: +(?P<ipv6_neighbor>\S+)'
+                       r' +IPv4 Neighbor +: +(?P<ipv4_neighbor>\S+)'
+                       r' +IPv4 Adj SID +: +(?P<ipv4_adj_sid>\S+ \d+)'
+                       r' +Restart Support +: +(?P<restart_support>\S+)'
+                       r' +Restart Status +: +(?P<restart_status>[ \S]+)'
+                       r' +Restart Supressed +: +(?P<restart_supressed>\S+)'
+                       r' +Number of Restarts: (?P<number_of_restarts>\d+)'
+                       r'  +Last Restart at +: +(?P<last_restart_at>\S+)')
 
         content_str = out.split('===============================================================================')[-1]
         content_list = content_str.strip().split('Hostname')
 
         for c in content_list:
-            m = p.match(c)
+            c_str = c.replace('\n', '').strip()
+            m = p.match(c_str)
             if m:
+                group = m.groupdict()
+                # ==============
+                # next step: grab group['key'] and construct the dictionary
+                # ==============
                 print('yes')
 
 
