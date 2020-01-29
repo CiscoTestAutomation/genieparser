@@ -1414,13 +1414,9 @@ class TestShowRouteIpv6(unittest.TestCase):
                                         },
                                     },
                                 },
-
                             },
                         },
                     },
-                },
-                'gw_of_last_resort': {
-                    'not_set': 'not set'
                 },
             },
         }
@@ -1600,9 +1596,6 @@ class TestShowRouteIpv6(unittest.TestCase):
                         },
                     },
                 },
-                'gw_of_last_resort': {
-                    'not_set': 'not set',
-                },
             },
             'VRF502': {
                 'address_family': {
@@ -1711,9 +1704,6 @@ class TestShowRouteIpv6(unittest.TestCase):
                         },
                     },
                 },
-                'gw_of_last_resort': {
-                    'not_set': 'not set',
-                },
             },
             'VRF503': {
                 'address_family': {
@@ -1782,9 +1772,6 @@ class TestShowRouteIpv6(unittest.TestCase):
 
                         },
                     },
-                },
-                'gw_of_last_resort': {
-                    'not_set': 'not set',
                 },
             },
         },
@@ -2208,9 +2195,6 @@ class TestShowRouteIpv6(unittest.TestCase):
                             },
                         },
                     },
-                },
-                'gw_of_last_resort': {
-                    'not_set': 'not set'
                 },
             },
         },
@@ -2708,9 +2692,6 @@ class TestShowRouteIpv6(unittest.TestCase):
                         }
                     }
                 },
-                'gw_of_last_resort': {
-                    'not_set': 'not set'
-                },
             },
         }
     }
@@ -3063,8 +3044,8 @@ class TestShowRouteIpv6(unittest.TestCase):
                         }
                     },
                 },
-                'gw_of_last_resort': {
-                    'from_network': 'fe80::10ff:fe04:209e',
+                'last_resort': {
+                    'gateway': 'fe80::10ff:fe04:209e',
                     'to_network': '::'
                 },
             },

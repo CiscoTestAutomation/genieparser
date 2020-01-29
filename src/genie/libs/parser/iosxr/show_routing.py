@@ -63,9 +63,8 @@ class ShowRouteIpv4Schema(MetaParser):
                         },
                     },
                 },
-                Optional('gw_of_last_resort'): {
-                    Optional('not_set'): str,
-                    Optional('from_network'): str,
+                Optional('last_resort'): {
+                    Optional('gateway'): str,
                     Optional('to_network'): str,
                 },
             },
@@ -603,8 +602,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         # S    2001:1:1:1::1/128
         # L    2001:2:2:2::2/128 is directly connected,
-        # i L2 2001: 0: 10: 204: 0: 33: : / 126
-        # i L1 2001: 21: 21: 21:: 21/128
+        # i L2 2001:0:10:204:0:33::/126
+        # i L1 2001:21:21:21::21/128
         p2 = re.compile(r'^((?P<code1>[\w](\*)*) +(?P<code2>\S+)? '
                         r'+(?P<network>\S+))?( +is +directly +connected\,)?$')
 
@@ -658,7 +657,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Gateway of last resort is not set
         # Gateway of last resort is 10.50.15.1 to network 0.0.0.0
         p14 = re.compile(r'^Gateway +of +last +resort +is '
-                         r'+(?P<from_network>(not +set)|\S+)( +to +network '
+                         r'+(?P<gateway>(not +set)|\S+)( +to +network '
                          r'+(?P<to_network>\S+))?$')
 
         ret_dict = {}
@@ -686,8 +685,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
             # S    2001:1:1:1::1/128
             # L    2001:2:2:2::2/128 is directly connected,
-            # i L2 2001: 0: 10: 204: 0: 33: : / 126
-            # i L1 2001: 21: 21: 21:: 21/128
+            # i L2 2001:0:10:204:0:33::/126
+            # i L1 2001:21:21:21::21/128
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -896,14 +895,12 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             m14 = p14.match(line)
             if m14:
                 group = m14.groupdict()
-                gw_dict = ret_dict.setdefault('vrf', {}).\
-                          setdefault(vrf, {}).\
-                          setdefault('gw_of_last_resort', {})
-                if 'not set' in group['from_network']:
-                    gw_dict.update({'not_set': str(group['from_network'])})
-                else:
-                    gw_dict.update({'from_network': str(group['from_network'])})
-                    gw_dict.update({'to_network' : str(group['to_network'])})
+                if 'not set' != group['gateway']:
+                    gw_dict = ret_dict.setdefault('vrf', {}).\
+                        setdefault(vrf, {}).\
+                        setdefault('last_resort', {})
+                    gw_dict.update({'gateway': group['gateway']})
+                    gw_dict.update({'to_network' : group['to_network']})
                 
                 continue
 
