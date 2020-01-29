@@ -141,8 +141,191 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Restart Supressed : Disabled
     Number of Restarts: 0
     Last Restart at   : Never
+    ===============================================================================
+    Rtr Base ISIS Instance 1 Adjacency (detail)
+    ===============================================================================
+    Hostname    : COPQON05R07
+    SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
+    Interface   : To-COPQON05R07-LAG-7             Up Time     : 58d 03:24:48
+    State       : Up                               Priority    : 0
+    Nbr Sys Typ : L2                               L. Circ Typ : L2
+    Hold Time   : 22                               Max Hold    : 30
+    Adj Level   : L2                               MT Enabled  : No
+    Topology    : Unicast
+    IPv6 Neighbor     : ::
+    IPv4 Neighbor     : 10.11.97.22
+    IPv4 Adj SID      : Label 524213
+    Restart Support   : Disabled
+    Restart Status    : Not currently being helped
+    Restart Supressed : Disabled
+    Number of Restarts: 0
+    Last Restart at   : Never
     []
     '''}
+    sample_parsed_output = {
+    'instance': {
+        '0': {
+            'level': {
+                'L2': {
+                    'interfaces': {
+                        'To-COPQON05R07-LAG-7': {
+                            'system_id': {
+                                '0691.5819.6089': {
+                                    'hold_time': 22,
+                                    'hostname': 'COPQON05R07',
+                                    'ipv4_adj_sid': 'Label 524213',
+                                    'ipv4_neighbor': '10.11.97.22',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '00:23:3e:8f:17:97',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '58d 03:24:48',
+                                },
+                            },
+                        },
+                        'To-COTKON04XR1-LAG-4': {
+                            'system_id': {
+                                '0670.7021.9137': {
+                                    'hold_time': 23,
+                                    'hostname': 'COTKON04XR1',
+                                    'ipv4_adj_sid': 'Label 524127',
+                                    'ipv4_neighbor': '10.11.79.245',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '84:26:2b:bc:2d:e1',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '36d 23:21:57',
+                                },
+                            },
+                        },
+                        'To-COTKPQ03R07-LAG-9': {
+                            'system_id': {
+                                '0691.5819.6091': {
+                                    'hold_time': 22,
+                                    'hostname': 'COTKPQ03R07',
+                                    'ipv4_adj_sid': 'Label 524214',
+                                    'ipv4_neighbor': '10.11.79.242',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '00:23:3e:8d:2f:99',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '58d 03:24:48',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '1': {
+            'level': {
+                'L2': {
+                    'interfaces': {
+                        'To-COPQON05R07-LAG-7': {
+                            'system_id': {
+                                '0691.5819.6089': {
+                                    'hold_time': 22,
+                                    'hostname': 'COPQON05R07',
+                                    'ipv4_adj_sid': 'Label 524213',
+                                    'ipv4_neighbor': '10.11.97.22',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '00:23:3e:8f:17:97',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '58d 03:24:48',
+                                },
+                            },
+                        },
+                        'To-COTKON04XR1-LAG-4': {
+                            'system_id': {
+                                '0670.7021.9137': {
+                                    'hold_time': 23,
+                                    'hostname': 'COTKON04XR1',
+                                    'ipv4_adj_sid': 'Label 524127',
+                                    'ipv4_neighbor': '10.11.79.245',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '84:26:2b:bc:2d:e1',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '36d 23:21:57',
+                                },
+                            },
+                        },
+                        'To-COTKPQ03R07-LAG-9': {
+                            'system_id': {
+                                '0691.5819.6091': {
+                                    'hold_time': 22,
+                                    'hostname': 'COTKPQ03R07',
+                                    'ipv4_adj_sid': 'Label 524214',
+                                    'ipv4_neighbor': '10.11.79.242',
+                                    'ipv6_neighbor': '::',
+                                    'l_circ_typ': 'L2',
+                                    'last_restart_at': 'Never',
+                                    'max_hold': 30,
+                                    'mt_enabled': 'No',
+                                    'nbr_sys_typ': 'L2',
+                                    'number_of_restarts': 0,
+                                    'priority': 0,
+                                    'restart_support': 'Disabled',
+                                    'restart_supressed': 'Disabled',
+                                    'snpa': '00:23:3e:8d:2f:99',
+                                    'state': 'Up',
+                                    'topology': 'Unicast',
+                                    'up_time': '58d 03:24:48',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -155,12 +338,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
         self.dev = Mock(**self.sample_output)
         obj = ShowRouterIsisAdjacencyDetail(device=self.dev)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
-        # self.assertEqual(parsed_output,self.sample_parsed_output)
+        self.assertEqual(parsed_output,self.sample_parsed_output)
 
 
 

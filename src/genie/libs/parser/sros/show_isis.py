@@ -121,47 +121,127 @@ class ShowRouterIsisAdjacencyDetailSchema(MetaParser):
     """Schema for show router isis adjacency detail"""
 
     schema = {
-        'hostname': {
+        'instance': {
             Any(): {
-                'system_id': str,
-                'interface': str,
-                'state': str,
-                'nbr_sys_typ': str,
-                'hold_time': int,
-                'adj_level': str,
-                'topology': str,
-                'ipv6_neighbor': str,
-                'ipv4_neighbor': str,
-                'ipv4_adj_sid': str,
-                'restart_support': str,
-                'restart_supressed': str,
-                'number_of_restarts': int,
-                'last_restart_at': str,
-                'snpa': str,
-                'up_time': str,
-                'priority': int,
-                'l_circ_typ': str,
-                'max_hold': int,
-                'mt_enabled': str,
+                'level': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                'system_id': {
+                                    Any(): {
+                                        'hostname': str,
+                                        'state': str,
+                                        'nbr_sys_typ': str,
+                                        'hold_time': int,
+                                        'topology': str,
+                                        'ipv6_neighbor': str,
+                                        'ipv4_neighbor': str,
+                                        'ipv4_adj_sid': str,
+                                        'restart_support': str,
+                                        'restart_supressed': str,
+                                        'number_of_restarts': int,
+                                        'last_restart_at': str,
+                                        'snpa': str,
+                                        'up_time': str,
+                                        'priority': int,
+                                        'l_circ_typ': str,
+                                        'max_hold': int,
+                                        'mt_enabled': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
-class ShowRouterIsisAdjacencyDetailSchema2(MetaParser):
-    """Schema for show router isis adjacency detail"""
 
-    schema = {
-        'hostname': {
-            Any(): {
-                'system_id': str,
-                'state': str,
-                'snpa': str,
-                'interface': str,
-                'up_time': str,
-                'priority': int,
-            }
-        }
-    }
+# =============================================
+# Helper Functions for ShowRouterIsisAdjacencyDetail
+# =============================================
+
+# Build a child dictionary for the final result
+def build_level_dict(s, pattern):
+    level_dict = {}
+    m = pattern.match(s)
+    group = m.groupdict()
+    system_id_dict = level_dict.setdefault('level', {}). \
+        setdefault(group['adj_level'], {}). \
+        setdefault('interfaces', {}). \
+        setdefault(group['interface'], {}). \
+        setdefault('system_id', {}). \
+        setdefault(group['system_id'], {})
+
+    str_keys = ['hostname', 'state', 'nbr_sys_typ', 'topology',
+                'ipv6_neighbor', 'ipv4_neighbor', 'ipv4_adj_sid',
+                'restart_support', 'restart_supressed', 'last_restart_at',
+                'snpa', 'up_time', 'l_circ_typ', 'mt_enabled']
+    int_keys = ['hold_time', 'number_of_restarts', 'priority', 'max_hold']
+
+    for k in str_keys:
+        system_id_dict[k] = group[k]
+
+    for k in int_keys:
+        system_id_dict[k] = int(group[k])
+
+    return level_dict
+
+
+# Merge two dictionaries
+# reference: https://bit.ly/36y1M1L
+def merge_dicts(dict1, dict2):
+    for k in set(dict1.keys()).union(dict2.keys()):
+        if k in dict1 and k in dict2:
+            if isinstance(dict1[k], dict) and isinstance(dict2[k], dict):
+                yield (k, dict(merge_dicts(dict1[k], dict2[k])))
+            else:
+                # If one of the values is not a dict, you can't continue merging it.
+                # Value from second dict overrides one in first and we move on.
+                yield (k, dict2[k])
+                # Alternatively, replace this with exception raiser to alert you of value conflicts
+        elif k in dict1:
+            yield (k, dict1[k])
+        else:
+            yield (k, dict2[k])
+
+
+def prepare_text(t, pattern):
+    result = {}
+    p0 = re.compile(r'Rtr Base ISIS Instance (?P<instance>\d+) Adjacency \(detail\)')
+
+    home_block = ''
+    home_dicts = {}
+    instance_num = None
+    for line in t.splitlines():
+
+        if 'Rtr Base ISIS Instance' in line:
+            line = line.strip()
+
+        m = p0.match(line)
+        if m:
+            instance_num = m.groupdict()['instance']
+            continue
+
+        if 'Last Restart at' in line:
+            result.setdefault('instance', {})
+            # build level dict
+            home_block += line
+            curr_dict = build_level_dict(home_block.strip(), pattern)
+            home_dicts = dict(merge_dicts(curr_dict, home_dicts))
+            home_block = ''
+
+            # insert the level dictionaries into the instance dictionary
+            result['instance'][instance_num] = home_dicts
+            continue
+
+        elif 'Hostname' in line or len(home_block) > 0:
+            home_block += line
+            continue
+
+    return result
+
 
 class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
     """ Parser for show router isis adjacency detail"""
@@ -169,17 +249,16 @@ class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
     cli_command = 'show router isis adjacency detail'
 
     def cli(self, output=None):
-        import time
-        start_time = time.time()
 
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        parsed_dict = {}
+        # Rtr Base ISIS Instance 0 Adjacency (detail)
+        p0 = re.compile(r'^Rtr Base ISIS Instance (?P<instance>\d+) Adjacency \(detail\)$')
 
-        p = re.compile(r'^: +(?P<hostname>\S+)'
+        p = re.compile(r'^Hostname +: +(?P<hostname>\S+)'
                        r' +SystemID +: +(?P<system_id>\S+) +SNPA +: +(?P<snpa>\S+)'
                        r' +Interface +: +(?P<interface>\S+) +Up Time +: +(?P<up_time>[\S]+ [\S]+)'
                        r' +State +: +(?P<state>\S+) +Priority +: +(?P<priority>\d+)'
@@ -196,25 +275,10 @@ class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
                        r' +Number of Restarts: (?P<number_of_restarts>\d+)'
                        r'  +Last Restart at +: +(?P<last_restart_at>\S+)')
 
-        content_str = out.split('===============================================================================')[-1]
-        content_list = content_str.strip().split('Hostname')
+        result = prepare_text(out, p)
 
-        for c in content_list:
-            c_str = c.replace('\n', '').strip()
-            m = p.match(c_str)
-            if m:
-                group = m.groupdict()
-                # ==============
-                # next step: grab group['key'] and construct the dictionary
-                # ==============
-                print('yes')
+        return result
 
-
-
-        print("--- %s seconds ---" % (time.time() - start_time))
-        import pdb
-        pdb.set_trace()
-        return parsed_dict
 
 
 
