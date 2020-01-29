@@ -11,9 +11,9 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxe show_ssh1
-from genie.libs.parser.iosxr.show_ssh1 import ShowSshHistory
+from genie.libs.parser.iosxr.show_ssh import ShowSshHistory
 
-class test_show_ssh1(unittest.TestCase):
+class test_show_ssh(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 ={
@@ -51,16 +51,14 @@ class test_show_ssh1(unittest.TestCase):
     2        1    vty0    0/RP0/CPU0      admin     172.16.1.254          v2  key-intr       Command-Line-Interface
     '''}
     
-    def test_show_ssh1_full(self):
+    def test_show_ssh_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-        obj = ShowSSHHistory(device=self.device)
-        parsed_output = obj.parse()  
         obj = ShowSshHistory(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse()  
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
-    def test_show_ssh1_empty(self):
+    def test_show_ssh_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowSshHistory(device=self.device)
