@@ -188,16 +188,17 @@ class ShowBgpInstancesSchema(MetaParser):
     """Schema for show bgp instances"""
 
     schema = {
-        'instance':
-            {Any():
-                {'bgp_id': int,
-                 'instance_id': int,
-                 'placed_grp': str,
-                 'num_vrfs': int,
-                 Optional('address_families'): list
-                }
-            },
-        }
+        'instance':{
+            Any(): {
+                'bgp_id': int,
+                'instance_id': int,
+                'placed_grp': str,
+                'num_vrfs': int,
+                Optional('address_families'): list
+            }
+        },
+        Optional('number_of_bgp_instances'): int,
+    }
 
 class ShowBgpInstances(ShowBgpInstancesSchema):
 
@@ -210,14 +211,15 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        p1 = re.compile(r'^(?P<instance_id>\d+)'
-                        ' +(?P<placed_grp>[\w\-]+)'
-                        ' +(?P<instance>[\w\-]+)'
-                        ' +(?P<bgp_id>\d+)'
-                        ' +(?P<num_vrfs>\d+)'
-                        ' +(?P<address_family>[\w\s\,\-]+)$')
+
+        p1 = re.compile(r'^(?P<instance_id>\d+) +(?P<placed_grp>[\w\_|\-]+) '
+                        r'+(?P<instance>[\w\-]+) +(?P<bgp_id>\d+) '
+                        r'+(?P<num_vrfs>\d+) +(?P<address_family>[\w\s\,\-]+)$')
+
         p1_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
-        p2 = re.compile(r'^(?P<address_family>[\w\s\,\-]+)$')
+        p2 = re.compile(r'^(?P<address_family>[(IPv|VPNv)\d Unicast\,]+)$')
+        p3 = re.compile(r'^Number +of +BGP +instances\: '
+                        r'+(?P<number_of_bgp_instances>\d+)$')
 
         ret_dict = {}
 
@@ -267,6 +269,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             m = p1_1.match(line)
             if m:
                 continue
+
             #                                                     IPv6 Unicast, VPNv6 Unicast
             m = p2.match(line)
             if m:
@@ -276,7 +279,15 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                     address_family_extra_line = [item.strip() for item in address_family_extra_line]
                     address_family_lst.extend(address_family_extra_line)
                     ret_dict['instance'][instance]['address_families'] = address_family_lst
-    
+
+            # Number of BGP instances: 1
+            m3 = p3.match(line)
+            if m3:
+                num = int(m3.groupdict()['number_of_bgp_instances'])
+                ret_dict['number_of_bgp_instances'] = num
+
+                continue
+
         return ret_dict
 
 # =======================================
