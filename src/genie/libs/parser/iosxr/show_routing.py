@@ -895,11 +895,12 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             m14 = p14.match(line)
             if m14:
                 group = m14.groupdict()
-                if 'not set' != group['gateway']:
-                    gw_dict = ret_dict.setdefault('vrf', {}).\
+                gw_dict = ret_dict.setdefault('vrf', {}).\
                         setdefault(vrf, {}).\
                         setdefault('last_resort', {})
-                    gw_dict.update({'gateway': group['gateway']})
+                gw_dict.update({'gateway': group['gateway']})
+                
+                if group['to_network']:
                     gw_dict.update({'to_network' : group['to_network']})
                 
                 continue

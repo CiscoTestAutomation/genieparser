@@ -1418,9 +1418,12 @@ class TestShowRouteIpv6(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                    },
+                },
             },
         }
-    }
 
     golden_output_2 = {'execute.return_value': '''
         RP/0/RP0/CPU0:PE1#show route vrf all ipv6
@@ -1596,6 +1599,9 @@ class TestShowRouteIpv6(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
             'VRF502': {
                 'address_family': {
@@ -1704,6 +1710,9 @@ class TestShowRouteIpv6(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
             'VRF503': {
                 'address_family': {
@@ -1772,6 +1781,9 @@ class TestShowRouteIpv6(unittest.TestCase):
 
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': 'not set'
                 },
             },
         },
@@ -2195,6 +2207,9 @@ class TestShowRouteIpv6(unittest.TestCase):
                             },
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': 'not set'
                 },
             },
         },
@@ -2691,6 +2706,9 @@ class TestShowRouteIpv6(unittest.TestCase):
                             }
                         }
                     }
+                },
+                'last_resort': {
+                    'gateway': 'not set'
                 },
             },
         }
