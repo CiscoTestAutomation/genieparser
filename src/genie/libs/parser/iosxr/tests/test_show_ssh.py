@@ -16,31 +16,30 @@ from genie.libs.parser.iosxr.show_ssh1 import ShowSshHistory
 class test_show_ssh1(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output1 ={'session':{
-        'incoming': 
-             {1:
-              {'chan': 1,
-               'pty' : 'vty0',
-               'location':'0/RP0/CPU0',
-               'userid':'admin',
-               'host':'172.16.1.254',
-               'ver': 'v2',
-               'authentication':'key-intr',
-               'connection_type':'Command-Line-Interface'
-               },
-              2:
-               {'chan': 1,
-                'pty' : 'vty0',
-                'location':'0/RP0/CPU0',
-                'userid':'admin',
-                'host':'172.16.1.254',
-                'ver': 'v2',
-                'authentication':'key-intr',
-                'connection_type':'Command-Line-Interface'
+    golden_parsed_output1 ={
+        'session':{
+            'incoming': 
+                 {1:
+                  {'chan': 1,
+                   'pty' : 'vty0',
+                   'location':'0/RP0/CPU0',
+                   'userid':'admin',
+                   'host':'172.16.1.254',
+                   'ver': 'v2',
+                   'authentication':'key-intr',
+                   'connection_type':'Command-Line-Interface'
+                   },
+                  2:
+                   {'chan': 1,
+                    'pty' : 'vty0',
+                    'location':'0/RP0/CPU0',
+                    'userid':'admin',
+                    'host':'172.16.1.254',
+                    'ver': 'v2',
+                    'authentication':'key-intr',
+                    'connection_type':'Command-Line-Interface'
+                    }
                 }
-               
-              }
         } 
     }
     # Specify the expected unparsed output
@@ -53,18 +52,12 @@ class test_show_ssh1(unittest.TestCase):
     '''}
     
     def test_show_ssh1_full(self):
- 
-        
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-<<<<<<< HEAD
         obj = ShowSSHHistory(device=self.device)
         parsed_output = obj.parse()  
-        
-=======
         obj = ShowSshHistory(device=self.device)
         parsed_output = obj.parse()
->>>>>>> Added changes based on feedback given
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
     def test_show_ssh1_empty(self):

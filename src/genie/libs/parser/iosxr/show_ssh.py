@@ -8,22 +8,21 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 class ShowSshHistorySchema(MetaParser):
     #Schema for show SSH History
-    schema = {'session':{
-        'incoming':{
-            Any():
-                {'chan': int,
-                 'pty' : str,
-                 'location':str,
-                 'userid':str,
-                 'host':str,
-                 'ver':str,
-                 'authentication':str,
-                 'connection_type':str
-                 }
-            
-        
+    schema = {
+        'session':{
+            'incoming':{
+                Any():
+                    {'chan': int,
+                     'pty' : str,
+                     'location':str,
+                     'userid':str,
+                     'host':str,
+                     'ver':str,
+                     'authentication':str,
+                     'connection_type':str
+                     }
+            }
         }
-    }
     }      
                
 # The parser class inherits from the schema class
@@ -41,8 +40,6 @@ class ShowSshHistory(ShowSshHistorySchema):
         # Initializes the Python dictionary variable
         parsed_dict = {}
         
-        
-
         # Defines the regex for the lines of device output, which is
         #Incoming sessions
         p1 = re.compile(r'^(Incoming sessions)')
@@ -53,8 +50,6 @@ class ShowSshHistory(ShowSshHistorySchema):
          # Defines the "for" loop, to pattern match each line of output
         for line in out.splitlines():
             line = line.strip()
-            
-            
             #match='Incoming sessions'
             m = p1.match(line)
             if m:
@@ -79,9 +74,7 @@ class ShowSshHistory(ShowSshHistorySchema):
                 group_dict['authentication'] = group['authentication']
                 group_dict['connection_type'] = group['connection_type']
                 continue
-            #print(parsed_dict)
-                
-        
+            
         return parsed_dict
                 
 
