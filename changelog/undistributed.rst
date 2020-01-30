@@ -115,4 +115,9 @@
     * Updated regex to accommodate more outputs
     * Added extra key to schema
     * Added new unittest
+
+* NXOS
+    * Added regex 
+    * Added new unittest
+    
     
