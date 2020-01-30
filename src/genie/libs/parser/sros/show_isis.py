@@ -139,6 +139,7 @@ class ShowRouterIsisAdjacencyDetailSchema(MetaParser):
                                         'ipv4_adj_sid': str,
                                         'restart_support': str,
                                         'restart_supressed': str,
+                                        'restart_status': str,
                                         'number_of_restarts': int,
                                         'last_restart_at': str,
                                         'snpa': str,
@@ -176,7 +177,7 @@ def build_level_dict(s, pattern):
 
     str_keys = ['hostname', 'state', 'nbr_sys_typ', 'topology',
                 'ipv6_neighbor', 'ipv4_neighbor', 'ipv4_adj_sid',
-                'restart_support', 'restart_supressed', 'last_restart_at',
+                'restart_support', 'restart_supressed', 'restart_status', 'last_restart_at',
                 'snpa', 'up_time', 'l_circ_typ', 'mt_enabled']
     int_keys = ['hold_time', 'number_of_restarts', 'priority', 'max_hold']
 
