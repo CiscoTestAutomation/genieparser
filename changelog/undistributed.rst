@@ -15,6 +15,8 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowProcessesMemoryPlatformSorted for:
+        * show processes memory platform sorted
 
 * IOSXR
     * Added ShowMplsInterfaces for:
