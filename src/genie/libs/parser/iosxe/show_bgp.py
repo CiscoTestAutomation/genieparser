@@ -698,7 +698,7 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
                    'show ip bgp regexp {regexp}'
                    ]
 
-    def cli(self, address_family=None, rd=None, vrf=None, regexp=None, output=None):
+    def cli(self, address_family='', rd='', vrf='', regexp=None, output=None):
 
         if output is None:
             # Build command

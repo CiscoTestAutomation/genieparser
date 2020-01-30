@@ -1365,12 +1365,18 @@ class TestShowIpBgpAll(unittest.TestCase):
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   'i': {'index': {1: {'localpref': 100,
-                                                       'next_hop': '10.13.202.64',
-                                                       'origin_codes': 'i',
-                                                       'path': '60000',
-                                                       'status_codes': '*>',
-                                                       'weight': 0}}}},
+                                   '172.16.200.99/32': {
+                                        'index': {
+                                            1: {
+                                                'localpref': 100,
+                                                'next_hop': '10.13.202.64',
+                                                'origin_codes': 'i',
+                                                'path': '60000',
+                                                'status_codes': '*>i',
+                                                'weight': 0,
+                                            },
+                                        },
+                                    },},
                 'vrf_route_identifier': '192.168.10.254'}}}}}
 
     golden_output2 = {'execute.return_value': '''
