@@ -61,6 +61,12 @@
         * show inventory
         * show module
 
+*SROS
+    * Added ShowRouterIsisAdjacency for:
+        * show router isis adjacency
+    * Added ShowRouterIsisAdjacencyDetail for:
+        * show router isis adjacency detail
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------

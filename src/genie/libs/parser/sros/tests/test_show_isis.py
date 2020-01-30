@@ -1,4 +1,5 @@
 import unittest
+
 from unittest.mock import Mock
 from pyats.topology import Device
 
