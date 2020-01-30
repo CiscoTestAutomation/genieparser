@@ -209,6 +209,8 @@ def merge_dicts(dict1, dict2):
 
 def prepare_text(t, pattern):
     result = {}
+
+    # Rtr Base ISIS Instance 0 Adjacency (detail)
     p0 = re.compile(r'Rtr Base ISIS Instance (?P<instance>\d+) Adjacency \(detail\)')
 
     home_block = ''
@@ -254,9 +256,6 @@ class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-
-        # Rtr Base ISIS Instance 0 Adjacency (detail)
-        p0 = re.compile(r'^Rtr Base ISIS Instance (?P<instance>\d+) Adjacency \(detail\)$')
 
         p = re.compile(r'^Hostname +: +(?P<hostname>\S+)'
                        r' +SystemID +: +(?P<system_id>\S+) +SNPA +: +(?P<snpa>\S+)'

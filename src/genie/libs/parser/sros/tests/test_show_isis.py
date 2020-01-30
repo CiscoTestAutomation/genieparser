@@ -20,9 +20,9 @@ class TestShowRouterIsisAdjacency(unittest.TestCase):
     ===============================================================================
     System ID                Usage State Hold Interface                     MT-ID
     -------------------------------------------------------------------------------
-    COPQON05R07              L2    Up    24   To-COPQON05R07-LAG-7          0
-    COTKON04XR1              L2    Up    24   To-COTKON04XR1-LAG-4          0
-    COTKPQ03R07              L2    Up    24   To-COTKPQ03R07-LAG-9          0
+    GENIE01R07              L2    Up    24   To-GENIE01R07-LAG-7          0
+    GENIE04XR1              L2    Up    24   To-GENIE04XR1-LAG-4          0
+    GENIE03R07              L2    Up    24   To-GENIE03R07-LAG-9          0
     -------------------------------------------------------------------------------
     Adjacencies : 3
     ===============================================================================
@@ -35,27 +35,27 @@ class TestShowRouterIsisAdjacency(unittest.TestCase):
             'level': {
                 'L2': {
                     'interfaces': {
-                        'To-COPQON05R07-LAG-7': {
+                        'To-GENIE01R07-LAG-7': {
                             'system_id': {
-                                'COPQON05R07': {
+                                'GENIE01R07': {
                                     'hold': 24,
                                     'mt_id': 0,
                                     'state': 'Up',
                                 },
                             },
                         },
-                        'To-COTKON04XR1-LAG-4': {
+                        'To-GENIE04XR1-LAG-4': {
                             'system_id': {
-                                'COTKON04XR1': {
+                                'GENIE04XR1': {
                                     'hold': 24,
                                     'mt_id': 0,
                                     'state': 'Up',
                                 },
                             },
                         },
-                        'To-COTKPQ03R07-LAG-9': {
+                        'To-GENIE03R07-LAG-9': {
                             'system_id': {
-                                'COTKPQ03R07': {
+                                'GENIE03R07': {
                                     'hold': 24,
                                     'mt_id': 0,
                                     'state': 'Up',
@@ -93,9 +93,9 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     ===============================================================================
     Rtr Base ISIS Instance 0 Adjacency (detail)
     ===============================================================================
-    Hostname    : COPQON05R07
+    Hostname    : GENIE01R07
     SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
-    Interface   : To-COPQON05R07-LAG-7             Up Time     : 58d 03:24:48
+    Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
     Hold Time   : 22                               Max Hold    : 30
@@ -109,9 +109,9 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Restart Supressed : Disabled
     Number of Restarts: 0
     Last Restart at   : Never
-    Hostname    : COTKON04XR1
+    Hostname    : GENIE04XR1
     SystemID    : 0670.7021.9137                   SNPA        : 84:26:2b:bc:2d:e1
-    Interface   : To-COTKON04XR1-LAG-4             Up Time     : 36d 23:21:57
+    Interface   : To-GENIE04XR1-LAG-4             Up Time     : 36d 23:21:57
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
     Hold Time   : 23                               Max Hold    : 30
@@ -125,9 +125,9 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Restart Supressed : Disabled
     Number of Restarts: 0
     Last Restart at   : Never
-    Hostname    : COTKPQ03R07
+    Hostname    : GENIE03R07
     SystemID    : 0691.5819.6091                   SNPA        : 00:23:3e:8d:2f:99
-    Interface   : To-COTKPQ03R07-LAG-9             Up Time     : 58d 03:24:48
+    Interface   : To-GENIE03R07-LAG-9             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
     Hold Time   : 22                               Max Hold    : 30
@@ -144,9 +144,9 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     ===============================================================================
     Rtr Base ISIS Instance 1 Adjacency (detail)
     ===============================================================================
-    Hostname    : COPQON05R07
+    Hostname    : GENIE01R07
     SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
-    Interface   : To-COPQON05R07-LAG-7             Up Time     : 58d 03:24:48
+    Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
     Hold Time   : 22                               Max Hold    : 30
@@ -168,11 +168,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
             'level': {
                 'L2': {
                     'interfaces': {
-                        'To-COPQON05R07-LAG-7': {
+                        'To-GENIE01R07-LAG-7': {
                             'system_id': {
                                 '0691.5819.6089': {
                                     'hold_time': 22,
-                                    'hostname': 'COPQON05R07',
+                                    'hostname': 'GENIE01R07',
                                     'ipv4_adj_sid': 'Label 524213',
                                     'ipv4_neighbor': '10.11.97.22',
                                     'ipv6_neighbor': '::',
@@ -192,11 +192,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                 },
                             },
                         },
-                        'To-COTKON04XR1-LAG-4': {
+                        'To-GENIE04XR1-LAG-4': {
                             'system_id': {
                                 '0670.7021.9137': {
                                     'hold_time': 23,
-                                    'hostname': 'COTKON04XR1',
+                                    'hostname': 'GENIE04XR1',
                                     'ipv4_adj_sid': 'Label 524127',
                                     'ipv4_neighbor': '10.11.79.245',
                                     'ipv6_neighbor': '::',
@@ -216,11 +216,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                 },
                             },
                         },
-                        'To-COTKPQ03R07-LAG-9': {
+                        'To-GENIE03R07-LAG-9': {
                             'system_id': {
                                 '0691.5819.6091': {
                                     'hold_time': 22,
-                                    'hostname': 'COTKPQ03R07',
+                                    'hostname': 'GENIE03R07',
                                     'ipv4_adj_sid': 'Label 524214',
                                     'ipv4_neighbor': '10.11.79.242',
                                     'ipv6_neighbor': '::',
@@ -248,11 +248,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
             'level': {
                 'L2': {
                     'interfaces': {
-                        'To-COPQON05R07-LAG-7': {
+                        'To-GENIE01R07-LAG-7': {
                             'system_id': {
                                 '0691.5819.6089': {
                                     'hold_time': 22,
-                                    'hostname': 'COPQON05R07',
+                                    'hostname': 'GENIE01R07',
                                     'ipv4_adj_sid': 'Label 524213',
                                     'ipv4_neighbor': '10.11.97.22',
                                     'ipv6_neighbor': '::',
@@ -272,11 +272,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                 },
                             },
                         },
-                        'To-COTKON04XR1-LAG-4': {
+                        'To-GENIE04XR1-LAG-4': {
                             'system_id': {
                                 '0670.7021.9137': {
                                     'hold_time': 23,
-                                    'hostname': 'COTKON04XR1',
+                                    'hostname': 'GENIE04XR1',
                                     'ipv4_adj_sid': 'Label 524127',
                                     'ipv4_neighbor': '10.11.79.245',
                                     'ipv6_neighbor': '::',
@@ -296,11 +296,11 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                 },
                             },
                         },
-                        'To-COTKPQ03R07-LAG-9': {
+                        'To-GENIE03R07-LAG-9': {
                             'system_id': {
                                 '0691.5819.6091': {
                                     'hold_time': 22,
-                                    'hostname': 'COTKPQ03R07',
+                                    'hostname': 'GENIE03R07',
                                     'ipv4_adj_sid': 'Label 524214',
                                     'ipv4_neighbor': '10.11.79.242',
                                     'ipv6_neighbor': '::',
