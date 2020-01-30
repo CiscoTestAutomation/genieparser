@@ -54,8 +54,9 @@ class ShowProcessesMemoryPlatformSorted(ShowProcessesMemoryPlatformSortedSchema)
 
 		# Init vars
 		parsed_dict = {}
-		mem_dict = parsed_dict.setdefault('system_memory', {})
-		procmem_dict = mem_dict.setdefault('per_process_memory', {})
+		if out:
+			mem_dict = parsed_dict.setdefault('system_memory', {})
+			procmem_dict = mem_dict.setdefault('per_process_memory', {})
 
 		# System memory: 7703908K total, 3863776K used, 3840132K free, 
 		p1 = re.compile(r'System +memory: +(?P<total>(\d+\w?)) +total,'
