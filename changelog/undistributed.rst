@@ -43,6 +43,8 @@
     * Added ShowBundleReasons for:  
         * show bundle reasons
         * show bundle {interface} reasons
+    * Added ShowSsh for:
+        * show ssh session details
 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
@@ -108,4 +110,11 @@
 * IOSXR
     * Updated and removed regex to accommodate outputs
     * Added new unittest 
+    * Updated and added regex to accommodate more outputs
+    * Added new output to unittest
+
+* IOSXR
+    * Updated regex to accommodate more outputs
+    * Added extra key to schema
+    * Added new unittest
     

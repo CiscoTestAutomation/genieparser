@@ -1,7 +1,6 @@
 
 # Python
 import unittest
-
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
@@ -361,6 +360,36 @@ class TestShowBgpInstances(unittest.TestCase):
         3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
                                                             IPv6 Unicast, VPNv6 Unicast
       '''}
+    
+    golden_output1 = {'execute.return_value': '''
+        
+        show bgp instances
+
+        Number of BGP instances: 1
+
+        ID  Placed-Grp  Name              AS        VRFs    Address Families
+        --------------------------------------------------------------------------------
+        0   v4_routing  default           34984     12      IPv4 Unicast, VPNv4 Unicast,
+                                                            IPv6 Unicast
+    '''
+    }
+
+    golden_parsed_output1 = {
+        'instance': {
+            'default': {
+                'address_families': [
+                    'ipv4 unicast',
+                    'vpnv4 unicast',
+                    'ipv6 unicast'
+                ],
+                'bgp_id': 34984,
+                'instance_id': 0,
+                'num_vrfs': 12,
+                'placed_grp': 'v4_routing'
+            }
+        },
+        'number_of_bgp_instances': 1
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -374,6 +403,13 @@ class TestShowBgpInstances(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstances(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ==========================================
@@ -3839,9 +3875,7 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
 
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'
