@@ -31,7 +31,7 @@ class ShowRouterIsisAdjacencySchema(MetaParser):
                             Any(): {
                                 'system_id': {
                                     Any(): {
-                                        'hold': int,
+                                        'hold_time': int,
                                         'state': str,
                                         'mt_id': int,
                                     }
@@ -98,7 +98,7 @@ class ShowRouterIsisAdjacency(ShowRouterIsisAdjacencySchema):
 
                 system_id_dict = interfaces_dict.setdefault('system_id', {}).setdefault(system_id, {})
 
-                system_id_dict['hold'] = hold
+                system_id_dict['hold_time'] = hold
                 system_id_dict['state'] = state
                 system_id_dict['mt_id'] = mt_id
 
