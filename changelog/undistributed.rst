@@ -45,7 +45,8 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
-
+    * Added ShowIpBgp for:
+        * show ip bgp regexp ^$ 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -60,6 +61,8 @@
         * show redundancy
         * show inventory
         * show module
+    * Added parser in iosxe which will indirectly add support for ios:
+        * show ip bgp regexp ^$ 
 
 --------------------------------------------------------------------------------
                                 Fix
