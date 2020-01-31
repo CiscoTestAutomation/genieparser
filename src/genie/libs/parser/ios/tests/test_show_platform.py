@@ -1458,7 +1458,6 @@ class TestShowInventory(unittest.TestCase):
     },
 }
 
-    # SM-ES2-16-P_show_inventory
     golden_output_6 = {'execute.return_value': '''
     NAME: "1", DESCR: "SM-ES2-16-P"
     PID: SM-ES2-16-P       , VID:      , SN: FOC09876NP3
@@ -1466,7 +1465,7 @@ class TestShowInventory(unittest.TestCase):
     golden_parsed_output_6 = {
         'slot': {
             '1': {
-                'other': {
+                'lc': {
                     'SM-ES2-16-P': {
                         'descr': 'SM-ES2-16-P',
                         'name': '1',
@@ -1479,7 +1478,6 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
-    # 2821_chassis_show_inventory
     golden_output_7 = {'execute.return_value': '''
     NAME: "2821 chassis", DESCR: "2821 chassis"
     PID: CISCO2821         , VID: V07 , SN: FTX1234AMWT
@@ -1543,7 +1541,6 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
-    # 3825_chassis_show_inventory
     golden_output_8 = {'execute.return_value': '''
     NAME: "3825 chassis", DESCR: "3825 chassis"
     PID: CISCO3825         , VID: V05 , SN: FTX7908A3RQ
@@ -1637,7 +1634,6 @@ class TestShowInventory(unittest.TestCase):
     },
 }
 
-    # 3845_chassis_show_inventory
     golden_output_9 = {'execute.return_value': '''
     NAME: "3845 chassis", DESCR: "3845 chassis"
     PID: CISCO3845         , VID: V05 , SN: FTX6666ARJ9

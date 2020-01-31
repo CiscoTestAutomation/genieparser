@@ -164,7 +164,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
         # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
-        r1_5 = re.compile(r'.*WS\-X.*')
+        # SM-ES2-16-P
+        r1_5 = re.compile(r'.*[WS\-X\s]|[SM\-ES].*')
 
         # NAME: "IOSv"
         r1_6 = re.compile(r'.*IOSv.*')
@@ -231,13 +232,9 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
                     # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
+                    # SM-ES2-16-P
                     elif r1_5.match(descr):
                         slot_code = 'lc'
-
-                    # NAME: "1", DESCR: "SM-ES2-16-P"
-                    # PID: SM-ES2-16-P       , VID:      , SN: FOC15316NP1
-                    else:
-                        slot_code = 'other'
 
                     slot_dict = parsed_output\
                         .setdefault('slot', {})\
