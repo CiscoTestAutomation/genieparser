@@ -15,7 +15,8 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
-
+    * Added ShowIpBgp for:
+        * show ip bgp regexp ^$ 
 * IOSXR
     * Added ShowMplsInterfaces for:
         * show mpls interfaces
@@ -45,8 +46,6 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
-    * Added ShowIpBgp for:
-        * show ip bgp regexp ^$ 
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
