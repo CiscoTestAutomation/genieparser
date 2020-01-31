@@ -23024,57 +23024,6 @@ class TestShowIpBgp(unittest.TestCase):
         * i                 10.19.198.239            0    100      0 1234 60000 ?
     '''}
 
-    golden_parsed_output2 = {
-        'vrf': {
-            'default': {
-                'address_family': {
-                    '': {
-                        'routes': {
-                            '1.1.1.1/32': {
-                                'index': {
-                                    1: {
-                                        'metric': 0,
-                                        'next_hop': '0.0.0.0',
-                                        'origin_codes': 'i',
-                                        'status_codes': '*>',
-                                        'weight': 32768,
-                                    },
-                                },
-                            },
-                            '2.2.2.2/32': {
-                                'index': {
-                                    1: {
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'next_hop': '2.2.2.2',
-                                        'origin_codes': 'i',
-                                        'status_codes': 'r>i',
-                                        'weight': 0,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    }
-
-    golden_output2 = {'execute.return_value': '''
-        show ip bgp regexp ^$
-        BGP table version is 3, local router ID is 1.1.1.1
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-                    r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-                    x best-external, a additional-path, c RIB-compressed,
-                    t secondary path, L long-lived-stale,
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
-
-            Network          Next Hop            Metric LocPrf Weight Path
-        *>   1.1.1.1/32       0.0.0.0                  0         32768 i
-        r>i  2.2.2.2/32       2.2.2.2                  0    100      0 i
-    '''}
-
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowIpBgp(device=self.device)
@@ -23086,12 +23035,6 @@ class TestShowIpBgp(unittest.TestCase):
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', rd='65109:10000')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
-    def test_golden2(self):
-        self.device = Mock(**self.golden_output2)
-        obj = ShowIpBgp(device=self.device)
-        parsed_output = obj.parse(regexp='^$')
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 class TestShowIpBgpRegexp(unittest.TestCase):
     ''' unit test for show ip bgp '''
