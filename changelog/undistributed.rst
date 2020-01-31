@@ -62,6 +62,7 @@
         * show redundancy
         * show inventory
         * show module
+    * Moved ShowBootvar to iosxe folder
 
 --------------------------------------------------------------------------------
                                 Fix
