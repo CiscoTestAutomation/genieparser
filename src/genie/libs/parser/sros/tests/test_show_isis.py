@@ -6,7 +6,9 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.sros.show_isis import ShowRouterIsisAdjacency,\
-                                        ShowRouterIsisAdjacencyDetail,ShowRouterIsisAdjacencyDetailOld
+                                        ShowRouterIsisAdjacencyDetail,\
+                                        ShowRouterIsisAdjacencyDetailOld,\
+                                        ShowRouterIsisAdjacencyDetailOld2
 
 
 
@@ -312,5 +314,17 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
         parsed_output = obj.parse()
         print("Old: end time: %s " % (time.time()))
         print("Old--- %s seconds ---" % (time.time() - start_time2))
+
+        self.assertEqual(parsed_output,self.sample_parsed_output)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.sample_output)
+        start_time2 = time.time()
+        print("Old 2: start time: %s " % (start_time2))
+        obj = ShowRouterIsisAdjacencyDetailOld2(device=self.dev)
+        parsed_output = obj.parse()
+        print("Old 2: end time: %s " % (time.time()))
+        print("Old 2 --- %s seconds ---" % (time.time() - start_time2))
 
         self.assertEqual(parsed_output,self.sample_parsed_output)
