@@ -9,6 +9,7 @@ from genie.libs.parser.sros.show_system_ntp_all import ShowSystemNtpAll
 
 
 class TestShowSystemNtpAll(unittest.TestCase):
+    maxDiff = None
     dev = Device(name='device')
     empty_output = {'execute.return_value': ''}
 
