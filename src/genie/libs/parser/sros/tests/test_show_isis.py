@@ -294,21 +294,23 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
         self.maxDiff = None
         self.dev = Mock(**self.sample_output)
         start_time = time.time()
-
+        print("New: start time: %s "%(start_time))
         obj = ShowRouterIsisAdjacencyDetail(device=self.dev)
         parsed_output = obj.parse()
-
+        print("New: end time: %s " % (time.time()))
         print("New--- %s seconds ---" % (time.time() - start_time))
-        self.assertEqual(parsed_output,self.sample_parsed_output)
 
+        self.assertEqual(parsed_output,self.sample_parsed_output)
 
 
     def test_golden2(self):
         self.maxDiff = None
         self.dev = Mock(**self.sample_output)
-        start_time = time.time()
+        start_time2 = time.time()
+        print("Old: start time: %s " % (start_time2))
         obj = ShowRouterIsisAdjacencyDetailOld(device=self.dev)
         parsed_output = obj.parse()
-        print("Old--- %s seconds ---" % (time.time() - start_time))
+        print("Old: end time: %s " % (time.time()))
+        print("Old--- %s seconds ---" % (time.time() - start_time2))
 
         self.assertEqual(parsed_output,self.sample_parsed_output)
