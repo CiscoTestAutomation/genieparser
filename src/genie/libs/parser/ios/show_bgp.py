@@ -41,7 +41,7 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAllDetail as ShowBgpAllDetai
                                              ShowIpBgpTemplatePeerPolicy as ShowIpBgpTemplatePeerPolicy_iosxe,\
                                              ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe, \
                                              ShowBgpSummary as ShowBgpSummary_iosxe, \
-                                             ShowIpBgp as ShowIpBgp_iosxe,
+                                             ShowIpBgp as ShowIpBgp_iosxe, \
                                              ShowIpBgpRegexp as ShowIpBgpRegexp_iosxe
 
 
