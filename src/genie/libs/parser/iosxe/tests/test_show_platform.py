@@ -60,19 +60,13 @@ class test_show_bootvar(unittest.TestCase):
         '''}
 
     golden_parsed_output1 = {
-        'boot_images':
-            {'bootflash:12351822-iedge-asr-uut':
-                {'var': 12},
-            'harddisk:/ISSUCleanGolden':
-                {'var': 12},
-            },
-        'bootldr': 'does not exist',
-        'config_file': None,
-        'config_register': '0x2',
-        'standby_state': 'not ready'}
+        'active': 
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2'},
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
 
     golden_output2 = {'execute.return_value': '''
-        show bootvar
+        asr-MIB-1#show bootvar
         BOOT variable =
         CONFIG_FILE variable =
         BOOTLDR variable does not exist
@@ -84,12 +78,25 @@ class test_show_bootvar(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'boot_images': {},
-        'bootldr': 'does not exist',
-        'config_file': None,
-        'config_register': '0x2',
-        'next_reload_config_register': '0x2102',
-        'standby_state': 'not ready'}
+        'active': 
+            {'configuration_register': '0x2',
+            'next_reload_configuration_register': '0x2102'}}
+
+    golden_output3 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2102
+
+        Standby not ready to show bootvar
+        '''}
+
+    golden_parsed_output3 = {
+        'active': 
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2102'},
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
 
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
@@ -103,11 +110,17 @@ class test_show_bootvar(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_bootvar_full1(self):
+    def test_show_bootvar_full2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_bootvar_full3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 class TestShowVersion(unittest.TestCase):
