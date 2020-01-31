@@ -32,6 +32,7 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp {address_family} rd {rd} summary'
     * 'show ip bgp all summary'
     * 'show ip bgp {address_family} all summary'
+    * 'show ip bgp regexp ^$'
     ----------------------------------------------------------------------------
     * 'show bgp all neighbors'
     * 'show bgp all neighbors {neighbor}'
@@ -681,6 +682,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 #   * 'show ip bgp {address_family}'
 #   * 'show ip bgp {address_family} rd {rd}'
 #   * 'show ip bgp {address_family} vrf {vrf}'
+#   * 'show ip bgp regexp ^$'
 # =============================================
 class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
 
@@ -689,6 +691,7 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         * 'show ip bgp {address_family}'
         * 'show ip bgp {address_family} rd {rd}'
         * 'show ip bgp {address_family} vrf {vrf}'
+        * 'show ip bgp regexp ^$'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf}',
@@ -698,7 +701,7 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
                    'show ip bgp regexp {regexp}'
                    ]
 
-    def cli(self, address_family='', rd='', vrf='', regexp=None, output=None):
+    def cli(self, address_family='', rd='', vrf='', regexp='', output=None):
 
         if output is None:
             # Build command

@@ -22718,7 +22718,7 @@ class TestShowIpBgpAllDampeningParameters(unittest.TestCase):
 
 class TestShowIpBgp(unittest.TestCase):
     ''' unit test for show ip bgp '''
-
+    self.maxDiff = None
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23075,21 +23075,18 @@ class TestShowIpBgp(unittest.TestCase):
     '''}
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', rd='65109:10000')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
     def test_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(regexp='^$')
