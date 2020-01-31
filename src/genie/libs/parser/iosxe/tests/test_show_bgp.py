@@ -44,7 +44,8 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAll,\
                                              ShowBgpAllNeighborsPolicy,\
                                              ShowIpBgpTemplatePeerSession,\
                                              ShowIpBgpTemplatePeerPolicy,\
-                                             ShowIpBgpAllDampeningParameters
+                                             ShowIpBgpAllDampeningParameters, \
+                                             ShowIpBgpRegexp
 
 
 # ===================================
@@ -22718,7 +22719,7 @@ class TestShowIpBgpAllDampeningParameters(unittest.TestCase):
 
 class TestShowIpBgp(unittest.TestCase):
     ''' unit test for show ip bgp '''
-    self.maxDiff = None
+    maxDiff = None
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23091,6 +23092,75 @@ class TestShowIpBgp(unittest.TestCase):
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(regexp='^$')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+class TestShowIpBgpRegexp(unittest.TestCase):
+    ''' unit test for show ip bgp '''
+    maxDiff = None
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    '': {
+                        'routes': {
+                            '1.1.1.1/32': {
+                                'index': {
+                                    1: {
+                                        'metric': 0,
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                        'status_codes': '*>',
+                                        'weight': 32768,
+                                    },
+                                },
+                            },
+                            '2.2.2.2/32': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '2.2.2.2',
+                                        'origin_codes': 'i',
+                                        'status_codes': 'r>i',
+                                        'weight': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        show ip bgp regexp ^$
+        BGP table version is 3, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                    r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                    x best-external, a additional-path, c RIB-compressed,
+                    t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+            Network          Next Hop            Metric LocPrf Weight Path
+        *>   1.1.1.1/32       0.0.0.0                  0         32768 i
+        r>i  2.2.2.2/32       2.2.2.2                  0    100      0 i
+    '''}
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpRegexp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(regexp='^$')
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgpRegexp(device=self.device)
+        parsed_output = obj.parse(regexp='^$')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 #-------------------------------------------------------------------------------

@@ -237,7 +237,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          r'(?P<path_type>(i|e|c|l|a|r|I))? *'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
@@ -726,6 +726,28 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
+# =============================================
+# Parser for:
+#   * 'show ip bgp regexp ^$'
+# =============================================
+class ShowIpBgpRegexp(ShowBgpSuperParser, ShowBgpSchema):
+
+    ''' Parser for:
+        * 'show ip bgp regexp ^$'
+    '''
+
+    cli_command = 'show ip bgp regexp {regexp}'
+
+    def cli(self, regexp, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(regexp=regexp)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output)
 
 #-------------------------------------------------------------------------------
 
