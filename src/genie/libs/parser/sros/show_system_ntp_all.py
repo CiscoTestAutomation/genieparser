@@ -32,7 +32,7 @@ class ShowSystemNtpAllSchema(MetaParser):
                 'server_authenticate': str,
             }
         },
-        'peer': {
+        Optional('peer'): {
             Any(): { # == group['remote']
                 'local_mode': {
                     Any(): { # == 'client'
@@ -93,7 +93,7 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
                         r'+(?P<stratum>[-\d]) +(?P<type>\S+) '
                         r'+(?P<a>[-]) +(?P<poll>\d+) +(?P<reach>\S+) '
                         r'+(?P<offset>[-.\d]+)')
-        # Base           138.120.105.64
+        # Base           172.16.189.64
         p7 = re.compile(r'(?P<router>\S+) +(?P<remote>[.\d]+)')
 
         for line in out.splitlines():
@@ -129,7 +129,7 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
             # NTP Active Associations
             # ==============================================================
             # reject                    STEP            -  srvr  -  64   ........  0.000
-            # candidate                 142.113.80.201  4  srvr  -  64   YYYYYYYY  -0.541
+            # candidate                 172.16.25.201  4  srvr  -  64   YYYYYYYY  -0.541
             m = p6.match(line)
             if m:
 
@@ -146,7 +146,7 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
                 client_dict['offset'] = float(group['offset'])
                 continue
 
-            # Base           138.120.105.64
+            # Base           172.16.189.64
             m = p7.match(line)
             if m:
                 group = m.groupdict()
