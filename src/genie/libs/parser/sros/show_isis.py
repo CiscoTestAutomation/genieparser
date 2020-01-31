@@ -225,6 +225,8 @@ def prepare_text(t, pattern):
         m = p0.match(line)
         if m:
             instance_num = m.groupdict()['instance']
+            home_dicts = {}
+
             continue
 
         if 'Last Restart at' in line:
