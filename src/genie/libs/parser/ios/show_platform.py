@@ -231,8 +231,13 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
                     # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
-                    if r1_5.match(descr):
+                    elif r1_5.match(descr):
                         slot_code = 'lc'
+
+                    # NAME: "1", DESCR: "SM-ES2-16-P"
+                    # PID: SM-ES2-16-P       , VID:      , SN: FOC15316NP1
+                    else:
+                        slot_code = 'other'
 
                     slot_dict = parsed_output\
                         .setdefault('slot', {})\
@@ -312,9 +317,16 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     slot = group['slot']
                     subslot = group['subslot']
 
-                    subslot_dict = slot_dict\
-                        .setdefault('subslot', {})\
-                        .setdefault(subslot, {})\
+                    if 'slot' not in parsed_output:
+                        slot_dict = parsed_output \
+                            .setdefault('slot', {}) \
+                            .setdefault(slot, {}) \
+                            .setdefault('other', {}) \
+                            .setdefault(pid, {})
+
+                    subslot_dict = slot_dict \
+                        .setdefault('subslot', {}) \
+                        .setdefault(subslot, {}) \
                         .setdefault(pid, {})
 
                     subslot_dict['descr'] = descr

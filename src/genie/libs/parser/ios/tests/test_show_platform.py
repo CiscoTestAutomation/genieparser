@@ -1458,6 +1458,701 @@ class TestShowInventory(unittest.TestCase):
     },
 }
 
+    # SM-ES2-16-P_show_inventory
+    golden_output_6 = {'execute.return_value': '''
+    NAME: "1", DESCR: "SM-ES2-16-P"
+    PID: SM-ES2-16-P       , VID:      , SN: FOC15316NP1
+    '''}
+    golden_parsed_output_6 = {
+        'slot': {
+            '1': {
+                'other': {
+                    'SM-ES2-16-P': {
+                        'descr': 'SM-ES2-16-P',
+                        'name': '1',
+                        'pid': 'SM-ES2-16-P',
+                        'sn': 'FOC15316NP1',
+                        'vid': '',
+                    },
+                },
+            },
+        },
+    }
+
+    # 2821_chassis_show_inventory
+    golden_output_7 = {'execute.return_value': '''
+    NAME: "2821 chassis", DESCR: "2821 chassis"
+    PID: CISCO2821         , VID: V07 , SN: FTX1418AMWT
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC14162U0D
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC14162W3E
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-2     , VID: V01, SN: FOC1412392E
+    '''}
+
+    golden_parsed_output_7 = {
+        'main': {
+            'chassis': {
+                'CISCO2821': {
+                    'descr': '2821 chassis',
+                    'name': '2821 chassis',
+                    'pid': 'CISCO2821',
+                    'sn': 'FTX1418AMWT',
+                    'vid': 'V07 ',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'other': {
+                    'AIM-VPN/SSL-2': {
+                        'descr': 'Encryption AIM Element',
+                        'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                        'pid': 'AIM-VPN/SSL-2',
+                        'sn': 'FOC1412392E',
+                        'vid': 'V01',
+                    },
+                    'VWIC2-2MFT-T1/E1': {
+                        'subslot': {
+                            '0': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC14162U0D',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                            '1': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC14162W3E',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    # 3825_chassis_show_inventory
+    golden_output_8 = {'execute.return_value': '''
+    NAME: "3825 chassis", DESCR: "3825 chassis"
+    PID: CISCO3825         , VID: V05 , SN: FTX1302A2RQ
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC12432K5F
+    
+    NAME: "Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1", DESCR: "Wan Interface Card BRI U (2091, 3086)"
+    PID: WIC-1B-U-V2       , VID: V01, SN: 36698682   
+    
+    NAME: "PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4", DESCR: "PVDMII DSP SIMM with four DSPs"
+    PID: PVDM2-64          , VID: V01 , SN: FOC12501WSI
+    
+    NAME: "High Density Voice Module - 8FXS/DID on Slot 1", DESCR: "High Density Voice Module - 8FXS/DID"
+    PID: EVM-HD-8FXS/DID   , VID: V04 , SN: FOC12452TG2
+    
+    NAME: "Six port FXO voice interface daughtercard on Slot 1 SubSlot 1", DESCR: "Six port FXO voice interface daughtercard"
+    PID: EM-HDA-6FXO       , VID: V03 , SN: FOC12491QXB
+    '''}
+
+    golden_parsed_output_8 = {
+    'main': {
+        'chassis': {
+            'CISCO3825': {
+                'descr': '3825 chassis',
+                'name': '3825 chassis',
+                'pid': 'CISCO3825',
+                'sn': 'FTX1302A2RQ',
+                'vid': 'V05 ',
+            },
+        },
+    },
+    'slot': {
+        '0': {
+            'other': {
+                'VWIC2-2MFT-T1/E1': {
+                    'subslot': {
+                        '0': {
+                            'VWIC2-2MFT-T1/E1': {
+                                'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                'pid': 'VWIC2-2MFT-T1/E1',
+                                'sn': 'FOC12432K5F',
+                                'vid': 'V01 ',
+                            },
+                        },
+                        '1': {
+                            'WIC-1B-U-V2': {
+                                'descr': 'Wan Interface Card BRI U (2091, 3086)',
+                                'name': 'Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1',
+                                'pid': 'WIC-1B-U-V2',
+                                'sn': '36698682',
+                                'vid': 'V01',
+                            },
+                        },
+                        '4': {
+                            'PVDM2-64': {
+                                'descr': 'PVDMII DSP SIMM with four DSPs',
+                                'name': 'PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4',
+                                'pid': 'PVDM2-64',
+                                'sn': 'FOC12501WSI',
+                                'vid': 'V01 ',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '1': {
+            'other': {
+                'EVM-HD-8FXS/DID': {
+                    'descr': 'High Density Voice Module - 8FXS/DID',
+                    'name': 'High Density Voice Module - 8FXS/DID on Slot 1',
+                    'pid': 'EVM-HD-8FXS/DID',
+                    'sn': 'FOC12452TG2',
+                    'subslot': {
+                        '1': {
+                            'EM-HDA-6FXO': {
+                                'descr': 'Six port FXO voice interface daughtercard',
+                                'name': 'Six port FXO voice interface daughtercard on Slot 1 SubSlot 1',
+                                'pid': 'EM-HDA-6FXO',
+                                'sn': 'FOC12491QXB',
+                                'vid': 'V03 ',
+                            },
+                        },
+                    },
+                    'vid': 'V04 ',
+                },
+            },
+        },
+    },
+}
+
+    # 3845_chassis_show_inventory
+    golden_output_9 = {'execute.return_value': '''
+    NAME: "3845 chassis", DESCR: "3845 chassis"
+    PID: CISCO3845         , VID: V05 , SN: FTX1504ARJ3
+    
+    NAME: "c3845 Motherboard with Gigabit Ethernet on Slot 0", DESCR: "c3845 Motherboard with Gigabit Ethernet"
+    PID: CISCO3845-MB      , VID: V09 , SN: FOC150208GQ
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-3     , VID: V01, SN: FOC150234YO
+    
+    NAME: "Clear/Subrate T3/E3 WAN on Slot 1", DESCR: "Clear/Subrate T3/E3 WAN"
+    PID: NM-1T3/E3=        , VID: V01 , SN: FOC15044ADM
+    
+    NAME: "16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2", DESCR: "16 Port 10BaseT/100BaseTX EtherSwitch"
+    PID: NM-16ESW          , VID: V01 , SN: FOC150267KO
+    
+    NAME: "Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0", DESCR: "Gigabit(1000BaseT) module for EtherSwitch NM"
+    PID: GE-DCARD-ESW      , VID: V01 , SN: FOC15032MNN
+    '''}
+
+    golden_parsed_output_9 = {
+    'main': {
+        'chassis': {
+            'CISCO3845': {
+                'descr': '3845 chassis',
+                'name': '3845 chassis',
+                'pid': 'CISCO3845',
+                'sn': 'FTX1504ARJ3',
+                'vid': 'V05 ',
+            },
+        },
+    },
+    'slot': {
+        '0': {
+            'other': {
+                'AIM-VPN/SSL-3': {
+                    'descr': 'Encryption AIM Element',
+                    'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                    'pid': 'AIM-VPN/SSL-3',
+                    'sn': 'FOC150234YO',
+                    'vid': 'V01',
+                },
+                'CISCO3845-MB': {
+                    'descr': 'c3845 Motherboard with Gigabit Ethernet',
+                    'name': 'c3845 Motherboard with Gigabit Ethernet on Slot 0',
+                    'pid': 'CISCO3845-MB',
+                    'sn': 'FOC150208GQ',
+                    'vid': 'V09 ',
+                },
+            },
+        },
+        '1': {
+            'other': {
+                'NM-1T3/E3=': {
+                    'descr': 'Clear/Subrate T3/E3 WAN',
+                    'name': 'Clear/Subrate T3/E3 WAN on Slot 1',
+                    'pid': 'NM-1T3/E3=',
+                    'sn': 'FOC15044ADM',
+                    'vid': 'V01 ',
+                },
+            },
+        },
+        '16': {
+            'other': {
+                'NM-16ESW': {
+                    'descr': '16 Port 10BaseT/100BaseTX EtherSwitch',
+                    'name': '16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2',
+                    'pid': 'NM-16ESW',
+                    'sn': 'FOC150267KO',
+                    'subslot': {
+                        '0': {
+                            'GE-DCARD-ESW': {
+                                'descr': 'Gigabit(1000BaseT) module for EtherSwitch NM',
+                                'name': 'Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0',
+                                'pid': 'GE-DCARD-ESW',
+                                'sn': 'FOC15032MNN',
+                                'vid': 'V01 ',
+                            },
+                        },
+                    },
+                    'vid': 'V01 ',
+                },
+            },
+        },
+    },
+}
+
+    golden_output_10 = {'execute.return_value': '''
+    NAME: "WS-C6506-E", DESCR: "Cisco Systems, Inc. Catalyst 6500 6-slot Chassis System"
+    PID: WS-C6506-E        ,                     VID: V05, SN: SAL223300ET
+    
+    NAME: "WS-C6K-VTT-E 1", DESCR: "VTT-E FRU 1"
+    PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT2215A012
+    
+    NAME: "WS-C6K-VTT-E 2", DESCR: "VTT-E FRU 2"
+    PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT2215A032
+    
+    NAME: "WS-C6K-VTT-E 3", DESCR: "VTT-E FRU 3"
+    PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT2215A016
+    
+    NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+    PID: CLK-7600          ,                     VID:    , SN: SMT2130A024
+    
+    NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+    PID: CLK-7600          ,                     VID:    , SN: SMT2130A024
+    
+    NAME: "1", DESCR: "C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1"
+    PID: C6800-16P10G-XL   ,                     VID: V03, SN: JAE22300PMK
+    
+    NAME: "C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 1", DESCR: "C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1"
+    PID: C6800-DFC-XL      ,                     VID:    , SN: JAE22300PMK
+    
+    NAME: "Transceiver Te1/1", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/1L
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222292YT     
+    
+    NAME: "Transceiver Te1/3", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/3"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222292Z2     
+    
+    NAME: "Transceiver Te1/5", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/5"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293MB     
+    
+    NAME: "Transceiver Te1/7", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/7"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293LL     
+    
+    NAME: "Transceiver Te1/9", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/9"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293LF     
+    
+    NAME: "Transceiver Te1/11", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/11"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293L4     
+    
+    NAME: "Transceiver Te1/13", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/13"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293MN     
+    
+    NAME: "Transceiver Te1/15", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/15"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293LE     
+    
+    NAME: "2", DESCR: "C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1"
+    PID: C6800-16P10G-XL   ,                     VID: V03, SN: JAE22300PMG
+    
+    NAME: "C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 2", DESCR: "C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1"
+    PID: C6800-DFC-XL      ,                     VID:    , SN: JAE22300PM
+    
+    NAME: "Transceiver Te2/1", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/1"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293RB     
+    
+    NAME: "Transceiver Te2/3", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/3"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222293RF     
+    
+    NAME: "Transceiver Te2/5", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/5"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD2222929T     
+    
+    NAME: "Transceiver Te2/7", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/7"
+    PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD222292CU     
+    
+    NAME: "3", DESCR: "C6800-48P-TX-XL 48 ports DCEF-XL 48P 10/100/1000MB Ethernet Rev. 1.0"
+    PID: C6800-48P-TX-XL   ,                     VID: V01, SN: JAE223200DC
+    
+    NAME: "WS-F6K-DFC4-AXL Distributed Forwarding Card 4 EARL 1 sub-module of 3", DESCR: "WS-F6K-DFC4-AXL Distributed Forwarding Card 4 Rev. 1.0"
+    PID: WS-F6K-DFC4-AXL   ,                     VID:    , SN: JAE223200DO
+    
+    NAME: "5", DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1"
+    PID: VS-SUP2T-10G      ,                     VID: V06, SN: JAE223302CQ
+    
+    NAME: "msfc sub-module of 5", DESCR: "VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1"
+    PID: VS-F6K-MSFC5      ,                     VID:    , SN: JAE22350PAV
+    
+    NAME: "VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 5", DESCR: "VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0"
+    PID: VS-F6K-PFC4       ,                     VID: V04, SN: JAE22350GWE
+    
+    NAME: "Transceiver Te5/4", DESCR: "X2 Transceiver 10Gbase-SR Te5/4"
+    PID: X2-10GB-SR        ,                     VID: V06 , SN: FNS22220Q8Q
+    
+    NAME: "6", DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1"
+    PID: VS-SUP2T-10G      ,                     VID: V06, SN: JAE22270W0N
+    
+    NAME: "msfc sub-module of 6", DESCR: "VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1"
+    PID: VS-F6K-MSFC5      ,                     VID:    , SN: JAE22350PAO
+    
+    NAME: "VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 6", DESCR: "VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0"
+    PID: VS-F6K-PFC4       ,                     VID: V04, SN: JAE22350GWE
+    
+    NAME: "Transceiver Te6/4", DESCR: "X2 Transceiver 10Gbase-SR Te6/4"
+    PID: X2-10GB-SR        ,                     VID: V06 , SN: FNS22220Q9B
+    
+    NAME: "WS-C6506-E-FAN 1", DESCR: "Enhanced 6-slot Fan Tray 1"
+    PID: WS-C6506-E-FAN    ,                     VID: V03, SN: DCH202100UZ
+    
+    NAME: "PS 1 WS-CAC-6000W", DESCR: "AC power supply, 6000 watt 1"
+    PID: WS-CAC-6000W      ,                     VID: V06, SN: ART2120F5B5
+    
+    NAME: "PS 2 WS-CAC-6000W", DESCR: "AC power supply, 6000 watt 2"
+    PID: WS-CAC-6000W      ,                     VID: V06, SN: ART2120F5B8
+    
+
+    '''}
+
+    golden_parsed_output_10 = {
+    'main': {
+        'chassis': {
+            'WS-C6506-E': {
+                'descr': 'Cisco Systems, Inc. Catalyst 6500 6-slot Chassis System',
+                'name': 'WS-C6506-E',
+                'pid': 'WS-C6506-E',
+                'sn': 'SAL223300ET',
+                'vid': 'V05',
+            },
+        },
+    },
+    'slot': {
+        '1': {
+            'other': {
+                'C6800-16P10G-XL': {
+                    'descr': 'C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1',
+                    'name': '1',
+                    'pid': 'C6800-16P10G-XL',
+                    'sn': 'JAE22300PMK',
+                    'subslot': {
+                        '0': {
+                            'C6800-DFC-XL': {
+                                'descr': 'C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1',
+                                'name': 'C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 1',
+                                'pid': 'C6800-DFC-XL',
+                                'sn': 'JAE22300PMK',
+                                'vid': '',
+                            },
+                            'SFP-10G-SR': {
+                                'descr': 'C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1',
+                                'name': 'C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 1',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222292YT',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '11': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/11',
+                                'name': 'Transceiver Te1/11',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293L4',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '13': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/13',
+                                'name': 'Transceiver Te1/13',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293MN',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '15': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/15',
+                                'name': 'Transceiver Te1/15',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293LE',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '3': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/3',
+                                'name': 'Transceiver Te1/3',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222292Z2',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '5': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/5',
+                                'name': 'Transceiver Te1/5',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293MB',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '7': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/7',
+                                'name': 'Transceiver Te1/7',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293LL',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '9': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te1/9',
+                                'name': 'Transceiver Te1/9',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293LF',
+                                'vid': 'V03 ',
+                            },
+                        },
+                    },
+                    'vid': 'V03',
+                },
+            },
+        },
+        '2': {
+            'other': {
+                'C6800-16P10G-XL': {
+                    'descr': 'C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1',
+                    'name': '2',
+                    'pid': 'C6800-16P10G-XL',
+                    'sn': 'JAE22300PMG',
+                    'subslot': {
+                        '0': {
+                            'C6800-DFC-XL': {
+                                'descr': 'C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1',
+                                'name': 'C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 2',
+                                'pid': 'C6800-DFC-XL',
+                                'sn': 'JAE22300PM',
+                                'vid': '',
+                            },
+                        },
+                        '1': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te2/1',
+                                'name': 'Transceiver Te2/1',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293RB',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '3': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te2/3',
+                                'name': 'Transceiver Te2/3',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222293RF',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '5': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te2/5',
+                                'name': 'Transceiver Te2/5',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD2222929T',
+                                'vid': 'V03 ',
+                            },
+                        },
+                        '7': {
+                            'SFP-10G-SR': {
+                                'descr': 'SFP+ Transceiver 10Gbase-SR Te2/7',
+                                'name': 'Transceiver Te2/7',
+                                'pid': 'SFP-10G-SR',
+                                'sn': 'AVD222292CU',
+                                'vid': 'V03 ',
+                            },
+                        },
+                    },
+                    'vid': 'V03',
+                },
+            },
+        },
+        '3': {
+            'other': {
+                'C6800-48P-TX-XL': {
+                    'descr': 'C6800-48P-TX-XL 48 ports DCEF-XL 48P 10/100/1000MB Ethernet Rev. 1.0',
+                    'name': '3',
+                    'pid': 'C6800-48P-TX-XL',
+                    'sn': 'JAE223200DC',
+                    'subslot': {
+                        '0': {
+                            'WS-F6K-DFC4-AXL': {
+                                'descr': 'WS-F6K-DFC4-AXL Distributed Forwarding Card 4 Rev. 1.0',
+                                'name': 'WS-F6K-DFC4-AXL Distributed Forwarding Card 4 EARL 1 sub-module of 3',
+                                'pid': 'WS-F6K-DFC4-AXL',
+                                'sn': 'JAE223200DO',
+                                'vid': '',
+                            },
+                        },
+                    },
+                    'vid': 'V01',
+                },
+            },
+        },
+        '5': {
+            'rp': {
+                'VS-SUP2T-10G': {
+                    'descr': 'VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1',
+                    'name': '5',
+                    'pid': 'VS-SUP2T-10G',
+                    'sn': 'JAE223302CQ',
+                    'subslot': {
+                        '0': {
+                            'VS-F6K-MSFC5': {
+                                'descr': 'VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1',
+                                'name': 'msfc sub-module of 5',
+                                'pid': 'VS-F6K-MSFC5',
+                                'sn': 'JAE22350PAV',
+                                'vid': '',
+                            },
+                            'VS-F6K-PFC4': {
+                                'descr': 'VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0',
+                                'name': 'VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 5',
+                                'pid': 'VS-F6K-PFC4',
+                                'sn': 'JAE22350GWE',
+                                'vid': 'V04',
+                            },
+                        },
+                        '4': {
+                            'X2-10GB-SR': {
+                                'descr': 'X2 Transceiver 10Gbase-SR Te5/4',
+                                'name': 'Transceiver Te5/4',
+                                'pid': 'X2-10GB-SR',
+                                'sn': 'FNS22220Q8Q',
+                                'vid': 'V06 ',
+                            },
+                        },
+                    },
+                    'vid': 'V06',
+                },
+            },
+        },
+        '6': {
+            'rp': {
+                'VS-SUP2T-10G': {
+                    'descr': 'VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1',
+                    'name': '6',
+                    'pid': 'VS-SUP2T-10G',
+                    'sn': 'JAE22270W0N',
+                    'subslot': {
+                        '0': {
+                            'VS-F6K-MSFC5': {
+                                'descr': 'VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1',
+                                'name': 'msfc sub-module of 6',
+                                'pid': 'VS-F6K-MSFC5',
+                                'sn': 'JAE22350PAO',
+                                'vid': '',
+                            },
+                            'VS-F6K-PFC4': {
+                                'descr': 'VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0',
+                                'name': 'VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 6',
+                                'pid': 'VS-F6K-PFC4',
+                                'sn': 'JAE22350GWE',
+                                'vid': 'V04',
+                            },
+                        },
+                        '4': {
+                            'X2-10GB-SR': {
+                                'descr': 'X2 Transceiver 10Gbase-SR Te6/4',
+                                'name': 'Transceiver Te6/4',
+                                'pid': 'X2-10GB-SR',
+                                'sn': 'FNS22220Q9B',
+                                'vid': 'V06 ',
+                            },
+                        },
+                    },
+                    'vid': 'V06',
+                },
+            },
+        },
+        'CLK-7600 1': {
+            'other': {
+                'CLK-7600 1': {
+                    'descr': 'OSR-7600 Clock FRU 1',
+                    'name': 'CLK-7600 1',
+                    'pid': 'CLK-7600',
+                    'sn': 'SMT2130A024',
+                    'vid': '',
+                },
+            },
+        },
+        'CLK-7600 2': {
+            'other': {
+                'CLK-7600 2': {
+                    'descr': 'OSR-7600 Clock FRU 2',
+                    'name': 'CLK-7600 2',
+                    'pid': 'CLK-7600',
+                    'sn': 'SMT2130A024',
+                    'vid': '',
+                },
+            },
+        },
+        'PS 1 WS-CAC-6000W': {
+            'other': {
+                'PS 1 WS-CAC-6000W': {
+                    'descr': 'AC power supply, 6000 watt 1',
+                    'name': 'PS 1 WS-CAC-6000W',
+                    'pid': 'WS-CAC-6000W',
+                    'sn': 'ART2120F5B5',
+                    'vid': 'V06',
+                },
+            },
+        },
+        'PS 2 WS-CAC-6000W': {
+            'other': {
+                'PS 2 WS-CAC-6000W': {
+                    'descr': 'AC power supply, 6000 watt 2',
+                    'name': 'PS 2 WS-CAC-6000W',
+                    'pid': 'WS-CAC-6000W',
+                    'sn': 'ART2120F5B8',
+                    'vid': 'V06',
+                },
+            },
+        },
+        'WS-C6506-E-FAN 1': {
+            'other': {
+                'WS-C6506-E-FAN 1': {
+                    'descr': 'Enhanced 6-slot Fan Tray 1',
+                    'name': 'WS-C6506-E-FAN 1',
+                    'pid': 'WS-C6506-E-FAN',
+                    'sn': 'DCH202100UZ',
+                    'vid': 'V03',
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1498,6 +2193,41 @@ class TestShowInventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_output_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_output_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_output_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_golden_output_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
+
+    def test_golden_output_10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 
 class test_show_bootvar(unittest.TestCase):
