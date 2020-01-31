@@ -117,7 +117,8 @@
     * Added new unittest
 
 * NXOS
-    * Added regex 
-    * Added new unittest
-    
+    * Updated ShowNveVniIngressReplication
+        * Added regex 
+        * Added new unittest
+
     
