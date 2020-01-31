@@ -10,9 +10,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
-# parser utils
-from genie.libs.parser.utils.common import Common
-
 # =============================================
 # Parser for 'show system ntp all'
 # =============================================
@@ -96,7 +93,7 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
                         r'+(?P<stratum>[-\d]) +(?P<type>\S+) '
                         r'+(?P<a>[-]) +(?P<poll>\d+) +(?P<reach>\S+) '
                         r'+(?P<offset>[-.\d]+)')
-        # Base           172.16.189.64
+        # Base           138.120.105.64
         p7 = re.compile(r'(?P<router>\S+) +(?P<remote>[.\d]+)')
 
         for line in out.splitlines():
@@ -116,45 +113,23 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
                 continue
 
             # Admin Status       : up                 Oper Status          : up
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                system_status_dict['admin_status'] = group['admin_status']
-                system_status_dict['oper_status'] = group['oper_status']
-                continue
-
             # Server Enabled     : No                 Server Authenticate  : No
-            m = p2.match(line)
+            # Clock Source       : 192.168.132.170
+            # Auth Check         : No
+            # Current Date & Time: 2020/01/17 17:24:12 UTC
+            m = p1.match(line) or p2.match(line) or p3.match(line) or p4.match(line) or p5.match(line)
+
             if m:
                 group = m.groupdict()
-                system_status_dict['server_enabled'] = group['server_enabled']
-                system_status_dict['server_authenticate'] = group['server_authenticate']
-                continue
-
-            # Clock Source       : 192.168.132.170
-            m = p3.match(line)
-            if m:
-                system_status_dict['clock_source'] = m.groupdict()['clock_source']
-                continue
-
-            # Auth Check         : No
-            m = p4.match(line)
-            if m:
-                system_status_dict['auth_check'] = m.groupdict()['auth_check']
-                continue
-
-            # Current Date & Time: 2020/01/17 17:24:12 UTC
-            m = p5.match(line)
-            if m:
-                k = 'current_date_time'
-                system_status_dict[k] = m.groupdict()[k]
+                for k in group.keys():
+                    system_status_dict[k] = group[k]
                 continue
 
             # ==============================================================
             # NTP Active Associations
             # ==============================================================
             # reject                    STEP            -  srvr  -  64   ........  0.000
-            # candidate                 172.16.25.201  4  srvr  -  64   YYYYYYYY  -0.541
+            # candidate                 142.113.80.201  4  srvr  -  64   YYYYYYYY  -0.541
             m = p6.match(line)
             if m:
 
@@ -171,7 +146,7 @@ class ShowSystemNtpAll(ShowSystemNtpAllSchema):
                 client_dict['offset'] = float(group['offset'])
                 continue
 
-            # Base           172.16.189.64
+            # Base           138.120.105.64
             m = p7.match(line)
             if m:
                 group = m.groupdict()

@@ -31,18 +31,18 @@ class TestShowSystemNtpAll(unittest.TestCase):
         Router         Remote                                            
     -------------------------------------------------------------------------------
     reject                    STEP            -  srvr  -  64   ........  0.000
-        Base           172.16.189.64
+        Base           138.120.105.64
     reject                    STEP            -  srvr  -  64   ........  0.000
-        Base           172.16.189.74
-    candidate                 172.16.25.201  4  srvr  -  64   YYYYYYYY  -0.541
-        Base           172.16.25.140
-    candidate                 172.16.25.201  4  srvr  -  64   YYYYYYYY  -0.335
-        Base           172.16.25.141
+        Base           138.120.105.74
+    candidate                 142.113.80.201  4  srvr  -  64   YYYYYYYY  -0.541
+        Base           142.113.80.140
+    candidate                 142.113.80.201  4  srvr  -  64   YYYYYYYY  -0.335
+        Base           142.113.80.141
     reject                    STEP            -  srvr  -  64   ........  0.000
-        Base           172.16.186.22
+        Base           142.122.12.22
     reject                    STEP            -  srvr  -  64   ........  0.000
         Base           172.24.107.142
-    chosen                    172.16.85.97   2  srvr  -  64   YYYYYYYY  0.259
+    chosen                    142.117.81.97   2  srvr  -  64   YYYYYYYY  0.259
         Base           192.168.132.170
     ===============================================================================
     ===============================================================================
@@ -69,7 +69,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
         },
     },
     'peer': {
-        '172.16.189.64': {
+        '138.120.105.64': {
             'local_mode': {
                 'client': {
                     'a': '-',
@@ -77,7 +77,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                     'poll': 64,
                     'reach': '........',
                     'refid': 'STEP',
-                    'remote': '172.16.189.64',
+                    'remote': '138.120.105.64',
                     'router': 'Base',
                     'state': 'reject',
                     'stratum': '-',
@@ -85,7 +85,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                 },
             },
         },
-        '172.16.189.74': {
+        '138.120.105.74': {
             'local_mode': {
                 'client': {
                     'a': '-',
@@ -93,7 +93,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                     'poll': 64,
                     'reach': '........',
                     'refid': 'STEP',
-                    'remote': '172.16.189.74',
+                    'remote': '138.120.105.74',
                     'router': 'Base',
                     'state': 'reject',
                     'stratum': '-',
@@ -101,15 +101,15 @@ class TestShowSystemNtpAll(unittest.TestCase):
                 },
             },
         },
-        '172.16.25.140': {
+        '142.113.80.140': {
             'local_mode': {
                 'client': {
                     'a': '-',
                     'offset': -0.541,
                     'poll': 64,
                     'reach': 'YYYYYYYY',
-                    'refid': '172.16.25.201',
-                    'remote': '172.16.25.140',
+                    'refid': '142.113.80.201',
+                    'remote': '142.113.80.140',
                     'router': 'Base',
                     'state': 'candidate',
                     'stratum': '4',
@@ -117,15 +117,15 @@ class TestShowSystemNtpAll(unittest.TestCase):
                 },
             },
         },
-        '172.16.25.141': {
+        '142.113.80.141': {
             'local_mode': {
                 'client': {
                     'a': '-',
                     'offset': -0.335,
                     'poll': 64,
                     'reach': 'YYYYYYYY',
-                    'refid': '172.16.25.201',
-                    'remote': '172.16.25.141',
+                    'refid': '142.113.80.201',
+                    'remote': '142.113.80.141',
                     'router': 'Base',
                     'state': 'candidate',
                     'stratum': '4',
@@ -133,7 +133,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                 },
             },
         },
-        '172.16.186.22': {
+        '142.122.12.22': {
             'local_mode': {
                 'client': {
                     'a': '-',
@@ -141,7 +141,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                     'poll': 64,
                     'reach': '........',
                     'refid': 'STEP',
-                    'remote': '172.16.186.22',
+                    'remote': '142.122.12.22',
                     'router': 'Base',
                     'state': 'reject',
                     'stratum': '-',
@@ -172,7 +172,7 @@ class TestShowSystemNtpAll(unittest.TestCase):
                     'offset': 0.259,
                     'poll': 64,
                     'reach': 'YYYYYYYY',
-                    'refid': '172.16.85.97',
+                    'refid': '142.117.81.97',
                     'remote': '192.168.132.170',
                     'router': 'Base',
                     'state': 'chosen',
@@ -191,7 +191,6 @@ class TestShowSystemNtpAll(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.dev = Mock(**self.sample_output)
         obj = ShowSystemNtpAll(device=self.dev)
         parsed_output = obj.parse()
