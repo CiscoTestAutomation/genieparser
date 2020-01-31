@@ -144,6 +144,20 @@ class ShowBootvar(ShowBootvarSchema):
         return boot_dict
 
 
+class ShowBoot(ShowBootvar):
+    """Parser for show boot"""
+
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+
+        # Execute command if output not provided
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+
 class ShowVersionSchema(MetaParser):
     """Schema for show version"""
     schema = {

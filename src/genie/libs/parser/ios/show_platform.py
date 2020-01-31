@@ -347,6 +347,20 @@ class ShowInventory(ShowInventorySchema_iosxe):
         return parsed_output
 
 class ShowBootvar(ShowBootvar_iosxe):
+    """Parser for show bootvar"""
+
+    cli_command = 'show bootvar'
+
+    def cli(self, output=None):
+
+        # Execute command if output not provided
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
+
+class ShowBoot(ShowBootvar_iosxe):
     """Parser for show boot"""
 
     cli_command = 'show boot'
