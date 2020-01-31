@@ -1,12 +1,12 @@
 import unittest
-
+import time
 from unittest.mock import Mock
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.sros.show_isis import ShowRouterIsisAdjacency,\
-                                        ShowRouterIsisAdjacencyDetail
+                                        ShowRouterIsisAdjacencyDetail,ShowRouterIsisAdjacencyDetailOld
 
 
 
@@ -186,7 +186,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'priority': 0,
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
-                                    'restart_status': 'Not currently being helped   ',
+                                    'restart_status': 'Not currently being helped',
                                     'snpa': '00:23:3e:8f:17:97',
                                     'state': 'Up',
                                     'topology': 'Unicast',
@@ -211,7 +211,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'priority': 0,
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
-                                    'restart_status': 'Not currently being helped   ',
+                                    'restart_status': 'Not currently being helped',
                                     'snpa': '84:26:2b:bc:2d:e1',
                                     'state': 'Up',
                                     'topology': 'Unicast',
@@ -236,7 +236,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'priority': 0,
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
-                                    'restart_status': 'Not currently being helped   ',
+                                    'restart_status': 'Not currently being helped',
                                     'snpa': '00:23:3e:8d:2f:99',
                                     'state': 'Up',
                                     'topology': 'Unicast',
@@ -269,7 +269,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'priority': 0,
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
-                                    'restart_status': 'Not currently being helped   ',
+                                    'restart_status': 'Not currently being helped',
                                     'snpa': '00:23:3e:8f:17:97',
                                     'state': 'Up',
                                     'topology': 'Unicast',
@@ -293,9 +293,22 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     def test_golden(self):
         self.maxDiff = None
         self.dev = Mock(**self.sample_output)
+        start_time = time.time()
+
         obj = ShowRouterIsisAdjacencyDetail(device=self.dev)
         parsed_output = obj.parse()
+
+        print("New--- %s seconds ---" % (time.time() - start_time))
         self.assertEqual(parsed_output,self.sample_parsed_output)
 
 
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.sample_output)
+        start_time = time.time()
+        obj = ShowRouterIsisAdjacencyDetailOld(device=self.dev)
+        parsed_output = obj.parse()
+        print("Old--- %s seconds ---" % (time.time() - start_time))
+
+        self.assertEqual(parsed_output,self.sample_parsed_output)
