@@ -20,6 +20,7 @@
     * show bgp all neighbor x.x.x.x received
     * show bgp all neighbor x.x.x.x received-routes
     * show bgp summary
+    * show ip bgp regexp <regexp>
 '''
 
 import re   
@@ -40,7 +41,8 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAllDetail as ShowBgpAllDetai
                                              ShowIpBgpTemplatePeerPolicy as ShowIpBgpTemplatePeerPolicy_iosxe,\
                                              ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe, \
                                              ShowBgpSummary as ShowBgpSummary_iosxe, \
-                                             ShowIpBgp as ShowIpBgp_iosxe
+                                             ShowIpBgp as ShowIpBgp_iosxe,
+                                             ShowIpBgpRegexp as ShowIpBgpRegexp_iosxe
 
 
 class ShowIpBgp(ShowIpBgp_iosxe):
@@ -123,4 +125,8 @@ class ShowBgpAll(ShowBgpAll_iosxe):
 
 class ShowBgpSummary(ShowBgpSummary_iosxe):
     """Parser for show bgp summary"""
+    pass
+
+class ShowIpBgpRegexp(ShowIpBgpRegexp_iosxe):
+    """Parser for show ip bgp regexp <regexp>"""
     pass

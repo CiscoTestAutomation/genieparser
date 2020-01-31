@@ -728,12 +728,12 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
 
 # =============================================
 # Parser for:
-#   * 'show ip bgp regexp ^$'
+#   * 'show ip bgp regexp {regexp}'
 # =============================================
 class ShowIpBgpRegexp(ShowBgpSuperParser, ShowBgpSchema):
 
     ''' Parser for:
-        * 'show ip bgp regexp ^$'
+        * 'show ip bgp regexp {regexp}'
     '''
 
     cli_command = 'show ip bgp regexp {regexp}'

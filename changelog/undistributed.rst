@@ -15,7 +15,7 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
-    * Added ShowIpBgp for:
+    * Added ShowIpBgpRegexp for:
         * show ip bgp regexp ^$ 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -60,7 +60,7 @@
         * show redundancy
         * show inventory
         * show module
-    * Added parser in iosxe which will indirectly add support for ios:
+    * Added ShowIpBgpRegexp:
         * show ip bgp regexp ^$ 
 
 --------------------------------------------------------------------------------
