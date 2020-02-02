@@ -1668,14 +1668,7 @@ class TestShowInventory(unittest.TestCase):
     },
     'slot': {
         '0': {
-            'other': {
-                'AIM-VPN/SSL-3': {
-                    'descr': 'Encryption AIM Element',
-                    'name': 'Virtual Private Network (VPN) Module on Slot 0',
-                    'pid': 'AIM-VPN/SSL-3',
-                    'sn': 'FOC758693YO',
-                    'vid': 'V01',
-                },
+            'lc': {
                 'CISCO3845-MB': {
                     'descr': 'c3845 Motherboard with Gigabit Ethernet',
                     'name': 'c3845 Motherboard with Gigabit Ethernet on Slot 0',
@@ -1684,9 +1677,19 @@ class TestShowInventory(unittest.TestCase):
                     'vid': 'V09 ',
                 },
             },
+            'other': {
+                'AIM-VPN/SSL-3': {
+                    'descr': 'Encryption AIM Element',
+                    'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                    'pid': 'AIM-VPN/SSL-3',
+                    'sn': 'FOC758693YO',
+                    'vid': 'V01',
+                },
+
+            },
         },
         '1': {
-            'other': {
+            'lc': {
                 'NM-1T3/E3=': {
                     'descr': 'Clear/Subrate T3/E3 WAN',
                     'name': 'Clear/Subrate T3/E3 WAN on Slot 1',
@@ -1697,7 +1700,7 @@ class TestShowInventory(unittest.TestCase):
             },
         },
         '16': {
-            'other': {
+            'lc': {
                 'NM-16ESW': {
                     'descr': '16 Port 10BaseT/100BaseTX EtherSwitch',
                     'name': '16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2',

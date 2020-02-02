@@ -165,7 +165,11 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
         # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
         # SM-ES2-16-P
-        r1_5 = re.compile(r'.*[WS\-X\s]|[SM\-ES].*')
+        r1_5 = re.compile(r'.*WS\-X.*|SM\-ES.*')
+
+        # NM-1T3/E3=
+        # CISCO3845-MB
+        r1_5_2 = re.compile(r'NM\-.*|CISCO.*\-MB')
 
         # NAME: "IOSv"
         r1_6 = re.compile(r'.*IOSv.*')
@@ -211,16 +215,14 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # 1
                 # 2
                 # 3
-                result = r1_1.match(name)
-                # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
-                result2 = r1_1_2.match(name)
 
-                if result or result2:
+                # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                result = r1_1.match(name) or r1_1_2.match(name)
+
+                if result:
                     flag_is_slot = True
-                    if result:
-                        group = result.groupdict()
-                    elif result2:
-                        group = result2.groupdict()
+
+                    group = result.groupdict()
                     slot = group['slot']
 
                     # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
@@ -233,8 +235,13 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
                     # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
                     # SM-ES2-16-P
-                    elif r1_5.match(descr):
+                    # PID: NM-1T3/E3=
+                    # PID: CISCO3845-MB
+                    elif r1_5.match(descr) or r1_5_2.match(pid):
                         slot_code = 'lc'
+
+                    else:
+                        slot_code = 'other'
 
                     slot_dict = parsed_output\
                         .setdefault('slot', {})\
