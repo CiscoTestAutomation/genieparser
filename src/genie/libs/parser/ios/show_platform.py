@@ -227,7 +227,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # ============================================
                 result = r1_1.match(name) or r1_1_2.match(name)
                 if result:
-                    flag_is_slot = True
 
                     group = result.groupdict()
                     slot = group['slot']
@@ -263,31 +262,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     else:
                         slot_code = 'other'
 
-                    # case: subslot info is given before its corresponding slot info
-                    #         see golden_output_7 in UT for detail
-
-                    # Compare current slot with existing slot number(s)
-                    if 'slot' in parsed_output and slot in [*parsed_output['slot']]:
-                        if slot_code in [*parsed_output['slot'][slot]]:
-                            # slot_dict ->
-                            # {'subslot': {slot_for_subslot: {xxx}}}
-                            subslot_pid = [*parsed_output['slot'][slot][slot_code]][0]
-                            slot_dict = parsed_output['slot'][slot][slot_code][subslot_pid]
-                            curr_dict = parsed_output['slot'][slot][slot_code]. \
-                                setdefault(pid, {})
-
-                            curr_dict['name'] = name
-                            curr_dict['descr'] = descr
-                            curr_dict['pid'] = pid
-                            curr_dict['vid'] = vid
-                            curr_dict['sn'] = sn
-
-                            curr_dict['subslot'] = slot_dict['subslot']
-
-                            del parsed_output['slot'][slot][slot_code][subslot_pid]
-
-                        continue
-
                     slot_dict = parsed_output\
                         .setdefault('slot', {})\
                         .setdefault(slot, {})\
@@ -299,24 +273,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     slot_dict['pid'] = pid
                     slot_dict['vid'] = vid
                     slot_dict['sn'] = sn
-
-                    continue
-
-                # slot_code == 'other'
-                # 2700W AC power supply for CISCO7604 2
-                # High Speed Fan Module for CISCO7604 1
-                if any(key in descr.lower() for key in oc_key_values):
-                    other_dict = parsed_output\
-                        .setdefault('slot', {})\
-                        .setdefault(name, {})\
-                        .setdefault('other', {})\
-                        .setdefault(name, {})
-
-                    other_dict['name'] = name
-                    other_dict['descr'] = descr
-                    other_dict['pid'] = pid
-                    other_dict['vid'] = vid
-                    other_dict['sn'] = sn
 
                     continue
 
@@ -355,13 +311,10 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # TenGigabitEthernet2 / 1 / 1
                 # GigabitEthernet3/0/50
                 # ============================================
-                result = r1_2_2.match(name)
-                result_2 = r1_3_2.match(name)
-                if result or result_2:
-                    if result:
-                        group = result.groupdict()
-                    elif result_2:
-                        group = result_2.groupdict()
+                result = r1_2_2.match(name) or r1_3_2.match(name)
+                if result:
+                    group = result.groupdict()
+
                     subslot = group['subslot']
 
                     subslot_dict = slot_dict \
@@ -408,10 +361,27 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['sn'] = sn
                     subslot_dict['vid'] = vid
 
-                    subslot_pid = pid
                     continue
 
+                # slot_code == 'other'
+                # 2700W AC power supply for CISCO7604 2
+                # High Speed Fan Module for CISCO7604 1
+                if any(key in descr.lower() for key in oc_key_values):
+                    other_dict = parsed_output\
+                        .setdefault('slot', {})\
+                        .setdefault(name, {})\
+                        .setdefault('other', {})\
+                        .setdefault(name, {})
+
+                    other_dict['name'] = name
+                    other_dict['descr'] = descr
+                    other_dict['pid'] = pid
+                    other_dict['vid'] = vid
+                    other_dict['sn'] = sn
+
+                    continue
         return parsed_output
+
 
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""

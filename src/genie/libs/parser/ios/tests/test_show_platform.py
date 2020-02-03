@@ -2181,11 +2181,6 @@ class TestShowInventory(unittest.TestCase):
         self.device = Mock(**self.golden_output_4)
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_output_5(self):
@@ -2207,11 +2202,6 @@ class TestShowInventory(unittest.TestCase):
         self.device = Mock(**self.golden_output_7)
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_golden_output_8(self):
