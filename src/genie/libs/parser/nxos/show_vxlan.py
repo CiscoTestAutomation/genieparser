@@ -1968,17 +1968,17 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
         # Interface VNI      Replication List  Source  Up Time
         # --------- -------- ----------------- ------- -------
         # nve1      10101    10.196.7.7           BGP-IMET 1d02h
-        # nve1      10011    1:1::1:1           BGP-IMET   00:46:55
+        # nve1      10011    2001:db8:1:1::1:1           BGP-IMET   00:46:55
         # nve1      10211    fe80::2fe:c8ff:fe09:8fff           BGP-IMET   00:46:55
 
         p1 = re.compile(r'^(?P<nve_name>[\w]+) +(?P<vni>[\d]+)( '
                         r'+(?P<replication_list>[\d\.]+|[\w\:]+) '
                         r'+(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+))?$')
 
-        # 201.3.0.51        BGP-IMET 03:21:19
-        # 201.2.0.52        BGP-IMET 03:15:18
-        # 201.2.0.51        BGP-IMET 03:21:19
-        # 1:2::1:4           BGP-IMET   00:48:12
+        # 192.168.51.51        BGP-IMET 03:21:19
+        # 192.168.154.52        BGP-IMET 03:15:18
+        # 192.168.154.51        BGP-IMET 03:21:19
+        # 2001:db8:1:4::1:4           BGP-IMET   00:48:12
         # fe80::2fe:c8ff:fe09:8fff BGP-IMET   00:47:54
         p2 = re.compile(r'^(?P<replication_list>[\d\.]+|[\w\:]+) '
                         r'+(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+)$')
@@ -1987,7 +1987,7 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
             line = line.strip()
 
             # nve1      10101    10.196.7.7           BGP-IMET 1d02h
-            # nve1      10011    1:1::1:1           BGP-IMET   00:46:55
+            # nve1      10011    2001:db8:1:1::1:1           BGP-IMET   00:46:55
             # nve1      10211    fe80::2fe:c8ff:fe09:8fff           BGP-IMET   00:46:55
             m = p1.match(line)
             if m:
@@ -2006,10 +2006,10 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
 
                 continue
 
-            # 201.3.0.51        BGP-IMET 03:21:19
-            # 201.2.0.52        BGP-IMET 03:15:18
-            # 201.2.0.51        BGP-IMET 03:21:19
-            # 1:2::1:4           BGP-IMET   00:48:12
+            # 192.168.51.51        BGP-IMET 03:21:19
+            # 192.168.154.52        BGP-IMET 03:15:18
+            # 192.168.154.51        BGP-IMET 03:21:19
+            # 2001:db8:1:4::1:4           BGP-IMET   00:48:12
             # fe80::2fe:c8ff:fe09:8fff BGP-IMET   00:47:54
             m2 = p2.match(line)
             if m2:
