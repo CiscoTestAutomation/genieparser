@@ -598,6 +598,58 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
             'total_entries': 22
         }
 
+    device_output_1 = {'execute.return_value': '''
+            show lldp neighbors detail
+
+            Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+            Device ID            Local Intf      Hold-time  Capability  Port ID  
+
+            Chassis id: 547f.ee44.51e1
+            Port id: mgmt:0
+            Local Port id: mgmt0
+            Port Description: mgmt0
+            System Name: System1
+            System Description: Cisco NX-OS n5000, Software (n5000-uk9), Version 7.3(2)N1(1), RELEASE SOFTWARE Copyright (c) 2002-2012, 2016-2017 by Cisco Systems, Inc. Compiled 5/12/2017 23:00:00
+            Time remaining: 116 seconds
+            System Capabilities: B
+            Enabled Capabilities: B
+            Management Address: 10.0.0.7
+            Vlan ID: not advertised
+
+            Total entries displayed: 1            
+            '''}
+    
+    expected_parsed_output_1 = {
+        'interfaces': {
+            'mgmt0': {
+                'port_id': {
+                    'mgmt0': {
+                        'neighbors': {
+                            'System1': {
+                                'chassis_id': '547f.ee44.51e1',
+                                'port_description': 'mgmt0',
+                                'system_name': 'System1',
+                                'system_description': 'Cisco NX-OS n5000, Software (n5000-uk9), Version 7.3(2)N1(1), RELEASE SOFTWARE Copyright (c) 2002-2012, 2016-2017 by Cisco Systems, Inc. Compiled 5/12/2017 23:00:00',
+                                'time_remaining': 116,
+                                'capabilities': {
+                                    'bridge': {
+                                        'name': 'bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address_v4': '10.0.0.7',
+                                'vlan_id': 'not advertised'
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'total_entries': 1
+    }
 
     def test_empty(self):
         self.maxDiff = None
@@ -619,6 +671,13 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_customer)
+
+    def test_show_lldp_neighbors_detail_missing_ipv6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowLldpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
 # =================================
 # Unit test for 'show lldp traffic'
