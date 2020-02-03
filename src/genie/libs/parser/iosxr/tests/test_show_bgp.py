@@ -1,13 +1,12 @@
 
 # Python
 import unittest
-
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Genie
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -30,7 +29,282 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
                                               ShowBgpSessions,
                                               ShowBgpInstanceAllSessions,
                                               ShowBgpNeighbors,
-                                              ShowBgpSummary)
+                                              ShowBgpSummary,
+                                              ShowBgpEgressEngineering)
+
+
+# ================================================================================
+# Unit test for 'show bgp egress-engineering'
+# ================================================================================
+class TestShowBgpEgressEngineering(unittest.TestCase):
+        
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 =  {
+        'peer_set':{
+            '192.168.1.2/32':{
+                'peer_set_id': '10b87210',
+                'nexthop': '192.168.1.2',
+                'version': 2,
+                'rn_version': 2,
+                'flags': '0x00000002',
+                'local_asn': 1,
+                'remote_asn': 2,
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.4',
+                'first_hop': ['192.168.1.2'],
+                'nhid': [3],
+                'label': 24002,
+                'refcount': 3,
+                'rpc_set': '10b9d408'
+            },
+            '192.168.1.3/32':{
+                'peer_set_id': '10be61d4',
+                'nexthop': '192.168.1.3',
+                'version': 3,
+                'rn_version': 3,
+                'flags': '0x00000002',
+                'local_asn': 1,
+                'remote_asn': 3,
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.5',
+                'first_hop': ['192.168.1.3'],
+                'nhid': [4],
+                'label': 24003,
+                'refcount': 3,
+                'rpc_set': '10be6250'
+            },
+        },
+    }
+
+    
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router_C# show bgp egress-engineering 
+
+        Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+            Nexthop: 192.168.1.2
+            Version: 2, rn_version: 2
+              Flags: 0x00000002
+          Local ASN: 1
+         Remote ASN: 2
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.4
+          First Hop: 192.168.1.2
+               NHID: 3
+              Label: 24002, Refcount: 3
+            rpc_set: 10b9d408
+    
+        Egress Engineering Peer Set: 192.168.1.3/32 (10be61d4)
+            Nexthop: 192.168.1.3
+            Version: 3, rn_version: 3
+              Flags: 0x00000002
+          Local ASN: 1
+         Remote ASN: 3
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.5
+          First Hop: 192.168.1.3
+               NHID: 4
+              Label: 24003, Refcount: 3
+            rpc_set: 10be6250
+
+        '''}
+
+    golden_parsed_output2 =  {
+        'peer_set':{
+            '10.19.0.2/32':{
+                'peer_set_id': '0xa968758',
+                'nexthop': '10.19.0.2',
+                'version': 2,
+                'rn_version': 2,
+                'flags': '0x00000006',
+                'local_asn': 100,
+                'remote_asn': 200,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.2',
+                'local_address': '10.19.0.1',
+                'first_hop': ['10.19.0.2'],
+                'nhid': [2],
+                'label': 24002,
+                'ifh': ['0x1000060'],
+                'refcount': 3,
+                'rpc_set': '0xe91d2fd8',
+                'id': 1
+            }, 
+            '10.30.30.30/32':{
+                'peer_set_id': '0xa9686b4',
+                'nexthop': '10.30.30.30',
+                'version': 3,
+                'rn_version': 3,
+                'flags': '0x00000006',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.166.13.13',
+                'first_hop': ['10.121.88.1', '10.1.0.1', '10.204.0.1'],
+                'nhid': [9, 10, 11],
+                'ifh': ['0x110', '0x130', '0x150'],
+                'label': 24008,
+                'refcount': 3,
+                'rpc_set': '0xe91d4160',
+                'id': 10
+            },
+            '10.121.88.1/32':{
+                'peer_set_id': '0xa9684c8',
+                'nexthop': '10.121.88.1',
+                'version': 6,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.121.88.2',
+                'first_hop': ['10.121.88.1'],
+                'nhid': [9],
+                'ifh': ['0x110'],
+                'label': 24004,
+                'refcount': 3,
+                'rpc_set': '0xe91d4060',
+                'id': 7
+            },
+            '10.1.0.1/32':{
+                'peer_set_id': '0xa96856c',
+                'nexthop': '10.1.0.1',
+                'version': 5,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.1.0.2',
+                'first_hop': ['10.1.0.1'],
+                'nhid': [10],
+                'ifh': ['0x130'],
+                'label': 24006,
+                'refcount': 3,
+                'rpc_set': '0xe91d40e0',
+                'id': 9
+            },
+            '10.204.0.1/32':{
+                'peer_set_id': '0xa968610',
+                'nexthop': '10.204.0.1',
+                'version': 4,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.204.0.2',
+                'first_hop': ['10.204.0.1'],
+                'nhid': [11],
+                'ifh': ['0x150'],
+                'label': 24010,
+                'refcount': 3,
+                'rpc_set': '0xe91d4548',
+                'id': 11
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''  
+        RP/0/0/CPU0:R1#show bgp egress-engineering 
+        Wed Apr 25 15:45:31.170
+
+     Egress Engineering Peer Set: 10.19.0.2/32 (0xa968758)
+            Nexthop: 10.19.0.2
+            Version: 2, rn_version: 2
+              Flags: 0x00000006
+          Local ASN: 100
+         Remote ASN: 200
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.2
+      Local Address: 10.19.0.1
+          First Hop: 10.19.0.2
+               NHID: 2
+                IFH: 0x1000060
+              Label: 24002, Refcount: 3
+            rpc_set: 0xe91d2fd8, ID: 1
+     Egress Engineering Peer Set: 10.30.30.30/32 (0xa9686b4)
+            Nexthop: 10.30.30.30
+            Version: 3, rn_version: 3
+              Flags: 0x00000006
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.166.13.13
+          First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
+               NHID: 9, 10, 11
+                IFH: 0x110, 0x130, 0x150
+              Label: 24008, Refcount: 3
+            rpc_set: 0xe91d4160, ID: 10
+     Egress Engineering Peer Set: 10.121.88.1/32 (0xa9684c8)
+            Nexthop: 10.121.88.1
+            Version: 6, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.121.88.2
+          First Hop: 10.121.88.1
+               NHID: 9
+                IFH: 0x110
+              Label: 24004, Refcount: 3
+            rpc_set: 0xe91d4060, ID: 7
+     Egress Engineering Peer Set: 10.1.0.1/32 (0xa96856c)
+            Nexthop: 10.1.0.1
+            Version: 5, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.1.0.2
+          First Hop: 10.1.0.1
+               NHID: 10
+                IFH: 0x130
+              Label: 24006, Refcount: 3
+            rpc_set: 0xe91d40e0, ID: 9
+     Egress Engineering Peer Set: 10.204.0.1/32 (0xa968610)
+            Nexthop: 10.204.0.1
+            Version: 4, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.204.0.2
+          First Hop: 10.204.0.1
+               NHID: 11
+                IFH: 0x150
+              Label: 24010, Refcount: 3
+            rpc_set: 0xe91d4548, ID: 11 
+
+        '''}
+    
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowBgpEgressEngineering(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpEgressEngineering(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpEgressEngineering(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ==================================
@@ -86,6 +360,36 @@ class TestShowBgpInstances(unittest.TestCase):
         3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
                                                             IPv6 Unicast, VPNv6 Unicast
       '''}
+    
+    golden_output1 = {'execute.return_value': '''
+        
+        show bgp instances
+
+        Number of BGP instances: 1
+
+        ID  Placed-Grp  Name              AS        VRFs    Address Families
+        --------------------------------------------------------------------------------
+        0   v4_routing  default           34984     12      IPv4 Unicast, VPNv4 Unicast,
+                                                            IPv6 Unicast
+    '''
+    }
+
+    golden_parsed_output1 = {
+        'instance': {
+            'default': {
+                'address_families': [
+                    'ipv4 unicast',
+                    'vpnv4 unicast',
+                    'ipv6 unicast'
+                ],
+                'bgp_id': 34984,
+                'instance_id': 0,
+                'num_vrfs': 12,
+                'placed_grp': 'v4_routing'
+            }
+        },
+        'number_of_bgp_instances': 1
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -99,6 +403,13 @@ class TestShowBgpInstances(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstances(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ==========================================
@@ -3564,9 +3875,7 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
 
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'

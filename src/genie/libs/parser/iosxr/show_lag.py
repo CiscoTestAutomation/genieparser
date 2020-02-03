@@ -3,7 +3,10 @@
      *  show lacp system-id
      *  show bundle 
      *  show bundle <interface>
+     *  show bundle reasons
+     *  show bundle <interface> reasons 
      *  show lacp
+     *  show lacp <interface>
 """
 # Python
 import re
@@ -156,6 +159,7 @@ class ShowBundle(ShowBundleSchema):
             out = output
 
         result_dict = {}
+        interface_flag = False
 
         # Bundle-Ether1
         # Bundle-Ether 2
@@ -273,7 +277,18 @@ class ShowBundle(ShowBundleSchema):
 
         # Link is Active
         # Link is Standby due to maximum-active links configuration
-        p15 = re.compile(r'^Link +is +(?P<link_state>.*)$')
+        # Partner System ID/Key do not match that of the Selected links
+        # Reason unavailable (diagnostics error)
+        # Link cannot be used (unknown reason)
+        # Link is down
+        # Link is being removed from the bundle
+        # Link is in the process of being created
+        # Bundle is in the process of being created
+        # Bundle is in the process of being deleted
+        # Bundle has been shut down
+        # Bundle is in the process of being replicated to this location
+        # Incompatible with other links in the bundle (bandwidth out of range)Loopback: Actor and Partner have the same System ID and Key
+        p15 = re.compile(r'(?P<link_state>[\S\s]+)')
 
         for line in out.splitlines():
             if line:
@@ -284,6 +299,7 @@ class ShowBundle(ShowBundleSchema):
             # Bundle-Ether1
             m = p1.match(line)
             if m:
+                interface_flag = False
                 group = m.groupdict()
                 name = m.group()
                 bundle_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
@@ -541,17 +557,44 @@ class ShowBundle(ShowBundleSchema):
                 port_dict.update({'interface': interface})
                 port_dict.update({'bw_kbps': bw_kbps})
                 port_dict.update({k : v for k, v in group.items()})
+                interface_flag = True
                 continue
 
             # Link is Active
             # Link is Standby due to maximum-active links configuration
-            m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                port_dict.update({'link_state': group['link_state']})
+            if interface_flag:
+                interface_flag = False
+                m = p15.match(line)
+                if m:
+                    group = m.groupdict()
+                    port_dict.update({'link_state': group['link_state']})
+
+                    continue
 
         return result_dict
 
+class ShowBundleReasons(ShowBundle):
+
+    """Parser for 
+    show bundle reasons
+    show bundle {interface} reasons
+    """
+
+    cli_command = ['show bundle {interface} reasons',
+                    'show bundle reasons']
+
+    def cli(self, interface='', output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(interface=interface, output=out)
+        
 
 class ShowLacpSchema(MetaParser):
     """Schema for show lacp"""
@@ -600,13 +643,19 @@ class ShowLacpSchema(MetaParser):
 
 
 class ShowLacp(ShowLacpSchema):
-    """parser for show lacp"""
+    """parser for 
+    show lacp
+    show lacp <inteface>
+    """
 
-    cli_command = 'show lacp'
+    cli_command = ['show lacp', 'show lacp {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 

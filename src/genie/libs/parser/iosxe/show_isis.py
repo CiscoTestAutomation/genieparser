@@ -86,6 +86,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         return ret_dict
 
+
 class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
 
@@ -277,10 +278,43 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                             Optional('hostname'): str,
                             Optional('ip_address'): str,
                             Optional('ipv6_address'): str,
-                            Any(): {
+                            Optional('is_neighbor'): {
                                 Any(): {
+                                    'neighbor_id': str,
                                     'metric': int,
-                                    Optional('mt_ipv6'): bool,
+                                },
+                            },
+                            Optional('extended_is_neighbor'): {
+                                Any(): {
+                                    'neighbor_id': str,
+                                    'metric': int,
+                                },
+                            },
+                            Optional('mt_is_neighbor'): {
+                                Any(): {
+                                    'neighbor_id': str,
+                                    'metric': int,
+                                },
+                            },
+                            Optional('ipv4_internal_reachability'): {
+                                Any(): {
+                                    'ip_prefix': str,
+                                    'prefix_len': str,
+                                    'metric': int,
+                                },
+                            },
+                            Optional('mt_ipv6_reachability'): {
+                                Any(): {
+                                    'ip_prefix': str,
+                                    'prefix_len': str,
+                                    'metric': int,
+                                },
+                            },
+                            Optional('ipv6_reachability'): {
+                                Any(): {
+                                    'ip_prefix': str,
+                                    'prefix_len': str,
+                                    'metric': int,
                                 },
                             },
                         },
@@ -315,7 +349,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
         p3 = re.compile(
             r'^(?P<lspid>[\w\-\.]+)(\s*(?P<star>\*))? +(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+)'
-            ' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
+            r' +(?P<lsp_holdtime>[\d\*]+)(/(?P<lsp_rcvd>[\d\*]+))? +(?P<att>\d+)/(?P<p>\d+)/(?P<ol>\d+)$')
+
         #   Area Address: 49.0001
         p4 = re.compile(r'^Area +Address: +(?P<area_address>[\w\.]+)$')
 
@@ -328,11 +363,17 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         #   Hostname: R2
         p7 = re.compile(r'^Hostname: +(?P<hostname>\w+)$')
+
         #   IP Address:   10.84.66.66
         p8 = re.compile(r'^IP +Address: +(?P<ip_address>[\d\.]+)$')
 
-        #   Metric: 10         IP 10.229.7.0/24
-        p9 = re.compile(r'^Metric: +(?P<metric>\d+) +(?P<metric_topology>[\w\-]+)( +\((?P<mt_ipv6>[\w\-]+)\))? +(?P<ip>\S+)$')
+        #  Metric: 10         IS R2.01
+        #  Metric: 10         IP 10.229.7.0/24
+        #  Metric: 40         IS (MT-IPv6) R2.01
+        #  Metric: 40         IS-Extended R2.01
+        #  Metric: 10         IPv6 2001:DB8:2:2:2::2/128
+        #  Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
+        p9 = re.compile(r'^Metric: +(?P<metric>\d+) +(?P<type>[\w\-]+)( +\((?P<mt_ipv6>[\w\-]+)\))? +(?P<ip>\S+)$')
 
         #   IPv6 Address: 2001:DB8:66:66:66::66
         p10 = re.compile(r'^IPv6 +Address: +(?P<ip_address>[\w\:]+)$')
@@ -415,17 +456,43 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'ip_address': group['ip_address']})
                 continue
 
+            #  Metric: 10         IS R2.01
             #  Metric: 10         IP 10.229.7.0/24
             #  Metric: 40         IS (MT-IPv6) R2.01
             #  Metric: 40         IS-Extended R2.01
+            #  Metric: 10         IPv6 2001:DB8:2:2:2::2/128
+            #  Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                ip_dict = lsp_dict.setdefault(group['ip'], {}).setdefault(group['metric_topology'].lower(), {})
-                ip_dict.update({'metric': int(group['metric'])})
-                if group['mt_ipv6']:
-                    ip_dict.update({'mt_ipv6': True})
+                mtype = group['type']
+                mt_ipv6 = group['mt_ipv6']
+                ip = group['ip']
 
+                if mtype.startswith('IS'):
+                    if mtype == 'IS-Extended':
+                        is_dict = lsp_dict.setdefault('extended_is_neighbor', {}).setdefault(ip, {})
+                    elif mtype == 'IS' and mt_ipv6:
+                        is_dict = lsp_dict.setdefault('mt_is_neighbor', {}).setdefault(ip, {})
+                    elif mtype == 'IS':
+                        is_dict = lsp_dict.setdefault('is_neighbor', {}).setdefault(ip, {})
+
+                    is_dict.update({'neighbor_id': ip,
+                                    'metric': int(group['metric'])})
+
+                if mtype.startswith('IP'):
+                    if mtype == 'IP':
+                        is_dict = lsp_dict.setdefault('ipv4_internal_reachability', {}).setdefault(ip, {})
+                    elif mtype == 'IPv6' and mt_ipv6:
+                        is_dict = lsp_dict.setdefault('mt_ipv6_reachability', {}).setdefault(ip, {})
+                    elif mtype == 'IPv6':
+                        is_dict = lsp_dict.setdefault('ipv6_reachability', {}).setdefault(ip, {})
+
+                    ip_prefix = ip.split('/')[0]
+                    prefix_len = ip.split('/')[1]
+                    is_dict.update({'ip_prefix': ip_prefix,
+                                    'prefix_len': prefix_len,
+                                    'metric': int(group['metric'])})
                 continue
 
             #   IPv6 Address: 2001:DB8:66:66:66::66

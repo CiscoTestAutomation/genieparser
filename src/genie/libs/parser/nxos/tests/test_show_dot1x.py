@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 from genie.libs.parser.nxos.show_dot1x import ShowDot1xAllStatistics, \

@@ -2,7 +2,7 @@
 import unittest
 
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -18931,7 +18931,7 @@ class TestShowProcessMemory(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
-        Time source is NTP, 21:28:35.662 JST Mon May 11 2020
+        Time source is NTP, 21:28:35.662 EST Mon May 11 2020
 
         Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
         reserve P Pool Total:     102404 Used:         88 Free:     102316

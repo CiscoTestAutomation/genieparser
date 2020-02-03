@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Parser
 from genie.libs.parser.nxos.show_vxlan import ShowNvePeers, \
@@ -36,7 +36,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 #  Unit test for 'show l2route evpn imet all detail'
 # ==================================================
 
-class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
+class TestShowL2routeEvpnImetAllDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -116,7 +116,7 @@ class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
 #  Unit test for 'show nve peers'
 # =================================
 
-class test_show_nve_peers(unittest.TestCase):
+class TestShowNvePeers(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -181,7 +181,7 @@ class test_show_nve_peers(unittest.TestCase):
 #  Unit test for 'show nve vni summary'
 # ==========================================
 
-class test_show_nve_vni_summary(unittest.TestCase):
+class TestShowNveVniSummary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -225,7 +225,7 @@ class test_show_nve_vni_summary(unittest.TestCase):
 #  Unit test for 'show nve vni '
 # ==========================================
 
-class test_show_nve_vni(unittest.TestCase):
+class TestShowNveVni(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -519,7 +519,7 @@ class test_show_nve_vni(unittest.TestCase):
 # ==================================================
 #  Unit test for 'show nve interface <nve> detail '
 # ==================================================
-class test_show_nve_interface_detail(unittest.TestCase):
+class TestShowNveInterfaceDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -650,7 +650,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
 #  Unit test for 'show nve multisites fabric-links'
 # ====================================================
 
-class test_show_fabric_links(unittest.TestCase):
+class TestShowFabricLinks(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -696,7 +696,7 @@ class test_show_fabric_links(unittest.TestCase):
 #  Unit test for 'show nve multisites dci-links'
 # ====================================================
 
-class test_show_dci_links(unittest.TestCase):
+class TestShowDciLinks(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -742,7 +742,7 @@ class test_show_dci_links(unittest.TestCase):
 #  Unit test for 'show nve ethernet-segment'
 # ====================================================
 
-class test_show_nve_ethernet_segment(unittest.TestCase):
+class TestShowNveEthernetSegment(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -834,7 +834,7 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
 #  Unit test for 'show l2route evpn ethernet-segment all'
 # ==============================================================
 
-class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
+class TestShowL2routeEvpnEthernetSegment(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -887,7 +887,7 @@ class test_show_l2route_evpn_ethernet_segment(unittest.TestCase):
 #  Unit test for 'show l2route topology detail'
 # ==============================================================
 
-class test_show_l2route_topology_detail(unittest.TestCase):
+class TestShowL2routeTopologyDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1095,7 +1095,7 @@ class test_show_l2route_topology_detail(unittest.TestCase):
 #  Unit test for 'show l2route mac all detail'
 # ==============================================================
 
-class test_show_l2route_mac_all_detail(unittest.TestCase):
+class TestShowL2routeMacAllDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1191,7 +1191,7 @@ class test_show_l2route_mac_all_detail(unittest.TestCase):
 #  Unit test for 'show l2route mac-ip all detail'
 # ==============================================================
 
-class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
+class TestShowL2routeMacIpAllDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1256,7 +1256,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
 # ==============================================================
 #  Unit test for 'show l2route summary'
 # ==============================================================
-class test_show_l2route_summary(unittest.TestCase):
+class TestShowL2routeSummary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1417,7 +1417,7 @@ class test_show_l2route_summary(unittest.TestCase):
 #  Unit test for 'show l2route mac-ip all detail'
 # ==============================================================
 
-class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
+class TestShowL2routeMacIpAllDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1482,7 +1482,7 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
 # ==============================================================
 #  Unit test for 'show l2route fl all'
 # ==============================================================
-class test_show_l2route_fl_all(unittest.TestCase):
+class TestShowL2routeFlAll(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1569,7 +1569,7 @@ class test_show_l2route_fl_all(unittest.TestCase):
 # ==============================================================
 #  Unit test for 'show running-config nv overlay'
 # ==============================================================
-class test_show_running_config_nv_overlay(unittest.TestCase):
+class TestShowRunningConfigNvOverlay(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1884,7 +1884,7 @@ interface Ethernet1/6
 # =========================================================
 #  Unit test for 'show nve vni ingress-replication'
 # =========================================================
-class test_show_nve_vni_ingress_replication(unittest.TestCase):
+class TestShowNveVniIngressReplication(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1972,6 +1972,110 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
         nve1      10202    10.196.7.7           BGP-IMET 1d02h
             '''}
 
+    golden_output1 = {'execute.return_value': '''
+        show nve vni ingress-replication 501001
+        Interface VNI      Replication List  Source  Up Time     
+        --------- -------- ----------------- ------- -------     
+        nve1      501001   192.168.51.52        BGP-IMET 03:21:19   
+                           192.168.51.51        BGP-IMET 03:21:19   
+                           192.168.154.52        BGP-IMET 03:15:18   
+                           192.168.154.51        BGP-IMET 03:21:19   
+        nxpi1-n9k1#
+    '''
+    }
+
+    golden_parsed_output1 = {
+        'nve1': {
+            'vni': {
+                501001: {
+                    'repl_ip': {
+                        '192.168.154.51': {
+                            'repl_ip': '192.168.154.51',
+                            'source': 'bgp-imet',
+                            'up_time': '03:21:19'
+                        },
+                        '192.168.154.52': {
+                            'repl_ip': '192.168.154.52',
+                            'source': 'bgp-imet',
+                            'up_time': '03:15:18'
+                        },
+                        '192.168.51.51': {
+                            'repl_ip': '192.168.51.51',
+                            'source': 'bgp-imet',
+                            'up_time': '03:21:19'
+                        },
+                        '192.168.51.52': {
+                            'repl_ip': '192.168.51.52',
+                            'source': 'bgp-imet',
+                            'up_time': '03:21:19'
+                        }
+                    },
+                    'vni': 501001
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        switch# show nve vni ingress-replication
+        Interface VNI      Replication List  Source  Up Time
+        --------- -------- ----------------- ------- -------
+        nve1      10011    2001:db8:1:1::1:1           BGP-IMET   00:46:55
+                           2001:db8:1:9::3:4           BGP-IMET   00:47:54
+                           2001:db8:1:4::1:4           BGP-IMET   00:48:12
+                           fe80::2fe:c8ff:fe09:8fff BGP-IMET   00:47:54
+        nve1      10211    fe80::2fe:c8ff:fe09:8fff           BGP-IMET   00:46:55
+                           fe80::2fe:c8ff2001:db8::8fff           BGP-IMET   1d02h
+    '''
+    }
+
+    golden_parsed_output2 = {
+        'nve1': {
+            'vni': {
+                10011: {
+                    'repl_ip': {
+                        '2001:db8:1:1::1:1': {
+                            'repl_ip': '2001:db8:1:1::1:1',
+                            'source': 'bgp-imet',
+                            'up_time': '00:46:55'
+                        },
+                        '2001:db8:1:4::1:4': {
+                            'repl_ip': '2001:db8:1:4::1:4',
+                            'source': 'bgp-imet',
+                            'up_time': '00:48:12'
+                        },
+                        '2001:db8:1:9::3:4': {
+                            'repl_ip': '2001:db8:1:9::3:4',
+                            'source': 'bgp-imet',
+                            'up_time': '00:47:54'
+                        },
+                        'fe80::2fe:c8ff:fe09:8fff': {
+                            'repl_ip': 'fe80::2fe:c8ff:fe09:8fff',
+                            'source': 'bgp-imet',
+                            'up_time': '00:47:54'
+                        }
+                    },
+                    'vni': 10011
+                },
+                10211: {
+                    'repl_ip': {
+                        'fe80::2fe:c8ff2001:db8::8fff': {
+                            'repl_ip': 'fe80::2fe:c8ff2001:db8::8fff',
+                            'source': 'bgp-imet',
+                            'up_time': '1d02h'
+                        },
+                        'fe80::2fe:c8ff:fe09:8fff': {
+                            'repl_ip': 'fe80::2fe:c8ff:fe09:8fff',
+                            'source': 'bgp-imet',
+                            'up_time': '00:46:55'
+                        }
+                    },
+                    'vni': 10211
+                }
+            }
+        }
+    }
+
     def test_show_nve_vni_ingress_replication_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -1992,10 +2096,24 @@ class test_show_nve_vni_ingress_replication(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_empty_repl)
 
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowNveVniIngressReplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowNveVniIngressReplication(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
 # =========================================================
 #  Unit test for 'show fabric multicast globals'
 # =========================================================
-class test_show_fabric_multicast_globals(unittest.TestCase):
+class TestShowFabricMulticastGlobals(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2044,7 +2162,7 @@ class test_show_fabric_multicast_globals(unittest.TestCase):
 # ================================================================
 #  Unit test for 'show fabric multicast ipv4 sa-ad-route vrf all'
 # ================================================================
-class test_show_fabric_multicast_ip_sa_ad_route(unittest.TestCase):
+class TestShowFabricMulticastIpSaAdRoute(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2329,7 +2447,7 @@ VRF "vpc-keepalive" MVPN SA AD Route Database VNI: 0
 # ================================================================
 #  Unit test for 'show fabric multicast ipv4 l2-mroute vni all'
 # ================================================================
-class test_show_fabric_multicast_ip_l2_mroute(unittest.TestCase):
+class TestShowFabricMulticastIpL2Mroute(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2591,7 +2709,7 @@ Fabric L2-Mroute: (*, 238.8.4.202/32)
 # ========================================
 #  show show l2route evpn mac-ip evi <evi>
 # ========================================
-class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
+class TestShowL2routeEvpnMacIpEvi(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output = {'execute.return_value': '''
@@ -2703,7 +2821,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
 # ========================================
 #  show l2route evpn mac-ip all
 # ========================================
-class test_show_l2route_evpn_mac_ip_all(unittest.TestCase):
+class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output = {'execute.return_value': '''

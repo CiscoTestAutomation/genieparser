@@ -9,8 +9,8 @@ __all__ = (
 import os
 
 try:
-    from ats import tcl
-    from ats.tcl import tclstr, TclCommand
+    from pyats import tcl
+    from pyats.tcl import tclstr, TclCommand
 except Exception:
     pass
 

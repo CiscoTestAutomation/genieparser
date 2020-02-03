@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -5479,7 +5479,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
             rx pathid: 0, tx pathid: 0
         Refresh Epoch 3
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
             10.105.5.1 (metric 2) (via vrf sample_vrf) from 10.105.5.1 (10.105.5.1)
             Origin IGP, metric 0, localpref 100, valid, internal, atomic-aggregate
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
@@ -5545,7 +5545,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                             2: {
                                                 'atomic_aggregate': True,
                                                 'aggregated_by_as': '65251',
-                                                'aggregated_by_address': '200::01',
+                                                'aggregated_by_address': '2001:db8:4::1',
                                                 'community': '1:1 '
                                                             '65100:101 '
                                                             '65100:175 '

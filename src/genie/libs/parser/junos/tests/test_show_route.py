@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device, loader
+from pyats.topology import Device, loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
