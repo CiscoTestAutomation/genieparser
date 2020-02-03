@@ -17,6 +17,9 @@
         * show access-session interface {interface} details
     * Added ShowIpBgpRegexp for:
         * show ip bgp regexp ^$ 
+    * Added ShowBootvar for:
+        * 'show bootvar'
+
 * IOSXR
     * Added ShowMplsInterfaces for:
         * show mpls interfaces
@@ -62,6 +65,7 @@
         * show module
     * Added ShowIpBgpRegexp:
         * show ip bgp regexp ^$ 
+    * Moved ShowBootvar to iosxe folder
 
 * SROS
     * Added ShowSystemNtpAll for:
