@@ -63,6 +63,10 @@
     * Added ShowIpBgpRegexp:
         * show ip bgp regexp ^$ 
 
+* SROS
+    * Added ShowSystemNtpAll for:
+        * show system ntp all
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
