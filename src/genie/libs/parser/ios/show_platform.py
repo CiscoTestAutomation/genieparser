@@ -212,6 +212,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     chassis_dict['sn'] = sn
 
                     continue
+
                 # 1
                 # 2
                 # 3
@@ -224,6 +225,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     group = result.groupdict()
                     slot = group['slot']
+
 
                     # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
                     # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
@@ -239,6 +241,12 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     # PID: CISCO3845-MB
                     elif r1_5.match(descr) or r1_5_2.match(pid):
                         slot_code = 'lc'
+
+                    # case: info with (slot == 0) doesn't exist, chassis is slot 0,
+                    #         see golden_output_8 in UT for detail
+                    # if slot == '0':
+                    #     slot_code = 'rp'
+                    #     slot_pid = chassis_dict['pid']
 
                     else:
                         slot_code = 'other'
@@ -309,23 +317,21 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # Transceiver Te2/15
                 # Transceiver Te5/1
                 # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
-                result = r1_3.match(name)
-                result_3 = r1_3_3.match(name)
+                result = r1_3.match(name) or r1_3_3.match(name)
 
-                if result or result_3:
-                    if result:
-                        group = result.groupdict()
-                    elif result_3:
-                        group = result_3.groupdict()
+                if result:
+                    group = result.groupdict()
 
-                    slot = group['slot']
+                    slot_for_subslot = group['slot']
                     subslot = group['subslot']
+
+                    slot_code = 'other'
 
                     if 'slot' not in parsed_output:
                         slot_dict = parsed_output \
                             .setdefault('slot', {}) \
-                            .setdefault(slot, {}) \
-                            .setdefault('other', {}) \
+                            .setdefault(slot_for_subslot, {}) \
+                            .setdefault(slot_code, {}) \
                             .setdefault(pid, {})
 
                     subslot_dict = slot_dict \
@@ -339,6 +345,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['sn'] = sn
                     subslot_dict['vid'] = vid
 
+                    subslot_pid = pid
                     continue
 
                 # Name could be:
@@ -359,6 +366,27 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+                # case: subslot info is given before its corresponding slot info
+                #         see golden_output_7 in UT for detail
+
+                if 'slot' in parsed_output:
+                    if slot_for_subslot:
+                        # slot_dict ->
+                        # {'subslot': {slot_for_subslot: {xxx}}}
+                        curr_dict = parsed_output['slot'][slot_for_subslot][slot_code]. \
+                            setdefault(pid, {})
+
+                        curr_dict['name'] = name
+                        curr_dict['descr'] = descr
+                        curr_dict['pid'] = pid
+                        curr_dict['vid'] = vid
+                        curr_dict['sn'] = sn
+
+                        curr_dict['subslot'] = slot_dict['subslot']
+
+                        del parsed_output['slot'][slot_for_subslot][slot_code][subslot_pid]
+
+                    continue
         return parsed_output
 
 class ShowBootvarSchema(MetaParser):

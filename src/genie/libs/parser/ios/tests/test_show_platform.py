@@ -1513,8 +1513,6 @@ class TestShowInventory(unittest.TestCase):
                         'pid': 'AIM-VPN/SSL-2',
                         'sn': 'FOC2837465E',
                         'vid': 'V01',
-                    },
-                    'VWIC2-2MFT-T1/E1': {
                         'subslot': {
                             '0': {
                                 'VWIC2-2MFT-T1/E1': {
@@ -1575,8 +1573,8 @@ class TestShowInventory(unittest.TestCase):
     },
     'slot': {
         '0': {
-            'other': {
-                'VWIC2-2MFT-T1/E1': {
+            'rp': {
+                'CISCO3825': {
                     'subslot': {
                         '0': {
                             'VWIC2-2MFT-T1/E1': {
