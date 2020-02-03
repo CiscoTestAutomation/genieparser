@@ -168,7 +168,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
             {Any():
                 {'device_id': str,
                  'platform': str,
-                 'capabilities': str,
+                 Optional('capabilities'): str,
                  'local_interface': str,
                  'port_id': str,
                  'hold_time': int,
@@ -209,8 +209,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
         # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_)]+)'
-                                   '\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+)$')
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/)]+)'
+                                   '(\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+))?$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
@@ -219,7 +219,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         interface_port_re = re.compile(r'Interface:\s*'
                                       '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                       '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                      '(?P<port_id>\S+)')
+                                      '(?P<port_id>\S+\s*\w*$)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
@@ -297,8 +297,12 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             if result:
                 platf_cap_dict = result.groupdict()
 
-                devices_dict['capabilities'] = \
-                    platf_cap_dict['capabilities']
+                if platf_cap_dict['capabilities'] is not None:
+                    devices_dict['capabilities'] = \
+                        platf_cap_dict['capabilities']
+                else:
+                    devices_dict['capabilities'] = ''
+
                 devices_dict['platform'] = \
                     platf_cap_dict['platform']
 
