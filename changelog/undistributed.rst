@@ -15,6 +15,8 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowIpBgpRegexp for:
+        * show ip bgp regexp ^$ 
     * Added ShowBootvar for:
         * 'show bootvar'
 
@@ -47,7 +49,6 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
-
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -62,6 +63,8 @@
         * show redundancy
         * show inventory
         * show module
+    * Added ShowIpBgpRegexp:
+        * show ip bgp regexp ^$ 
     * Moved ShowBootvar to iosxe folder
 
 * SROS
