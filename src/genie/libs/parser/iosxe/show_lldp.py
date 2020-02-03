@@ -149,7 +149,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Local +Intf: +(?P<intf>[\w\/\.\-]+)$')
-        p1_1 = re.compile(r'^Port +id: +(?P<port_id>[\w\/\.\-]+)$')
+        p1_1 = re.compile(r'^Port +id: +(?P<port_id>[\S ]+)$')
 
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
 
