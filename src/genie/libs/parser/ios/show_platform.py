@@ -181,6 +181,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
         for line in output.splitlines():
             line = line.strip()
 
+            # Obtain keys 'name' and 'description' from:
+            # NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -190,6 +192,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                 continue
 
+            # PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -198,8 +201,11 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 vid = group.get('vid', '')
                 sn = group['sn']
 
-                # CISCO3945-CHASSIS
-                # Cisco Systems Cisco 6500 4-slot Chassis
+                # ============================================
+                #               Build Slot
+                # ============================================
+                # DESCR: "CISCO3945-CHASSIS"
+                # DESCR: "Cisco Systems Cisco 6500 4-slot Chassis"
                 if r1_0.match(descr):
                     chassis_dict = parsed_output.setdefault('main', {})\
                         .setdefault('chassis', {})\
@@ -213,32 +219,35 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
-                # 1
-                # 2
-                # 3
-
-                # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                # ============================================
+                # NAME: "1"
+                # NAME: "2"
+                # NAME: "3"
+                # NAME: "Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0"
+                # ============================================
                 result = r1_1.match(name) or r1_1_2.match(name)
-
                 if result:
                     flag_is_slot = True
 
                     group = result.groupdict()
                     slot = group['slot']
 
-
-                    # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
-                    # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
+                    # ============================================
+                    # DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5"
+                    # DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
                     # PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511R12W
-                    # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                    # NAME: "Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0"
+                    # ============================================
                     if r1_4.match(descr) or r1_4_2.match(pid) or ('R' in name):
                         slot_code = 'rp'
 
-                    # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
-                    # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
-                    # SM-ES2-16-P
+                    # ============================================
+                    # DESCR: "WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0"
+                    # DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4"
+                    # DESCR: "SM-ES2-16-P"
                     # PID: NM-1T3/E3=
                     # PID: CISCO3845-MB
+                    # ============================================
                     elif r1_5.match(descr) or r1_5_2.match(pid):
                         slot_code = 'lc'
 
@@ -248,8 +257,36 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     #     slot_code = 'rp'
                     #     slot_pid = chassis_dict['pid']
 
+                    # ============================================
+                    # PID: AIM-VPN/SSL-2
+                    # ============================================
                     else:
                         slot_code = 'other'
+
+                    # case: subslot info is given before its corresponding slot info
+                    #         see golden_output_7 in UT for detail
+
+                    # Compare current slot with existing slot number(s)
+                    if 'slot' in parsed_output and slot in [*parsed_output['slot']]:
+                        if slot_code in [*parsed_output['slot'][slot]]:
+                            # slot_dict ->
+                            # {'subslot': {slot_for_subslot: {xxx}}}
+                            subslot_pid = [*parsed_output['slot'][slot][slot_code]][0]
+                            slot_dict = parsed_output['slot'][slot][slot_code][subslot_pid]
+                            curr_dict = parsed_output['slot'][slot][slot_code]. \
+                                setdefault(pid, {})
+
+                            curr_dict['name'] = name
+                            curr_dict['descr'] = descr
+                            curr_dict['pid'] = pid
+                            curr_dict['vid'] = vid
+                            curr_dict['sn'] = sn
+
+                            curr_dict['subslot'] = slot_dict['subslot']
+
+                            del parsed_output['slot'][slot][slot_code][subslot_pid]
+
+                        continue
 
                     slot_dict = parsed_output\
                         .setdefault('slot', {})\
@@ -265,10 +302,34 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+                # slot_code == 'other'
+                # 2700W AC power supply for CISCO7604 2
+                # High Speed Fan Module for CISCO7604 1
+                if any(key in descr.lower() for key in oc_key_values):
+                    other_dict = parsed_output\
+                        .setdefault('slot', {})\
+                        .setdefault(name, {})\
+                        .setdefault('other', {})\
+                        .setdefault(name, {})
+
+                    other_dict['name'] = name
+                    other_dict['descr'] = descr
+                    other_dict['pid'] = pid
+                    other_dict['vid'] = vid
+                    other_dict['sn'] = sn
+
+                    continue
+
+                # ============================================
+                #               Build Subslot
+                # ============================================
+
+                # ============================================
+                # Match 1:
                 # msfc sub-module of 1
                 # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
+                # ============================================
                 result = r1_2.match(name)
-
                 if result:
                     group = result.groupdict()
                     slot = group['slot']
@@ -288,12 +349,14 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+                # ============================================
+                # Match 2:
                 # Switch 1 - Power Supply 1
                 # TenGigabitEthernet2 / 1 / 1
                 # GigabitEthernet3/0/50
+                # ============================================
                 result = r1_2_2.match(name)
                 result_2 = r1_3_2.match(name)
-
                 if result or result_2:
                     if result:
                         group = result.groupdict()
@@ -313,12 +376,12 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['vid'] = vid
                     continue
 
+                # ============================================
+                # Match 3:
                 # Transceiver Te2/1
-                # Transceiver Te2/15
-                # Transceiver Te5/1
                 # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
+                # ============================================
                 result = r1_3.match(name) or r1_3_3.match(name)
-
                 if result:
                     group = result.groupdict()
 
@@ -348,45 +411,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_pid = pid
                     continue
 
-                # Name could be:
-                # 2700W AC power supply for CISCO7604 2
-                # High Speed Fan Module for CISCO7604 1
-                if any(key in descr.lower() for key in oc_key_values):
-                    other_dict = parsed_output\
-                        .setdefault('slot', {})\
-                        .setdefault(name, {})\
-                        .setdefault('other', {})\
-                        .setdefault(name, {})
-
-                    other_dict['name'] = name
-                    other_dict['descr'] = descr
-                    other_dict['pid'] = pid
-                    other_dict['vid'] = vid
-                    other_dict['sn'] = sn
-
-                    continue
-
-                # case: subslot info is given before its corresponding slot info
-                #         see golden_output_7 in UT for detail
-
-                if 'slot' in parsed_output:
-                    if slot_for_subslot:
-                        # slot_dict ->
-                        # {'subslot': {slot_for_subslot: {xxx}}}
-                        curr_dict = parsed_output['slot'][slot_for_subslot][slot_code]. \
-                            setdefault(pid, {})
-
-                        curr_dict['name'] = name
-                        curr_dict['descr'] = descr
-                        curr_dict['pid'] = pid
-                        curr_dict['vid'] = vid
-                        curr_dict['sn'] = sn
-
-                        curr_dict['subslot'] = slot_dict['subslot']
-
-                        del parsed_output['slot'][slot_for_subslot][slot_code][subslot_pid]
-
-                    continue
         return parsed_output
 
 class ShowBootvarSchema(MetaParser):
