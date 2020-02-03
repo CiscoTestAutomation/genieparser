@@ -9,7 +9,7 @@ out = '''
 
     TxReq = 0       TxReqID = 0     TxTotal = 3
 
-    RxVersion = 0   LastRxSrcMAC = 00:00:00:00:00:00
+    RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
 '''
 dict = {}  # initialize empty dictionary
 

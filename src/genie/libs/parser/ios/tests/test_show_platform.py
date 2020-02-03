@@ -222,7 +222,7 @@ class TestShowVersion(unittest.TestCase):
         The password-recovery mechanism is enabled.
 
         512K bytes of flash-simulated non-volatile configuration memory.
-        Base ethernet MAC Address       : 84:3D:C6:38:B9:80
+        Base ethernet MAC Address       : 84:3D:C6:FF:F1:B8
         Motherboard assembly number     : 73-15476-04
         Motherboard serial number       : FDO202907UH
         Model revision number           : W0
@@ -378,7 +378,7 @@ class TestShowVersion(unittest.TestCase):
     The password-recovery mechanism is enabled.
 
     512K bytes of flash-simulated non-volatile configuration memory.
-    Base ethernet MAC Address       : AC:F2:C5:E7:6D:00
+    Base ethernet MAC Address       : AC:F2:C5:FF:55:E7
     Motherboard assembly number     : 73-13061-04
     Motherboard serial number       : FDO1633Q14M
     Model revision number           : A0

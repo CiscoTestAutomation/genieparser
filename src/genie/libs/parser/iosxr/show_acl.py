@@ -233,7 +233,7 @@ class ShowAclEthernetServices(ShowAclAfiAllSchema):
         # 10 permit host 0000.0000.0000 host 0000.0000.0000
         # 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
         # 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
-        # 40 permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb 80f3
+        # 40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3
         p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny)? +'
             '(?P<source_mac_address>(any|(host +[\d\.\w]+))|([\d\.]+ +[\d\.]+))'
             ' +(?P<destination_mac_address>(host +[\d\.\w]+)|any)( +'

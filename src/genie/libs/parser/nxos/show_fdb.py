@@ -78,10 +78,10 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         # initial return dictionary
         ret_dict = {}
 
-        # C 1001     0000.04b1.0000   dynamic  0     F      F nve1(10.9.0.101)
-        # * 1001     0000.0191.0000   dynamic  0     F      F    Eth1/11
-        # G 2000     7e00.c000.0007    static       -       F    F  vPC Peer-Link(R)
-        # 4000     5e00.c000.0007   static   ~~~         F      F    sup-eth1(R)
+        # C 1001     0000.04ff.b1b1   dynamic  0     F      F nve1(10.9.0.101)
+        # * 1001     0000.01ff.9191   dynamic  0     F      F    Eth1/11
+        # G 2000     7e00.c0ff.0007    static       -       F    F  vPC Peer-Link(R)
+        # 4000     5e00.c0ff.0007   static   ~~~         F      F    sup-eth1(R)
         p1 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) '
             '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
             '+(?P<age>[0-9\-\~]+) '
@@ -148,8 +148,8 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableBaseSch
         else:
             out = output
             
-        # C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(10.9.0.101)
-        # * 1001     00f1.0000.0000   dynamic  0         F      F    Eth1/11
+        # C 1001     0000.04ff.b1b1   dynamic  0         F      F    nve1(10.9.0.101)
+        # * 1001     00f1.00ff.0000   dynamic  0         F      F    Eth1/11
         # get return dictionary
         ret_dict = super().cli(out)
 
@@ -194,10 +194,10 @@ class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableBaseSchema
         else:
             out = output
 
-        # *   10     aaaa.bbbb.cccc   static   -         F      F    Eth1/2
-        # *   20     aaaa.bbbb.cccc   static   -         F      F    Drop
-        # G    -     0000.dead.beef   static   -         F      F    sup-eth1(R)
-        # G    -     5e00.c000.0007   static   -         F      F     (R)
+        # *   10     aaaa.bbff.8888   static   -         F      F    Eth1/2
+        # *   20     aaaa.bbff.8888   static   -         F      F    Drop
+        # G    -     0000.deff.6c9d   static   -         F      F    sup-eth1(R)
+        # G    -     5e00.c0ff.0007   static   -         F      F     (R)
 
         # get return dictionary
         ret_dict = super().cli(out)
@@ -359,7 +359,7 @@ class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableB
         #     VLAN    MAC Address    Type     age     Secure  NTFY  Ports
         # ---------+---------------+--------+---------+------+----+---------
         # G     -  5e00:c000:0007   static   -          F     F   sup-eth1(R)
-        # *     1  fa16.3eef.6e79   dynamic   00:01:02   F     F     Eth1/4
+        # *     1  fa16.3eff.5e69   dynamic   00:01:02   F     F     Eth1/4
 
         # get return dictionary
         ret_dict = super().cli(out)

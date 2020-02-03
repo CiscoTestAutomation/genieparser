@@ -194,7 +194,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c638.b980
+            # Chassis id: 843d.c6ff.f1b8
             m = p2.match(line)
             if m:
                 sub_dict = {}

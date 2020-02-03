@@ -20,8 +20,8 @@ class test_show_authentication_sessions(unittest.TestCase):
             'GigabitEthernet1/0/48': {
                 'interface': 'GigabitEthernet1/0/48',
                 'client': {
-                    '0015.63b0.f676': {
-                        'client': '0015.63b0.f676',
+                    '0015.63ff.a727': {
+                        'client': '0015.63ff.a727',
                         'method': 'dot1x',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -36,8 +36,8 @@ class test_show_authentication_sessions(unittest.TestCase):
             'GigabitEthernet1/0/5': {
                 'interface': 'GigabitEthernet1/0/5',
                 'client': {
-                    '000f.23c4.a401': {
-                        'client': '000f.23c4.a401',
+                    '000f.23ff.69c5': {
+                        'client': '000f.23ff.69c5',
                         'method': 'mab',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -52,8 +52,8 @@ class test_show_authentication_sessions(unittest.TestCase):
             'GigabitEthernet1/0/7': {
                 'interface': 'GigabitEthernet1/0/7',
                 'client': {
-                    '0014.bf5d.d26d': {
-                        'client': '0014.bf5d.d26d',
+                    '0014.bfff.30ca': {
+                        'client': '0014.bfff.30ca',
                         'method': 'dot1x',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -71,9 +71,9 @@ class test_show_authentication_sessions(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         show authentication sessions
         Interface    MAC Address     Method   Domain   Status         Session ID
-        Gi1/0/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
-        Gi1/0/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
-        Gi1/0/7      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
+        Gi1/0/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+        Gi1/0/5      000f.23ff.69c5  mab      DATA     Authz Success  0A3462B10000000D24F80B58
+        Gi1/0/7      0014.bfff.30ca  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
     '''
     }
 
@@ -179,9 +179,9 @@ Runnable methods list:
        dot1x    Failed over
 ----------------------------------------
             Interface:  GigabitEthernet2/0/47
-          MAC Address:  0005.5e7c.da05
+          MAC Address:  0005.5eff.5781
            IP Address:  Unknown
-            User-Name:  00055e7cda05
+            User-Name:  00055eff5781
                Status:  Authz Success
                Domain:  VOICE
        Oper host mode:  multi-domain
@@ -203,7 +203,7 @@ Runnable methods list:
         'interfaces': {
             'GigabitEthernet2/0/47': {
                 'mac_address': {
-                    '0005.5e7c.da05': {
+                    '0005.5eff.5781': {
                         'acct_session_id': '0x00000003',
                         'authorized_by': 'Authentication '
                         'Server',
@@ -230,7 +230,7 @@ Runnable methods list:
                         },
                         'status': 'Authz '
                         'Success',
-                        'user_name': '00055e7cda05'
+                        'user_name': '00055eff5781'
                     },
                     'Unknown': {
                         'acct_session_id': '0x00000002',

@@ -1638,7 +1638,7 @@ class TestShowRunSecIsis(unittest.TestCase):
      ip router isis test1
      ipv6 router isis test1
     router isis test
-     net 49.0001.1111.11ff.2222.00
+     net 49.0001.11ff.2211.2222.00
      metric-style wide
      !
      address-family ipv6
@@ -1646,7 +1646,7 @@ class TestShowRunSecIsis(unittest.TestCase):
      exit-address-family
     router isis test1
      vrf VRF1
-     net 49.0001.1111.11ff.2222.00
+     net 49.0001.11ff.2211.2222.00
      metric-style wide
      !
      address-family ipv6

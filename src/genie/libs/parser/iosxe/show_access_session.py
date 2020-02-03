@@ -88,7 +88,7 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 ret_dict['session_count'] = int(m.groupdict()['val'])
                 continue
 
-            # Gi1/0/1                  f4cf.beef.acc1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
+            # Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
             m = p2.match(line)
             if m:
                 group = m.groupdict()

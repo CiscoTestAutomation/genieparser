@@ -22,23 +22,23 @@ class test_show_arp(unittest.TestCase):
     			'neighbors': {
         			 '10.10.1.1': { 
 	                    'ip': '10.10.1.1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': '2'
 	               	},
 	               	'10.10.1.1': { 
 	                    'ip': '10.10.1.1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': '-'
 	               	},
 	               	'10.10.1.1': { 
 	                    'ip': '10.10.1.1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': 'alias'
 	               	},
 	               	'10.10.1.1/1': { 
 	                    'ip': '10.10.1.1',
 	                    'prefix_length': '1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': '-'
 	               	}
 	            }
@@ -49,12 +49,12 @@ class test_show_arp(unittest.TestCase):
     			'neighbors': {
         			 '10.10.1.1': { 
 	                    'ip': '10.10.1.1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': '1111'
 	               	},
 	               	'10.10.1.1': { 
 	                    'ip': '10.10.1.1',
-	                    'link_layer_address': 'aa11.bb22.cc33',
+	                    'link_layer_address': 'aa11.bbff.ee55',
 	                    'age': '2222'
 	               	}
 	            }
@@ -64,12 +64,12 @@ class test_show_arp(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
 		ciscoasa# show arp
-		outside 10.10.1.1 aa11.bb22.cc33 2
-		outside 10.10.1.1 aa11.bb22.cc33 -
-		outside 10.10.1.1 aa11.bb22.cc33 alias
-		outside 10.10.1.1/1 aa11.bb22.cc33 -
-		pod100 10.10.1.1 aa11.bb22.cc33 1111
-		pod100 10.10.1.1 aa11.bb22.cc33 2222
+		outside 10.10.1.1 aa11.bbff.ee55 2
+		outside 10.10.1.1 aa11.bbff.ee55 -
+		outside 10.10.1.1 aa11.bbff.ee55 alias
+		outside 10.10.1.1/1 aa11.bbff.ee55 -
+		pod100 10.10.1.1 aa11.bbff.ee55 1111
+		pod100 10.10.1.1 aa11.bbff.ee55 2222
     '''}
 
     def test_empty(self):

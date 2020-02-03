@@ -154,7 +154,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         # VTP Traps Generation            : Disabled
         p5 = re.compile(r'^VTP +Traps +Generation +: +(?P<val>\w+)$')
 
-        # Device ID                       : 3820.5622.a580
+        # Device ID                       : 3820.56ff.c7a2
         p6 = re.compile(r'^Device +ID +: +(?P<val>[\w\.\:]+)$')
 
         # Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
@@ -261,7 +261,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                                                     m.groupdict()['val'].lower() else True
                 continue
             
-            # Device ID                       : 3820.5622.a580
+            # Device ID                       : 3820.56ff.c7a2
             m = p6.match(line)
             if m:
                 ret_dict['vtp']['device_id'] = m.groupdict()['val']

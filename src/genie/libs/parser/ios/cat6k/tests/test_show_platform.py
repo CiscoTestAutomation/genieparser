@@ -404,8 +404,8 @@ class TestShowModule(unittest.TestCase):
                     "card_type": "Catalyst 6000 supervisor 2 (Active)",
                     "fw_ver": "6.1(3)",
                     "hw_ver": "3.9",
-                    "mac_address_from": "0001.6416.0342",
-                    "mac_address_to": "0001.6416.0343",
+                    "mac_address_from": "0001.64ff.1958",
+                    "mac_address_to": "0001.64ff.1959",
                     "model": "WS-X6K-S2U-MSFC2",
                     "ports": 2,
                     "serial_number": "SAD0628035C",
@@ -446,8 +446,8 @@ class TestShowModule(unittest.TestCase):
                     "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                     "fw_ver": "12.1(5r)E1",
                     "hw_ver": "1.3",
-                    "mac_address_from": "0005.7485.9518",
-                    "mac_address_to": "0005.7485.9527",
+                    "mac_address_from": "0005.74ff.1b9d",
+                    "mac_address_to": "0005.74ff.1bac",
                     "model": "WS-X6816-GBIC",
                     "ports": 16,
                     "serial_number": "SAL061218K3",
@@ -468,8 +468,8 @@ class TestShowModule(unittest.TestCase):
                     "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                     "fw_ver": "12.1(5r)E1",
                     "hw_ver": "1.3",
-                    "mac_address_from": "0005.7485.9548",
-                    "mac_address_to": "0005.7485.9557",
+                    "mac_address_from": "0005.74ff.1bcd",
+                    "mac_address_to": "0005.74ff.1bdc",
                     "model": "WS-X6816-GBIC",
                     "ports": 16,
                     "serial_number": "SAL061218K8",
@@ -490,8 +490,8 @@ class TestShowModule(unittest.TestCase):
                     "card_type": "Switching Fabric Module-136 (Active)",
                     "fw_ver": "6.1(3)",
                     "hw_ver": "1.2",
-                    "mac_address_from": "0001.0002.0003",
-                    "mac_address_to": "0001.0002.0003",
+                    "mac_address_from": "0001.00ff.0205",
+                    "mac_address_to": "0001.00ff.0205",
                     "model": "WS-X6500-SFM2",
                     "ports": 0,
                     "serial_number": "SAD061701YC",
@@ -504,8 +504,8 @@ class TestShowModule(unittest.TestCase):
                     "card_type": "1 port 10-Gigabit Ethernet Module",
                     "fw_ver": "6.3(1)",
                     "hw_ver": "1.0",
-                    "mac_address_from": "0002.7ec2.95f2",
-                    "mac_address_to": "0002.7ec2.95f2",
+                    "mac_address_from": "0002.7eff.58b5",
+                    "mac_address_to": "0002.7eff.58b5",
                     "model": "WS-X6502-10GE",
                     "ports": 1,
                     "serial_number": "SAD062003CM",
@@ -543,12 +543,12 @@ class TestShowModule(unittest.TestCase):
 
         Mod MAC addresses                       Hw    Fw           Sw           Status
         --- ---------------------------------- ------ ------------ ------------ -------
-          1  0001.6416.0342 to 0001.6416.0343   3.9   6.1(3)       7.5(0.6)HUB9 Ok      
+          1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok      
           2  0000.0000.0000 to 0000.0000.0000   0.0   Unknown      Unknown      Unknown 
-          3  0005.7485.9518 to 0005.7485.9527   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
-          4  0005.7485.9548 to 0005.7485.9557   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
-          5  0001.0002.0003 to 0001.0002.0003   1.2   6.1(3)       7.5(0.6)HUB9 Ok      
-          6  0002.7ec2.95f2 to 0002.7ec2.95f2   1.0   6.3(1)       7.5(0.6)HUB9 Ok      
+          3  0005.74ff.1b9d to 0005.74ff.1bac   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
+          4  0005.74ff.1bcd to 0005.74ff.1bdc   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
+          5  0001.00ff.0205 to 0001.00ff.0205   1.2   6.1(3)       7.5(0.6)HUB9 Ok      
+          6  0002.7eff.58b5 to 0002.7eff.58b5   1.0   6.3(1)       7.5(0.6)HUB9 Ok      
 
         Mod Sub-Module                  Model           Serial           Hw     Status 
         --- --------------------------- --------------- --------------- ------- -------

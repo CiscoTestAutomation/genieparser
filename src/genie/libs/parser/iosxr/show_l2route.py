@@ -112,12 +112,12 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
 
         # Topo ID  Mac Address    Producer    Next Hop(s)
         # -------- -------------- ----------- ---------------------------------
-        # 0        0012.0100.0001 L2VPN       172.16.2.89/100001/ME
-        # 0        0012.0100.0002 L2VPN       172.16.2.89/100001/ME
-        # 0        0012.0100.0003 L2VPN       172.16.2.89/100001/ME
-        # 0        0012.0100.0004 L2VPN       172.16.2.89/100001/ME
-        # 0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME
-        # 0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0001 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0002 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0003 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0004 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0005 L2VPN       172.16.2.89/100001/ME
+        # 0        0012.01ff.0006 L2VPN       172.16.2.89/100001/ME
 
         p = re.compile(r'^(?P<topo_id>\d+) +'
                        r'(?P<mac_address>\S+) +'
@@ -187,12 +187,12 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
 
         # Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
         # -------- -------------- --------------- ----------- -----------------
-        # 0        0001.0003.0004 10.1.0.250    LOCAL       N/A
-        # 0        0001.0003.0004 2001:db8::250   LOCAL       N/A
-        # 0        0aaa.0bbb.0000 10.1.0.3      LOCAL       N/A
-        # 0        0aaa.0bbb.0001 10.1.0.4      LOCAL       N/A
-        # 0        fc00.0001.0006 192.168.166.3   L2VPN  Bundle-Ether1.0
-        # 0        fc00.0001.0008 192.168.49.3    L2VPN  68101/I/ME
+        # 0        0001.00ff.0307 10.1.0.250    LOCAL       N/A
+        # 0        0001.00ff.0307 2001:db8::250   LOCAL       N/A
+        # 0        0aaa.0bff.bbbb 10.1.0.3      LOCAL       N/A
+        # 0        0aaa.0bff.bbbc 10.1.0.4      LOCAL       N/A
+        # 0        fc00.00ff.0107 192.168.166.3   L2VPN  Bundle-Ether1.0
+        # 0        fc00.00ff.0109 192.168.49.3    L2VPN  68101/I/ME
 
         p = re.compile(r'^(?P<topo_id>\d+) +'
                        r'(?P<mac_address>\S+) +'

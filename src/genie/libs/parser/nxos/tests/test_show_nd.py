@@ -32,7 +32,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                 'neighbors': {
                     '2001:db8:c56d:4::2': {
                         'ip': '2001:db8:c56d:4::2',
-                        'link_layer_address': 'fa16.3e82.6320',
+                        'link_layer_address': 'fa16.3eff.e5a2',
                         'age': '00:09:27',
                         'preference': 50,
                         'origin': 'other',
@@ -44,7 +44,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                     },
                     '2001:db8:c56d:4::33': {
                         'ip': '2001:db8:c56d:4::33',
-                        'link_layer_address': 'aabb.beef.cccc',
+                        'link_layer_address': 'aabb.beff.bcbc',
                         'age': '2d15h',
                         'preference': 1,
                         'origin': 'static',
@@ -54,9 +54,9 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                         'best': 'Yes',
                         'throttled': 'No',
                     },
-                    'fe80::f816:3eff:fe82:6320': {
-                        'ip': 'fe80::f816:3eff:fe82:6320',
-                        'link_layer_address': 'fa16.3e82.6320',
+                    'fe80::f816:3eff:feff:e5a2': {
+                        'ip': 'fe80::f816:3eff:feff:e5a2',
+                        'link_layer_address': 'fa16.3eff.e5a2',
                         'age': '00:05:42',
                         'preference': 50,
                         'origin': 'other',
@@ -68,7 +68,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                         },
                     '2001:db8:c56d:4::34': {
                         'ip': '2001:db8:c56d:4::34',
-                        'link_layer_address': 'aaab.beef.ccce',
+                        'link_layer_address': 'aaab.beff.bcbe',
                         'age': '1d18h',
                         'preference': 1,
                         'origin': 'static',
@@ -85,7 +85,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                 'neighbors':{
                     '2001:db8:c8d1:4::33': {
                         'ip': '2001:db8:c8d1:4::33',
-                        'link_layer_address': 'aaaa.bbbb.cccc',
+                        'link_layer_address': 'aaaa.bbff.8888',
                         'age': '2d15h',
                         'preference': 1,
                         'origin': 'static',
@@ -144,7 +144,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
 
         Address :            2001:db8:c56d:4::2
         Age :                00:09:27
-        MacAddr :            fa16.3e82.6320
+        MacAddr :            fa16.3eff.e5a2
         Preference :         50
         Source :             icmpv6
         Interface :          Ethernet1/1
@@ -156,7 +156,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
 
         Address :            2001:db8:c56d:4::33
         Age :                   2d15h
-        MacAddr :            aabb.beef.cccc
+        MacAddr :            aabb.beff.bcbc
         Preference :         1
         Source :             Static
         Interface :          Ethernet1/1
@@ -168,7 +168,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
 
         Address :            2001:db8:c56d:4::34
         Age :                   1d18h
-        MacAddr :            aaab.beef.ccce
+        MacAddr :            aaab.beff.bcbe
         Preference :         1
         Source :             Static
         Interface :          Ethernet1/1
@@ -178,9 +178,9 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
         Best :               Yes
         Throttled :          No
 
-        Address :            fe80::f816:3eff:fe82:6320
+        Address :            fe80::f816:3eff:feff:e5a2
         Age :                00:05:42
-        MacAddr :            fa16.3e82.6320
+        MacAddr :            fa16.3eff.e5a2
         Preference :         50
         Source :             icmpv6
         Interface :          Ethernet1/1
@@ -193,7 +193,7 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
 
         Address :            2001:db8:c8d1:4::33
         Age :                   2d15h
-        MacAddr :            aaaa.bbbb.cccc
+        MacAddr :            aaaa.bbff.8888
         Preference :         1
         Source :             Static
         Interface :          Ethernet1/2
@@ -829,36 +829,36 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
 
         ICMPv6 Adjacency Table for all VRFs
         Address         Age       MAC Address     State      Interface  Phy-Interface
-        2001:db8:c56d:4::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
-        fe80::f816:3eff:fe82:6320
-                        00:18:33  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
-        2001:db8:c8d1:4::2     00:03:30  fa16.3e8b.59c9  STALE       Eth1/2      Eth1/2
-        fe80::f816:3eff:fe8b:59c9
-                        00:14:19  fa16.3e8b.59c9  STALE       Eth1/2      Eth1/2
-        2001:db8:c56d:1::1     00:15:31  fa16.3e19.8682  STALE       Eth1/3      Eth1/3
-        fe80::f816:3eff:fe19:8682
-                        00:15:31  fa16.3e19.8682  STALE       Eth1/3      Eth1/3
-        2001:db8:c8d1:1::1     00:07:58  fa16.3ec7.8140  STALE       Eth1/4      Eth1/4
-        fe80::f816:3eff:fec7:8140
-                        00:02:41  fa16.3ec7.8140  STALE       Eth1/4      Eth1/4
+        2001:db8:c56d:4::2     00:15:02  fa16.3eff.e5a2  STALE       Eth1/1      Eth1/1
+        fe80::f816:3eff:feff:e5a2
+                        00:18:33  fa16.3eff.e5a2  STALE       Eth1/1      Eth1/1
+        2001:db8:c8d1:4::2     00:03:30  fa16.3eff.e455  STALE       Eth1/2      Eth1/2
+        fe80::f816:3eff:feff:e455
+                        00:14:19  fa16.3eff.e455  STALE       Eth1/2      Eth1/2
+        2001:db8:c56d:1::1     00:15:31  fa16.3eff.9f9b  STALE       Eth1/3      Eth1/3
+        fe80::f816:3eff:feff:9f9b
+                        00:15:31  fa16.3eff.9f9b  STALE       Eth1/3      Eth1/3
+        2001:db8:c8d1:1::1     00:07:58  fa16.3eff.4908  STALE       Eth1/4      Eth1/4
+        fe80::f816:3eff:feff:4908
+                        00:02:41  fa16.3eff.4908  STALE       Eth1/4      Eth1/4
     '''}
 
     golden_parsed_output = {
         "interfaces": {
             "Ethernet1/4": {
                 "neighbors": {
-                    "fe80::f816:3eff:fec7:8140": {
+                    "fe80::f816:3eff:feff:4908": {
                         "neighbor_state": "stale",
                         "age": "00:02:41",
-                        "ip": "fe80::f816:3eff:fec7:8140",
-                        "link_layer_address": "fa16.3ec7.8140",
+                        "ip": "fe80::f816:3eff:feff:4908",
+                        "link_layer_address": "fa16.3eff.4908",
                         "physical_interface": "Ethernet1/4"
                     },
                     "2001:db8:c8d1:1::1": {
                         "neighbor_state": "stale",
                         "age": "00:07:58",
                         "ip": "2001:db8:c8d1:1::1",
-                        "link_layer_address": "fa16.3ec7.8140",
+                        "link_layer_address": "fa16.3eff.4908",
                         "physical_interface": "Ethernet1/4"
                     }
                 },
@@ -870,14 +870,14 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
                         "neighbor_state": "stale",
                         "age": "00:03:30",
                         "ip": "2001:db8:c8d1:4::2",
-                        "link_layer_address": "fa16.3e8b.59c9",
+                        "link_layer_address": "fa16.3eff.e455",
                         "physical_interface": "Ethernet1/2"
                     },
-                    "fe80::f816:3eff:fe8b:59c9": {
+                    "fe80::f816:3eff:feff:e455": {
                         "neighbor_state": "stale",
                         "age": "00:14:19",
-                        "ip": "fe80::f816:3eff:fe8b:59c9",
-                        "link_layer_address": "fa16.3e8b.59c9",
+                        "ip": "fe80::f816:3eff:feff:e455",
+                        "link_layer_address": "fa16.3eff.e455",
                         "physical_interface": "Ethernet1/2"
                     }
                 },
@@ -885,18 +885,18 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
             },
             "Ethernet1/1": {
                 "neighbors": {
-                    "fe80::f816:3eff:fe82:6320": {
+                    "fe80::f816:3eff:feff:e5a2": {
                         "neighbor_state": "stale",
                         "age": "00:18:33",
-                        "ip": "fe80::f816:3eff:fe82:6320",
-                        "link_layer_address": "fa16.3e82.6320",
+                        "ip": "fe80::f816:3eff:feff:e5a2",
+                        "link_layer_address": "fa16.3eff.e5a2",
                         "physical_interface": "Ethernet1/1"
                     },
                     "2001:db8:c56d:4::2": {
                         "neighbor_state": "stale",
                         "age": "00:15:02",
                         "ip": "2001:db8:c56d:4::2",
-                        "link_layer_address": "fa16.3e82.6320",
+                        "link_layer_address": "fa16.3eff.e5a2",
                         "physical_interface": "Ethernet1/1"
                     }
                 },
@@ -908,14 +908,14 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
                         "neighbor_state": "stale",
                         "age": "00:15:31",
                         "ip": "2001:db8:c56d:1::1",
-                        "link_layer_address": "fa16.3e19.8682",
+                        "link_layer_address": "fa16.3eff.9f9b",
                         "physical_interface": "Ethernet1/3"
                     },
-                    "fe80::f816:3eff:fe19:8682": {
+                    "fe80::f816:3eff:feff:9f9b": {
                         "neighbor_state": "stale",
                         "age": "00:15:31",
-                        "ip": "fe80::f816:3eff:fe19:8682",
-                        "link_layer_address": "fa16.3e19.8682",
+                        "ip": "fe80::f816:3eff:feff:9f9b",
+                        "link_layer_address": "fa16.3eff.9f9b",
                         "physical_interface": "Ethernet1/3"
                     }
                 },
@@ -929,9 +929,9 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
             'Ethernet1/1.390': {
                 'interface': 'Ethernet1/1.390',
                 'neighbors': {
-                    'fe80::f816:3eff:fe59:8f2e': {
-                        'ip': 'fe80::f816:3eff:fe59:8f2e',
-                        'link_layer_address': 'fa16.3e59.8f2e',
+                    'fe80::f816:3eff:feff:e887': {
+                        'ip': 'fe80::f816:3eff:feff:e887',
+                        'link_layer_address': 'fa16.3eff.e887',
                         'neighbor_state': 'stale',
                         'age': '00:00:49',
                         'physical_interface': 'Ethernet1/1.390',
@@ -948,8 +948,8 @@ class test_show_ipv6_icmp_neighbor_detail(unittest.TestCase):
 
         ICMPv6 Adjacency Table for VRF VRF1
         Address         Age       MAC Address     State      Interface  Phy-Interface
-        fe80::f816:3eff:fe59:8f2e
-                        00:00:49  fa16.3e59.8f2e  STALE       Eth1/1.390  Eth1/1.390
+        fe80::f816:3eff:feff:e887
+                        00:00:49  fa16.3eff.e887  STALE       Eth1/1.390  Eth1/1.390
     '''}
 
     def test_show_ipv6_icmp_neighbor_detail_golden(self):
@@ -979,7 +979,7 @@ class test_show_ipv6_routers(unittest.TestCase):
 
     golden_output= {'execute.return_value':'''
     n9kv-3# show ipv6 routers vrf all
-    Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
+    Router fe80::f816:3eff:feff:e5a2 on Ethernet1/1 , last update time 3.2 min
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
@@ -987,7 +987,7 @@ class test_show_ipv6_routers(unittest.TestCase):
       valid lifetime 2592000, preferred lifetime 604800
 
 
-    Router fe80::f816:3eff:fe8b:59c9 on Ethernet1/2 , last update time 1.5 min
+    Router fe80::f816:3eff:feff:e455 on Ethernet1/2 , last update time 1.5 min
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
@@ -997,7 +997,7 @@ class test_show_ipv6_routers(unittest.TestCase):
       valid lifetime 2592000, preferred lifetime 604800
 
 
-    Router fe80::f816:3eff:fe19:8682 on Ethernet1/3 , last update time 2.8 min
+    Router fe80::f816:3eff:feff:9f9b on Ethernet1/3 , last update time 2.8 min
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
@@ -1005,7 +1005,7 @@ class test_show_ipv6_routers(unittest.TestCase):
       valid lifetime 2592000, preferred lifetime 604800
 
 
-    Router fe80::f816:3eff:fec7:8140 on Ethernet1/4 , last update time 2.3 min
+    Router fe80::f816:3eff:feff:4908 on Ethernet1/4 , last update time 2.3 min
     Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
     HomeAgentFlag 0, Preference Medium
     Reachable time 0 msec, Retransmission time 0 msec
@@ -1017,11 +1017,11 @@ class test_show_ipv6_routers(unittest.TestCase):
         "interfaces": {
             "Ethernet1/3": {
                 "neighbors": {
-                    "fe80::f816:3eff:fe19:8682": {
+                    "fe80::f816:3eff:feff:9f9b": {
                         "homeagent_flag": 0,
                         "is_router": True,
                         "addr_flag": 0,
-                        "ip": "fe80::f816:3eff:fe19:8682",
+                        "ip": "fe80::f816:3eff:feff:9f9b",
                         "lifetime": 1800,
                         "current_hop_limit": 64,
                         "retransmission_time": 0,
@@ -1044,11 +1044,11 @@ class test_show_ipv6_routers(unittest.TestCase):
             },
             "Ethernet1/1": {
                 "neighbors": {
-                    "fe80::f816:3eff:fe82:6320": {
+                    "fe80::f816:3eff:feff:e5a2": {
                         "homeagent_flag": 0,
                         "is_router": True,
                         "addr_flag": 0,
-                        "ip": "fe80::f816:3eff:fe82:6320",
+                        "ip": "fe80::f816:3eff:feff:e5a2",
                         "lifetime": 1800,
                         "current_hop_limit": 64,
                         "retransmission_time": 0,
@@ -1071,11 +1071,11 @@ class test_show_ipv6_routers(unittest.TestCase):
             },
             "Ethernet1/4": {
                 "neighbors": {
-                    "fe80::f816:3eff:fec7:8140": {
+                    "fe80::f816:3eff:feff:4908": {
                         "homeagent_flag": 0,
                         "is_router": True,
                         "addr_flag": 0,
-                        "ip": "fe80::f816:3eff:fec7:8140",
+                        "ip": "fe80::f816:3eff:feff:4908",
                         "lifetime": 1800,
                         "current_hop_limit": 64,
                         "retransmission_time": 0,
@@ -1098,11 +1098,11 @@ class test_show_ipv6_routers(unittest.TestCase):
             },
             "Ethernet1/2": {
                 "neighbors": {
-                    "fe80::f816:3eff:fe8b:59c9": {
+                    "fe80::f816:3eff:feff:e455": {
                         "homeagent_flag": 0,
                         "is_router": True,
                         "addr_flag": 0,
-                        "ip": "fe80::f816:3eff:fe8b:59c9",
+                        "ip": "fe80::f816:3eff:feff:e455",
                         "lifetime": 1800,
                         "current_hop_limit": 64,
                         "retransmission_time": 0,

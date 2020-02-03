@@ -19,7 +19,7 @@ class test_show_lacp_sysid(unittest.TestCase):
 
     golden_parsed_output = {
         "system_priority": 100,
-        "system_id_mac": "00-1b-0c-10-5a-26"
+        "system_id_mac": "00-1b-0c-ff-6a-36"
     }
 
     golden_output = {'execute.return_value': '''
@@ -28,7 +28,7 @@ class test_show_lacp_sysid(unittest.TestCase):
 
         Priority  MAC Address
         --------  -----------------
-          0x0064  00-1b-0c-10-5a-26
+          0x0064  00-1b-0c-ff-6a-36
     '''}
 
     def test_empty(self):
@@ -69,7 +69,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 2000000,
                     "available": 2000000
                 },
-                "mac_address": "001b.0c10.5a25",
+                "mac_address": "001b.0cff.6a35",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 1,
@@ -128,7 +128,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 2000000,
                     "available": 2000000
                 },
-                "mac_address": "001b.0c10.5a24",
+                "mac_address": "001b.0cff.6a34",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 2,
@@ -193,7 +193,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up
           Local links <active/standby/configured>:   2 / 0 / 2
           Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a25 (Chassis pool)
+          MAC address (source):                      001b.0cff.6a35 (Chassis pool)
           Inter-chassis link:                        No
           Minimum active links / bandwidth:          1 / 1 kbps
           Maximum active links:                      8
@@ -221,7 +221,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up
           Local links <active/standby/configured>:   2 / 1 / 3
           Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a24 (Chassis pool)
+          MAC address (source):                      001b.0cff.6a34 (Chassis pool)
           Inter-chassis link:                        No
           Minimum active links / bandwidth:          2 / 1 kbps
           Maximum active links:                      2
@@ -263,7 +263,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 100000,
                     "available": 100000
                 },
-                "mac_address": "1234.4321.1111",
+                "mac_address": "1234.43ff.3232",
                 "mac_address_source": "GigabitEthernet0/0/0/1",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 500,
@@ -326,7 +326,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 100000,
                     "available": 100000
                 },
-                "mac_address": "1234.4321.2222",
+                "mac_address": "1234.43ff.4343",
                 "mac_address_source": "chassis pool",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 500,
@@ -366,7 +366,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                     Up
           Local links <active/standby/configured>:   1 / 0 / 1
           Local bandwidth <effective/available>:     100000 (100000) kbps
-          MAC address (source):                      1234.4321.1111 (Gi0/0/0/1)
+          MAC address (source):                      1234.43ff.3232 (Gi0/0/0/1)
           Minimum active links / bandwidth:          1 / 500 kbps
           Maximum active links:                      32
           Wait-while timer:                          2000 ms
@@ -399,7 +399,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up 
           Local links <active/standby/configured>:   1 / 0 / 1
           Local bandwidth <effective/available>:     100000 / 100000 kbps
-          MAC address (source):                      1234.4321.2222 (chassis pool)
+          MAC address (source):                      1234.43ff.4343 (chassis pool)
           Minimum active links / bandwidth:          1 / 500 kbps
           Maximum active links:                      32 (from partner)
           Wait-while timer:                          100 ms
@@ -433,7 +433,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 1000000,
                     "available": 1000000
                 },
-                "mac_address": "0000.deaf.0000",
+                "mac_address": "0000.deff.afaf",
                 "mac_address_source": "Configured",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 1,
@@ -476,7 +476,7 @@ class test_show_bundle(unittest.TestCase):
         Status: Up
         Local links <active/standby/configured>: 1 / 0 / 1
         Local bandwidth <effective/available>: 1000000 (1000000) kbps
-        MAC address (source): 0000.deaf.0000 (Configured)
+        MAC address (source): 0000.deff.afaf (Configured)
         Minimum active links / bandwidth: 1 / 1 kbps
         Maximum active links: 64
         Wait while timer: 100 ms
@@ -514,7 +514,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 0,
                     "available": 0
                 },
-                "mac_address": "0000.deaf.0000",
+                "mac_address": "0000.deff.afaf",
                 "mac_address_source": "Configured",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 1,
@@ -558,7 +558,7 @@ class test_show_bundle(unittest.TestCase):
         Status: mLACP hot standby
         Local links <active/standby/configured>: 0 / 1 / 1
         Local bandwidth <effective/available>: 0 (0) kbps
-        MAC address (source): 0000.deaf.0000 (Configured)
+        MAC address (source): 0000.deff.afaf (Configured)
         Minimum active links / bandwidth: 1 / 1 kbps
         Maximum active links: 64
         Wait while timer: 100 ms
@@ -644,7 +644,7 @@ class test_show_bundle_reasons(unittest.TestCase):
                     "effective": 2000000,
                     "available": 2000000
                 },
-                "mac_address": "0006.c179.dbfa",
+                "mac_address": "0006.c1ff.5574",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 1,
@@ -703,7 +703,7 @@ class test_show_bundle_reasons(unittest.TestCase):
                     "effective": 1000000,
                     "available": 1000000
                 },
-                "mac_address": "0006.c179.dbf9",
+                "mac_address": "0006.c1ff.5573",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 1,
@@ -760,7 +760,7 @@ class test_show_bundle_reasons(unittest.TestCase):
       Status:                                    Up
       Local links <active/standby/configured>:   2 / 0 / 2
       Local bandwidth <effective/available>:     2000000 (2000000) kbps
-      MAC address (source):                      0006.c179.dbfa (Chassis pool)
+      MAC address (source):                      0006.c1ff.5574 (Chassis pool)
       Inter-chassis link:                        No
       Minimum active links / bandwidth:          1 / 1 kbps
       Maximum active links:                      24
@@ -788,7 +788,7 @@ class test_show_bundle_reasons(unittest.TestCase):
       Status:                                    Up
       Local links <active/standby/configured>:   1 / 0 / 2
       Local bandwidth <effective/available>:     1000000 (1000000) kbps
-      MAC address (source):                      0006.c179.dbf9 (Chassis pool)
+      MAC address (source):                      0006.c1ff.5573 (Chassis pool)
       Inter-chassis link:                        No
       Minimum active links / bandwidth:          1 / 1 kbps
       Maximum active links:                      24
@@ -829,7 +829,7 @@ class test_show_bundle_reasons(unittest.TestCase):
                     "effective": 0,
                     "available": 0
                 },
-                "mac_address": "000e.832a.1a1a",
+                "mac_address": "000e.83ff.4444",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 1,
@@ -870,7 +870,7 @@ class test_show_bundle_reasons(unittest.TestCase):
       Status:                                    Down
       Local links <active/standby/configured>:   0 / 0 / 0
       Local bandwidth <effective/available>:     0 (0) kbps
-      MAC address (source):                      000e.832a.1a1a (Chassis pool)
+      MAC address (source):                      000e.83ff.4444 (Chassis pool)
       Inter-chassis link:                        No
       Minimum active links / bandwidth:          1 / 1 kbps
       Maximum active links:                      24
@@ -935,7 +935,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x000a,0x0001",
                         "key": "0x0001",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -945,7 +945,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x000a,0x0001",
                             "key": "0x0001",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -965,7 +965,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0002",
                         "key": "0x0001",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -975,7 +975,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0005",
                             "key": "0x0001",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -1002,7 +1002,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "a---A---",
                         "port_id": "0x8000,0x0005",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "out_sync",
                         "collecting": False,
@@ -1012,7 +1012,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "as--A---",
                             "port_id": "0x8000,0x0004",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": False,
@@ -1032,7 +1032,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0004",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -1042,7 +1042,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0003",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -1062,7 +1062,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0003",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -1072,7 +1072,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0002",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -1107,10 +1107,10 @@ class test_show_lacp(unittest.TestCase):
           Port          (rate)  State    Port ID       Key    System ID
           --------------------  -------- ------------- ------ ------------------------
         Local
-          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-ff-c6-81
 
           Port                  Receive    Period Selection  Mux       A Churn P Churn
           --------------------  ---------- ------ ---------- --------- ------- -------
@@ -1123,12 +1123,12 @@ class test_show_lacp(unittest.TestCase):
           Port          (rate)  State    Port ID       Key    System ID
           --------------------  -------- ------------- ------ ------------------------
         Local
-          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-ff-c6-81
 
           Port                  Receive    Period Selection  Mux       A Churn P Churn
           --------------------  ---------- ------ ---------- --------- ------- -------
@@ -1152,7 +1152,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdAF--",
                         "port_id": "0x8000,0x0002",
                         "key": "0x0008",
-                        "system_id": "0x8000,40-55-39-12-5a-fc",
+                        "system_id": "0x8000,40-55-39-ff-6c-0f",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -1162,7 +1162,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdAF--",
                             "port_id": "0x0001,0x0006",
                             "key": "0x0008",
-                            "system_id": "0x0001,cc-ef-48-06-1d-04",
+                            "system_id": "0x0001,cc-ef-48-ff-23-0a",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -1182,7 +1182,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdAF--",
                         "port_id": "0x8000,0x0001",
                         "key": "0x0008",
-                        "system_id": "0x8000,40-55-39-12-5a-fc",
+                        "system_id": "0x8000,40-55-39-ff-6c-0f",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -1192,7 +1192,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdAF--",
                             "port_id": "0x8000,0x0004",
                             "key": "0x0008",
-                            "system_id": "0x0001,cc-ef-48-06-1d-04",
+                            "system_id": "0x0001,cc-ef-48-ff-23-0a",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -1227,10 +1227,10 @@ class test_show_lacp(unittest.TestCase):
           Port          (rate)  State    Port ID       Key    System ID
           --------------------  -------- ------------- ------ ------------------------
         Local
-          Te0/0/0/0         1s  ascdAF-- 0x8000,0x0002 0x0008 0x8000,40-55-39-12-5a-fc
-           Partner          1s  ascdAF-- 0x0001,0x0006 0x0008 0x0001,cc-ef-48-06-1d-04
-          Te0/1/0/0         1s  ascdAF-- 0x8000,0x0001 0x0008 0x8000,40-55-39-12-5a-fc
-           Partner          1s  ascdAF-- 0x8000,0x0004 0x0008 0x0001,cc-ef-48-06-1d-04
+          Te0/0/0/0         1s  ascdAF-- 0x8000,0x0002 0x0008 0x8000,40-55-39-ff-6c-0f
+           Partner          1s  ascdAF-- 0x0001,0x0006 0x0008 0x0001,cc-ef-48-ff-23-0a
+          Te0/1/0/0         1s  ascdAF-- 0x8000,0x0001 0x0008 0x8000,40-55-39-ff-6c-0f
+           Partner          1s  ascdAF-- 0x8000,0x0004 0x0008 0x0001,cc-ef-48-ff-23-0a
 
           Port                  Receive    Period Selection  Mux       A Churn P Churn
           --------------------  ---------- ------ ---------- --------- ------- -------
