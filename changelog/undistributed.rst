@@ -15,6 +15,10 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowIpBgpRegexp for:
+        * show ip bgp regexp ^$ 
+    * Added ShowBootvar for:
+        * 'show bootvar'
     * Added ShowProcessesMemoryPlatformSorted for:
         * show processes memory platform sorted
 
