@@ -262,12 +262,20 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     else:
                         slot_code = 'other'
 
-                    slot_dict = parsed_output\
-                        .setdefault('slot', {})\
-                        .setdefault(slot, {})\
-                        .setdefault(slot_code, {})\
+                    slot_dict = parsed_output \
+                        .setdefault('slot', {}) \
+                        .setdefault(slot, {}) \
+                        .setdefault(slot_code, {}) \
                         .setdefault(pid, {})
-                    
+
+                    if 'slot' in parsed_output:
+                        if slot in parsed_output['slot'].keys():
+                            if slot_code in parsed_output['slot'][slot].keys():
+                                if 'tbd' in parsed_output['slot'][slot][slot_code]:
+                                    subslot_dict = parsed_output['slot'][slot][slot_code]['tbd']
+                                    slot_dict['subslot'] = subslot_dict['subslot']
+                                    del parsed_output['slot'][slot][slot_code]['tbd']
+
                     slot_dict['name'] = name
                     slot_dict['descr'] = descr
                     slot_dict['pid'] = pid
@@ -332,9 +340,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # ============================================
                 # Match 3:
                 # Transceiver Te2/1
-                # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
                 # ============================================
-                result = r1_3.match(name) or r1_3_3.match(name)
+                result = r1_3.match(name)
                 if result:
                     group = result.groupdict()
 
@@ -362,6 +369,42 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['vid'] = vid
 
                     continue
+
+                # ============================================
+                # Match 4:
+                # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
+                # VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0
+                # ============================================
+                result = r1_3_3.match(name)
+                if result:
+                    group = result.groupdict()
+
+                    slot_for_subslot = group['slot']
+                    subslot = group['subslot']
+
+                    slot_code = 'other'
+
+                    if 'slot' not in parsed_output:
+
+                        slot_dict = parsed_output \
+                            .setdefault('slot', {}) \
+                            .setdefault(slot_for_subslot, {}) \
+                            .setdefault(slot_code, {}) \
+                            .setdefault('tbd', {})
+
+                    subslot_dict = slot_dict \
+                        .setdefault('subslot', {}) \
+                        .setdefault(subslot, {}) \
+                        .setdefault(pid, {})
+
+                    subslot_dict['descr'] = descr
+                    subslot_dict['name'] = name
+                    subslot_dict['pid'] = pid
+                    subslot_dict['sn'] = sn
+                    subslot_dict['vid'] = vid
+
+                    continue
+
 
                 # slot_code == 'other'
                 # 2700W AC power supply for CISCO7604 2
