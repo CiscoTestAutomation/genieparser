@@ -32,6 +32,7 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp {address_family} rd {rd} summary'
     * 'show ip bgp all summary'
     * 'show ip bgp {address_family} all summary'
+    * 'show ip bgp regexp ^$'
     ----------------------------------------------------------------------------
     * 'show bgp all neighbors'
     * 'show bgp all neighbors {neighbor}'
@@ -236,7 +237,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
@@ -681,6 +682,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 #   * 'show ip bgp {address_family}'
 #   * 'show ip bgp {address_family} rd {rd}'
 #   * 'show ip bgp {address_family} vrf {vrf}'
+#   * 'show ip bgp regexp ^$'
 # =============================================
 class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
 
@@ -689,15 +691,17 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         * 'show ip bgp {address_family}'
         * 'show ip bgp {address_family} rd {rd}'
         * 'show ip bgp {address_family} vrf {vrf}'
+        * 'show ip bgp regexp ^$'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf}',
                    'show ip bgp {address_family} rd {rd}',
                    'show ip bgp {address_family}',
                    'show ip bgp',
+                   'show ip bgp regexp {regexp}'
                    ]
 
-    def cli(self, address_family='', rd='', vrf='', output=None):
+    def cli(self, address_family='', rd='', vrf='', regexp='', output=None):
 
         if output is None:
             # Build command
@@ -709,6 +713,8 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
                                                  rd=rd)
             elif address_family:
                 cmd = self.cli_command[2].format(address_family=address_family)
+            elif regexp:
+                cmd = self.cli_command[4].format(regexp=regexp)
             else:
                 cmd = self.cli_command[3]
             # Execute command
@@ -720,6 +726,28 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
+# =============================================
+# Parser for:
+#   * 'show ip bgp regexp {regexp}'
+# =============================================
+class ShowIpBgpRegexp(ShowBgpSuperParser, ShowBgpSchema):
+
+    ''' Parser for:
+        * 'show ip bgp regexp {regexp}'
+    '''
+
+    cli_command = 'show ip bgp regexp {regexp}'
+
+    def cli(self, regexp, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(regexp=regexp)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output)
 
 #-------------------------------------------------------------------------------
 
