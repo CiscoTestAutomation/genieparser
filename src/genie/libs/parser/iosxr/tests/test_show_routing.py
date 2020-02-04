@@ -206,6 +206,9 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
         },
     }
@@ -315,7 +318,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                             }
                         }
                     }
-                }
+                },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             }
         }
     }
@@ -421,6 +427,9 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
             'VRF502': {
                 'address_family': {
@@ -522,6 +531,9 @@ class TestShowRouteIpv4(unittest.TestCase):
 
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': 'not set'
                 },
             },
         },
@@ -673,6 +685,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': '192.168.1.1',
+                    'to_network': '0.0.0.0'
+                },
             },
         },
     }
@@ -801,6 +817,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                             },
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': '172.16.0.88',
+                    'to_network': '0.0.0.0'
                 },
             },
         },
@@ -1198,7 +1218,8 @@ class TestShowRouteIpv4(unittest.TestCase):
                                     'for': '7w5d'
                                 },
                                 'ip': '0.0.0.0',
-                                'known_via': 'bgp 65001',
+                                'known_via': 'bgp '
+                                '65001',
                                 'mask': '0',
                                 'metric': 10,
                                 'next_hop': {
@@ -1206,13 +1227,9 @@ class TestShowRouteIpv4(unittest.TestCase):
                                         1: {
                                             'from': '172.23.15.196',
                                             'index': 1,
-                                            'metric': 10,
-                                            'next_hop': '172.23.6.96'
-                                        }
-                                    },
-                                    'outgoing_interface': {
-                                        'default': {
                                             'method': 'unicast',
+                                            'metric': 10,
+                                            'next_hop': '172.23.6.96',
                                             'outgoing_interface': 'default',
                                             'table': 'default',
                                             'table_id': '0xe0000000'
@@ -1229,7 +1246,6 @@ class TestShowRouteIpv4(unittest.TestCase):
             }
         }
     }
-            
 
 
     def test_empty_1(self):
