@@ -304,6 +304,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output1 = {'execute.return_value': '''
         Router#show policy-map control-plane
         Load for five secs: 29%/0%; one minute: 7%; five minutes: 6%
@@ -496,6 +497,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output2 = {'execute.return_value': '''
         Device# show policy-map control-plane
 
@@ -556,6 +558,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output3 = {'execute.return_value': '''
         Router# show policy-map control-plane
         Control Plane
@@ -649,6 +652,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output4 = {'execute.return_value': '''
         Router# show policy-map control-plane
         Control Plane
@@ -772,6 +776,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/0/0
     golden_output5 = {'execute.return_value': '''
         Router#show policy-map interface gigabitEthernet 0/0/0
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
@@ -1065,6 +1070,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                                 'maximum_thresh': '281250',
                                                 'mark_prob': '1/10'}}}}}}}}}}}
 
+    # show policy-map interface
     golden_output6 = {'execute.return_value': '''
         Router# show policy-map interface
         serial3/1
@@ -1169,6 +1175,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                             '20': {
                                                 'packets_marked': 500}}}}}}}}}}}
 
+    # show policy-map interface
     golden_output7 = {'execute.return_value': '''
         Router# show policy-map interface
         FastEthernet4/1/1
@@ -1273,6 +1280,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_output': 0,
                                     'bytes_output': 0}}}}}}}}
 
+    # show policy-map interface TenGigabitEthernet0/0/2
     golden_output8 = {'execute.return_value': '''
         Device# show policy-map interface TenGigabitEthernet0/0/2
             show policy-map interface TenGigabitEthernet0/0/2
@@ -1362,6 +1370,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface GigabitEthernet0/0/1
     golden_output9 = {'execute.return_value': '''
             PE1#show policy-map interface GigabitEthernet0/0/1
 
@@ -1413,6 +1422,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'target_shape_rate': 500000,
                                     'total_drops': 0}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/1/1 output class class-default
     golden_output10 = {'execute.return_value': '''
         Router#show policy-map interface gigabitEthernet 0/1/1 output class class-default
         Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
@@ -1494,6 +1504,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_output': 0,
                                     'bytes_output': 0}}}}}}}}
 
+    # show policy-map interface TenGigabitEthernet 0/3/0.41 output
     golden_output11 = {'execute.return_value': '''
         PE1#show policy-map interface TenGigabitEthernet 0/3/0.41 output
 
@@ -1564,6 +1575,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'interval': 300,
                                         'offered_rate_bps': 0}}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/1/4 input class class-default
     golden_output12 = {'execute.return_value': '''
             show policy-map interface gigabitEthernet 0/1/4 input class class-default
             Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
@@ -1603,6 +1615,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface GigabitEthernet 0/0/1 input
     golden_output13 = {'execute.return_value': '''
             PE1#show policy-map interface GigabitEthernet 0/0/1 input
 
@@ -1634,6 +1647,7 @@ class test_show_policy_map_type(unittest.TestCase):
                     'policy_name': {
                         'VLAN51_QoS': {}}}}}}
 
+    # show policy-map interface class TEST2
     golden_output14 = {'execute.return_value': '''
         PE1#show policy-map interface class TEST2
 
@@ -1703,6 +1717,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                             'actions': {"drop": True},
                                             'bps': 0}}}}}}}}}}
 
+    # show policy-map interface class VLAN51_QoS
     golden_output15 = {'execute.return_value': '''
         PE1#show policy-map interface class VLAN51_QoS
 
@@ -1779,6 +1794,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map target service-group 1
     golden_output16 = {'execute.return_value': '''
             Router#show policy-map target service-group 1
             Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
@@ -1857,6 +1873,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'bytes_output': 0,
                                     'bandwidth': 'remaining ratio 2'}}}}}}}}
 
+    # show policy-map target service-group 1
     golden_output17 = {'execute.return_value': '''
         Device# show policy-map target service-group 1
 
@@ -2042,6 +2059,7 @@ class test_show_policy_map_type(unittest.TestCase):
     }
     }
 
+    # show policy-map interface te0/0/0.101
     golden_output18 = {'execute.return_value':'''
     PE1#show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
@@ -2136,6 +2154,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                                             'interval': 300,
                                                             'offered_rate_bps': 0}}}}}}}}}
 
+    # show policy-map interface te0/0/0.101
     golden_output19 = {'execute.return_value':'''
 show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
@@ -2195,6 +2214,7 @@ show policy-map interface te0/0/0.101
     }
 }
 
+    # show policy-map interface te0/0/0.101
     golden_output20 = {'execute.return_value':'''
 show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
@@ -2321,6 +2341,7 @@ show policy-map interface te0/0/0.101
                                         3000000000,
                                     'total_drops': 0}}}}}}}}
 
+    # ShowPolicyMapInterface
     golden_output21 = {'execute.return_value':'''
     GigabitEthernet4.1
     
@@ -2413,6 +2434,7 @@ show policy-map interface te0/0/0.101
 
     '''}
 
+    # ShowPolicyMapInterfaceOutput
     golden_output22 = {'execute.return_value': '''
 TenGigabitEthernet0/0/0
 
@@ -2586,6 +2608,7 @@ TenGigabitEthernet0/0/0
         }
     }
 
+    # ShowPolicyMapInterfaceOutput
     golden_output23 = {'execute.return_value': '''
 TenGigabitEthernet0/0/0
 
@@ -2934,7 +2957,90 @@ GigabitEthernet0/0/3
         'GigabitEthernet0/0/3': {
         }
     }
-                                        
+
+    golden_output24 = {'execute.return_value': '''
+    class-map match-any interactive1-IDL120932391
+     match ip dscp cs2
+    class-map match-any interactive2-IDL120932391
+     match ip dscp af21  af22  af23
+    class-map match-any interactive3-IDL120932391
+     match ip dscp cs3  af31  af32  af33
+    class-map match-any customer-control-IDL120932391
+     match ip dscp cs6  cs7
+    class-map match-any interactive21-IDL120932391
+     match ip dscp cs2  af21  af22  af23
+    class-map match-any besteffort-IDL120932391
+     match ip dscp cs1
+    class-map match-any realtime-IDL120932391
+     match ip dscp cs4  af41  af42  af43  cs5  ef
+    class-map match-any realtime2-IDL120932391
+     match ip dscp cs5  ef
+    class-map match-any realtime1-IDL120932391
+     match ip dscp cs4  af41  af42  af43
+    class-map match-any network-control-IDL120932391
+     match access-group name NETWORK-CONTROL-IDL120932391
+    !
+    olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+     class network-control-IDL120932391
+      bandwidth percent 1
+      random-detect dscp-based
+      set cos 5
+     class realtime-IDL120932391
+      priority percent 30
+      set cos 5
+     class interactive3-IDL120932391
+      bandwidth percent 5
+      random-detect dscp-based
+      random-detect dscp 24 24 40 10
+      random-detect dscp 26 24 40 10
+      random-detect dscp 28 24 40 10
+      random-detect dscp 30 24 40 10
+      set cos 5
+     class interactive21-IDL120932391
+      bandwidth percent 5
+      random-detect dscp-based
+      random-detect dscp 16 24 40 10
+      random-detect dscp 18 24 40 10
+      random-detect dscp 20 24 40 10
+      random-detect dscp 22 24 40 10
+      set cos 5
+     class besteffort-IDL120932391
+      bandwidth percent 1
+      random-detect dscp-based
+      set cos 5
+     class class-default
+      bandwidth percent 58
+      random-detect dscp-based
+      random-detect dscp 0 24 40 10
+      random-detect dscp 10 24 40 10
+      random-detect dscp 12 24 40 10
+      random-detect dscp 14 24 40 10
+      random-detect dscp 48 24 40 10
+      random-detect dscp 56 24 40 10
+      set cos 5
+      fair-queue
+    policy-map GWS-WAN-OUT-ETH-IDL120932391
+     class class-default
+      shape average 99872000
+       service-policy GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+    policy-map CLNE-MGMNT-OUT
+     class class-default
+      shape average 128000
+    policy-map GWS-LAN-OUT-IDL120932391
+     class customer-control-IDL120932391
+      set cos 6
+     class realtime-IDL120932391
+      set cos 5
+     class interactive3-IDL120932391
+      set cos 3
+     class interactive21-IDL120932391
+      set cos 2
+     class besteffort-IDL120932391
+      set cos 0
+     class class-default
+      set cos 1
+
+    '''}
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
@@ -3029,6 +3135,18 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output20)
 
+    # def test_show_policy_map_interface_full9(self):
+    #     self.maxDiff = None
+    #     self.device = Mock(**self.golden_output24)
+    #     obj = ShowPolicyMapInterface(device=self.device)
+    #     parsed_output = obj.parse()
+    #     import pprint
+    #     pprint.pprint(parsed_output)
+    #     import pdb
+    #     pdb.set_trace()
+    #
+    #     self.assertEqual(parsed_output, self.golden_parsed_output24)
+
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
@@ -3107,12 +3225,14 @@ GigabitEthernet0/0/3
         obj = ShowPolicyMapInterfaceOutput(device=self.device)
         parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output23)
+
         
 # =============================================
 # Unit test for :
 #    *'show policy map'
 #    *'show policy map {name}'
 # =============================================
+
 
 class test_show_policy_map(unittest.TestCase):
     '''Unit test for "show policy map"

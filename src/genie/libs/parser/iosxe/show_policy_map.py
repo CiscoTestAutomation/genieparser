@@ -1134,6 +1134,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # class prec2
             m = p29.match(line)
             if m:
+                # import pdb
+                # pdb.set_trace()
                 precedence_list,bytes1_list,bytes2_list,bytes3_list = ([] for _ in range(4))
                 class_value = m.groupdict()['class']
                 class_dictionary = policy_dict.setdefault('class', {}).\
