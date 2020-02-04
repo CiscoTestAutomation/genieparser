@@ -250,12 +250,6 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     elif r1_5.match(descr) or r1_5_2.match(pid):
                         slot_code = 'lc'
 
-                    # case: info with (slot == 0) doesn't exist, chassis is slot 0,
-                    #         see golden_output_8 in UT for detail
-                    # if slot == '0':
-                    #     slot_code = 'rp'
-                    #     slot_pid = chassis_dict['pid']
-
                     # ============================================
                     # PID: AIM-VPN/SSL-2
                     # ============================================
@@ -382,14 +376,12 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     slot_for_subslot = group['slot']
                     subslot = group['subslot']
 
-                    slot_code = 'other'
-
                     if 'slot' not in parsed_output:
 
                         slot_dict = parsed_output \
                             .setdefault('slot', {}) \
                             .setdefault(slot_for_subslot, {}) \
-                            .setdefault(slot_code, {}) \
+                            .setdefault('other', {}) \
                             .setdefault('tbd', {})
 
                     subslot_dict = slot_dict \
@@ -423,6 +415,25 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     other_dict['sn'] = sn
 
                     continue
+
+        # case: golden_output_8
+        if 'slot' in parsed_output:
+            # k is slot number. e.g. "1" or "0"
+            for k in parsed_output['slot'].keys():
+                # s is slot_code. e.g., "rp", "lc" or "other"
+                for s in parsed_output['slot'][k].keys():
+                    if 'tbd' in parsed_output['slot'][k][s] and (k == '0'):
+                        chassis_pid = list(parsed_output['main']['chassis'].keys())[0]
+
+                        subslot_dict = parsed_output['slot'][k][s]['tbd']
+
+                        parsed_output.setdefault('slot', {}).\
+                                      setdefault(k, {}).\
+                                      setdefault('rp', {}).\
+                                      setdefault(chassis_pid, subslot_dict)
+                        del parsed_output['slot'][k][s]
+                        break
+
         return parsed_output
 
 
