@@ -116,6 +116,8 @@
 	    * Updated for the case of empty ttl_groups
 		* Updated for udp ACL with incremented counter
 		* Added support for access-lists with object-group references
+    * Updated ShowInventory
+        * Updated for various outputs
 
 * IOSXE
     * Updating symbolic link to platform specific unittests
