@@ -70,12 +70,14 @@
 * SROS
     * Added ShowSystemNtpAll for:
         * show system ntp all
-
-*SROS
     * Added ShowRouterIsisAdjacency for:
         * show router isis adjacency
     * Added ShowRouterIsisAdjacencyDetail for:
         * show router isis adjacency detail
+
+* LINUX
+    * Added Ps for:
+        * ps -ef
 
 --------------------------------------------------------------------------------
                                 Fix
