@@ -683,8 +683,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
                                                   setdefault(class_map, {})
                 class_map_dict['match_evaluation'] = class_match.replace('(', '').replace(')', '')
-                import pdb
-                pdb.set_trace()
+
                 continue
 
             # queue stats for all priority classes:
@@ -1549,12 +1548,15 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # Policy Map police-in
         # Policy Map policy_4-6-3~6
-        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\S]+))$')
+        # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+        # policy-map CLNE-MGMNT-OUT
+        p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S]+))$')
         
         # Class class-default
         # Class class c1
         # Class class_4-6-3
-        p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
+        # class realtime-IDL120932391
+        p2 = re.compile(r'^(Class) +(?P<class_map>([\S\s]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
@@ -1587,7 +1589,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # violate - action drop
         p3_4 = re.compile(r'^violate-action +(?P<violate_action>([\w\-\s]+))$')
 
-        # service - policy child - policy
+        # service-policy child-policy
         p3_5 = re.compile(r'^service-policy +(?P<service_policy>([\w\-\s]+))$')
 
         # Average Rate Traffic Shaping
@@ -1606,10 +1608,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p6 = re.compile(r'^priority +level +(?P<pri_level>(\d+)) +(?P<kb_per_sec>(\d+)) \(kb\/s\)$')
 
         # bandwidth 20000 (kb/s)
-        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb[p/]s\)$')
-
         # bandwidth 100
-        p7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
+        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))(?: \(kb[p/]s\))?$')
 
         # Bandwidth 70 (%)
         # bandwidth 80 (%)
@@ -1650,8 +1650,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
 
-        #  Set cos 5
-        p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
+        # Set cos 5
+        # set cos 5
+        p11 = re.compile(r'^(Set|set) +(?P<set>([\w\s]+))$')
 
         # Shape average 30m
         p12 = re.compile(r'^Shape +average +(?P<shape_average_min>(\d+))m$')
@@ -1659,11 +1660,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # bandwidth 100
         p13 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
 
-        #  bandwidth remaining percent 50
-        p14 = re.compile(r'^bandwidth remaining percent +(?P<bandwidth_remaining_percent>(\d+))$')
-
+        # bandwidth remaining percent 50
         # bandwidth remaining 80 (%)
-        p14_0 = re.compile(r'^bandwidth remaining +(?P<bandwidth_remaining_percent>(\d+)) \(%\)$')
+        p14 = re.compile(r'^^bandwidth remaining(?: percent)? +(?P<bandwidth_remaining_percent>(\d+))(:? \(%\))?$')
 
         # bandwidth remaining ratio 100
         p14_1 = re.compile(r'^bandwidth remaining ratio +(?P<bandwidth_remaining_ratio>(\d+))$')
@@ -1700,6 +1699,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
             # Class class-default
             # Class class c1
+            # class network-control-IDL120932391
             m = p2.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
@@ -1810,7 +1810,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['violate_action'] = vioate_list
                 continue
 
-            # service - policy child - policy
+            # service-policy child-policy
             m = p3_5.match(line)
             if m:
                 if police_line == 1:
@@ -1861,12 +1861,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
             # bandwidth 20000 (kb/s)
+            # bandwidth 100
             m = p7_0.match(line)
-            if m:
-                class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
-                continue
-
-            m = p7_1.match(line)
             if m:
                 class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth'])
                 continue
@@ -1875,9 +1871,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # bandwidth 80 (%)
             m = p7.match(line)
             if m:
-                if weight_line == 1 :
+                if weight_line == 1:
                     weight_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
-                elif weight_line != 1 :
+                elif weight_line != 1:
                     random_detect = class_map_dict.setdefault('random_detect', {})  # initialize random_detect{}
                     random_detect['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
                 continue
@@ -1958,7 +1954,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
                 continue
 
-            #  Set cos 5
+            # Set cos 5
+            # set cos 5
             m = p11.match(line)
             if m:
                 class_map_dict['set'] = m.groupdict()['set']
@@ -1976,14 +1973,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['bandwidth'] = int(m.groupdict()['bandwidth'])
                 continue
 
-            #  bandwidth remaining percent 50
-            m = p14.match(line)
-            if m:
-                class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
-                continue
-
+            # bandwidth remaining percent 50
             # bandwidth remaining 80 (%)
-            m = p14_0.match(line)
+            m = p14.match(line)
             if m:
                 class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
