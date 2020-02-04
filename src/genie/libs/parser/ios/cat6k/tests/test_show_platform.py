@@ -381,7 +381,7 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
-    golden_output_10 = {'execute.return_value': '''
+    golden_output_2 = {'execute.return_value': '''
         NAME: "WS-C6506-E", DESCR: "Cisco Systems, Inc. Catalyst 6500 6-slot Chassis System"
         PID: WS-C6506-E        ,                     VID: V05, SN: SAL123456ET
 
@@ -490,7 +490,7 @@ class TestShowInventory(unittest.TestCase):
 
         '''}
 
-    golden_parsed_output_10 = {
+    golden_parsed_output_2 = {
     'index': {
         1: {
             'descr': 'Cisco Systems, Inc. Catalyst 6500 6-slot Chassis System',
@@ -730,18 +730,18 @@ class TestShowInventory(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_1(self):
+    def test_show_inventory_1(self):
         self.device = Mock(**self.golden_output)
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_golden_output_10(self):
+    def test_show_inventory_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_10)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_10)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowModule(unittest.TestCase):
     device = Device(name="aDevice")
