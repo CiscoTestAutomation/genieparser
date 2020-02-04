@@ -2958,90 +2958,6 @@ GigabitEthernet0/0/3
         }
     }
 
-    golden_output24 = {'execute.return_value': '''
-    class-map match-any interactive1-IDL120932391
-     match ip dscp cs2
-    class-map match-any interactive2-IDL120932391
-     match ip dscp af21  af22  af23
-    class-map match-any interactive3-IDL120932391
-     match ip dscp cs3  af31  af32  af33
-    class-map match-any customer-control-IDL120932391
-     match ip dscp cs6  cs7
-    class-map match-any interactive21-IDL120932391
-     match ip dscp cs2  af21  af22  af23
-    class-map match-any besteffort-IDL120932391
-     match ip dscp cs1
-    class-map match-any realtime-IDL120932391
-     match ip dscp cs4  af41  af42  af43  cs5  ef
-    class-map match-any realtime2-IDL120932391
-     match ip dscp cs5  ef
-    class-map match-any realtime1-IDL120932391
-     match ip dscp cs4  af41  af42  af43
-    class-map match-any network-control-IDL120932391
-     match access-group name NETWORK-CONTROL-IDL120932391
-    !
-    olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
-     class network-control-IDL120932391
-      bandwidth percent 1
-      random-detect dscp-based
-      set cos 5
-     class realtime-IDL120932391
-      priority percent 30
-      set cos 5
-     class interactive3-IDL120932391
-      bandwidth percent 5
-      random-detect dscp-based
-      random-detect dscp 24 24 40 10
-      random-detect dscp 26 24 40 10
-      random-detect dscp 28 24 40 10
-      random-detect dscp 30 24 40 10
-      set cos 5
-     class interactive21-IDL120932391
-      bandwidth percent 5
-      random-detect dscp-based
-      random-detect dscp 16 24 40 10
-      random-detect dscp 18 24 40 10
-      random-detect dscp 20 24 40 10
-      random-detect dscp 22 24 40 10
-      set cos 5
-     class besteffort-IDL120932391
-      bandwidth percent 1
-      random-detect dscp-based
-      set cos 5
-     class class-default
-      bandwidth percent 58
-      random-detect dscp-based
-      random-detect dscp 0 24 40 10
-      random-detect dscp 10 24 40 10
-      random-detect dscp 12 24 40 10
-      random-detect dscp 14 24 40 10
-      random-detect dscp 48 24 40 10
-      random-detect dscp 56 24 40 10
-      set cos 5
-      fair-queue
-    policy-map GWS-WAN-OUT-ETH-IDL120932391
-     class class-default
-      shape average 99872000
-       service-policy GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
-    policy-map CLNE-MGMNT-OUT
-     class class-default
-      shape average 128000
-    policy-map GWS-LAN-OUT-IDL120932391
-     class customer-control-IDL120932391
-      set cos 6
-     class realtime-IDL120932391
-      set cos 5
-     class interactive3-IDL120932391
-      set cos 3
-     class interactive21-IDL120932391
-      set cos 2
-     class besteffort-IDL120932391
-      set cos 0
-     class class-default
-      set cos 1
-
-    '''}
-
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -3134,18 +3050,6 @@ GigabitEthernet0/0/3
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output20)
-
-    def test_show_policy_map_interface_full9(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output24)
-        obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
-        self.assertEqual(parsed_output, self.golden_parsed_output24)
 
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
@@ -3844,6 +3748,90 @@ class test_show_policy_map(unittest.TestCase):
             exceed-action drop
     '''}
 
+    golden_output15 = {'execute.return_value': '''
+    class-map match-any interactive1-IDL120932391
+     match ip dscp cs2
+    class-map match-any interactive2-IDL120932391
+     match ip dscp af21  af22  af23
+    class-map match-any interactive3-IDL120932391
+     match ip dscp cs3  af31  af32  af33
+    class-map match-any customer-control-IDL120932391
+     match ip dscp cs6  cs7
+    class-map match-any interactive21-IDL120932391
+     match ip dscp cs2  af21  af22  af23
+    class-map match-any besteffort-IDL120932391
+     match ip dscp cs1
+    class-map match-any realtime-IDL120932391
+     match ip dscp cs4  af41  af42  af43  cs5  ef
+    class-map match-any realtime2-IDL120932391
+     match ip dscp cs5  ef
+    class-map match-any realtime1-IDL120932391
+     match ip dscp cs4  af41  af42  af43
+    class-map match-any network-control-IDL120932391
+     match access-group name NETWORK-CONTROL-IDL120932391
+    !
+    olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+     class network-control-IDL120932391
+      bandwidth percent 1
+      random-detect dscp-based
+      set cos 5
+     class realtime-IDL120932391
+      priority percent 30
+      set cos 5
+     class interactive3-IDL120932391
+      bandwidth percent 5
+      random-detect dscp-based
+      random-detect dscp 24 24 40 10
+      random-detect dscp 26 24 40 10
+      random-detect dscp 28 24 40 10
+      random-detect dscp 30 24 40 10
+      set cos 5
+     class interactive21-IDL120932391
+      bandwidth percent 5
+      random-detect dscp-based
+      random-detect dscp 16 24 40 10
+      random-detect dscp 18 24 40 10
+      random-detect dscp 20 24 40 10
+      random-detect dscp 22 24 40 10
+      set cos 5
+     class besteffort-IDL120932391
+      bandwidth percent 1
+      random-detect dscp-based
+      set cos 5
+     class class-default
+      bandwidth percent 58
+      random-detect dscp-based
+      random-detect dscp 0 24 40 10
+      random-detect dscp 10 24 40 10
+      random-detect dscp 12 24 40 10
+      random-detect dscp 14 24 40 10
+      random-detect dscp 48 24 40 10
+      random-detect dscp 56 24 40 10
+      set cos 5
+      fair-queue
+    policy-map GWS-WAN-OUT-ETH-IDL120932391
+     class class-default
+      shape average 99872000
+       service-policy GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+    policy-map CLNE-MGMNT-OUT
+     class class-default
+      shape average 128000
+    policy-map GWS-LAN-OUT-IDL120932391
+     class customer-control-IDL120932391
+      set cos 6
+     class realtime-IDL120932391
+      set cos 5
+     class interactive3-IDL120932391
+      set cos 3
+     class interactive21-IDL120932391
+      set cos 2
+     class besteffort-IDL120932391
+      set cos 0
+     class class-default
+      set cos 1
+
+    '''}
+
     def test_show_policy_map_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -3948,6 +3936,18 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output14)
+
+    def test_show_policy_map_golden15(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output15)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output15)
 
 if __name__ == '__main__':
     unittest.main()

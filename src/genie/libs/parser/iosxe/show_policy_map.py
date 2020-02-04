@@ -1815,7 +1815,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 if police_line == 1:
                     police_dict['service_policy'] = m.groupdict()['service_policy']
-                else :
+                else:
                     class_map_dict['service_policy'] = m.groupdict()['service_policy']
                 continue
 
