@@ -3135,17 +3135,17 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output20)
 
-    # def test_show_policy_map_interface_full9(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output24)
-    #     obj = ShowPolicyMapInterface(device=self.device)
-    #     parsed_output = obj.parse()
-    #     import pprint
-    #     pprint.pprint(parsed_output)
-    #     import pdb
-    #     pdb.set_trace()
-    #
-    #     self.assertEqual(parsed_output, self.golden_parsed_output24)
+    def test_show_policy_map_interface_full9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output24)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output24)
 
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
