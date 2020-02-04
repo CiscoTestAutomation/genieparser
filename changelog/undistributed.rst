@@ -124,3 +124,7 @@
         * Added new unittest
 
     
+* IOSXR:
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest

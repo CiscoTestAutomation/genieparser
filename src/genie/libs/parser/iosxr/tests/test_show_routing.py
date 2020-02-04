@@ -1169,6 +1169,69 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    golden_output_10 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:GENIE-TEST#show route vrf qattwd ipv4 0.0.0.0/0                     
+                                                                                                
+        Routing entry for 0.0.0.0/0                                                             
+        Known via "bgp 65001", distance 200, metric 10, candidate default path                
+        Tag 10584, type internal                                                              
+        Installed Nov 20 07:00:25.367 for 7w5d                                                 
+        Routing Descriptor Blocks                                                             
+            172.23.6.96, from 172.23.15.196                                                     
+            Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000   
+            Route metric is 10                                                                
+        No advertising protos.
+    '''
+    }
+
+    golden_parsed_output_10 = {
+        'vrf': {
+            'qattwd': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '0.0.0.0/0': {
+                                'active': True,
+                                'distance': 200,
+                                'installed': {
+                                    'date': 'Nov 20 07:00:25.367',
+                                    'for': '7w5d'
+                                },
+                                'ip': '0.0.0.0',
+                                'known_via': 'bgp 65001',
+                                'mask': '0',
+                                'metric': 10,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'from': '172.23.15.196',
+                                            'index': 1,
+                                            'metric': 10,
+                                            'next_hop': '172.23.6.96'
+                                        }
+                                    },
+                                    'outgoing_interface': {
+                                        'default': {
+                                            'method': 'unicast',
+                                            'outgoing_interface': 'default',
+                                            'table': 'default',
+                                            'table_id': '0xe0000000'
+                                        }
+                                    }
+                                },
+                                'route': '0.0.0.0/0',
+                                'tag': '10584',
+                                'type': 'internal'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+            
+
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv4(device=self.device)
@@ -1244,6 +1307,13 @@ class TestShowRouteIpv4(unittest.TestCase):
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_9)
+
+    def test_show_route_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0/0', vrf='qattwd')
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 # ============================================
 # unit test for 'show route ipv6'

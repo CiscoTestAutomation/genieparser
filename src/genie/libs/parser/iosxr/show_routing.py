@@ -30,6 +30,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                 Optional('known_via'): str,
                                 Optional('distance'): int,
                                 Optional('type'): str,
+                                Optional('tag'): str,
                                 Optional('installed'): {
                                     'date': str,
                                     'for': str,
@@ -46,6 +47,9 @@ class ShowRouteIpv4Schema(MetaParser):
                                             'outgoing_interface': str,
                                             Optional('updated'): str,
                                             Optional('metric'): int,
+                                            Optional('table'): str,
+                                            Optional('method'): str,
+                                            Optional('table_id'): str,
                                         }
                                     },
                                     Optional('next_hop_list'): {
@@ -179,9 +183,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-        p4 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*(?P<code2>\S+))? +'
-                r'(?P<network>\S+) +)?(is +directly +connected, +'
-                r'(?P<date>[\w:]+))?,? *(?P<interface>[\w\/\.\-]+)?$$')
+        p4 = re.compile(r'^((?P<code1>[\w]) +(?P<code2>\S+)? +(?P<network>\S+)'
+                        r' +)?(is +directly +connected, +(?P<date>[\w:]+))?,?'
+                        r' *(?P<interface>[\w\/\.\-]+)?$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -211,14 +215,24 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         p10 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
-        p11 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
-                        r'+via +(?P<interface>\S+)$')
+        # 172.23.6.96, from 172.23.15.196
+        p11 = re.compile(r'^(?P<nexthop>\S+), +from +(?P<from>\S+)(, '
+                         r'+via +(?P<interface>\S+))?$')
         
         # R2_xrv#show route ipv4
         # Routing Descriptor Blocks
         # No advertising protos.
         p12 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
                 r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
+        
+        # Tag 10584, type internal
+        p13 = re.compile(r'^Tag +(?P<tag>\d+)\, +type +(?P<type>\w+)$')
+
+        # Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+        p14 = re.compile(r'^Nexthop +in +[V|v]rf\: +\"(?P<interface>\w+)\"\, '
+                         r'+[T|t]able\: +\"(?P<table>\w+)\"\, +IPv4 '
+                         r'+(?P<method>\w+)\, +[T|t]able +[I|i]d\: '
+                         r'+(?P<table_id>\S+)$')
 
         # initial variables
         ret_dict = {}
@@ -234,7 +248,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # Routing Descriptor Blocks
             # No advertising protos.
             m = p12.match(line)
-
             if m or not line:
                 continue
 
@@ -354,6 +367,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         code2 = group.get('code2', None)
                         if code2:
                             code1 = '{} {}'.format(code1, code2)
+
                         route_dict.update({'source_protocol': source_protocol})
                         route_dict.update({'source_protocol_codes': code1})
                     
@@ -487,6 +501,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 continue
 
             # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
+            # 172.23.6.96, from 172.23.15.196
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -499,10 +514,45 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     setdefault('next_hop_list', {}). \
                     setdefault(index, {})
                 outgoing_interface_dict.update({'index': index})
-                outgoing_interface_dict.update({'outgoing_interface': interface})
+                if interface:
+                    outgoing_interface_dict.update({'outgoing_interface': interface})
                 outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
+
+            # Tag 10584, type internal
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+
+                route_dict.update({'tag': group['tag']})
+                route_dict.update({'type': group['type']})
+
+                continue
+
+            # Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                
+                interface = group['interface']
+                table = group['table']
+                method = group['method'].lower()
+                table_id = group['table_id']
+
+                if interface:
+                    nexthop_intf_dict = route_dict.setdefault('next_hop', {}). \
+                        setdefault('outgoing_interface', {}). \
+                        setdefault(interface, {})
+                    nexthop_intf_dict.update({'outgoing_interface': interface})
+                
+                nexthop_intf_dict.update({'table': table})
+                nexthop_intf_dict.update({'method': method})
+                nexthop_intf_dict.update({'table_id': table_id})
+                # nexthop_intf_dict.udpate({'outgoing_interface': interface})
+
+                continue
+
         
         return ret_dict
 
