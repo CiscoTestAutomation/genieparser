@@ -21,7 +21,8 @@ from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary,\
                                            ShowBgpAll,\
                                            ShowBgpAllDetail, \
                                            ShowBgpSummary, \
-                                           ShowIpBgp
+                                           ShowIpBgp, \
+                                           ShowIpBgpRegexp
 
 # iosxe tests/test_show_bgp
 from genie.libs.parser.iosxe.tests.test_show_bgp import \
@@ -38,7 +39,8 @@ from genie.libs.parser.iosxe.tests.test_show_bgp import \
                                 TestShowIpBgpAllDampeningParameters as TestShowIpBgpAllDampeningParameters_iosxe,\
                                 TestShowBgpAll as TestShowBgpAll_iosxe, \
                                 TestShowBgpSummary as TestShowBgpSummary_iosxe, \
-                                TestShowIpBgp as test_show_bgp_iosxe
+                                TestShowIpBgp as test_show_bgp_iosxe, \
+                                TestShowIpBgpRegexp as TestShowIpBgpRegexp_iosxe
 
 # ===================================
 # Unit test for 'show bgp all detail'
@@ -438,5 +440,19 @@ class TestShowBgpSummary(TestShowBgpSummary_iosxe):
         parsed_output = obj.parse(address_family='vpnv4 unicast', vrf='L3VPN-0051')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+
+class TestShowIpBgpRegexp(TestShowIpBgpRegexp_iosxe):
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpRegexp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(regexp='^$')
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgpRegexp(device=self.device)
+        parsed_output = obj.parse(regexp='^$')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 if __name__ == '__main__':
     unittest.main()

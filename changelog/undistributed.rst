@@ -15,6 +15,10 @@
         * show processes memory | include {include}
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
+    * Added ShowIpBgpRegexp for:
+        * show ip bgp regexp ^$ 
+    * Added ShowBootvar for:
+        * 'show bootvar'
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -45,7 +49,6 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
-
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -60,6 +63,19 @@
         * show redundancy
         * show inventory
         * show module
+    * Added ShowIpBgpRegexp:
+        * show ip bgp regexp ^$ 
+    * Moved ShowBootvar to iosxe folder
+
+* SROS
+    * Added ShowSystemNtpAll for:
+        * show system ntp all
+
+*SROS
+    * Added ShowRouterIsisAdjacency for:
+        * show router isis adjacency
+    * Added ShowRouterIsisAdjacencyDetail for:
+        * show router isis adjacency detail
 
 --------------------------------------------------------------------------------
                                 Fix
