@@ -14,5 +14,5 @@
 * IOSXR
     * Updated ShowVersion for:
         * Updated RegEx for software version to support Cisco 8000 series
-        * Added default value to schema for device_family as this is not part of Cisco 8000 output
+        * Changed schema device_family to optional as this is not part of Cisco 8000 output
         
