@@ -45,7 +45,7 @@ class Ps(PsSchema):
 
     def cli(self, output=None, grep=None):
         if output is None:
-            command = f"{self.cli_command} | grep {grep}" if grep else self.cli_command
+            command = "{} | grep {}".format(self.cli_command, grep) if grep else self.cli_command
             out = self.device.execute(command)
         else:
             out = output
