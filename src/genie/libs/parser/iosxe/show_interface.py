@@ -11,6 +11,7 @@
     * show interfaces <interface>
     * show ipv6 interface
     * show interfaces accounting
+    * show interfaces status
 """
 
 import os
@@ -3201,7 +3202,6 @@ class ShowInterfacesStatusSchema(MetaParser):
                 'type': str,
             }
         }
-
     }
 
 
