@@ -3781,6 +3781,27 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_output15 = {'execute.return_value': '''
+    class-map match-any interactive1-IDL120932391
+     match ip dscp cs2
+    class-map match-any interactive2-IDL120932391
+     match ip dscp af21  af22  af23
+    class-map match-any interactive3-IDL120932391
+     match ip dscp cs3  af31  af32  af33
+    class-map match-any customer-control-IDL120932391
+     match ip dscp cs6  cs7
+    class-map match-any interactive21-IDL120932391
+     match ip dscp cs2  af21  af22  af23
+    class-map match-any besteffort-IDL120932391
+     match ip dscp cs1
+    class-map match-any realtime-IDL120932391
+     match ip dscp cs4  af41  af42  af43  cs5  ef
+    class-map match-any realtime2-IDL120932391
+     match ip dscp cs5  ef
+    class-map match-any realtime1-IDL120932391
+     match ip dscp cs4  af41  af42  af43
+    class-map match-any network-control-IDL120932391
+     match access-group name NETWORK-CONTROL-IDL120932391
+    !
     olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
      class network-control-IDL120932391
       bandwidth percent 1
