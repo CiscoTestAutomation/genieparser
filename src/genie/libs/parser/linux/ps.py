@@ -21,7 +21,7 @@ class PsSchema(MetaParser):
     ''' Schema for "ps -ef" '''
 
     schema = {
-        'ps': {
+        'process': {
             Any(): {
                 'uid': str,
                 'pid': str,
@@ -41,18 +41,17 @@ class PsSchema(MetaParser):
 class Ps(PsSchema):
  
     ''' Parser for "ps -ef"'''
- 
     cli_command = 'ps -ef'
- 
-    def cli(self, output=None):
+
+    def cli(self, output=None, grep=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            command = f"{self.cli_command} | grep {grep}" if grep else self.cli_command
+            out = self.device.execute(command)
         else:
             out = output
  
         # Init vars
         parsed_dict = {}
-        count = 0
 
         # root      2322     1  0  2019 tty2     00:00:00 /sbin/mingetty /dev/tty2      
         # root      2326     1  0  2019 tty3     00:00:00 /sbin/mingetty /dev/tty3       
@@ -68,8 +67,9 @@ class Ps(PsSchema):
  
             m = p1.match(line)
             if m:
-                parsed_dict.setdefault('ps', {}).setdefault(str(count), m.groupdict())
-                count += 1
+                groups = m.groupdict()
+                pid = groups['pid']
+                parsed_dict.setdefault('process', {}).setdefault(pid, groups)
                 continue
  
         return parsed_dict

@@ -22,8 +22,8 @@ class test_ps(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'ps': {
-            '0': {
+        'process': {
+            '1': {
                 'uid': 'root',
                 'pid': '1',
                 'ppid': '0',
@@ -33,7 +33,7 @@ class test_ps(unittest.TestCase):
                 'time': '00:03:36',
                 'cmd': '/sbin/init'
             },
-            '1': {
+            '2': {
                 'uid': 'root',
                 'pid': '2',
                 'ppid': '0',
@@ -43,7 +43,7 @@ class test_ps(unittest.TestCase):
                 'time': '00:00:07',
                 'cmd': '[kthreadd]'
             },
-            '2': {
+            '1774': {
                 'uid': 'root',
                 'pid': '1774',
                 'ppid': '1730',
@@ -53,7 +53,7 @@ class test_ps(unittest.TestCase):
                 'time': '00:00:00',
                 'cmd': 'hald-addon-input: Listening on /dev/input/event2 /dev/input/event0'
             },
-            '3': {
+            '1781': {
                 'uid': '68',
                 'pid': '1781',
                 'ppid': '1730',
