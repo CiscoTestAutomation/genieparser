@@ -16,6 +16,7 @@
     * show interfaces accounting
     * show interfaces
     * show interfaces <interface>
+    * test
 """
 
 # python
