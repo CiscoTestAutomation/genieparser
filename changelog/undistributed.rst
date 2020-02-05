@@ -19,6 +19,8 @@
         * show ip bgp regexp ^$ 
     * Added ShowBootvar for:
         * 'show bootvar'
+    * Added ShowProcessesMemoryPlatformSorted for:
+        * 'show processes memory platform sorted'
 
 * IOSXR
     * Added ShowMplsInterfaces for:
