@@ -11,7 +11,7 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxe show_ssh1
-from genie.libs.parser.iosxr.show_ssh_history import ShowSshHistory
+from genie.libs.parser.iosxr.show_ssh import ShowSshHistory
 
 class test_show_ssh_history(unittest.TestCase):
 
