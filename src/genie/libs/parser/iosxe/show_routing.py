@@ -2094,7 +2094,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                         Any(): { # tag_midchain_dict
                                             'tag_midchain_info': str,
                                             'label': list,
-                                            'frr': { # frr_dict
+                                            Optional('frr'): { # frr_dict
                                                 'primary': { # frr_primary_dict
                                                     'info': str,
                                                     'primary': {
