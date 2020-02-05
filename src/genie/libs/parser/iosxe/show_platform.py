@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 
+    * 'show bootvar'
     * 'show version'
     * 'dir'
     * 'show redundancy'
@@ -30,6 +31,131 @@ except (ImportError, OSError):
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+
+class ShowBootvarSchema(MetaParser):
+    """Schema for show bootvar"""
+
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('config_file'): str,
+        Optional('bootldr'): str,
+        Optional('active'): {
+            'configuration_register': str,
+            Optional("next_reload_configuration_register"): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('standby'): {
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
+    }
+
+
+class ShowBootvar(ShowBootvarSchema):
+    """Parser for show boot"""
+
+    cli_command = 'show bootvar'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        boot_dict = {}
+        boot_variable = None
+
+        # BOOT variable = bootflash:/asr1000rpx.bin,12;
+        # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+
+        # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+        p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
+
+        # Configuration register is 0x2002
+        # Configuration register is 0x2 (will be 0x2102 at next reload)
+        p3 = re.compile(r'Configuration +register +is +(?P<var1>(\S+))'
+                        r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
+
+        # Standby Configuration register is 0x2002
+        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+
+        # CONFIG_FILE variable =
+        p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
+
+        # BOOTLDR variable =
+        p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
+
+        # BOOTLDR variable does not exist
+        # not parsing
+
+        # Standby not ready to show bootvar
+        # not parsing
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
+            m = p1.match(line)
+            if m:
+                boot = m.groupdict()['var']
+                if boot:
+                    boot_dict['next_reload_boot_variable'] = boot
+                    boot_dict.setdefault('active', {})['boot_variable'] = boot
+                continue
+
+            # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+            m = p2.match(line)
+            if m:
+                boot = m.groupdict()['var']
+                if boot:
+                    boot_dict.setdefault('standby', {})['boot_variable'] = boot
+                continue
+
+            # Configuration register is 0x2002
+            m = p3.match(line)
+            if m:
+                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var1']
+                if m.groupdict()['var2']:
+                    boot_dict.setdefault('active', {})['next_reload_configuration_register'] = m.groupdict()['var2']
+                continue
+
+            # Standby Configuration register is 0x2002
+            m = p4.match(line)
+            if m:
+                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
+                continue
+
+            # CONFIG_FILE variable =
+            m = p5.match(line)
+            if m:
+                if m.groupdict()['var']:
+                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
+                continue
+
+            # BOOTLDR variable =
+            m = p6.match(line)
+            if m:
+                if m.groupdict()['var']:
+                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
+                continue
+        return boot_dict
+
+
+class ShowBoot(ShowBootvar):
+    """Parser for show boot"""
+
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+
+        # Execute command if output not provided
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
 
 
 class ShowVersionSchema(MetaParser):

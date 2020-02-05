@@ -60,10 +60,14 @@ class ShowRouteIpv4Schema(MetaParser):
                                     }
                                 }
                             }
-                        }
-                    }
-                }
-            }
+                        },
+                    },
+                },
+                Optional('last_resort'): {
+                    Optional('gateway'): str,
+                    Optional('to_network'): str,
+                },
+            },
         }
     }
 
@@ -550,6 +554,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         'per-user static route': ['U'],
         'access/subscriber': ['A'],
         'traffic engineering': ['t'],
+        'application route' : ['a'],
     }
 
 
@@ -596,8 +601,11 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
 
         # S    2001:1:1:1::1/128
-        p2 = re.compile(r'^(?P<code1>\w(\*)?) *(?P<code2>\w+)? +'
-                '(?P<network>[\w\:\/]+)$')
+        # L    2001:2:2:2::2/128 is directly connected,
+        # i L2 2001:0:10:204:0:33::/126
+        # i L1 2001:21:21:21::21/128
+        p2 = re.compile(r'^((?P<code1>[\w](\*)*) +(?P<code2>\S+)? '
+                        r'+(?P<network>\S+))?( +is +directly +connected\,)?$')
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
@@ -605,10 +613,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
                 'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
                 '( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
-
-        # L    2001:2:2:2::2/128 is directly connected,
-        p4 = re.compile(r'^((?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +'
-                '(?P<network>\S+) +)?is +directly +connected,$')
 
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
@@ -648,6 +652,13 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # R2_xrv#show route ipv6
         p13 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
                 r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
+        
+        # Gateway of last resort is fe80::10ff:fe04:209e to network ::
+        # Gateway of last resort is not set
+        # Gateway of last resort is 10.50.15.1 to network 0.0.0.0
+        p14 = re.compile(r'^Gateway +of +last +resort +is '
+                         r'+(?P<gateway>(not +set)|\S+)( +to +network '
+                         r'+(?P<to_network>\S+))?$')
 
         ret_dict = {}
         address_family = 'ipv6'
@@ -673,6 +684,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
             # S    2001:1:1:1::1/128
+            # L    2001:2:2:2::2/128 is directly connected,
+            # i L2 2001:0:10:204:0:33::/126
+            # i L1 2001:21:21:21::21/128
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -685,9 +699,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 code2 = group['code2']
                 if code2:
                     code1 = '{} {}'.format(code1, code2)
-                
-                network = group['network']
 
+                network = group['network']
                 route_dict = ret_dict.setdefault('vrf', {}). \
                     setdefault(vrf, {}). \
                     setdefault('address_family', {}). \
@@ -725,42 +738,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     next_hop_list_dict.update({'outgoing_interface': interface})
                 if updated:
                     next_hop_list_dict.update({'updated': updated})
-                continue
-            
-            # L    2001:2:2:2::2/128 is directly connected,
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                code1 = group.get('code1', None)
-                source_protocol = None
-                network = group.get('network', None)
-                updated = group.get('date', None)
-                interface = group.get('interface', None)
-
-                if network:
-                    route_dict = ret_dict.setdefault('vrf', {}). \
-                        setdefault(vrf, {}). \
-                        setdefault('address_family', {}). \
-                        setdefault(address_family, {}). \
-                        setdefault('routes', {}). \
-                        setdefault(network, {})
-
-                    route_dict.update({'route': network})
-                    route_dict.update({'active': True})
-                
-                if code1:
-                    source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
-                    for key,val in self.source_protocol_dict.items():
-                        if source_protocol_code in val:
-                            source_protocol = key
-                    
-                    code2 = group.get('code2', None)
-                    if code2:
-                        code1 = '{} {}'.format(code1, code2)
-                    if source_protocol:
-                        route_dict.update({'source_protocol': source_protocol})
-                    route_dict.update({'source_protocol_codes': code1})
-
                 continue
 
             # 01:52:24, Loopback0
@@ -911,5 +888,21 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
-        
+
+            # Gateway of last resort is fe80::10ff:fe04:209e to network ::
+            # Gateway of last resort is not set
+            # Gateway of last resort is 10.50.15.1 to network 0.0.0.0
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                gw_dict = ret_dict.setdefault('vrf', {}).\
+                        setdefault(vrf, {}).\
+                        setdefault('last_resort', {})
+                gw_dict.update({'gateway': group['gateway']})
+                
+                if group['to_network']:
+                    gw_dict.update({'to_network' : group['to_network']})
+                
+                continue
+
         return ret_dict

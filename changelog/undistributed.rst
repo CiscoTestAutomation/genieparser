@@ -57,7 +57,6 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
-
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -72,6 +71,19 @@
         * show redundancy
         * show inventory
         * show module
+    * Added ShowIpBgpRegexp:
+        * show ip bgp regexp ^$ 
+    * Moved ShowBootvar to iosxe folder
+
+* SROS
+    * Added ShowSystemNtpAll for:
+        * show system ntp all
+
+*SROS
+    * Added ShowRouterIsisAdjacency for:
+        * show router isis adjacency
+    * Added ShowRouterIsisAdjacencyDetail for:
+        * show router isis adjacency detail
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -112,6 +124,8 @@
 	    * Updated for the case of empty ttl_groups
 		* Updated for udp ACL with incremented counter
 		* Added support for access-lists with object-group references
+    * Updated ShowInventory
+        * Updated for various outputs
 
 * IOSXE
     * Updating symbolic link to platform specific unittests
@@ -120,6 +134,8 @@
     * Updating symbolic link to platform specific unittests
 
 * IOSXR
+    * Updated and removed regex to accommodate outputs
+    * Added new unittest 
     * Updated and added regex to accommodate more outputs
     * Added new output to unittest
 
@@ -127,4 +143,10 @@
     * Updated regex to accommodate more outputs
     * Added extra key to schema
     * Added new unittest
+
+* NXOS
+    * Updated ShowNveVniIngressReplication
+        * Added regex 
+        * Added new unittest
+
     
