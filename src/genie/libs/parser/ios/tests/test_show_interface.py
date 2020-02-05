@@ -31,7 +31,7 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesStats,\
                                         ShowInterfacesDescription, \
-                                        ShowInterfaceStatus
+                                        ShowInterfacesStatus
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
@@ -1070,6 +1070,7 @@ class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
 
+
 class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
     """unit test for show interfaces description """
     
@@ -1092,6 +1093,23 @@ class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
         obj = ShowInterfacesDescription(device=self.device)
         parsed_output = obj.parse(interface='Gi0/0')
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+
+class TestShowInterfacesStatus(TestShowInterfacesStatus_iosxe):
+    """unit test for show interfaces status """
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfacesStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output1)
 
 
 if __name__ == '__main__':
