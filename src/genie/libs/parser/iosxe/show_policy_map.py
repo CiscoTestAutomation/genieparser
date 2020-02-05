@@ -1550,13 +1550,14 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Policy Map policy_4-6-3~6
         # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
         # policy-map CLNE-MGMNT-OUT
-        p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S]+))$')
+        # Policy-map egress policy
+        p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S ]+))$')
         
         # Class class-default
         # Class class c1
         # Class class_4-6-3
         # class realtime-IDL120932391
-        p2 = re.compile(r'^(Class) +(?P<class_map>([\S\s]+))$')
+        p2 = re.compile(r'^(Class|class) +(?P<class_map>([\S\s]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
