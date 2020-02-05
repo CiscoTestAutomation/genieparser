@@ -1556,8 +1556,10 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Class class-default
         # Class class c1
         # Class class_4-6-3
+        p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
+
         # class realtime-IDL120932391
-        p2 = re.compile(r'^(Class|class) +(?P<class_map>([\S\s]+))$')
+        p2_same = re.compile(r'^class +(?P<class_map>([\S\-]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
@@ -1701,7 +1703,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # Class class-default
             # Class class c1
             # class network-control-IDL120932391
-            m = p2.match(line)
+            m = p2.match(line) or p2_same.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
                 class_map_dict = policy_map_dict.setdefault('class', {}).setdefault(class_map, {})
