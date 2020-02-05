@@ -44,7 +44,7 @@ class ShowVersionSchema(MetaParser):
               'software_version': str,
               'uptime': str,
               Optional('image'): str,
-              'device_family': Default(str,""),
+              Optional('device_family'): str,
               Optional('processor'): str,
               Optional('processor_memory_bytes'): str,
               Optional('chassis_detail'): str,
