@@ -1616,7 +1616,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # Bandwidth 70 (%)
         # bandwidth 80 (%)
-        p7 = re.compile(r'^[bB]andwidth +(?P<bandwidth>(\d+)) \(%\)$')
+        # bandwidth percent 5
+        p7 = re.compile(r'^[bB]andwidth(:? percent)? +(?P<bandwidth>(\d+))(?: \(%\))?$')
 
         # Weighted Fair Queueing
         p8 = re.compile(r'^Weighted +Fair +Queueing$')
@@ -1658,7 +1659,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p11 = re.compile(r'^(Set|set) +(?P<set>([\w\s]+))$')
 
         # Shape average 30m
-        p12 = re.compile(r'^Shape +average +(?P<shape_average_min>(\d+))m$')
+        # shape average 99872000
+        p12 = re.compile(r'^(Shape|shape) +average +(?P<shape_average_min>(\d+))(:?m)?$')
 
         # bandwidth 100
         p13 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')

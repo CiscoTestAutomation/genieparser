@@ -1,5 +1,6 @@
 # Python
 import unittest
+import genie.gre
 from unittest.mock import Mock
 
 # ATS
@@ -3869,6 +3870,7 @@ class test_show_policy_map(unittest.TestCase):
         'CLNE-MGMNT-OUT': {
             'class': {
                 'class-default': {
+                    'shape_average_min': 128000,
                 },
             },
         },
@@ -3898,24 +3900,40 @@ class test_show_policy_map(unittest.TestCase):
             'class': {
                 'class-default': {
                     'service_policy': 'GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391',
+                    'shape_average_min': 99872000,
                 },
             },
         },
         'GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391': {
             'class': {
                 'besteffort-IDL120932391': {
+                    'random_detect': {
+                        'bandwidth_percent': 1
+                    },
                     'set': 'cos 5',
                 },
                 'class-default': {
+                    'random_detect': {
+                        'bandwidth_percent': 58
+                    },
                     'set': 'cos 5',
                 },
                 'interactive21-IDL120932391': {
+                    'random_detect': {
+                        'bandwidth_percent': 5
+                    },
                     'set': 'cos 5',
                 },
                 'interactive3-IDL120932391': {
+                    'random_detect': {
+                        'bandwidth_percent': 5
+                    },
                     'set': 'cos 5',
                 },
                 'network-control-IDL120932391': {
+                    'random_detect': {
+                        'bandwidth_percent': 1
+                    },
                     'set': 'cos 5',
                 },
                 'realtime-IDL120932391': {
@@ -4035,7 +4053,13 @@ class test_show_policy_map(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output15)
         obj = ShowPolicyMap(device=self.device)
+        # parsed_output = obj.parse()
+        import re;
+        re.reset();
         parsed_output = obj.parse()
+        print(re.colour_output());
+        re.reset()
+
         # import pprint
         # pprint.pprint(parsed_output)
         # import pdb
