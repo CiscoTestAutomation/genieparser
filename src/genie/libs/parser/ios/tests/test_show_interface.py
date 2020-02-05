@@ -30,14 +30,17 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesSwitchport, \
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesStats,\
-                                        ShowInterfacesDescription
+                                        ShowInterfacesDescription, \
+                                        ShowInterfaceStatus
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
                 TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
                 TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
                 TestShowInterfacesStats as TestShowInterfacesStats_iosxe,\
-                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe
+                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe, \
+                TestShowInterfacesStatus as TestShowInterfacesStatuss_iosxe
+
 
 class TestShowInterfaceParsergen(unittest.TestCase):
 

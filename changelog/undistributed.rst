@@ -19,6 +19,8 @@
         * show ip bgp regexp ^$ 
     * Added ShowBootvar for:
         * 'show bootvar'
+    * Added ShowInterfaceStatus for:
+        * show interface status
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -66,6 +68,8 @@
     * Added ShowIpBgpRegexp:
         * show ip bgp regexp ^$ 
     * Moved ShowBootvar to iosxe folder
+    * Added ShowInterfaceStatus for:
+        * show interface status
 
 * SROS
     * Added ShowSystemNtpAll for:

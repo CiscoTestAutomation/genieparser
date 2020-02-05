@@ -1059,6 +1059,7 @@ class ShowIpInterfaceBriefSchema(MetaParser):
                 },
             }
 
+
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     """Parser for:
      show ip interface brief
@@ -1139,6 +1140,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         yang_output = self.yang()
         merged_output = merge_dict(yang_output,cli_output)
         return merged_output
+
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     """Parser for:
@@ -1297,6 +1299,7 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
 
         return interface_dict
 
+
 class ShowInterfacesSwitchportSchema(MetaParser):
     """Schema for show interfaces switchport"""
     schema = {
@@ -1342,6 +1345,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     Optional('appliance_trust'): str,
                 },
             }
+
 
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     """parser for show interfaces switchport"""
@@ -1787,6 +1791,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('multicast_groups'): list,
                 },
             }
+
 
 class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface
@@ -2363,7 +2368,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         return interface_dict
 
 
-
 class ShowIpv6InterfaceSchema(MetaParser):
     """Schema for show ipv6 interface"""
     schema = {
@@ -2416,6 +2420,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                     Optional('joined_group_addresses'): list,
                 },
             }
+
 
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
@@ -2825,6 +2830,7 @@ class ShowInterfacesTrunkSchema(MetaParser):
         }
     }
 
+
 class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
     """parser for show interfaces trunk"""
     cli_command = 'show interfaces trunk'
@@ -2904,6 +2910,7 @@ class ShowInterfacesCountersSchema(MetaParser):
             },
         }
     }
+
 
 class ShowInterfacesCounters(ShowInterfacesCountersSchema):
     """parser for show interfaces <WORD> counters"""
@@ -3110,11 +3117,11 @@ class ShowInterfacesStats(ShowInterfacesStatsSchema):
                 continue
 
         return result_dict
-        
+
+
 # ====================================================
 #  parser for show interfaces description
 # ====================================================
-
 class ShowInterfacesDescriptionSchema(MetaParser):
     """schema for show interfaces description
     """
@@ -3128,6 +3135,7 @@ class ShowInterfacesDescriptionSchema(MetaParser):
             }
         }
     }
+
 
 class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
     """parser for show interfaces description
@@ -3173,3 +3181,21 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                 continue
 
         return result_dict
+
+
+# ====================================================
+#  schema for show interfaces status
+# ====================================================
+class ShowInterfacesStatusSchema(MetaParser):
+    """Schema for:
+        show interfaces status"""
+
+    schema = {
+
+    }
+
+
+# ====================================================
+#  parser for show interfaces status
+# ====================================================
+class ShowInterfaceStatus(ShowInterfacesStatusSchema):

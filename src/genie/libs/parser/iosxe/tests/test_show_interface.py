@@ -30,7 +30,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBriefPipeIp,\
                                         ShowInterfacesStats,\
-                                        ShowInterfacesDescription
+                                        ShowInterfacesDescription,\
+                                        ShowInterfaceStatus
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -18912,6 +18913,188 @@ class TestShowInterfacesDescription(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
+
+###################################################
+# unit test for show interfaces status
+####################################################
+class TestShowInterfaceStatus(unittest.TestCase):
+    """unit test for show interface status """
+
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_interface_output1 = {'execute.return_value': ''' 
+
+    [2019-11-29 13:25:12,766] +++ jkgipswi001: executing command 'show interfaces status' +++
+    show interfaces status
+    
+    Port      Name               Status       Vlan       Duplex  Speed Type
+    Gi1/1     To Minet           notconnect   1            auto   auto 10/100/1000-TX
+    Gi1/2     TelenorVOIP        notconnect   125          full    100 10/100/1000-TX
+    Gi1/3     DP                 connected    132        a-full a-1000 10/100/1000-TX
+    Gi1/4     DP                 notconnect   132          auto   auto 10/100/1000-TX
+    Gi1/5     DP                 connected    132        a-full a-1000 10/100/1000-TX
+    Gi1/6                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/8                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/9                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/10    To swi002     connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/11                       connected    136        a-full a-1000 10/100/1000-TX
+    Gi1/12                       connected    99         a-full  a-100 10/100/1000-TX
+    Gi1/13                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/14                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi1/15                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/16                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/17                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/18                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/19                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/20                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/21                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/22                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/23                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/24                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/25                       connected    250        a-full a-1000 10/100/1000-TX
+    Gi1/26                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/27                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi1/28                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/29                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/30                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi1/31                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi1/32                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/33                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/34                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/35                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi1/36                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/37    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/38                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/39                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/40                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/41                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi1/42                       connected    99         a-full  a-100 10/100/1000-TX
+    Gi1/43    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
+    Gi1/45    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/47                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi1/48                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/1                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/2                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/3                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/4                        connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/5                        connected    99         a-full a-1000 10/100/1000-TX
+    Gi2/6                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/7                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/8                        connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/9                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/10                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/11    DEPLOY             connected    136        a-full a-1000 10/100/1000-TX
+    Gi2/12                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/13                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/14                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/15                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/16                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/17                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/18                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/19                       connected    140        a-full a-1000 10/100/1000-TX
+    Gi2/20                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/21                       connected    550        a-full a-1000 10/100/1000-TX
+    Gi2/22    DEPLOY             notconnect   136          auto   auto 10/100/1000-TX
+    Gi2/23                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi2/24    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi2/25    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi2/26    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi2/27                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/28                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/29                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/30                       connected    250        a-full a-1000 10/100/1000-TX
+    Gi2/31                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/32                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/33                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/34                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi2/35                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/36                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/37                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/38                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/39                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/40                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/41                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/42                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/43                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/44                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/45                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/46                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi2/47                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/48                       connected    100        a-full a-1000 10/100/1000-TX
+    Te3/1                        inactive     1            full   auto No XCVR
+    Te3/2                        inactive     1            full   auto No XCVR
+    Gi3/3                        notconnect   99           full   1000 No Gbic
+    Gi3/4                        notconnect   99           full   1000 No Gbic
+    Gi3/5     To jkgipswi004     connected    trunk        full   1000 1000BaseSX
+    Gi3/6     To jkgipswi003     connected    trunk        full   1000 1000BaseSX
+    Gi5/1                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/2                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/3                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/4                        connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/5                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/6                        connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/7                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/8                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/9                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/10                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/11                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/12                       connected    99         a-full a-1000 10/100/1000-TX
+    Gi5/13                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/14    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi5/15    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi5/16                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/17                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/18                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/19                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/20                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/21                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/22                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/23                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/24                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/25                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/26                       connected    136        a-full a-1000 10/100/1000-TX
+    Gi5/27                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/28                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/29                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/30                       connected    100        a-full a-1000 10/100/1000-TX
+    Gi5/31                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/32                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/33                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/34                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/35                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/36                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/37                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/38                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/39                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/40                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi5/41                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/42                       connected    99         a-full   a-10 10/100/1000-TX
+    Gi5/43                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/44                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/45                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/46                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/47                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi5/48                       notconnect   99           auto   auto 10/100/1000-TX
+    switch1#
+    '''}
+
+    # golden_parsed_interface_output1 =
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
 if __name__ == '__main__':
     unittest.main()
