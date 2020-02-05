@@ -39,7 +39,7 @@ from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
                 TestShowInterfacesStats as TestShowInterfacesStats_iosxe,\
                 TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe, \
-                TestShowInterfacesStatus as TestShowInterfacesStatuss_iosxe
+                TestShowInterfacesStatus as TestShowInterfacesStatus_iosxe
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
