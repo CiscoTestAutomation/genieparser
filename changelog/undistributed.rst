@@ -21,12 +21,6 @@
         * 'show bootvar'
     * Added ShowProcessesMemoryPlatformSorted for:
         * 'show processes memory platform sorted'
-    * Added ShowPlatformSoftwareMemoryCallsite for:
-        * 'show platform software memory <process> switch active <plane> alloc callsite brief'
-    * Added ShowPlatformSoftwareMemroyBacktrace for:
-        * 'show platform software memory <process> switch active <plane> alloc backtrace'
-    * Updated ShowProcessesMemory for:
-        * 'show processes memory sorted'
 
 * IOSXR
     * Added ShowMplsInterfaces for:
