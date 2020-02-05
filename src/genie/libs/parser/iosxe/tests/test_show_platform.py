@@ -2,12 +2,13 @@
 import unittest
 
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
+                                                  ShowBootvar,\
                                                   ShowRedundancy,\
                                                   ShowRedundancyStates,\
                                                   ShowInventory,\
@@ -34,6 +35,92 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
                                                   ShowProcessesMemory
+
+
+# ============================
+# Unit test for 'show bootvar'
+# ============================
+class test_show_bootvar(unittest.TestCase):
+    '''Unit test for "show bootvar" '''
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output1 = {
+        'active': 
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2'},
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
+
+    golden_output2 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable =
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2 (will be 0x2102 at next reload)
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output2 = {
+        'active': 
+            {'configuration_register': '0x2',
+            'next_reload_configuration_register': '0x2102'}}
+
+    golden_output3 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2102
+
+        Standby not ready to show bootvar
+        '''}
+
+    golden_parsed_output3 = {
+        'active': 
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2102'},
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
+
+    def test_show_bootvar_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBootvar(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_bootvar_full1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_bootvar_full2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_bootvar_full3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 class TestShowVersion(unittest.TestCase):
@@ -18931,7 +19018,7 @@ class TestShowProcessMemory(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
-        Time source is NTP, 21:28:35.662 JST Mon May 11 2020
+        Time source is NTP, 21:28:35.662 EST Mon May 11 2020
 
         Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
         reserve P Pool Total:     102404 Used:         88 Free:     102316

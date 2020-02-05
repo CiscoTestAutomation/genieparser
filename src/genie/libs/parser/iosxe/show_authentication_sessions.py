@@ -300,6 +300,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         ret_dict = {}
         hold_dict = {}
         mac_dict = {}
+        policies_dict = {}
         policies_flag = False
         index = 1
 
@@ -316,6 +317,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()            
                 if policies_flag:
+                    if index != 1:
+                        index += 1
                     if not policies_dict:
                         policies_dict = mac_dict.setdefault('server_policies', {})
                         index_dict = policies_dict.setdefault(index, {})
@@ -323,7 +326,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                         index_dict.update({'security_policy': group['policy_status']})
                     elif group['security_name'] == 'Status':
                         index_dict.update({'security_status': group['policy_status']})
-                    index += 1
                 else:
                     security_dict = mac_dict.setdefault('local_policies', {})
                     if group['security_name'] == 'Policy':

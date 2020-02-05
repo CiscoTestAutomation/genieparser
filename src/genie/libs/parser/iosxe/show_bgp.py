@@ -32,6 +32,7 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp {address_family} rd {rd} summary'
     * 'show ip bgp all summary'
     * 'show ip bgp {address_family} all summary'
+    * 'show ip bgp regexp ^$'
     ----------------------------------------------------------------------------
     * 'show bgp all neighbors'
     * 'show bgp all neighbors {neighbor}'
@@ -236,7 +237,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>   [5][65535:1][0][24][10.1.1.0]/17
         # *>  100:2051:VEID-2:Blk-1/136
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          r'(?P<path_type>(i|e|c|l|a|r|I))?'
+                          r'(?P<path_type>(i|e|c|l|a|r|I))?\s*'
                           r'(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,\-]+)'
                           r'(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
 
@@ -681,6 +682,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 #   * 'show ip bgp {address_family}'
 #   * 'show ip bgp {address_family} rd {rd}'
 #   * 'show ip bgp {address_family} vrf {vrf}'
+#   * 'show ip bgp regexp ^$'
 # =============================================
 class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
 
@@ -689,15 +691,17 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         * 'show ip bgp {address_family}'
         * 'show ip bgp {address_family} rd {rd}'
         * 'show ip bgp {address_family} vrf {vrf}'
+        * 'show ip bgp regexp ^$'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf}',
                    'show ip bgp {address_family} rd {rd}',
                    'show ip bgp {address_family}',
                    'show ip bgp',
+                   'show ip bgp regexp {regexp}'
                    ]
 
-    def cli(self, address_family='', rd='', vrf='', output=None):
+    def cli(self, address_family='', rd='', vrf='', regexp='', output=None):
 
         if output is None:
             # Build command
@@ -709,6 +713,8 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
                                                  rd=rd)
             elif address_family:
                 cmd = self.cli_command[2].format(address_family=address_family)
+            elif regexp:
+                cmd = self.cli_command[4].format(regexp=regexp)
             else:
                 cmd = self.cli_command[3]
             # Execute command
@@ -720,6 +726,28 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
+# =============================================
+# Parser for:
+#   * 'show ip bgp regexp {regexp}'
+# =============================================
+class ShowIpBgpRegexp(ShowBgpSuperParser, ShowBgpSchema):
+
+    ''' Parser for:
+        * 'show ip bgp regexp {regexp}'
+    '''
+
+    cli_command = 'show ip bgp regexp {regexp}'
+
+    def cli(self, regexp, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(regexp=regexp)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output)
 
 #-------------------------------------------------------------------------------
 
@@ -1010,7 +1038,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # 62000, (Received from a RR-client)
         # 2, imported safety path from 50000:2:172.17.0.0/16
         # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
-        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+        # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
         # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
         p17=re.compile(r'^(?P<route_info>[a-zA-Z0-9\-\.\{\}\s\(\)\/\:\[\]]+)'
                        r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\w\s\.\:]'
@@ -1490,7 +1518,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 400 33299 51178 47751 {27016}, imported path from [400:1]2001:db8:a69:5a4::/64 (VRF2)
             # 62000, (Received from a RR-client)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
-            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+            # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
             m = p17.match(line)
             if m and refresh_epoch_flag:

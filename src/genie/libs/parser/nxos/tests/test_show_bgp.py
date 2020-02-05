@@ -5,8 +5,8 @@ from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -17498,7 +17498,6 @@ class test_show_running_config_bgp(unittest.TestCase):
             route-target import 100:1
             route-target export 100:1
         '''}
-
 
     def test_golden1(self):
         self.maxDiff = None

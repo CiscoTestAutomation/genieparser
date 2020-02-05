@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 

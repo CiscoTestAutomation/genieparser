@@ -50,7 +50,8 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowEnvironment as ShowEnvironment_iosxe, \
     ShowModule as ShowModule_iosxe, \
     ShowSwitch as ShowSwitch_iosxe, \
-    ShowSwitchDetail as ShowSwitchDetail_iosxe
+    ShowSwitchDetail as ShowSwitchDetail_iosxe, \
+    ShowBootvar as ShowBootvar_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -164,7 +165,12 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
         # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
         # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
-        r1_5 = re.compile(r'.*WS\-X.*')
+        # SM-ES2-16-P
+        r1_5 = re.compile(r'.*WS\-X.*|SM\-ES.*')
+
+        # NM-1T3/E3=
+        # CISCO3845-MB
+        r1_5_2 = re.compile(r'NM\-.*|CISCO.*\-MB')
 
         # NAME: "IOSv"
         r1_6 = re.compile(r'.*IOSv.*')
@@ -173,12 +179,11 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # PID: CLK-7600          ,                     VID:    , SN: FXS170802GL
         r2 = re.compile(r'PID:\s*(?P<pid>.+)\s*\,\s*VID:\s*(?P<vid>.*)\,\s*SN:\s*(?P<sn>.+)')
 
-        # Declaring slot_dict
-        slot_dict = {}
-
         for line in output.splitlines():
             line = line.strip()
 
+            # Obtain keys 'name' and 'description' from:
+            # NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -188,6 +193,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                 continue
 
+            # PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -196,8 +202,11 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 vid = group.get('vid', '')
                 sn = group['sn']
 
-                # CISCO3945-CHASSIS
-                # Cisco Systems Cisco 6500 4-slot Chassis
+                # ============================================
+                #               Build Slot
+                # ============================================
+                # DESCR: "CISCO3945-CHASSIS"
+                # DESCR: "Cisco Systems Cisco 6500 4-slot Chassis"
                 if r1_0.match(descr):
                     chassis_dict = parsed_output.setdefault('main', {})\
                         .setdefault('chassis', {})\
@@ -205,43 +214,62 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     chassis_dict['name'] = name
                     chassis_dict['descr'] = descr
-                    chassis_dict['pid'] = pid
+                    chassis_dict['pid'] = pid                    
                     chassis_dict['vid'] = vid
                     chassis_dict['sn'] = sn
 
                     continue
-                # 1
-                # 2
-                # 3
-                result = r1_1.match(name)
-                # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
-                result2 = r1_1_2.match(name)
 
-                if result or result2:
-                    flag_is_slot = True
-                    if result:
-                        group = result.groupdict()
-                    elif result2:
-                        group = result2.groupdict()
+                # ============================================
+                # NAME: "1"
+                # NAME: "2"
+                # NAME: "3"
+                # NAME: "Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0"
+                # ============================================
+                result = r1_1.match(name) or r1_1_2.match(name)
+                if result:
+
+                    group = result.groupdict()
                     slot = group['slot']
 
-                    # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
-                    # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
+                    # ============================================
+                    # DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5"
+                    # DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
                     # PID: WS-C3750X-48T-S   , VID: V02  , SN: FDO1511R12W
-                    # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
+                    # NAME: "Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0"
+                    # ============================================
                     if r1_4.match(descr) or r1_4_2.match(pid) or ('R' in name):
                         slot_code = 'rp'
 
-                    # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
-                    # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
-                    if r1_5.match(descr):
+                    # ============================================
+                    # DESCR: "WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0"
+                    # DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4"
+                    # DESCR: "SM-ES2-16-P"
+                    # PID: NM-1T3/E3=
+                    # PID: CISCO3845-MB
+                    # ============================================
+                    elif r1_5.match(descr) or r1_5_2.match(pid):
                         slot_code = 'lc'
 
-                    slot_dict = parsed_output\
-                        .setdefault('slot', {})\
-                        .setdefault(slot, {})\
-                        .setdefault(slot_code, {})\
+                    # ============================================
+                    # PID: AIM-VPN/SSL-2
+                    # ============================================
+                    else:
+                        slot_code = 'other'
+
+                    slot_dict = parsed_output \
+                        .setdefault('slot', {}) \
+                        .setdefault(slot, {}) \
+                        .setdefault(slot_code, {}) \
                         .setdefault(pid, {})
+
+                    if 'slot' in parsed_output:
+                        if slot in parsed_output['slot'].keys():
+                            if slot_code in parsed_output['slot'][slot].keys():
+                                if 'tbd' in parsed_output['slot'][slot][slot_code]:
+                                    subslot_dict = parsed_output['slot'][slot][slot_code]['tbd']
+                                    slot_dict['subslot'] = subslot_dict['subslot']
+                                    del parsed_output['slot'][slot][slot_code]['tbd']
 
                     slot_dict['name'] = name
                     slot_dict['descr'] = descr
@@ -251,10 +279,16 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+                # ============================================
+                #               Build Subslot
+                # ============================================
+
+                # ============================================
+                # Match 1:
                 # msfc sub-module of 1
                 # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
+                # ============================================
                 result = r1_2.match(name)
-
                 if result:
                     group = result.groupdict()
                     slot = group['slot']
@@ -274,17 +308,16 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+                # ============================================
+                # Match 2:
                 # Switch 1 - Power Supply 1
                 # TenGigabitEthernet2 / 1 / 1
                 # GigabitEthernet3/0/50
-                result = r1_2_2.match(name)
-                result_2 = r1_3_2.match(name)
+                # ============================================
+                result = r1_2_2.match(name) or r1_3_2.match(name)
+                if result:
+                    group = result.groupdict()
 
-                if result or result_2:
-                    if result:
-                        group = result.groupdict()
-                    elif result_2:
-                        group = result_2.groupdict()
                     subslot = group['subslot']
 
                     subslot_dict = slot_dict \
@@ -299,25 +332,29 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     subslot_dict['vid'] = vid
                     continue
 
+                # ============================================
+                # Match 3:
                 # Transceiver Te2/1
-                # Transceiver Te2/15
-                # Transceiver Te5/1
-                # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
+                # ============================================
                 result = r1_3.match(name)
-                result_3 = r1_3_3.match(name)
+                if result:
+                    group = result.groupdict()
 
-                if result or result_3:
-                    if result:
-                        group = result.groupdict()
-                    elif result_3:
-                        group = result_3.groupdict()
-
-                    slot = group['slot']
+                    slot_for_subslot = group['slot']
                     subslot = group['subslot']
 
-                    subslot_dict = slot_dict\
-                        .setdefault('subslot', {})\
-                        .setdefault(subslot, {})\
+                    slot_code = 'other'
+
+                    if 'slot' not in parsed_output:
+                        slot_dict = parsed_output \
+                            .setdefault('slot', {}) \
+                            .setdefault(slot_for_subslot, {}) \
+                            .setdefault(slot_code, {}) \
+                            .setdefault(pid, {})
+
+                    subslot_dict = slot_dict \
+                        .setdefault('subslot', {}) \
+                        .setdefault(subslot, {}) \
                         .setdefault(pid, {})
 
                     subslot_dict['descr'] = descr
@@ -328,7 +365,41 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
-                # Name could be:
+                # ============================================
+                # Match 4:
+                # Enhanced High Speed WAN Interface Card-1 Port Gigabit Ethernet SFP/Cu on Slot 0 SubSlot 2
+                # VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0
+                # ============================================
+                result = r1_3_3.match(name)
+                if result:
+                    group = result.groupdict()
+
+                    slot_for_subslot = group['slot']
+                    subslot = group['subslot']
+
+                    if 'slot' not in parsed_output:
+
+                        slot_dict = parsed_output \
+                            .setdefault('slot', {}) \
+                            .setdefault(slot_for_subslot, {}) \
+                            .setdefault('other', {}) \
+                            .setdefault('tbd', {})
+
+                    subslot_dict = slot_dict \
+                        .setdefault('subslot', {}) \
+                        .setdefault(subslot, {}) \
+                        .setdefault(pid, {})
+
+                    subslot_dict['descr'] = descr
+                    subslot_dict['name'] = name
+                    subslot_dict['pid'] = pid
+                    subslot_dict['sn'] = sn
+                    subslot_dict['vid'] = vid
+
+                    continue
+
+
+                # slot_code == 'other'
                 # 2700W AC power supply for CISCO7604 2
                 # High Speed Fan Module for CISCO7604 1
                 if any(key in descr.lower() for key in oc_key_values):
@@ -346,106 +417,57 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
                     continue
 
+        # case: golden_output_8
+        if 'slot' in parsed_output:
+            # k is slot number. e.g. "1" or "0"
+            for k in parsed_output['slot'].keys():
+                # s is slot_code. e.g., "rp", "lc" or "other"
+                for s in parsed_output['slot'][k].keys():
+                    if 'tbd' in parsed_output['slot'][k][s] and (k == '0'):
+                        chassis_pid = list(parsed_output['main']['chassis'].keys())[0]
+
+                        subslot_dict = parsed_output['slot'][k][s]['tbd']
+
+                        parsed_output.setdefault('slot', {}).\
+                                      setdefault(k, {}).\
+                                      setdefault('rp', {}).\
+                                      setdefault(chassis_pid, subslot_dict)
+                        del parsed_output['slot'][k][s]
+                        break
+
         return parsed_output
+
 
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
 
-    schema = {
-        Optional('current_boot_variable'): str,
-        Optional('next_reload_boot_variable'): str,
-        Optional('config_file'): str,
-        Optional('bootldr'): str,
-        Optional('active'): {
-            'configuration_register': str,
-            Optional('boot_variable'): str,
-        },
-        Optional('standby'): {
-            'configuration_register': str,
-            Optional('boot_variable'): str,
-        },
-    }
+
+class ShowBootvar(ShowBootvar_iosxe):
+    """Parser for show bootvar"""
+
+    cli_command = 'show bootvar'
+
+    def cli(self, output=None):
+
+        # Execute command if output not provided
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
 
 
-class ShowBootvar(ShowBootvarSchema):
+class ShowBoot(ShowBootvar_iosxe):
     """Parser for show boot"""
 
     cli_command = 'show boot'
 
     def cli(self, output=None):
+
+        # Execute command if output not provided
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
-        boot_dict = {}
-        boot_variable = None
-
-        # BOOT variable = bootflash:/asr1000rpx.bin,12;
-        # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
-
-        # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
-        p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
-
-        # Configuration register is 0x2002
-        p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
-
-        # Standby Configuration register is 0x2002
-        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
-
-        # CONFIG_FILE variable =
-        p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
-
-        # BOOTLDR variable =
-        p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
-            m = p1.match(line)
-            if m:
-                boot = m.groupdict()['var']
-                if boot:
-                    boot_dict['next_reload_boot_variable'] = boot
-                    boot_dict.setdefault('active', {})['boot_variable'] = boot
-                continue
-
-            # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
-            m = p2.match(line)
-            if m:
-                boot = m.groupdict()['var']
-                if boot:
-                    boot_dict.setdefault('standby', {})['boot_variable'] = boot
-                continue
-
-            # Configuration register is 0x2002
-            m = p3.match(line)
-            if m:
-                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var']
-                continue
-
-            # Standby Configuration register is 0x2002
-            m = p4.match(line)
-            if m:
-                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
-                continue
-
-            # CONFIG_FILE variable =
-            m = p5.match(line)
-            if m:
-                if m.groupdict()['var']:
-                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
-                continue
-
-            # BOOTLDR variable =
-            m = p6.match(line)
-            if m:
-                if m.groupdict()['var']:
-                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
-                continue
-        return boot_dict
+        return super().cli(output=output)
 
 
 class ShowProcessesCpuSorted(ShowProcessesCpuSorted_iosxe):

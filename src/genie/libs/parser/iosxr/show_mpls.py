@@ -1,8 +1,14 @@
 ''' show_mpls.py
 
 IOSXR parsers for the following show commands:
+    * 'show mpls label range'
+    * 'show mpls ldp neighbor'
+    * 'show mpls ldp neighbor {interface}'
+    * 'show mpls ldp neighbor detail'
+    * 'show mpls ldp neighbor {interface} detail'
     * 'show mpls ldp neighbor brief'
     * 'show mpls label table detail'
+    * 'show mpls label table private'
     * 'show mpls interfaces'
     * 'show mpls interfaces {interface}'
     * 'show mpls forwarding'
@@ -18,6 +24,592 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+# ======================================================
+# Parser for 'show mpls label range'
+# ======================================================
+class ShowMplsLabelRangeSchema(MetaParser):
+
+    """Schema for show mpls label range"""
+
+    schema =  {
+        'range_for_dynamic_labels':
+			{'min_range': int,
+			'max_range': int 	 
+			},	 
+	    }
+
+class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
+
+    '''Parser for show mpls label range'''
+
+    cli_command = ['show mpls label range']
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        # Init vars        
+        mpls_dict = {}
+        #Range for dynamic labels: Min/Max: 24000/1048575
+        
+        p1 = re.compile(r'Range +for +dynamic +labels: +Min/Max: +(?P<min_range>\d+)/(?P<max_range>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Range for dynamic labels: Min/Max: 24000/1048575
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                range_dict = mpls_dict.setdefault('range_for_dynamic_labels', {})
+                range_dict.update({'min_range': int(group['min_range'])})
+                range_dict.update({'max_range': int(group['max_range'])})
+                continue
+            
+        return mpls_dict
+
+# ======================================================
+# Parser for 'show mpls ldp neighbor'
+# ======================================================
+class ShowMplsLdpNeighborSchema(MetaParser):
+    
+    """Schema for 
+     show mpls ldp neighbor
+     show mpls ldp neighbor {interface}
+     show mpls ldp neighbor detail
+     show mpls ldp neighbor {interface} detail
+     """
+
+    schema = {
+        'vrf':{
+            Any():{ 
+                'peers':{
+    	        	Any():{
+                        'label_space_id':{
+                            Any():{
+                                'tcp_connection': str,
+    	        		        Optional('local_ldp_ident'): str,
+    	        		        Optional('graceful_restart'): str,
+    	        		        Optional('session_holdtime'): int,
+                                Optional('session_holdtime_ms'): int,
+                                Optional('password'): str,
+    	        		        'state': str,
+    	        		        'msg_sent': int,
+    	        		        'msg_rcvd': int,
+    	        		        'neighbor': str,
+                                Optional('last_tib_rev_sent'): int,
+                                'uptime': str,
+                                Optional('uid'): int,
+                                Optional('peer_id'): int,
+                                Optional('address_family'):{
+                                    Any():{
+    	        		                'ldp_discovery_sources': {
+    	        		                	Optional('interface'):{
+    	        		                		Any():{
+    	        		                			Optional('ip_address'):{
+                                                        Any():{
+                                                            Optional('holdtime_ms'): int,
+                                                            Optional('hello_interval_ms'): int,
+                                                            Optional('holdtime'): int,
+                                                            Optional('hello_interval'): int,
+                                                            Optional('holdtime_str'): str,
+                                                        },
+                                                    },
+    	        		                		},
+    	        		                	},
+    	        		                	Optional('targeted_hello'):{
+    	        		                		Any():{
+    	        		                			Any():{
+    	        		                				Optional('active'): bool,
+                                                        Optional('holdtime_ms'): int,
+                                                        Optional('hello_interval_ms'): int,
+                                                        Optional('holdtime'): int,
+                                                        Optional('hello_interval'): int,
+                                                        Optional('holdtime_str'): str,
+    	        		                			},
+    	        		                		},
+    	        		                	},
+    	        		                },
+                	        		    Optional('address_bound'): list,
+                                    }
+                                },
+    	        		        Optional('peer_holdtime'): int,
+    	        		        Optional('ka_interval'): int,
+    	        		        Optional('peer_holdtime_ms'): int,
+    	        		        Optional('ka_interval_ms'): int,
+    	        		        Optional('peer_state'): str,
+    	        		        Optional('clients'): str,
+    	        		        Optional('inbound_label_filtering'): str,
+    	        		        Optional('session_protection'):{
+    	        		        	'session_state': str,
+    	        		        	Optional('duration_int'): int,
+                                    Optional('duration_str'): str,
+    	        		        },
+    	        		        Optional('nsr'): str,
+    	        		        Optional('capabilities'): {
+    	        		        	Optional('sent'): {
+    	        		        		Any(): str,
+    	        		        	},
+    	        		        	Optional('received'): {
+    	        		        		Any(): str,
+    	        		        	},
+    	        		        },
+                            },
+                        },
+    	        	},
+    	        },
+            }
+        }
+    }
+
+class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
+
+    """Parser for
+     show mpls ldp neighbor
+     show mpls ldp neighbor {interface}
+      """
+
+    cli_command = ['show mpls ldp neighbor', 'show mpls ldp vrf {vrf} neighbor',
+     'show mpls ldp neighbor {interface}', 'show mpls ldp vrf {vrf} neighbor {interface}']
+
+    def cli(self, vrf="", interface=None, output=None):
+        if output is None:
+            if vrf and interface:
+                out = self.device.execute(self.cli_command[3].\
+                    format(vrf=vrf, interface=interface))
+            elif not vrf and interface:
+                out = self.device.execute(self.cli_command[2].\
+                    format(interface=interface))
+            elif vrf and not interface:
+                out = self.device.execute(self.cli_command[1].\
+                    format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
+
+        else:
+            out = output
+        
+        if not vrf:
+            vrf = 'default'
+
+        # initial return dictionary
+        mpls_dict = {}
+        target_flag = False
+        interface_flag = False
+        receive_flag = False
+        sent_flag = False 
+
+        # Peer LDP Identifier: 10.16.0.2:0
+        # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
+        p1 = re.compile(r'^Peer +LDP +(Ident|Identifier): *'
+        '(?P<peer_ldp>[\d\.]+):(?P<label_space_id>\d+)(; '
+        '+Local +LDP +(Ident|Identifier) +(?P<local_ldp>\S+)$)?')
+
+        # TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
+        p2 = re.compile(r'^TCP +connection: *(?P<tcp_connection>[\S\s]+)$')
+        
+        # Graceful Restart: No
+        p3 = re.compile(r'^Graceful +Restart: +(?P<graceful_restart>[\S\s]+)$')
+
+        # Session Holdtime: 180 sec
+        p4 = re.compile(r'Session Holdtime: +(?P<session_holdtime>\d+)'
+        ' +(?P<rate>(sec|ms))$')
+
+        # Password: not required, none, in use
+        p5 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
+
+        #     State: Oper; Msgs sent/rcvd: 824/825; Downstream
+        #     State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
+        #     State: Oper; Msgs sent/rcvd: 5855/6371; Downstream on demand
+        #     State: Oper; Msgs sent/rcvd: 24710/24702; Downstream-Unsolicited
+        p6 = re.compile(r'^State: *(?P<state>\w+); +Msgs +sent\/rcvd:'
+        ' *(?P<msg_sent>\d+)\/(?P<msg_rcvd>\d+)(;'
+        ' +(?P<neighbor>[\w\s/-]+))?(; +Last +TIB +rev +sent +'
+        '(?P<last_tib_rev_sent>\d+))?$')
+
+        #  Up time: 04:26:14
+        #  Up time: 3d21h; UID: 4; Peer Id 0
+        p7 = re.compile(r'^Up +time: *(?P<up_time>[\w\:]+)(; '
+        '+UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+);?)?$')
+
+        #     LDP discovery sources:
+        #       ATM3/0.1
+        #
+        #      IPv4: (1)
+        #       GigabitEthernet0/0/0/1
+        #      IPv6: (0)
+        p8 = re.compile(r'(?P<address_family>(IPv4|IPv6)): +\((?P<number>\d)\)')
+
+        #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
+        p9 = re.compile(r'(?P<interface>[A-Za-z-]+[\d/.]+)((,|;)'
+        ' +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
+
+        #'Targeted Hello (10.36.3.3 ->172.20.22.22, active, passive)'
+        # 'Targeted Hello 192.168.189.2 ->192.168.189.4, active, passive;'
+        #'Targeted Hello (10.4.1.1 ->10.16.2.2, active)'
+        #'Targeted Hello (10.4.1.1 ->10.16.2.2, passive)'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive;'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, active;'
+        #'Targeted Hello 10.4.1.1 ->10.16.2.2, active'
+        #'Targeted Hello 10.36.3.3 ->172.20.22.22'
+        # 'Targeted Hello (10.36.3.3 ->172.20.22.22)'
+        p10 = re.compile(r'Targeted +Hello +\(?(?P<ldp_ip>[\d/.]+)'
+        '\s*->\s*(?P<tdp_ip>[\d/.]+),?\s*'
+        '(?P<key1>[\S\s]+)+(,|;)? +(?P<key2>passive)?')
+
+        # holdtime: 15000 ms, hello interval: 5000 ms
+        # holdtime: infinite, hello interval: 10000 ms
+        p11 = re.compile(r'^holdtime: *(?P<holdtime>(\d+|\w+)) '
+        '*(?P<hold_rate>(ms|sec))?, +hello +interval: '
+        '*(?P<hello_interval>\d+) +(?P<hello_rate>(ms|sec))$')
+
+        # Addresses bound to this peer:
+        # IPv4: (4)
+        #   10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
+        # IPv6: (0)
+        p12 = re.compile(r'(?P<address_bound_peer_ldp>[\d\.\s]+)$')
+
+        # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+        p13 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +'
+        '(?P<peer_rate>(ms|sec)); +KA +interval: '
+        '*(?P<ka_interval>\d+) +(?P<ka_rate>(ms|sec));'
+        ' +Peer +state: +(?P<peer_state>\S+)$')
+        
+        # Clients: Dir Adj Client
+        p14 = re.compile(r'^Clients: +(?P<clients>[\S\s]+)$')
+
+        # Inbound label filtering: accept acl 'pfx_acl2'
+        p15 = re.compile(r'^Inbound +label +filtering: +'
+        '(?P<inbound_label_filtering>[\S\s]+)$') 
+
+        #Enabled, state: Ready
+        #LDP Session Protection: enabled, state: protecting
+        p16 = re.compile(r'(LDP +Session +Protection:? )?(E|e)nabled, +state: '
+        '+(?P<session_state>\w+)$')
+
+        #Duration: 30 seconds
+        #duration: infinite
+        p17 = re.compile(r'(D|d)uration: +(?P<duration>(\d+|\w+)) *(seconds)?')
+
+        # NSR: Disabled
+        # LDP NSR: Enabled
+        p18 = re.compile(r'(LDP\s+)?NSR: +(?P<nsr>\w+)$')
+
+        #  Capabilities:
+        #  Capabilities Sent:
+        p19 = re.compile(r'^Capabilities+(\sSent)?:')
+
+        #  Capabilities Recieved:
+        #  Recieved:
+        p20 = re.compile(r'(Capabilities\s+)?Received:')
+
+        # 0x508  (MP: Point-to-Multipoint (P2MP))
+        # 0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+        p21 = re.compile(r'(?P<key>\S+) +\((?P<value>MP: +\S+ +\(\S+\))\)')
+
+        # 0x50b  (Typed Wildcard FEC)
+        p22 = re.compile(r'(?P<key>\S+) +\((?P<value>Typed +Wildcard +FEC)\)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Peer LDP Identifier: 10.16.0.2:0
+            # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
+            m = p1.match(line)
+            if m: 
+                group = m.groupdict()
+                peer_dict = mpls_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('peers', {}).\
+                    setdefault(group['peer_ldp'], {}).\
+                    setdefault('label_space_id', {}).\
+                    setdefault(int(group['label_space_id']), {})
+                if group['local_ldp']:
+                    peer_dict.update({'local_ldp_ident':group['local_ldp'] })
+                continue
+            
+            # TCP connection: 10.16.0.2:646 - 10.16.0.9:38143
+            m = p2.match(line)
+            if m: 
+                group = m.groupdict()
+                peer_dict.update({'tcp_connection': group['tcp_connection']})
+                continue
+
+            # Graceful Restart: No
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict.update({'graceful_restart': group ['graceful_restart']})
+                continue
+
+            # Session Holdtime: 180 sec
+            # Session Holdtime: 180000 ms
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key = 'session_holdtime' if group['rate'] == 'sec' \
+                    else 'session_holdtime_ms' 
+                peer_dict.update({key: int(group['session_holdtime'])}) 
+                continue
+
+            # Password: not required, none, in use
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict.update({'password': group['password']})
+                continue
+            
+            # State: Oper; Msgs sent/rcvd: 824/825; Downstream
+            # State: Oper; Msgs sent/rcvd: 824/825; Downstream; Last TIB rev sent 4103
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict.update({'state': group['state']})
+                peer_dict.update({'msg_sent': int(group['msg_sent'])})
+                peer_dict.update({'msg_rcvd': int(group['msg_rcvd'])})
+                if group['neighbor']:
+                    peer_dict.update({'neighbor': group['neighbor']})
+                if group['last_tib_rev_sent']:
+                    peer_dict.update({'last_tib_rev_sent': int(group['last_tib_rev_sent'])})
+                continue
+
+            #  Up time: 04:26:14
+            #  Up time: 3d21h; UID: 4; Peer Id 0
+            #  p7 = re.compile(r'^Up +time: *(?P<up_time>[\w\:]+)(; +UID: *(?P<uid>\d+); +Peer +Id +(?P<peer_id>\d+))?$')
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict.update({'uptime': group['up_time']})
+                if group['uid']:
+                    peer_dict.update({'uid': int(group['uid'])})
+                if group['peer_id']:
+                    peer_dict.update({'peer_id': int(group['peer_id'])})
+                continue
+
+            #      IPv4: (1)
+            #       GigabitEthernet0/0/0/1
+            #      IPv6: (0)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if int(group['number']) !=0:
+                    address_dict = peer_dict.setdefault('address_family', {}).\
+                                        setdefault(group['address_family'].lower(), {})      
+                continue
+
+            # LDP discovery sources:
+            #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
+            #       ATM3/0.1
+            #
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_source_dict = address_dict.setdefault('ldp_discovery_sources',{}).\
+                                            setdefault('interface',{}).\
+                                            setdefault(group['interface'],{})
+                target_flag = False
+                interface_flag = True
+                if group['src_ip_address']:
+                    ldp_source_ip_address_dict = ldp_source_dict.setdefault('ip_address',{}).\
+                                                    setdefault(group['src_ip_address'],{})
+                    
+                continue
+        
+            #'Targeted Hello (10.36.3.3 ->172.20.22.22, active, passive)'
+            #'Targeted Hello 192.168.189.2 ->192.168.189.4, active, passive;'
+            #'Targeted Hello (10.4.1.1 ->10.16.2.2, active)'
+            #'Targeted Hello (10.4.1.1 ->10.16.2.2, passive)'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, passive;'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, active;'
+            #'Targeted Hello 10.4.1.1 ->10.16.2.2, active'
+            #'Targeted Hello 10.36.3.3 ->172.20.22.22'
+            # 'Targeted Hello (10.36.3.3 ->172.20.22.22)'
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                target_dict = address_dict.setdefault('ldp_discovery_sources',{}).\
+                                        setdefault('targeted_hello',{}).\
+                                        setdefault(group['ldp_ip'],{}).\
+                                        setdefault(group['tdp_ip'], {})
+                interface_flag = False
+                target_flag = True
+                if group['key1'] == 'active' and not group['key2']:
+                    target_dict.update({'active': True})
+                else:
+                    target_dict.update({'active': False}) 
+
+                continue
+
+            # holdtime: 15000 ms, hello interval: 5000 ms
+            # holdtime: infinite, hello interval: 10000 ms
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                #if interface_flag:
+                if group['hold_rate']:
+                    hold_key = 'holdtime' if group['hold_rate'] == 'sec' \
+                        else 'holdtime_ms'
+                    hold_val = int(group['holdtime'])
+                else:
+                    hold_key = 'holdtime_str'    
+
+                hello_key = 'hello_interval' if group['hello_rate'] == 'sec' \
+                    else 'hello_interval_ms'
+                hello_val =  int(group['hello_interval'])
+                if interface_flag:
+                    ldp_source_ip_address_dict.update({hold_key:hold_val})
+                    ldp_source_ip_address_dict.update({hello_key:hello_val})
+                    interface_flag = False
+                if target_flag:
+                    target_dict.update({hold_key:group['holdtime']})
+                    target_dict.update({hello_key:hello_val})
+                    target_flag = False
+                
+                continue
+            
+            #   10.16.0.7        10.16.27.7       10.16.78.7       10.16.79.7       
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                address_bound_list = group['address_bound_peer_ldp'].split()
+                if 'address_bound' not in address_dict:
+                    address_dict.update({'address_bound': address_bound_list})
+                else:
+                    address_dict['address_bound'].extend(address_bound_list)
+            
+                continue
+            
+            # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                peer_key = 'peer_holdtime' if group['peer_rate'] == 'sec' \
+                    else 'peer_holdtime_ms'
+                interval_key = 'ka_interval'  if group['ka_rate'] == 'sec' \
+                    else 'ka_interval_ms'
+                peer_dict.update({peer_key: int(group['peer_holdtime'])})
+                peer_dict.update({interval_key: int(group['ka_interval'])})
+                peer_dict.update({'peer_state': group['peer_state']})
+
+                continue
+            
+            # Clients: Dir Adj Client
+            m = p14.match(line)
+            if m: 
+                group = m.groupdict()
+                peer_dict.update({'clients': group['clients']})
+
+                continue
+            
+            # Inbound label filtering: accept acl 'pfx_acl2'
+            m = p15.match(line)
+            if m: 
+                group = m.groupdict()
+                peer_dict.update({'inbound_label_filtering': group['inbound_label_filtering']})
+
+                continue
+            
+            #Enabled, state: Ready
+            #LDP Session Protection: enabled, state: protecting
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict = peer_dict.setdefault('session_protection', {})
+                session_dict.update({'session_state': group['session_state']})
+
+                continue
+            #Duration: 30 seconds
+            #duration: infinite
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                if group['duration'].isdigit():
+                    session_dict.update({'duration_int': int(group['duration'])})
+                else: 
+                    session_dict.update({'duration_str': group['duration']})
+
+                continue
+
+            # NSR: Disabled
+            # LDP NSR: Enabled
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict.update({'nsr': group['nsr']})
+                
+                continue
+
+            #  Capabilities:
+            #  Capabilities Sent:
+            m = p19.match(line)
+            if m:
+                sent_flag = True
+                sent_dict = peer_dict.setdefault('capabilities',{}).\
+                                        setdefault('sent',{})
+                continue
+
+            #  Capabilities Recieved:
+            #  Recieved:
+            m = p20.match(line)
+            if m:
+                receive_flag = True
+                sent_flag = False
+                recieved_dict = peer_dict.setdefault('capabilities', {}).\
+                    setdefault('received', {})
+
+                continue
+            # 0x508  (MP: Point-to-Multipoint (P2MP))
+            # 0x509  (MP: Multipoint-to-Multipoint (MP2MP))
+            m = p21.match(line)
+            if m:
+                group = m.groupdict() 
+                if sent_flag:
+                    sent_dict.update({group['key'] :group['value']})
+                if receive_flag:
+                    recieved_dict.update({group['key'] :group['value']})
+                
+                continue
+            
+            # 0x50b  (Typed Wildcard FEC)
+            m = p22.match(line)
+            if m:
+                group = m.groupdict() 
+                if sent_flag:
+                    sent_dict.update({group['key'] :group['value']})
+                if receive_flag:
+                    recieved_dict.update({group['key'] :group['value']})
+                
+                continue
+
+        return mpls_dict
+
+class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
+    """Parser for show mpls ldp neighbor detail,
+                  show mpls ldp neighbor {interface} detail"""
+
+    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp vrf {vrf} neighbor  detail', 
+    'show mpls ldp neighbor {interface} detail', 'show mpls ldp vrf {vrf} {interface} detail']
+
+    def cli(self, vrf="", interface=None, output=None):
+        if output is None:
+            if vrf and interface:
+                out = self.device.execute(self.cli_command[3].\
+                    format(vrf=vrf, interface=interface))
+            elif not vrf and interface:
+                out = self.device.execute(self.cli_command[2].\
+                    format(interface=interface))
+            elif vrf and not interface:
+                out = self.device.execute(self.cli_command[1].\
+                    format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
+
+        else:
+            out = output
+
+        return super().cli(vrf=vrf, interface=interface, output=out)
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
@@ -175,22 +767,27 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
-
 # ======================================================
-# Parser for 'show mpls label table detail'
+# Schema for 'show mpls label table detail'
 # ======================================================
 class ShowMplsLabelTableDetailSchema(MetaParser):
     
-    """Schema for show mpls label table detail"""
+    """Schema for 
+    show mpls label table detail
+    show mpls label table private
+    """
 
     schema = {
         'table': {
             Any(): {
                 'label': {
                     Any(): {
-                        'owner': str,
-                        'state': str,
-                        'rewrite': str,
+                        'owner': {
+                            Any():{
+                                'state': str,
+                                'rewrite': str,
+                            },
+                        },
                         Optional('label_type'): {
                             Any(): {
                                 Optional('vers'): int,
@@ -201,6 +798,8 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
                                 Optional('type'): int,
                                 Optional('interface'): str,
                                 Optional('nh'): str,
+                                Optional('default'): bool,
+                                Optional('prefix'): str,
                             },
                         }
                     },
@@ -209,11 +808,14 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
         }
     }
 
-
+# ======================================================
+# Parser for 'show mpls label table detail'
+# ======================================================
 class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
-    """Parser for show mpls label table detail"""
-
+    """
+    Parser for show mpls label table detail
+    """
     cli_command = ['show mpls label table detail']
 
     def cli(self, output=None):
@@ -230,8 +832,10 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         # ----- ------- ------------------------------- ------ -------
         # 0     0       LSD(A)                          InUse  Yes
         # 0     16000   ISIS(A):SR                      InUse  No
-        p1 = re.compile(r'^(?P<table>\d+)\s+(?P<label>\d+)\s+(?P<owner>[\S]+)\s+(?P<state>\S+)'
-            '\s+(?P<rewrite>\S+)$')
+        # 0     16001   LDP:lsd_test_ut                 InUse  No
+        #               Static:lsd_test_ut              InUse  No
+        p1 = re.compile(r'(?P<table>\d+\s+)?(?P<label>\d+\s+)?(?P<owner>[\S]+)'
+        '\s+(?P<state>\S+)\s+(?P<rewrite>\w+)$')
 
         # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
         # (Lbl-blk SRLB, vers:0, (start_label=15000, size=1000, app_notify=0)
@@ -243,6 +847,11 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
         p3 = re.compile(r'^\((?P<sr_label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
             '\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
             '\s+nh=(?P<nh>\S+)\)$')
+            
+        # (IPv4, vers:0, default, 10.4.1.1/24)
+        # (IPv4, vers:0, , 10.229.10.10/15)
+        p4 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
+        ' +(?P<default>default)?, +(?P<prefix>\S+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -250,16 +859,23 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             # Table Label   Owner                           State  Rewrite
             # ----- ------- ------------------------------- ------ -------
             # 0     0       LSD(A)                          InUse  Yes
-            # 0     16000   ISIS(A):SR                      InUse  No
+            # 0     16001   LDP:lsd_test_ut                 InUse  No
+            #       Static:lsd_test_ut                      InUse  No
             m = p1.match(line)
             if m:
-                table = int(m.groupdict()['table'])
-                label = int(m.groupdict()['label'])
-                final_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
-                    setdefault('label', {}).setdefault(label, {})
-                label_list = ['owner', 'state', 'rewrite']
+                label_list = ['state', 'rewrite']
+                if (m.groupdict()['table']) and (m.groupdict()['label']):
+                    table = int(m.groupdict()['table'].strip())
+                    label = int(m.groupdict()['label'].strip())
+                    final_dict = mpls_dict.setdefault('table', {}).\
+                                setdefault(table, {}).\
+                                setdefault('label', {}).\
+                                setdefault(label, {}).\
+                                setdefault('owner', {})
+                
+                owner_dict = final_dict.setdefault(m.groupdict()['owner'], {})
                 for key in label_list:
-                    final_dict.update({key:m.groupdict()[key]})
+                    owner_dict.update({key:m.groupdict()[key]})
                 continue
 
             # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
@@ -267,7 +883,9 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             m = p2.match(line)
             if m:
                 label_type = m.groupdict()['label_type']
-                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
                 label_list = ['vers', 'start_label', 'size']
                 for key in label_list:
                     latest_dict.update({key:int(m.groupdict()[key])})
@@ -279,7 +897,9 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
             m = p3.match(line)
             if m:
                 label_type = m.groupdict()['sr_label_type']
-                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
                 label_list = ['vers', 'index', 'type']
                 for key in label_list:
                     latest_dict.update({key:int(m.groupdict()[key])})
@@ -287,8 +907,38 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 latest_dict.update({'nh':m.groupdict()['nh']})
                 continue
 
+            # (IPv4, vers:0, default, 10.4.1.1/24)
+            # (IPv4, vers:0, , 10.229.10.10/15)
+            m = p4.match(line)
+            if m:
+                label_type = m.groupdict()['label_type']
+                latest_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                        setdefault('label', {}).setdefault(label, {}).\
+                            setdefault('label_type', {}).setdefault(label_type, {})
+                latest_dict.update({'vers':int(m.groupdict()['vers'])})
+                latest_dict.update({'default':True if m.groupdict()['default'] != None\
+                    else False})
+                latest_dict.update({'prefix':m.groupdict()['prefix']})
+
         return mpls_dict
 
+# ======================================================
+# Parser for 'show mpls label table private'
+# ======================================================
+class ShowMplsLabelTablePrivate(ShowMplsLabelTableDetail):
+
+    """
+    Parser for show mpls label table private
+    """
+
+    cli_command = ['show mpls label table private']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        return super().cli(output=out)
 
 # ======================================================
 # Schema for 'show mpls interfaces'

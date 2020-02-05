@@ -25,7 +25,7 @@ import xmltodict
 import re
 
 try:
-    from ats import tcl
+    from pyats import tcl
 except Exception:
     pass
 

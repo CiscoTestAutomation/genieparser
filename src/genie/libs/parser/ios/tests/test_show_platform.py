@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                         SchemaMissingKeyError
@@ -1042,7 +1042,6 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
-
     golden_output_2 = {'execute.return_value': '''
         NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
         PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
@@ -1458,6 +1457,270 @@ class TestShowInventory(unittest.TestCase):
     },
 }
 
+    golden_output_6 = {'execute.return_value': '''
+    NAME: "1", DESCR: "SM-ES2-16-P"
+    PID: SM-ES2-16-P       , VID:      , SN: FOC09876NP3
+    '''}
+    golden_parsed_output_6 = {
+        'slot': {
+            '1': {
+                'lc': {
+                    'SM-ES2-16-P': {
+                        'descr': 'SM-ES2-16-P',
+                        'name': '1',
+                        'pid': 'SM-ES2-16-P',
+                        'sn': 'FOC09876NP3',
+                        'vid': '',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+    NAME: "2821 chassis", DESCR: "2821 chassis"
+    PID: CISCO2821         , VID: V07 , SN: FTX1234AMWT
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675U0D
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675W3E
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-2     , VID: V01, SN: FOC2837465E
+    '''}
+
+    golden_parsed_output_7 = {
+        'main': {
+            'chassis': {
+                'CISCO2821': {
+                    'descr': '2821 chassis',
+                    'name': '2821 chassis',
+                    'pid': 'CISCO2821',
+                    'sn': 'FTX1234AMWT',
+                    'vid': 'V07 ',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'other': {
+                    'AIM-VPN/SSL-2': {
+                        'descr': 'Encryption AIM Element',
+                        'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                        'pid': 'AIM-VPN/SSL-2',
+                        'sn': 'FOC2837465E',
+                        'vid': 'V01',
+                        'subslot': {
+                            '0': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC98675U0D',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                            '1': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC98675W3E',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+    NAME: "3825 chassis", DESCR: "3825 chassis"
+    PID: CISCO3825         , VID: V05 , SN: FTX7908A3RQ
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC65428K9F
+    
+    NAME: "Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1", DESCR: "Wan Interface Card BRI U (2091, 3086)"
+    PID: WIC-1B-U-V2       , VID: V01, SN: 10293847   
+    
+    NAME: "PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4", DESCR: "PVDMII DSP SIMM with four DSPs"
+    PID: PVDM2-64          , VID: V01 , SN: FOC63358WSI
+    
+    NAME: "High Density Voice Module - 8FXS/DID on Slot 1", DESCR: "High Density Voice Module - 8FXS/DID"
+    PID: EVM-HD-8FXS/DID   , VID: V04 , SN: FOC65798TG8
+    
+    NAME: "Six port FXO voice interface daughtercard on Slot 1 SubSlot 1", DESCR: "Six port FXO voice interface daughtercard"
+    PID: EM-HDA-6FXO       , VID: V03 , SN: FOC85389QXB
+    '''}
+
+    golden_parsed_output_8 = {
+    'main': {
+        'chassis': {
+            'CISCO3825': {
+                'descr': '3825 chassis',
+                'name': '3825 chassis',
+                'pid': 'CISCO3825',
+                'sn': 'FTX7908A3RQ',
+                'vid': 'V05 ',
+            },
+        },
+    },
+    'slot': {
+        '0': {
+            'rp': {
+                'CISCO3825': {
+                    'subslot': {
+                        '0': {
+                            'VWIC2-2MFT-T1/E1': {
+                                'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                'pid': 'VWIC2-2MFT-T1/E1',
+                                'sn': 'FOC65428K9F',
+                                'vid': 'V01 ',
+                            },
+                        },
+                        '1': {
+                            'WIC-1B-U-V2': {
+                                'descr': 'Wan Interface Card BRI U (2091, 3086)',
+                                'name': 'Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1',
+                                'pid': 'WIC-1B-U-V2',
+                                'sn': '10293847',
+                                'vid': 'V01',
+                            },
+                        },
+                        '4': {
+                            'PVDM2-64': {
+                                'descr': 'PVDMII DSP SIMM with four DSPs',
+                                'name': 'PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4',
+                                'pid': 'PVDM2-64',
+                                'sn': 'FOC63358WSI',
+                                'vid': 'V01 ',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '1': {
+            'other': {
+                'EVM-HD-8FXS/DID': {
+                    'descr': 'High Density Voice Module - 8FXS/DID',
+                    'name': 'High Density Voice Module - 8FXS/DID on Slot 1',
+                    'pid': 'EVM-HD-8FXS/DID',
+                    'sn': 'FOC65798TG8',
+                    'subslot': {
+                        '1': {
+                            'EM-HDA-6FXO': {
+                                'descr': 'Six port FXO voice interface daughtercard',
+                                'name': 'Six port FXO voice interface daughtercard on Slot 1 SubSlot 1',
+                                'pid': 'EM-HDA-6FXO',
+                                'sn': 'FOC85389QXB',
+                                'vid': 'V03 ',
+                            },
+                        },
+                    },
+                    'vid': 'V04 ',
+                },
+            },
+        },
+    },
+}
+
+    golden_output_9 = {'execute.return_value': '''
+    NAME: "3845 chassis", DESCR: "3845 chassis"
+    PID: CISCO3845         , VID: V05 , SN: FTX6666ARJ9
+    
+    NAME: "c3845 Motherboard with Gigabit Ethernet on Slot 0", DESCR: "c3845 Motherboard with Gigabit Ethernet"
+    PID: CISCO3845-MB      , VID: V09 , SN: FOC729346GQ
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-3     , VID: V01, SN: FOC758693YO
+    
+    NAME: "Clear/Subrate T3/E3 WAN on Slot 1", DESCR: "Clear/Subrate T3/E3 WAN"
+    PID: NM-1T3/E3=        , VID: V01 , SN: FOC28476ADM
+    
+    NAME: "16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2", DESCR: "16 Port 10BaseT/100BaseTX EtherSwitch"
+    PID: NM-16ESW          , VID: V01 , SN: FOC135464KO
+    
+    NAME: "Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0", DESCR: "Gigabit(1000BaseT) module for EtherSwitch NM"
+    PID: GE-DCARD-ESW      , VID: V01 , SN: FOC91864MNN
+    '''}
+
+    golden_parsed_output_9 = {
+    'main': {
+        'chassis': {
+            'CISCO3845': {
+                'descr': '3845 chassis',
+                'name': '3845 chassis',
+                'pid': 'CISCO3845',
+                'sn': 'FTX6666ARJ9',
+                'vid': 'V05 ',
+            },
+        },
+    },
+    'slot': {
+        '0': {
+            'lc': {
+                'CISCO3845-MB': {
+                    'descr': 'c3845 Motherboard with Gigabit Ethernet',
+                    'name': 'c3845 Motherboard with Gigabit Ethernet on Slot 0',
+                    'pid': 'CISCO3845-MB',
+                    'sn': 'FOC729346GQ',
+                    'vid': 'V09 ',
+                },
+            },
+            'other': {
+                'AIM-VPN/SSL-3': {
+                    'descr': 'Encryption AIM Element',
+                    'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                    'pid': 'AIM-VPN/SSL-3',
+                    'sn': 'FOC758693YO',
+                    'vid': 'V01',
+                },
+
+            },
+        },
+        '1': {
+            'lc': {
+                'NM-1T3/E3=': {
+                    'descr': 'Clear/Subrate T3/E3 WAN',
+                    'name': 'Clear/Subrate T3/E3 WAN on Slot 1',
+                    'pid': 'NM-1T3/E3=',
+                    'sn': 'FOC28476ADM',
+                    'vid': 'V01 ',
+                },
+            },
+        },
+        '16': {
+            'lc': {
+                'NM-16ESW': {
+                    'descr': '16 Port 10BaseT/100BaseTX EtherSwitch',
+                    'name': '16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2',
+                    'pid': 'NM-16ESW',
+                    'sn': 'FOC135464KO',
+                    'subslot': {
+                        '0': {
+                            'GE-DCARD-ESW': {
+                                'descr': 'Gigabit(1000BaseT) module for EtherSwitch NM',
+                                'name': 'Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0',
+                                'pid': 'GE-DCARD-ESW',
+                                'sn': 'FOC91864MNN',
+                                'vid': 'V01 ',
+                            },
+                        },
+                    },
+                    'vid': 'V01 ',
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -1498,6 +1761,34 @@ class TestShowInventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_output_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_output_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_output_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_golden_output_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
 
 class test_show_bootvar(unittest.TestCase):

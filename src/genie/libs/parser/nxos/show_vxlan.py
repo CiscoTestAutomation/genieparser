@@ -1968,16 +1968,27 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
         # Interface VNI      Replication List  Source  Up Time
         # --------- -------- ----------------- ------- -------
         # nve1      10101    10.196.7.7           BGP-IMET 1d02h
+        # nve1      10011    2001:db8:1:1::1:1           BGP-IMET   00:46:55
+        # nve1      10211    fe80::2fe:c8ff:fe09:8fff           BGP-IMET   00:46:55
 
-        p1 = re.compile(r'^\s*(?P<nve_name>[\w]+) +(?P<vni>[\d]+)( +(?P<replication_list>[\w\.]+)'
-                        ' +(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+))?$')
+        p1 = re.compile(r'^(?P<nve_name>[\w]+) +(?P<vni>[\d]+)( '
+                        r'+(?P<replication_list>[\d\.]+|[\w\:]+) '
+                        r'+(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+))?$')
+
+        # 192.168.51.51        BGP-IMET 03:21:19
+        # 192.168.154.52        BGP-IMET 03:15:18
+        # 192.168.154.51        BGP-IMET 03:21:19
+        # 2001:db8:1:4::1:4           BGP-IMET   00:48:12
+        # fe80::2fe:c8ff:fe09:8fff BGP-IMET   00:47:54
+        p2 = re.compile(r'^(?P<replication_list>[\d\.]+|[\w\:]+) '
+                        r'+(?P<source>[\w\-]+) +(?P<uptime>[\w\:]+)$')
+
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
-
+            # nve1      10101    10.196.7.7           BGP-IMET 1d02h
+            # nve1      10011    2001:db8:1:1::1:1           BGP-IMET   00:46:55
+            # nve1      10211    fe80::2fe:c8ff:fe09:8fff           BGP-IMET   00:46:55
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1985,12 +1996,30 @@ class ShowNveVniIngressReplication(ShowNveVniIngressReplicationSchema):
                 vni = int(group['vni'])
                 nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
                 nve_dict.update({'vni': vni})
+
                 if group['replication_list']:
                     repl_ip = group['replication_list'].strip()
                     repl_dict = nve_dict.setdefault('repl_ip', {}).setdefault(repl_ip, {})
                     repl_dict.update({'repl_ip': repl_ip})
                     repl_dict.update({'source': group['source'].lower()})
                     repl_dict.update({'up_time': group['uptime']})
+
+                continue
+
+            # 192.168.51.51        BGP-IMET 03:21:19
+            # 192.168.154.52        BGP-IMET 03:15:18
+            # 192.168.154.51        BGP-IMET 03:21:19
+            # 2001:db8:1:4::1:4           BGP-IMET   00:48:12
+            # fe80::2fe:c8ff:fe09:8fff BGP-IMET   00:47:54
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                repl_ip = group['replication_list'].strip()
+                repl_dict = nve_dict.setdefault('repl_ip', {}).setdefault(repl_ip, {})
+                repl_dict.update({'repl_ip': repl_ip})
+                repl_dict.update({'source': group['source'].lower()})
+                repl_dict.update({'up_time': group['uptime']})
+
                 continue
 
         return result_dict
