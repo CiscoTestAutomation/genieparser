@@ -16,6 +16,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowSwitch, \
                                                   ShowModule, \
                                                   ShowPlatformSoftwareStatusControl, \
+                                                  ShowPlatformSoftwareMemoryCallsite, \
+                                                  ShowPlatformSoftwareMemoryBacktrace, \
                                                   ShowPlatformSoftwareSlotActiveMonitorMem, \
                                                   ShowProcessesCpuSorted, \
                                                   ShowProcessesCpuPlatform, \
@@ -4204,6 +4206,268 @@ class TestShowModule(unittest.TestCase):
         platform_obj = ShowModule(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+# ==================================================================================================
+# Unit test for "show platfrom software memory <process> switch active <plane> alloc callsite brief"
+# ==================================================================================================
+class TestShowPlatformSoftwareMemoryCallsite(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'tracekey': '1#2315ece11e07bc883d89421df58e37b6',
+        'callsites':
+            {1617611779:
+                {'thread': 31884,
+                'diff_byte': 57424,
+                'diff_call': 2},
+            1617569792:
+                {'thread': 31884,
+                'diff_byte': 57360,
+                'diff_call': 1},
+            1617562624:
+                {'thread': 31884,
+                'diff_byte': 16960,
+                'diff_call': 1},
+            2150603778:
+                {'thread': 31884,
+                'diff_byte': 9545,
+                'diff_call': 67},
+            1617611780:
+                {'thread': 31884,
+                'diff_byte': 8208,
+                'diff_call': 1},
+            809417733:
+                {'thread': 31884,
+                'diff_byte': 7776,
+                'diff_call': 36},
+            2154573825:
+                {'thread': 31884,
+                'diff_byte': 6768,
+                'diff_call': 18},
+            1617611778:
+                {'thread': 31884,
+                'diff_byte': 1872,
+                'diff_call': 2},
+            1617611832:
+                {'thread': 31884,
+                'diff_byte': 1688,
+                'diff_call': 1},
+            2150603781:
+                {'thread': 31884,
+                'diff_byte': 1512,
+                'diff_call': 1},
+            2150603776:
+                {'thread': 31884,
+                'diff_byte': 1303,
+                'diff_call': 55},
+            2150603777:
+                {'thread': 31884,
+                'diff_byte': 880,
+                'diff_call': 55},
+            2154579970:
+                {'thread': 31884,
+                'diff_byte': 720,
+                'diff_call': 18},
+            2154593280:
+                {'thread': 31884,
+                'diff_byte': 432,
+                'diff_call': 18},
+            1356969988:
+                {'thread': 31884,
+                'diff_byte': 88,
+                'diff_call': 1},
+            1617614849:
+                {'thread': 31884,
+                'diff_byte': 56,
+                'diff_call': 1},
+            1356969989:
+                {'thread': 31884,
+                'diff_byte': 49,
+                'diff_call': 2},
+            1617611909:
+                {'thread': 31884,
+                'diff_byte': 40,
+                'diff_call': 1},
+            1617611907:
+                {'thread': 31884,
+                'diff_byte': 40,
+                'diff_call': 1},
+            1617611908:
+                {'thread': 31884,
+                'diff_byte': 36,
+                'diff_call': 1},
+            1617614856:
+                {'thread': 31884,
+                'diff_byte': 32,
+                'diff_call': 1},
+            1617948702:
+                {'thread': 31884,
+                'diff_byte': 12,
+                'diff_call': 1}
+            }
+    }
+
+    golden_output = {'execute.return_value': '''
+        The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+
+  callsite      thread    diff_byte               diff_call
+  ----------------------------------------------------------
+  1617611779    31884     57424                   2
+  1617569792    31884     57360                   1
+  1617562624    31884     16960                   1
+  2150603778    31884     9545                    67
+  1617611780    31884     8208                    1
+  809417733     31884     7776                    36
+  2154573825    31884     6768                    18
+  1617611778    31884     1872                    2
+  1617611832    31884     1688                    1
+  2150603781    31884     1512                    1
+  2150603776    31884     1303                    55
+  2150603777    31884     880                     55
+  2154579970    31884     720                     18
+  2154593280    31884     432                     18
+  1356969988    31884     88                      1
+  1617614849    31884     56                      1
+  1356969989    31884     49                      2
+  1617611909    31884     40                      1
+  1617611907    31884     40                      1
+  1617611908    31884     36                      1
+  1617614856    31884     32                      1
+  1617948702    31884     12                      1
+           '''}
+
+ 
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareMemoryCallsite(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process='dbm', plane='R0')  
+
+    def test_golden_output(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareMemoryCallsite(device=self.device)
+        parsed_output = obj.parse(process='dbm', plane='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ==================================================================================================
+# Unit test for "show platfrom software memory <process> switch active <plane> alloc backtrace"
+# ==================================================================================================
+class TestShowPlatformSoftwareMemoryBacktrace(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B9800 re_mgr:7F7AFA351000+122BC re_mgr:7F7AFA351000+2C203 re_mgr:7F7AFA351000+16EA5 re_mgr:7F7AFA351000+136FD prelib:7F7B033EE000+3F8E':
+            {'allocs': 198,
+            'frees': 0,
+            'call_diff': 198
+            },
+        '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B985E re_mgr:7F7AFA351000+123FA :556841E8C000+CE61E :556841E8C000+CD815 re_mgr:7F7AFA351000+1DDC4 re_mgr:7F7AFA351000+16EA5':
+            {'allocs': 11,
+            'frees': 0,
+            'call_diff': 11
+            }
+    }
+
+    golden_parsed_output2 = {
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 1,
+            'frees': 0,
+            'call_diff': 1
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7A0F5 ui:7F74770E4000+471E1 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 1,
+            'frees': 0,
+            'call_diff': 1
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7B63A ui:7F74770E4000+47232 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 1,
+            'frees': 0,
+            'call_diff': 1
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 tdllib:7F7474D05000+6D0D1 cdlcore:7F7466A6B000+37D15 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745 evlib:7F7478862000+8E37':
+            {'allocs': 3,
+            'frees': 0,
+            'call_diff': 3
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+3380A cdlcore:7F7466A6B000+345FC cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 2,
+            'frees': 0,
+            'call_diff': 2
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2C185 cdlcore:7F7466A6B000+34651 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 2,
+            'frees': 0,
+            'call_diff': 2
+            },
+        '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2D67B cdlcore:7F7466A6B000+346A2 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+            {'allocs': 2,
+            'frees': 0,
+            'call_diff': 2
+            }
+    }
+
+    golden_output = {'execute.return_value': '''
+          backtrace: 1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B9800 re_mgr:7F7AFA351000+122BC re_mgr:7F7AFA351000+2C203 re_mgr:7F7AFA351000+16EA5 re_mgr:7F7AFA351000+136FD prelib:7F7B033EE000+3F8E
+      callsite: 3761680384, thread_id: 16066
+      allocs: 198, frees: 0, call_diff: 198
+      backtrace: 1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B985E re_mgr:7F7AFA351000+123FA :556841E8C000+CE61E :556841E8C000+CD815 re_mgr:7F7AFA351000+1DDC4 re_mgr:7F7AFA351000+16EA5
+      callsite: 3761680384, thread_id: 16066
+      allocs: 11, frees: 0, call_diff: 11
+      '''}
+
+    golden_output2 = {'execute.return_value': '''
+          backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7A0F5 ui:7F74770E4000+471E1 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7B63A ui:7F74770E4000+47232 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 tdllib:7F7474D05000+6D0D1 cdlcore:7F7466A6B000+37D15 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745 evlib:7F7478862000+8E37
+      callsite: 2150603778, thread_id: 31884
+      allocs: 3, frees: 0, call_diff: 3
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+3380A cdlcore:7F7466A6B000+345FC cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2C185 cdlcore:7F7466A6B000+34651 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2D67B cdlcore:7F7466A6B000+346A2 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process='chassis-manager', plane='R0')  
+
+    def test_golden_output(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        parsed_output = obj.parse(process='chassis-manager', plane='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_output2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        parsed_output = obj.parse(process='dbm', plane='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
 
 
 class TestShowPlatformSoftwareStatusControlProcessorBrief(unittest.TestCase):
@@ -18969,6 +19233,94 @@ class TestShowProcessMemory(unittest.TestCase):
         lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
     '''}
 
+    golden_parsed_output_sorted = {
+        'lsmi_io_pool': {
+        'free': 832,
+        'total': 6295128,
+        'used': 6294296,
+        },
+        'pid': {
+            0: {
+                'index': {
+                    1: {
+                        'allocated': 300693520,
+                        'freed': 48258952,
+                        'getbufs': 0,
+                        'holding': 232782240,
+                        'pid': 0,
+                        'process': '*Init*',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
+            },
+            4: {
+                'index': {
+                    1: {
+                        'allocated': 22517320,
+                        'freed': 103960,
+                        'getbufs': 0,
+                        'holding': 22275464,
+                        'pid': 4,
+                        'process': 'RF Slave Main Th',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
+            },
+            82: {
+                'index': {
+                    1: {
+                        'allocated': 327917232,
+                        'freed': 3336888,
+                        'getbufs': 0,
+                        'holding': 15636504,
+                        'pid': 82,
+                        'process': 'IOSD ipc task',
+                        'retbufs': 0,
+                        'tty': 0,
+                    },
+                },
+            },
+        },
+        'processor_pool': {
+            'free': 1057412724,
+            'total': 1371713468,
+            'used': 314300744,
+        },
+        'reserve_p_pool': {
+            'free': 102316,
+            'total': 102404,
+            'used': 88,
+        },
+    }
+
+    golden_output_sorted = {'execute.return_value': '''\
+        Processor Pool Total: 1371713468 Used:  314300744 Free: 1057412724
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+         lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+
+         PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+           0   0  300693520   48258952  232782240          0          0 *Init*
+           4   0   22517320     103960   22275464          0          0 RF Slave Main Th
+          82   0  327917232    3336888   15636504          0          0 IOSD ipc task
+           0   0  176469928  171522624    5961896   24110359    1233588 *Dead*
+         254   0  254238664  251084832    4737200          0          0 Exec
+         490   0    4302136     254040    4090040     849828          0 EEM ED Syslog
+         509   0    2099024     218912    1910056          0          0 EEM Server
+         442   0    2209480    1055968    1089736          0          0 Crypto CA
+           1   0     984576       6944    1014520          0          0 Chunk Manager
+         348   0     971760      86936     937904          0          0 CEF: IPv4 proces
+         241   0     807712       3808     858064          0          0 IP ARP Adjacency
+           0   0          0          0     723568          0          0 *MallocLite*
+         431   0     462944       1008     499880          0          0 EST Client
+         245   0     838392     345256     492432          0          0 mDNS
+         147   0   13765808   13092880     464472          0          0 SAMsgThread
+         491   0     392736       9464     425216      72316          0 EEM ED Generic
+         456   0     331040        336     384648          0          0 Crypto IKEv2
+         389   0     379008        456     318544          0          0 LSD Main Proc
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowProcessesMemory(device=self.device)
@@ -18988,6 +19340,13 @@ class TestShowProcessMemory(unittest.TestCase):
         platform_obj = ShowProcessesMemory(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_golden_sorted(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_sorted)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        parsed_output = platform_obj.parse(sorted=3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_sorted)
 
 if __name__ == '__main__':
     unittest.main()

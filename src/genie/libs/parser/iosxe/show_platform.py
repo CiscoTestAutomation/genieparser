@@ -2833,6 +2833,119 @@ class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMon
         return ret_dict
 
 
+class ShowPlatformSoftwareMemoryCallsiteSchema(MetaParser):
+    """ Schema for show platform software memory <process> switch active <R0> alloc callsite brief """
+    schema = {
+        'tracekey': str,
+        'callsites': {
+            Any(): {
+                'thread': int,
+                'diff_byte': int,
+                'diff_call': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchema):
+    """ Parser for show platform software memory <process> switch active <R0> alloc callsite brief """
+
+
+    cli_command = 'show platform software memory {process} switch active {plane} alloc callsite brief'
+
+    def cli(self, process, plane, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(process=process, plane=plane)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Init vars
+        parsed_dict = {}
+        if out:
+            callsite_dict = parsed_dict.setdefault('callsites', {})
+
+        # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+        p1 = re.compile(r'The +current +tracekey +is\s*: +(?P<tracekey>[#\d\w]*)')
+
+        # callsite      thread    diff_byte               diff_call
+        # ----------------------------------------------------------
+        # 1617611779    31884     57424                   2
+        p2 = re.compile(r'(?P<callsite>(\d+))\s+(?P<thread>(\d+))\s+(?P<diffbyte>(\d+))\s+(?P<diffcall>(\d+))')
+
+        for line in out.splitlines():
+            line = line.strip()
+ 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['tracekey'] = str(group['tracekey'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = int(group['callsite'])
+                one_callsite_dict = callsite_dict.setdefault(callsite, {})
+                one_callsite_dict['thread'] = int(group['thread'])
+                one_callsite_dict['diff_byte'] = int(group['diffbyte'])
+                one_callsite_dict['diff_call'] = int(group['diffcall'])
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
+    """ Schema for show platform software memory <process> switch active <R0> alloc backtrace """
+    schema = {
+        Any():
+            {'allocs': int,
+            'frees': int,
+            'call_diff': int}
+    }
+
+class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
+    """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
+
+    cli_command = 'show platform software memory {process} switch active {plane} alloc backtrace'
+
+    def cli(self, process, plane, output=None):
+        if output is None:
+            cmd = self.cli_command.format(process=process, plane=plane)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+         # Init vars
+        parsed_dict = {}
+
+        # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+        #   callsite: 2150603778, thread_id: 31884
+        #   allocs: 1, frees: 0, call_diff: 1
+        p1 = re.compile(r'backtrace: (?P<backtrace>[\w#\d\s:+]+)$')
+
+        p2 = re.compile(r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
+
+        for line in out.splitlines():
+            line = line.strip()
+ 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                backtrace = str(group['backtrace'])
+                backtrace_dict = parsed_dict.setdefault(backtrace, {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                backtrace_dict['allocs'] = int(group['allocs'])
+                backtrace_dict['frees'] = int(group['frees'])
+                backtrace_dict['call_diff'] = int(group['call_diff'])
+                continue
+
+        return parsed_dict
+
+
 class ShowPlatformSoftwareStatusControlSchema(MetaParser):
     """Schema for show platform software status control-processor brief"""
     schema = {
@@ -5364,10 +5477,11 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
 
     cli_command = [
         'show processes memory',
-        'show processes memory | include {include}'
+        'show processes memory | include {include}',
+        'show processes memory sorted' # sorted argument is depth (ex: depth of 10 would only parse first 10 lines of sorted output)
     ]
 
-    def cli(self, include=None, output=None):
+    def cli(self, include=None, sorted=None, output=None):
 
         ret_dict = {}
         pid_index = {}
@@ -5375,6 +5489,9 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
         if not output:
             if include:
                 cmd = self.cli_command[1].format(include=include)
+            elif sorted:
+                cmd = self.cli_command[2]
+                sorted_line_count = 0
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -5401,7 +5518,6 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
 
         for line in out.splitlines():
             line = line.strip()
-            
             # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
             m = p1.match(line)
             if m:
@@ -5430,6 +5546,10 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             # 1   0    3415536     879912    2565568          0          0 Chunk Manager
             m = p4.match(line)
             if m:
+                if sorted:
+                    sorted_line_count += 1
+                    if sorted_line_count > sorted:
+                        break
                 group = m.groupdict()
                 pid = int(group['pid'])
                 index = pid_index.get(pid, 0) + 1
