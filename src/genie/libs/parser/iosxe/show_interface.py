@@ -3223,16 +3223,10 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         result_dict = {}
 
         # Port      Name               Status       Vlan       Duplex  Speed Type
-        # Gi1/1     To Minet           notconnect   1            auto   auto 10/100/1000-TX
-        # Gi1/2     TelenorVOIP        notconnect   125          full    100 10/100/1000-TX
-        # Gi1/3     DP                 connected    132        a-full a-1000 10/100/1000-TX
-        # Gi1/4     DP                 notconnect   132          auto   auto 10/100/1000-TX
-        # Gi1/5     DP                 connected    132        a-full a-1000 10/100/1000-TX
-        # Gi1/6                        connected    100        a-full a-1000 10/100/1000-TX
+        # Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+        # Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
         # Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
-        # Gi1/8                        notconnect   99           auto   auto 10/100/1000-TX
-        # Gi1/9                        notconnect   99           auto   auto 10/100/1000-TX
-        # Gi1/10    To swi002     connected    trunk      a-full a-1000 10/100/1000-TX
+        # Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
 
         p1 = re.compile(r'^(?P<interfaces>\w+\d+\/\d+)(?: +(?P<name>([\S ]+)))?'
                         r' +(?P<status>\S+) +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+)'
@@ -3246,7 +3240,7 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
                 group = m.groupdict()
 
                 intf_dict = result_dict.setdefault('interfaces', {}).\
-                                        setdefault(group['interfaces'], {})
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
 
                 name_val = group['name'].strip()
                 if len(name_val)>0 :
