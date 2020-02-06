@@ -3097,7 +3097,7 @@ class TestShowIpCefInternal(unittest.TestCase):
     golden_output_4 = {'execute.return_value': '''
         show ip cef vrf MG501 192.168.1.1 internal
         Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 01:53:02.138 JST Thu Feb 6 2020
+        Time source is NTP, 01:53:02.138 EST Thu Feb 6 2020
 
         192.168.1.0/24, epoch 1, flags [rlbls], RIB[B], refcnt 6, per-destination sharing
           sources: RIB 
@@ -3131,7 +3131,7 @@ class TestShowIpCefInternal(unittest.TestCase):
             label 16051
             label 16052
             label 16051
-            TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F9C9D304A90
+            TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F9C9D304A90
     '''}
     golden_parsed_output_4 = {
         'vrf': {
@@ -3154,18 +3154,6 @@ class TestShowIpCefInternal(unittest.TestCase):
                                 },
                                 'flags': ['rlbls'],
                                 'output_chain': {
-                                    'frr': {
-                                        'primary': {
-                                            'primary': {
-                                                'tag_adj': {
-                                                    'GigabitEthernet0/1/7': {
-                                                        'addr': '27.86.198.29',
-                                                        'addr_info': '7F9C9D304A90',
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
                                     'label': ['362', 'implicit-null'],
                                     'tag_midchain': {
                                         'Tunnel65536': {
@@ -3173,6 +3161,12 @@ class TestShowIpCefInternal(unittest.TestCase):
                                             'tag_midchain_info': '7F9C9D301840',
                                         },
                                     },
+                                    'tag_adj': {
+                                            'GigabitEthernet0/1/7': {
+                                                'addr': '10.19.198.29',
+                                                'addr_info': '7F9C9D304A90',
+                                            },
+                                        },
                                 },
                                 'path_list': {
                                     '7F9C9E8D7A30': {

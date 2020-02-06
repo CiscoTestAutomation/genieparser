@@ -2154,7 +2154,13 @@ class ShowIpCefInternalSchema(MetaParser):
                                             },
                                         }
                                     },
-                                }
+                                    Optional('tag_adj'): {
+                                        Any(): {
+                                            'addr': str,
+                                            'addr_info': str,
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -2242,7 +2248,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # TAG midchain out of Tunnel65537 7F4F881C0718
         p8_1 = re.compile(r'^TAG +midchain +out +of +(?P<tunnel>[a-zA-Z\d]+) +(?P<info>[A-Z\d]+)$')
 
-        # TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F9C9D304A90
+        # TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F9C9D304A90
         p8_2 = re.compile(r'^TAG +adj +out +of +(?P<interface>\S+), +addr '
                           r'+(?P<addr>\S+)(?: +(?P<addr_info>[A-Z\d]+))?$')
 
@@ -2529,19 +2535,16 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     tag_midchain_dict['tag_midchain_info'] = group['info']
                 continue
 
-            # TAG adj out of GigabitEthernet0/1/7, addr 27.86.198.29 7F9C9D304A90
+            # TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F9C9D304A90
             m8_2 = p8_2.match(line)
             if m8_2:
                 group = m8_2.groupdict()
-                primary_dict = output_chain_dict.setdefault('frr', {}). \
-                                                 setdefault('primary', {}). \
-                                                 setdefault('primary', {}). \
-                                                 setdefault('tag_adj', {}). \
+                tag_adj_dict = output_chain_dict.setdefault('tag_adj', {}). \
                                                  setdefault(group['interface'], {})
 
-                primary_dict['addr'] = group['addr']
+                tag_adj_dict['addr'] = group['addr']
                 if group['addr_info']:
-                    primary_dict['addr_info'] = group['addr_info']
+                    tag_adj_dict['addr_info'] = group['addr_info']
                 continue
 
             # <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F0FF08D46D0>
