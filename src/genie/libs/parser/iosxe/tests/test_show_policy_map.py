@@ -3782,36 +3782,36 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_output15 = {'execute.return_value': '''
-    class-map match-any interactive1-IDL120932391
+    class-map match-any interactive1-ABC123123123
      match ip dscp cs2
-    class-map match-any interactive2-IDL120932391
+    class-map match-any interactive2-ABC123123123
      match ip dscp af21  af22  af23
-    class-map match-any interactive3-IDL120932391
+    class-map match-any interactive3-ABC123123123
      match ip dscp cs3  af31  af32  af33
-    class-map match-any customer-control-IDL120932391
+    class-map match-any customer-control-ABC123123123
      match ip dscp cs6  cs7
-    class-map match-any interactive21-IDL120932391
+    class-map match-any interactive21-ABC123123123
      match ip dscp cs2  af21  af22  af23
-    class-map match-any besteffort-IDL120932391
+    class-map match-any besteffort-ABC123123123
      match ip dscp cs1
-    class-map match-any realtime-IDL120932391
+    class-map match-any realtime-ABC123123123
      match ip dscp cs4  af41  af42  af43  cs5  ef
-    class-map match-any realtime2-IDL120932391
+    class-map match-any realtime2-ABC123123123
      match ip dscp cs5  ef
-    class-map match-any realtime1-IDL120932391
+    class-map match-any realtime1-ABC123123123
      match ip dscp cs4  af41  af42  af43
-    class-map match-any network-control-IDL120932391
-     match access-group name NETWORK-CONTROL-IDL120932391
+    class-map match-any network-control-ABC123123123
+     match access-group name NETWORK-CONTROL-ABC123123123
     !
-    olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
-     class network-control-IDL120932391
+    olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
+     class network-control-ABC123123123
       bandwidth percent 1
       random-detect dscp-based
       set cos 5
-     class realtime-IDL120932391
+     class realtime-ABC123123123
       priority percent 30
       set cos 5
-     class interactive3-IDL120932391
+     class interactive3-ABC123123123
       bandwidth percent 5
       random-detect dscp-based
       random-detect dscp 24 24 40 10
@@ -3819,7 +3819,7 @@ class test_show_policy_map(unittest.TestCase):
       random-detect dscp 28 24 40 10
       random-detect dscp 30 24 40 10
       set cos 5
-     class interactive21-IDL120932391
+     class interactive21-ABC123123123
       bandwidth percent 5
       random-detect dscp-based
       random-detect dscp 16 24 40 10
@@ -3827,7 +3827,7 @@ class test_show_policy_map(unittest.TestCase):
       random-detect dscp 20 24 40 10
       random-detect dscp 22 24 40 10
       set cos 5
-     class besteffort-IDL120932391
+     class besteffort-ABC123123123
       bandwidth percent 1
       random-detect dscp-based
       set cos 5
@@ -3842,23 +3842,23 @@ class test_show_policy_map(unittest.TestCase):
       random-detect dscp 56 24 40 10
       set cos 5
       fair-queue
-    policy-map GWS-WAN-OUT-ETH-IDL120932391
+    policy-map GWS-WAN-OUT-ETH-ABC123123123
      class class-default
       shape average 99872000
-       service-policy GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+       service-policy GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
     policy-map CLNE-MGMNT-OUT
      class class-default
       shape average 128000
-    policy-map GWS-LAN-OUT-IDL120932391
-     class customer-control-IDL120932391
+    policy-map GWS-LAN-OUT-ABC123123123
+     class customer-control-ABC123123123
       set cos 6
-     class realtime-IDL120932391
+     class realtime-ABC123123123
       set cos 5
-     class interactive3-IDL120932391
+     class interactive3-ABC123123123
       set cos 3
-     class interactive21-IDL120932391
+     class interactive21-ABC123123123
       set cos 2
-     class besteffort-IDL120932391
+     class besteffort-ABC123123123
       set cos 0
      class class-default
       set cos 1
@@ -3866,83 +3866,95 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output15 = {
-    'policy_map': {
-        'CLNE-MGMNT-OUT': {
-            'class': {
-                'class-default': {
-                    'shape_average_min': 128000,
+        'policy_map': {
+            'CLNE-MGMNT-OUT': {
+                'class': {
+                    'class-default': {
+                        'shape_average_min': 128000,
+                    },
+                },
+            },
+            'GWS-LAN-OUT-ABC123123123': {
+                'class': {
+                    'besteffort-ABC123123123': {
+                        'set': 'cos 0',
+                    },
+                    'class-default': {
+                        'set': 'cos 1',
+                    },
+                    'customer-control-ABC123123123': {
+                        'set': 'cos 6',
+                    },
+                    'interactive21-ABC123123123': {
+                        'set': 'cos 2',
+                    },
+                    'interactive3-ABC123123123': {
+                        'set': 'cos 3',
+                    },
+                    'realtime-ABC123123123': {
+                        'set': 'cos 5',
+                    },
+                },
+            },
+            'GWS-WAN-OUT-ETH-ABC123123123': {
+                'class': {
+                    'class-default': {
+                        'service_policy': 'GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123',
+                        'shape_average_min': 99872000,
+                    },
+                },
+            },
+            'GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123': {
+                'class': {
+                    'besteffort-ABC123123123': {
+                        'random_detect': {
+                            'bandwidth_percent': 1,
+                            'mode': 'dscp-based',
+                        },
+                        'set': 'cos 5',
+                    },
+                    'class-default': {
+                        'fair_queue': {
+                            'enabled': True,
+                        },
+                        'random_detect': {
+                            'bandwidth_percent': 58,
+                            'dscp': ['56', '24', '40', '10'],
+                            'mode': 'dscp-based',
+                        },
+                        'set': 'cos 5',
+                    },
+                    'interactive21-ABC123123123': {
+                        'random_detect': {
+                            'bandwidth_percent': 5,
+                            'dscp': ['22', '24', '40', '10'],
+                            'mode': 'dscp-based',
+                        },
+                        'set': 'cos 5',
+                    },
+                    'interactive3-ABC123123123': {
+                        'random_detect': {
+                            'bandwidth_percent': 5,
+                            'dscp': ['30', '24', '40', '10'],
+                            'mode': 'dscp-based',
+                        },
+                        'set': 'cos 5',
+                    },
+                    'network-control-ABC123123123': {
+                        'random_detect': {
+                            'bandwidth_percent': 1,
+                            'mode': 'dscp-based',
+                        },
+                        'set': 'cos 5',
+                    },
+                    'realtime-ABC123123123': {
+                        'priority_percent': 30,
+                        'set': 'cos 5',
+                    },
                 },
             },
         },
-        'GWS-LAN-OUT-IDL120932391': {
-            'class': {
-                'besteffort-IDL120932391': {
-                    'set': 'cos 0',
-                },
-                'class-default': {
-                    'set': 'cos 1',
-                },
-                'customer-control-IDL120932391': {
-                    'set': 'cos 6',
-                },
-                'interactive21-IDL120932391': {
-                    'set': 'cos 2',
-                },
-                'interactive3-IDL120932391': {
-                    'set': 'cos 3',
-                },
-                'realtime-IDL120932391': {
-                    'set': 'cos 5',
-                },
-            },
-        },
-        'GWS-WAN-OUT-ETH-IDL120932391': {
-            'class': {
-                'class-default': {
-                    'service_policy': 'GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391',
-                    'shape_average_min': 99872000,
-                },
-            },
-        },
-        'GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391': {
-            'class': {
-                'besteffort-IDL120932391': {
-                    'random_detect': {
-                        'bandwidth_percent': 1
-                    },
-                    'set': 'cos 5',
-                },
-                'class-default': {
-                    'random_detect': {
-                        'bandwidth_percent': 58
-                    },
-                    'set': 'cos 5',
-                },
-                'interactive21-IDL120932391': {
-                    'random_detect': {
-                        'bandwidth_percent': 5
-                    },
-                    'set': 'cos 5',
-                },
-                'interactive3-IDL120932391': {
-                    'random_detect': {
-                        'bandwidth_percent': 5
-                    },
-                    'set': 'cos 5',
-                },
-                'network-control-IDL120932391': {
-                    'random_detect': {
-                        'bandwidth_percent': 1
-                    },
-                    'set': 'cos 5',
-                },
-                'realtime-IDL120932391': {
-                    'set': 'cos 5',
-                },
-            },
-        },
-    },
-}
+    }
 
     def test_show_policy_map_empty(self):
         self.maxDiff = None
@@ -4060,10 +4072,10 @@ class test_show_policy_map(unittest.TestCase):
         print(re.colour_output());
         re.reset()
 
-        # import pprint
-        # pprint.pprint(parsed_output)
-        # import pdb
-        # pdb.set_trace()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
 
         self.assertEqual(parsed_output, self.golden_parsed_output15)
 

@@ -1475,7 +1475,13 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('cir_bps'): int,
                         Optional('cir_upper_bound_bps'): int,
                         Optional('cir_lower_bound_bps'): int,
+                        Optional('fair_queue'): {
+                            'enabled': bool,
+                        },
+                        Optional('priority_percent'): int,
                         Optional('random_detect'): {
+                            Optional('mode'): str, # 'dscp-based'
+                            Optional('dscp'): list, # ['24', '24', '40', 10']
                             Optional('exponential_weight'): int,
                             Optional('bandwidth_percent'): int,
                             Optional('wred_type'): str,
@@ -1548,7 +1554,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # Policy Map police-in
         # Policy Map policy_4-6-3~6
-        # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-IDL120932391
+        # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
         # policy-map CLNE-MGMNT-OUT
         # Policy-map egress policy
         p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S ]+))$')
@@ -1558,7 +1564,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Class class_4-6-3
         p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
 
-        # class realtime-IDL120932391
+        # class realtime-ABC123123123
         p2_same = re.compile(r'^class +(?P<class_map>([\S\-]+))$')
 
         # police 8000 9216 0
@@ -1619,6 +1625,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # bandwidth percent 5
         p7 = re.compile(r'^[bB]andwidth(:? percent)? +(?P<bandwidth>(\d+))(?: \(%\))?$')
 
+        # fair-queue
+        p8_0 = re.compile(r'^fair-queue$')
+
         # Weighted Fair Queueing
         p8 = re.compile(r'^Weighted +Fair +Queueing$')
 
@@ -1653,6 +1662,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
+
+        # priority percent 30
+        p10_2 = re.compile(r'^priority percent +(?P<percent>\d+)$')
 
         # Set cos 5
         # set cos 5
@@ -1691,6 +1703,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # queue-limit 77 packets
         p17_1 = re.compile(r'^queue-limit +(?P<queue_limit_packets>(\d+)) packets$')
 
+        # random-detect dscp-based
+        p18 = re.compile(r'^random-detect +(?P<mode>\S+)$')
+
+        # random-detect dscp 16 24 40 10
+        p18_1 = re.compile(r'^random-detect dscp +(?P<dscp>[\d ]+)$')
+
         for line in out.splitlines():
 
             line = line.strip()
@@ -1704,7 +1722,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
             # Class class-default
             # Class class c1
-            # class network-control-IDL120932391
+            # class network-control-ABC123123123
             m = p2.match(line) or p2_same.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
@@ -1717,7 +1735,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line=1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
@@ -1730,7 +1748,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
                 police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
@@ -1744,7 +1762,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
@@ -1758,7 +1776,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
                 continue
@@ -1769,7 +1787,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
@@ -1781,7 +1799,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
@@ -1811,8 +1829,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # violate - action drop
             m = p3_4.match(line)
             if m:
-                vioate_list.append(m.groupdict()['violate_action'])
-                police_dict['violate_action'] = vioate_list
+                violate_list.append(m.groupdict()['violate_action'])
+                police_dict['violate_action'] = violate_list
                 continue
 
             # service-policy child-policy
@@ -1881,6 +1899,28 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 elif weight_line != 1:
                     random_detect = class_map_dict.setdefault('random_detect', {})  # initialize random_detect{}
                     random_detect['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
+                continue
+
+            # random-detect dscp-based
+            m = p18.match(line)
+            if m:
+                random_detect = class_map_dict.setdefault('random_detect', {})
+                random_detect['mode'] = m.groupdict()['mode']
+                continue
+
+            # random-detect dscp 16 24 40 10
+            m = p18_1.match(line)
+            if m:
+                if 'random_detect' not in class_map_dict:
+                    random_detect = class_map_dict.setdefault('random_detect', {})
+
+                random_detect['dscp'] = m.groupdict()['dscp'].split()
+                continue
+
+            # fair-queue
+            m = p8_0.match(line)
+            if m:
+                class_map_dict.setdefault('fair_queue', {'enabled': True})
                 continue
 
             # Weighted Fair Queueing
@@ -1959,6 +1999,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
                 continue
 
+            # priority percent 30
+            m = p10_2.match(line)
+            if m:
+                class_map_dict['priority_percent'] = int(m.groupdict()['percent'])
+                continue
+
             # Set cos 5
             # set cos 5
             m = p11.match(line)
@@ -1997,7 +2043,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
                 police_dict['conform_burst'] = int(m.groupdict()['conform_burst'])
@@ -2005,7 +2051,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['peak_burst'] = int(m.groupdict()['peak_burst'])
                 police_dict['conform_action'] = conform_list.append(m.groupdict()['conform_action'])
                 police_dict['exceed_action'] = exceed_list.append(m.groupdict()['exceed_action'])
-                police_dict['violate_action'] = vioate_list.append(m.groupdict()['violate_action'])
+                police_dict['violate_action'] = violate_list.append(m.groupdict()['violate_action'])
                 continue
 
             # police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
@@ -2014,17 +2060,17 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_line = 1
                 conform_list = []
                 exceed_list = []
-                vioate_list = []
+                violate_list = []
                 conform_list.append(m.groupdict()['conform_action'])
                 exceed_list.append(m.groupdict()['exceed_action'])
-                vioate_list.append(m.groupdict()['violate_action'])
+                violate_list.append(m.groupdict()['violate_action'])
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
                 police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
                 police_dict['be_ms'] = int(m.groupdict()['be_ms'])
                 police_dict['conform_action'] = conform_list
                 police_dict['exceed_action'] = exceed_list
-                police_dict['violate_action'] = vioate_list
+                police_dict['violate_action'] = violate_list
                 continue
 
             #  time-based wred, exponential weight 9
