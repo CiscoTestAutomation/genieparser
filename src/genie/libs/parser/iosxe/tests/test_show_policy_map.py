@@ -3841,14 +3841,14 @@ class test_show_policy_map(unittest.TestCase):
       random-detect dscp 56 24 40 10
       set cos 5
       fair-queue
-    policy-map GWS-WAN-OUT-ETH-ABC123123123
+    policy-map ACD-QWE-TQQ-IIH-ABC123123123
      class class-default
       shape average 99872000
        service-policy GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
-    policy-map CLNE-MGMNT-OUT
+    policy-map ABCD-QWER-TYU
      class class-default
       shape average 128000
-    policy-map GWS-LAN-OUT-ABC123123123
+    policy-map ACD-QWE-TYU-ABC123123123
      class customer-control-ABC123123123
       set cos 6
      class realtime-ABC123123123
@@ -3866,14 +3866,14 @@ class test_show_policy_map(unittest.TestCase):
 
     golden_parsed_output15 = {
         'policy_map': {
-            'CLNE-MGMNT-OUT': {
+            'ABCD-QWER-TYU': {
                 'class': {
                     'class-default': {
                         'shape_average_min': 128000,
                     },
                 },
             },
-            'GWS-LAN-OUT-ABC123123123': {
+            'ACD-QWE-TYU-ABC123123123': {
                 'class': {
                     'besteffort-ABC123123123': {
                         'set': 'cos 0',
@@ -3895,7 +3895,7 @@ class test_show_policy_map(unittest.TestCase):
                     },
                 },
             },
-            'GWS-WAN-OUT-ETH-ABC123123123': {
+            'ACD-QWE-TQQ-IIH-ABC123123123': {
                 'class': {
                     'class-default': {
                         'service_policy': 'GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123',

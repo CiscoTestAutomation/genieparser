@@ -1555,7 +1555,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # Policy Map police-in
         # Policy Map policy_4-6-3~6
         # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
-        # policy-map CLNE-MGMNT-OUT
+        # policy-map ABCD-QWER-TYU
         # Policy-map egress policy
         p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S ]+))$')
         
