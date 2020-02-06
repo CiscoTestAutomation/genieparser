@@ -18924,169 +18924,32 @@ class TestShowInterfacesStatus(unittest.TestCase):
     maxDiff = None
 
     golden_interface_output1 = {'execute.return_value': ''' 
-
-    [2019-11-29 13:25:12,766] +++ jkgipswi001: executing command 'show interfaces status' +++
     show interfaces status
     
     Port      Name               Status       Vlan       Duplex  Speed Type
-    Gi1/1     To Minet           notconnect   1            auto   auto 10/100/1000-TX
-    Gi1/2     TelenorVOIP        notconnect   125          full    100 10/100/1000-TX
-    Gi1/3     DP                 connected    132        a-full a-1000 10/100/1000-TX
-    Gi1/4     DP                 notconnect   132          auto   auto 10/100/1000-TX
-    Gi1/5     DP                 connected    132        a-full a-1000 10/100/1000-TX
-    Gi1/6                        connected    100        a-full a-1000 10/100/1000-TX
+    Gi1/1     To Abcde           notconnect   1            auto   auto 10/100/1000-TX
+    Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+    Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
     Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/8                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/9                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/10    To swi002     connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi1/11                       connected    136        a-full a-1000 10/100/1000-TX
-    Gi1/12                       connected    99         a-full  a-100 10/100/1000-TX
-    Gi1/13                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/14                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi1/15                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/16                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/17                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/18                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/19                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/20                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/21                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/22                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/23                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/24                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/25                       connected    250        a-full a-1000 10/100/1000-TX
-    Gi1/26                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/27                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi1/28                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/29                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/30                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi1/31                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi1/32                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/33                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/34                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/35                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi1/36                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/37    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi1/38                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/39                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi1/40                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/41                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi1/42                       connected    99         a-full  a-100 10/100/1000-TX
-    Gi1/43    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
-    Gi1/45    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/47                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi1/48                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/1                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/2                        connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/3                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/4                        connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/5                        connected    99         a-full a-1000 10/100/1000-TX
-    Gi2/6                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/7                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/8                        connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/9                        connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/10                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/11    DEPLOY             connected    136        a-full a-1000 10/100/1000-TX
+    Gi2/11    APQWSR             connected    136        a-full a-1000 10/100/1000-TX
     Gi2/12                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/13                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/14                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/15                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/16                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/17                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/18                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/19                       connected    140        a-full a-1000 10/100/1000-TX
-    Gi2/20                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/21                       connected    550        a-full a-1000 10/100/1000-TX
-    Gi2/22    DEPLOY             notconnect   136          auto   auto 10/100/1000-TX
     Gi2/23                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi2/24    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi2/25    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi2/26    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi2/27                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/28                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/29                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/30                       connected    250        a-full a-1000 10/100/1000-TX
-    Gi2/31                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/32                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/33                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/34                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi2/35                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/36                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/37                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/38                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/39                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/40                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/41                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/42                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/43                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/44                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/45                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/46                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi2/47                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi2/48                       connected    100        a-full a-1000 10/100/1000-TX
-    Te3/1                        inactive     1            full   auto No XCVR
+    Gi2/24    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
     Te3/2                        inactive     1            full   auto No XCVR
-    Gi3/3                        notconnect   99           full   1000 No Gbic
     Gi3/4                        notconnect   99           full   1000 No Gbic
-    Gi3/5     To jkgipswi004     connected    trunk        full   1000 1000BaseSX
-    Gi3/6     To jkgipswi003     connected    trunk        full   1000 1000BaseSX
-    Gi5/1                        connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/2                        connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/3                        connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/4                        connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/5                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/6                        connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/7                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/8                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/9                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/10                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/11                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/12                       connected    99         a-full a-1000 10/100/1000-TX
-    Gi5/13                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/14    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi5/15    CAPWAP             connected    trunk      a-full a-1000 10/100/1000-TX
-    Gi5/16                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/17                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/18                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/19                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/20                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/21                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/22                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/23                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/24                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/25                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/26                       connected    136        a-full a-1000 10/100/1000-TX
-    Gi5/27                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/28                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/29                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/30                       connected    100        a-full a-1000 10/100/1000-TX
-    Gi5/31                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/32                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/33                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/34                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/35                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/36                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/37                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/38                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/39                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/40                       connected    140        a-full  a-100 10/100/1000-TX
-    Gi5/41                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/42                       connected    99         a-full   a-10 10/100/1000-TX
-    Gi5/43                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/44                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/45                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/46                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/47                       notconnect   99           auto   auto 10/100/1000-TX
-    Gi5/48                       notconnect   99           auto   auto 10/100/1000-TX
-    switch1#
+    Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
+    Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
     '''}
 
     golden_parsed_interface_output1 = {
     'interfaces': {
         'Gi1/1': {
             'duplex_code': 'auto',
-            'name': 'To Minet',
+            'name': 'To Abcde',
             'port_speed': 'auto',
             'status': 'notconnect',
             'type': '10/100/1000-TX',
@@ -19094,268 +18957,27 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi1/10': {
             'duplex_code': 'a-full',
-            'name': 'To swi002',
+            'name': 'To cft123',
             'port_speed': 'a-1000',
             'status': 'connected',
             'type': '10/100/1000-TX',
             'vlan': 'trunk',
         },
-        'Gi1/11': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '136',
-        },
-        'Gi1/12': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/13': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/14': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/15': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/16': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/17': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/18': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/19': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
         'Gi1/2': {
             'duplex_code': 'full',
-            'name': 'TelenorVOIP',
+            'name': 'TelenlqPOIU',
             'port_speed': '100',
             'status': 'notconnect',
             'type': '10/100/1000-TX',
             'vlan': '125',
         },
-        'Gi1/20': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/21': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/22': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/23': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/24': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/25': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '250',
-        },
-        'Gi1/26': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/27': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/28': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/29': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
         'Gi1/3': {
             'duplex_code': 'a-full',
-            'name': 'DP',
+            'name': 'SE',
             'port_speed': 'a-1000',
             'status': 'connected',
             'type': '10/100/1000-TX',
             'vlan': '132',
-        },
-        'Gi1/30': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi1/31': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/32': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/33': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/34': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/35': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/36': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/37': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
-        },
-        'Gi1/38': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/39': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi1/4': {
-            'duplex_code': 'auto',
-            'name': 'DP',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '132',
-        },
-        'Gi1/40': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/41': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/42': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/43': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
         },
         'Gi1/44': {
             'duplex_code': 'a-full',
@@ -19366,7 +18988,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi1/45': {
             'duplex_code': 'a-full',
-            'name': 'CAPWAP',
+            'name': 'ASDFGH',
             'port_speed': 'a-1000',
             'status': 'connected',
             'type': '10/100/1000-TX',
@@ -19379,64 +19001,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
             'type': '10/100/1000-TX',
             'vlan': '99',
         },
-        'Gi1/47': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/48': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/5': {
-            'duplex_code': 'a-full',
-            'name': 'DP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '132',
-        },
-        'Gi1/6': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
         'Gi1/7': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/8': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi1/9': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/1': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/10': {
             'duplex_code': 'auto',
             'port_speed': 'auto',
             'status': 'notconnect',
@@ -19445,7 +19010,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi2/11': {
             'duplex_code': 'a-full',
-            'name': 'DEPLOY',
+            'name': 'APQWSR',
             'port_speed': 'a-1000',
             'status': 'connected',
             'type': '10/100/1000-TX',
@@ -19458,84 +19023,6 @@ class TestShowInterfacesStatus(unittest.TestCase):
             'type': '10/100/1000-TX',
             'vlan': '99',
         },
-        'Gi2/13': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/14': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/15': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/16': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/17': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/18': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/19': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi2/2': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/20': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/21': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '550',
-        },
-        'Gi2/22': {
-            'duplex_code': 'auto',
-            'name': 'DEPLOY',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '136',
-        },
         'Gi2/23': {
             'duplex_code': 'a-full',
             'port_speed': 'a-100',
@@ -19545,238 +19032,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi2/24': {
             'duplex_code': 'a-full',
-            'name': 'CAPWAP',
+            'name': 'ASDFGH',
             'port_speed': 'a-1000',
             'status': 'connected',
             'type': '10/100/1000-TX',
             'vlan': 'trunk',
-        },
-        'Gi2/25': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
-        },
-        'Gi2/26': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
-        },
-        'Gi2/27': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/28': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/29': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/3': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/30': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '250',
-        },
-        'Gi2/31': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/32': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/33': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/34': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/35': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/36': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/37': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/38': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/39': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/4': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/40': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/41': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/42': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/43': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/44': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/45': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/46': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/47': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/48': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi2/5': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/6': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/7': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/8': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi2/9': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi3/3': {
-            'duplex_code': '1000',
-            'name': 'notconnect',
-            'port_speed': 'No',
-            'status': '99',
-            'type': 'Gbic',
-            'vlan': 'full',
         },
         'Gi3/4': {
             'duplex_code': '1000',
@@ -19788,7 +19048,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi3/5': {
             'duplex_code': 'full',
-            'name': 'To jkgipswi004',
+            'name': 'To loedutjb234',
             'port_speed': '1000',
             'status': 'connected',
             'type': '1000BaseSX',
@@ -19796,357 +19056,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
         },
         'Gi3/6': {
             'duplex_code': 'full',
-            'name': 'To jkgipswi003',
+            'name': 'To loedutjb345',
             'port_speed': '1000',
             'status': 'connected',
             'type': '1000BaseSX',
             'vlan': 'trunk',
-        },
-        'Gi5/1': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/10': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/11': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/12': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/13': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/14': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
-        },
-        'Gi5/15': {
-            'duplex_code': 'a-full',
-            'name': 'CAPWAP',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': 'trunk',
-        },
-        'Gi5/16': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/17': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/18': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/19': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/2': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/20': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/21': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/22': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/23': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/24': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/25': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/26': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '136',
-        },
-        'Gi5/27': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/28': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/29': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/3': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/30': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-1000',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '100',
-        },
-        'Gi5/31': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/32': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/33': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/34': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/35': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/36': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/37': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/38': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/39': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/4': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/40': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-100',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '140',
-        },
-        'Gi5/41': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/42': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/43': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/44': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/45': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/46': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/47': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/48': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/5': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/6': {
-            'duplex_code': 'a-full',
-            'port_speed': 'a-10',
-            'status': 'connected',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/7': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/8': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Gi5/9': {
-            'duplex_code': 'auto',
-            'port_speed': 'auto',
-            'status': 'notconnect',
-            'type': '10/100/1000-TX',
-            'vlan': '99',
-        },
-        'Te3/1': {
-            'duplex_code': 'auto',
-            'name': 'inactive',
-            'port_speed': 'No',
-            'status': '1',
-            'type': 'XCVR',
-            'vlan': 'full',
         },
         'Te3/2': {
             'duplex_code': 'auto',
@@ -20169,6 +19083,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
         self.device = Mock(**self.golden_interface_output1)
         obj = ShowInterfacesStatus(device=self.device)
         parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
 if __name__ == '__main__':
