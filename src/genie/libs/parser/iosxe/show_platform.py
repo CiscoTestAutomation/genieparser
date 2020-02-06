@@ -2,7 +2,6 @@
 
 IOSXE parsers for the following show commands:
 
-    * 'show bootvar'
     * 'show version'
     * 'dir'
     * 'show redundancy'
@@ -31,131 +30,6 @@ except (ImportError, OSError):
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
-
-class ShowBootvarSchema(MetaParser):
-    """Schema for show bootvar"""
-
-    schema = {
-        Optional('current_boot_variable'): str,
-        Optional('next_reload_boot_variable'): str,
-        Optional('config_file'): str,
-        Optional('bootldr'): str,
-        Optional('active'): {
-            'configuration_register': str,
-            Optional("next_reload_configuration_register"): str,
-            Optional('boot_variable'): str,
-        },
-        Optional('standby'): {
-            'configuration_register': str,
-            Optional('boot_variable'): str,
-        },
-    }
-
-
-class ShowBootvar(ShowBootvarSchema):
-    """Parser for show boot"""
-
-    cli_command = 'show bootvar'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        boot_dict = {}
-        boot_variable = None
-
-        # BOOT variable = bootflash:/asr1000rpx.bin,12;
-        # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
-
-        # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
-        p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
-
-        # Configuration register is 0x2002
-        # Configuration register is 0x2 (will be 0x2102 at next reload)
-        p3 = re.compile(r'Configuration +register +is +(?P<var1>(\S+))'
-                        r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
-
-        # Standby Configuration register is 0x2002
-        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
-
-        # CONFIG_FILE variable =
-        p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
-
-        # BOOTLDR variable =
-        p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
-
-        # BOOTLDR variable does not exist
-        # not parsing
-
-        # Standby not ready to show bootvar
-        # not parsing
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
-            m = p1.match(line)
-            if m:
-                boot = m.groupdict()['var']
-                if boot:
-                    boot_dict['next_reload_boot_variable'] = boot
-                    boot_dict.setdefault('active', {})['boot_variable'] = boot
-                continue
-
-            # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
-            m = p2.match(line)
-            if m:
-                boot = m.groupdict()['var']
-                if boot:
-                    boot_dict.setdefault('standby', {})['boot_variable'] = boot
-                continue
-
-            # Configuration register is 0x2002
-            m = p3.match(line)
-            if m:
-                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var1']
-                if m.groupdict()['var2']:
-                    boot_dict.setdefault('active', {})['next_reload_configuration_register'] = m.groupdict()['var2']
-                continue
-
-            # Standby Configuration register is 0x2002
-            m = p4.match(line)
-            if m:
-                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
-                continue
-
-            # CONFIG_FILE variable =
-            m = p5.match(line)
-            if m:
-                if m.groupdict()['var']:
-                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
-                continue
-
-            # BOOTLDR variable =
-            m = p6.match(line)
-            if m:
-                if m.groupdict()['var']:
-                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
-                continue
-        return boot_dict
-
-
-class ShowBoot(ShowBootvar):
-    """Parser for show boot"""
-
-    cli_command = 'show boot'
-
-    def cli(self, output=None):
-
-        # Execute command if output not provided
-        if output is None:
-            output = self.device.execute(self.cli_command)
-
-        return super().cli(output=output)
 
 
 class ShowVersionSchema(MetaParser):
@@ -2981,8 +2855,7 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
     def cli(self, process, plane, output=None):
 
         if output is None:
-            cmd = self.cli_command.format(process=process, plane=plane)
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(process=process, plane=plane))
         else:
             out = output
 
@@ -3002,12 +2875,16 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
         for line in out.splitlines():
             line = line.strip()
  
+            # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 parsed_dict['tracekey'] = str(group['tracekey'])
                 continue
 
+            # callsite      thread    diff_byte               diff_call
+            # ----------------------------------------------------------
+            # 1617611779    31884     57424                   2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -3026,7 +2903,9 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
         Any():
             {'allocs': int,
             'frees': int,
-            'call_diff': int}
+            'call_diff': int,
+            'callsite': int,
+            'thread_id': int}
     }
 
 class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
@@ -3036,8 +2915,7 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
 
     def cli(self, process, plane, output=None):
         if output is None:
-            cmd = self.cli_command.format(process=process, plane=plane)
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(process=process, plane=plane))
         else:
             out = output
 
@@ -3045,15 +2923,18 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
         parsed_dict = {}
 
         # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
-        #   callsite: 2150603778, thread_id: 31884
-        #   allocs: 1, frees: 0, call_diff: 1
         p1 = re.compile(r'backtrace: (?P<backtrace>[\w#\d\s:+]+)$')
 
-        p2 = re.compile(r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
+        #   callsite: 2150603778, thread_id: 31884
+        p2 = re.compile(r'callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)')
+
+        #   allocs: 1, frees: 0, call_diff: 1
+        p3 = re.compile(r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
 
         for line in out.splitlines():
             line = line.strip()
  
+            # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -3061,7 +2942,16 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
                 backtrace_dict = parsed_dict.setdefault(backtrace, {})
                 continue
 
+            #   callsite: 2150603778, thread_id: 31884
             m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                backtrace_dict['callsite'] = int(group['callsite'])
+                backtrace_dict['thread_id'] = int(group['thread_id'])
+                continue
+
+            #   allocs: 1, frees: 0, call_diff: 1
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 backtrace_dict['allocs'] = int(group['allocs'])
@@ -5604,7 +5494,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}',
-        'show processes memory sorted' # sorted argument is depth (ex: depth of 10 would only parse first 10 lines of sorted output)
+        'show processes memory sorted'
     ]
 
     def cli(self, include=None, sorted=None, output=None):
@@ -5617,7 +5507,6 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
                 cmd = self.cli_command[1].format(include=include)
             elif sorted:
                 cmd = self.cli_command[2]
-                sorted_line_count = 0
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -5672,10 +5561,6 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             # 1   0    3415536     879912    2565568          0          0 Chunk Manager
             m = p4.match(line)
             if m:
-                if sorted:
-                    sorted_line_count += 1
-                    if sorted_line_count > sorted:
-                        break
                 group = m.groupdict()
                 pid = int(group['pid'])
                 index = pid_index.get(pid, 0) + 1

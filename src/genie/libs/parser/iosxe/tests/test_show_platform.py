@@ -8,7 +8,6 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
-                                                  ShowBootvar,\
                                                   ShowRedundancy,\
                                                   ShowRedundancyStates,\
                                                   ShowInventory,\
@@ -37,92 +36,6 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
                                                   ShowProcessesMemory
-
-
-# ============================
-# Unit test for 'show bootvar'
-# ============================
-class test_show_bootvar(unittest.TestCase):
-    '''Unit test for "show bootvar" '''
-
-    maxDiff = None
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_output1 = {'execute.return_value': '''
-        asr-MIB-1#show bootvar
-        BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
-        CONFIG_FILE variable =
-        BOOTLDR variable does not exist
-        Configuration register is 0x2
-
-        Standby not ready to show bootvar
-
-        asr-MIB-1#
-        '''}
-
-    golden_parsed_output1 = {
-        'active': 
-            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
-            'configuration_register': '0x2'},
-        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
-
-    golden_output2 = {'execute.return_value': '''
-        asr-MIB-1#show bootvar
-        BOOT variable =
-        CONFIG_FILE variable =
-        BOOTLDR variable does not exist
-        Configuration register is 0x2 (will be 0x2102 at next reload)
-
-        Standby not ready to show bootvar
-
-        asr-MIB-1#
-        '''}
-
-    golden_parsed_output2 = {
-        'active': 
-            {'configuration_register': '0x2',
-            'next_reload_configuration_register': '0x2102'}}
-
-    golden_output3 = {'execute.return_value': '''
-        asr-MIB-1#show bootvar
-        BOOT variable = bootflash:12351822-iedge-asr-uut,12;
-        CONFIG_FILE variable =
-        BOOTLDR variable does not exist
-        Configuration register is 0x2102
-
-        Standby not ready to show bootvar
-        '''}
-
-    golden_parsed_output3 = {
-        'active': 
-            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
-            'configuration_register': '0x2102'},
-        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
-
-    def test_show_bootvar_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBootvar(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_show_bootvar_full1(self):
-        self.device = Mock(**self.golden_output1)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_bootvar_full2(self):
-        self.device = Mock(**self.golden_output2)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
-
-    def test_show_bootvar_full3(self):
-        self.device = Mock(**self.golden_output3)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 class TestShowVersion(unittest.TestCase):
@@ -4454,12 +4367,16 @@ class TestShowPlatformSoftwareMemoryBacktrace(unittest.TestCase):
         '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B9800 re_mgr:7F7AFA351000+122BC re_mgr:7F7AFA351000+2C203 re_mgr:7F7AFA351000+16EA5 re_mgr:7F7AFA351000+136FD prelib:7F7B033EE000+3F8E':
             {'allocs': 198,
             'frees': 0,
-            'call_diff': 198
+            'call_diff': 198,
+            'callsite': 3761680384,
+            'thread_id': 16066
             },
         '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B985E re_mgr:7F7AFA351000+123FA :556841E8C000+CE61E :556841E8C000+CD815 re_mgr:7F7AFA351000+1DDC4 re_mgr:7F7AFA351000+16EA5':
             {'allocs': 11,
             'frees': 0,
-            'call_diff': 11
+            'call_diff': 11,
+            'callsite': 3761680384,
+            'thread_id': 16066
             }
     }
 
@@ -4467,37 +4384,51 @@ class TestShowPlatformSoftwareMemoryBacktrace(unittest.TestCase):
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 1,
             'frees': 0,
-            'call_diff': 1
+            'call_diff': 1,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7A0F5 ui:7F74770E4000+471E1 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 1,
             'frees': 0,
-            'call_diff': 1
+            'call_diff': 1,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7B63A ui:7F74770E4000+47232 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 1,
             'frees': 0,
-            'call_diff': 1
+            'call_diff': 1,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 tdllib:7F7474D05000+6D0D1 cdlcore:7F7466A6B000+37D15 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745 evlib:7F7478862000+8E37':
             {'allocs': 3,
             'frees': 0,
-            'call_diff': 3
+            'call_diff': 3,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+3380A cdlcore:7F7466A6B000+345FC cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 2,
             'frees': 0,
-            'call_diff': 2
+            'call_diff': 2,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2C185 cdlcore:7F7466A6B000+34651 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 2,
             'frees': 0,
-            'call_diff': 2
+            'call_diff': 2,
+            'callsite': 2150603778,
+            'thread_id': 31884
             },
         '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2D67B cdlcore:7F7466A6B000+346A2 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
             {'allocs': 2,
             'frees': 0,
-            'call_diff': 2
+            'call_diff': 2,
+            'callsite': 2150603778,
+            'thread_id': 31884
             }
     }
 
@@ -19391,21 +19322,6 @@ class TestShowProcessMemory(unittest.TestCase):
            0   0  300693520   48258952  232782240          0          0 *Init*
            4   0   22517320     103960   22275464          0          0 RF Slave Main Th
           82   0  327917232    3336888   15636504          0          0 IOSD ipc task
-           0   0  176469928  171522624    5961896   24110359    1233588 *Dead*
-         254   0  254238664  251084832    4737200          0          0 Exec
-         490   0    4302136     254040    4090040     849828          0 EEM ED Syslog
-         509   0    2099024     218912    1910056          0          0 EEM Server
-         442   0    2209480    1055968    1089736          0          0 Crypto CA
-           1   0     984576       6944    1014520          0          0 Chunk Manager
-         348   0     971760      86936     937904          0          0 CEF: IPv4 proces
-         241   0     807712       3808     858064          0          0 IP ARP Adjacency
-           0   0          0          0     723568          0          0 *MallocLite*
-         431   0     462944       1008     499880          0          0 EST Client
-         245   0     838392     345256     492432          0          0 mDNS
-         147   0   13765808   13092880     464472          0          0 SAMsgThread
-         491   0     392736       9464     425216      72316          0 EEM ED Generic
-         456   0     331040        336     384648          0          0 Crypto IKEv2
-         389   0     379008        456     318544          0          0 LSD Main Proc
     '''}
 
     def test_empty(self):
@@ -19432,7 +19348,7 @@ class TestShowProcessMemory(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_sorted)
         platform_obj = ShowProcessesMemory(device=self.device)
-        parsed_output = platform_obj.parse(sorted=3)
+        parsed_output = platform_obj.parse(sorted=True)
         self.assertEqual(parsed_output, self.golden_parsed_output_sorted)
 
 if __name__ == '__main__':
