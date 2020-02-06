@@ -1182,9 +1182,38 @@ class TestShowRouteIpv4(unittest.TestCase):
     U - per-user static route, o - ODR, L - local, G - DAGR, l - LISP
     A - access/subscriber, a - Application route
     M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+    
+    Gateway of last resort is not set
+
+    S 10.2.2.2/32 is directly connected, 00:06:36, Null0
     '''}
 
-    # golden_parsed_output_10
+    golden_parsed_output_10 = {
+    'vrf': {
+        'L:192': {
+            'address_family': {
+                'ipv4': {
+                    'routes': {
+                        '10.2.2.2/32': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'Null0': {
+                                        'outgoing_interface': 'Null0',
+                                        'updated': '00:06:36',
+                                    },
+                                },
+                            },
+                            'route': '10.2.2.2/32',
+                            'source_protocol': 'static',
+                            'source_protocol_codes': 'S',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -1267,11 +1296,6 @@ class TestShowRouteIpv4(unittest.TestCase):
         self.device = Mock(**self.golden_output_10)
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(vrf='L:192')
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 # ============================================
