@@ -42,7 +42,7 @@ class ShowLacpSystemId(ShowLacpSystemIdSchema):
         result_dict = {}
         # Priority  MAC Address
         # --------  -----------------
-        #   0x0064  00-1b-0c-10-5a-26
+        #   0x0064  00-1b-0c-ff-6a-36
         p1 = re.compile(r'^(?P<system_priority>[\w]+) +(?P<system_id_mac>[\w\.\-]+)$')
 
         for line in out.splitlines():
@@ -177,7 +177,7 @@ class ShowBundle(ShowBundleSchema):
         # Local bandwidth <effective/available>:  100000 / 100000 kbps
         p4 = re.compile(r'^Local +bandwidth.*: *(?P<effective>[\d]+) *(\/ *|\()(?P<available>[\d]+)\)?.*$')
 
-        # MAC address (source):  001b.0c10.5a24 (Chassis pool)
+        # MAC address (source):  001b.0cff.6a34 (Chassis pool)
         p5 = re.compile(r'^MAC address.*: *(?P<mac_address>[\w.-]+) +\((?P<mac_address_source>.*)\)$')
 
         # Inter-chassis link:  No
@@ -330,7 +330,7 @@ class ShowBundle(ShowBundleSchema):
                 bw_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
-            # MAC address (source):  001b.0c10.5a24 (Chassis pool)
+            # MAC address (source):  001b.0cff.6a34 (Chassis pool)
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -666,8 +666,8 @@ class ShowLacp(ShowLacpSchema):
         p1 = re.compile(r'^Bundle-Ether(?P<bundle_id>[\d]+)$')
 
         #   Port          (rate)  State    Port ID       Key    System ID
-        #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
-        #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
+        #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
+        #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
         p2 = re.compile(r'^(?P<interface>[\S]+) +(?P<rate>[\d]+)s +(?P<state>[\w-]+)'
                          ' +(?P<port_id>[\w, ]+) +(?P<key>[\w]+)'
                          ' +(?P<system_id>[\w\-, ]+)$')
@@ -694,8 +694,8 @@ class ShowLacp(ShowLacpSchema):
                 continue
 
             #   Port          (rate)  State    Port ID       Key    System ID
-            #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
-            #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
+            #   Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
+            #    Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
             m = p2.match(line)
             if m:
                 group = m.groupdict()

@@ -258,7 +258,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
                     str(m.groupdict()['primary_node2'])
                 continue
 
-            # mac addr             : 025e.ea57.a400
+            # mac addr             : 025e.eaff.fb57
             p7 = re.compile(r'\s*mac +addr *:'
                              ' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
             m = p7.match(line)

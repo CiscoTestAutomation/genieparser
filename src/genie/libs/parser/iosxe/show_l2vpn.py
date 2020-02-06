@@ -121,13 +121,13 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
         #     vfi VPLS-2051 neighbor 10.120.202.64 2051
         #     Port-channel1 service instance 2051 (split-horizon)
         #     GigabitEthernet0/0/3 service instance 3051 (split-horizon)
-        #    -   000C.29F8.5078 forward static_r  0    OCE_PTR:0xe8e5dda0
+        #    -   000C.29FF.4971 forward static_r  0    OCE_PTR:0xe8e5dda0
         p6 = re.compile(r'^(?P<member_port>[\w\d\-\/\s\.:]+)( +\(.*\))?$')
 
         #    AED MAC address    Policy  Tag       Age  Pseudoport
-        #    0   0000.A000.0027 forward dynamic   3142 Port-channel1.EFP2051
-        #    0   0000.A000.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-        #    -   000C.29F8.5078 forward static_r  0    OCE_PTR:0xe8e5dda0
+        #    0   0000.A0FF.0027 forward dynamic   3142 Port-channel1.EFP2051
+        #    0   0000.A0FF.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+        #    -   000C.29FF.4971 forward static_r  0    OCE_PTR:0xe8e5dda0
         p7 = re.compile(r'^(?P<aed>[\d-]+) +(?P<mac_address>[\w\d\.]+) +(?P<policy>\w+) +(?P<tag>\w+)'
                          ' +(?P<age>\d+) +(?P<pseudoport>[\w\d\-\.\/:]+)$')
 

@@ -609,7 +609,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 continue
 
             # deny   any any vlan 10
-            # permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb aarp
+            # permit host aaaa.aaff.5555 host bbbb.bbff.7777 aarp
             m = p_mac_acl.match(line)
             if m:
                 group = m.groupdict()

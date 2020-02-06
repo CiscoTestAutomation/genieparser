@@ -972,7 +972,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Refresh Epoch 1
         p7 = re.compile(r'^Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
 
-        # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+        # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
         p8 = re.compile(r'^Extended +Community\:'
                         r' +(?P<ext_community>([a-zA-Z0-9\-\:]+)) +ENCAP *:'
                         r'(?P<encap>(\d+)) +Router +(?P<router_mac>(\S+))$')
@@ -1019,7 +1019,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         p13 = re.compile(r'^vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
                          r' +vni\:(?P<vni>[0-9]+)$')
 
-        # local router mac:001E.7A13.E9BF
+        # local router mac:001E.7AFF.FCD2
         p14 = re.compile(r'^local +router +mac\:'
                          r'(?P<local_router_mac>[a-zA-Z0-9\.]+)$')
 
@@ -1394,7 +1394,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 refresh_epoch = int(m.groupdict()['refresh_epoch'])
                 continue
 
-            # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
             m = p8.match(line)
             if m:
                 if 'evpn' not in subdict:
@@ -1489,7 +1489,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['local_vxlan_vtep']['vni'] = str(m.groupdict()['vni'])
                 continue
 
-            # local router mac:001E.7A13.E9BF
+            # local router mac:001E.7AFF.FCD2
             m = p14.match(line)
             if m and local_vxlan_vtep:
                 subdict['local_vxlan_vtep']['local_router_mac'] = \

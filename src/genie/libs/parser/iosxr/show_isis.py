@@ -210,7 +210,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         # Total adjacency count: 1
         p3 = re.compile(r'^Total +adjacency +count: +(?P<adjacency_count>(\d+))$')
 
-        # R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    26   22:30:26 Yes None None
+        # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
         p4 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
                          '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<ipv4_bfd>([\s\w]+)) +(?P<ipv6_bfd>([\w\s]+))$')
 
@@ -259,7 +259,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
                 level_dict['total_adjacency_count'] = int(m.groupdict()['adjacency_count'])
                 continue
 
-            # R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    26   22:30:26 Yes None None
+            # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
             m = p4.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
@@ -336,7 +336,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
         # IS-IS 4445 neighbors:
         p1 = re.compile(r'^IS-IS\s+(?P<isis_name>\S+)\s*neighbors:$')
 
-        # R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
+        # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None|Init)+) +(?P<holdtime>\S+) '
                          '+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
 
@@ -356,7 +356,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                                                setdefault(vrf, {})
                 continue
 
-            # R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
+            # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
             m = p2.match(line)
             if m:
                 system_id = m.groupdict()['system_id']
@@ -533,7 +533,7 @@ class ShowIsis(ShowIsisSchema):
         # VRF context: VRF1
         r2 = re.compile(r'VRF\s+context\s*:\s*(?P<vrf>.+)')
 
-        # System Id: 3333.3333.3333
+        # System Id: 3333.33ff.6666
         r3 = re.compile(r'System\s+Id\s*:\s*(?P<system_id>\S+)')
 
         # Instance Id: 0
@@ -648,7 +648,7 @@ class ShowIsis(ShowIsisSchema):
 
                 continue
 
-            # System Id: 3333.3333.3333
+            # System Id: 3333.33ff.6666
             result = r3.match(line)
             if result:
                 group = result.groupdict()
@@ -967,9 +967,9 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         # IS-IS TEST1 hostnames
         r1 = re.compile(r'IS\-IS\s(?P<isis>.+)\s+hostnames')
 
-        # 2     1720.1800.0254 tor-28.tenlab-cloud
-        # 2     1720.1800.0213 leaf-2.qa-site1
-        # 2     1720.1800.0250 tor-23.tenlab-cloud
+        # 2     1720.18ff.0254 tor-28.tenlab-cloud
+        # 2     1720.18ff.0213 leaf-2.qa-site1
+        # 2     1720.18ff.0250 tor-23.tenlab-cloud
         r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+'
                          '(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
 
@@ -993,9 +993,9 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
                 continue
 
-            # 2     1720.1800.0254 tor-28.tenlab-cloud
-            # 2     1720.1800.0213 leaf-2.qa-site1
-            # 2     1720.1800.0250 tor-23.tenlab-cloud            
+            # 2     1720.18ff.0254 tor-28.tenlab-cloud
+            # 2     1720.18ff.0213 leaf-2.qa-site1
+            # 2     1720.18ff.0250 tor-23.tenlab-cloud            
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -2645,7 +2645,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r36 = re.compile(r'Next\s+LAN\s+IIH\s+in\s*:\s*'
                          r'(?P<next_lan_iih>\d+)\s*s')
 
-        # SNPA:                   fa16.3eb0.d50f
+        # SNPA:                   fa16.3eff.86bf
         r37 = re.compile(r'SNPA\s*:\s*(?P<snpa>\S+)')
 
         # Layer-2 MCast Groups Membership:
@@ -3126,7 +3126,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
                 continue
 
-            # SNPA:                   fa16.3eb0.d50f
+            # SNPA:                   fa16.3eff.86bf
             result = r37.match(line)
             if result:
                 group = result.groupdict()
@@ -3553,8 +3553,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # R3.00-00            * 0x0000000d    0x0476        578  /*            1/0/0
         # R3.03-00              0x00000007    0x8145        988  /*            0/0/0
         # router-5.00-00        0x00000005 0x807997c        457                0/0/0
-        # 0000.0C00.0C35.00-00  0x0000000C    0x5696        325                0/0/0
-        # 0000.0C00.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
+        # 0000.0CFF.0C35.00-00  0x0000000C    0x5696        325                0/0/0
+        # 0000.0CFF.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
         r2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
                 r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
                 r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
@@ -3642,11 +3642,11 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                            r'(?P<local_l1>\d+),\s*local\s*L2\s*'
                            r'(?P<local_l2>\d+)\)')
 
-        # Metric: 10   IS 0000.0C00.62E6.03 
+        # Metric: 10   IS 0000.0CFF.62E6.03 
         r18 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\s+'
                          r'(?P<is_neighbor>[\w\.\-]+)')
 
-        # Metric: 0    ES 0000.0C00.0C35
+        # Metric: 0    ES 0000.0CFF.0C35
         r19 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+ES\s+'
                          r'(?P<es_neighbor>[\w\.]+)')
 
@@ -3967,7 +3967,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # Metric: 10   IS 0000.0C00.62E6.03 
+            # Metric: 10   IS 0000.0CFF.62E6.03 
             result = r18.match(line)
             if result:
                 group = result.groupdict()
@@ -3980,7 +3980,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
             
-            # Metric: 0    ES 0000.0C00.0C35
+            # Metric: 0    ES 0000.0CFF.0C35
             result = r19.match(line)
             if result:        
                 group = result.groupdict()

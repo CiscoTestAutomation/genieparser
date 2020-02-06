@@ -615,7 +615,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Standby router is unknown expired
             # Standby router is 192.168.1.2 expires in 00:00:02
-            # Standby router is fe80::5000:1cff:fe0a:1, 5200.1c0a.0001 expires in 00:00:02
+            # Standby router is fe80::5000:1cff:feff:a0b, 5200.1cff.0a0b expires in 00:00:02
             p9 = re.compile(r'\s*Standby +router +is'
                              ' +(?P<standby_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
                              '( *(expired|expires +in +(?P<expire>'
@@ -642,7 +642,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     group_key['standby_expire'] = m.groupdict()['expire']
                 continue
 
-            # Standby virtual mac address is 0000.0c07.ac05, state is active
+            # Standby virtual mac address is 0000.0cff.b30c, state is active
             p10 = re.compile(r'\s*Standby +virtual +mac +address +is'
                               ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+),'
                               ' +state +is +(?P<standby_state>[a-zA-Z ]+)$')

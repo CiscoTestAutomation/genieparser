@@ -472,10 +472,10 @@ class TestShowModule(unittest.TestCase):
 
         Mod MAC addresses                       Hw   Fw            Sw           Status
         --- ---------------------------------- ----- ------------- ------------ -------
-        1  001e.4a79.7510 to 001e.4a79.753f  2.7   12.2(14r)S    15.4(0.10)   Ok
-        2  0015.2bc3.25c0 to 0015.2bc3.25ff  2.1   15.4(0.10)S   15.4(0.10)S  Ok
-        5  0011.21b5.8e64 to 0011.21b5.8e67  4.1   8.1(3         15.4(0.10)   Ok
-        6  0022.559e.64fc to 0022.559e.64ff  5.12  8.5(4         15.4(0.10)   Ok
+        1  001e.4aff.ee89 to 001e.4aff.eeb8  2.7   12.2(14r)S    15.4(0.10)   Ok
+        2  0015.2bff.e884 to 0015.2bff.e8c3  2.1   15.4(0.10)S   15.4(0.10)S  Ok
+        5  0011.21ff.441a to 0011.21ff.441d  4.1   8.1(3         15.4(0.10)   Ok
+        6  0022.55ff.039b to 0022.55ff.039e  5.12  8.5(4         15.4(0.10)   Ok
 
         Mod  Sub-Module                  Model              Serial       Hw     Status
         ---- --------------------------- ------------------ ----------- ------- -------
@@ -500,8 +500,8 @@ class TestShowModule(unittest.TestCase):
                     'card_type': 'CEF720 48 port 10/100/1000mb Ethernet',
                     'fw_ver': '12.2(14r)S',
                     'hw_ver': '2.7',
-                    'mac_address_from': '001e.4a79.7510',
-                    'mac_address_to': '001e.4a79.753f',
+                    'mac_address_from': '001e.4aff.ee89',
+                    'mac_address_to': '001e.4aff.eeb8',
                     'model': 'WS-X6748-GE-TX',
                     'online_diag_status': 'Pass',
                     'ports': 48,
@@ -523,8 +523,8 @@ class TestShowModule(unittest.TestCase):
                     'card_type': '2 port adapter Enhanced FlexWAN',
                     'fw_ver': '15.4(0.10)S',
                     'hw_ver': '2.1',
-                    'mac_address_from': '0015.2bc3.25c0',
-                    'mac_address_to': '0015.2bc3.25ff',
+                    'mac_address_from': '0015.2bff.e884',
+                    'mac_address_to': '0015.2bff.e8c3',
                     'model': 'WS-X6582-2PA',
                     'online_diag_status': 'Pass',
                     'ports': 0,
@@ -538,8 +538,8 @@ class TestShowModule(unittest.TestCase):
                     'card_type': 'Supervisor Engine 720 (Hot)',
                     'fw_ver': '8.1(3',
                     'hw_ver': '4.1',
-                    'mac_address_from': '0011.21b5.8e64',
-                    'mac_address_to': '0011.21b5.8e67',
+                    'mac_address_from': '0011.21ff.441a',
+                    'mac_address_to': '0011.21ff.441d',
                     'model': 'WS-SUP720-3BXL',
                     'online_diag_status': 'Pass',
                     'ports': 2,
@@ -567,8 +567,8 @@ class TestShowModule(unittest.TestCase):
                     'card_type': 'Supervisor Engine 720 (Active)',
                     'fw_ver': '8.5(4',
                     'hw_ver': '5.12',
-                    'mac_address_from': '0022.559e.64fc',
-                    'mac_address_to': '0022.559e.64ff',
+                    'mac_address_from': '0022.55ff.039b',
+                    'mac_address_to': '0022.55ff.039e',
                     'model': 'WS-SUP720-3BXL',
                     'online_diag_status': 'Pass',
                     'ports': 2,
