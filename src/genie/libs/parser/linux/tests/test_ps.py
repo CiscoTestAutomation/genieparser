@@ -17,15 +17,14 @@ from genie.libs.parser.linux.ps import Ps
 # Unit tests for:
 #   'ps -ef'
 # ===============
-class test_ps(unittest.TestCase):
+class TestPs(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'process': {
+        'pid': {
             '1': {
                 'uid': 'root',
-                'pid': '1',
                 'ppid': '0',
                 'c': '0',
                 'stime': '2019',
@@ -35,7 +34,6 @@ class test_ps(unittest.TestCase):
             },
             '2': {
                 'uid': 'root',
-                'pid': '2',
                 'ppid': '0',
                 'c': '0',
                 'stime': '2019',
@@ -45,7 +43,6 @@ class test_ps(unittest.TestCase):
             },
             '1774': {
                 'uid': 'root',
-                'pid': '1774',
                 'ppid': '1730',
                 'c': '0',
                 'stime': '2019',
@@ -55,7 +52,6 @@ class test_ps(unittest.TestCase):
             },
             '1781': {
                 'uid': '68',
-                'pid': '1781',
                 'ppid': '1730',
                 'c': '0',
                 'stime': '2019',

@@ -21,10 +21,9 @@ class PsSchema(MetaParser):
     ''' Schema for "ps -ef" '''
 
     schema = {
-        'process': {
+        'pid': {
             Any(): {
                 'uid': str,
-                'pid': str,
                 'ppid': str,
                 'c': str,
                 'stime': str,
@@ -45,8 +44,8 @@ class Ps(PsSchema):
 
     def cli(self, output=None, grep=None):
         if output is None:
-            command = "{} | grep {}".format(self.cli_command, grep) if grep else self.cli_command
-            out = self.device.execute(command)
+            self.cli_command = "{} | grep {}".format(self.cli_command, grep) if grep else self.cli_command
+            out = self.device.execute(self.cli_command)
         else:
             out = output
  
@@ -69,7 +68,8 @@ class Ps(PsSchema):
             if m:
                 groups = m.groupdict()
                 pid = groups['pid']
-                parsed_dict.setdefault('process', {}).setdefault(pid, groups)
+                del groups['pid']
+                parsed_dict.setdefault('pid', {}).setdefault(pid, groups)
                 continue
  
         return parsed_dict
