@@ -1472,6 +1472,142 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     'total_entries': 1,
 }
 
+    device_output_1 = {'execute.return_value': '''\
+            ------------------------------------------------
+            Local Intf: Gi4/0/38
+            Chassis id: 10.0.0.7
+            Port id: F8B7E2958F6F:P1
+            Port Description: SW PORT
+            System Name: SEPF8B7E29
+            
+            System Description:
+            Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads
+            
+            Time remaining: 178 seconds
+            System Capabilities: B,T
+            Enabled Capabilities: B,T
+            Management Addresses:
+                IP: 10.0.0.7
+            Auto Negotiation - supported, enabled
+            Physical media capabilities:
+                1000baseT(FD)
+                100base-TX(FD)
+                100base-TX(HD)
+                10base-T(FD)
+                10base-T(HD)
+            Media Attachment Unit type: 30
+            Vlan ID: - not advertised
+            ------------------------------------------------
+            Local Intf: Gi4/0/15
+            Chassis id: 10.0.0.8
+            Port id: CC5A5363E4F6:P1
+            Port Description: SW PORT
+            System Name: SEPCC5A536
+            
+            System Description:
+            Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads
+            
+            Time remaining: 124 seconds
+            System Capabilities: B,T
+            Enabled Capabilities: B,T
+            Management Addresses:
+                IP: 10.0.0.8
+            Auto Negotiation - supported, enabled
+            Physical media capabilities:
+                1000baseT(FD)
+                100base-TX(FD)
+                100base-TX(HD)
+                10base-T(FD)
+                10base-T(HD)
+            Media Attachment Unit type: 30
+            Vlan ID: - not advertised
+            Total entries displayed: 2
+        '''}
+
+    expected_parsed_output_1 = {
+        'interfaces': {
+            'GigabitEthernet4/0/38': {
+                'if_name': 'GigabitEthernet4/0/38',
+                'port_id': {
+                    'F8B7E2958F6F:P1': {
+                        'neighbors': {
+                            'SEPF8B7E29': {
+                                'neighbor_id': 'SEPF8B7E29',
+                                'chassis_id': '10.0.0.7',
+                                'port_id': 'F8B7E2958F6F:P1',
+                                'system_name': 'SEPF8B7E29',
+                                'system_description': '',
+                                'time_remaining': 178,
+                                'capabilities': {
+                                    'mac_bridge': {
+                                        'name': 'mac_bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    },
+                                    'telephone': {
+                                        'name': 'telephone',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address': '10.0.0.7',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)',
+                                    '100base-TX(FD)',
+                                    '100base-TX(HD)',
+                                    '10base-T(FD)',
+                                    '10base-T(HD)'
+                                ],
+                                'unit_type': 30
+                            }
+                        }
+                    }
+                }
+            },
+            'GigabitEthernet4/0/15': {
+                'if_name': 'GigabitEthernet4/0/15',
+                'port_id': {
+                    'CC5A5363E4F6:P1': {
+                        'neighbors': {
+                            'SEPCC5A536': {
+                                'neighbor_id': 'SEPCC5A536',
+                                'chassis_id': '10.0.0.8',
+                                'port_id': 'CC5A5363E4F6:P1',
+                                'system_name': 'SEPCC5A536',
+                                'system_description': '',
+                                'time_remaining': 124,
+                                'capabilities': {
+                                    'mac_bridge': {
+                                        'name': 'mac_bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    },
+                                    'telephone': {
+                                        'name': 'telephone',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address': '10.0.0.8',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)',
+                                    '100base-TX(FD)',
+                                    '100base-TX(HD)',
+                                    '10base-T(FD)',
+                                    '10base-T(HD)'
+                                ],
+                                'unit_type': 30
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'total_entries': 2
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
@@ -1491,6 +1627,12 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+    def test_show_lldp_neighbors_detail_colon_in_port_id(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.device_output_1)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.expected_parsed_output_1)
 
 
 class test_show_lldp_traffic(unittest.TestCase):
