@@ -2502,7 +2502,7 @@ class TestShowIpCefInternal(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        device_name01#show ip cef 10.19.198.239 internal 
+        R1_xe#show ip cef 10.19.198.239 internal 
         Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
         Time source is NTP, 16:01:30.164 UTC Mon Nov 4 2019
 
@@ -2735,7 +2735,7 @@ class TestShowIpCefInternal(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-        device_name02#show ip cef 10.100.5.5 internal
+        R1_xe#show ip cef 10.100.5.5 internal
         Load for five secs: 0%/0%; one minute: 0%; five minutes: 1%
         Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
 
@@ -2970,7 +2970,7 @@ class TestShowIpCefInternal(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value': '''
-        device_name03#show ip cef vrf MG501 10.55.50.1 internal
+        R1_xe#show ip cef vrf MG501 10.55.50.1 internal
         Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
         Time source is NTP, 11:56:14.594 UTC Tue Nov 5 2019
 
@@ -3002,7 +3002,7 @@ class TestShowIpCefInternal(unittest.TestCase):
             <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.169.196.213 7F4F881C1898>
             <repair:  label 16061
                         TAG adj out of GigabitEthernet0/1/7, addr 10.169.196.217 7F4F881C1CF8>
-        sr_ve-laasr01#
+        R1_xe#
     '''}
     golden_parsed_output_3 = {
         'vrf': {
@@ -3162,11 +3162,11 @@ class TestShowIpCefInternal(unittest.TestCase):
                                         },
                                     },
                                     'tag_adj': {
-                                            'GigabitEthernet0/1/7': {
-                                                'addr': '10.19.198.29',
-                                                'addr_info': '7F9C9D304A90',
-                                            },
+                                        'GigabitEthernet0/1/7': {
+                                            'addr': '10.19.198.29',
+                                            'addr_info': '7F9C9D304A90',
                                         },
+                                    },
                                 },
                                 'path_list': {
                                     '7F9C9E8D7A30': {
