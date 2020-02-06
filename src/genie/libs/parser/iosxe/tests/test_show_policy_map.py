@@ -1,6 +1,5 @@
 # Python
 import unittest
-import genie.gre
 from unittest.mock import Mock
 
 # ATS
@@ -4065,18 +4064,7 @@ class test_show_policy_map(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output15)
         obj = ShowPolicyMap(device=self.device)
-        # parsed_output = obj.parse()
-        import re;
-        re.reset();
         parsed_output = obj.parse()
-        print(re.colour_output());
-        re.reset()
-
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output15)
 
 
