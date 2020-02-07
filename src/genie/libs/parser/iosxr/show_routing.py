@@ -601,7 +601,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         
         # VRF: VRF501
         # VRF: L:123
-        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\S]+)$')
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')
 
         # S    2001:1:1:1::1/128
         # L    2001:2:2:2::2/128 is directly connected,
