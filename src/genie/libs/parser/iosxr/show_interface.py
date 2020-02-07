@@ -2152,10 +2152,10 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                 if interface not in ret_dict:
                     ret_dict[interface] = {}
 
-                if status and status is not '-':
+                if status and status != '-':
                     ret_dict[interface]['status'] = status.lower()
 
-                if outer_vlan and outer_vlan is not '-':
+                if outer_vlan and outer_vlan != '-':
                     ret_dict[interface]['outer_vlan'] = outer_vlan
                     try:
                         vlan_id = re.match('[\w\.]+:(\d+)', outer_vlan).groups()[0]
@@ -2163,22 +2163,22 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                     except Exception:
                         pass
 
-                if mtu and mtu is not '-':
+                if mtu and mtu != '-':
                     ret_dict[interface]['mtu'] = int(mtu)
 
-                if layer and xtra is not '-':
+                if layer and xtra != '-':
                     ret_dict[interface]['layer'] = layer.lower()
 
-                if inner_vlan and inner_vlan is not '-':
+                if inner_vlan and inner_vlan != '-':
                     ret_dict[interface]['inner_vlan'] = inner_vlan
 
-                if xtra and xtra is not '-':
+                if xtra and xtra != '-':
                     ret_dict[interface]['xtra'] = xtra
 
-                if rewrite_num_of_tags_pop and rewrite_num_of_tags_pop is not '-':
+                if rewrite_num_of_tags_pop and rewrite_num_of_tags_pop != '-':
                     ret_dict[interface]['rewrite_num_of_tags_pop'] = int(rewrite_num_of_tags_pop)
 
-                if rewrite_num_of_tags_push and rewrite_num_of_tags_push is not '-':
+                if rewrite_num_of_tags_push and rewrite_num_of_tags_push != '-':
                     ret_dict[interface]['rewrite_num_of_tags_push'] = int(rewrite_num_of_tags_push)
 
         return ret_dict

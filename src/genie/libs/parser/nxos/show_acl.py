@@ -246,7 +246,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if protocol is ('ipv4' or 'ipv6'):
                     protocol_name = protocol
                 else:
-                    if acl_dict['type'] is 'ipv6-acl-type':
+                    if acl_dict['type'] == 'ipv6-acl-type':
                         protocol_name = 'ipv6'
                     else:
                         protocol_name = 'ipv4'

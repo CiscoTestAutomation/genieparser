@@ -112,7 +112,7 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
                     masklength_range = "{}..{}".format(mask, mask)
                 else:
                     split_ranges = ranges.split()
-                    if len(split_ranges) is 4:
+                    if len(split_ranges) == 4:
                         masklength_range = "{}..{}".format(
                             split_ranges[1], split_ranges[3]
                         )

@@ -5858,7 +5858,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             # LDP is configured through LDP autoconfig
             m = p3.match(line)
             if m:
-                if m.groupdict()['auto_config'] is 'configured':
+                if m.groupdict()['auto_config'] == 'configured':
                     intf_dict['autoconfig'] = True
                     mpls_ldp_dict['autoconfig'] = True
                 else:
