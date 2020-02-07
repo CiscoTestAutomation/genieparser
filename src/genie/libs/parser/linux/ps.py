@@ -40,12 +40,14 @@ class PsSchema(MetaParser):
 class Ps(PsSchema):
  
     ''' Parser for "ps -ef"'''
-    cli_command = 'ps -ef'
+    cli_command = ['ps -ef', r'ps -ef | grep {grep}']
 
     def cli(self, output=None, grep=None):
         if output is None:
-            self.cli_command = "{} | grep {}".format(self.cli_command, grep) if grep else self.cli_command
-            out = self.device.execute(self.cli_command)
+            command = self.cli_command[0]
+            if grep:
+                command = self.cli_command[1].replace(r'{grep}', grep)
+            out = self.device.execute(command)
         else:
             out = output
  
