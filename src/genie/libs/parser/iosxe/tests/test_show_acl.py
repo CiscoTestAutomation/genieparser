@@ -592,9 +592,9 @@ class TestShowAccessLists(unittest.TestCase):
                 'matches': {
                     'l2': {
                         'eth': {
-                            'destination_mac_address': 'host 0003.0003.0003',
+                            'destination_mac_address': 'host 0003.00ff.0306',
                             'lsap': '0x1 0xD8FE',
-                            'source_mac_address': 'host 0001.0002.0033',
+                            'source_mac_address': 'host 0001.00ff.0235',
                         },
                     },
                 },
@@ -650,7 +650,7 @@ class TestShowAccessLists(unittest.TestCase):
             permit any any
             deny   any any msdos
             deny   any any vlan 10
-            permit host 0001.0002.0033 host 0003.0003.0003 lsap 0x1 0xD8FE
+            permit host 0001.00ff.0235 host 0003.00ff.0306 lsap 0x1 0xD8FE
             permit any any aarp cos 4 vlan 20
     '''
     }

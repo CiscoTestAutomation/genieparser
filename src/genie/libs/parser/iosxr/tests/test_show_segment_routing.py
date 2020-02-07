@@ -342,9 +342,9 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
         Node 1
         TE router ID: 192.168.0.4
         Host name: rtrD
-        ISIS system ID: 1921.6800.1004 level-1 ASN: 65001 domain ID: 1111
-        ISIS system ID: 1921.6800.1004 level-2 ASN: 65001 domain ID: 1111
-        ISIS system ID: 1921.6800.1004 level-2 ASN: 65001 domain ID: 9999
+        ISIS system ID: 1921.68ff.1004 level-1 ASN: 65001 domain ID: 1111
+        ISIS system ID: 1921.68ff.1004 level-2 ASN: 65001 domain ID: 1111
+        ISIS system ID: 1921.68ff.1004 level-2 ASN: 65001 domain ID: 9999
         Advertised Prefixes:
         192.168.0.4
         192.168.0.4
@@ -354,7 +354,7 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
         Node 2
         TE router ID: 192.168.0.1
         Host name: rtrA
-        ISIS system ID: 1921.6800.1001 level-2
+        ISIS system ID: 1921.68ff.1001 level-2
         Advertised Prefixes:
         192.168.0.1
     '''}
@@ -365,9 +365,9 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
                 'te_router_id': '192.168.0.4',
                 'host_name': 'rtrD',
                 'isis_system_id': [
-                    '1921.6800.1004 level-1',
-                    '1921.6800.1004 level-2',
-                    '1921.6800.1004 level-2'],
+                    '1921.68ff.1004 level-1',
+                    '1921.68ff.1004 level-2',
+                    '1921.68ff.1004 level-2'],
                 'asn': [
                     65001,
                     65001,
@@ -384,7 +384,7 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
             2: {
                 'te_router_id': '192.168.0.1',
                 'host_name': 'rtrA',
-                                'isis_system_id': ['1921.6800.1001 level-2'],
+                                'isis_system_id': ['1921.68ff.1001 level-2'],
                 'advertised_prefixes': ['192.168.0.1']}}}
 
     def test_empty_output(self):

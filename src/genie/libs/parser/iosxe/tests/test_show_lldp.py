@@ -60,7 +60,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -95,7 +95,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
                                 'system_name': 'R5',
@@ -130,7 +130,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -166,7 +166,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'R5': {
                                 'neighbor_id': 'R5',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
                                 'system_name': 'R5',
@@ -203,7 +203,7 @@ class test_show_lldp_entry(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         ------------------------------------------------
         Local Intf: Gi2/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/4
         Port Description: GigabitEthernet1/0/4
         System Name: R5
@@ -231,7 +231,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/16
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/2
         Port Description: GigabitEthernet1/0/2
         System Name: R5
@@ -259,7 +259,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/17
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/3
         Port Description: GigabitEthernet1/0/3
         System Name: R5
@@ -287,7 +287,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/1
         Port Description: GigabitEthernet1/0/1
         System Name: R5
@@ -326,7 +326,7 @@ class test_show_lldp_entry(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         ------------------------------------------------
         Local Intf: Gi1/0/13
-        Chassis id: 00fe.4fe1.7834e
+        Chassis id: 00fe.4fff.5a16e
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-genie-3
@@ -349,7 +349,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/11
-        Chassis id: 4500.1ede.8800
+        Chassis id: 4500.1eff.67de
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-genie.lab
@@ -372,8 +372,8 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Te1/1/3
-        Chassis id: 5a3e.7069.ed49
-        Port id: 5169.53ae.51ac
+        Chassis id: 5a3e.70ff.57b2
+        Port id: 5169.53ff.005b
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -389,7 +389,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/10
-        Chassis id: 8dc3.4100.2988
+        Chassis id: 8dc3.41ff.2988
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-Edge.genie
@@ -436,7 +436,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True
                                     }
                                 },
-                            'chassis_id': '8dc3.4100.2988',
+                            'chassis_id': '8dc3.41ff.2988',
                             'management_address': '10.1.23.102',
                             'neighbor_id': 'C9300-Edge.genie',
                             'port_description': 'GigabitEthernet0/0',
@@ -468,7 +468,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                         'system': True
                                         }
                                     },
-                                'chassis_id': '4500.1ede.8800',
+                                'chassis_id': '4500.1eff.67de',
                                 'management_address': '10.1.23.23',
                                 'neighbor_id': 'C9300-genie.lab',
                                 'port_description': 'GigabitEthernet0/0',
@@ -502,7 +502,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True
                                     }
                                 },
-                            'chassis_id': '00fe.4fe1.7834e',
+                            'chassis_id': '00fe.4fff.5a16e',
                             'management_address': '10.1.2.203',
                             'neighbor_id': 'C9300-genie-3',
                             'port_description': 'GigabitEthernet0/0',
@@ -521,13 +521,13 @@ class test_show_lldp_entry(unittest.TestCase):
         'TenGigabitEthernet1/1/3': {
             'if_name': 'TenGigabitEthernet1/1/3',
             'port_id': {
-                '5169.53ae.51ac': {
+                '5169.53ff.005b': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'not supported',
-                            'chassis_id': '5a3e.7069.ed49',
+                            'chassis_id': '5a3e.70ff.57b2',
                             'neighbor_id': 'not advertised',
-                            'port_id': '5169.53ae.51ac',
+                            'port_id': '5169.53ff.005b',
                             'system_name': 'not advertised',
                             'time_remaining': 97
                             },
@@ -573,7 +573,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -608,7 +608,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -643,7 +643,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
                                 'system_name': 'R5',
@@ -678,7 +678,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
                                 'system_name': 'R5',
@@ -713,7 +713,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         ------------------------------------------------
         Local Intf: Gi2/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/4
         Port Description: GigabitEthernet1/0/4
         System Name: R5
@@ -741,7 +741,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/16
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/2
         Port Description: GigabitEthernet1/0/2
         System Name: R5
@@ -769,7 +769,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/17
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/3
         Port Description: GigabitEthernet1/0/3
         System Name: R5
@@ -797,7 +797,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/1
         Port Description: GigabitEthernet1/0/1
         System Name: R5

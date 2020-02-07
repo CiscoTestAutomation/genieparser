@@ -30,14 +30,17 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesSwitchport, \
                                         ShowInterfacesTrunk, \
                                         ShowInterfacesStats,\
-                                        ShowInterfacesDescription
+                                        ShowInterfacesDescription, \
+                                        ShowInterfacesStatus
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
                 TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
                 TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
                 TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
                 TestShowInterfacesStats as TestShowInterfacesStats_iosxe,\
-                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe
+                TestShowInterfacesDescription as TestShowInterfacesDescription_iosxe, \
+                TestShowInterfacesStatus as TestShowInterfacesStatus_iosxe
+
 
 class TestShowInterfaceParsergen(unittest.TestCase):
 
@@ -159,9 +162,9 @@ class TestShowInterfaces(unittest.TestCase):
                     "prefix_length": "24"
                }
             },
-            "mac_address": "fa16.3e4b.55fd",
+            "mac_address": "fa16.3eff.a049",
             "bandwidth": 1000000,
-            "phys_address": "fa16.3e4b.55fd",
+            "phys_address": "fa16.3eff.a049",
             "port_channel": {
                "port_channel_member": False
             },
@@ -230,10 +233,10 @@ class TestShowInterfaces(unittest.TestCase):
                "send": False,
                "receive": False
             },
-            "mac_address": "fa16.3e4b.55fd",
+            "mac_address": "fa16.3eff.a049",
             "keepalive": 10,
             "txload": "1/255",
-            "phys_address": "fa16.3e4b.55fd",
+            "phys_address": "fa16.3eff.a049",
             "port_channel": {
                "port_channel_member": False
             },
@@ -401,7 +404,7 @@ class TestShowInterfaces(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/2 is up, line protocol is up 
-          Hardware is iGbE, address is fa16.3e4b.55fd (bia fa16.3e4b.55fd)
+          Hardware is iGbE, address is fa16.3eff.a049 (bia fa16.3eff.a049)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
@@ -428,7 +431,7 @@ class TestShowInterfaces(unittest.TestCase):
              1 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/2.1 is up, line protocol is up 
-          Hardware is iGbE, address is fa16.3e4b.55fd (bia fa16.3e4b.55fd)
+          Hardware is iGbE, address is fa16.3eff.a049 (bia fa16.3eff.a049)
           Internet address is 192.168.154.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
@@ -751,9 +754,9 @@ class TestShowIpv6Interface(unittest.TestCase):
                     "ip": "2001:db8:405::1:1",
                     "prefix_length": "112"
                },
-               "FE80::F816:3EFF:FE4B:55FD": {
+               "FE80::F816:3EFF:FEFF:A049": {
                     "status": "valid",
-                    "ip": "FE80::F816:3EFF:FE4B:55FD",
+                    "ip": "FE80::F816:3EFF:FEFF:A049",
                     "origin": "link_layer"
                },
                "2001:db8:405::5:2/112": {
@@ -829,7 +832,7 @@ class TestShowIpv6Interface(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/1.1 is up, line protocol is up
-          IPv6 is enabled, link-local address is FE80::F816:3EFF:FE4B:55FD 
+          IPv6 is enabled, link-local address is FE80::F816:3EFF:FEFF:A049 
           No Virtual link-local address(es):
           Global unicast address(es):
             2001:db8:405::1:1, subnet is 2001:db8:405::1:0/112 
@@ -1067,6 +1070,7 @@ class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
         parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
 
+
 class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
     """unit test for show interfaces description """
     
@@ -1089,6 +1093,23 @@ class TestShowInterfacesDescription(TestShowInterfacesDescription_iosxe):
         obj = ShowInterfacesDescription(device=self.device)
         parsed_output = obj.parse(interface='Gi0/0')
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+
+class TestShowInterfacesStatus(TestShowInterfacesStatus_iosxe):
+    """unit test for show interfaces status """
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfacesStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output1)
 
 
 if __name__ == '__main__':

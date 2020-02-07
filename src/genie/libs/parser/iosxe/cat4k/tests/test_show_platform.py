@@ -21,8 +21,8 @@ class test_show_module_c4507(unittest.TestCase):
             1: {
                 'card_type': '10/100/1000BaseT Premium POE E Series',
                 'hw_ver': '3.1',
-                'mac_address_from': '11a1.b222.cc33',
-                'mac_address_to': '11a1.b222.cc3f',
+                'mac_address_from': '11a1.b2ff.ee55',
+                'mac_address_to': '11a1.b2ff.ee61',
                 'model': 'WS-X4648-RJ45V+E',
                 'port': 48,
                 'serial_number': 'ABCDE123456',
@@ -32,8 +32,8 @@ class test_show_module_c4507(unittest.TestCase):
                 'card_type': 'Sup 7L-E 10GE (SFP+), 1000BaseX (SFP)',
                 'fw_ver': '15.0(1r)SG10',
                 'hw_ver': '3.0',
-                'mac_address_from': '555a.888b.ccc0',
-                'mac_address_to': '555a.888b.cccd',
+                'mac_address_from': '555a.88ff.584c',
+                'mac_address_to': '555a.88ff.5859',
                 'model': 'WS-X45-SUP7L-E',
                 'operating_mode': 'RPR',
                 'port': 6,
@@ -46,8 +46,8 @@ class test_show_module_c4507(unittest.TestCase):
             6: {
                 'card_type': '10/100/1000BaseT Premium POE E Series',
                 'hw_ver': '3.1',
-                'mac_address_from': '00a0.bb11.ff3b',
-                'mac_address_to': '00a0.bb11.ff3f',
+                'mac_address_from': '00a0.bbff.114c',
+                'mac_address_to': '00a0.bbff.1150',
                 'model': 'WS-X4648-RJ45V+E',
                 'port': 48,
                 'serial_number': 'CDEFGH12345',
@@ -56,8 +56,8 @@ class test_show_module_c4507(unittest.TestCase):
             7: {
                 'card_type': '10/100/1000BaseT Premium POE E Series',
                 'hw_ver': '3.1',
-                'mac_address_from': 'b888.11aa.22dd',
-                'mac_address_to': 'b888.11aa.22df',
+                'mac_address_from': 'b888.11ff.cc88',
+                'mac_address_to': 'b888.11ff.cc8a',
                 'model': 'WS-X4648-RJ45V+E',
                 'port': 48,
                 'serial_number': 'ASDFGH56789',
@@ -83,10 +83,10 @@ class test_show_module_c4507(unittest.TestCase):
 
          M MAC addresses                    Hw  Fw           Sw               Status
         --+--------------------------------+---+------------+----------------+---------
-         1 11a1.b222.cc33 to 11a1.b222.cc3f 3.1                               Ok
-         3 555a.888b.ccc0 to 555a.888b.cccd 3.0 15.0(1r)SG10 03.06.07.E       Ok
-         6 00a0.bb11.ff3b to 00a0.bb11.ff3f 3.1                               Ok
-         7 b888.11aa.22dd to b888.11aa.22df 3.1                               Ok
+         1 11a1.b2ff.ee55 to 11a1.b2ff.ee61 3.1                               Ok
+         3 555a.88ff.584c to 555a.88ff.5859 3.0 15.0(1r)SG10 03.06.07.E       Ok
+         6 00a0.bbff.114c to 00a0.bbff.1150 3.1                               Ok
+         7 b888.11ff.cc88 to b888.11ff.cc8a 3.1                               Ok
 
         Mod  Redundancy role     Operating mode      Redundancy status
         ----+-------------------+-------------------+----------------------------------

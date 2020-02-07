@@ -183,7 +183,7 @@ class ShowVersion(ShowVersionSchema):
         p22 = re.compile(r'^(?P<crash_size>\d+)K'
             r' +bytes +of +Crash +Files +at +crashinfo:.$')
 
-        # Base Ethernet MAC Address          : 70:b3:17:60:05:00
+        # Base Ethernet MAC Address          : 70:b3:17:ff:65:60
         p23 = re.compile(r'^Base +Ethernet +MAC +Address +: '
                          r'+(?P<mac_address>\S+)$')
 
@@ -385,7 +385,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['crash_size']
                 continue
 
-            # Base Ethernet MAC Address          : 70:b3:17:60:05:00
+            # Base Ethernet MAC Address          : 70:b3:17:ff:65:60
             m = p23.match(line)
             if m:
                 mac_address = m.groupdict()['mac_address']

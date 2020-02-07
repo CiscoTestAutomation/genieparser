@@ -500,14 +500,14 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     m.groupdict()['vipr']
                 continue
 
-            # Router-MAC                     : 000c.29e2.c046
+            # Router-MAC                     : 000c.29ff.a329
             m = p16_7.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['router_mac'] = \
                     m.groupdict()['router_mac']
                 continue
 
-            # VIP Derived MAC                : 000c.29e2.c046
+            # VIP Derived MAC                : 000c.29ff.a329
             m = p16_8.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['vip_derived_mac'] = \
@@ -2052,7 +2052,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # *>i10.21.33.33/32   10.36.3.3         0        100          0 ?
             # l10.34.34.0/24      0.0.0.0                  100      32768 i
             # *>i2001::33/128     ::ffff:10.36.3.3  0        100          0 ?
-            # *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216
+            # *>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[0]:[0.0.0.0]/216
             # *>i                 10.186.0.2        0        100          0 ?
             # *>l10.4.1.0/24        0.0.0.0                            100      32768 i
             # *>r10.16.1.0/24        0.0.0.0                4444        100      32768 ?
@@ -6353,7 +6353,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     continue
 
                 if vrf:
-                    if vrf is 'default':
+                    if vrf == 'default':
                         bgp_vrf_dict = bgp_vrf_default_dict
                     else:
                         bgp_vrf_dict = bgp_vrf_nondefault_dict
@@ -7727,7 +7727,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         except Exception:
                             pass
 
-                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248</nonipprefix>
+                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248</nonipprefix>
                         try:
                             network = prefix_root.find('{}nonipprefix'.format(namespace)).text
                         except Exception:
@@ -10355,8 +10355,8 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         result_dict = {}
 
         # BGP routing table information for VRF default, address family L2VPN EVPN
-        # Route Distinguisher: 10.121.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
-        # BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.55]/136, version 13144
+        # Route Distinguisher: 10.121.0.55:27001   (ES [0300.00ff.0001.2c00.0309 0])
+        # BGP routing table entry for [4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.55]/136, version 13144
         # Paths: (1 available, best #1)
         # Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         # Multipath: iBGP
@@ -10367,7 +10367,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         #     192.168.111.55 (metric 0) from 0.0.0.0 (10.121.0.55)
         #       Origin IGP, MED not set, localpref 100, weight 32768
         #       Received label 25000
-        #       Extcommunity: ENCAP:8 RT:0000.0000.012c
+        #       Extcommunity: ENCAP:8 RT:0000.00ff.012c
         #
         #   Path-id 1 advertised to peers:
         #     10.121.0.11          10.121.0.22          10.121.0.33          10.121.0.44
