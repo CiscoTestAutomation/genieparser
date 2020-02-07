@@ -240,6 +240,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 continue
 
             # VRF: VRF501
+            # VRF: L:123
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -599,7 +600,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             out = output
         
         # VRF: VRF501
-        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
+        # VRF: L:123
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\S]+)$')
 
         # S    2001:1:1:1::1/128
         # L    2001:2:2:2::2/128 is directly connected,
