@@ -126,7 +126,7 @@ class ShowUsers(ShowUsersSchema):
         # *  0 con 0                idle                 00:00:00
         #   10 vty 0             Virtual-Access2          0      1212321
         p1 = re.compile(r'^((?P<busy>\*) +)?(?P<line>[\d]+ +[\w]+ +[\d]+)'
-                         '( +(?P<user>[a-zA-Z\-_.]+))? +(?P<host>\S+)'
+                         '( +(?P<user>[0-9a-z\-_.]+))? +(?P<host>\S+)'
                          ' +(?P<idle>[0-9\:]+)( +(?P<location>[\S]+))?$')
 
         for line in out.splitlines():
