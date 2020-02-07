@@ -35,7 +35,7 @@ class ShowIpv6NeighborsDetailSchema(MetaParser):
                 'neighbors': {
                     Any(): {
                         'ip': str,  # Conf/Ops Str '2001:db8:8548:1::1'
-                        'link_layer_address': str,  # Conf/Ops Str 'aaaa.beef.cccc'
+                        'link_layer_address': str,  # Conf/Ops Str 'aaaa.beff.bcbc'
                         'age': str,
                         'neighbor_state': str,
                         'location': str,
@@ -63,8 +63,8 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
 
         ret_dict = {}
 
-        # 2001:db8:8548:1::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
-        # fe80::f816:3eff:fe26:1224  119  fa16.3e26.1224 REACH Gi0/0/0/0.90         0/0/CPU0
+        # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
+        # fe80::f816:3eff:feff:384a  119  fa16.3eff.384a REACH Gi0/0/0/0.90         0/0/CPU0
         p1 = re.compile(r'^(?P<ip>\S+)\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+(?P<interface>\S+)\s+'
                          '(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
@@ -76,7 +76,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2001:db8:8548:1::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff 
+            # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff 
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']

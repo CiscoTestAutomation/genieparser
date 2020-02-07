@@ -162,9 +162,9 @@ class TestShowInterfaces(unittest.TestCase):
                     "prefix_length": "24"
                }
             },
-            "mac_address": "fa16.3e4b.55fd",
+            "mac_address": "fa16.3eff.a049",
             "bandwidth": 1000000,
-            "phys_address": "fa16.3e4b.55fd",
+            "phys_address": "fa16.3eff.a049",
             "port_channel": {
                "port_channel_member": False
             },
@@ -233,10 +233,10 @@ class TestShowInterfaces(unittest.TestCase):
                "send": False,
                "receive": False
             },
-            "mac_address": "fa16.3e4b.55fd",
+            "mac_address": "fa16.3eff.a049",
             "keepalive": 10,
             "txload": "1/255",
-            "phys_address": "fa16.3e4b.55fd",
+            "phys_address": "fa16.3eff.a049",
             "port_channel": {
                "port_channel_member": False
             },
@@ -404,7 +404,7 @@ class TestShowInterfaces(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/2 is up, line protocol is up 
-          Hardware is iGbE, address is fa16.3e4b.55fd (bia fa16.3e4b.55fd)
+          Hardware is iGbE, address is fa16.3eff.a049 (bia fa16.3eff.a049)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
@@ -431,7 +431,7 @@ class TestShowInterfaces(unittest.TestCase):
              1 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/2.1 is up, line protocol is up 
-          Hardware is iGbE, address is fa16.3e4b.55fd (bia fa16.3e4b.55fd)
+          Hardware is iGbE, address is fa16.3eff.a049 (bia fa16.3eff.a049)
           Internet address is 192.168.154.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
@@ -754,9 +754,9 @@ class TestShowIpv6Interface(unittest.TestCase):
                     "ip": "2001:db8:405::1:1",
                     "prefix_length": "112"
                },
-               "FE80::F816:3EFF:FE4B:55FD": {
+               "FE80::F816:3EFF:FEFF:A049": {
                     "status": "valid",
-                    "ip": "FE80::F816:3EFF:FE4B:55FD",
+                    "ip": "FE80::F816:3EFF:FEFF:A049",
                     "origin": "link_layer"
                },
                "2001:db8:405::5:2/112": {
@@ -832,7 +832,7 @@ class TestShowIpv6Interface(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/1.1 is up, line protocol is up
-          IPv6 is enabled, link-local address is FE80::F816:3EFF:FE4B:55FD 
+          IPv6 is enabled, link-local address is FE80::F816:3EFF:FEFF:A049 
           No Virtual link-local address(es):
           Global unicast address(es):
             2001:db8:405::1:1, subnet is 2001:db8:405::1:0/112 

@@ -15,7 +15,7 @@
             'RxResp': 0,
             'RxTotal': 0,
             'RxVersion': 0,
-            'LastRxSrcMAC': '00:00:00:00:00:00'
+            'LastRxSrcMAC': '00:00:00:ff:00:00'
             }
         }
     }

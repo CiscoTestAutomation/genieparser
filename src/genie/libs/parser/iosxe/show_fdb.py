@@ -89,9 +89,9 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                 ret_dict.update({'total_mac_addresses': int(m.groupdict()['val'])})
                 continue
 
-            # 10    aaaa.bbbb.cccc    STATIC      Gi1/0/8 Gi1/0/9
-            # 20    aaaa.bbbb.cccc    STATIC      Drop
-            # All    0100.0ccc.cccd    STATIC      CPU
+            # 10    aaaa.bbff.8888    STATIC      Gi1/0/8 Gi1/0/9
+            # 20    aaaa.bbff.8888    STATIC      Drop
+            # All    0100.0cff.999a    STATIC      CPU
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -151,8 +151,8 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                         intf_dict.update({'age': age})
                 continue
 
-            # *  101  44dd.ee55.ff66   dynamic  Yes         10   Gi1/40
-            # *  102  aa11.bb22.cc33    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
+            # *  101  44dd.eeff.55bb   dynamic  Yes         10   Gi1/40
+            # *  102  aa11.bbff.ee55    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
             # *  400  0000.0000.0000    static  No           -   vPC Peer-Link
             # *  ---  0000.0000.0000    static  No           -   Router
             m = p4.match(line)

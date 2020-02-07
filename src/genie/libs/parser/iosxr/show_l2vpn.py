@@ -59,9 +59,9 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
 
         # Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
 
-        # 6        0/0/CPU0   BV1        1000.0001.0001      10.1.1.11
-        # 6        0/0/CPU0   BV1        0000.f65a.357c      fe80::200:f6ff:fe5a:357c
-        # 1        0/0/CPU0   BE1.7      7777.7777.0002
+        # 6        0/0/CPU0   BV1        1000.00ff.0102      10.1.1.11
+        # 6        0/0/CPU0   BV1        0000.f6ff.8fd6      fe80::200:f6ff:feff:8fd6
+        # 1        0/0/CPU0   BE1.7      7777.77ff.7779
 
         p = re.compile(r'^(?P<topo_id>\d+) +'
                        r'(?P<producer>\S+) +'
@@ -164,7 +164,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
             ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
 
         # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
-        # 0001.0000.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h
+        # 0001.00ff.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h
         # 0m 14s           N/A
         p3 = re.compile(
             r'^(?P<mac_address>\S+) +(?P<type>\S+) +(?P<learned_from>[\w\/\.\d]+)'
@@ -214,7 +214,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(
                 continue
 
             # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
-            # 0001.0000.0002 dynamic Te0/0/1/0/3.3               N/A        0d
+            # 0001.00ff.0002 dynamic Te0/0/1/0/3.3               N/A        0d
             # 0h 0m 14s           N/A
             m = p3.match(line)
             if m and start_parsing:
@@ -461,7 +461,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         
         # BV100, state: up, BVI MAC addresses: 1
         p5_1 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +BVI +'
-            'MAC +addresses: +(?P<bvi_mac_address>\d+)$')
+            'MAC +addresses: +(?P<bvi_mac_address>\S+)$')
 
         # VFI 1
         # VFI vfi60 (up)
@@ -857,6 +857,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     },
                                     Optional('error'): str,
                                     Optional('bvi_mac_address'): list,
+                                    Optional('virtual_mac_address'): list,
                                     Optional('mac_aging_time'): int,
                                     Optional('mac_limit'): int,
                                     Optional('mac_limit_action'): str,
@@ -1203,7 +1204,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                             r' +interworking +(?P<interworking>\S+)$')
         
         # 0000.0000.0000
-        p19 = re.compile(r'(?P<static_mac_address>[\d\.]+)$')
+        p19 = re.compile(r'(?P<static_mac_address>[a-zA-Z\d\.]+)$')
 
         # Statistics:
         p20 = re.compile(r'Statistics:')
@@ -1364,7 +1365,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # BVI MAC address:
         p66 = re.compile(r'^BVI +MAC +address:$')
 
-        # 1000.1000.1000
+        # 1000.10ff.1000
         p67 = re.compile(r'^(?P<bvi_mac_address>\w+\.\w+\.\w+)$')
 
         # Rewrite Tags: []
@@ -2202,7 +2203,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 mac_address_type = 'bvi_mac_address'
                 continue
 
-            # 1000.1000.1000
+            # 1000.10ff.1000
             m = p67.match(line)
             if m:
                 group = m.groupdict()

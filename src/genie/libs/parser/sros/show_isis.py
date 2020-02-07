@@ -178,7 +178,7 @@ class ShowRouterIsisAdjacencyDetail(ShowRouterIsisAdjacencyDetailSchema):
 
         # Hostname    : COPQON05R07
         p1 = re.compile(r'^Hostname +: +(?P<hostname>\S+)$')
-        # SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
+        # SystemID    : 0691.58ff.79a2                   SNPA        : 00:23:3e:ff:a6:27
         p2 = re.compile(r'^SystemID +: +(?P<system_id>\S+) +SNPA +: +(?P<snpa>\S+)$')
         # Interface   : To-COPQON05R07-LAG-7             Up Time     : 58d 03:24:48
         p3 = re.compile(r'^Interface +: +(?P<interface>\S+) +Up Time +: +(?P<up_time>[\s\S]+)$')

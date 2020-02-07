@@ -255,14 +255,14 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         # EVI   Ethernet Segment Id                     EtherTag Label  
         # VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label
 
-        # 5     0012.1200.0000.0000.0002                0        24114
-        # 100   0100.0000.acce.5500.0100                0        24005
+        # 5     0012.12ff.0000.0000.0002                0        24114
+        # 100   0100.00ff.acce.5500.0100                0        24005
         p1 = re.compile(r'^(?P<evi>(\d+)) +(?P<esi>([a-z0-9\.]+))'
                          ' +(?P<eth_tag>(\d+))( +(?P<label>(\d+)))?$')
 
-        # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
-        # 16003      VXLAN  0001.0407.0405.0607.0811    0          24004
-        # 1000       MPLS   0001.0000.0102.0000.0011    0
+        # 16001      VXLAN  0001.04ff.0b0c.0607.0811    0          24002
+        # 16003      VXLAN  0001.04ff.0b0c.0607.0811    0          24004
+        # 1000       MPLS   0001.00ff.0102.0000.0011    0
         p2 = re.compile(r'^(?P<vpn_id>(\d+)) +(?P<encap>([a-zA-Z]+))'
                          ' +(?P<esi>([a-z0-9\.]+)) +(?P<eth_tag>(\d+))'
                          '( +(?P<mp_internal_label>(\d+)))?$')
@@ -298,7 +298,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 5     0012.1200.0000.0000.0002                0        24114
+            # 5     0012.12ff.0000.0000.0002                0        24114
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -311,8 +311,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                     sub_dict['label'] = int(group['label'])
                 continue
 
-            # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
-            # 16003      VXLAN  0001.0407.0405.0607.0811    0          24004
+            # 16001      VXLAN  0001.04ff.0b0c.0607.0811    0          24002
+            # 16003      VXLAN  0001.04ff.0b0c.0607.0811    0          24004
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -492,7 +492,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p1 = re.compile(r'^(?P<vpn_id>\d+)( +(?P<encap>\S+))? +(?P<mac_address>[\w\.]+) +'
                 '(?P<ip_address>[\w:\.]+) +(?P<next_hop>[\S ]+) +(?P<label>\d+)$')
         
-        # 001b.0100.0001 N/A                                     24014    7  
+        # 001b.01ff.0001 N/A                                     24014    7  
         p1_1 = re.compile(r'^(?P<mac_address>\S+) +(?P<next_hop>\S+) +(?P<label>\d+) +(?P<vpn_id>\d+)$')
 
         # IP Address   : 10.196.7.8
@@ -622,7 +622,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({'label': label}) 
                 continue
             
-            # 001b.0100.0001 N/A                                     24014    7
+            # 001b.01ff.0001 N/A                                     24014    7
             m = p1_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1040,8 +1040,8 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         }
         detail_type = None
 
-        # 0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
-        # 0210.0300.9e00.0210.0000 BE4                                78.81.321.95<
+        # 0210.03ff.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
+        # 0210.03ff.9e00.0210.0000 BE4                                78.81.321.95<
         p1 = re.compile(r'^(?P<segment_id>[\w\.\/]+) +(?P<interface>\S+) +(?P<next_hop>[\d\.\<]+)$')
 
         # 10.204.100.100   
@@ -1056,7 +1056,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Interface name : GigabitEthernet0/3/0/0
         p4 = re.compile(r'^Interface name +: +(?P<interface>\S+)$')
 
-        # Interface MAC  : 008a.9644.d8dd
+        # Interface MAC  : 008a.96ff.1d22
         p4_1 = re.compile(r'^Interface +MAC *: +(?P<interface_mac>[\S ]+)$')
 
         # IfHandle       : 0x1800300
@@ -1068,7 +1068,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Redundancy     : Not Defined
         p7 = re.compile(r'^Redundancy +: +(?P<redundancy>[\S ]+)$')
 
-        # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+        # Source MAC        : 0001.edff.9e9f (PBB BSA)
         p8 = re.compile(r'^Source +MAC +: +(?P<source_mac>[\S ]+)$')
 
         # Operational    : MHN
@@ -1114,10 +1114,10 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # ESI type          : 0
         p21 = re.compile(r'^ESI +type *: +(?P<esi_type>\S+)$')
 
-        # Value          : 36.3700.0000.0000.1100
+        # Value          : 36.3700.00ff.0000.1100
         p22 = re.compile(r'^Value *: +(?P<value>[\S ]+)$')
 
-        # ES Import RT      : 3637.0000.0000 (from ESI)
+        # ES Import RT      : 3637.00ff.0000 (from ESI)
         p23 = re.compile(r'^ES +Import +RT *: +(?P<es_import_rt>[\S ]+)$')
 
         # Service Carving   : Auto-selection
@@ -1247,7 +1247,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 main_port_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
 
-            # Interface MAC  : 008a.9644.d8dd
+            # Interface MAC  : 008a.96ff.1d22
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1279,7 +1279,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 main_port_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
 
-            # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+            # Source MAC        : 0001.edff.9e9f (PBB BSA)
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -1400,7 +1400,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 esi_dict.update({'type': esi_type})
                 continue
 
-            # Value          : 36.3700.0000.0000.1100
+            # Value          : 36.3700.00ff.0000.1100
             m = p22.match(line)
             if m:
                 group = m.groupdict()
@@ -1408,7 +1408,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 esi_dict.update({'value': esi_value})
                 continue
 
-            # ES Import RT      : 3637.0000.0000 (from ESI)
+            # ES Import RT      : 3637.00ff.0000 (from ESI)
             m = p23.match(line)
             if m:
                 group = m.groupdict()
@@ -1682,7 +1682,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 evpn_vpws_service_carving_results_dict = interface_dict.setdefault('evpn_vpws_service_carving_results', {})
                 continue
 
-            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
+            # 0210.03ff.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1839,8 +1839,8 @@ class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
         summary_pathlist_index = 0
         out = output if output else self.device.execute(self.cli_command)
         
-        # 1000 0000.0102.0304.0506.07aa 0 None
-        # 1000 0000.0102.0304.0506.07aa 200 24011
+        # 1000 0000.01ff.0506.0506.07aa 0 None
+        # 1000 0000.01ff.0506.0506.07aa 200 24011
         p1 = re.compile(r'^(?P<evi>\d+)( +(?P<encap>\S+))? +'
                 '(?P<ethernet_segment_id>[\w\.]+) +(?P<ether_tag>\S+) +(?P<label>\S+)$')
         
@@ -1851,9 +1851,9 @@ class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
         for line in out.splitlines():
             line = line.strip()
             
-            # 1000 0000.0102.0304.0506.07aa 0 None
-            # 1000 0000.0102.0304.0506.07aa 200 24011
-            # 100        MPLS   0036.3700.0000.0000.1100    0          64006
+            # 1000 0000.01ff.0506.0506.07aa 0 None
+            # 1000 0000.01ff.0506.0506.07aa 200 24011
+            # 100        MPLS   0036.37ff.0000.0000.1100    0          64006
             m = p1.match(line)
             if m:
                 group = m.groupdict()

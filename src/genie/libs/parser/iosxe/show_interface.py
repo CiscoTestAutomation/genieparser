@@ -217,7 +217,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                            r' +line +protocol +is +(?P<line_protocol>\w+)'
                            r'( *, *(?P<attribute>[\w\s]+))?$')
 
-        # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+        # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
         p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
                         r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
@@ -463,7 +463,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
                 continue
 
-            # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+            # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
             # Hardware is Loopback
             m = p2.match(line)
 
@@ -2471,8 +2471,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
-            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
-            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [UNA/TEN]
             p2 = re.compile(r'^IPv6 +is +(?P<status>\w+), +'
                              'link-local +address +is +(?P<link_local>[\w\:]+)'
                              '( *\[(?P<type>[\w\/]+)\])?$')

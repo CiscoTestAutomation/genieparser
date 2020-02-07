@@ -83,14 +83,14 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
         # ================================================================================
         # St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
         # -- ----- -------------- ------- ----------- --------- ------ ----- -----
-        #  >    40 a80c.0d4f.18d2 Up      13:20:10        48010      0     0     0
+        #  >    40 a80c.0dff.6722 Up      13:20:10        48010      0     0     0
         # 
         # Domain domain7_2 (level 7), Service service7_2
         # Down MEP on GigabitEthernet0/0/1/0.2 MEP-ID 10
         # ================================================================================
         # St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
         # -- ----- -------------- ------- ----------- --------- ------ ----- -----
-        #  >    40 a80c.0d4f.18d2 Up      13:20:10        48010      0     0     0
+        #  >    40 a80c.0dff.6722 Up      13:20:10        48010      0     0     0
 
         ret_dict = {}
         
@@ -101,8 +101,8 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
         # Up MEP on GigabitEthernet0/6/0/23.1 MEP-ID 500
         p2 = re.compile(r'^(?P<mep_type>\w+) +MEP +on +(?P<interface>\S+) +MEP-ID +(?P<mep_id>\d+)$')
 
-        # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
-        # >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
+        # V     10 0001.02ff.0706 Up      00:01:35            2      0     0     2
+        # >    20 0001.02ff.0705 Up      00:00:03            4      1     0     0
         p3 = re.compile(r'^(?P<st>(>|R|L|C|X|\*|I|V|T|M|U)) +(?P<id>\d+) +(?P<mac_address>\S+) +'
             '(?P<port>\w+) +(?P<up_down_time>\S+) +(?P<ccm_rcvd>\d+) +(?P<seq_err>\d+) +'
             '(?P<rdi>\d+) +(?P<error>\d+)$')
@@ -143,8 +143,8 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
 
                 continue
             
-            # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
-            # >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
+            # V     10 0001.02ff.0706 Up      00:01:35            2      0     0     2
+            # >    20 0001.02ff.0705 Up      00:00:03            4      1     0     0
             m = p3.match(line)
             if m:
                 group = m.groupdict()

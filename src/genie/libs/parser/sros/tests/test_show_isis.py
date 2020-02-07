@@ -94,7 +94,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Rtr Base ISIS Instance 0 Adjacency (detail)
     ===============================================================================
     Hostname    : GENIE01R07
-    SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
+    SystemID    : 0691.58ff.79a2                   SNPA        : 00:23:3e:ff:a6:27
     Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
@@ -110,7 +110,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Number of Restarts: 0
     Last Restart at   : Never
     Hostname    : GENIE04XR1
-    SystemID    : 0670.7021.9137                   SNPA        : 84:26:2b:bc:2d:e1
+    SystemID    : 0670.70ff.b258                   SNPA        : 84:26:2b:ff:e9:9e
     Interface   : To-GENIE04XR1-LAG-4             Up Time     : 36d 23:21:57
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
@@ -126,7 +126,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Number of Restarts: 0
     Last Restart at   : Never
     Hostname    : GENIE03R07
-    SystemID    : 0691.5819.6091                   SNPA        : 00:23:3e:8d:2f:99
+    SystemID    : 0691.58ff.79aa                   SNPA        : 00:23:3e:ff:bc:27
     Interface   : To-GENIE03R07-LAG-9             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
@@ -145,7 +145,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
     Rtr Base ISIS Instance 1 Adjacency (detail)
     ===============================================================================
     Hostname    : GENIE01R07
-    SystemID    : 0691.5819.6089                   SNPA        : 00:23:3e:8f:17:97
+    SystemID    : 0691.58ff.79a2                   SNPA        : 00:23:3e:ff:a6:27
     Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
     State       : Up                               Priority    : 0
     Nbr Sys Typ : L2                               L. Circ Typ : L2
@@ -170,7 +170,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                     'interfaces': {
                         'To-GENIE01R07-LAG-7': {
                             'system_id': {
-                                '0691.5819.6089': {
+                                '0691.58ff.79a2': {
                                     'hold_time': 22,
                                     'hostname': 'GENIE01R07',
                                     'ipv4_adj_sid': 'Label 524213',
@@ -186,7 +186,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
                                     'restart_status': 'Not currently being helped',
-                                    'snpa': '00:23:3e:8f:17:97',
+                                    'snpa': '00:23:3e:ff:a6:27',
                                     'state': 'Up',
                                     'topology': 'Unicast',
                                     'up_time': '58d 03:24:48',
@@ -195,7 +195,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                         },
                         'To-GENIE04XR1-LAG-4': {
                             'system_id': {
-                                '0670.7021.9137': {
+                                '0670.70ff.b258': {
                                     'hold_time': 23,
                                     'hostname': 'GENIE04XR1',
                                     'ipv4_adj_sid': 'Label 524127',
@@ -211,7 +211,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
                                     'restart_status': 'Not currently being helped',
-                                    'snpa': '84:26:2b:bc:2d:e1',
+                                    'snpa': '84:26:2b:ff:e9:9e',
                                     'state': 'Up',
                                     'topology': 'Unicast',
                                     'up_time': '36d 23:21:57',
@@ -220,7 +220,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                         },
                         'To-GENIE03R07-LAG-9': {
                             'system_id': {
-                                '0691.5819.6091': {
+                                '0691.58ff.79aa': {
                                     'hold_time': 22,
                                     'hostname': 'GENIE03R07',
                                     'ipv4_adj_sid': 'Label 524214',
@@ -236,7 +236,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
                                     'restart_status': 'Not currently being helped',
-                                    'snpa': '00:23:3e:8d:2f:99',
+                                    'snpa': '00:23:3e:ff:bc:27',
                                     'state': 'Up',
                                     'topology': 'Unicast',
                                     'up_time': '58d 03:24:48',
@@ -253,7 +253,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                     'interfaces': {
                         'To-GENIE01R07-LAG-7': {
                             'system_id': {
-                                '0691.5819.6089': {
+                                '0691.58ff.79a2': {
                                     'hold_time': 22,
                                     'hostname': 'GENIE01R07',
                                     'ipv4_adj_sid': 'Label 524213',
@@ -269,7 +269,7 @@ class TestShowRouterIsisAdjacencyDetail(unittest.TestCase):
                                     'restart_support': 'Disabled',
                                     'restart_supressed': 'Disabled',
                                     'restart_status': 'Not currently being helped',
-                                    'snpa': '00:23:3e:8f:17:97',
+                                    'snpa': '00:23:3e:ff:a6:27',
                                     'state': 'Up',
                                     'topology': 'Unicast',
                                     'up_time': '58d 03:24:48',

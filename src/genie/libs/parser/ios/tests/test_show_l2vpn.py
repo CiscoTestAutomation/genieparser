@@ -1294,8 +1294,8 @@ class test_show_bridge_domain(unittest.TestCase):
                 "mac_table": {
                     "OCE_PTR:0xe8eb04a0": {
                         "mac_address": {
-                            "000C.29B0.3E16": {
-                                "mac_address": "000C.29B0.3E16",
+                            "000C.29FF.EEC6": {
+                                "mac_address": "000C.29FF.EEC6",
                                 "aed": 0,
                                 "policy": "forward",
                                 "tag": "static_r",
@@ -1306,8 +1306,8 @@ class test_show_bridge_domain(unittest.TestCase):
                     },
                     "GigabitEthernet6.EFP10": {
                         "mac_address": {
-                            "000C.29AF.F904": {
-                                "mac_address": "000C.29AF.F904",
+                            "000C.29FF.A9B3": {
+                                "mac_address": "000C.29FF.A9B3",
                                 "aed": 0,
                                 "policy": "forward",
                                 "tag": "dynamic_c",
@@ -1318,8 +1318,8 @@ class test_show_bridge_domain(unittest.TestCase):
                     },
                     "GigabitEthernet7.EFP10": {
                         "mac_address": {
-                            "000C.2993.130E": {
-                                "mac_address": "000C.2993.130E",
+                            "000C.29FF.A6A1": {
+                                "mac_address": "000C.29FF.A6A1",
                                 "aed": 0,
                                 "policy": "forward",
                                 "tag": "dynamic_c",
@@ -1330,8 +1330,8 @@ class test_show_bridge_domain(unittest.TestCase):
                     },
                     "OCE_PTR:0xe8eb0500": {
                         "mac_address": {
-                            "000C.29EE.EC0D": {
-                                "mac_address": "000C.29EE.EC0D",
+                            "000C.29FF.DBFB": {
+                                "mac_address": "000C.29FF.DBFB",
                                 "aed": 0,
                                 "policy": "forward",
                                 "tag": "static_r",
@@ -1354,10 +1354,10 @@ class test_show_bridge_domain(unittest.TestCase):
             GigabitEthernet7 service instance 10
             EVPN Instance 10
            AED MAC address    Policy  Tag       Age  Pseudoport
-           -   000C.29B0.3E16 forward static_r  0    OCE_PTR:0xe8eb04a0
-           -   000C.29AF.F904 forward dynamic_c 29   GigabitEthernet6.EFP10
-           -   000C.2993.130E forward dynamic_c 26   GigabitEthernet7.EFP10
-           -   000C.29EE.EC0D forward static_r  0    OCE_PTR:0xe8eb0500
+           -   000C.29FF.EEC6 forward static_r  0    OCE_PTR:0xe8eb04a0
+           -   000C.29FF.A9B3 forward dynamic_c 29   GigabitEthernet6.EFP10
+           -   000C.29FF.A6A1 forward dynamic_c 26   GigabitEthernet7.EFP10
+           -   000C.29FF.DBFB forward static_r  0    OCE_PTR:0xe8eb0500
     '''
     }
 

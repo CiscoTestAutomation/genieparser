@@ -794,7 +794,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'active',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '1.0',
-                                       'mac_address': '84-78-ac-0f-c4-cd to 84-78-ac-0f-c4-df',
+                                       'mac_address': '84-78-ac-ff-d3-dc to 84-78-ac-ff-d3-ee',
                                        'serial_number': 'JAF1708AGTH',
                                        'online_diag_status': 'Pass'}
                                     },
@@ -805,7 +805,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ha-standby',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '1.0',
-                                       'mac_address': '84-78-ac-0f-b9-00 to 84-78-ac-0f-b9-12',
+                                       'mac_address': '84-78-ac-ff-c8-0f to 84-78-ac-ff-c8-21',
                                        'serial_number': 'JAF1708AGQH',
                                        'online_diag_status': 'Pass'}
                                     }
@@ -818,7 +818,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ok',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '1.0',
-                                       'mac_address': '84-78-ac-18-dd-30 to 84-78-ac-18-dd-63',
+                                       'mac_address': '84-78-ac-ff-f5-48 to 84-78-ac-ff-f5-7b',
                                        'serial_number': 'JAF1717AAND',
                                        'online_diag_status': 'Pass'}
                                     },
@@ -829,7 +829,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ok',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '1.0',
-                                       'mac_address': '54-4a-00-ad-19-40 to 54-4a-00-ad-19-7b',
+                                       'mac_address': '54-4a-00-ff-c6-ed to 54-4a-00-ff-c6-29',
                                        'serial_number': 'JAE18120FLU',
                                        'online_diag_status': 'Pass'}
                                     },
@@ -840,7 +840,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ok',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '2.0',
-                                       'mac_address': 'bc-16-65-54-af-64 to bc-16-65-54-af-87',
+                                       'mac_address': 'bc-16-65-ff-04-b8 to bc-16-65-ff-04-db',
                                        'serial_number': 'JAF1719AHMB',
                                        'online_diag_status': 'Pass'}
                                     },
@@ -851,7 +851,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ok',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '1.0',
-                                       'mac_address': 'd8-67-d9-0e-91-c8 to d8-67-d9-0e-91-e3',
+                                       'mac_address': 'd8-67-d9-ff-9f-d6 to d8-67-d9-ff-9f-f1',
                                        'serial_number': 'JAF1641APPF',
                                        'online_diag_status': 'Pass'}
                                     },
@@ -862,7 +862,7 @@ class test_show_module(unittest.TestCase):
                                        'status': 'ok',
                                        'software': '8.3(0)CV(0.658)',
                                        'hardware': '2.1',
-                                       'mac_address': 'bc-16-65-3a-b8-d0 to bc-16-65-3a-b9-03',
+                                       'mac_address': 'bc-16-65-ff-f2-0b to bc-16-65-ff-f3-3d',
                                        'serial_number': 'JAF1717BEAT',
                                        'online_diag_status': 'Pass'}
                                     }
@@ -943,13 +943,13 @@ class test_show_module(unittest.TestCase):
 
     Mod  MAC-Address(es)                         Serial-Num
     ---  --------------------------------------  ----------
-    1    84-78-ac-0f-c4-cd to 84-78-ac-0f-c4-df  JAF1708AGTH
-    2    84-78-ac-0f-b9-00 to 84-78-ac-0f-b9-12  JAF1708AGQH
-    3    84-78-ac-18-dd-30 to 84-78-ac-18-dd-63  JAF1717AAND
-    4    54-4a-00-ad-19-40 to 54-4a-00-ad-19-7b  JAE18120FLU
-    6    bc-16-65-54-af-64 to bc-16-65-54-af-87  JAF1719AHMB
-    7    d8-67-d9-0e-91-c8 to d8-67-d9-0e-91-e3  JAF1641APPF
-    8    bc-16-65-3a-b8-d0 to bc-16-65-3a-b9-03  JAF1717BEAT
+    1    84-78-ac-ff-d3-dc to 84-78-ac-ff-d3-ee  JAF1708AGTH
+    2    84-78-ac-ff-c8-0f to 84-78-ac-ff-c8-21  JAF1708AGQH
+    3    84-78-ac-ff-f5-48 to 84-78-ac-ff-f5-7b  JAF1717AAND
+    4    54-4a-00-ff-c6-ed to 54-4a-00-ff-c6-29  JAE18120FLU
+    6    bc-16-65-ff-04-b8 to bc-16-65-ff-04-db  JAF1719AHMB
+    7    d8-67-d9-ff-9f-d6 to d8-67-d9-ff-9f-f1  JAF1641APPF
+    8    bc-16-65-ff-f2-0b to bc-16-65-ff-f3-3d  JAF1717BEAT
 
     Mod  Online Diag Status
     ---  ------------------
@@ -1018,12 +1018,12 @@ class test_show_module(unittest.TestCase):
 
         Mod  MAC-Address(es)                         Serial-Num
         ---  --------------------------------------  ----------
-        1    88-1d-fc-84-e3-ec to 88-1d-fc-84-e4-2f  SAL18422J9D
+        1    88-1d-fc-ff-68-71 to 88-1d-fc-ff-69-b3  SAL18422J9D
         22   NA                                      SAL18401T5J
         24   NA                                      SAL18401T2L
         26   NA                                      SAL18401T5S
-        27   e4-c7-22-be-01-0c to e4-c7-22-be-01-1d  SAL18422LG1
-        28   e4-c7-22-bd-f1-a6 to e4-c7-22-bd-f1-b7  SAL18412064
+        27   e4-c7-22-ff-bf-ca to e4-c7-22-ff-bf-db  SAL18422LG1
+        28   e4-c7-22-ff-af-64 to e4-c7-22-ff-af-75  SAL18412064
         29   NA                                      SAL18422HKT
         30   NA                                      SAL18422HKA
 
@@ -1053,7 +1053,7 @@ class test_show_module(unittest.TestCase):
                            "hardware": "1.4",
                            "status": "active",
                            "slot/world_wide_name": "SUP2",
-                           "mac_address": "e4-c7-22-bd-f1-a6 to e4-c7-22-bd-f1-b7"
+                           "mac_address": "e4-c7-22-ff-af-64 to e4-c7-22-ff-af-75"
                       }
                  },
                  "27": {
@@ -1066,7 +1066,7 @@ class test_show_module(unittest.TestCase):
                            "hardware": "1.4",
                            "status": "ha-standby",
                            "slot/world_wide_name": "SUP1",
-                           "mac_address": "e4-c7-22-be-01-0c to e4-c7-22-be-01-1d"
+                           "mac_address": "e4-c7-22-ff-bf-ca to e4-c7-22-ff-bf-db"
                       }
                  }
             },
@@ -1081,7 +1081,7 @@ class test_show_module(unittest.TestCase):
                            "hardware": "1.3",
                            "status": "ok",
                            "slot/world_wide_name": "LC1",
-                           "mac_address": "88-1d-fc-84-e3-ec to 88-1d-fc-84-e4-2f"
+                           "mac_address": "88-1d-fc-ff-68-71 to 88-1d-fc-ff-69-b3"
                       }
                  },
                  "26": {
@@ -1256,7 +1256,7 @@ class test_show_vdc_detail(unittest.TestCase):
                             {'1':
                               {'name': 'PE1',
                                'state': 'active',
-                               'mac_address': '84:78:ac:5a:86:c1',
+                               'mac_address': '84:78:ac:ff:e0:1c',
                                'ha_policy': 'RELOAD',
                                'dual_sup_ha_policy': 'SWITCHOVER',
                                'boot_order': '1',
@@ -1272,7 +1272,7 @@ class test_show_vdc_detail(unittest.TestCase):
                             '2':
                               {'name': 'PE2',
                                'state': 'active',
-                               'mac_address': '84:78:ac:5a:86:c2',
+                               'mac_address': '84:78:ac:ff:e0:1d',
                                'ha_policy': 'RESTART',
                                'dual_sup_ha_policy': 'SWITCHOVER',
                                'boot_order': '1',
@@ -1288,7 +1288,7 @@ class test_show_vdc_detail(unittest.TestCase):
                             '3':
                               {'name': 'CORE',
                                'state': 'active',
-                               'mac_address': '84:78:ac:5a:86:c3',
+                               'mac_address': '84:78:ac:ff:e0:1e',
                                'ha_policy': 'RESTART',
                                'dual_sup_ha_policy': 'SWITCHOVER',
                                'boot_order': '1',
@@ -1311,7 +1311,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc id: 1
     vdc name: PE1
     vdc state: active
-    vdc mac address: 84:78:ac:5a:86:c1
+    vdc mac address: 84:78:ac:ff:e0:1c
     vdc ha policy: RELOAD
     vdc dual-sup ha policy: SWITCHOVER
     vdc boot Order: 1
@@ -1328,7 +1328,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc id: 2
     vdc name: PE2
     vdc state: active
-    vdc mac address: 84:78:ac:5a:86:c2
+    vdc mac address: 84:78:ac:ff:e0:1d
     vdc ha policy: RESTART
     vdc dual-sup ha policy: SWITCHOVER
     vdc boot Order: 1
@@ -1345,7 +1345,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc id: 3
     vdc name: CORE
     vdc state: active
-    vdc mac address: 84:78:ac:5a:86:c3
+    vdc mac address: 84:78:ac:ff:e0:1e
     vdc ha policy: RESTART
     vdc dual-sup ha policy: SWITCHOVER
     vdc boot Order: 1

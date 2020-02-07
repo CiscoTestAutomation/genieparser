@@ -9,6 +9,14 @@
                                 New
 --------------------------------------------------------------------------------
 
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
@@ -21,6 +29,7 @@
         * 'show bootvar'
     * Added ShowInterfaceStatus for:
         * show interface status
+
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -74,12 +83,15 @@
 * SROS
     * Added ShowSystemNtpAll for:
         * show system ntp all
-
-*SROS
     * Added ShowRouterIsisAdjacency for:
         * show router isis adjacency
     * Added ShowRouterIsisAdjacencyDetail for:
         * show router isis adjacency detail
+
+* LINUX
+    * Added Ps for:
+        * ps -ef
+        * ps -ef | grep {grep}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -144,3 +156,6 @@
     * Updated ShowNveVniIngressReplication
         * Added regex 
         * Added new unittest
+    * Updated ShowIpCefInternal
+	    * Update schema and regex to support more various output
+
