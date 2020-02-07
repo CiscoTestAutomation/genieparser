@@ -30,7 +30,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBriefPipeIp,\
                                         ShowInterfacesStats,\
-                                        ShowInterfacesDescription
+                                        ShowInterfacesDescription,\
+                                        ShowInterfacesStatus
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -18912,6 +18913,177 @@ class TestShowInterfacesDescription(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
+
+###################################################
+# unit test for show interfaces status
+####################################################
+class TestShowInterfacesStatus(unittest.TestCase):
+    """unit test for show interfaces status """
+
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_interface_output1 = {'execute.return_value': ''' 
+    show interfaces status
+    
+    Port      Name               Status       Vlan       Duplex  Speed Type
+    Gi1/1     To Abcde           notconnect   1            auto   auto 10/100/1000-TX
+    Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+    Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
+    Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
+    Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/11    APQWSR             connected    136        a-full a-1000 10/100/1000-TX
+    Gi2/12                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/23                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi2/24    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+    Te3/2                        inactive     1            full   auto No XCVR
+    Gi3/4                        notconnect   99           full   1000 No Gbic
+    Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
+    Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
+    '''}
+
+    golden_parsed_interface_output1 = {
+        'interfaces': {
+            'GigabitEthernet1/1': {
+                'duplex_code': 'auto',
+                'name': 'To Abcde',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '1',
+            },
+            'GigabitEthernet1/10': {
+                'duplex_code': 'a-full',
+                'name': 'To cft123',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet1/2': {
+                'duplex_code': 'full',
+                'name': 'TelenlqPOIU',
+                'port_speed': '100',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '125',
+            },
+            'GigabitEthernet1/3': {
+                'duplex_code': 'a-full',
+                'name': 'SE',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '132',
+            },
+            'GigabitEthernet1/44': {
+                'duplex_code': 'a-full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '550',
+            },
+            'GigabitEthernet1/45': {
+                'duplex_code': 'a-full',
+                'name': 'ASDFGH',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet1/46': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet1/7': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet2/11': {
+                'duplex_code': 'a-full',
+                'name': 'APQWSR',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '136',
+            },
+            'GigabitEthernet2/12': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet2/23': {
+                'duplex_code': 'a-full',
+                'port_speed': 'a-100',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '140',
+            },
+            'GigabitEthernet2/24': {
+                'duplex_code': 'a-full',
+                'name': 'ASDFGH',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet3/4': {
+                'duplex_code': '1000',
+                'name': 'notconnect',
+                'port_speed': 'No',
+                'status': '99',
+                'type': 'Gbic',
+                'vlan': 'full',
+            },
+            'GigabitEthernet3/5': {
+                'duplex_code': 'full',
+                'name': 'To loedutjb234',
+                'port_speed': '1000',
+                'status': 'connected',
+                'type': '1000BaseSX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet3/6': {
+                'duplex_code': 'full',
+                'name': 'To loedutjb345',
+                'port_speed': '1000',
+                'status': 'connected',
+                'type': '1000BaseSX',
+                'vlan': 'trunk',
+            },
+            'TenGigabitEthernet3/2': {
+                'duplex_code': 'auto',
+                'name': 'inactive',
+                'port_speed': 'No',
+                'status': '1',
+                'type': 'XCVR',
+                'vlan': 'full',
+            },
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfacesStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
 if __name__ == '__main__':
     unittest.main()
