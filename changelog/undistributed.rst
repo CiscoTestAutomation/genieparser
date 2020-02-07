@@ -9,6 +9,13 @@
                                 New
 --------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
