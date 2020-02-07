@@ -2,6 +2,7 @@
 
 Linux parsers for the following commands:
     * ps -ef
+    * ps -ef | grep {grep}
 '''
 
 # Python
@@ -40,13 +41,13 @@ class PsSchema(MetaParser):
 class Ps(PsSchema):
  
     ''' Parser for "ps -ef"'''
-    cli_command = ['ps -ef', r'ps -ef | grep {grep}']
+    cli_command = ['ps -ef', 'ps -ef | grep {grep}']
 
     def cli(self, output=None, grep=None):
         if output is None:
             command = self.cli_command[0]
             if grep:
-                command = self.cli_command[1].replace(r'{grep}', grep)
+                command = self.cli_command[1].replace('{grep}', grep)
             out = self.device.execute(command)
         else:
             out = output
@@ -59,19 +60,21 @@ class Ps(PsSchema):
         # root      2328     1  0  2019 tty4     00:00:00 /sbin/mingetty /dev/tty4                                       
         # root      2334     1  0  2019 tty5     00:00:00 /sbin/mingetty /dev/tty5                  
         # root      2341     1  0  2019 tty6     00:00:00 /sbin/mingetty /dev/tty6
-        p1 = re.compile(r'^(?P<uid>(\S+))\s+(?P<pid>(\d+))'
-            r'\s+(?P<ppid>(\d+))\s+(?P<c>(\S+))\s+(?P<stime>(\d+))'
-            r'\s+(?P<tty>(\S+))\s+(?P<time>(\S+))\s+(?P<cmd>(.+))$')
+        p1 = re.compile(r'^(?P<uid>\S+)\s+(?P<pid>\d+)\s+(?P<ppid>\d+)'
+            + r'\s+(?P<c>\S+)\s+(?P<stime>\S+)\s+(?P<tty>\S+)'
+            + r'\s+(?P<time>\S+)\s+(?P<cmd>.+)$')
  
         for line in out.splitlines():
             line = line.strip()
  
             m = p1.match(line)
             if m:
+                if grep and 'grep {}'.format(grep) in line:
+                    continue
+
                 groups = m.groupdict()
                 pid = groups['pid']
                 del groups['pid']
                 parsed_dict.setdefault('pid', {}).setdefault(pid, groups)
-                continue
  
         return parsed_dict
