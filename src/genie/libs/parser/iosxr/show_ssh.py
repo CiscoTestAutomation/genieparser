@@ -125,7 +125,7 @@ class ShowSsh(ShowSshSchema):
 # Schema for 'show ssh history'
 # =====================================
 class ShowSshHistorySchema(MetaParser):
-    #Schema for show SSH History
+    #Schema for show SSH history
     schema = {
         'session':{
             'incoming':{

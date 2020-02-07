@@ -12,7 +12,7 @@ from pyats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxe show_ssh1
+# iosxr show_ssh
 from genie.libs.parser.iosxr.show_ssh import ShowSsh, ShowSshHistory
 
 # ===============================
