@@ -227,7 +227,7 @@ class TestShowSdrDetail(unittest.TestCase):
             0: {
                 'dsdrsc_node': '0/RSP0/CPU0',
                 'dsdrsc_partner_node': '0/RSP1/CPU0',
-                'mac_address': 'a80c.0d5f.ab17',
+                'mac_address': 'a80c.0dff.0b76',
                 'membership': {
                     '0/0/CPU0': {
                         'node_status': 'IOS XR RUN',
@@ -257,7 +257,7 @@ class TestShowSdrDetail(unittest.TestCase):
                 dSDRsc partner node  : 0/RSP1/CPU0
                 primary node1        : 0/RSP0/CPU0
                 primary node2        : 0/RSP1/CPU0
-                mac addr             : a80c.0d5f.ab17
+                mac addr             : a80c.0dff.0b76
 
 
 
@@ -276,7 +276,7 @@ class TestShowSdrDetail(unittest.TestCase):
             0: {
                 'dsdrsc_node': '0/0/CPU0',
                 'dsdrsc_partner_node': 'NONE',
-                'mac_address': '025e.ea57.a400',
+                'mac_address': '025e.eaff.fb57',
                 'membership': {
                     '0/0/CPU0': {
                         'node_status': 'IOS XR RUN',
@@ -296,7 +296,7 @@ class TestShowSdrDetail(unittest.TestCase):
                 dSDRsc partner node  : NONE
                 primary node1        : 0/0/CPU0
                 primary node2        : NONE
-                mac addr             : 025e.ea57.a400
+                mac addr             : 025e.eaff.fb57
 
 
 

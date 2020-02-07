@@ -225,7 +225,7 @@ class TestShowVersion(unittest.TestCase):
             'switch_num': {
                 '1': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:72:7d:80',
+                    'mac_address': '38:20:56:ff:ef:f2',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC19315RWV',
                     'model_rev_num': 'U0',
@@ -241,7 +241,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '2': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:7b:00',
+                    'mac_address': '38:20:56:ff:a4:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC19315SCE',
                     'model_rev_num': 'U0',
@@ -257,7 +257,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '3': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:72:a8:00',
+                    'mac_address': '38:20:56:ff:1b:72',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KD',
                     'model_rev_num': 'U0',
@@ -273,7 +273,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '4': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:97:00',
+                    'mac_address': '38:20:56:ff:c0:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KG',
                     'model_rev_num': 'U0',
@@ -289,7 +289,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '5': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:49:00',
+                    'mac_address': '38:20:56:ff:72:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KB',
                     'model_rev_num': 'U0',
@@ -379,7 +379,7 @@ class TestShowVersion(unittest.TestCase):
         1609272K bytes of Flash at flash-5:.
         0K bytes of  at webui:.
 
-        Base Ethernet MAC Address          : 38:20:56:72:7d:80
+        Base Ethernet MAC Address          : 38:20:56:ff:ef:f2
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC19315RWV
         Model Revision Number              : U0
@@ -401,7 +401,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:7b:00
+        Base Ethernet MAC Address          : 38:20:56:ff:a4:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC19315SCE
         Model Revision Number              : U0
@@ -413,7 +413,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:72:a8:00
+        Base Ethernet MAC Address          : 38:20:56:ff:1b:72
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KD
         Model Revision Number              : U0
@@ -425,7 +425,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:97:00
+        Base Ethernet MAC Address          : 38:20:56:ff:c0:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KG
         Model Revision Number              : U0
@@ -437,7 +437,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:49:00
+        Base Ethernet MAC Address          : 38:20:56:ff:72:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KB
         Model Revision Number              : U0
@@ -3085,7 +3085,7 @@ Switch#   Role        Priority      State
 
     golden_parsed_output_c3850 = {
                                     'main': {
-                                        'switch_mac_address': '0057.d21b.cc00',
+                                        'switch_mac_address': '0057.d2ff.e71b',
                                         'mac_persistency_wait_time': 'indefinite',
                                         'swstack': True,
                                     },
@@ -3094,7 +3094,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V07',
-                                                    'mac_address': '0057.d21b.cc00',
+                                                    'mac_address': '0057.d2ff.e71b',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '3',
@@ -3110,7 +3110,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.565b.8e80',
+                                                    'mac_address': '3820.56ff.e9db',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3126,7 +3126,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.8e00',
+                                                    'mac_address': '3820.56ff.b729',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3142,7 +3142,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.da80',
+                                                    'mac_address': '3820.56ff.04a9',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3158,7 +3158,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.7a00',
+                                                    'mac_address': '3820.56ff.a329',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3176,12 +3176,12 @@ Switch#   Role        Priority      State
     golden_output_c3850 = {'execute.return_value': '''\
 Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
 ------  -----   ---------             -----------  --------------  -------       --------
- 1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d21b.cc00  V07           16.6.1        
- 2       32     WS-C3850-24P-E        FCW1932D0TF  3820.565b.8e80  V06           16.6.1        
- 3       32     WS-C3850-24P-E        FCW1932D0L8  3820.5629.8e00  V06           16.6.1        
- 4       32     WS-C3850-24P-E        FCW1932C0VB  3820.5629.da80  V06           16.6.1        
- 5       32     WS-C3850-24P-E        FCW1932C0M9  3820.5629.7a00  V06           16.6.1        
-Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+ 1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1        
+ 2       32     WS-C3850-24P-E        FCW1932D0TF  3820.56ff.e9db  V06           16.6.1        
+ 3       32     WS-C3850-24P-E        FCW1932D0L8  3820.56ff.b729  V06           16.6.1        
+ 4       32     WS-C3850-24P-E        FCW1932C0VB  3820.56ff.04a9  V06           16.6.1        
+ 5       32     WS-C3850-24P-E        FCW1932C0M9  3820.56ff.a329  V06           16.6.1        
+Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
 Mac persistency wait time: Indefinite
                                    Current
 Switch#   Role        Priority      State 
@@ -4051,7 +4051,7 @@ class TestShowSwitchDetail(unittest.TestCase):
                     },
                     "state": "ready",
                     "priority": "3",
-                    "mac_address": "689c.e2d9.df00"
+                    "mac_address": "689c.e2ff.b9d9"
                },
                "3": {
                     "role": "member",
@@ -4088,19 +4088,19 @@ class TestShowSwitchDetail(unittest.TestCase):
                     "mac_address": "c800.84ff.7e00"
                }
             },
-            "mac_address": "689c.e2d9.df00",
+            "mac_address": "689c.e2ff.b9d9",
             "mac_persistency_wait_time": "indefinite"
         }
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
         show switch detail
-        Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
+        Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
         Switch#   Role    Mac Address     Priority Version  State 
         -------------------------------------------------------------------------------------
-        *1       Active   689c.e2d9.df00     3      V04     Ready                
+        *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
          3       Member   c800.84ff.4800     1      V05     Ready                
 
@@ -4117,13 +4117,13 @@ class TestShowSwitchDetail(unittest.TestCase):
 
     golden_parsed_output1 = {
         "switch": {
-            "mac_address": "00d6.fe70.3c80",
+            "mac_address": "00d6.feff.acf0",
             "mac_persistency_wait_time": "indefinite",
             "stack": {
                 "1": {
                     "role": "active",
                     "state": "ready",
-                    "mac_address": "00d6.fe70.3c80",
+                    "mac_address": "00d6.feff.acf0",
                     "priority": "1",
                     "hw_ver": "V02",
                     "ports": {
@@ -4142,12 +4142,12 @@ class TestShowSwitchDetail(unittest.TestCase):
     }
     golden_output1 = {'execute.return_value': '''\
         show switch detail
-        Switch/Stack Mac Address : 00d6.fe70.3c80 - Local Mac Address
+        Switch/Stack Mac Address : 00d6.feff.acf0 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                     H/W   Current
         Switch#   Role    Mac Address     Priority Version  State
         ------------------------------------------------------------
-        *1       Active   00d6.fe70.3c80     1      V02     Ready
+        *1       Active   00d6.feff.acf0     1      V02     Ready
 
                 Stack Port Status             Neighbors
         Switch#  Port 1     Port 2           Port 1   Port 2
@@ -4188,7 +4188,7 @@ class TestShowSwitch(unittest.TestCase):
                     "hw_ver": "V04",
                     "state": "ready",
                     "priority": "3",
-                    "mac_address": "689c.e2d9.df00"
+                    "mac_address": "689c.e2ff.b9d9"
                },
                "3": {
                     "role": "member",
@@ -4205,18 +4205,18 @@ class TestShowSwitch(unittest.TestCase):
                     "mac_address": "c800.84ff.7e00"
                }
             },
-            "mac_address": "689c.e2d9.df00",
+            "mac_address": "689c.e2ff.b9d9",
             "mac_persistency_wait_time": "indefinite"
         }
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
-        Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
+        Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
         Switch#   Role    Mac Address     Priority Version  State 
         -------------------------------------------------------------------------------------
-        *1       Active   689c.e2d9.df00     3      V04     Ready                
+        *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
          3       Member   c800.84ff.4800     1      V05     Ready 
     '''
@@ -4253,7 +4253,7 @@ class TestShowModule(unittest.TestCase):
             },
             "1": {
                "serial_number": "foc1902x062",
-               "mac_address": "689c.e2d9.df00",
+               "mac_address": "689c.e2ff.b9d9",
                "sw_ver": "16.9.1",
                "model": "ws-c3850-48p-e",
                "hw_ver": "v04",
@@ -4273,7 +4273,7 @@ class TestShowModule(unittest.TestCase):
     golden_output_c3850 = {'execute.return_value': '''\
         Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
         ------  -----   ---------             -----------  --------------  -------       --------
-         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1        
+         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2ff.b9d9  V04           16.9.1        
          2       32     WS-C3850-24P-E        FCW1909C0N2  c800.84ff.7e00  V05           16.9.1        
          3       32     WS-C3850-24P-E        FCW1909D0JC  c800.84ff.4800  V05           16.9.1
     '''

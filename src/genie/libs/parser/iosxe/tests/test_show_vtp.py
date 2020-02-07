@@ -74,7 +74,7 @@ class test_show_vtp_status(unittest.TestCase):
     golden_parsed_output = {
         "vtp": {
         "pruning_mode": False,
-        "device_id": "3820.5622.a580",
+        "device_id": "3820.56ff.c7a2",
         "traps_generation": False,
         "updater_id": "192.168.234.1",
         "updater_interface": "Vl100",
@@ -100,7 +100,7 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Domain Name                 : 
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
-        Device ID                       : 3820.5622.a580
+        Device ID                       : 3820.56ff.c7a2
         Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
         Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
 
@@ -148,7 +148,7 @@ class test_show_vtp_status(unittest.TestCase):
 
     golden_parsed_output_3 = {
         'vtp': {
-            'device_id': '3820.5622.a580',
+            'device_id': '3820.56ff.c7a2',
             'feature': {
                 'mst': {
                     'configuration_revision': 0,
@@ -171,7 +171,7 @@ class test_show_vtp_status(unittest.TestCase):
                                   '0x92 0xC2 0xC7 0xFC',
                     'operating_mode': 'primary server',
                     'primary_description': 'SW1',
-                    'primary_id': '3820.5622.a580',
+                    'primary_id': '3820.56ff.c7a2',
                 },
             },
 
@@ -188,7 +188,7 @@ class test_show_vtp_status(unittest.TestCase):
             VTP Domain Name                 : 
             VTP Pruning Mode                : Disabled
             VTP Traps Generation            : Disabled
-            Device ID                       : 3820.5622.a580
+            Device ID                       : 3820.56ff.c7a2
             
             Feature VLAN:
             --------------
@@ -197,7 +197,7 @@ class test_show_vtp_status(unittest.TestCase):
             Number of existing extended VLANs : 0
             Maximum VLANs supported locally   : 4096
             Configuration Revision            : 2
-            Primary ID                        : 3820.5622.a580
+            Primary ID                        : 3820.56ff.c7a2
             Primary Description               : SW1
             MD5 digest                        : 0xC2 0x3C 0x1A 0x2C 0x1C 0x48 0x7D 0xFC 
                                                 0x6B 0x17 0x15 0x87 0x92 0xC7 0x70 0x25 
@@ -225,7 +225,7 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Domain Name                 : GENIE
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
-        Device ID                       : 02da.308e.1ae9
+        Device ID                       : 02da.30ff.a878
 
         Feature VLAN:
         --------------
@@ -234,7 +234,7 @@ class test_show_vtp_status(unittest.TestCase):
         Number of existing extended VLANs : 0
         Maximum VLANs supported locally   : 2048
         Configuration Revision            : 25
-        Primary ID                        : 02da.308e.1ae9
+        Primary ID                        : 02da.30ff.a878
         Primary Description               : genie
         MD5 digest                        : 0x3D 0x05 0xEE 0x1F 0x35 0xCC 0x7C 0x74
                                             0x41 0x7A 0xB2 0x1F 0xE9 0x77 0x9A 0xCD
@@ -254,7 +254,7 @@ class test_show_vtp_status(unittest.TestCase):
 
     golden_parsed_output_4 = {
         'vtp': {
-            'device_id': '02da.308e.1ae9',
+            'device_id': '02da.30ff.a878',
             'domain_name': 'GENIE',
             'feature': {
                 'mst': {
@@ -275,7 +275,7 @@ class test_show_vtp_status(unittest.TestCase):
                                   '0xCC 0xCD 0xE9 0xEE',
                     'operating_mode': 'primary server',
                     'primary_description': 'genie',
-                    'primary_id': '02da.308e.1ae9'
+                    'primary_id': '02da.30ff.a878'
                 }
             },
             'pruning_mode': False,

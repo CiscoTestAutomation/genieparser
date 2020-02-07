@@ -1572,7 +1572,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
         # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
         # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
-        # b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
+        # b827.ebff.4720/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
         # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
         p3 = re.compile(r'(?P<map_id>(\S+)), +uptime: +(?P<uptime>(\S+)),'
                          ' +expires: +(?P<expires>(\S+)), +via +(?P<via>(.*))$')
@@ -1624,7 +1624,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
             # # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
             # ::/0, uptime: 00:11:28, expires: never, via static-send-map-request
-            # b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
+            # b827.ebff.4720/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
             # 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
             m = p3.match(line)
             if m:
@@ -2277,8 +2277,8 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
 
         # 192.168.0.0/24, locator-set RLOC
         # 2001:192:168::/64, locator-set RLOC
-        # 0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
-        # cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        # 0050.56ff.1bbe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        # cafe.caff.c9fd/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
         p4 = re.compile(r'(?P<etr_eid>(\S+)),'
                          '(?: +dynamic-eid +(?P<dyn_eid>(\S+)),'
                          ' +inherited +from +default)?'
@@ -2326,7 +2326,7 @@ class ShowLispServiceDatabase(ShowLispServiceDatabaseSchema):
                 continue
 
             # 192.168.0.0/24, locator-set RLOC
-            # cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+            # cafe.caff.c9fd/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
             m = p4.match(line)
             if m:
                 group = m.groupdict()

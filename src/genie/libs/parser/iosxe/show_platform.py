@@ -2040,7 +2040,7 @@ class ShowPlatform(ShowPlatformSchema):
 
         # ----------      C3850    -------------
 
-        # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+        # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
         p1 = re.compile(
             r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
              '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
@@ -2050,7 +2050,7 @@ class ShowPlatform(ShowPlatformSchema):
 
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
         # ------  -----   ---------             -----------  --------------  -------       --------
-        #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d21b.cc00  V07           16.6.1
+        #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                          '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                          '(?P<mac_address>[\w\.\:]+) +'
@@ -2567,7 +2567,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
 
         # initial regexp pattern
 
-        # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+        # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
         p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
                          '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
         
@@ -2578,7 +2578,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         #                                              H/W   Current
         # Switch#   Role    Mac Address     Priority Version  State 
         # -----------------------------------------------------------
-        # *1       Active   689c.e2d9.df00     3      V04     Ready 
+        # *1       Active   689c.e2ff.b9d9     3      V04     Ready 
         p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
                          '(?P<mac_address>[\w\.]+) +'
                          '(?P<priority>\d+) +'
@@ -2597,7 +2597,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+            # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
             m = p1.match(line)
             if m:
                 ret_dict['mac_address'] = m.groupdict()['switch_mac_address']
@@ -2612,7 +2612,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             #                                              H/W   Current
             # Switch#   Role    Mac Address     Priority Version  State 
             # -----------------------------------------------------------
-            # *1       Active   689c.e2d9.df00     3      V04     Ready 
+            # *1       Active   689c.e2ff.b9d9     3      V04     Ready 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -2885,7 +2885,7 @@ class ShowModule(ShowModuleSchema):
 
             # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
             # ------  -----   ---------             -----------  --------------  -------       --------
-            #  1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1
+            #  1       56     WS-C3850-48P-E        FOC1902X062  689c.e2ff.b9d9  V04           16.9.1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
