@@ -153,7 +153,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             out = output
         
         # VRF: VRF501
-        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[:\w]+)$')
+        # VRF: L:123
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\S]+)$')
 
         # R    10.1.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
         # B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
