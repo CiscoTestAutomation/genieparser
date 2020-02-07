@@ -40,7 +40,7 @@ class ShowIpv6NeighborsSchema(MetaParser):
                 'neighbors': {
                     Any(): {
                         'ip': str,  # Conf/Ops Str '2001:db8:8548:1::1'
-                        'link_layer_address': str,  # Conf/Ops Str 'aaaa.beef.cccc'
+                        'link_layer_address': str,  # Conf/Ops Str 'aaaa.beff.bcbc'
                         'age': str,
                         'neighbor_state': str,
                         Optional('trlv'): str,
@@ -82,7 +82,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         ret_dict = {}
 
         # IPv6 Address                              Age Link-layer Addr State Interface
-        # 2001:db8:8548:1::2                                 0 fa16.3eca.3efd  REACH Gi2
+        # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
                         '\s+(?P<interface>\S+)$')
@@ -90,7 +90,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2001:db8:8548:1::2                                 0 fa16.3eca.3efd  REACH Gi2
+            # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -139,7 +139,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
         ret_dict = {}
 
         # IPv6 Address                              TRLV Age Link-layer Addr State Interface
-        # FE80::F816:3EFF:FEBF:341D                   0    0 fa16.3ebf.341d  REACH Gi2.90
+        # FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<trlv>\S)\s+(?P<age>\S+)\s+'
                          '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
                          '(?P<interface>\S+)$')
@@ -148,7 +148,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
             line = line.strip()
 
             # IPv6 Address                              TRLV Age Link-layer Addr State Interface
-            # FE80::F816:3EFF:FEBF:341D                   0    0 fa16.3ebf.341d  REACH Gi2.90
+            # FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']

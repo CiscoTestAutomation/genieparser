@@ -152,7 +152,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 instances_dict['vlans_mapped'] = m.groupdict()['vlan']
                 continue
 
-            # Bridge        address 0023.04ee.be14  priority      32768 (32768 sysid 0) 
+            # Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0) 
             m = p2_1.match(line)
             if m:
                 instances_dict['bridge_address'] = m.groupdict()['b_address']
@@ -212,7 +212,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 intf_dict['port_cost'] = int(m.groupdict()['port_cost'])
                 continue
 
-            # Designated root       address 0023.04ee.be14  priority  32768  cost   0        
+            # Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
             m = p7_1.match(line)
             if m:
                 intf_dict['designated_root_address'] = m.groupdict()['d_root_address']
@@ -227,7 +227,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 intf_dict['designated_regional_root_cost'] = int(m.groupdict()['designated_regional_root_cost'])
                 continue
 
-            # Designated bridge     address 4055.3926.d8c1  priority  61440  port id 128.4125
+            # Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             m = p8_1.match(line)
             if m:
                 intf_dict['designated_bridge_address'] = m.groupdict()['d_bridge_address']
@@ -573,7 +573,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                         r'+the\s+(?P<mode>\w+)\s+compatible\s+Spanning\s+'
                         r'Tree\s+protocol$')
 
-        # Bridge Identifier has priority 12345, sysid 0, address aa00.aa00.aa00
+        # Bridge Identifier has priority 12345, sysid 0, address aa00.aaff.aa00
         p2 = re.compile(r'^Bridge\s+Identifier\s+has\s+priority\s+'
                         r'(?P<bridge_priority>\d+),\s+sysid\s+'
                         r'(?P<bridge_sysid>\d+),\s+address\s+'
@@ -667,7 +667,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 inst_dict[self.MODE_KEY_MAP[mode]] = int(group['inst'])
                 continue
 
-            #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
+            #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -767,7 +767,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict['port_identifier'] = m.groupdict()['port_identifier']
                 continue
 
-            # Designated root has priority 32768, address 0023.04ee.be14
+            # Designated root has priority 32768, address 0023.04ff.ad03
             m = p11.match(line)
             if m:
                 intf_dict['designated_root_priority'] = int(m.groupdict()['designated_root_priority'])

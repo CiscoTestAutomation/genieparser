@@ -38,7 +38,7 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
                                 'id': {
                                     10: {
                                         'mac_address': {
-                                            '0001.0203.0403': {
+                                            '0001.02ff.0706': {
                                                 'st': 'V',
                                                 'port': 'Up',
                                                 'up_down_time': '00:01:35',
@@ -66,7 +66,7 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
                                 'id': {
                                     20: {
                                         'mac_address': {
-                                            '0001.0203.0402': {
+                                            '0001.02ff.0705': {
                                                 'st': '>',
                                                 'port': 'Up',
                                                 'up_down_time': '00:00:03',
@@ -79,7 +79,7 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
                                     },
                                     21: {
                                         'mac_address': {
-                                            '0001.0203.0403': {
+                                            '0001.02ff.0706': {
                                                 'st': '>',
                                                 'port': 'Up',
                                                 'up_down_time': '00:00:04',
@@ -119,15 +119,15 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         ================================================================================
         St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
         -- ----- -------------- ------- ----------- --------- ------ ----- -----
-        V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
+        V     10 0001.02ff.0706 Up      00:01:35            2      0     0     2
 
         Domain dom4 (level 2), Service ser4
         Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
         ================================================================================
         St    ID MAC Address    Port    Up/Downtime   CcmRcvd SeqErr   RDI Error
         -- ----- -------------- ------- ----------- --------- ------ ----- -----
-        >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
-        >    21 0001.0203.0403 Up      00:00:04            3      0     0     0
+        >    20 0001.02ff.0705 Up      00:00:03            4      1     0     0
+        >    21 0001.02ff.0706 Up      00:00:04            3      0     0     0
 
         Domain dom5 (level 2), Service dom5
         '''}

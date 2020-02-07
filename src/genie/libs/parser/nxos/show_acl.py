@@ -169,11 +169,11 @@ class ShowAccessLists(ShowAccessListsSchema):
                            r'(?: +\[match=(?P<match>\d+)\])?(?: +(?P<logging>log))?$')
 
         # --- MAC access list ---
-        # 10 permit aaaa.bbbb.cccc 0000.0000.0000 bbbb.cccc.dddd bbbb.cccc.dddd aarp
+        # 10 permit aaaa.bbff.8888 0000.0000.0000 bbbb.ccff.aaaa bbbb.ccff.aaaa aarp
         # 20 permit 0000.0000.0000 0000.0000.0000 any
-        # 30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbbb.cccc 0000.0000.0000 0x8041
+        # 30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbff.8888 0000.0000.0000 0x8041
         # 40 deny any any vlan 10
-        # 50 permit aaaa.aaaa.aaaa ffff.ffff.0000 any aarp
+        # 50 permit aaaa.aaff.5555 ffff.ffff.0000 any aarp
         p2_mac = re.compile(r'^(?P<seq>\S+) +(?P<actions_forwarding>permit|deny) '
                             r'+(?P<source_mac_address>any|host|[\w]{4}.[\w]{4}.[\w]{4}'
                             r'(?: [\w]{4}.[\w]{4}.[\w]{4})?) '

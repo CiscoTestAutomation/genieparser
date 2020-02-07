@@ -70,10 +70,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # Node ID: 0/0/CPU0
         p1 = re.compile(r'^Node +ID: +(?P<node_id>(\S+))$')
 
-        # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
-        # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
-        # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
-        # mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
+        # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 encap_id=0x2007
+        # mac=fc:00:00:ff:01:03 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
+        # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+        # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
                          ' +GPORT\=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
                          '(?: +Trunk\=(?P<trunk>\d+))?'
@@ -90,10 +90,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
                                          setdefault(m.groupdict()['node_id'], {})
                 continue
 
-            # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
-            # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
-            # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
-            # mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
+            # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 encap_id=0x2007
+            # mac=fc:00:00:ff:01:03 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
+            # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+            # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
             m = p2.match(line)
             if m:
                 group = m.groupdict()

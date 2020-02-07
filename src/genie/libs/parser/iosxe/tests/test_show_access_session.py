@@ -21,8 +21,8 @@ class test_show_access_session(unittest.TestCase):
             'GigabitEthernet1/0/1': {
                 'interface': 'GigabitEthernet1/0/1',
                 'client': {
-                    'f4cf.beef.acc1': {
-                        'client': 'f4cf.beef.acc1',
+                    'f4cf.beff.9cb1': {
+                        'client': 'f4cf.beff.9cb1',
                         'method': 'dot1x',
                         'domain': 'DATA',
                         'status': 'authenticator',
@@ -40,7 +40,7 @@ class test_show_access_session(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Interface                MAC Address    Method  Domain  Status Fg  Session ID
         --------------------------------------------------------------------------------------------
-        Gi1/0/1                  f4cf.beef.acc1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
+        Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
 
         Session count = 1
     '''
@@ -66,7 +66,7 @@ class test_show_access_session_interface_details(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/21': {
                 'mac_address': {
-                    '0800.37c8.2dbc': {
+                    '0800.37ff.f585': {
                         'iif_id': '0x105B0C0000005F5',
                         'ipv6_address': 'Unknown',
                         'ipv4_address': '10.4.1.1',
@@ -109,7 +109,7 @@ class test_show_access_session_interface_details(unittest.TestCase):
         dev1#show access-session interface Gi1/0/21 details
         Interface: GigabitEthernet1/0/21
         IIF-ID: 0x105B0C0000005F5
-        MAC Address: 0800.37c8.2dbc
+        MAC Address: 0800.37ff.f585
         IPv6 Address: Unknown
         IPv4 Address: 10.4.1.1
         User-Name: genie123

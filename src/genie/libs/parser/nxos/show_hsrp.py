@@ -354,7 +354,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         p11 = re.compile(r'Authentication +(?:(MD5, key-string)|(text))?'
                           ' +\"(?P<auth>(\S+))\"$')
 
-        # Virtual mac address is 0000.0c07.ac01 (Default MAC)
+        # Virtual mac address is 0000.0cff.b308 (Default MAC)
         p12 = re.compile(r'Virtual +mac +address +is +(?P<mac>(\S+))'
                           ' +\((?P<status>\S+) MAC( - (?P<use_bia>(\S+))'
                           ' +enabled)?\)$')
@@ -591,7 +591,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 groups_dict['authentication'] = m.groupdict()['auth']
                 continue
 
-            # Virtual mac address is 0000.0c9f.f000 (Default MAC)
+            # Virtual mac address is 0000.0cff.909f (Default MAC)
             m = p12.match(line)
             if m:
                 group = m.groupdict()

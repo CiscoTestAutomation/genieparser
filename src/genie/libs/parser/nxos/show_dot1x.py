@@ -147,7 +147,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
             line = line.strip()
 
             # Ethernet1/1    AUTH                none      AUTHORIZED
-            # Ethernet102/1/6    AUTH   0E:BE:EF:3F:00:00      AUTHORIZED
+            # Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -274,7 +274,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
         # TxPeriod = 30
         # TimeToNextReauth = 17
         # ReAuthPeriod = 60
-        # Supplicant = 54:BE:EF:E5:00:00
+        # Supplicant = 54:BE:EF:FF:E5:E5
         # Authentication Method = EAP
         # ReAuthAction = Reauthenticate
         # Authenticated By = Remote Server
@@ -425,7 +425,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
 
             ### Clients ###
 
-                # Supplicant = 54:BE:EF:E5:00:00
+                # Supplicant = 54:BE:EF:FF:E5:E5
                 elif key.lower() == 'supplicant':
                     client_dict = intf_dict.setdefault('clients', {}).setdefault(val, {})
                     client_dict['client'] = val

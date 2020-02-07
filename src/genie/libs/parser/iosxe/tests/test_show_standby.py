@@ -35,19 +35,19 @@ class test_show_standby_internal(unittest.TestCase):
             166: {
                 'group': 10,
                 'interface': 'gi2/0/3',
-                'mac_address': '0000.0c07.ac0a'},
+                'mac_address': '0000.0cff.b311'},
             169: {
                 'group': 5,
                 'interface': 'gi1/0/1',
-                'mac_address': '0000.0c07.ac05'},
+                'mac_address': '0000.0cff.b30c'},
             172: {
                 'group': 0,
                 'interface': 'gi2/0/3',
-                'mac_address': '0000.0c07.ac00'},
+                'mac_address': '0000.0cff.b307'},
             173: {
                 'group': 1,
                 'interface': 'gi2/0/3',
-                'mac_address': '0000.0c07.ac01'}},
+                'mac_address': '0000.0cff.b308'}},
         'msgQ_max_size': 0,
         'msgQ_size': 0,
         'v3_to_v4_transform': 'disabled',
@@ -84,13 +84,13 @@ class test_show_standby_internal(unittest.TestCase):
         78  2001:DB8:10:1:1::254             Gi1        Grp 20
 
         HSRP MAC Address Table
-        169 Gi1/0/1 0000.0c07.ac05
+        169 Gi1/0/1 0000.0cff.b30c
             Gi1/0/1 Grp 5
-        166 Gi2/0/3 0000.0c07.ac0a
+        166 Gi2/0/3 0000.0cff.b311
             Gi2/0/3 Grp 10
-        172 Gi2/0/3 0000.0c07.ac00
+        172 Gi2/0/3 0000.0cff.b307
             Gi2/0/3 Grp 0
-        173 Gi2/0/3 0000.0c07.ac01
+        173 Gi2/0/3 0000.0cff.b308
             Gi2/0/3 Grp 1
     '''}
 
@@ -133,7 +133,7 @@ class test_show_standby_all(unittest.TestCase):
                   'group_number': 0,
                   'hsrp_router_state': 'active',
                   'last_state_change': '1w0d',
-                  'local_virtual_mac_address': '0000.0c9f.f000',
+                  'local_virtual_mac_address': '0000.0cff.909f',
                   'local_virtual_mac_address_conf': 'v2 '
                   'default',
                   'preempt': True,
@@ -159,7 +159,7 @@ class test_show_standby_all(unittest.TestCase):
                     'hold_sec': 20,
                     'next_hello_sent': 2.848
                   },
-                  'virtual_mac_address': '0000.0c9f.f000',
+                  'virtual_mac_address': '0000.0cff.909f',
                   'virtual_mac_address_mac_in_use': True
                   }
                 }
@@ -184,7 +184,7 @@ class test_show_standby_all(unittest.TestCase):
                   'configured_priority': 110,
                   'group_number': 10,
                   'hsrp_router_state': 'disabled',
-                  'local_virtual_mac_address': '0000.0c07.ac0a',
+                  'local_virtual_mac_address': '0000.0cff.b311',
                   'local_virtual_mac_address_conf': 'v1 '
                   'default',
                   'preempt': True,
@@ -227,7 +227,7 @@ class test_show_standby_all(unittest.TestCase):
                   'configured_priority': 110,
                   'group_number': 10,
                   'hsrp_router_state': 'standby',
-                  'local_virtual_mac_address': '0000.0c07.ac0a',
+                  'local_virtual_mac_address': '0000.0cff.b311',
                   'local_virtual_mac_address_conf': 'v1 '
                   'default',
                   'preempt': True,
@@ -244,7 +244,7 @@ class test_show_standby_all(unittest.TestCase):
                     'hold_sec': 10,
                     'next_hello_sent': 2.096
                   },
-                  'virtual_mac_address': '0050.568e.3a40',
+                  'virtual_mac_address': '0050.56ff.c8ce',
                   'virtual_mac_address_mac_in_use': False
                   }
                 }
@@ -266,8 +266,8 @@ class test_show_standby_all(unittest.TestCase):
             8 state changes, last state change 1w0d
             Track object 1 (unknown)
           Virtual IP address is 192.168.1.254
-          Active virtual MAC address is 0000.0c9f.f000 (MAC In Use)
-            Local virtual MAC address is 0000.0c9f.f000 (v2 default)
+          Active virtual MAC address is 0000.0cff.909f (MAC In Use)
+            Local virtual MAC address is 0000.0cff.909f (v2 default)
           Hello time 5 sec, hold time 20 sec
             Next hello sent in 2.848 secs
           Authentication MD5, key-chain "5"
@@ -280,7 +280,7 @@ class test_show_standby_all(unittest.TestCase):
           State is Disabled
           Virtual IP address is unknown
           Active virtual MAC address is unknown (MAC Not In Use)
-            Local virtual MAC address is 0000.0c07.ac0a (v1 default)
+            Local virtual MAC address is 0000.0cff.b311 (v1 default)
           Hello time 3 sec, hold time 10 sec
           Authentication MD5, key-chain "cisco123"
           Preemption enabled
@@ -292,8 +292,8 @@ class test_show_standby_all(unittest.TestCase):
           State is Standby
             1 state change, last state change 00:00:08
           Virtual IP address is 10.1.2.254
-          Active virtual MAC address is 0050.568e.3a40 (MAC Not In Use)
-            Local virtual MAC address is 0000.0c07.ac0a (v1 default)
+          Active virtual MAC address is 0050.56ff.c8ce (MAC Not In Use)
+            Local virtual MAC address is 0000.0cff.b311 (v1 default)
           Hello time 3 sec, hold time 10 sec
             Next hello sent in 2.096 secs
           Preemption enabled

@@ -60,7 +60,7 @@ class TestShowVersion(unittest.TestCase):
                     "disk_size": "1638400"
                 }
             },
-            "mac_address": "70:b3:17:60:05:00",
+            "mac_address": "70:b3:17:ff:65:60",
             "mb_assembly_num": "47A7",
             "mb_sn": "CAT2242L6CG",
             "model_rev_num": "V02",
@@ -210,7 +210,7 @@ class TestShowVersion(unittest.TestCase):
 
 
 
-        Base Ethernet MAC Address          : 70:b3:17:60:05:00
+        Base Ethernet MAC Address          : 70:b3:17:ff:65:60
 
         Motherboard Assembly Number        : 47A7
 

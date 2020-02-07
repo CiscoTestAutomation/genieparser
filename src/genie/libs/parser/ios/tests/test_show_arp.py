@@ -39,14 +39,14 @@ class test_show_ip_arp(unittest.TestCase):
 							'10.1.8.1': {
 								'age': '79',
                               	'ip': '10.1.8.1',
-                              	'link_layer_address': '0012.7f57.ac80',
+                              	'link_layer_address': '0012.7fff.04d7',
                               	'origin': 'dynamic',
                               	'protocol': 'Internet',
                               	'type': 'ARPA'},
 			                '10.1.8.146': {
 			                	'age': '-',
                                 'ip': '10.1.8.146',
-                                'link_layer_address': '843d.c638.b9b7',
+                                'link_layer_address': '843d.c6ff.f1ef',
                                 'origin': 'static',
                                 'protocol': 'Internet',
                                 'type': 'ARPA'}}}},
@@ -56,7 +56,7 @@ class test_show_ip_arp(unittest.TestCase):
                 			'10.9.1.1': {
                 				'age': '-',
                               	'ip': '10.9.1.1',
-                              	'link_layer_address': '843d.c638.b9c6',
+                              	'link_layer_address': '843d.c6ff.f1fe',
                               	'origin': 'static',
                               	'protocol': 'Internet',
                               	'type': 'ARPA'}}}},
@@ -66,7 +66,7 @@ class test_show_ip_arp(unittest.TestCase):
                 			'10.69.1.2': {
                 				'age': '-',
                                	'ip': '10.69.1.2',
-                              	'link_layer_address': '843d.c638.b9c1',
+                              	'link_layer_address': '843d.c6ff.f1f9',
                                	'origin': 'static',
                                	'protocol': 'Internet',
                                	'type': 'ARPA'}
@@ -79,10 +79,10 @@ class test_show_ip_arp(unittest.TestCase):
 		golden_output = {'execute.return_value': '''\
 			R5#show ip arp 
 			Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-			Internet  10.1.8.1               79   0012.7f57.ac80  ARPA   FastEthernet0
-			Internet  10.9.1.1                -   843d.c638.b9c6  ARPA   Port-channel10
-			Internet  10.69.1.2               -   843d.c638.b9c1  ARPA   Vlan99
-			Internet  10.1.8.146              -   843d.c638.b9b7  ARPA   FastEthernet0
+			Internet  10.1.8.1               79   0012.7fff.04d7  ARPA   FastEthernet0
+			Internet  10.9.1.1                -   843d.c6ff.f1fe  ARPA   Port-channel10
+			Internet  10.69.1.2               -   843d.c6ff.f1f9  ARPA   Vlan99
+			Internet  10.1.8.146              -   843d.c6ff.f1ef  ARPA   FastEthernet0
 		'''}
 
 		golden_parsed_output_1 = {
@@ -93,14 +93,14 @@ class test_show_ip_arp(unittest.TestCase):
 							'10.1.8.1': {
 								'age': '79',
                               	'ip': '10.1.8.1',
-                              	'link_layer_address': '0012.7f57.ac80',
+                              	'link_layer_address': '0012.7fff.04d7',
                               	'origin': 'dynamic',
                               	'protocol': 'Internet',
                               	'type': 'ARPA'},
                             '10.1.8.146': {
                             	'age': '-',
                                 'ip': '10.1.8.146',
-                                'link_layer_address': '843d.c638.b9b7',
+                                'link_layer_address': '843d.c6ff.f1ef',
                                 'origin': 'static',
                                 'protocol': 'Internet',
                                 'type': 'ARPA'}
@@ -113,8 +113,8 @@ class test_show_ip_arp(unittest.TestCase):
 		golden_output_1 = {'execute.return_value': '''\
 			R5#show ip arp 
 			Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-			Internet  10.1.8.1               79   0012.7f57.ac80  ARPA   FastEthernet0
-			Internet  10.1.8.146              -   843d.c638.b9b7  ARPA   FastEthernet0
+			Internet  10.1.8.1               79   0012.7fff.04d7  ARPA   FastEthernet0
+			Internet  10.1.8.146              -   843d.c6ff.f1ef  ARPA   FastEthernet0
 		'''}
 
 		def test_empty(self):
@@ -410,8 +410,8 @@ class test_show_arp(test_show_arp_iosxe):
     empty_output_ios = {'execute.return_value': ''}
     golden_output_ios = {'execute.return_value': '''\
         Protocol   Address       Age (min)   Hardware Addr    Type    Interface
-        Internet   10.1.1.5           134    0005.0032.0854   ARPA    FastEthernet0/0/0
-        Internet   10.1.1.7             -    0005.0032.0000   ARPA    FastEthernet0/0/0
+        Internet   10.1.1.5           134    0005.00ff.3a86   ARPA    FastEthernet0/0/0
+        Internet   10.1.1.7             -    0005.00ff.3232   ARPA    FastEthernet0/0/0
         '''}
     golden_parsed_output_ios = {
         'interfaces': {
@@ -420,7 +420,7 @@ class test_show_arp(test_show_arp_iosxe):
                     'neighbors': {
                         '10.1.1.5': {
                             'ip': '10.1.1.5',
-                            'link_layer_address': '0005.0032.0854',
+                            'link_layer_address': '0005.00ff.3a86',
                             'age': '134',
                             'origin': 'dynamic',
                             'type': 'ARPA',
@@ -428,7 +428,7 @@ class test_show_arp(test_show_arp_iosxe):
                             },
                         '10.1.1.7': {
                             'ip': '10.1.1.7',
-                            'link_layer_address': '0005.0032.0000',
+                            'link_layer_address': '0005.00ff.3232',
                             'age': '-',
                             'origin': 'static',
                             'type': 'ARPA',
