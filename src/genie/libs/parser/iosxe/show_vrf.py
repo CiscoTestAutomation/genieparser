@@ -184,14 +184,16 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # VRF vrf1; default RD 1:1; default VPNID <not set>
         # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
         # VRF 12349; default RD 10.4.1.1:20; default VPNID <not set>
+        # VRF DEMO (VRF Id = 12); default RD 65001:1; default VPNID <not set>; being deleted
         p1 = re.compile(r'^VRF +(?P<vrf>[\S]+)( +\(VRF +Id +\= +'
                         r'(?P<vrf_id>\d+)\))?; +default +RD +'
                         r'(?P<rd>[\S\s]+); +default +VPNID +'
                         r'(?P<vpn_id>[\w\s\:\<\>]+)(?: +VRF +'
-                        r'Table +ID +\= +(?P<alt_vrf_id>\d))?$')
+                        r'Table +ID +\= +(?P<alt_vrf_id>\d))?(?:; being deleted)?$')
 
         # New CLI format, supports multiple address-families
-        p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format, +supports +(?P<support_af>[\s\S]+)$')
+        p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format,'
+                          r' +supports +(?P<support_af>[\s\S]+)$')
 
         # Flags: 0x180C
         p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
@@ -205,7 +207,8 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # Address family ipv4 unicast (Table ID = 0x1):
         # Address family ipv4 (Table ID = 2 (0x2)):
         p4 = re.compile(r'^Address +family +(?P<af>[\w\s]+) +'
-                        r'\(Table +ID +\= +(?P<table_id>\w+)( *[\w\(\)]+)?\):$')
+                        r'\(Table +ID +\= +(?P<table_id>\w+)'
+                        r'( *[\w\(\)]+)?\)(:|;)?(?: being deleted:)?$')
 
         # VRF Table ID = 2
         p5 = re.compile(r'^VRF +Table +ID += +(?P<table_id>\d+)$')

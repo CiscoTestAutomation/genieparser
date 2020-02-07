@@ -645,6 +645,52 @@ class TestShowVrfDetail(unittest.TestCase):
             'vrf_id': 17
         }
     }
+
+    golden_output_4 = {
+        'execute.return_value': '''
+        VRF DEMO (VRF Id = 12); default RD 65001:1; default VPNID <not set>; being deleted
+          Description: demo
+          New CLI format, supports multiple address-families
+          Flags: 0x180D
+          No interfaces
+        Address family ipv4 unicast (Table ID = 0xC); being deleted:
+          Flags: 0x1
+          No Export VPN route-target communities
+          No Import VPN route-target communities
+          No import route-map
+          No global export route-map
+          No export route-map
+          VRF label distribution protocol: not configured
+          VRF label allocation mode: per-prefix
+        Address family ipv6 unicast not active
+        Address family ipv4 multicast not active
+        Address family ipv6 multicast not active
+        
+        
+        * Being deleted
+        '''
+    }
+
+    golden_parsed_output_4 = {
+        'DEMO': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x1',
+                    'table_id': '0xC',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix',
+                    },
+                },
+            },
+            'cli_format': 'New',
+            'description': 'demo',
+            'flags': '0x180D',
+            'route_distinguisher': '65001:1',
+            'support_af': 'multiple address-families',
+            'vrf_id': 12,
+        },
+    }
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -684,6 +730,13 @@ class TestShowVrfDetail(unittest.TestCase):
         obj = ShowVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='GENIE')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse(vrf='DEMO')
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()
