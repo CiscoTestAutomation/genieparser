@@ -81,8 +81,8 @@ class TestPs(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = Ps(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, {'pid': {}})
 
 if __name__ == '__main__':
     unittest.main()
