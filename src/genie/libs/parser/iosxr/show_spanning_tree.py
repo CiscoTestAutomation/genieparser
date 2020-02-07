@@ -183,12 +183,12 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 			m = p8.match(line)
 			if m:
 				group = m.groupdict()
-				if address_type is 'designated_root_address':
+				if address_type == 'designated_root_address':
 					mst_instances.update({
 						'root_max_age' : int(group['max_age'])})
 					mst_instances.update({
 						'root_forward_delay' : int(group['forward_delay'])})
-				if address_type is 'bridge_address':
+				if address_type == 'bridge_address':
 					mst_instances.update({
 						'bridge_max_age' : int(group['max_age'])})
 					mst_instances.update({
@@ -622,11 +622,11 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 			m = p4.match(line)
 			if m:
 				group = m.groupdict()
-				if address_type is 'designated_root_address':
+				if address_type == 'designated_root_address':
 					vlan.update({'designated_root_max_age' : int(group['max_age'])})
 					vlan.update({
 						'designated_root_forward_delay' : int(group['forward_delay'])})
-				if address_type is 'bridge_address':
+				if address_type == 'bridge_address':
 					vlan.update({'bridge_max_age' : int(group['max_age'])})
 					vlan.update({
 						'bridge_forward_delay' : int(group['forward_delay'])})

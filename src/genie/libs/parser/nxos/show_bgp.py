@@ -6353,7 +6353,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     continue
 
                 if vrf:
-                    if vrf is 'default':
+                    if vrf == 'default':
                         bgp_vrf_dict = bgp_vrf_default_dict
                     else:
                         bgp_vrf_dict = bgp_vrf_nondefault_dict
