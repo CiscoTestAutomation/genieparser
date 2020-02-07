@@ -415,7 +415,7 @@ VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 104  enet  100104     1500  -      -      -        -    -        0      0   
 319  enet  100319     1500  -      -      -        -    -        0      0   
 320  enet  100320     1500  -      -      -        -    -        0      0   
- --More--         
+ --More--           
 VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
 333  enet  100333     1500  -      -      -        -    -        0      0   
