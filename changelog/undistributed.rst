@@ -102,6 +102,8 @@
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+    * Updated ShowEthernetServiceInstanceDetail
+        * Modified regex to support outputs
 * IOSXR
     * Updated ShowRouteIpv4:
         * Changed regex to support some VRF values such as 'L:111'
