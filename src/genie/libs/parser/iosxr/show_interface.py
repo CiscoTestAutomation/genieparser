@@ -548,7 +548,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 continue
 
             # Hardware is Null interface
-            # Hardware is Management Ethernet, address is 5254.00c3.6c43 (bia 5254.00c3.6c43)
+            # Hardware is Management Ethernet, address is 5254.00ff.3007 (bia 5254.00ff.3007)
 
             p3 = re.compile(r'^\s*Hardware is (?P<types>[a-zA-Z\,\s]+)(?:'
                              ' +address +is (?P<mac_address>[a-z0-9\.]+) +\(bia'
@@ -569,7 +569,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                     interface_detail_dict[interface]['phys_address'] = str(m.groupdict()['phys_address'])
                 continue
 
-            # Hardware is VLAN sub-interface(s), address is aaaa.bbbb.cccc
+            # Hardware is VLAN sub-interface(s), address is aaaa.bbff.8888
             p3_1 = re.compile(r'^\s*Hardware is (?P<types>[\w\W]+) +address'
                                ' +is +(?P<mac_address>[a-z0-9\.]+)$')
             m = p3_1.match(line)
@@ -1633,7 +1633,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ipv6_groups = []
                 continue
 
-            # IPv6 is enabled, link-local address is fe80::a8aa:bbff:febb:cccc [TENTATIVE]
+            # IPv6 is enabled, link-local address is fe80::a8aa:bbff:feff:8888 [TENTATIVE]
             p2 = re.compile(r'^\s*(?P<enabled>(IPv6 is enabled)), +link-local'
                              ' +address +is +(?P<ipv6_link_local>[a-zA-Z0-9\:]+)'
                              ' +\[(?P<ipv6_link_local_state>[A-Z]+)\]$')
@@ -1646,7 +1646,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ipv6_vrf_all_interface_dict[interface]['enabled'] = True
                 continue
 
-            # IPv6 is enabled, link-local address is fe80::a8aa:bbff:febb:cccc
+            # IPv6 is enabled, link-local address is fe80::a8aa:bbff:feff:8888
             p2_1 = re.compile(r'^\s*(?P<enabled>(IPv6 is enabled)), +link-local'
                                ' +address +is +(?P<ipv6_link_local>[a-zA-Z0-9\:]+)$')
             m = p2_1.match(line)
@@ -1667,7 +1667,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 continue
 
             # Global unicast address(es):
-            # 2001:db8:3:3:a8aa:bbff:febb:cccc, subnet is 2001:db8:3:3::/64 [TENTATIVE]
+            # 2001:db8:3:3:a8aa:bbff:feff:8888, subnet is 2001:db8:3:3::/64 [TENTATIVE]
             p3 = re.compile(r'^\s*(?P<ipv6>(.+)(ff:fe)(.+)), +subnet +is'
                              ' +(?P<ipv6_subnet>[a-zA-Z0-9\:]+)\/(?P<ipv6_prefix_length>[0-9]+)'
                              ' +\[(?P<ipv6_status>[A-Z]+)\](?: +with +route-tag'
@@ -2152,10 +2152,10 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                 if interface not in ret_dict:
                     ret_dict[interface] = {}
 
-                if status and status is not '-':
+                if status and status != '-':
                     ret_dict[interface]['status'] = status.lower()
 
-                if outer_vlan and outer_vlan is not '-':
+                if outer_vlan and outer_vlan != '-':
                     ret_dict[interface]['outer_vlan'] = outer_vlan
                     try:
                         vlan_id = re.match('[\w\.]+:(\d+)', outer_vlan).groups()[0]
@@ -2163,22 +2163,22 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                     except Exception:
                         pass
 
-                if mtu and mtu is not '-':
+                if mtu and mtu != '-':
                     ret_dict[interface]['mtu'] = int(mtu)
 
-                if layer and xtra is not '-':
+                if layer and xtra != '-':
                     ret_dict[interface]['layer'] = layer.lower()
 
-                if inner_vlan and inner_vlan is not '-':
+                if inner_vlan and inner_vlan != '-':
                     ret_dict[interface]['inner_vlan'] = inner_vlan
 
-                if xtra and xtra is not '-':
+                if xtra and xtra != '-':
                     ret_dict[interface]['xtra'] = xtra
 
-                if rewrite_num_of_tags_pop and rewrite_num_of_tags_pop is not '-':
+                if rewrite_num_of_tags_pop and rewrite_num_of_tags_pop != '-':
                     ret_dict[interface]['rewrite_num_of_tags_pop'] = int(rewrite_num_of_tags_pop)
 
-                if rewrite_num_of_tags_push and rewrite_num_of_tags_push is not '-':
+                if rewrite_num_of_tags_push and rewrite_num_of_tags_push != '-':
                     ret_dict[interface]['rewrite_num_of_tags_push'] = int(rewrite_num_of_tags_push)
 
         return ret_dict
@@ -2397,7 +2397,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p2 = re.compile(r'^Interface +state +transitions: +(?P<interface_state_transitions>[\d]+)$')
 
         # Hardware is Loopback
-        # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+        # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         p3 = re.compile(r'^Hardware +is +(?P<type>[\w\-\/\s\+\(\)]+)'
                          '(, *address +is +(?P<mac_address>[\w\.]+))?'
                          '( *\(bia *(?P<phys_address>[\w\.]+)\))?$')
@@ -2589,7 +2589,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Hardware is Loopback
-            # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+            # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
             m = p3.match(line)
             if m:
                 types = m.groupdict()['type']

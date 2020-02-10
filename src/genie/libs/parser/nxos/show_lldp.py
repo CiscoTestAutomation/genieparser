@@ -235,7 +235,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         port_dict = {}
         tmp_chassis_id = ''
         tmp_port_id = ''
-        # Chassis id: 000d.bd09.46fa
+        # Chassis id: 000d.bdff.4f04
         # Chassis id: 39373638-3935-5A43-4A37-35303036574C
         p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\S]+)$')
         # Port id: Gi0/0/0/1
@@ -281,7 +281,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Chassis id: 000d.bd09.46fa
+            # Chassis id: 000d.bdff.4f04
             # Chassis id: 39373638-3935-5A43-4A37-35303036574C
             m = p1.match(line)
             if m:

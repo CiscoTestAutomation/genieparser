@@ -57,10 +57,10 @@ class ShowModule(ShowModuleSchema):
         # 3     6  Sup 7L-E 10GE (SFP+), 1000BaseX (SFP)  WS-X45-SUP7L-E     QWERT987654
         p3 = re.compile(r'^(?P<mod>\d+) +(?P<port>\d+) +(?P<card_type>[\S\s]+) +(?P<model>\S+) +(?P<serial_number>\S+)$')
 
-        # 3 555a.888b.ccc0 to 555a.888b.cccd 3.0 15.0(1r)SG10 03.06.07.E       Ok
+        # 3 555a.88ff.584c to 555a.88ff.5859 3.0 15.0(1r)SG10 03.06.07.E       Ok
         p4 = re.compile(r'^(?P<mod>\d+) +(?P<mac_address_from>[\w\.]+) +to +(?P<mac_address_to>[\w\.]+) +(?P<hw_ver>[\w\.\(\)]+) +(?P<fw_ver>[\w\.\(\)]+) +(?P<sw_ver>[\w\.\(\)]+) +(?P<status>\w+)$')
 
-        # 1 11a1.b222.cc33 to 11a1.b222.cc3f 3.1                               Ok
+        # 1 11a1.b2ff.ee55 to 11a1.b2ff.ee61 3.1                               Ok
         p4_1 = re.compile(r'^(?P<mod>\d+) +(?P<mac_address_from>[\w\.]+) +to +(?P<mac_address_to>[\w\.]+) +(?P<hw_ver>[\w\.\(\)]+) +(?P<status>\w+)$')
         
         # 3   Active Supervisor   RPR                 Active
@@ -99,7 +99,7 @@ class ShowModule(ShowModuleSchema):
                 mode_dict.update({'serial_number': group['serial_number']})
                 continue
 
-            # 3 555a.888b.ccc0 to 555a.888b.cccd 3.0 15.0(1r)SG10 03.06.07.E       Ok
+            # 3 555a.88ff.584c to 555a.88ff.5859 3.0 15.0(1r)SG10 03.06.07.E       Ok
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -112,7 +112,7 @@ class ShowModule(ShowModuleSchema):
                 mode_dict.update({'status': group['status']})
                 continue
 
-            # 1 11a1.b222.cc33 to 11a1.b222.cc3f 3.1                               Ok
+            # 1 11a1.b2ff.ee55 to 11a1.b2ff.ee61 3.1                               Ok
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()

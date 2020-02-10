@@ -29,7 +29,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
                     'rxlogoff': 0,
                     'txtotal': 3,
                     'txreqid': 0,
-                    'lastrxsrcmac': '00:00:00:00:00:00',
+                    'lastrxsrcmac': '00:00:00:ff:00:00',
                     'rxinvalid': 0,
                     'rxrespid': 0,
                     'rxlenerr': 0,
@@ -50,7 +50,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 0       TxReqID = 0     TxTotal = 3
 
-        RxVersion = 0   LastRxSrcMAC = 00:00:00:00:00:00
+        RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
     '''}
 
     parsed_output_2 = {
@@ -62,7 +62,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
                     'rxlogoff': 25,
                     'txtotal': 6,
                     'txreqid': 89,
-                    'lastrxsrcmac': '02:45:44:55:66:78',
+                    'lastrxsrcmac': '02:45:44:ff:bb:cd',
                     'rxinvalid': 5,
                     'rxrespid': 34,
                     'rxlenerr': 6,
@@ -83,7 +83,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 5       TxReqID = 89     TxTotal = 6
 
-        RxVersion = 78   LastRxSrcMAC = 02:45:44:55:66:78 
+        RxVersion = 78   LastRxSrcMAC = 02:45:44:ff:bb:cd 
     '''}
 
     def test_output(self):
@@ -122,8 +122,8 @@ class test_show_dot1x_all_summary(unittest.TestCase):
             'Ethernet102/1/6': {
                 'interface': 'Ethernet102/1/6',
                 'clients': {
-                    '0E:BE:EF:3F:00:00': {
-                        'client': '0E:BE:EF:3F:00:00',
+                    '0E:BE:EF:FF:3F:3F': {
+                        'client': '0E:BE:EF:FF:3F:3F',
                         'pae': 'AUTH',
                         'status': 'AUTHORIZED'
                     }
@@ -149,7 +149,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
 
                Interface     PAE              Client          Status
     ------------------------------------------------------------------
-      Ethernet102/1/6    AUTH   0E:BE:EF:3F:00:00      AUTHORIZED
+      Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
     '''}
 
     parsed_output_2 = {
@@ -257,8 +257,8 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 'max_req': 3,
                 'mac-auth-bypass': False,
                 'clients': {
-                    '54:be:ef:e5:00:00' : {
-                        'client': '54:be:ef:e5:00:00',
+                    '54:be:ef:ff:e5:e5' : {
+                        'client': '54:be:ef:ff:e5:e5',
                         'session': {
                             'auth_sm_state': 'authenticated',
                             'auth_bend_sm_state': 'idle',
@@ -318,7 +318,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
 
         Dot1x Authenticator Client List
         -------------------------------
-                       Supplicant = 54:BE:EF:E5:00:00
+                       Supplicant = 54:BE:EF:FF:E5:E5
                 Auth SM State = AUTHENTICATED
                 Auth BEND SM State = IDLE
                       Port Status = AUTHORIZED
@@ -353,8 +353,8 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 'max_req': 2,
                 'mac-auth-bypass': True,
                 'clients': {
-                    '53:ab:de:d4:11:11' : {
-                        'client': '53:ab:de:d4:11:11',
+                    '53:ab:de:ff:e5:e5' : {
+                        'client': '53:ab:de:ff:e5:e5',
                         'session': {
                             'auth_sm_state':'authenticated',
                             'auth_bend_sm_state': 'idle',
@@ -391,7 +391,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
 
         Dot1x Authenticator Client List
         -------------------------------
-                       Supplicant = 53:AB:DE:D4:11:11
+                       Supplicant = 53:AB:DE:FF:E5:E5
                 Auth SM State = AUTHENTICATED
                 Auth BEND SM State = IDLE
                       Port Status = AUTHORIZED
@@ -418,7 +418,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
         Dot1x Authenticator Client List
         -------------------------------
         EAP Method                = (13)
-        Supplicant                = 6451.065c.f902
+        Supplicant                = 6451.06ff.565e
         Session ID                = 0A90740B0000A7FD44A5F6A8
             Auth SM State         = AUTHENTICATED
             Auth BEND SM State    = IDLE
@@ -439,8 +439,8 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 're_auth_max': 2,
                 'max_req': 1,
                 'clients': {
-                    '6451.065c.f902' : {
-                        'client': '6451.065c.f902',
+                    '6451.06ff.565e' : {
+                        'client': '6451.06ff.565e',
                         'eap_method': '(13)',
                         'session': {
                             'session_id': '0a90740b0000a7fd44a5f6a8',

@@ -261,7 +261,7 @@ class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # G  1008    5e01.8000.0007    static   -          F     F   sup-eth1(R)
+            # G  1008    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
             p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<vlan>[0-9]+) '
                 '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
                 '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '

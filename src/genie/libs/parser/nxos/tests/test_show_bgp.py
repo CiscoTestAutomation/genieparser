@@ -1239,9 +1239,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1000',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9100',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1299,9 +1299,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1005',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9105',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1359,9 +1359,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1006',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9106',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1419,9 +1419,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1007',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9107',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1479,9 +1479,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1008',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9108',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1539,9 +1539,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
                 'encap_type': 'VXLAN',
-                'router_mac': '000c.29e2.c046',
+                'router_mac': '000c.29ff.a329',
                 'topo_id': '1009',
-                'vip_derived_mac': '000c.29e2.c046',
+                'vip_derived_mac': '000c.29ff.a329',
                 'vnid': '9109',
                 'vtep_ip': '10.49.1.1',
                 'vtep_vip_r': '10.49.2.1',
@@ -1688,8 +1688,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.11.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -1762,8 +1762,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.16.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -1835,8 +1835,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.17.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -1908,8 +1908,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.18.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -1981,8 +1981,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.19.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -2054,8 +2054,8 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         VTEP IP                        : 10.49.1.1
         VTEP Virtual IP                : 10.49.2.1
         VTEP VIP-R                     : 10.49.2.1
-        Router-MAC                     : 000c.29e2.c046
-        VIP Derived MAC                : 000c.29e2.c046
+        Router-MAC                     : 000c.29ff.a329
+        VIP Derived MAC                : 000c.29ff.a329
         Router-ID                      : 10.220.20.1
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
@@ -5422,7 +5422,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                          "route_distinguisher": "10.4.1.2:32868",
                          "local_router_id": "10.4.1.2",
                          "prefixes": {
-                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216": {
+                              "[2]:[0]:[0]:[48]:[0000.19ff.f320]:[0]:[0.0.0.0]/216": {
                                    "index": {
                                         1: {
                                              "weight": 32768,
@@ -5434,7 +5434,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         }
                                    }
                               },
-                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[10.220.20.44]/272": {
+                              "[2]:[0]:[0]:[48]:[0000.19ff.f320]:[32]:[10.220.20.44]/272": {
                                    "index": {
                                         1: {
                                              "weight": 32768,
@@ -5446,7 +5446,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         }
                                    }
                               },
-                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2001:db8:183c:4005::44]/368": {
+                              "[2]:[0]:[0]:[48]:[0000.19ff.f320]:[128]:[2001:db8:183c:4005::44]/368": {
                                    "index": {
                                         1: {
                                              "weight": 32768,
@@ -5480,11 +5480,11 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 10.4.1.2:32868    (L2VNI 5020)
-        *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[0]:[0.0.0.0]/216
                               10.9.1.1                           100      32768 i
-        *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[10.220.20.44]/272
+        *>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[32]:[10.220.20.44]/272
                               10.9.1.1                           100      32768 i
-        *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2001:db8:183c:4005::44]/368
+        *>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[128]:[2001:db8:183c:4005::44]/368
                               10.9.1.1                           100      32768 i
         '''}
 
@@ -17561,7 +17561,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                                   "201:2000": {
                                        "dampening_enabled": True,
                                        "network": {
-                                            "[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[10.81.1.2]/248": {
+                                            "[2]:[0]:[0]:[48]:[0201.02ff.0303]:[32]:[10.81.1.2]/248": {
                                                  "duration": "00:20:58",
                                                  "peer": "10.106.102.3",
                                                  "best": False,
@@ -17597,7 +17597,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                                                  "reuse_limit": 10,
                                                  "reuse_time": "00:01:50"
                                             },
-                                            "[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248": {
+                                            "[2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248": {
                                                  "duration": "00:20:58",
                                                  "peer": "10.106.102.3",
                                                  "best": False,
@@ -17961,8 +17961,8 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
 
         Route Distinguisher: 201:2000
             Network                 Peer              Flaps  Duration ReuseTime P / S / R
-        d e [2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
-        d e [2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[10.81.1.2]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [2]:[0]:[0]:[48]:[0201.02ff.0303]:[32]:[10.81.1.2]/248 10.106.102.3                84   00:20:58 00:01:50  35/30/10
         d e [5]:[0]:[0]:[24]:[10.100.1.0]:[0.0.0.0]/224 10.106.102.3                84   00:20:58 00:01:50  35/30/10
         d e [5]:[0]:[0]:[24]:[10.100.2.0]:[0.0.0.0]/224 10.106.102.3                84   00:20:58 00:01:50  35/30/10
 
@@ -18123,7 +18123,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                                   "201:2000": {
                                        "dampening_enabled": True,
                                        "network": {
-                                            "[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[10.81.1.2]/248": {
+                                            "[2]:[0]:[0]:[48]:[0201.02ff.0303]:[32]:[10.81.1.2]/248": {
                                                  "duration": "00:19:41",
                                                  "peer": "10.106.102.3",
                                                  "best": False,
@@ -18159,7 +18159,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                                                  "reuse_limit": 10,
                                                  "reuse_time": "00:01:40"
                                             },
-                                            "[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248": {
+                                            "[2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248": {
                                                  "duration": "00:19:41",
                                                  "peer": "10.106.102.3",
                                                  "best": False,
@@ -18719,7 +18719,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                         <dampenedpaths>4</dampenedpaths>
                         <TABLE_prefix>
                          <ROW_prefix>
-                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[10.81.1.1]/248</nonipprefix>
+                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.02ff.0302]:[32]:[10.81.1.1]/248</nonipprefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
                           <peer>10.106.102.3</peer>
@@ -18732,7 +18732,7 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                           <best>false</best>
                          </ROW_prefix>
                          <ROW_prefix>
-                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[10.81.1.2]/248</nonipprefix>
+                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.02ff.0303]:[32]:[10.81.1.2]/248</nonipprefix>
                           <status>d</status>
                           <pathtype>e</pathtype>
                           <peer>10.106.102.3</peer>
@@ -26994,8 +26994,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                     '10.121.0.55:27001': {  # Ops Str '10.121.0.55:27001'
                                         'rd': '10.121.0.55:27001',
                                         'prefix': {
-                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.55]/136':{
-                                                 'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.55]/136',
+                                            '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.55]/136':{
+                                                 'nonipprefix': '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.55]/136',
                                                  'prefixversion': 13144,
                                                  'on_xmitlist': True,
                                                  'totalpaths': 1,
@@ -27013,13 +27013,13 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                         'origin': 'igp',
                                                         'localpref': 100,
                                                         'weight': 32768,
-                                                        'extcommunity': ['ENCAP:8','RT:0000.0000.012c'],
+                                                        'extcommunity': ['ENCAP:8','RT:0000.00ff.012c'],
                                                         'advertisedto':['10.121.0.11','10.121.0.22','10.121.0.33','10.121.0.44','10.196.0.11'],
                                                      },
                                                  }
                                             },
-                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136': {
-                                                'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136',
+                                            '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136': {
+                                                'nonipprefix': '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136',
                                                 'prefixversion': 13146,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27037,7 +27037,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                         'origin': 'igp',
                                                         'localpref': 100,
                                                         'weight': 0,
-                                                        'extcommunity': ['ENCAP:8', 'RT:0000.0000.012c'],
+                                                        'extcommunity': ['ENCAP:8', 'RT:0000.00ff.012c'],
                                                         'originatorid': '10.121.0.66',
                                                         'clusterlist' : ['10.196.0.11'],
                                                     },
@@ -27048,8 +27048,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                     '10.121.0.66:27001': {
                                         'rd': '10.121.0.66:27001',
                                         'prefix': {
-                                            '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136': {
-                                                'nonipprefix': '[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136',
+                                            '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136': {
+                                                'nonipprefix': '[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136',
                                                 'prefixversion': 13145,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27067,7 +27067,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                         'origin': 'igp',
                                                         'localpref': 100,
                                                         'weight': 0,
-                                                        'extcommunity': ['ENCAP:8', 'RT:0000.0000.012c'],
+                                                        'extcommunity': ['ENCAP:8', 'RT:0000.00ff.012c'],
                                                         'advertisedto': ['10.121.0.11', '10.121.0.22', '10.121.0.33',
                                                                          '10.121.0.44'],
                                                         'originatorid': '10.121.0.66',
@@ -27089,8 +27089,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
     golden_output = {'execute.return_value': '''
     MS-BL5(config)# sh bgp l2vpn evpn route-type 4
      BGP routing table information for VRF default, address family L2VPN EVPN
-    Route Distinguisher: 10.121.0.55:27001   (ES [0300.0000.0001.2c00.0309 0])
-    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.55]/136, version 13144
+    Route Distinguisher: 10.121.0.55:27001   (ES [0300.00ff.0001.2c00.0309 0])
+    BGP routing table entry for [4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.55]/136, version 13144
     Paths: (1 available, best #1)
     Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27099,28 +27099,28 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
       AS-Path: NONE, path locally originated
         192.168.111.55 (metric 0) from 0.0.0.0 (10.121.0.55)
           Origin IGP, MED not set, localpref 100, weight 32768
-          Extcommunity: ENCAP:8 RT:0000.0000.012c
+          Extcommunity: ENCAP:8 RT:0000.00ff.012c
 
       Path-id 1 advertised to peers:
         10.121.0.11          10.121.0.22          10.121.0.33          10.121.0.44
         10.196.0.11
-    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136, version 13146
+    BGP routing table entry for [4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136, version 13146
     Paths: (1 available, best #1)
     Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
 
       Advertised path-id 1
       Path type: internal (0xcd3c5594), path is valid, is best path, no labeled nexthop
-                 Imported from 10.121.0.66:27001:[4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136
+                 Imported from 10.121.0.66:27001:[4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136
       AS-Path: NONE, path sourced internal to AS
         192.168.111.66 (metric 3) from 10.196.0.11 (10.196.0.11)
           Origin IGP, MED not set, localpref 100, weight 0
-          Extcommunity: ENCAP:8 RT:0000.0000.012c
+          Extcommunity: ENCAP:8 RT:0000.00ff.012c
           Originator: 10.121.0.66 Cluster list: 10.196.0.11
 
       Path-id 1 not advertised to any peer
 
     Route Distinguisher: 10.121.0.66:27001
-    BGP routing table entry for [4]:[0300.0000.0001.2c00.0309]:[32]:[192.168.111.66]/136, version 13145
+    BGP routing table entry for [4]:[0300.00ff.0001.2c00.0309]:[32]:[192.168.111.66]/136, version 13145
     Paths: (1 available, best #1)
     Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
 
@@ -27130,7 +27130,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
       AS-Path: NONE, path sourced internal to AS
         192.168.111.66 (metric 3) from 10.196.0.11 (10.196.0.11)
           Origin IGP, MED not set, localpref 100, weight 0
-          Extcommunity: ENCAP:8 RT:0000.0000.012c
+          Extcommunity: ENCAP:8 RT:0000.00ff.012c
           Originator: 10.121.0.66 Cluster list: 10.196.0.11
 
       Path-id 1 advertised to peers:
@@ -27151,8 +27151,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                         'rd_vrf': 'l2',
                                         'rd_vniid': 25000,
                                         'prefix': {
-                                            '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152',
+                                            '[1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152',
                                                 'prefixversion': 4904,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27175,8 +27175,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                     },
                                                 }
                                             },
-                                            '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152',
+                                            '[1]:[03cc.ccff.2233.2200.0021]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03cc.ccff.2233.2200.0021]:[0x0]/152',
                                                 'prefixversion': 4074,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27199,8 +27199,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                     },
                                                 }
                                             },
-                                            '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152',
+                                            '[1]:[03dd.ddff.2233.2200.002c]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03dd.ddff.2233.2200.002c]:[0x0]/152',
                                                 'prefixversion': 4487,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27230,8 +27230,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                         'rd_vrf': 'l3',
                                         'rd_vniid': 25001,
                                         'prefix': {
-                                            '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152',
+                                            '[1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152',
                                                 'prefixversion': 4905,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27258,8 +27258,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                     },
                                                 }
                                             },
-                                            '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03cc.cc11.1122.2200.0021]:[0x0]/152',
+                                            '[1]:[03cc.ccff.2233.2200.0021]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03cc.ccff.2233.2200.0021]:[0x0]/152',
                                                 'prefixversion': 4075,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27286,8 +27286,8 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
                                                     },
                                                 }
                                             },
-                                            '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152': {
-                                                'nonipprefix': '[1]:[03dd.dd11.1122.2200.002c]:[0x0]/152',
+                                            '[1]:[03dd.ddff.2233.2200.002c]:[0x0]/152': {
+                                                'nonipprefix': '[1]:[03dd.ddff.2233.2200.002c]:[0x0]/152',
                                                 'prefixversion': 4488,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27330,7 +27330,7 @@ class test_show_bgp_l2vpn_evpn_route_type(unittest.TestCase):
    PSW-1-TOR5# sh bgp l2vpn evpn route-type 1
 BGP routing table information for VRF default, address family L2VPN EVPN
 Route Distinguisher: 192.168.9.1:33767    (L2VNI 25000)
-BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4904
+BGP routing table entry for [1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152, version 4904
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27343,7 +27343,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
       Extcommunity: RT:200:25000 ENCAP:8
 
   Path-id 1 not advertised to any peer
-BGP routing table entry for [1]:[03cc.cc11.1122.2200.0021]:[0x0]/152, version 4074
+BGP routing table entry for [1]:[03cc.ccff.2233.2200.0021]:[0x0]/152, version 4074
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27356,7 +27356,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
       Extcommunity: RT:200:25000 ENCAP:8
 
   Path-id 1 not advertised to any peer
-BGP routing table entry for [1]:[03dd.dd11.1122.2200.002c]:[0x0]/152, version 4487
+BGP routing table entry for [1]:[03dd.ddff.2233.2200.002c]:[0x0]/152, version 4487
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27371,7 +27371,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
   Path-id 1 not advertised to any peer
 
 Route Distinguisher: 192.168.9.1:33768    (L3VNI 25001)
-BGP routing table entry for [1]:[03bb.bbbb.bbbb.bb00.0016]:[0x0]/152, version 4905
+BGP routing table entry for [1]:[03bb.bbff.7777.bb00.0016]:[0x0]/152, version 4905
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27384,7 +27384,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
       Extcommunity: RT:200:25001 RT:1234:5678 ENCAP:8
 
   Path-id 1 not advertised to any peer
-BGP routing table entry for [1]:[03cc.cc11.1122.2200.0021]:[0x0]/152, version 4075
+BGP routing table entry for [1]:[03cc.ccff.2233.2200.0021]:[0x0]/152, version 4075
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27397,7 +27397,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
       Extcommunity: RT:200:25001 RT:1234:5678 ENCAP:8
 
   Path-id 1 not advertised to any peer
-BGP routing table entry for [1]:[03dd.dd11.1122.2200.002c]:[0x0]/152, version 4488
+BGP routing table entry for [1]:[03dd.ddff.2233.2200.002c]:[0x0]/152, version 4488
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -27424,8 +27424,8 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                     '192.168.154.1:3': {
                                         'rd': '192.168.154.1:3',
                                         'prefix': {
-                                            '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216': {
-                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216',
+                                            '[2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216': {
+                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216',
                                                 'prefixversion': 116,
                                                 'on_xmitlist': True,
                                                 'mpath': 'ibgp',
@@ -27460,8 +27460,8 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                     '192.168.154.1:4': {
                                         'rd': '192.168.154.1:4',
                                         'prefix': {
-                                            '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216': {
-                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216',
+                                            '[2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216': {
+                                                'nonipprefix': '[2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216',
                                                 'prefixversion': 117,
                                                 'on_xmitlist': True,
                                                 'totalpaths': 1,
@@ -27506,7 +27506,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         BL1# show bgp l2vpn evpn route-type 2
         BGP routing table information for VRF default, address family L2VPN EVPN
         Route Distinguisher: 192.168.154.1:3
-        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216, version 116
+        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216, version 116
         Paths: (1 available, best #1)
         Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
         Multipath: iBGP
@@ -27525,7 +27525,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
             172.16.205.8
 
         Route Distinguisher: 192.168.154.1:4
-        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.0003.0007]:[0]:[0.0.0.0]/216, version 117
+        BGP routing table entry for [2]:[0]:[0]:[48]:[5e00.00ff.030a]:[0]:[0.0.0.0]/216, version 117
         Paths: (1 available, best #1)
         Flags: (0x000202) on xmit-list, is not in l2rib/evpn, is not in HW
         Multipath: iBGP
@@ -28141,8 +28141,8 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
     golden_output_5 = {'execute.return_value': '''
         show bgp l2vpn evpn route-type 4
         BGP routing table information for VRF default, address family L2VPN EVPN
-        Route Distinguisher: 10.144.6.6:27001   (ES [0300.0000.01b2.0700.0309 0])
-        BGP routing table entry for [4]:[0300.0000.01b2.0700.0309]:[32]:[10.144.6.6]/136, version 2018
+        Route Distinguisher: 10.144.6.6:27001   (ES [0300.00ff.01b2.0700.0309 0])
+        BGP routing table entry for [4]:[0300.00ff.01b2.0700.0309]:[32]:[10.144.6.6]/136, version 2018
         Paths: (1 available, best #0)
         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
         Multipath: iBGP
@@ -28150,9 +28150,9 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
           AS-Path: NONE, path locally originated
             10.144.6.6 (inaccessible, metric 4294967295) from 0.0.0.0 (10.144.6.6)
               Origin IGP, MED not set, localpref 100, weight 32768
-              Extcommunity: ENCAP:8 RT:0000.0001.b207
+              Extcommunity: ENCAP:8 RT:0000.00ff.b308
         Route Distinguisher: 10.196.7.7:27001
-        BGP routing table entry for [4]:[0300.0000.0364.0e00.0309]:[32]:[10.196.7.7]/136, version 438
+        BGP routing table entry for [4]:[0300.00ff.0364.0e00.0309]:[32]:[10.196.7.7]/136, version 438
         Paths: (1 available, best #1)
         Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not in HW
         Multipath: iBGP
@@ -28161,7 +28161,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
           AS-Path: 200 , path sourced external to AS
             10.196.7.7 (metric 20) from 10.166.7.7 (10.196.7.7)
               Origin IGP, MED not set, localpref 100, weight 0
-              Extcommunity: ENCAP:8 RT:0000.0003.640e
+              Extcommunity: ENCAP:8 RT:0000.00ff.6711
           Path-id 1 not advertised to any peer
         '''}
 
@@ -28175,14 +28175,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                 {'rd': 
                                     {'10.144.6.6:27001': 
                                         {'prefix': 
-                                            {'[4]:[0300.0000.01b2.0700.0309]:[32]:[10.144.6.6]/136': 
+                                            {'[4]:[0300.00ff.01b2.0700.0309]:[32]:[10.144.6.6]/136': 
                                                 {'bestpathnr': 0,
                                                 'mpath': 'ibgp',
-                                                'nonipprefix': '[4]:[0300.0000.01b2.0700.0309]:[32]:[10.144.6.6]/136',
+                                                'nonipprefix': '[4]:[0300.00ff.01b2.0700.0309]:[32]:[10.144.6.6]/136',
                                                 'on_xmitlist': True,
                                                 'path': 
                                                     {1: 
-                                                        {'extcommunity': ['ENCAP:8', 'RT:0000.0001.b207'],
+                                                        {'extcommunity': ['ENCAP:8', 'RT:0000.00ff.b308'],
                                                         'ipnexthop': '10.144.6.6',
                                                         'localpref': 100,
                                                         'neighbor': '0.0.0.0',
@@ -28200,13 +28200,13 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
                                         'rd': '10.144.6.6:27001'},
                                     '10.196.7.7:27001': 
                                         {'prefix': 
-                                            {'[4]:[0300.0000.0364.0e00.0309]:[32]:[10.196.7.7]/136': 
+                                            {'[4]:[0300.00ff.0364.0e00.0309]:[32]:[10.196.7.7]/136': 
                                                 {'bestpathnr': 1,
                                                 'mpath': 'ibgp',
-                                                'nonipprefix': '[4]:[0300.0000.0364.0e00.0309]:[32]:[10.196.7.7]/136',
+                                                'nonipprefix': '[4]:[0300.00ff.0364.0e00.0309]:[32]:[10.196.7.7]/136',
                                                 'on_xmitlist': True,
                                                 'path': {1: {'extcommunity': ['ENCAP:8',
-                                                                            'RT:0000.0003.640e'],
+                                                                            'RT:0000.00ff.6711'],
                                                            'ipnexthop': '10.196.7.7',
                                                            'localpref': 100,
                                                            'neighbor': '10.166.7.7',
@@ -28483,9 +28483,9 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output = {'execute.return_value': '''
-        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.04b1.0000 | be "best path, in rib"   n 10
+        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.04ff.b1b1 | be "best path, in rib"   n 10
           Path type: internal, path is valid, is best path, in rib
-                     Imported from 10.4.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[0]:[0.0.0.0]/216 
+                     Imported from 10.4.0.101:33768:[2]:[0]:[0]:[48]:[0000.04ff.b1b1]:[0]:[0.0.0.0]/216 
           AS-Path: NONE, path sourced internal to AS
             10.9.0.101 (metric 9) from 10.4.0.66 (10.4.0.66)
               Origin IGP, MED not set, localpref 100, weight 0
@@ -28494,33 +28494,33 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
               Originator: 10.4.0.101 Cluster list: 10.4.0.66 
 
           Path-id 1 not advertised to any peer
-        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[10.21.102.2]/272, version 6768199
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.04ff.b1b1]:[32]:[10.21.102.2]/272, version 6768199
         --
           Path type: internal, path is valid, is best path, in rib
-                     Imported from 10.4.0.101:33768:[2]:[0]:[0]:[48]:[0000.04b1.0000]:[32]:[10.21.102.2]/272 
+                     Imported from 10.4.0.101:33768:[2]:[0]:[0]:[48]:[0000.04ff.b1b1]:[32]:[10.21.102.2]/272 
           AS-Path: NONE, path sourced internal to AS
             10.9.0.101 (metric 9) from 10.4.0.66 (10.4.0.66)
               Origin IGP, MED not set, localpref 100, weight 0
               Received label 2001001 3003802
               Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:2
-                  Router MAC:00de.fbdc.5f87
+                  Router MAC:00de.fbff.3c64
               Originator: 10.4.0.101 Cluster list: 10.4.0.66 
 
           Path-id 1 not advertised to any peer
     '''}
 
     golden_parsed_output = {'mac_address':
-                                {'0000.04b1.0000':
+                                {'0000.04ff.b1b1':
                                     {'next_hop': '10.9.0.101',
                                      'received_label': '2001001'}
                                 }
                             }
 
     golden_output_1 = {'execute.return_value': '''
-        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.0191.0000 | grep -b 8  -a 10  "best path" 
+        CH-P2-TOR-1# sh bgp l2vpn evpn 0000.01ff.9191 | grep -b 8  -a 10  "best path" 
         BGP routing table information for VRF default, address family L2VPN EVPN
         Route Distinguisher: 10.4.0.1:33768    (L2VNI 2001001)
-        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[0]:[0.0.0.0]/216, version 6956047
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.01ff.9191]:[0]:[0.0.0.0]/216, version 6956047
         Paths: (1 available, best #1)
         Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -28534,7 +28534,7 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
 
           Path-id 1 advertised to peers:
             10.4.0.66       
-        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.0191.0000]:[32]:[10.21.101.2]/272, version 6956019
+        BGP routing table entry for [2]:[0]:[0]:[48]:[0000.01ff.9191]:[32]:[10.21.101.2]/272, version 6956019
         Paths: (1 available, best #1)
         Flags: (0x000302) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -28545,14 +28545,14 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
               Origin IGP, MED not set, localpref 100, weight 32768
               Received label 2001001 3003802
               Extcommunity: RT:2:2001001 RT:2:3003802 ENCAP:8 MAC Mobility Sequence:00:1
-                  Router MAC:00f2.8b7a.f8ff
+                  Router MAC:00f2.8bff.737a
 
           Path-id 1 advertised to peers:
             10.4.0.66           
     '''}
 
     golden_parsed_output_1 = {'mac_address':
-                                {'0000.0191.0000':
+                                {'0000.01ff.9191':
                                     {'received_label': '2001001',
                                      'next_hop': '10.4.0.1'}}}
 
@@ -28560,21 +28560,21 @@ class test_show_bgp_l2vpn_evpn_word(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpL2vpnEvpnWord(device=self.device)
-        parsed_output = obj.parse(mac='0000.04b1.0000', count1='10')
+        parsed_output = obj.parse(mac='0000.04ff.b1b1', count1='10')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_l2route_evpn_word_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowBgpL2vpnEvpnWord(device=self.device)
-        parsed_output = obj.parse(mac='0000.0191.0000', count1='8', count2='10')
+        parsed_output = obj.parse(mac='0000.01ff.9191', count1='8', count2='10')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpL2vpnEvpnWord(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(mac='0000.04b1.0000', count1='10')
+            parsed_output = obj.parse(mac='0000.04ff.b1b1', count1='10')
 
 
 # =======================================================================
@@ -29172,8 +29172,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                             "rd": {
                                 "10.16.2.2:3": {
                                     "prefix": {
-                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.111.6.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.111.6.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.111.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.111.6.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29187,8 +29187,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.4.6.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.4.6.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.4.6.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.4.6.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29202,8 +29202,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.111.6.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.111.6.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.111.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.111.6.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29217,8 +29217,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.4.6.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.4.6.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.4.6.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.4.6.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29232,8 +29232,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.111.7.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.111.7.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.111.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.111.7.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29247,8 +29247,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.4.7.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.4.7.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.4.7.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.4.7.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29262,8 +29262,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.111.7.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.111.7.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.111.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.111.7.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29277,8 +29277,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.4.7.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.4.7.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.4.7.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.4.7.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29292,8 +29292,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.111.8.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.111.8.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.111.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.111.8.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29307,8 +29307,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.4.8.3]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.4.8.3]/272",
+                                        "[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.4.8.3]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.4.8.3]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29322,8 +29322,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.111.8.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.111.8.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.111.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.111.8.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29337,8 +29337,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.4.8.4]/272": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.4.8.4]/272",
+                                        "[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.4.8.4]/272": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.4.8.4]/272",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29352,8 +29352,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                 }
                                             }
                                         },
-                                        "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216": {
-                                            "nonipprefix": "[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216",
+                                        "[2]:[0]:[0]:[48]:[5e00.c0ff.050c]:[0]:[0.0.0.0]/216": {
+                                            "nonipprefix": "[2]:[0]:[0]:[48]:[5e00.c0ff.050c]:[0]:[0.0.0.0]/216",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
@@ -29393,31 +29393,31 @@ Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
    Network            Next Hop            Metric     LocPrf     Weight Path
    Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
-*>i[2]:[0]:[0]:[48]:[5e00.c005.0007]:[0]:[0.0.0.0]/216
+*>i[2]:[0]:[0]:[48]:[5e00.c0ff.050c]:[0]:[0.0.0.0]/216
                       10.144.6.6                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.111.6.3]/272
+*>i[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.111.6.3]/272
                       10.144.6.6                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0006.0006.0003]:[32]:[10.4.6.3]/272
+*>i[2]:[0]:[0]:[48]:[0006.00ff.0609]:[32]:[10.4.6.3]/272
                       10.144.6.6                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.111.6.4]/272
+*>i[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.111.6.4]/272
                       10.144.6.6                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0006.0006.0004]:[32]:[10.4.6.4]/272
+*>i[2]:[0]:[0]:[48]:[0006.00ff.060a]:[32]:[10.4.6.4]/272
                       10.144.6.6                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.111.7.3]/272
+*>i[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.111.7.3]/272
                       10.196.7.7                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0007.0007.0003]:[32]:[10.4.7.3]/272
+*>i[2]:[0]:[0]:[48]:[0007.00ff.070a]:[32]:[10.4.7.3]/272
                       10.196.7.7                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.111.7.4]/272
+*>i[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.111.7.4]/272
                       10.196.7.7                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0007.0007.0004]:[32]:[10.4.7.4]/272
+*>i[2]:[0]:[0]:[48]:[0007.00ff.070b]:[32]:[10.4.7.4]/272
                       10.196.7.7                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.111.8.3]/272
+*>i[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.111.8.3]/272
                       10.1.8.8                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0008.0008.0003]:[32]:[10.4.8.3]/272
+*>i[2]:[0]:[0]:[48]:[0008.00ff.080b]:[32]:[10.4.8.3]/272
                       10.1.8.8                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.111.8.4]/272
+*>i[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.111.8.4]/272
                       10.1.8.8                           100          0 i
-*>i[2]:[0]:[0]:[48]:[0008.0008.0004]:[32]:[10.4.8.4]/272
+*>i[2]:[0]:[0]:[48]:[0008.00ff.080c]:[32]:[10.4.8.4]/272
                       10.1.8.8                           100          0 i
 
 """}
@@ -29766,33 +29766,33 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
 
         Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 10.16.2.2:32868    (L2VNI 10101)
-        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.c271]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.0987]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.58b9]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3e2f.654d]:[32]:[10.111.3.4]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.947c]:[32]:[10.111.3.4]/272
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3e68.b933]:[32]:[10.111.3.3]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.229b]:[32]:[10.111.3.3]/272
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[10.111.2.4]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[32]:[10.111.2.4]/272
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[32]:[10.111.1.4]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.c271]:[32]:[10.111.1.4]/272
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[32]:[10.111.1.3]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.0987]:[32]:[10.111.1.3]/272
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[32]:[10.111.2.3]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.58b9]:[32]:[10.111.2.3]/272
                             10.76.23.23                       100      32768 i
 
         Route Distinguisher: 10.16.2.2:32968    (L2VNI 10201)
 
         Route Distinguisher: 10.16.2.2:32969    (L2VNI 10202)
-        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
-        *>l[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[192.168.16.4]/272
+        *>l[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[32]:[192.168.16.4]/272
                             10.76.23.23                       100      32768 i
 
         Route Distinguisher: 10.144.6.6:3
@@ -29818,11 +29818,11 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
         Route Distinguisher: 10.1.8.8:32969
 
         Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
-        *>l[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[5e00.00ff.0108]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
 
         Route Distinguisher: 10.16.2.2:4    (L3VNI 10200)
-        *>l[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216
+        *>l[2]:[0]:[0]:[48]:[5e00.00ff.0108]:[0]:[0.0.0.0]/216
                             10.76.23.23                       100      32768 i
     '''}
 
@@ -29845,7 +29845,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher':'10.16.2.2:32868',
                                 'rd_l2vni':10101,
                                 'advertised':{  
-                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29857,7 +29857,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.c271]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29869,7 +29869,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.0987]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29881,7 +29881,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.58b9]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29893,7 +29893,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3e2f.654d]:[32]:[10.111.3.4]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.947c]:[32]:[10.111.3.4]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29905,7 +29905,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3e68.b933]:[32]:[10.111.3.3]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.229b]:[32]:[10.111.3.3]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29917,7 +29917,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[10.111.2.4]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[32]:[10.111.2.4]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29929,7 +29929,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ec5.fcab]:[32]:[10.111.1.4]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.c271]:[32]:[10.111.1.4]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29941,7 +29941,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ed1.37b5]:[32]:[10.111.1.3]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.0987]:[32]:[10.111.1.3]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29953,7 +29953,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3ed4.83e4]:[32]:[10.111.2.3]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.58b9]:[32]:[10.111.2.3]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29982,7 +29982,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher':'10.16.2.2:32969',
                                 'rd_l2vni':10202,
                                 'advertised':{  
-                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -29994,7 +29994,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    '[2]:[0]:[0]:[48]:[fa16.3e79.6bfe]:[32]:[192.168.16.4]/272':{  
+                                    '[2]:[0]:[0]:[48]:[fa16.3eff.e478]:[32]:[192.168.16.4]/272':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -30102,7 +30102,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher':'10.16.2.2:3',
                                 'rd_l3vni':10100,
                                 'advertised':{  
-                                    '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[5e00.00ff.0108]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',
@@ -30122,7 +30122,7 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher':'10.16.2.2:4',
                                 'rd_l3vni':10200,
                                 'advertised':{  
-                                    '[2]:[0]:[0]:[48]:[5e00.0001.0007]:[0]:[0.0.0.0]/216':{  
+                                    '[2]:[0]:[0]:[48]:[5e00.00ff.0108]:[0]:[0.0.0.0]/216':{  
                                         'index':{  
                                             1:{  
                                                 'status_codes':'*>',

@@ -149,9 +149,9 @@ class ShowNvePeers(ShowNvePeersSchema):
         result_dict = {}
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
         # nve1      192.168.16.1      Up    CP        01:15:09 n/a
-        # nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.0028.093a   
-        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00dc.5da5   
+        # nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:3                  Up    CP        21:47:20 5254.00ff.3162   
+        # nve1      2001:db8:646:a2bb:0:abcd:1234:5                  Up    CP        21:47:20 5254.00ff.3a82   
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
                         ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
@@ -503,7 +503,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'vpc_capability': group.pop('vpc_capability').lower()})
                     continue
 
-                #  Local Router MAC: 5e00.0005.0007
+                #  Local Router MAC: 5e00.00ff.050c
                 m = p3.match(line)
                 if m:
                     group = m.groupdict()
@@ -600,14 +600,14 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     nve_dict.update({'src_if_holddown_left': int(group.pop('hold_time_left'))})
                     continue
 
-                #  Virtual Router MAC: 0200.c90c.0b16
+                #  Virtual Router MAC: 0200.c9ff.1722
                 m = p14.match(line)
                 if m:
                     group = m.groupdict()
                     nve_dict.update({'vip_rmac': group.pop('v_router_mac')})
                     continue
 
-                #  Virtual Router MAC Re-origination: 0200.6565.6565
+                #  Virtual Router MAC Re-origination: 0200.65ff.caca
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
@@ -866,7 +866,7 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         df_vlans = ""
         result_dict = {}
 
-        # ESI: 0300.0000.0001.2c00.0309
+        # ESI: 0300.00ff.0001.2c00.0309
         #   Parent interface: nve1
         #   ES State: Up
         #   Port-channel state: N/A
@@ -1096,7 +1096,7 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
         index = 1
         # ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
         # ------------------------ -----------------  ----- ----------- ----------
-        # 0300.0000.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
+        # 0300.00ff.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
 
         p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
                         ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
@@ -1185,8 +1185,8 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
         #                   Emulated IP: 192.168.196.22
         #                   Emulated RO IP: 192.168.196.22
         #                   TX-ID: 20 (Rcvd Ack: 0)
-        #                   RMAC: 5e00.0005.0007, VRFID: 3
-        #                   VMAC: 0200.c90c.0b16
+        #                   RMAC: 5e00.00ff.050c, VRFID: 3
+        #                   VMAC: 0200.c9ff.1722
         #                   Flags: L3cp, Sub_Flags: --, Prev_Flags: -
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<topo_name>[\w\-]+) +(?P<topo_type>[\w\/]+)(: +(?P<vni>[\d]+))?$')
         p2 = re.compile(r'^\s*Encap:(?P<encap_type>[\d]+) +IOD:(?P<iod>[\d]+) +IfHdl:(?P<if_hdl>[\d]+)$')
@@ -1305,7 +1305,7 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- ------ ------------- ---------- ----------------
-        # 101         5e00.0002.0007 VXLAN  Rmac          0          192.168.106.1
+        # 101         5e00.00ff.0209 VXLAN  Rmac          0          192.168.106.1
         #            Route Resolution Type: Regular
         #            Forwarding State: Resolved (PeerID: 2)
         #            Sent To: BGP
@@ -1422,14 +1422,14 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         result_dict = {}
         # Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
         # ----------- -------------- ------ ---------- --------------- ---------------
-        # 1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
-        # 1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
+        # 1001        fa16.3eff.f6c1 BGP    --            0          10.36.10.11      192.168.106.1
+        # 1001        fa16.3eff.9f0a HMM    --            0          10.36.10.55      Local
         #            Sent To: BGP
         #            SOO: 774975538
         #            L3-Info: 10001
-        # 101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local
-        # 101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66 
-        # 101         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
+        # 101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local
+        # 101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66 
+        # 101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
                         '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<next_hop1>[\w\/\.]+)$')
@@ -1440,8 +1440,8 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
 
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
-        # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
-        # 201         0011.0100.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1   
+        # 101         0000.9cff.2293 10.111.1.3     BGP    --            0         10.76.23.23
+        # 201         0011.01ff.0001 10.1.1.2       BGP    --            0         2001:db8:646:a2bb:0:abcd:5678:1   
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')

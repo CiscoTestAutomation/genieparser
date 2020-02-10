@@ -94,8 +94,8 @@ class Ifconfig(IfconfigSchema):
         p3 = re.compile(r'^inet6 +(?P<ip>\S+) +prefixlen +(?P<prefixlen>\d+) '
                          '+scopeid +(?P<scopeid>\S+)$')
 
-        #  ether 48:2a:e3:13:45:42  txqueuelen 1000  (Ethernet)
-        #  ether 00:50:b6:8d:bd:f5  (Ethernet)
+        #  ether 48:2a:e3:ff:58:55  txqueuelen 1000  (Ethernet)
+        #  ether 00:50:b6:ff:4b:83  (Ethernet)
         #  loop  txqueuelen 1000  (Local Loopback)
         #  loop  (Local Loopback)
         p4 = re.compile(r'^(?P<type>\S+)( +(?P<mac>\S+))?( +txqueuelen +(?P<txqueuelen>\d+))? '
@@ -156,7 +156,7 @@ class Ifconfig(IfconfigSchema):
                 ipv6_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
                 continue
 
-            #   ether 48:2a:e3:13:45:42  txqueuelen 1000  (Ethernet)
+            #   ether 48:2a:e3:ff:58:55  txqueuelen 1000  (Ethernet)
             m = p4.match(line)
             if m:
                 group = m.groupdict()

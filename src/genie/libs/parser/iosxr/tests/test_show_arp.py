@@ -30,13 +30,13 @@ class test_show_arp_detail(unittest.TestCase):
 							'10.1.2.1': {
 								'age': '02:55:43',
 								'ip': '10.1.2.1',
-								'link_layer_address': 'fa16.3e4c.b963',
+								'link_layer_address': 'fa16.3eff.06af',
 								'origin': 'dynamic',
 								'type': 'ARPA'},
 							'10.1.2.2': {
 								'age': '-',
 								'ip': '10.1.2.2',
-								'link_layer_address': 'fa16.3ee4.1462',
+								'link_layer_address': 'fa16.3eff.f847',
 								'origin': 'static',
 								'type': 'ARPA'}
 						}
@@ -48,13 +48,13 @@ class test_show_arp_detail(unittest.TestCase):
 							'10.2.3.2': {
 								'age': '-',
 								'ip': '10.2.3.2',
-								'link_layer_address': 'fa16.3e8f.3468',
+								'link_layer_address': 'fa16.3eff.c3f7',
 								'origin': 'static',
 								'type': 'ARPA'},
 							'10.2.3.3': {
 								'age': '00:13:12',
 								'ip': '10.2.3.3',
-								'link_layer_address': '5e00.8002.0007',
+								'link_layer_address': '5e00.80ff.0209',
 								'origin': 'dynamic',
 								'type': 'ARPA'}
 						}
@@ -71,10 +71,10 @@ class test_show_arp_detail(unittest.TestCase):
 			0/0/CPU0
 			-------------------------------------------------------------------------------
 			Address         Age         Hardware Addr   State      Flag      Type  Interface
-			10.1.2.1        02:55:43   fa16.3e4c.b963  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
-			10.1.2.2        -          fa16.3ee4.1462  Interface  Unknown ARPA GigabitEthernet0/0/0/0
-			10.2.3.2        -          fa16.3e8f.3468  Interface  Unknown ARPA GigabitEthernet0/0/0/1
-			10.2.3.3        00:13:12   5e00.8002.0007  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
+			10.1.2.1        02:55:43   fa16.3eff.06af  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
+			10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
+			10.2.3.2        -          fa16.3eff.c3f7  Interface  Unknown ARPA GigabitEthernet0/0/0/1
+			10.2.3.3        00:13:12   5e00.80ff.0209  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
 		'''}
 
 
@@ -86,13 +86,13 @@ class test_show_arp_detail(unittest.TestCase):
 							'10.1.2.1': {
 								'age': '02:56:20',
 								'ip': '10.1.2.1',
-								'link_layer_address': 'fa16.3e4c.b963',
+								'link_layer_address': 'fa16.3eff.06af',
 								'origin': 'dynamic',
 								'type': 'ARPA'},
 							'10.1.2.2': {
 								'age': '-',
 								'ip': '10.1.2.2',
-								'link_layer_address': 'fa16.3ee4.1462',
+								'link_layer_address': 'fa16.3eff.f847',
 								'origin': 'static',
 								'type': 'ARPA'}
 						}
@@ -104,12 +104,12 @@ class test_show_arp_detail(unittest.TestCase):
 							'10.2.3.2': {
 								'age': '-',
 								'ip': '10.2.3.2',
-								'link_layer_address': 'fa16.3e8f.3468',
+								'link_layer_address': 'fa16.3eff.c3f7',
 								'origin': 'static',
 								'type': 'ARPA'},
 							'10.2.3.3': {'age': '00:13:49',
 								'ip': '10.2.3.3',
-								'link_layer_address': '5e00.8002.0007',
+								'link_layer_address': '5e00.80ff.0209',
 								'origin': 'dynamic',
 								'type': 'ARPA'}
 						}
@@ -126,10 +126,10 @@ class test_show_arp_detail(unittest.TestCase):
 			0/0/CPU0
 			-------------------------------------------------------------------------------
 			Address         Age         Hardware Addr   State      Flag      Type  Interface
-			10.1.2.1        02:56:20   fa16.3e4c.b963  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
-			10.1.2.2        -          fa16.3ee4.1462  Interface  Unknown ARPA GigabitEthernet0/0/0/0
-			10.2.3.2        -          fa16.3e8f.3468  Interface  Unknown ARPA GigabitEthernet0/0/0/1
-			10.2.3.3        00:13:49   5e00.8002.0007  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
+			10.1.2.1        02:56:20   fa16.3eff.06af  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
+			10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
+			10.2.3.2        -          fa16.3eff.c3f7  Interface  Unknown ARPA GigabitEthernet0/0/0/1
+			10.2.3.3        00:13:49   5e00.80ff.0209  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
 		'''}
 
 		def test_empty(self):

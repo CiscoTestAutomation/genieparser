@@ -19,8 +19,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
             'GigabitEthernet1/0/48': {
                 'interface': 'GigabitEthernet1/0/48',
                 'client': {
-                    '0015.63b0.f676': {
-                        'client': '0015.63b0.f676',
+                    '0015.63ff.a727': {
+                        'client': '0015.63ff.a727',
                         'method': 'dot1x',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -35,8 +35,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
             'GigabitEthernet1/0/5': {
                 'interface': 'GigabitEthernet1/0/5',
                 'client': {
-                    '000f.23c4.a401': {
-                        'client': '000f.23c4.a401',
+                    '000f.23ff.69c5': {
+                        'client': '000f.23ff.69c5',
                         'method': 'mab',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -51,8 +51,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
             'GigabitEthernet1/0/7': {
                 'interface': 'GigabitEthernet1/0/7',
                 'client': {
-                    '0014.bf5d.d26d': {
-                        'client': '0014.bf5d.d26d',
+                    '0014.bfff.30ca': {
+                        'client': '0014.bfff.30ca',
                         'method': 'dot1x',
                         'domain': 'DATA',
                         'status': 'Authz Success',
@@ -70,9 +70,9 @@ class TestShowAuthenticationSessions(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         show authentication sessions
         Interface    MAC Address     Method   Domain   Status         Session ID
-        Gi1/0/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
-        Gi1/0/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
-        Gi1/0/7      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
+        Gi1/0/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+        Gi1/0/5      000f.23ff.69c5  mab      DATA     Authz Success  0A3462B10000000D24F80B58
+        Gi1/0/7      0014.bfff.30ca  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
     '''
     }
 
@@ -81,8 +81,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
             'GigabitEthernet1/7/35': {
                 'interface': 'GigabitEthernet1/7/35',
                 'client': {
-                    '0000.0022.2222': {
-                        'client': '0000.0022.2222',
+                    '0000.00ff.4444': {
+                        'client': '0000.00ff.4444',
                         'method': 'dot1x',
                         'domain': 'UNKNOWN',
                         'status': 'Auth',
@@ -102,7 +102,7 @@ class TestShowAuthenticationSessions(unittest.TestCase):
 
         Interface Identifier     Method Domain  Status Fg Session ID
         -----------------------------------------------------------------------------
-        Gi1/7/35  0000.0022.2222 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
+        Gi1/7/35  0000.00ff.4444 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
     '''
     }
 
@@ -111,8 +111,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
         Interface                MAC Address    Method  Domain  Status Fg  Session
         ID
         --------------------------------------------------------------------------------------------
-        Gi1/0/1                  0050.b6d6.a8b0 mab     DATA    Auth     0A76060A00000018DD109536
-        Gi1/0/2                  b4a8.b968.f35b mab     VOICE   Auth     0A76060A0000000D5323681F
+        Gi1/0/1                  0050.b6ff.7f87 mab     DATA    Auth     0A76060A00000018DD109536
+        Gi1/0/2                  b4a8.b9ff.5cc3 mab     VOICE   Auth     0A76060A0000000D5323681F
 
         *Session count = 2*    
     '''}
@@ -121,8 +121,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/1': {
                 'client': {
-                    '0050.b6d6.a8b0': {
-                        'client': '0050.b6d6.a8b0',
+                    '0050.b6ff.7f87': {
+                        'client': '0050.b6ff.7f87',
                         'domain': 'DATA',
                         'method': 'mab',
                         'session': {
@@ -137,8 +137,8 @@ class TestShowAuthenticationSessions(unittest.TestCase):
             },
             'GigabitEthernet1/0/2': {
                 'client': {
-                    'b4a8.b968.f35b': {
-                        'client': 'b4a8.b968.f35b',
+                    'b4a8.b9ff.5cc3': {
+                        'client': 'b4a8.b9ff.5cc3',
                         'domain': 'VOICE',
                         'method': 'mab',
                         'session': {
@@ -189,7 +189,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet3/0/2': {
                 'mac_address': {
-                    '0010.0010.0001': {
+                    '0010.00ff.1011': {
                         'iif_id': '0x1055240000001F6',
                         'ipv6_address': 'Unknown',
                         'ipv4_address': '192.0.2.1',
@@ -232,7 +232,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
 
                 Interface:  GigabitEthernet3/0/2
                    IIF-ID:  0x1055240000001F6 
-              MAC Address:  0010.0010.0001
+              MAC Address:  0010.00ff.1011
              IPv6 Address:  Unknown
              IPv4 Address:  192.0.2.1
                 User-Name:  genie123
@@ -260,7 +260,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/12': {
                 'mac_address': {
-                    '0010.0010.0001': {
+                    '0010.00ff.1011': {
                         'acct_session_id': 'Unknown',
                         'common_session_id': 'AC14FC0A0000101200E28D62',
                         'current_policy': 'dot1x_dvlan_reauth_hm',
@@ -303,7 +303,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
 
                 Interface:  GigabitEthernet1/0/12
                    IIF-ID:  0x1055240000001F6 
-              MAC Address:  0010.0010.0001
+              MAC Address:  0010.00ff.1011
              IPv6 Address:  Unknown
              IPv4 Address:  192.0.2.1
                 User-Name:  genie123
@@ -333,7 +333,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         Time source is NTP, 13:51:25.306 EDT Wed Sep 11 2019
 
                     Interface:  GigabitEthernet1/12
-                MAC Address:  6390.c2f7.5d21
+                MAC Address:  6390.c2ff.5519
                 IPv6 Address:  Unknown
                 IPv4 Address:  10.1.2.102
                     User-Name:  host/genie.cisco.corp
@@ -370,7 +370,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/12': {
                 'mac_address': {
-                    '6390.c2f7.5d21': {
+                    '6390.c2ff.5519': {
                         'acct_session_id': 'Unknown',
                         'common_session_id': '0A805A0A000012C8FDF2EF40',
                         'current_policy': 'POLICY_Gi1/12',
@@ -420,7 +420,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
 
                 Switch# show authentication sessions interface gigabitethernet2/0/47
                     Interface:  GigabitEthernet2/0/47
-                MAC Address:  0001.1010.0101
+                MAC Address:  0001.10ff.1111
                 IP Address:  10.1.2.3
                     Status:  Authz Success
                     Domain:  DATA
@@ -439,9 +439,9 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
             dot1x    Failed over
         ----------------------------------------
                     Interface:  GigabitEthernet2/0/47
-                MAC Address:  0005.5e7c.da05
+                MAC Address:  0005.5eff.5781
                 IP Address:  10.1.3.5
-                    User-Name:  00055e7cda05
+                    User-Name:  00055eff5781
                     Status:  Authz Success
                     Domain:  VOICE
             Oper host mode:  multi-domain
@@ -463,7 +463,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet2/0/47': {
                 'mac_address': {
-                    '0001.1010.0101': {
+                    '0001.10ff.1111': {
                         'acct_session_id': '0x00000002',
                         'authorized_by': 'Guest Vlan',
                         'common_session_id': '0A3462C8000000000002763C',
@@ -489,7 +489,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'status': 'Authz Success',
                         'vlan_policy': '20'
                     },
-                    '0005.5e7c.da05': {
+                    '0005.5eff.5781': {
                         'acct_session_id': '0x00000003',
                         'authorized_by': 'Authentication Server',
                         'common_session_id': '0A3462C8000000010002A238',
@@ -513,7 +513,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                             'type': 'N/A'
                         },
                         'status': 'Authz Success',
-                        'user_name': '00055e7cda05'
+                        'user_name': '00055eff5781'
                     }
                 }
             }
@@ -524,10 +524,10 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         Genie_SW#show authentication sessions interface GigabitEthernet1/0/1 details
         Interface: GigabitEthernet1/0/1
         IIF-ID: 0x156E4683
-        MAC Address: 0050.b6d6.a8b0
+        MAC Address: 0050.b6ff.7f87
         IPv6 Address: fe80::2119:3248:786b:40db
         IPv4 Address: 192.168.1.5
-        User-Name: 00-50-B6-D6-A8-B0
+        User-Name: 00-50-B6-FF-7F-87
         Status: Authorized
         Domain: DATA
         Oper host mode: multi-auth
@@ -543,7 +543,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/1': {
                 'mac_address': {
-                    '0050.b6d6.a8b0': {
+                    '0050.b6ff.7f87': {
                         'acct_session_id': '0x0000000f',
                         'common_session_id': '0A76060A00000018DD109536',
                         'current_policy': 'POLICY_Gi1/0/1',
@@ -556,7 +556,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'oper_host_mode': 'multi-auth',
                         'session_timeout': {'type': 'N/A'},
                         'status': 'Authorized',
-                        'user_name': '00-50-B6-D6-A8-B0'
+                        'user_name': '00-50-B6-FF-7F-87'
                     }
                 }
             }
@@ -568,10 +568,10 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         detail
                     Interface:  GigabitEthernet1/0/2
                     IIF-ID:  0x17B5937E
-                MAC Address:  b4a8.b968.f35b
+                MAC Address:  b4a8.b9ff.5cc3
                 IPv6 Address:  Unknown
                 IPv4 Address:  10.4.1.1
-                    User-Name:  B4-A8-B9-68-F3-5B
+                    User-Name:  B4-A8-B9-FF-5C-C3
                     Status:  Authorized
                     Domain:  VOICE
             Oper host mode:  multi-auth
@@ -599,7 +599,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/2': {
                 'mac_address': {
-                    'b4a8.b968.f35b': {
+                    'b4a8.b9ff.5cc3': {
                         'acct_session_id': '0x00000004',
                         'common_session_id': '0A76060A0000000D5323681F',
                         'current_policy': 'POLICY_Gi1/0/2',
@@ -639,7 +639,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         },
                         'session_timeout': {'type': 'N/A'},
                         'status': 'Authorized',
-                        'user_name': 'B4-A8-B9-68-F3-5B'
+                        'user_name': 'B4-A8-B9-FF-5C-C3'
                     }
                 }
             }
@@ -649,7 +649,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
     golden_output_10 = {'execute.return_value': '''
         Interface: *GigabitEthernet1/0/17*
         IIF-ID: 0x1534B4E2
-        MAC Address: 0024.9b47.c281
+        MAC Address: 0024.9bff.0ac8
         IPv6 Address: Unknown
         IPv4 Address: Unknown
         User-Name: host/Laptop123.test.com
@@ -680,7 +680,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/17': {
                 'mac_address': {
-                    '0024.9b47.c281': {
+                    '0024.9bff.0ac8': {
                         'acct_session_id': '0x0000008d',
                         'common_session_id': '0A8628020000007168945FE6',
                         'current_policy': 'Test_DOT1X-DEFAULT_V1',
@@ -726,7 +726,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         details
                     Interface:  GigabitEthernet1/0/6
                        IIF-ID:  0x1FB8CAD0
-                  MAC Address:  0024.9b47.bf33
+                  MAC Address:  0024.9bff.077a
                  IPv6 Address:  Unknown
                  IPv4 Address:  Unknown
                     User-Name:  User1
@@ -762,7 +762,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/6': {
                 'mac_address': {
-                    '0024.9b47.bf33': {
+                    '0024.9bff.077a': {
                         'acct_session_id': '0x00004bca',
                         'common_session_id': '0A788905000029BE6BFF02FE',
                         'current_policy': 'Test_DOT1X-DEFAULT_V1',
@@ -807,10 +807,10 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         details
                     Interface:  GigabitEthernet1/0/48
                        IIF-ID:  0x1AE25879
-                  MAC Address:  006b.f16b.efa0
+                  MAC Address:  006b.f1ff.5b0c
                  IPv6 Address:  Unknown
                  IPv4 Address:  Unknown
-                    User-Name:  00-6B-F1-6B-EF-A0
+                    User-Name:  00-6B-F1-FF-5B-0C
                        Status:  Authorized
                        Domain:  DATA
                Oper host mode:  multi-auth
@@ -836,7 +836,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/48': {
                 'mac_address': {
-                    '006b.f16b.efa0': {
+                    '006b.f1ff.5b0c': {
                         'acct_session_id': '0x00004d7a',
                         'common_session_id': '0A788905000021FBF8593E6C',
                         'current_policy': 'Test_DOT1X-DEFAULT_V1',
@@ -845,7 +845,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'iif_id': '0x1AE25879',
                         'ipv4_address': 'Unknown',
                         'ipv6_address': 'Unknown',
-                        'user_name': '00-6B-F1-6B-EF-A0',
+                        'user_name': '00-6B-F1-FF-5B-0C',
                         'status': 'Authorized',
                         'oper_host_mode': 'multi-auth',
                         'oper_control_dir': 'both',
@@ -878,10 +878,10 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         Test_NAC_SW#sh authentication sessions int *Gi1/0/17* details
         Interface: *GigabitEthernet1/0/17*
         IIF-ID: 0x11910563
-        MAC Address: 00e1.6d14.958a
+        MAC Address: 00e1.6dff.a99e
         IPv6 Address: Unknown
         IPv4 Address: Unknown
-        User-Name: 00-E1-6D-14-95-8A
+        User-Name: 00-E1-6D-FF-A9-9E
         Status: Authorized
         Domain: VOICE
         Oper host mode: multi-auth
@@ -907,7 +907,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/17': {
                 'mac_address': {
-                    '00e1.6d14.958a': {
+                    '00e1.6dff.a99e': {
                         'acct_session_id': '0x00000028',
                         'common_session_id': '0A8628020000003463B40D0F',
                         'current_policy': 'Test_DOT1X-DEFAULT_V1',
@@ -916,7 +916,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
                         'iif_id': '0x11910563',
                         'ipv4_address': 'Unknown',
                         'ipv6_address': 'Unknown',
-                        'user_name': '00-E1-6D-14-95-8A',
+                        'user_name': '00-E1-6D-FF-A9-9E',
                         'status': 'Authorized',
                         'oper_host_mode': 'multi-auth',
                         'oper_control_dir': 'both',
@@ -951,7 +951,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         details
                     Interface:  GigabitEthernet1/0/6
                        IIF-ID:  0x1FB8CAD0
-                  MAC Address:  0024.9b47.bf33
+                  MAC Address:  0024.9bff.077a
                  IPv6 Address:  Unknown
                  IPv4 Address:  Unknown
                     User-Name:  User1
@@ -978,7 +978,7 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/6': {
                 'mac_address': {
-                    '0024.9b47.bf33': {
+                    '0024.9bff.077a': {
                         'ipv6_address': 'Unknown',
                         'iif_id': '0x1FB8CAD0',
                         'ipv4_address': 'Unknown',
