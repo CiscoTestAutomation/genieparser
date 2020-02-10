@@ -100,6 +100,17 @@ class ShowUsersSchema(MetaParser):
                 'idle': str,
                 Optional('location'): str, 
             },
+        },
+        'interface': {
+            Any(): {
+                'user': {
+                    Any(): {
+                        'mode': str,
+                        'idle': str,
+                        Optional('peer_address'): str,
+                    }
+                }
+            }
         }
     }
 
@@ -129,6 +140,13 @@ class ShowUsers(ShowUsersSchema):
                          '( +(?P<user>[0-9a-z\-_.]+))? +(?P<host>\S+)'
                          ' +(?P<idle>[0-9\:]+)( +(?P<location>[\S]+))?$')
 
+        # Interface    User               Mode         Idle     Peer Address
+        # unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+        # unknown      a(ONEP)            com.cisco.sy 00:00:49
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<user>\S+) '
+                        r'+(?P<mode>[a-z.]+) +(?P<idle>\S+)'
+                        r'(:? +(?P<peer_address>\S+))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -149,6 +167,22 @@ class ShowUsers(ShowUsersSchema):
 
                 line_dict['host'] = group['host']
                 line_dict['idle'] = group['idle']
+                continue
+
+            # Interface    User               Mode         Idle     Peer Address
+            # unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+            # unknown      a(ONEP)            com.cisco.sy 00:00:49
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault('interface', {}).\
+                                     setdefault(group['interface'], {}).\
+                                     setdefault('user', {}).\
+                                     setdefault(group['user'], {})
+                intf_dict['mode'] = group['mode']
+                intf_dict['idle'] = group['idle']
+                if group['peer_address'] is not None:
+                    intf_dict['peer_address'] = group['peer_address']
                 continue
 
         return ret_dict
