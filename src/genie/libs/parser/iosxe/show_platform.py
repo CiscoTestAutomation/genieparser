@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 
+    * 'show bootvar'
     * 'show version'
     * 'dir'
     * 'show redundancy'
@@ -17,6 +18,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import logging
+from collections import OrderedDict 
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -30,6 +32,131 @@ except (ImportError, OSError):
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+
+class ShowBootvarSchema(MetaParser):
+    """Schema for show bootvar"""
+
+    schema = {
+        Optional('current_boot_variable'): str,
+        Optional('next_reload_boot_variable'): str,
+        Optional('config_file'): str,
+        Optional('bootldr'): str,
+        Optional('active'): {
+            'configuration_register': str,
+            Optional("next_reload_configuration_register"): str,
+            Optional('boot_variable'): str,
+        },
+        Optional('standby'): {
+            'configuration_register': str,
+            Optional('boot_variable'): str,
+        },
+    }
+
+
+class ShowBootvar(ShowBootvarSchema):
+    """Parser for show boot"""
+
+    cli_command = 'show bootvar'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        boot_dict = {}
+        boot_variable = None
+
+        # BOOT variable = bootflash:/asr1000rpx.bin,12;
+        # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+
+        # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+        p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
+
+        # Configuration register is 0x2002
+        # Configuration register is 0x2 (will be 0x2102 at next reload)
+        p3 = re.compile(r'Configuration +register +is +(?P<var1>(\S+))'
+                        r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
+
+        # Standby Configuration register is 0x2002
+        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+
+        # CONFIG_FILE variable =
+        p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
+
+        # BOOTLDR variable =
+        p6 = re.compile(r'^BOOTLDR +variable += +(?P<var>\S+)$')
+
+        # BOOTLDR variable does not exist
+        # not parsing
+
+        # Standby not ready to show bootvar
+        # not parsing
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
+            m = p1.match(line)
+            if m:
+                boot = m.groupdict()['var']
+                if boot:
+                    boot_dict['next_reload_boot_variable'] = boot
+                    boot_dict.setdefault('active', {})['boot_variable'] = boot
+                continue
+
+            # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+            m = p2.match(line)
+            if m:
+                boot = m.groupdict()['var']
+                if boot:
+                    boot_dict.setdefault('standby', {})['boot_variable'] = boot
+                continue
+
+            # Configuration register is 0x2002
+            m = p3.match(line)
+            if m:
+                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var1']
+                if m.groupdict()['var2']:
+                    boot_dict.setdefault('active', {})['next_reload_configuration_register'] = m.groupdict()['var2']
+                continue
+
+            # Standby Configuration register is 0x2002
+            m = p4.match(line)
+            if m:
+                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
+                continue
+
+            # CONFIG_FILE variable =
+            m = p5.match(line)
+            if m:
+                if m.groupdict()['var']:
+                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
+                continue
+
+            # BOOTLDR variable =
+            m = p6.match(line)
+            if m:
+                if m.groupdict()['var']:
+                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
+                continue
+        return boot_dict
+
+
+class ShowBoot(ShowBootvar):
+    """Parser for show boot"""
+
+    cli_command = 'show boot'
+
+    def cli(self, output=None):
+
+        # Execute command if output not provided
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
 
 
 class ShowVersionSchema(MetaParser):
@@ -2850,12 +2977,12 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
     """ Parser for show platform software memory <process> switch active <R0> alloc callsite brief """
 
 
-    cli_command = 'show platform software memory {process} switch active {plane} alloc callsite brief'
+    cli_command = 'show platform software memory {process} switch active {slot} alloc callsite brief'
 
-    def cli(self, process, plane, output=None):
+    def cli(self, process, slot, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(process=process, plane=plane))
+            out = self.device.execute(self.cli_command.format(process=process, slot=slot))
         else:
             out = output
 
@@ -2900,27 +3027,32 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
 class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
     """ Schema for show platform software memory <process> switch active <R0> alloc backtrace """
     schema = {
-        Any():
-            {'allocs': int,
-            'frees': int,
-            'call_diff': int,
-            'callsite': int,
-            'thread_id': int}
+        'backtraces': {
+            Any():
+                {'allocs': int,
+                'frees': int,
+                'call_diff': int,
+                'callsite': int,
+                'thread_id': int}
+        }
+        
     }
 
 class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
     """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
 
-    cli_command = 'show platform software memory {process} switch active {plane} alloc backtrace'
+    cli_command = 'show platform software memory {process} switch active {slot} alloc backtrace'
 
-    def cli(self, process, plane, output=None):
+    def cli(self, process, slot, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(process=process, plane=plane))
+            out = self.device.execute(self.cli_command.format(process=process, slot=slot))
         else:
             out = output
 
          # Init vars
         parsed_dict = {}
+        if out:
+            backtraces_dict = parsed_dict.setdefault('backtraces', {})
 
         # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
         p1 = re.compile(r'backtrace: (?P<backtrace>[\w#\d\s:+]+)$')
@@ -2939,24 +3071,24 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
             if m:
                 group = m.groupdict()
                 backtrace = str(group['backtrace'])
-                backtrace_dict = parsed_dict.setdefault(backtrace, {})
+                one_backtrace_dict = backtraces_dict.setdefault(backtrace, {})
                 continue
 
             #   callsite: 2150603778, thread_id: 31884
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                backtrace_dict['callsite'] = int(group['callsite'])
-                backtrace_dict['thread_id'] = int(group['thread_id'])
+                one_backtrace_dict['callsite'] = int(group['callsite'])
+                one_backtrace_dict['thread_id'] = int(group['thread_id'])
                 continue
 
             #   allocs: 1, frees: 0, call_diff: 1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                backtrace_dict['allocs'] = int(group['allocs'])
-                backtrace_dict['frees'] = int(group['frees'])
-                backtrace_dict['call_diff'] = int(group['call_diff'])
+                one_backtrace_dict['allocs'] = int(group['allocs'])
+                one_backtrace_dict['frees'] = int(group['frees'])
+                one_backtrace_dict['call_diff'] = int(group['call_diff'])
                 continue
 
         return parsed_dict
@@ -5494,10 +5626,9 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}',
-        'show processes memory sorted'
     ]
 
-    def cli(self, include=None, sorted=None, output=None):
+    def cli(self, include=None, output=None):
 
         ret_dict = {}
         pid_index = {}
@@ -5505,8 +5636,6 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
         if not output:
             if include:
                 cmd = self.cli_command[1].format(include=include)
-            elif sorted:
-                cmd = self.cli_command[2]
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -5570,6 +5699,119 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
                     setdefault(index, {})
                 pid_index.update({pid: index})
                 pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
+                continue
+            
+        return ret_dict
+
+
+
+
+class ShowProcessesMemorySortedSchema(MetaParser):
+    schema = {
+        'processor_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'reserve_p_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'lsmi_io_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'per_process_memory': {
+            Any(): {
+                'pid': int,
+                'tty': int,
+                'allocated': int,
+                'freed': int,
+                'holding': int,
+                'getbufs': int,
+                'retbufs': int,
+            }
+        }
+    }
+
+class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
+
+    cli_command = 'show processes memory sorted'
+
+    def cli(self, include=None, sorted=None, output=None):
+
+        ret_dict = {}
+        pid_index = {}
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        if out:
+            per_process_memory_dict = ret_dict.setdefault('per_process_memory', OrderedDict())
+
+
+        # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+        p1 = re.compile(r'^Processor +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+        
+        # reserve P Pool Total:     102404 Used:         88 Free:     102316
+        p2 = re.compile(r'^reserve +P +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+
+        # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+        p3 = re.compile(r'^lsmpi_io +Pool +Total: +(?P<total>\d+) +'
+                r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+        
+        # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+        # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+        p4 = re.compile(r'^(?P<pid>\d+) +(?P<tty>\d+) +(?P<allocated>\d+) +'
+                r'(?P<freed>\d+) +(?P<holding>\d+) +(?P<getbufs>\d+) +'
+                r'(?P<retbufs>\d+) +(?P<process>[\S ]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('processor_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # reserve P Pool Total:     102404 Used:         88 Free:     102316
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
+                processor_pool_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+            # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                process_name = str(group['process'])
+                one_process_dict = per_process_memory_dict.setdefault(process_name, {})
+                one_process_dict['pid'] = int(group['pid'])
+                one_process_dict['tty'] = int(group['tty'])
+                one_process_dict['allocated'] = int(group['allocated'])
+                one_process_dict['freed'] = int(group['freed'])
+                one_process_dict['holding'] = int(group['holding'])
+                one_process_dict['getbufs'] = int(group['getbufs'])
+                one_process_dict['retbufs'] = int(group['retbufs'])
                 continue
             
         return ret_dict
