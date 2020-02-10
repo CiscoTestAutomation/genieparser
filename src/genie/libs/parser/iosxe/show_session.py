@@ -101,7 +101,7 @@ class ShowUsersSchema(MetaParser):
                 Optional('location'): str, 
             },
         },
-        'interface': {
+        Optional('interface'): {
             Any(): {
                 'user': {
                     Any(): {
@@ -137,8 +137,8 @@ class ShowUsers(ShowUsersSchema):
         # *  0 con 0                idle                 00:00:00
         #   10 vty 0             Virtual-Access2          0      1212321
         p1 = re.compile(r'^((?P<busy>\*) +)?(?P<line>[\d]+ +[\w]+ +[\d]+)'
-                         '( +(?P<user>[0-9a-z\-_.]+))? +(?P<host>\S+)'
-                         ' +(?P<idle>[0-9\:]+)( +(?P<location>[\S]+))?$')
+                        r'( +(?P<user>[0-9a-z\-_.]+))? +(?P<host>\S+)'
+                        r' +(?P<idle>[0-9\:]+)( +(?P<location>[\S]+))?$')
 
         # Interface    User               Mode         Idle     Peer Address
         # unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
