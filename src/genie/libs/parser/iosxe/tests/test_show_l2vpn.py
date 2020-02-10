@@ -32,9 +32,9 @@ class test_show_bridge_domain(unittest.TestCase):
                     'VPLS-2051.10200e6': {
                         'pseudoport': 'VPLS-2051.10200e6',
                         'mac_address': {
-                            '0000.57FF.6D9E': {
+                            '0000.57C4.A8D9': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.57FF.6D9E',
+                                'mac_address': '0000.57C4.A8D9',
                                 'age': 3153,
                                 'policy': 'forward',
                                 'aed': 0,
@@ -44,44 +44,44 @@ class test_show_bridge_domain(unittest.TestCase):
                     'Port-channel1.EFP2051': {
                         'pseudoport': 'Port-channel1.EFP2051',
                         'mac_address': {
-                            '0000.A0FF.0027': {
+                            '0000.A000.0027': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.0027',
+                                'mac_address': '0000.A000.0027',
                                 'age': 3142,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.0097': {
+                            '0000.A000.0097': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.0097',
+                                'mac_address': '0000.A000.0097',
                                 'age': 3153,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.013A': {
+                            '0000.A000.013A': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.013A',
+                                'mac_address': '0000.A000.013A',
                                 'age': 3137,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.00BF': {
+                            '0000.A000.00BF': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.00BF',
+                                'mac_address': '0000.A000.00BF',
                                 'age': 3125,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.010C': {
+                            '0000.A000.010C': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.010C',
+                                'mac_address': '0000.A000.010C',
                                 'age': 3133,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.010F': {
+                            '0000.A000.010F': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.010F',
+                                'mac_address': '0000.A000.010F',
                                 'age': 3133,
                                 'policy': 'forward',
                                 'aed': 0,
@@ -107,16 +107,16 @@ class test_show_bridge_domain(unittest.TestCase):
                     'Port-channel1.EFP2052': {
                         'pseudoport': 'Port-channel1.EFP2052',
                         'mac_address': {
-                            '0000.A0FF.002C': {
+                            '0000.A000.002C': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.002C',
+                                'mac_address': '0000.A000.002C',
                                 'age': 3143,
                                 'policy': 'forward',
                                 'aed': 0,
                                 },
-                            '0000.A0FF.0015': {
+                            '0000.A000.0015': {
                                 'tag': 'dynamic',
-                                'mac_address': '0000.A0FF.0015',
+                                'mac_address': '0000.A000.0015',
                                 'age': 3141,
                                 'policy': 'forward',
                                 'aed': 0,
@@ -148,13 +148,13 @@ class test_show_bridge_domain(unittest.TestCase):
         1 ports belonging to split-horizon group 0
             Port-channel1 service instance 2051 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.0027 forward dynamic   3142 Port-channel1.EFP2051
-           0   0000.A0FF.00BF forward dynamic   3125 Port-channel1.EFP2051
-           0   0000.A0FF.013A forward dynamic   3137 Port-channel1.EFP2051
-           0   0000.A0FF.010F forward dynamic   3133 Port-channel1.EFP2051
-           0   0000.57FF.6D9E forward dynamic   3153 VPLS-2051.10200e6
-           0   0000.A0FF.0097 forward dynamic   3153 Port-channel1.EFP2051
-           0   0000.A0FF.010C forward dynamic   3133 Port-channel1.EFP2051
+           0   0000.A000.0027 forward dynamic   3142 Port-channel1.EFP2051
+           0   0000.A000.00BF forward dynamic   3125 Port-channel1.EFP2051
+           0   0000.A000.013A forward dynamic   3137 Port-channel1.EFP2051
+           0   0000.A000.010F forward dynamic   3133 Port-channel1.EFP2051
+           0   0000.57C4.A8D9 forward dynamic   3153 VPLS-2051.10200e6
+           0   0000.A000.0097 forward dynamic   3153 Port-channel1.EFP2051
+           0   0000.A000.010C forward dynamic   3133 Port-channel1.EFP2051
 
         Bridge-domain 2052 (2 ports in all)
         State: UP                    Mac learning: Enabled
@@ -163,8 +163,8 @@ class test_show_bridge_domain(unittest.TestCase):
         1 ports belonging to split-horizon group 0
             Port-channel1 service instance 2052 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.0015 forward dynamic   3141 Port-channel1.EFP2052
-           0   0000.A0FF.002C forward dynamic   3143 Port-channel1.EFP2052
+           0   0000.A000.0015 forward dynamic   3141 Port-channel1.EFP2052
+           0   0000.A000.002C forward dynamic   3143 Port-channel1.EFP2052
     '''
     }
 
@@ -178,137 +178,137 @@ class test_show_bridge_domain(unittest.TestCase):
                     'GigabitEthernet0/0/3.EFP3051': {
                         'pseudoport': 'GigabitEthernet0/0/3.EFP3051',
                         'mac_address': {
-                            '0000.A0FF.0118': {
+                            '0000.A000.0118': {
                                 'tag': 'dynamic',
                                 'age': 3441,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0118',
+                                'mac_address': '0000.A000.0118',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0077': {
+                            '0000.A000.0077': {
                                 'tag': 'dynamic',
                                 'age': 3426,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0077',
+                                'mac_address': '0000.A000.0077',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.011C': {
+                            '0000.A000.011C': {
                                 'tag': 'dynamic',
                                 'age': 3442,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.011C',
+                                'mac_address': '0000.A000.011C',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.001F': {
+                            '0000.A000.001F': {
                                 'tag': 'dynamic',
                                 'age': 3416,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.001F',
+                                'mac_address': '0000.A000.001F',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0068': {
+                            '0000.A000.0068': {
                                 'tag': 'dynamic',
                                 'age': 3424,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0068',
+                                'mac_address': '0000.A000.0068',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00C5': {
+                            '0000.A000.00C5': {
                                 'tag': 'dynamic',
                                 'age': 3433,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00C5',
+                                'mac_address': '0000.A000.00C5',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0108': {
+                            '0000.A000.0108': {
                                 'tag': 'dynamic',
                                 'age': 3440,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0108',
+                                'mac_address': '0000.A000.0108',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0010': {
+                            '0000.A000.0010': {
                                 'tag': 'dynamic',
                                 'age': 3415,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0010',
+                                'mac_address': '0000.A000.0010',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.000F': {
+                            '0000.A000.000F': {
                                 'tag': 'dynamic',
                                 'age': 3415,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.000F',
+                                'mac_address': '0000.A000.000F',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.007F': {
+                            '0000.A000.007F': {
                                 'tag': 'dynamic',
                                 'age': 3426,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.007F',
+                                'mac_address': '0000.A000.007F',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.007B': {
+                            '0000.A000.007B': {
                                 'tag': 'dynamic',
                                 'age': 3426,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.007B',
+                                'mac_address': '0000.A000.007B',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0087': {
+                            '0000.A000.0087': {
                                 'tag': 'dynamic',
                                 'age': 3427,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0087',
+                                'mac_address': '0000.A000.0087',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00AA': {
+                            '0000.A000.00AA': {
                                 'tag': 'dynamic',
                                 'age': 3430,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00AA',
+                                'mac_address': '0000.A000.00AA',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.012C': {
+                            '0000.A000.012C': {
                                 'tag': 'dynamic',
                                 'age': 3443,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.012C',
+                                'mac_address': '0000.A000.012C',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00D0': {
+                            '0000.A000.00D0': {
                                 'tag': 'dynamic',
                                 'age': 3434,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00D0',
+                                'mac_address': '0000.A000.00D0',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00F6': {
+                            '0000.A000.00F6': {
                                 'tag': 'dynamic',
                                 'age': 3438,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00F6',
+                                'mac_address': '0000.A000.00F6',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00F7': {
+                            '0000.A000.00F7': {
                                 'tag': 'dynamic',
                                 'age': 3438,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00F7',
+                                'mac_address': '0000.A000.00F7',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.00F2': {
+                            '0000.A000.00F2': {
                                 'tag': 'dynamic',
                                 'age': 3438,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.00F2',
+                                'mac_address': '0000.A000.00F2',
                                 'policy': 'forward',
                                 },
-                            '0000.A0FF.0129': {
+                            '0000.A000.0129': {
                                 'tag': 'dynamic',
                                 'age': 3443,
                                 'aed': 0,
-                                'mac_address': '0000.A0FF.0129',
+                                'mac_address': '0000.A000.0129',
                                 'policy': 'forward',
                                 },
                             },
@@ -340,25 +340,25 @@ class test_show_bridge_domain(unittest.TestCase):
         1 ports belonging to split-horizon group 0
             GigabitEthernet0/0/3 service instance 3051 (split-horizon)
            AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00AA forward dynamic   3430 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0077 forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00D0 forward dynamic   3434 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.001F forward dynamic   3416 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0129 forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00F6 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.007B forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0068 forward dynamic   3424 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00C5 forward dynamic   3433 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0087 forward dynamic   3427 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00F7 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0118 forward dynamic   3441 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0108 forward dynamic   3440 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.007F forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.011C forward dynamic   3442 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.012C forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0010 forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.000F forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00AA forward dynamic   3430 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0077 forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00D0 forward dynamic   3434 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.001F forward dynamic   3416 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0129 forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00F6 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.007B forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0068 forward dynamic   3424 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00C5 forward dynamic   3433 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0087 forward dynamic   3427 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.00F7 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0118 forward dynamic   3441 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0108 forward dynamic   3440 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.007F forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.011C forward dynamic   3442 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.012C forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.0010 forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
+           0   0000.A000.000F forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
     '''
     }
 
@@ -634,12 +634,12 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     '''
     }
 
-
     golden_parsed_output_2 = {
         'service_instance': {
             100: {
                 'interfaces': {
                     'TenGigabitEthernet0/1': {
+                        'description': 'Fiber Connexion to XXX-111-1111',
                         'dot1q_tunnel_ethertype': '0x8100',
                         'efp_statistics': {
                             'bytes_in': 3955205745,
@@ -669,6 +669,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
             2000: {
                 'interfaces': {
                     'TenGigabitEthernet0/1': {
+                        'description': 'Fiber Connexion (Layer 2) to XXX-200-2222',
                         'dot1q_tunnel_ethertype': '0x8100',
                         'efp_statistics': {
                             'bytes_in': 51800659418,
@@ -753,7 +754,6 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
 
     '''
     }
-
 
     golden_parsed_output_interface = {
         'service_instance': {
@@ -990,6 +990,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
             },
         },
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
@@ -1003,15 +1004,12 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
     def test_golden_full_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
-
-
 
     def test_golden_interface(self):
         self.maxDiff = None

@@ -110,6 +110,8 @@
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+    * Updated ShowEthernetServiceInstanceDetail
+        * Modified regex to support outputs
 * IOSXR
     * Updated ShowLacp
         * Change in order to parse show lacp {interface}.
