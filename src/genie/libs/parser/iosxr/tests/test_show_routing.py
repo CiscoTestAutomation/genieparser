@@ -1227,10 +1227,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                                         1: {
                                             'from': '172.23.15.196',
                                             'index': 1,
-                                            'method': 'unicast',
+                                            'address_family': 'IPv4 Unicast',
                                             'metric': 10,
                                             'next_hop': '172.23.6.96',
-                                            'outgoing_interface': 'default',
+                                            'nexthop_in_vrf': 'default',
                                             'table': 'default',
                                             'table_id': '0xe0000000'
                                         }

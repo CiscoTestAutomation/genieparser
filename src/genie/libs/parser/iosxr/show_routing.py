@@ -58,8 +58,9 @@ class ShowRouteIpv4Schema(MetaParser):
                                             Optional('metric'): int,
                                             Optional('from'): str,
                                             Optional('table'): str,
-                                            Optional('method'): str,
+                                            Optional('address_family'): str,
                                             Optional('table_id'): str,
+                                            Optional('nexthop_in_vrf'): str,
                                         }
                                     }
                                 }
@@ -183,9 +184,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-        p4 = re.compile(r'^((?P<code1>[\w]) \s+(?P<code2>\S+)? +(?P<network>\S+)'
-                        r' +)?(is +directly +connected, +(?P<date>[\w:]+))?,?'
-                        r' +(?P<interface>[\w\/\.\-]+)?$')
+        p4 = re.compile(r'^((?P<code1>[\w])\s+(?P<code2>\S+)?\s+(?P<network>\S+)'
+                        r'\s+)?(is\s+directly\s+connected,\s+(?P<date>[\w:]+))?,?'
+                        r'\s+(?P<interface>[\w\/\.\-]+)?$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -216,8 +217,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
         # 172.23.6.96, from 172.23.15.196
-        p11 = re.compile(r'^(?P<nexthop>\S+), +from +(?P<from>\S+)(, '
-                         r'+via +(?P<interface>\S+))?$')
+        p11 = re.compile(r'^(?P<nexthop>\S+),\s+from\s+(?P<from>\S+)(, '
+                         r'+via\s+(?P<interface>\S+))?$')
         
         # R2_xrv#show route ipv4
         # Routing Descriptor Blocks
@@ -226,13 +227,13 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
         
         # Tag 10584, type internal
-        p13 = re.compile(r'^Tag +(?P<tag>\d+)\, +type +(?P<type>\w+)$')
+        p13 = re.compile(r'^Tag\s+(?P<tag>\d+)\,\s+type\s+(?P<type>\w+)$')
 
         # Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
-        p14 = re.compile(r'^Nexthop +in +[V|v]rf\: +\"(?P<interface>\w+)\"\, '
-                         r'+[T|t]able\: +\"(?P<table>\w+)\"\, +IPv4 '
-                         r'+(?P<method>\w+)\, +[T|t]able +[I|i]d\: '
-                         r'+(?P<table_id>\S+)$')
+        p14 = re.compile(r'^Nexthop\s+in\s+[V|v]rf\:\s+\"(?P<interface>\w+)\"\, '
+                         r'+[T|t]able\:\s+\"(?P<table>\w+)\"\, '
+                         r'+(?P<address_family>[\w\s]+)\,\s+[T|t]able '
+                         r'+[I|i]d\:\s+(?P<table_id>\S+)$')
 
         # Gateway of last resort is 172.16.0.88 to network 0.0.0.0
         p15 = re.compile(r'^Gateway +of +last +resort +is '
@@ -339,7 +340,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 if updated:
                     next_hop_list_dict.update({'updated': updated})
                 continue
-            
+
             # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
             m = p4.match(line)
@@ -542,7 +543,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 
                 interface = group['interface']
                 table = group['table']
-                method = group['method'].lower()
+                address_family = group['address_family']
                 table_id = group['table_id']
 
                 if interface:
@@ -552,10 +553,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 nexthop_intf_dict.update({'index': index})
                 if interface:
-                    nexthop_intf_dict.update({'outgoing_interface': interface})
+                    nexthop_intf_dict.update({'nexthop_in_vrf': interface})
                 
                 nexthop_intf_dict.update({'table': table})
-                nexthop_intf_dict.update({'method': method})
+                nexthop_intf_dict.update({'address_family': address_family})
                 nexthop_intf_dict.update({'table_id': table_id})
 
                 continue
