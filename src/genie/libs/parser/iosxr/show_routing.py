@@ -30,6 +30,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                 Optional('known_via'): str,
                                 Optional('distance'): int,
                                 Optional('type'): str,
+                                Optional('tag'): str,
                                 Optional('installed'): {
                                     'date': str,
                                     'for': str,
@@ -56,6 +57,10 @@ class ShowRouteIpv4Schema(MetaParser):
                                             Optional('updated'): str,
                                             Optional('metric'): int,
                                             Optional('from'): str,
+                                            Optional('table'): str,
+                                            Optional('address_family'): str,
+                                            Optional('table_id'): str,
+                                            Optional('nexthop_in_vrf'): str,
                                         }
                                     }
                                 }
@@ -166,23 +171,23 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
         # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
         p2 = re.compile(r'^(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+) +'
-                r'\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
-                r'(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
-                r'( +(?P<date>[\w:]+),?)?( +(?P<interface>[\w\/\.\-]+))?'
-                r'( +(?P<code3>[\w\*\(\>\)\!]+))?$')
+                        r'\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
+                        r'(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'( +(?P<date>[\w:]+),?)?( +(?P<interface>[\w\/\.\-]+))?'
+                        r'( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
         # [90/15360] via 10.23.90.3, 1w0d, GigabitEthernet0/0/0/1.90
         # [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
-                r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
-                r'(?P<interface>[\w\/\.\-]+)$')
+                        r'(?P<next_hop>\S+),( +(?P<date>[\w:]+))?,? +'
+                        r'(?P<interface>[\w\/\.\-]+)$')
 
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-        p4 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*(?P<code2>\S+))? +'
-                r'(?P<network>\S+) +)?(is +directly +connected, +'
-                r'(?P<date>[\w:]+))?,? *(?P<interface>[\w\/\.\-]+)?$$')
+        p4 = re.compile(r'^((?P<code1>[\w])\s+(?P<code2>\S+)?\s+(?P<network>\S+)'
+                        r'\s+)?(is\s+directly\s+connected,\s+(?P<date>[\w:]+))?,?'
+                        r'\s+(?P<interface>[\w\/\.\-]+)?$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -212,14 +217,29 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         p10 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
-        p11 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
-                        r'+via +(?P<interface>\S+)$')
+        # 172.23.6.96, from 172.23.15.196
+        p11 = re.compile(r'^(?P<nexthop>\S+),\s+from\s+(?P<from>\S+)(, '
+                         r'+via\s+(?P<interface>\S+))?$')
         
         # R2_xrv#show route ipv4
         # Routing Descriptor Blocks
         # No advertising protos.
         p12 = re.compile(r'^((\S+#)?(show +route))|(Routing +Descriptor +'
                 r'Blocks)|(No +advertising +protos\.)|(Redist +Advertisers:)')
+        
+        # Tag 10584, type internal
+        p13 = re.compile(r'^Tag\s+(?P<tag>\d+)\,\s+type\s+(?P<type>\w+)$')
+
+        # Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+        p14 = re.compile(r'^Nexthop\s+in\s+[V|v]rf\:\s+\"(?P<interface>\w+)\"\, '
+                         r'+[T|t]able\:\s+\"(?P<table>\w+)\"\, '
+                         r'+(?P<address_family>[\w\s]+)\,\s+[T|t]able '
+                         r'+[I|i]d\:\s+(?P<table_id>\S+)$')
+
+        # Gateway of last resort is 172.16.0.88 to network 0.0.0.0
+        p15 = re.compile(r'^Gateway +of +last +resort +is '
+                         r'+(?P<gateway>(not +set)|\S+)( +to +network '
+                         r'+(?P<to_network>\S+))?$')
 
         # initial variables
         ret_dict = {}
@@ -235,7 +255,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # Routing Descriptor Blocks
             # No advertising protos.
             m = p12.match(line)
-
             if m or not line:
                 continue
 
@@ -323,7 +342,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 if updated:
                     next_hop_list_dict.update({'updated': updated})
                 continue
-            
+
             # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
             m = p4.match(line)
@@ -356,6 +375,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         code2 = group.get('code2', None)
                         if code2:
                             code1 = '{} {}'.format(code1, code2)
+
                         route_dict.update({'source_protocol': source_protocol})
                         route_dict.update({'source_protocol_codes': code1})
                     
@@ -489,6 +509,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 continue
 
             # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
+            # 172.23.6.96, from 172.23.15.196
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -501,10 +522,58 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     setdefault('next_hop_list', {}). \
                     setdefault(index, {})
                 outgoing_interface_dict.update({'index': index})
-                outgoing_interface_dict.update({'outgoing_interface': interface})
+                if interface:
+                    outgoing_interface_dict.update({'outgoing_interface': interface})
                 outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
+
+            # Tag 10584, type internal
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+
+                route_dict.update({'tag': group['tag']})
+                route_dict.update({'type': group['type']})
+
+                continue
+
+            # Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                
+                interface = group['interface']
+                table = group['table']
+                address_family = group['address_family']
+                table_id = group['table_id']
+
+                if interface:
+                    nexthop_intf_dict = route_dict.setdefault('next_hop', {}).\
+                        setdefault('next_hop_list', {}). \
+                        setdefault(index, {})
+
+                nexthop_intf_dict.update({'index': index})
+                if interface:
+                    nexthop_intf_dict.update({'nexthop_in_vrf': interface})
+                
+                nexthop_intf_dict.update({'table': table})
+                nexthop_intf_dict.update({'address_family': address_family})
+                nexthop_intf_dict.update({'table_id': table_id})
+
+                continue
+            
+            # Gateway of last resort is 172.16.0.88 to network 0.0.0.0
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                gw_dict = ret_dict.setdefault('vrf', {}).\
+                    setdefault(vrf, {}).\
+                    setdefault('last_resort', {})
+                gw_dict.update({'gateway': group['gateway']})
+
+                if group['to_network']:
+                    gw_dict.update({'to_network': group['to_network']})
         
         return ret_dict
 

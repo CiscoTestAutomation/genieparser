@@ -167,3 +167,8 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
+    
+* IOSXR:
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest
