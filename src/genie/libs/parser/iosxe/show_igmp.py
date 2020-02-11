@@ -38,7 +38,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                         Any(): {
                             Optional('oper_status'): str,
                             'interface_status': str,
-                            Optional('ip_processing_disabled'): bool,
+                            Optional('internet_protocol_processing'): bool,
                             Optional('interface_address'): str,
                             Optional('enable'): bool,
                             Optional('host_version'): int,
@@ -146,7 +146,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p2_2 = re.compile(r'^Internet protocol processing (?P<disabled>disabled)$')
             m = p2_2.match(line)
             if m:
-                ret_dict['vrf'][vrf]['interface'][intf]['ip_processing_disabled'] = True
+                ret_dict['vrf'][vrf]['interface'][intf]['internet_protocol_processing'] = False
                 continue
 
             # Internet address is 10.1.2.1/24

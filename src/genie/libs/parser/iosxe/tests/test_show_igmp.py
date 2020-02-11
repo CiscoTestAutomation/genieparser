@@ -207,12 +207,12 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                  'interface': {
                      'GigabitEthernet15': {
                          'interface_status': 'down',
-                         'ip_processing_disabled': True,
+                         'internet_protocol_processing': False,
                          'oper_status': 'down',
                      },
                      'Loopback8': {
                          'interface_status': 'up',
-                         'ip_processing_disabled': True,
+                         'internet_protocol_processing': False,
                          'oper_status': 'up',
                      },
                  },
