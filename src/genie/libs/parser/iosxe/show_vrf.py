@@ -116,6 +116,7 @@ class ShowVrfDetailSchema(MetaParser):
         Any(): {
             Optional('vrf_id'):  int,
             Optional('description'):  str,
+            Optional('being_deleted'): bool,
             Optional('route_distinguisher'): str,
             Optional('vpn_id'): str,
             Optional('interfaces'): list,
@@ -189,7 +190,8 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                         r'(?P<vrf_id>\d+)\))?; +default +RD +'
                         r'(?P<rd>[\S\s]+); +default +VPNID +'
                         r'(?P<vpn_id>[\w\s\:\<\>]+)(?: +VRF +'
-                        r'Table +ID +\= +(?P<alt_vrf_id>\d))?(?:; being deleted)?$')
+                        r'Table +ID +\= +(?P<alt_vrf_id>\d))?'
+                        r'(?:(?P<being_deleted>; being deleted))?$')
 
         # New CLI format, supports multiple address-families
         p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format,'
@@ -263,12 +265,16 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
             # VRF vrf1; default RD 1:1; default VPNID <not set>
             # VRF Down; default RD 100:1; default VPNID <not set> VRF Table ID = 1
             # VRF 12349; default RD 10.4.1.1:20; default VPNID <not set>
+            # VRF DEMO (VRF Id = 12); default RD 65001:1; default VPNID <not set>; being deleted
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 vrf = groups['vrf']
 
                 vrf_dict = result_dict.setdefault(vrf, {})
+
+                if groups['being_deleted']:
+                    vrf_dict.update({'being_deleted': True})
 
                 if groups['vrf_id']:
                     vrf_dict.update({'vrf_id': int(groups['vrf_id'])})

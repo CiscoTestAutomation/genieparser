@@ -682,6 +682,7 @@ class TestShowVrfDetail(unittest.TestCase):
                     },
                 },
             },
+            'being_deleted': True,
             'cli_format': 'New',
             'description': 'demo',
             'flags': '0x180D',
