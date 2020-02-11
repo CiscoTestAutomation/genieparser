@@ -8,6 +8,20 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowUsers:
+        * Changed regex to support various outputs.
+
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
@@ -97,13 +111,15 @@
 	    * Modified regex to fix parsing as per customer output
     * Updated ShowVlan
         * Modified if-condition to support various output.
-		
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+    * Updated ShowVrfDetail:
+        * Modified regex to support customer output
     * Updated ShowEthernetServiceInstanceDetail
         * Modified regex to support outputs
+
 * IOSXR
     * Updated ShowRouteIpv4:
         * Changed regex to support some VRF values such as 'L:111'
@@ -151,4 +167,3 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
-
