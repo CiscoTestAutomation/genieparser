@@ -227,7 +227,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Belongs to Po1
         p2_2 = re.compile(r'^Belongs *to *(?P<port_channel_int>[a-zA-Z0-9]+)$')
 
-        # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
+        # Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
         p3 = re.compile(r'^Hardware: *(?P<types>[a-zA-Z0-9\/\s]+),'
                         ' *address: *(?P<mac_address>[a-z0-9\.]+)'
                         ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
@@ -558,7 +558,7 @@ class ShowInterface(ShowInterfaceSchema):
                     ['port_channel_int'] = Common.convert_intf_name(port_channel_int)
                 continue
 
-            # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
+            # Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
             m = p3.match(line)
             if m:
                 types = m.groupdict()['types']

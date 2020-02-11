@@ -117,7 +117,7 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
 
         # Address :            2001:db8:c56d:4::2
         # Age :                00:09:27
-        # MacAddr :            fa16.3e82.6320
+        # MacAddr :            fa16.3eff.e5a2
         # Preference :         50
         # Source :             icmpv6
         # Interface :          Ethernet1/1
@@ -622,7 +622,7 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
 
         #  ICMPv6 Adjacency Table for all VRFs
         # Address         Age       MAC Address     State      Interface  Phy-Interface
-        # 2001:db8:c56d:4::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1
+        # 2001:db8:c56d:4::2     00:15:02  fa16.3eff.e5a2  STALE       Eth1/1      Eth1/1
 
         # ICMPv6 Adjacency Table for all VRFs
         p1 = re.compile(r'^\s*ICMPv6 Adjacency Table for +(?P<vrf>[\w]+) +VRFs$')
@@ -734,7 +734,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
         result_dict = {}
 
-        # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
+        # Router fe80::f816:3eff:feff:e5a2 on Ethernet1/1 , last update time 3.2 min
         # Router fe80::e6c7:22ff:fe15:4cc1 on port-channel1.100 , last update time 1.3 min
         p1 = re.compile(r'^((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
                         ' +(?P<interface>[\S]+) +,'
@@ -764,7 +764,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
             else:
                 continue
 
-            # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
+            # Router fe80::f816:3eff:feff:e5a2 on Ethernet1/1 , last update time 3.2 min
             # Router fe80::e6c7:22ff:fe15:4cc1 on port-channel1.100 , last update time 1.3 min
             m = p1.match(line)
             if m:

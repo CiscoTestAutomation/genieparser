@@ -134,8 +134,8 @@ class ShowIsis(ShowIsisSchema):
         # VRF: default
         p5 = re.compile(r'^VRF *: +(?P<vrf>\S+)$')
 
-        # System ID : 3333.3333.3333  IS-Type : L1-L2
-        p6 = re.compile(r'^System +ID *: +(?P<sysid>[\d\.]+) +IS-Type *: +(?P<is_type>\S+)$')
+        # System ID : 3333.33ff.6666  IS-Type : L1-L2
+        p6 = re.compile(r'^System +ID *: +(?P<sysid>[a-zA-Z\d\-\.]+) +IS-Type *: +(?P<is_type>\S+)$')
 
         # SAP : 412  Queue Handle : 15
         p7 = re.compile(r'^SAP *: +(?P<sap>\d+) +Queue +Handle *: +(?P<queue_handle>\d+)$')
@@ -268,7 +268,7 @@ class ShowIsis(ShowIsisSchema):
                 vrf_dict.update({'vrf': vrf})
                 continue
 
-            #   System ID : 3333.3333.3333  IS-Type : L1-L2
+            #   System ID : 3333.33ff.6666  IS-Type : L1-L2
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1109,8 +1109,8 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         p1 = re.compile(r'^IS-IS +[Pp]rocess: +(?P<process_id>\S+) +VRF: +(?P<vrf>\S+)$')
 
         # System ID       SNPA            Level  State  Hold Time  Interface
-        # R2_xr           fa16.3e44.0679  1      UP     00:00:09   Ethernet1/1.115
-        # 2222.2222.2222  fa16.3e44.0679  1      INIT   00:00:32   Ethernet1/1.415
+        # R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
+        # 2222.22ff.4444  fa16.3eff.4abd  1      INIT   00:00:32   Ethernet1/1.415
         p2 = re.compile(r'^(?P<sysid>\S+) +(?P<snpa>[\w\.]+) +(?P<level>\d+) '
                         r'+(?P<state>\S+) +(?P<hold_time>[\d\:]+) +(?P<interface>\S+)$')
 
@@ -1130,7 +1130,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
                                        setdefault(vrf, {})
                 continue
 
-            # R2_xr           fa16.3e44.0679  1      UP     00:00:09   Ethernet1/1.115
+            # R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1203,9 +1203,9 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                         r'+hostname +table +VRF: +(?P<vrf>\S+)$')
 
         #  Level  System ID       Dynamic hostname
-        #  1      1111.1111.1111  R1_ios
-        #  1      3333.3333.3333* R3_nx
-        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[\d\.]+)(?P<star>\*)? '
+        #  1      1111.11ff.2222  R1_ios
+        #  1      3333.33ff.6666* R3_nx
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<system_id>[a-zA-Z\d\-\.]+)(?P<star>\*)? '
                         r'+(?P<dynamic_hostname>\S+)$')
 
         for line in out.splitlines():
@@ -1224,8 +1224,8 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                                        setdefault(vrf, {})
                 continue
 
-            #  1      1111.1111.1111  R1_ios
-            #  1      3333.3333.3333* R3_nx
+            #  1      1111.11ff.2222  R1_ios
+            #  1      3333.33ff.6666* R3_nx
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1297,9 +1297,9 @@ class ShowIsisHostnameDetail(ShowIsisHostnameDetailSchema):
                         r'+hostname +table +VRF: +(?P<vrf>\S+)$')
 
         #  Level  LSP ID                Dynamic hostname
-        #  1      7777.7777.7777.00-00* R7
-        #  2      2222.2222.2222.00-00  R2
-        p2 = re.compile(r'^(?P<level>\d+) +(?P<lsp_id>[\d\-\.]+)(?P<star>\*)? '
+        #  1      7777.77ff.eeee.00-00* R7
+        #  2      2222.22ff.4444.00-00  R2
+        p2 = re.compile(r'^(?P<level>\d+) +(?P<lsp_id>[a-zA-Z\d\-\.]+)(?P<star>\*)? '
                         r'+(?P<dynamic_hostname>\S+)$')
 
         for line in out.splitlines():
@@ -1318,8 +1318,8 @@ class ShowIsisHostnameDetail(ShowIsisHostnameDetailSchema):
                                        setdefault(vrf, {})
                 continue
 
-            #  1      7777.7777.7777.00-00* R7
-            #  2      2222.2222.2222.00-00  R2
+            #  1      7777.77ff.eeee.00-00* R7
+            #  2      2222.22ff.4444.00-00  R2
             m = p2.match(line)
             if m:
                 group = m.groupdict()

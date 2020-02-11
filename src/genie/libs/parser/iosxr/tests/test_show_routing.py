@@ -1190,6 +1190,7 @@ class TestShowRouteIpv4(unittest.TestCase):
     }
 
     golden_output_10 = {'execute.return_value': '''
+<<<<<<< HEAD
         RP/0/RSP0/CPU0:GENIE-TEST#show route vrf qattwd ipv4 0.0.0.0/0                     
                                                                                                 
         Routing entry for 0.0.0.0/0                                                             
@@ -1247,6 +1248,52 @@ class TestShowRouteIpv4(unittest.TestCase):
         }
     }
 
+=======
+    RP/0/RP0/CPU0:xrv_rtr1#sh route vrf L:192
+    Thu Feb 6 00:29:44.865 UTC
+    
+    Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+    E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+    i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+    ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+    U - per-user static route, o - ODR, L - local, G - DAGR, l - LISP
+    A - access/subscriber, a - Application route
+    M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+    
+    Gateway of last resort is not set
+
+    S 10.2.2.2/32 is directly connected, 00:06:36, Null0
+    '''}
+
+    golden_parsed_output_10 = {
+    'vrf': {
+        'L:192': {
+            'address_family': {
+                'ipv4': {
+                    'routes': {
+                        '10.2.2.2/32': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'Null0': {
+                                        'outgoing_interface': 'Null0',
+                                        'updated': '00:06:36',
+                                    },
+                                },
+                            },
+                            'route': '10.2.2.2/32',
+                            'source_protocol': 'static',
+                            'source_protocol_codes': 'S',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+>>>>>>> dev
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -1317,18 +1364,26 @@ class TestShowRouteIpv4(unittest.TestCase):
         parsed_output = obj.parse(route='10.23.120.2/32', vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
-    def test_3(self):
+    def test_show_route_9(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_9)
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
+<<<<<<< HEAD
     def test_show_route_9(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_10)
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(route='0.0.0.0/0', vrf='qattwd')
+=======
+    def test_show_route_10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse(vrf='L:192')
+>>>>>>> dev
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 # ============================================

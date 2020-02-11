@@ -313,7 +313,8 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
         p2 = re.compile(r'^Service +(i|I)nstance +(t|T)ype: +(?P<service_instance_type>\S+)$')
 
         # Description: xxx
-        p3 = re.compile(r'^Description: +(?P<description>\S+)$')
+        # Description: Fiber Connexion to XXX-111-1111
+        p3 = re.compile(r'^Description: +(?P<description>[\S\s]+)$')
 
         # Associated Interface: GigabitEthernet0/0/3
         p4 = re.compile(r'^Associated +Interface: +(?P<associated_interface>[\w\d\-\.\/]+)$')

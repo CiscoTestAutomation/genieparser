@@ -19,7 +19,7 @@ class TestShowSpanningTreeMst(unittest.TestCase):
            P1# show spanning-tree mst detail  
 
                 ##### MST0    vlans mapped:   1-399,501-4094
-            Bridge        address 0023.04ee.be14  priority      32768 (32768 sysid 0)
+            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
             Root          this switch for the CIST
             Regional Root this switch
             Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
@@ -29,9 +29,9 @@ class TestShowSpanningTreeMst(unittest.TestCase):
             Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsisten
             t)
             Port info             port id       128.4125  priority    128  cost   500      
-            Designated root       address 0023.04ee.be14  priority  32768  cost   0        
-            Design. regional root address 0023.04ee.be14  priority  32768  cost   0        
-            Designated bridge     address 4055.3926.d8c1  priority  61440  port id 128.4125
+            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
+            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             Timers: message expires in 0 sec, forward delay 0, forward transitions 0
             Bpdus sent 113, received 0
         '''}
@@ -42,7 +42,7 @@ class TestShowSpanningTreeMst(unittest.TestCase):
                     0: {
                         'mst_id': 0,
                         'vlans_mapped': '1-399,501-4094',
-                        'bridge_address': '0023.04ee.be14',
+                        'bridge_address': '0023.04ff.ad03',
                         'bridge_priority': 32768,
                         'sys_id': 0,
                         'root_for_cist' : 'this switch',
@@ -56,13 +56,13 @@ class TestShowSpanningTreeMst(unittest.TestCase):
                                 'port_cost': 500,
                                 'bridge_assurance_inconsistent': True,
                                 'vpc_peer_link_inconsistent': True,
-                                'designated_root_address': '0023.04ee.be14',
+                                'designated_root_address': '0023.04ff.ad03',
                                 'designated_root_priority': 32768,
                                 'designated_root_cost': 0,
-                                'designated_regional_root_address': '0023.04ee.be14',
+                                'designated_regional_root_address': '0023.04ff.ad03',
                                 'designated_regional_root_priority': 32768,
                                 'designated_regional_root_cost': 0,
-                                'designated_bridge_address': '4055.3926.d8c1',
+                                'designated_bridge_address': '4055.39ff.fee7',
                                 'designated_bridge_priority': 61440,
                                 'designated_bridge_port_id': '128.4125',
                                 'timers': {
@@ -101,7 +101,7 @@ class TestShowSpanningTreeMst(unittest.TestCase):
             P1# show spanning-tree mst detail 
 
                 ##### MST0    vlans mapped:   1-399,501-4094
-            Bridge        address 0023.04ee.be14  priority      32768 (32768 sysid 0)
+            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
             Root          this switch for the CIST
             Operational   hello time 5, forward delay 20, max age 30, txholdcount 12
             Configured    hello time 10, forward delay 30, max age 40, max hops    255
@@ -110,9 +110,9 @@ class TestShowSpanningTreeMst(unittest.TestCase):
             Po25 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsisten
             t)
             Port info             port id       128.4125  priority    128  cost   500      
-            Designated root       address 0023.04ee.be14  priority  32768  cost   0        
-            Design. regional root address 0023.04ee.be14  priority  32768  cost   0        
-            Designated bridge     address 4055.3926.d8c1  priority  61440  port id 128.4125
+            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
+            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             Timers: message expires in 0 sec, forward delay 0, forward transitions 0
             Bpdus sent 113, received 0
         '''}
@@ -123,7 +123,7 @@ class TestShowSpanningTreeMst(unittest.TestCase):
                     0: {
                         'mst_id': 0,
                         'vlans_mapped': '1-399,501-4094',
-                        'bridge_address': '0023.04ee.be14',
+                        'bridge_address': '0023.04ff.ad03',
                         'bridge_priority': 32768,
                         'sys_id': 0,
                         'root_for_cist' : 'this switch',
@@ -136,13 +136,13 @@ class TestShowSpanningTreeMst(unittest.TestCase):
                                 'port_cost': 500,
                                 'bridge_assurance_inconsistent': True,
                                 'vpc_peer_link_inconsistent': True,
-                                'designated_root_address': '0023.04ee.be14',
+                                'designated_root_address': '0023.04ff.ad03',
                                 'designated_root_priority': 32768,
                                 'designated_root_cost': 0,
-                                'designated_regional_root_address': '0023.04ee.be14',
+                                'designated_regional_root_address': '0023.04ff.ad03',
                                 'designated_regional_root_priority': 32768,
                                 'designated_regional_root_cost': 0,
-                                'designated_bridge_address': '4055.3926.d8c1',
+                                'designated_bridge_address': '4055.39ff.fee7',
                                 'designated_bridge_priority': 61440,
                                 'designated_bridge_port_id': '128.4125',
                                 'timers': {
@@ -513,7 +513,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         P1# show spanning-tree detail
 
          MST0000 is executing the mstp compatible Spanning Tree protocol
-      Bridge Identifier has priority 32768, sysid 0, address 00e3.04ee.be14
+      Bridge Identifier has priority 32768, sysid 0, address 00e3.04ff.ad03
       Configured hello time 10, max age 40, forward delay 30
       We are the root of the spanning tree
       Topology change flag not set, detected flag not set
@@ -525,8 +525,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
      Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
     ce Inconsistent, VPC Peer-link Inconsistent)
        Port path cost 500, Port priority 128, Port Identifier 128.4125
-       Designated root has priority 32768, address 0023.04ee.be14
-       Designated bridge has priority 61440, address 4055.3926.d8c1
+       Designated root has priority 32768, address 0023.04ff.ad03
+       Designated bridge has priority 61440, address 4055.39ff.fee7
        Designated port id is 128.4125, designated path cost 0
        Timers: message age 0, forward delay 0, hold 0
        Number of transitions to forwarding state: 0
@@ -543,7 +543,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                     'mst_id': 0,
                     'bridge_priority': 32768,
                     'bridge_sysid': 0,
-                    'bridge_address': '00e3.04ee.be14',
+                    'bridge_address': '00e3.04ff.ad03',
                     'topology_change_flag': False,
                     'topology_detected_flag': False,
                     'topology_changes': 0,
@@ -573,9 +573,9 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                             'port_priority': 128,
                             'port_identifier': '128.4125',
                             'designated_root_priority': 32768,
-                            'designated_root_address': '0023.04ee.be14',
+                            'designated_root_address': '0023.04ff.ad03',
                             'designated_bridge_priority': 61440,
-                            'designated_bridge_address': '4055.3926.d8c1',
+                            'designated_bridge_address': '4055.39ff.fee7',
                             'designated_port_id': '128.4125',
                             'designated_path_cost': 0,
                             'timers': {
@@ -606,7 +606,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         P1# show spanning-tree detail
 
          MST0000 is executing the mstp compatible Spanning Tree protocol
-      Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
+      Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
       Configured hello time 10, fex hello time 10, max age 40, forward delay 30
       We are the root of the spanning tree
       Topology change flag not set, detected flag not set
@@ -618,8 +618,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
      Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
     ce Inconsistent, VPC Peer-link Inconsistent)
        Port path cost 500, Port priority 128, Port Identifier 128.4125
-       Designated root has priority 32768, address 0023.04ee.be14
-       Designated bridge has priority 61440, address 4055.3926.d8c1
+       Designated root has priority 32768, address 0023.04ff.ad03
+       Designated bridge has priority 61440, address 4055.39ff.fee7
        Designated port id is 128.4125, designated path cost 0
        Timers: message age 0, forward delay 0, hold 0
        Number of transitions to forwarding state: 0
@@ -631,8 +631,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         Port 2390 (Port-channel14) of MST0 is broken   (Bridge Assuran
         ce Inconsistent, VPC Peer-link Inconsistent)
         Port path cost 6660, Port priority 128, Port Identifier 128.2390.
-        Designated root has priority 32768, address d8b1.9009.bf80
-        Designated bridge has priority 32768, address d8b1.9009.bf80
+        Designated root has priority 32768, address d8b1.90ff.c889
+        Designated bridge has priority 32768, address d8b1.90ff.c889
         Designated port id is 128.2390, designated path cost 0
         Timers: message age 0, forward delay 0, hold 0
         Number of transitions to forwarding state: 0
@@ -649,7 +649,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                     'mst_id': 0,
                     'bridge_priority': 32768,
                     'bridge_sysid': 0,
-                    'bridge_address': '0023.04ee.be14',
+                    'bridge_address': '0023.04ff.ad03',
                     'topology_change_flag': False,
                     'topology_detected_flag': False,
                     'time_since_topology_change': '142:22:13',
@@ -679,9 +679,9 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                             'port_priority': 128,
                             'port_identifier': '128.4125',
                             'designated_root_priority': 32768,
-                            'designated_root_address': '0023.04ee.be14',
+                            'designated_root_address': '0023.04ff.ad03',
                             'designated_bridge_priority': 61440,
-                            'designated_bridge_address': '4055.3926.d8c1',
+                            'designated_bridge_address': '4055.39ff.fee7',
                             'designated_port_id': '128.4125',
                             'designated_path_cost': 0,
                             'timers': {
@@ -709,9 +709,9 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                             'port_priority': 128,
                             'port_identifier': '128.2390.',
                             'designated_root_priority': 32768,
-                            'designated_root_address': 'd8b1.9009.bf80',
+                            'designated_root_address': 'd8b1.90ff.c889',
                             'designated_bridge_priority': 32768,
-                            'designated_bridge_address': 'd8b1.9009.bf80',
+                            'designated_bridge_address': 'd8b1.90ff.c889',
                             'designated_port_id': '128.2390',
                             'designated_path_cost': 0,
                             'timers': {
@@ -743,7 +743,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
 DS1-R101# sh spanning-tree detail 
 
  VLAN0109 is executing the rstp compatible Spanning Tree protocol
-  Bridge Identifier has priority 20480, sysid 109, address 0023.04ee.be1f
+  Bridge Identifier has priority 20480, sysid 109, address 0023.04ff.ad0e
   Configured hello time 2, max age 20, forward delay 15
   We are the root of the spanning tree
   Topology change flag not set, detected flag not set
@@ -755,8 +755,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4126 (port-channel31, vPC Peer-link) of VLAN0109 is root forwarding 
    Port path cost 2, Port priority 128, Port Identifier 128.4126
-   Designated root has priority 20589, address 0023.04ee.be1f
-   Designated bridge has priority 0, address 0026.981e.c642
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
    Designated port id is 128.4126, designated path cost 0
    Timers: message age 3, forward delay 0, hold 0
    Number of transitions to forwarding state: 1
@@ -766,8 +766,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4194 (port-channel99, vPC) of VLAN0109 is designated forwarding 
    Port path cost 1, Port priority 128, Port Identifier 128.4194
-   Designated root has priority 20589, address 0023.04ee.be1f
-   Designated bridge has priority 20589, address 0026.981e.c642
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 20589, address 0026.98ff.e460
    Designated port id is 128.4194, designated path cost 0
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
@@ -777,8 +777,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4196 (port-channel101, vPC) of VLAN0109 is designated forwarding 
    Port path cost 1, Port priority 128, Port Identifier 128.4196
-   Designated root has priority 20589, address 0023.04ee.be1f
-   Designated bridge has priority 20589, address 0026.981e.c642
+   Designated root has priority 20589, address 0023.04ff.ad0e
+   Designated bridge has priority 20589, address 0026.98ff.e460
    Designated port id is 128.4196, designated path cost 0
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
@@ -787,7 +787,7 @@ DS1-R101# sh spanning-tree detail
 
 
  VLAN0110 is executing the rstp compatible Spanning Tree protocol
-  Bridge Identifier has priority 20480, sysid 110, address 0023.04ee.be1f
+  Bridge Identifier has priority 20480, sysid 110, address 0023.04ff.ad0e
   Configured hello time 2, max age 20, forward delay 15
   We are the root of the spanning tree
   Topology change flag not set, detected flag not set
@@ -799,8 +799,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4126 (port-channel31, vPC Peer-link) of VLAN0110 is root forwarding 
    Port path cost 2, Port priority 128, Port Identifier 128.4126
-   Designated root has priority 20590, address 0023.04ee.be1f
-   Designated bridge has priority 0, address 0026.981e.c642
+   Designated root has priority 20590, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
    Designated port id is 128.4126, designated path cost 0
    Timers: message age 3, forward delay 0, hold 0
    Number of transitions to forwarding state: 1
@@ -810,8 +810,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4194 (port-channel99, vPC) of VLAN0110 is designated forwarding 
    Port path cost 1, Port priority 128, Port Identifier 128.4194
-   Designated root has priority 20590, address 0023.04ee.be1f
-   Designated bridge has priority 20590, address 0026.981e.c642
+   Designated root has priority 20590, address 0023.04ff.ad0e
+   Designated bridge has priority 20590, address 0026.98ff.e460
    Designated port id is 128.4194, designated path cost 0
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
@@ -821,7 +821,7 @@ DS1-R101# sh spanning-tree detail
 
 
  VLAN0122 is executing the rstp compatible Spanning Tree protocol
-  Bridge Identifier has priority 20480, sysid 122, address 0023.04ee.be1f
+  Bridge Identifier has priority 20480, sysid 122, address 0023.04ff.ad0e
   Configured hello time 2, max age 20, forward delay 15
   Topology change flag not set, detected flag not set
   Number of topology changes 9 last change occurred 123:10:02 ago
@@ -832,8 +832,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4126 (port-channel31, vPC Peer-link) of VLAN0122 is root forwarding 
    Port path cost 2, Port priority 128, Port Identifier 128.4126
-   Designated root has priority 20602, address 0023.04ee.be1f
-   Designated bridge has priority 0, address 0026.981e.c642
+   Designated root has priority 20602, address 0023.04ff.ad0e
+   Designated bridge has priority 0, address 0026.98ff.e460
    Designated port id is 128.4126, designated path cost 0
    Timers: message age 3, forward delay 0, hold 0
    Number of transitions to forwarding state: 1
@@ -843,8 +843,8 @@ DS1-R101# sh spanning-tree detail
 
  Port 4194 (port-channel99, vPC) of VLAN0122 is designated forwarding 
    Port path cost 1, Port priority 128, Port Identifier 128.4194
-   Designated root has priority 20602, address 0023.04ee.be1f
-   Designated bridge has priority 20602, address 0026.981e.c642
+   Designated root has priority 20602, address 0023.04ff.ad0e
+   Designated bridge has priority 20602, address 0026.98ff.e460
    Designated port id is 128.4194, designated path cost 0, Topology change is set
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 0
@@ -862,7 +862,7 @@ DS1-R101# sh spanning-tree detail
             'max_age': 20,
             'vlans': {
                 109: {
-                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_address': '0023.04ff.ad0e',
                     'bridge_priority': 20480,
                     'bridge_sysid': 109,
                     'interfaces': {
@@ -872,11 +872,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 0,
                                 'bpdu_sent': 231106
                             },
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 20589,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4196',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20589,
                             'internal': False,
                             'link_type': 'shared',
@@ -898,11 +898,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 3245744,
                                 'bpdu_sent': 3245614
                             },
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 0,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4126',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20589,
                             'internal': False,
                             'link_type': 'point-to-point',
@@ -925,11 +925,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 0,
                                 'bpdu_sent': 2725887
                             },
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 20589,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4194',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20589,
                             'internal': False,
                             'link_type': 'point-to-point',
@@ -969,7 +969,7 @@ DS1-R101# sh spanning-tree detail
                     'vlan_id': 109
                 },
                 110: {
-                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_address': '0023.04ff.ad0e',
                     'bridge_priority': 20480,
                     'bridge_sysid': 110,
                     'interfaces': {
@@ -979,11 +979,11 @@ DS1-R101# sh spanning-tree detail
                             'bpdu_received': 3245745,
                             'bpdu_sent': 3245614
                         },
-                        'designated_bridge_address': '0026.981e.c642',
+                        'designated_bridge_address': '0026.98ff.e460',
                         'designated_bridge_priority': 0,
                         'designated_path_cost': 0,
                         'designated_port_id': '128.4126',
-                        'designated_root_address': '0023.04ee.be1f',
+                        'designated_root_address': '0023.04ff.ad0e',
                         'designated_root_priority': 20590,
                         'internal': False,
                         'link_type': 'point-to-point',
@@ -1006,11 +1006,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 0,
                                 'bpdu_sent': 2725886
                             },
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 20590,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4194',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20590,
                             'internal': False,
                             'link_type': 'point-to-point',
@@ -1050,7 +1050,7 @@ DS1-R101# sh spanning-tree detail
                     'vlan_id': 110
                 },
                 122: {
-                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_address': '0023.04ff.ad0e',
                     'bridge_priority': 20480,
                     'bridge_sysid': 122,
                     'interfaces': {
@@ -1060,11 +1060,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_received': 3245745,
                                 'bpdu_sent': 3245614
                             },
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 0,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4126',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20602,
                             'internal': False,
                             'link_type': 'point-to-point',
@@ -1088,11 +1088,11 @@ DS1-R101# sh spanning-tree detail
                                 'bpdu_sent': 2725887
                             },
                             'topology_change': True,
-                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_address': '0026.98ff.e460',
                             'designated_bridge_priority': 20602,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.4194',
-                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_address': '0023.04ff.ad0e',
                             'designated_root_priority': 20602,
                             'internal': False,
                             'link_type': 'point-to-point',
