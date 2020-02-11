@@ -36,17 +36,18 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                     Optional('global_active_groups'): int,
                     'interface': {
                         Any(): {
-                            'oper_status': str,
+                            Optional('oper_status'): str,
                             'interface_status': str,
-                            Optional('interface_adress'): str,
-                            'enable': bool,
-                            'host_version': int,
-                            'router_version': int,
-                            'query_interval': int,
+                            Optional('ip_processing_disabled'): bool,
+                            Optional('interface_address'): str,
+                            Optional('enable'): bool,
+                            Optional('host_version'): int,
+                            Optional('router_version'): int,
+                            Optional('query_interval'): int,
                             Optional('configured_query_interval'): int,
-                            'querier_timeout': int,
+                            Optional('querier_timeout'): int,
                             Optional('configured_querier_timeout'): int,
-                            'query_max_response_time': int,
+                            Optional('query_max_response_time'): int,
                             Optional('last_member_query_interval'): int,
                             Optional('last_member_query_count'): int,
                             Optional('group_policy'): str,
@@ -83,7 +84,6 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
     """
     cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface']
     exclude = ['joins', 'leaves']
-
 
     def cli(self, vrf='',output=None):
         if output is None:
@@ -142,11 +142,18 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                     m.groupdict()['intf_status'].lower()
                 continue
 
+            # Internet protocol processing disabled
+            p2_2 = re.compile(r'^Internet protocol processing (?P<disabled>disabled)$')
+            m = p2_2.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['interface'][intf]['ip_processing_disabled'] = True
+                continue
+
             # Internet address is 10.1.2.1/24
             p3 = re.compile(r'^Internet +address +is +(?P<ip>[\w\/\.\:]+)$')
             m = p3.match(line)
             if m:                
-                ret_dict['vrf'][vrf]['interface'][intf]['interface_adress'] = \
+                ret_dict['vrf'][vrf]['interface'][intf]['interface_address'] = \
                     m.groupdict()['ip']
                 continue
 
