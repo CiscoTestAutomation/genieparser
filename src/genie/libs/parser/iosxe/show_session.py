@@ -142,6 +142,11 @@ class ShowUsers(ShowUsersSchema):
         pg_entries = pg_result.entries
         line_dict = {}
 
+        # for sample output in ios
+        if len(pg_entries.keys()) == 1:
+            key = list(pg_entries.keys())[0]
+            pg_entries = pg_entries[key]
+
         for k in pg_entries.keys():
             # output:
             #    Line       User       Host(s)              Idle       Location
@@ -171,8 +176,7 @@ class ShowUsers(ShowUsersSchema):
             # 'line'
             pg_p1 = re.compile(r'^((?P<busy>\*) +)?(?P<head>\d+)$')
             pg_p1_2 = re.compile(r'^((?P<busy>\*) +)?(?P<line>\d+ \w+ \d+)$')
-            import pdb
-            pdb.set_trace()
+
             # ...'busy': '2',...'line': 'vty 0',
             m1 = pg_p1.match(curr_dict['busy'])
             if m1:
@@ -199,13 +203,15 @@ class ShowUsers(ShowUsersSchema):
                 if curr_dict['idle'] is not '':
                     m = pg_p2.match(curr_dict['idle'])
                     if m:
-                        location = m.groupdict()['head']+curr_dict['location']
+                        if m.groupdict()['head']:
+                            location = m.groupdict()['head']+curr_dict['location']
+                        else:
+                            location = curr_dict['location']
                         curr_dict.update({'location': location})
 
                         # 'idle'
                         idle = m.groupdict()['idle']
                         curr_dict.update({'idle': idle})
-
 
             # ----------------------------
             # Build the parsed output
@@ -216,7 +222,7 @@ class ShowUsers(ShowUsersSchema):
                     line_sub_dict[key] = curr_dict[key]
             line_sub_dict['active'] = busy
 
-        if bool(line_dict)==True:
+        if bool(line_dict):
             ret_dict.setdefault('line', line_dict)
 
         # initial regexp pattern
