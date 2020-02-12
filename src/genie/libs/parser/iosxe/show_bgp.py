@@ -675,7 +675,6 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
-
 # =============================================
 # Parser for:
 #   * 'show ip bgp'
@@ -702,6 +701,11 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
                    ]
 
     def cli(self, address_family='', rd='', vrf='', regexp='', output=None):
+
+        if '.' in address_family:
+            parser = ShowIpBgpAllDetail(self.device)
+            self.schema = parser.schema
+            return parser.parse(route=address_family, output=output)
 
         if output is None:
             # Build command
@@ -789,7 +793,9 @@ class ShowBgpAllDetailSchema(MetaParser):
                                         Optional('table_version'): str,
                                         Optional('index'):
                                             {Any():
-                                                {Optional('next_hop'): str,
+                                                {
+                                                Optional('mpls_labels'): str,    
+                                                Optional('next_hop'): str,
                                                 Optional('next_hop_igp_metric'): str,
                                                 Optional('gateway'): str,
                                                 Optional('route_info'): str,
@@ -1044,6 +1050,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                        r'(\,)?(?: +\(aggregated +by +(?P<aggregated_by>[\w\s\.\:]'
                        r'+)\)(\,))?(?: +(?P<route_status>[A-Za-z0-9\.\:\/\(\)\s'
                        r'\[\]\-\&]+))?$')
+        
+        # mpls labels in/out nolabel/64402
+        p18 = re.compile(r'^mpls +labels +in\/out +(?P<mpls_labels>\w+\/\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1455,6 +1464,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['recipient_pathid'] = recipient_pathid
                 subdict['transfer_pathid'] = transfer_pathid
                 continue
+            
+            # mpls labels in/out nolabel/64402
+            # p18 = re.compile(r'^mpls +labels +in\/out +(?P<mpls_labels>\w+\/\w+)$')
+            m = p18.match(line)
+            if m:
+                mpls_labels = str(m.groupdict()['mpls_labels'])
+
+                subdict['mpls_labels'] = mpls_labels
+                continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
             m = p10.match(line)
@@ -1603,7 +1621,8 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
     '''
 
     cli_command = ['show ip bgp all detail',
-        'show ip bgp {address_family} vrf {vrf} {route}'
+        'show ip bgp {address_family} vrf {vrf} {route}',
+        'show ip bgp {route}'
                    ]
 
     def cli(self, address_family='', vrf='', route='',output=None):
@@ -1612,6 +1631,8 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
             if address_family and vrf and route:
                 cmd = self.cli_command[1].format(address_family=address_family,
                     vrf=vrf, route=route)
+            elif route:
+                cmd = self.cli_command[2].format(route=route)
             else:
                 cmd = self.cli_command[0]
             # Execute command
