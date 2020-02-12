@@ -159,7 +159,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         
         # VRF: VRF501
         # VRF: L:123
-        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\S]+)$')
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>\S+)$')
 
         # R    10.1.0.0/8 [120/1] via 10.12.120.1, 1w0d, GigabitEthernet0/0/0/0.120
         # B    10.21.33.33/32 [200/0] via 10.166.13.13, 00:52:31
@@ -185,9 +185,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
         # is directly connected, 01:51:13, GigabitEthernet0/0/0/3
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
-        p4 = re.compile(r'^((?P<code1>[\w])\s+(?P<code2>\S+)?\s+(?P<network>\S+)'
-                        r'\s+)?(is\s+directly\s+connected,\s+(?P<date>[\w:]+))?,?'
-                        r'\s+(?P<interface>[\w\/\.\-]+)?$')
+        # S 10.2.2.2/32 is directly connected, 00:06:36, Null0
+        p4 = re.compile(r'^((?P<code1>[\w])\s*(?P<code2>\S+)?(\s+'
+                        r'(?P<network>\S+)\s+))?(is\s+directly\s+connected,\s+'
+                        r'(?P<date>[\w:]+))?,?\s+(?P<interface>[\w\/\.\-]+)?$')
 
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -345,6 +346,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
             # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
             #                 is directly connected, 01:51:13, GigabitEthernet0/0/0/3
+            # S 10.2.2.2/32 is directly connected, 00:06:36, Null0
             m = p4.match(line)
             if m:
                 try:
@@ -376,7 +378,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                         if code2:
                             code1 = '{} {}'.format(code1, code2)
 
-                        route_dict.update({'source_protocol': source_protocol})
+                        if source_protocol:
+                            route_dict.update({'source_protocol': source_protocol})
                         route_dict.update({'source_protocol_codes': code1})
                     
                     outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
@@ -524,6 +527,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'index': index})
                 if interface:
                     outgoing_interface_dict.update({'outgoing_interface': interface})
+
                 outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
