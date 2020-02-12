@@ -119,6 +119,9 @@
         * Modified regex to support customer output
     * Updated ShowEthernetServiceInstanceDetail
         * Modified regex to support outputs
+    * Updated ShowIpIgmpInterface:
+        * Modified schema
+
 
 * IOSXR
     * Updated ShowRouteIpv4:
