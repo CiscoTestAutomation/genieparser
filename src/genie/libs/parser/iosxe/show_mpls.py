@@ -1894,14 +1894,17 @@ class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
 
     cli_command = ['show mpls forwarding-table detail',
                    'show mpls forwarding-table vrf {vrf} detail',
-                   'show mpls forwarding-table labels {label} detail']
+                   'show mpls forwarding-table labels {label} detail',
+                   'show mpls forwarding-table {route} detail']
 
-    def cli(self, vrf='', label='', output=None):
+    def cli(self, vrf='', label='', route='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[1].format(vrf=vrf)
             elif label:
                 cmd = self.cli_command[2].format(label=label)
+            elif route:
+                cmd = self.cli_command[3].format(route=route)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
