@@ -8,7 +8,6 @@ import sys
 import warnings
 import logging
 import importlib
-
 from genie.libs import parser
 from genie.abstract import Lookup
 
@@ -35,7 +34,6 @@ def _load_parser_json():
 
 # Parser within Genie
 parser_data = _load_parser_json()
-
 
 def get_parser_commands(device, data=parser_data):
     '''Remove all commands which contain { as this requires
@@ -469,3 +467,28 @@ class Common():
                                         final_seconds)
 
         return normal_time
+
+    @classmethod
+    def find_deepest_dict(self, data):
+        """
+        https://bit.ly/3buLxWY
+        Finds the deepest dictionary in a nested dictionary
+        For example:
+            d = {'a':
+                    {'b':
+                        {'c':
+                            {'d': 2}
+                         }
+                     },
+                 'e': 2,
+                 'f': 2}
+            find_deepest(d) returns {d:2}
+        """
+        if not any([isinstance(data.get(k), dict) for k in data]):
+            return data
+        else:
+            for dkey in data:
+                if isinstance(data.get(dkey), dict):
+                    return self.find_deepest_dict(data.get(dkey))
+                else:
+                    continue
