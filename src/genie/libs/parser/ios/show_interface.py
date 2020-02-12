@@ -9,6 +9,7 @@
     * show ip interface
     * show ipv6 interface
     * show interfaces accounting
+    * show interfaces status
 
     # TODO: Need find replacement command for IOSXE 'show interface <intf> counters'
 """
@@ -34,7 +35,8 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowInterfacesSwitchport as ShowInterfacesSwitchport_iosxe, \
     ShowInterfacesTrunk as ShowInterfacesTrunk_iosxe, \
     ShowInterfacesStats as ShowInterfacesStats_iosxe,\
-    ShowInterfacesDescription as ShowInterfacesDescription_iosxe
+    ShowInterfacesDescription as ShowInterfacesDescription_iosxe, \
+    ShowInterfacesStatus as ShowInterfacesStatus_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -114,9 +116,16 @@ class ShowInterfacesStats(ShowInterfacesStats_iosxe):
         show interfaces <interface> stats
         show interfaces stats"""
     pass
-    
+
+
 class ShowInterfacesDescription(ShowInterfacesDescription_iosxe):
     """Parser for:
         show interfaces <interface> description
         show interfaces description"""
+    pass
+
+
+class ShowInterfacesStatus(ShowInterfacesStatus_iosxe):
+    """Parser for:
+        show interfaces status"""
     pass

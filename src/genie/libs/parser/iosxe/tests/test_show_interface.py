@@ -30,7 +30,8 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesAccounting, \
                                         ShowIpInterfaceBriefPipeIp,\
                                         ShowInterfacesStats,\
-                                        ShowInterfacesDescription
+                                        ShowInterfacesDescription,\
+                                        ShowInterfacesStatus
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -518,7 +519,7 @@ class TestShowInterfaces(unittest.TestCase):
                  "out_babble": 0
             },
             "auto_negotiate": True,
-            "phys_address": "0057.d228.1a02",
+            "phys_address": "0057.d2ff.422a",
             "keepalive": 10,
             "output_hang": "never",
             "txload": "1/255",
@@ -545,7 +546,7 @@ class TestShowInterfaces(unittest.TestCase):
             "last_input": "never",
             "last_output": "1d22h",
             "line_protocol": "up",
-            "mac_address": "0057.d228.1a02",
+            "mac_address": "0057.d2ff.422a",
             "connected": True,
             "port_channel": {
                  "port_channel_member": True,
@@ -606,7 +607,7 @@ class TestShowInterfaces(unittest.TestCase):
                  "in_overrun": 0,
                  "out_babble": 0
             },
-            "phys_address": "0057.d228.1a64",
+            "phys_address": "0057.d2ff.428c",
             "keepalive": 10,
             "output_hang": "never",
             "txload": "1/255",
@@ -637,7 +638,7 @@ class TestShowInterfaces(unittest.TestCase):
             "last_input": "never",
             "last_output": "04:39:18",
             "line_protocol": "down",
-            "mac_address": "0057.d228.1a64",
+            "mac_address": "0057.d2ff.428c",
             "connected": False,
             "port_channel": {
                  "port_channel_member": False
@@ -702,7 +703,7 @@ class TestShowInterfaces(unittest.TestCase):
                  "in_overrun": 0,
                  "out_babble": 0
             },
-            "phys_address": "5254.0072.9b0c",
+            "phys_address": "5254.00ff.0e7e",
             "keepalive": 10,
             "output_hang": "never",
             "txload": "1/255",
@@ -733,7 +734,7 @@ class TestShowInterfaces(unittest.TestCase):
             },
             "last_output": "00:00:27",
             "line_protocol": "up",
-            "mac_address": "5254.0072.9b0c",
+            "mac_address": "5254.00ff.0e7e",
             "oper_status": "up",
             "port_channel": {
                  "port_channel_member": False
@@ -849,7 +850,7 @@ class TestShowInterfaces(unittest.TestCase):
                  "out_octets": 5526,
                  "in_overrun": 0
             },
-            "phys_address": "0057.d228.1a51",
+            "phys_address": "0057.d2ff.4279",
             "queues": {
                  "input_queue_size": 0,
                  "total_output_drop": 0,
@@ -876,7 +877,7 @@ class TestShowInterfaces(unittest.TestCase):
             },
             "last_output": "1d03h",
             "line_protocol": "up",
-            "mac_address": "0057.d228.1a51",
+            "mac_address": "0057.d2ff.4279",
             "oper_status": "up",
             "port_channel": {
                  "port_channel_member": False
@@ -935,7 +936,7 @@ class TestShowInterfaces(unittest.TestCase):
                  "in_overrun": 0,
                  "out_babble": 0
             },
-            "phys_address": "0057.d228.1a02",
+            "phys_address": "0057.d2ff.422a",
             "keepalive": 10,
             "output_hang": "never",
             "txload": "1/255",
@@ -960,7 +961,7 @@ class TestShowInterfaces(unittest.TestCase):
             "last_input": "never",
             "last_output": "00:00:02",
             "line_protocol": "up",
-            "mac_address": "0057.d228.1a02",
+            "mac_address": "0057.d2ff.422a",
             "connected": True,
             "port_channel": {
                  "port_channel_member": True,
@@ -1032,8 +1033,8 @@ class TestShowInterfaces(unittest.TestCase):
             "last_input": "never",
             "last_output": "never",
             "line_protocol": "down",
-            "mac_address": "380e.4d6c.7006",
-            "phys_address": "380e.4d6c.7006",
+            "mac_address": "380e.4dff.dc72",
+            "phys_address": "380e.4dff.dc72",
             "mtu": 1500,
             "oper_status": "down",
             "output_hang": "never",
@@ -1060,7 +1061,7 @@ class TestShowInterfaces(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet1/0/1 is administratively down, line protocol is down (disabled) 
-          Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+          Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
           Description: desc
           Internet address is 10.1.1.1/24
           MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec, 
@@ -1090,7 +1091,7 @@ class TestShowInterfaces(unittest.TestCase):
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet1/0/2 is up, line protocol is up (connected) 
-          Hardware is Gigabit Ethernet, address is 0057.d228.1a02 (bia 0057.d228.1a02)
+          Hardware is Gigabit Ethernet, address is 0057.d2ff.422a (bia 0057.d2ff.422a)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1118,7 +1119,7 @@ class TestShowInterfaces(unittest.TestCase):
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet3 is up, line protocol is up 
-          Hardware is CSR vNIC, address is 5254.0072.9b0c (bia 5254.0072.9b0c)
+          Hardware is CSR vNIC, address is 5254.00ff.0e7e (bia 5254.00ff.0e7e)
           Interface is unnumbered. Using address of Loopback0 (192.168.154.1)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
@@ -1168,7 +1169,7 @@ class TestShowInterfaces(unittest.TestCase):
              0 unknown protocol drops
              0 output buffer failures, 0 output buffers swapped out
         Vlan100 is up, line protocol is up 
-          Hardware is Ethernet SVI, address is 0057.d228.1a51 (bia 0057.d228.1a51)
+          Hardware is Ethernet SVI, address is 0057.d2ff.4279 (bia 0057.d2ff.4279)
           Internet address is 192.168.234.1/24
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
@@ -1191,7 +1192,7 @@ class TestShowInterfaces(unittest.TestCase):
              0 unknown protocol drops
              0 output buffer failures, 0 output buffers swapped out
         Port-channel12 is up, line protocol is up (connected) 
-          Hardware is EtherChannel, address is 0057.d228.1a02 (bia 0057.d228.1a02)
+          Hardware is EtherChannel, address is 0057.d2ff.422a (bia 0057.d2ff.422a)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
@@ -1220,7 +1221,7 @@ class TestShowInterfaces(unittest.TestCase):
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0/4 is administratively down, line protocol is down
-          Hardware is BUILT-IN-2T+6X1GE, address is 380e.4d6c.7006 (bia 380e.4d6c.7006)
+          Hardware is BUILT-IN-2T+6X1GE, address is 380e.4dff.dc72 (bia 380e.4dff.dc72)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, loopback not set
@@ -1251,7 +1252,7 @@ class TestShowInterfaces(unittest.TestCase):
     golden_interface_output = {'execute.return_value': '''
     CE1#show interfaces GigabitEthernet1
   GigabitEthernet1 is up, line protocol is up
-  Hardware is CSR vNIC, address is 5e00.0001.0000 (bia 5e00.0001.0000)
+  Hardware is CSR vNIC, address is 5e00.00ff.0101 (bia 5e00.00ff.0101)
   Internet address is 172.16.1.243/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1284,7 +1285,7 @@ class TestShowInterfaces(unittest.TestCase):
     golden_parsed_interface_output={
             "GigabitEthernet1": {
                 "rxload": "1/255",
-                "phys_address": "5e00.0001.0000",
+                "phys_address": "5e00.00ff.0101",
                 "flow_control": {
                     "send": False,
                     "receive": False
@@ -1370,7 +1371,7 @@ class TestShowInterfaces(unittest.TestCase):
                 },
                 "output_hang": "never",
                 "txload": "1/255",
-                "mac_address": "5e00.0001.0000",
+                "mac_address": "5e00.00ff.0101",
                 "reliability": "255/255"
             }
         }
@@ -1378,7 +1379,7 @@ class TestShowInterfaces(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
 show interfaces
 Vlan1 is administratively down, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1400,7 +1401,7 @@ Vlan1 is administratively down, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan15 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1422,7 +1423,7 @@ Vlan15 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan101 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1445,7 +1446,7 @@ Vlan101 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan102 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.106.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1468,7 +1469,7 @@ Vlan102 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan103 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.9.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1491,7 +1492,7 @@ Vlan103 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan104 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1514,7 +1515,7 @@ Vlan104 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan105 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1537,7 +1538,7 @@ Vlan105 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan106 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.240.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1560,7 +1561,7 @@ Vlan106 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan107 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1583,7 +1584,7 @@ Vlan107 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan108 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.64.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1606,7 +1607,7 @@ Vlan108 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan109 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.234.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1629,7 +1630,7 @@ Vlan109 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan110 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1652,7 +1653,7 @@ Vlan110 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan111 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.70.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1675,7 +1676,7 @@ Vlan111 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan112 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.246.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1698,7 +1699,7 @@ Vlan112 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan113 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1721,7 +1722,7 @@ Vlan113 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan114 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.94.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1744,7 +1745,7 @@ Vlan114 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan115 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.21.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1767,7 +1768,7 @@ Last clearing of "show interface" counters never
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan116 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1790,7 +1791,7 @@ Vlan116 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan117 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.136.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1813,7 +1814,7 @@ Vlan117 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan118 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1836,7 +1837,7 @@ Vlan118 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan119 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.4.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1859,7 +1860,7 @@ Vlan119 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan120 is up, line protocol is up , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1882,7 +1883,7 @@ Vlan120 is up, line protocol is up , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan121 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.135.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1905,7 +1906,7 @@ Vlan121 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan122 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1928,7 +1929,7 @@ Vlan122 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan123 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1951,7 +1952,7 @@ Vlan123 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan124 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.219.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1974,7 +1975,7 @@ Vlan124 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan125 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.166.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -1997,7 +1998,7 @@ Vlan125 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan126 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.115.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2020,7 +2021,7 @@ Vlan126 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan127 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.66.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2043,7 +2044,7 @@ Vlan127 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan128 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2066,7 +2067,7 @@ Vlan128 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan129 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.229.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2089,7 +2090,7 @@ Vlan129 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan130 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.186.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2112,7 +2113,7 @@ Vlan130 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan131 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.145.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2135,7 +2136,7 @@ Vlan131 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan132 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.106.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2158,7 +2159,7 @@ Vlan132 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan133 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2181,7 +2182,7 @@ Vlan133 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan134 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.34.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2204,7 +2205,7 @@ Vlan134 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan135 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.1.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2227,7 +2228,7 @@ Vlan135 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan136 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.225.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2250,7 +2251,7 @@ Vlan136 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan137 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2273,7 +2274,7 @@ Vlan137 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan138 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2296,7 +2297,7 @@ Vlan138 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan139 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.144.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2319,7 +2320,7 @@ Vlan139 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 Vlan140 is up, line protocol is down , Autostate Enabled
-  Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Ethernet SVI, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.121.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2342,7 +2343,7 @@ Vlan140 is up, line protocol is down , Autostate Enabled
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
 GigabitEthernet0/0 is up, line protocol is up 
-  Hardware is RP management port, address is 70b3.1760.0500 (bia 70b3.1760.0500)
+  Hardware is RP management port, address is 70b3.17ff.6560 (bia 70b3.17ff.6560)
   Internet address is 10.9.1.20/16
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -2370,7 +2371,7 @@ GigabitEthernet0/0 is up, line protocol is up
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/1 is down, line protocol is down (notconnect) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0500 (bia 70b3.1760.0500)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6560 (bia 70b3.17ff.6560)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2398,7 +2399,7 @@ FortyGigabitEthernet1/0/1 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/2 is up, line protocol is up (connected) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0501 (bia 70b3.1760.0501)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6561 (bia 70b3.17ff.6561)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2426,7 +2427,7 @@ FortyGigabitEthernet1/0/2 is up, line protocol is up (connected)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/3 is down, line protocol is down (notconnect) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0502 (bia 70b3.1760.0502)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6562 (bia 70b3.17ff.6562)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2454,7 +2455,7 @@ FortyGigabitEthernet1/0/3 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/4 is up, line protocol is up (connected) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0503 (bia 70b3.1760.0503)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6563 (bia 70b3.17ff.6563)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2482,7 +2483,7 @@ FortyGigabitEthernet1/0/4 is up, line protocol is up (connected)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/5 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0504 (bia 70b3.1760.0504)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6564 (bia 70b3.17ff.6564)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2510,7 +2511,7 @@ FortyGigabitEthernet1/0/5 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/6 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0505 (bia 70b3.1760.0505)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6565 (bia 70b3.17ff.6565)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2538,7 +2539,7 @@ FortyGigabitEthernet1/0/6 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/7 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0506 (bia 70b3.1760.0506)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6566 (bia 70b3.17ff.6566)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2566,7 +2567,7 @@ FortyGigabitEthernet1/0/7 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/8 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0507 (bia 70b3.1760.0507)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6567 (bia 70b3.17ff.6567)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2594,7 +2595,7 @@ FortyGigabitEthernet1/0/8 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/9 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0508 (bia 70b3.1760.0508)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6568 (bia 70b3.17ff.6568)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2622,7 +2623,7 @@ FortyGigabitEthernet1/0/9 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/10 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0509 (bia 70b3.1760.0509)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6569 (bia 70b3.17ff.6569)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2650,7 +2651,7 @@ FortyGigabitEthernet1/0/10 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/11 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050a (bia 70b3.1760.050a)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656a (bia 70b3.17ff.656a)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2678,7 +2679,7 @@ FortyGigabitEthernet1/0/11 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/12 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050b (bia 70b3.1760.050b)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656b (bia 70b3.17ff.656b)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2706,7 +2707,7 @@ FortyGigabitEthernet1/0/12 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/13 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050c (bia 70b3.1760.050c)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656c (bia 70b3.17ff.656c)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2734,7 +2735,7 @@ FortyGigabitEthernet1/0/13 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/14 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050d (bia 70b3.1760.050d)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656d (bia 70b3.17ff.656d)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2762,7 +2763,7 @@ FortyGigabitEthernet1/0/14 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/15 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050e (bia 70b3.1760.050e)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656e (bia 70b3.17ff.656e)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2790,7 +2791,7 @@ FortyGigabitEthernet1/0/15 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/16 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.050f (bia 70b3.1760.050f)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.656f (bia 70b3.17ff.656f)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2818,7 +2819,7 @@ FortyGigabitEthernet1/0/16 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/17 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0510 (bia 70b3.1760.0510)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6570 (bia 70b3.17ff.6570)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2846,7 +2847,7 @@ FortyGigabitEthernet1/0/17 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/18 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0511 (bia 70b3.1760.0511)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6571 (bia 70b3.17ff.6571)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2874,7 +2875,7 @@ FortyGigabitEthernet1/0/18 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/19 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0512 (bia 70b3.1760.0512)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6572 (bia 70b3.17ff.6572)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2902,7 +2903,7 @@ FortyGigabitEthernet1/0/19 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/20 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0513 (bia 70b3.1760.0513)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6573 (bia 70b3.17ff.6573)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2930,7 +2931,7 @@ FortyGigabitEthernet1/0/20 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/21 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0514 (bia 70b3.1760.0514)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6574 (bia 70b3.17ff.6574)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2958,7 +2959,7 @@ FortyGigabitEthernet1/0/21 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/22 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0515 (bia 70b3.1760.0515)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6575 (bia 70b3.17ff.6575)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2986,7 +2987,7 @@ FortyGigabitEthernet1/0/22 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/23 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0516 (bia 70b3.1760.0516)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6576 (bia 70b3.17ff.6576)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3014,7 +3015,7 @@ FortyGigabitEthernet1/0/23 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/24 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0517 (bia 70b3.1760.0517)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6577 (bia 70b3.17ff.6577)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3042,7 +3043,7 @@ FortyGigabitEthernet1/0/24 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/25 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0518 (bia 70b3.1760.0518)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6578 (bia 70b3.17ff.6578)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3070,7 +3071,7 @@ FortyGigabitEthernet1/0/25 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/26 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.0519 (bia 70b3.1760.0519)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.6579 (bia 70b3.17ff.6579)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3098,7 +3099,7 @@ FortyGigabitEthernet1/0/26 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/27 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051a (bia 70b3.1760.051a)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657a (bia 70b3.17ff.657a)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3126,7 +3127,7 @@ FortyGigabitEthernet1/0/27 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/28 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051b (bia 70b3.1760.051b)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657b (bia 70b3.17ff.657b)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3154,7 +3155,7 @@ FortyGigabitEthernet1/0/28 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/29 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051c (bia 70b3.1760.051c)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657c (bia 70b3.17ff.657c)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3182,7 +3183,7 @@ FortyGigabitEthernet1/0/29 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/30 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051d (bia 70b3.1760.051d)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657d (bia 70b3.17ff.657d)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3210,7 +3211,7 @@ FortyGigabitEthernet1/0/30 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/31 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051e (bia 70b3.1760.051e)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657e (bia 70b3.17ff.657e)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3238,7 +3239,7 @@ FortyGigabitEthernet1/0/31 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 FortyGigabitEthernet1/0/32 is down, line protocol is down (inactive) 
-  Hardware is Forty Gigabit Ethernet, address is 70b3.1760.051f (bia 70b3.1760.051f)
+  Hardware is Forty Gigabit Ethernet, address is 70b3.17ff.657f (bia 70b3.17ff.657f)
   MTU 1500 bytes, BW 40000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3266,7 +3267,7 @@ FortyGigabitEthernet1/0/32 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/33 is down, line protocol is down (inactive) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0520 (bia 70b3.1760.0520)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6580 (bia 70b3.17ff.6580)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3295,7 +3296,7 @@ HundredGigE1/0/33 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/34 is down, line protocol is down (inactive) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0521 (bia 70b3.1760.0521)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6581 (bia 70b3.17ff.6581)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3324,7 +3325,7 @@ HundredGigE1/0/34 is down, line protocol is down (inactive)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/35 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Description: connected to Ixia 1/6
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3354,7 +3355,7 @@ HundredGigE1/0/35 is up, line protocol is up (connected)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/35.1 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3365,7 +3366,7 @@ HundredGigE1/0/35.1 is up, line protocol is up (connected)
      13769 packets output, 2168924 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.2 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3376,7 +3377,7 @@ HundredGigE1/0/35.2 is up, line protocol is up (connected)
      13784 packets output, 2170079 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.3 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.135.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3387,7 +3388,7 @@ HundredGigE1/0/35.3 is up, line protocol is up (connected)
      13764 packets output, 2169079 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.4 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3398,7 +3399,7 @@ HundredGigE1/0/35.4 is up, line protocol is up (connected)
      13766 packets output, 2168845 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.5 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.4.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3409,7 +3410,7 @@ HundredGigE1/0/35.5 is up, line protocol is up (connected)
      13750 packets output, 2167640 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.6 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3420,7 +3421,7 @@ HundredGigE1/0/35.6 is up, line protocol is up (connected)
      13744 packets output, 2167636 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.7 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.136.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3431,7 +3432,7 @@ HundredGigE1/0/35.7 is up, line protocol is up (connected)
      13781 packets output, 2169851 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.8 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3442,7 +3443,7 @@ HundredGigE1/0/35.8 is up, line protocol is up (connected)
      13777 packets output, 2169702 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.9 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.21.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3453,7 +3454,7 @@ HundredGigE1/0/35.9 is up, line protocol is up (connected)
      13770 packets output, 2169056 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.10 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.94.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3464,7 +3465,7 @@ HundredGigE1/0/35.10 is up, line protocol is up (connected)
      13777 packets output, 2168425 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.11 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3475,7 +3476,7 @@ HundredGigE1/0/35.11 is up, line protocol is up (connected)
      13756 packets output, 2168163 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.12 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.246.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3486,7 +3487,7 @@ HundredGigE1/0/35.12 is up, line protocol is up (connected)
      13765 packets output, 2168956 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.13 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.70.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3497,7 +3498,7 @@ HundredGigE1/0/35.13 is up, line protocol is up (connected)
      13773 packets output, 2169451 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.14 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3508,7 +3509,7 @@ HundredGigE1/0/35.14 is up, line protocol is up (connected)
      13794 packets output, 2171050 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.15 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.234.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3519,7 +3520,7 @@ HundredGigE1/0/35.15 is up, line protocol is up (connected)
      13787 packets output, 2169487 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.16 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.64.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3530,7 +3531,7 @@ HundredGigE1/0/35.16 is up, line protocol is up (connected)
      13773 packets output, 2169512 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.17 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3541,7 +3542,7 @@ HundredGigE1/0/35.17 is up, line protocol is up (connected)
      13796 packets output, 2170930 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.18 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.240.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3552,7 +3553,7 @@ HundredGigE1/0/35.18 is up, line protocol is up (connected)
      13780 packets output, 2169941 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.19 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3563,7 +3564,7 @@ HundredGigE1/0/35.19 is up, line protocol is up (connected)
      13787 packets output, 2170375 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.20 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3574,7 +3575,7 @@ HundredGigE1/0/35.20 is up, line protocol is up (connected)
      13772 packets output, 2169331 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.101 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.9.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3585,7 +3586,7 @@ HundredGigE1/0/35.101 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.102 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.106.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3596,7 +3597,7 @@ HundredGigE1/0/35.102 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.103 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3607,7 +3608,7 @@ HundredGigE1/0/35.103 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.104 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.51.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3618,7 +3619,7 @@ HundredGigE1/0/35.104 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.105 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.154.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3629,7 +3630,7 @@ HundredGigE1/0/35.105 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.106 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.4.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3640,7 +3641,7 @@ HundredGigE1/0/35.106 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.107 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.111.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3651,7 +3652,7 @@ HundredGigE1/0/35.107 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.108 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.220.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3662,7 +3663,7 @@ HundredGigE1/0/35.108 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.109 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3673,7 +3674,7 @@ HundredGigE1/0/35.109 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.110 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.189.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3684,7 +3685,7 @@ HundredGigE1/0/35.110 is up, line protocol is up (connected)
      0 packets output, 0 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/36 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0523 (bia 70b3.1760.0523)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6583 (bia 70b3.17ff.6583)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3713,7 +3714,7 @@ HundredGigE1/0/36 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/37 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0524 (bia 70b3.1760.0524)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6584 (bia 70b3.17ff.6584)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3742,7 +3743,7 @@ HundredGigE1/0/37 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/38 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0525 (bia 70b3.1760.0525)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6585 (bia 70b3.17ff.6585)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3771,7 +3772,7 @@ HundredGigE1/0/38 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/39 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0526 (bia 70b3.1760.0526)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6586 (bia 70b3.17ff.6586)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3800,7 +3801,7 @@ HundredGigE1/0/39 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/40 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0527 (bia 70b3.1760.0527)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6587 (bia 70b3.17ff.6587)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3829,7 +3830,7 @@ HundredGigE1/0/40 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/41 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.4.2/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -3859,7 +3860,7 @@ HundredGigE1/0/41 is up, line protocol is up (connected)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/42 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.0529 (bia 70b3.1760.0529)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6589 (bia 70b3.17ff.6589)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3888,7 +3889,7 @@ HundredGigE1/0/42 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/43 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.052a (bia 70b3.1760.052a)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.658a (bia 70b3.17ff.658a)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3917,7 +3918,7 @@ HundredGigE1/0/43 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/44 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.052b (bia 70b3.1760.052b)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.658b (bia 70b3.17ff.658b)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3946,7 +3947,7 @@ HundredGigE1/0/44 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/45 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.052c (bia 70b3.1760.052c)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.658c (bia 70b3.17ff.658c)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3975,7 +3976,7 @@ HundredGigE1/0/45 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/46 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.052d (bia 70b3.1760.052d)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.658d (bia 70b3.17ff.658d)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -4004,7 +4005,7 @@ HundredGigE1/0/46 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/47 is down, line protocol is down (notconnect) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.052e (bia 70b3.1760.052e)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.658e (bia 70b3.17ff.658e)
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -4033,7 +4034,7 @@ HundredGigE1/0/47 is down, line protocol is down (notconnect)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/48 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 172.16.94.2/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4063,7 +4064,7 @@ HundredGigE1/0/48 is up, line protocol is up (connected)
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/48.1 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.51.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4074,7 +4075,7 @@ HundredGigE1/0/48.1 is up, line protocol is up (connected)
      1729535 packets output, 112615606 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.2 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4085,7 +4086,7 @@ HundredGigE1/0/48.2 is up, line protocol is up (connected)
      1733061 packets output, 113033370 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.3 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.106.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4096,7 +4097,7 @@ HundredGigE1/0/48.3 is up, line protocol is up (connected)
      1729514 packets output, 112614680 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.4 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.9.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4107,7 +4108,7 @@ HundredGigE1/0/48.4 is up, line protocol is up (connected)
      1729722 packets output, 112627684 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.5 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4118,7 +4119,7 @@ HundredGigE1/0/48.5 is up, line protocol is up (connected)
      1729694 packets output, 112626186 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.6 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4129,7 +4130,7 @@ HundredGigE1/0/48.6 is up, line protocol is up (connected)
      1729813 packets output, 112633620 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.7 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.240.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4140,7 +4141,7 @@ HundredGigE1/0/48.7 is up, line protocol is up (connected)
      1729823 packets output, 112634178 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.8 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4151,7 +4152,7 @@ HundredGigE1/0/48.8 is up, line protocol is up (connected)
      1729821 packets output, 112634398 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.9 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.64.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4162,7 +4163,7 @@ HundredGigE1/0/48.9 is up, line protocol is up (connected)
      1729707 packets output, 112626654 bytes
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.10 is up, line protocol is up (connected) 
-  Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
+  Hardware is Hundred Gigabit Ethernet, address is 70b3.17ff.6500 (bia 70b3.17ff.6500)
   Internet address is 192.168.234.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
@@ -4173,7 +4174,7 @@ HundredGigE1/0/48.10 is up, line protocol is up (connected)
      1729798 packets output, 112632450 bytes
   Last clearing of "show interface" counters never
 Bluetooth0/4 is administratively down, line protocol is down 
-  Hardware is BT management port, address is 70b3.1760.0500 (bia 70b3.1760.0500)
+  Hardware is BT management port, address is 70b3.17ff.6560 (bia 70b3.17ff.6560)
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -4200,7 +4201,7 @@ Bluetooth0/4 is administratively down, line protocol is down
      1 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 Port-channel2 is up, line protocol is up (connected) 
-  Hardware is EtherChannel, address is 70b3.1760.0501 (bia 70b3.1760.0501)
+  Hardware is EtherChannel, address is 70b3.17ff.6561 (bia 70b3.17ff.6561)
   MTU 1500 bytes, BW 80000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -4711,8 +4712,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 1000000,
@@ -4778,8 +4779,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 1000000,
@@ -4845,8 +4846,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.205.1/24": {
                     "ip": "172.16.205.1",
@@ -4918,8 +4919,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.106.1/24": {
                     "ip": "172.16.106.1",
@@ -4991,8 +4992,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.9.1/24": {
                     "ip": "172.16.9.1",
@@ -5064,8 +5065,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.169.1/24": {
                     "ip": "172.16.169.1",
@@ -5137,8 +5138,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.76.1/24": {
                     "ip": "172.16.76.1",
@@ -5210,8 +5211,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.240.1/24": {
                     "ip": "172.16.240.1",
@@ -5283,8 +5284,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.151.1/24": {
                     "ip": "172.16.151.1",
@@ -5356,8 +5357,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.64.1/24": {
                     "ip": "172.16.64.1",
@@ -5429,8 +5430,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.234.1/24": {
                     "ip": "172.16.234.1",
@@ -5502,8 +5503,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.151.1/24": {
                     "ip": "172.16.151.1",
@@ -5575,8 +5576,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.70.1/24": {
                     "ip": "172.16.70.1",
@@ -5648,8 +5649,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.246.1/24": {
                     "ip": "172.16.246.1",
@@ -5721,8 +5722,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.169.1/24": {
                     "ip": "172.16.169.1",
@@ -5794,8 +5795,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.94.1/24": {
                     "ip": "172.16.94.1",
@@ -5867,8 +5868,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.21.1/24": {
                     "ip": "172.16.21.1",
@@ -5940,8 +5941,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.205.1/24": {
                     "ip": "172.16.205.1",
@@ -6013,8 +6014,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.136.1/24": {
                     "ip": "172.16.136.1",
@@ -6086,8 +6087,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.69.1/24": {
                     "ip": "172.16.69.1",
@@ -6159,8 +6160,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.4.1/24": {
                     "ip": "172.16.4.1",
@@ -6232,8 +6233,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "up",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.196.1/24": {
                     "ip": "172.16.196.1",
@@ -6305,8 +6306,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.135.1/24": {
                     "ip": "172.16.135.1",
@@ -6378,8 +6379,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.76.1/24": {
                     "ip": "172.16.76.1",
@@ -6451,8 +6452,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.19.1/24": {
                     "ip": "172.16.19.1",
@@ -6524,8 +6525,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.219.1/24": {
                     "ip": "172.16.219.1",
@@ -6597,8 +6598,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.166.1/24": {
                     "ip": "172.16.166.1",
@@ -6670,8 +6671,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.115.1/24": {
                     "ip": "172.16.115.1",
@@ -6743,8 +6744,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.66.1/24": {
                     "ip": "172.16.66.1",
@@ -6816,8 +6817,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.19.1/24": {
                     "ip": "172.16.19.1",
@@ -6889,8 +6890,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.229.1/24": {
                     "ip": "172.16.229.1",
@@ -6962,8 +6963,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.186.1/24": {
                     "ip": "172.16.186.1",
@@ -7035,8 +7036,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.145.1/24": {
                     "ip": "172.16.145.1",
@@ -7108,8 +7109,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.106.1/24": {
                     "ip": "172.16.106.1",
@@ -7181,8 +7182,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.69.1/24": {
                     "ip": "172.16.69.1",
@@ -7254,8 +7255,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.34.1/24": {
                     "ip": "172.16.34.1",
@@ -7327,8 +7328,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.1.1/24": {
                     "ip": "172.16.1.1",
@@ -7400,8 +7401,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.225.1/24": {
                     "ip": "172.16.225.1",
@@ -7473,8 +7474,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.196.1/24": {
                     "ip": "172.16.196.1",
@@ -7546,8 +7547,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.169.1/24": {
                     "ip": "172.16.169.1",
@@ -7619,8 +7620,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.144.1/24": {
                     "ip": "172.16.144.1",
@@ -7692,8 +7693,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "autostate": True,
             "type": "Ethernet SVI",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.121.1/24": {
                     "ip": "172.16.121.1",
@@ -7764,8 +7765,8 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "type": "RP management port",
-            "mac_address": "70b3.1760.0500",
-            "phys_address": "70b3.1760.0500",
+            "mac_address": "70b3.17ff.6560",
+            "phys_address": "70b3.17ff.6560",
             "ipv4": {
                 "10.9.1.20/16": {
                     "ip": "10.9.1.20",
@@ -7856,8 +7857,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0500",
-            "phys_address": "70b3.1760.0500",
+            "mac_address": "70b3.17ff.6560",
+            "phys_address": "70b3.17ff.6560",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -7949,8 +7950,8 @@ Tunnel10 is up, line protocol is up
             'port_speed': '40gb/s',
             'media_type': 'QSFP 40G SR4 SFP',
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0501",
-            "phys_address": "70b3.1760.0501",
+            "mac_address": "70b3.17ff.6561",
+            "phys_address": "70b3.17ff.6561",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8031,8 +8032,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0502",
-            "phys_address": "70b3.1760.0502",
+            "mac_address": "70b3.17ff.6562",
+            "phys_address": "70b3.17ff.6562",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8124,8 +8125,8 @@ Tunnel10 is up, line protocol is up
             'port_speed': '40gb/s',
             'media_type': 'QSFP 40G SR BD SFP',
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0503",
-            "phys_address": "70b3.1760.0503",
+            "mac_address": "70b3.17ff.6563",
+            "phys_address": "70b3.17ff.6563",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8206,8 +8207,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0504",
-            "phys_address": "70b3.1760.0504",
+            "mac_address": "70b3.17ff.6564",
+            "phys_address": "70b3.17ff.6564",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8293,8 +8294,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0505",
-            "phys_address": "70b3.1760.0505",
+            "mac_address": "70b3.17ff.6565",
+            "phys_address": "70b3.17ff.6565",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8380,8 +8381,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0506",
-            "phys_address": "70b3.1760.0506",
+            "mac_address": "70b3.17ff.6566",
+            "phys_address": "70b3.17ff.6566",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8467,8 +8468,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0507",
-            "phys_address": "70b3.1760.0507",
+            "mac_address": "70b3.17ff.6567",
+            "phys_address": "70b3.17ff.6567",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8554,8 +8555,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0508",
-            "phys_address": "70b3.1760.0508",
+            "mac_address": "70b3.17ff.6568",
+            "phys_address": "70b3.17ff.6568",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8641,8 +8642,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0509",
-            "phys_address": "70b3.1760.0509",
+            "mac_address": "70b3.17ff.6569",
+            "phys_address": "70b3.17ff.6569",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8728,8 +8729,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050a",
-            "phys_address": "70b3.1760.050a",
+            "mac_address": "70b3.17ff.656a",
+            "phys_address": "70b3.17ff.656a",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8815,8 +8816,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050b",
-            "phys_address": "70b3.1760.050b",
+            "mac_address": "70b3.17ff.656b",
+            "phys_address": "70b3.17ff.656b",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8902,8 +8903,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050c",
-            "phys_address": "70b3.1760.050c",
+            "mac_address": "70b3.17ff.656c",
+            "phys_address": "70b3.17ff.656c",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -8989,8 +8990,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050d",
-            "phys_address": "70b3.1760.050d",
+            "mac_address": "70b3.17ff.656d",
+            "phys_address": "70b3.17ff.656d",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9076,8 +9077,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050e",
-            "phys_address": "70b3.1760.050e",
+            "mac_address": "70b3.17ff.656e",
+            "phys_address": "70b3.17ff.656e",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9163,8 +9164,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.050f",
-            "phys_address": "70b3.1760.050f",
+            "mac_address": "70b3.17ff.656f",
+            "phys_address": "70b3.17ff.656f",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9250,8 +9251,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0510",
-            "phys_address": "70b3.1760.0510",
+            "mac_address": "70b3.17ff.6570",
+            "phys_address": "70b3.17ff.6570",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9337,8 +9338,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0511",
-            "phys_address": "70b3.1760.0511",
+            "mac_address": "70b3.17ff.6571",
+            "phys_address": "70b3.17ff.6571",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9424,8 +9425,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0512",
-            "phys_address": "70b3.1760.0512",
+            "mac_address": "70b3.17ff.6572",
+            "phys_address": "70b3.17ff.6572",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9511,8 +9512,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0513",
-            "phys_address": "70b3.1760.0513",
+            "mac_address": "70b3.17ff.6573",
+            "phys_address": "70b3.17ff.6573",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9598,8 +9599,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0514",
-            "phys_address": "70b3.1760.0514",
+            "mac_address": "70b3.17ff.6574",
+            "phys_address": "70b3.17ff.6574",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9685,8 +9686,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0515",
-            "phys_address": "70b3.1760.0515",
+            "mac_address": "70b3.17ff.6575",
+            "phys_address": "70b3.17ff.6575",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9772,8 +9773,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0516",
-            "phys_address": "70b3.1760.0516",
+            "mac_address": "70b3.17ff.6576",
+            "phys_address": "70b3.17ff.6576",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9859,8 +9860,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0517",
-            "phys_address": "70b3.1760.0517",
+            "mac_address": "70b3.17ff.6577",
+            "phys_address": "70b3.17ff.6577",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -9946,8 +9947,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0518",
-            "phys_address": "70b3.1760.0518",
+            "mac_address": "70b3.17ff.6578",
+            "phys_address": "70b3.17ff.6578",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10033,8 +10034,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.0519",
-            "phys_address": "70b3.1760.0519",
+            "mac_address": "70b3.17ff.6579",
+            "phys_address": "70b3.17ff.6579",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10120,8 +10121,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051a",
-            "phys_address": "70b3.1760.051a",
+            "mac_address": "70b3.17ff.657a",
+            "phys_address": "70b3.17ff.657a",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10207,8 +10208,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051b",
-            "phys_address": "70b3.1760.051b",
+            "mac_address": "70b3.17ff.657b",
+            "phys_address": "70b3.17ff.657b",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10294,8 +10295,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051c",
-            "phys_address": "70b3.1760.051c",
+            "mac_address": "70b3.17ff.657c",
+            "phys_address": "70b3.17ff.657c",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10381,8 +10382,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051d",
-            "phys_address": "70b3.1760.051d",
+            "mac_address": "70b3.17ff.657d",
+            "phys_address": "70b3.17ff.657d",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10468,8 +10469,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051e",
-            "phys_address": "70b3.1760.051e",
+            "mac_address": "70b3.17ff.657e",
+            "phys_address": "70b3.17ff.657e",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10555,8 +10556,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Forty Gigabit Ethernet",
-            "mac_address": "70b3.1760.051f",
-            "phys_address": "70b3.1760.051f",
+            "mac_address": "70b3.17ff.657f",
+            "phys_address": "70b3.17ff.657f",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 40000000,
@@ -10642,8 +10643,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0520",
-            "phys_address": "70b3.1760.0520",
+            "mac_address": "70b3.17ff.6580",
+            "phys_address": "70b3.17ff.6580",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -10729,8 +10730,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0521",
-            "phys_address": "70b3.1760.0521",
+            "mac_address": "70b3.17ff.6581",
+            "phys_address": "70b3.17ff.6581",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -10821,8 +10822,8 @@ Tunnel10 is up, line protocol is up
             'media_type': 'QSFP 100G SR4',
             "type": "Hundred Gigabit Ethernet",
             'port_speed': '100gb/s',
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "description": "connected to Ixia 1/6",
             "delay": 10,
             "mtu": 1500,
@@ -10911,8 +10912,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13769
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.19.1/24": {
                     "ip": "172.16.19.1",
@@ -10948,8 +10949,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13784
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.76.1/24": {
                     "ip": "172.16.76.1",
@@ -10985,8 +10986,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13764
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.135.1/24": {
                     "ip": "172.16.135.1",
@@ -11022,8 +11023,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13766
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.196.1/24": {
                     "ip": "172.16.196.1",
@@ -11059,8 +11060,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13750
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.4.1/24": {
                     "ip": "172.16.4.1",
@@ -11096,8 +11097,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13744
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.69.1/24": {
                     "ip": "172.16.69.1",
@@ -11133,8 +11134,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13781
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.136.1/24": {
                     "ip": "172.16.136.1",
@@ -11170,8 +11171,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13777
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.205.1/24": {
                     "ip": "172.16.205.1",
@@ -11207,8 +11208,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13770
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.21.1/24": {
                     "ip": "172.16.21.1",
@@ -11244,8 +11245,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13777
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.94.1/24": {
                     "ip": "172.16.94.1",
@@ -11281,8 +11282,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13756
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.169.1/24": {
                     "ip": "172.16.169.1",
@@ -11318,8 +11319,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13765
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.246.1/24": {
                     "ip": "172.16.246.1",
@@ -11355,8 +11356,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13773
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.70.1/24": {
                     "ip": "172.16.70.1",
@@ -11392,8 +11393,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13794
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.151.1/24": {
                     "ip": "172.16.151.1",
@@ -11429,8 +11430,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13787
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.234.1/24": {
                     "ip": "172.16.234.1",
@@ -11466,8 +11467,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13773
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.64.1/24": {
                     "ip": "172.16.64.1",
@@ -11503,8 +11504,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13796
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.151.1/24": {
                     "ip": "172.16.151.1",
@@ -11540,8 +11541,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13780
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.240.1/24": {
                     "ip": "172.16.240.1",
@@ -11577,8 +11578,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13787
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.76.1/24": {
                     "ip": "172.16.76.1",
@@ -11614,8 +11615,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 13772
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.169.1/24": {
                     "ip": "172.16.169.1",
@@ -11651,8 +11652,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.9.1/24": {
                     "ip": "192.168.9.1",
@@ -11688,8 +11689,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.106.1/24": {
                     "ip": "192.168.106.1",
@@ -11725,8 +11726,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.205.1/24": {
                     "ip": "192.168.205.1",
@@ -11762,8 +11763,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.51.1/24": {
                     "ip": "192.168.51.1",
@@ -11799,8 +11800,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.154.1/24": {
                     "ip": "192.168.154.1",
@@ -11836,8 +11837,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.4.1/24": {
                     "ip": "192.168.4.1",
@@ -11873,8 +11874,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.111.1/24": {
                     "ip": "192.168.111.1",
@@ -11910,8 +11911,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.220.1/24": {
                     "ip": "192.168.220.1",
@@ -11947,8 +11948,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.76.1/24": {
                     "ip": "192.168.76.1",
@@ -11984,8 +11985,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 0
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.189.1/24": {
                     "ip": "192.168.189.1",
@@ -12015,8 +12016,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0523",
-            "phys_address": "70b3.1760.0523",
+            "mac_address": "70b3.17ff.6583",
+            "phys_address": "70b3.17ff.6583",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12102,8 +12103,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0524",
-            "phys_address": "70b3.1760.0524",
+            "mac_address": "70b3.17ff.6584",
+            "phys_address": "70b3.17ff.6584",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12189,8 +12190,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0525",
-            "phys_address": "70b3.1760.0525",
+            "mac_address": "70b3.17ff.6585",
+            "phys_address": "70b3.17ff.6585",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12276,8 +12277,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0526",
-            "phys_address": "70b3.1760.0526",
+            "mac_address": "70b3.17ff.6586",
+            "phys_address": "70b3.17ff.6586",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12363,8 +12364,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0527",
-            "phys_address": "70b3.1760.0527",
+            "mac_address": "70b3.17ff.6587",
+            "phys_address": "70b3.17ff.6587",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12455,8 +12456,8 @@ Tunnel10 is up, line protocol is up
             "type": "Hundred Gigabit Ethernet",
             'media_type': 'QSFP 100G SR4',
             'port_speed': '100gb/s',
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.4.2/24": {
                     "ip": "172.16.4.2",
@@ -12543,8 +12544,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.0529",
-            "phys_address": "70b3.1760.0529",
+            "mac_address": "70b3.17ff.6589",
+            "phys_address": "70b3.17ff.6589",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12630,8 +12631,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.052a",
-            "phys_address": "70b3.1760.052a",
+            "mac_address": "70b3.17ff.658a",
+            "phys_address": "70b3.17ff.658a",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12717,8 +12718,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.052b",
-            "phys_address": "70b3.1760.052b",
+            "mac_address": "70b3.17ff.658b",
+            "phys_address": "70b3.17ff.658b",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12804,8 +12805,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.052c",
-            "phys_address": "70b3.1760.052c",
+            "mac_address": "70b3.17ff.658c",
+            "phys_address": "70b3.17ff.658c",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12891,8 +12892,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.052d",
-            "phys_address": "70b3.1760.052d",
+            "mac_address": "70b3.17ff.658d",
+            "phys_address": "70b3.17ff.658d",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -12978,8 +12979,8 @@ Tunnel10 is up, line protocol is up
             "oper_status": "down",
             "connected": False,
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.052e",
-            "phys_address": "70b3.1760.052e",
+            "mac_address": "70b3.17ff.658e",
+            "phys_address": "70b3.17ff.658e",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 100000000,
@@ -13072,8 +13073,8 @@ Tunnel10 is up, line protocol is up
             'media_type': 'QSFP 100G SR4',
             'port_speed': '100gb/s',
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "172.16.94.2/24": {
                     "ip": "172.16.94.2",
@@ -13167,8 +13168,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729535
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.51.1/24": {
                     "ip": "192.168.51.1",
@@ -13204,8 +13205,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1733061
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.205.1/24": {
                     "ip": "192.168.205.1",
@@ -13241,8 +13242,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729514
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.106.1/24": {
                     "ip": "192.168.106.1",
@@ -13278,8 +13279,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729722
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.9.1/24": {
                     "ip": "192.168.9.1",
@@ -13315,8 +13316,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729694
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.169.1/24": {
                     "ip": "192.168.169.1",
@@ -13352,8 +13353,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729813
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.76.1/24": {
                     "ip": "192.168.76.1",
@@ -13389,8 +13390,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729823
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.240.1/24": {
                     "ip": "192.168.240.1",
@@ -13426,8 +13427,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729821
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.151.1/24": {
                     "ip": "192.168.151.1",
@@ -13463,8 +13464,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729707
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.64.1/24": {
                     "ip": "192.168.64.1",
@@ -13500,8 +13501,8 @@ Tunnel10 is up, line protocol is up
                 'out_pkts': 1729798
             },
             "type": "Hundred Gigabit Ethernet",
-            "mac_address": "70b3.1760.059f",
-            "phys_address": "70b3.1760.059f",
+            "mac_address": "70b3.17ff.6500",
+            "phys_address": "70b3.17ff.6500",
             "ipv4": {
                 "192.168.234.1/24": {
                     "ip": "192.168.234.1",
@@ -13530,8 +13531,8 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "down",
             "oper_status": "down",
             "type": "BT management port",
-            "mac_address": "70b3.1760.0500",
-            "phys_address": "70b3.1760.0500",
+            "mac_address": "70b3.17ff.6560",
+            "phys_address": "70b3.17ff.6560",
             "delay": 10,
             "mtu": 1500,
             "bandwidth": 1000000,
@@ -13617,8 +13618,8 @@ Tunnel10 is up, line protocol is up
             "connected": True,
             'auto_negotiate': False,
             "type": "EtherChannel",
-            "mac_address": "70b3.1760.0501",
-            "phys_address": "70b3.1760.0501",
+            "mac_address": "70b3.17ff.6561",
+            "phys_address": "70b3.17ff.6561",
             "delay": 10,
             'duplex_mode': 'full',
             'link_type': 'force-up',
@@ -14747,8 +14748,8 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "type": "SPA-1X10GE-L-V2",
-            "mac_address": "006b.f1d5.e820",
-            "phys_address": "006b.f1d5.e820",
+            "mac_address": "006b.f1ff.bef5",
+            "phys_address": "006b.f1ff.bef5",
             "description": "toP",
             "ipv4": {
                 "10.169.197.94/30": {
@@ -14840,7 +14841,7 @@ Tunnel10 is up, line protocol is up
     Time source is NTP, 17:32:09.532 EST Tue Apr 23 2019
 
     TenGigabitEthernet0/2/0 is up, line protocol is up 
-      Hardware is SPA-1X10GE-L-V2, address is 006b.f1d5.e820 (bia 006b.f1d5.e820)
+      Hardware is SPA-1X10GE-L-V2, address is 006b.f1ff.bef5 (bia 006b.f1ff.bef5)
       Description: toP
       Internet address is 10.169.197.94/30
       MTU 1552 bytes, BW 10000000 Kbit/sec, DLY 10 usec, 
@@ -14882,8 +14883,8 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "type": "CSR vNIC",
-            "mac_address": "fa16.3eda.af5b",
-            "phys_address": "fa16.3eda.af5b",
+            "mac_address": "fa16.3eff.8a36",
+            "phys_address": "fa16.3eff.8a36",
             "ipv4": {
                 "10.0.2.1/24": {
                     "ip": "10.0.2.1",
@@ -14972,7 +14973,7 @@ Tunnel10 is up, line protocol is up
     [2019-04-23 10:53:38,979] +++ csr1000v-1: executing command 'show interfaces GigabitEthernet3' +++
     show interfaces GigabitEthernet3
     GigabitEthernet3 is up, line protocol is up 
-      Hardware is CSR vNIC, address is fa16.3eda.af5b (bia fa16.3eda.af5b)
+      Hardware is CSR vNIC, address is fa16.3eff.8a36 (bia fa16.3eff.8a36)
       Internet address is 10.0.2.1/24
       MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 600 usec, 
          reliability 255/255, txload 1/255, rxload 1/255
@@ -15005,7 +15006,7 @@ Tunnel10 is up, line protocol is up
 
     golden_interface_output_4 = { 'execute.return_value': '''
         GigabitEthernet0/0/0 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
           Description: Genie to Genie-next for L2 Fiber lines ***
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
@@ -15033,7 +15034,7 @@ Tunnel10 is up, line protocol is up
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0/0.105 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
           Description: Another Genie L2 connection
           Internet address is 10.95.2.252/24
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
@@ -15043,7 +15044,7 @@ Tunnel10 is up, line protocol is up
           Keepalive not supported
           Last clearing of "show interface" counters never
         GigabitEthernet0/0/0.1761524 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
           Description: *** Genie VLAN  ***
           Internet address is 10.121.113.98/27
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
@@ -15117,12 +15118,12 @@ Tunnel10 is up, line protocol is up
             "last_output": "00:00:00",
             "line_protocol": "up",
             "link_type": "auto",
-            "mac_address": "1ca1.8811.b008",
+            "mac_address": "1ca1.88ff.c119",
             "media_type": "T",
             "mtu": 1500,
             "oper_status": "up",
             "output_hang": "never",
-            "phys_address": "1ca1.8811.b008",
+            "phys_address": "1ca1.88ff.c119",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -15160,10 +15161,10 @@ Tunnel10 is up, line protocol is up
                 }
             },
             "line_protocol": "up",
-            "mac_address": "1ca1.8811.b008",
+            "mac_address": "1ca1.88ff.c119",
             "mtu": 1500,
             "oper_status": "up",
-            "phys_address": "1ca1.8811.b008",
+            "phys_address": "1ca1.88ff.c119",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -15191,10 +15192,10 @@ Tunnel10 is up, line protocol is up
                 }
             },
             "line_protocol": "up",
-            "mac_address": "1ca1.8811.b008",
+            "mac_address": "1ca1.88ff.c119",
             "mtu": 1500,
             "oper_status": "up",
-            "phys_address": "1ca1.8811.b008",
+            "phys_address": "1ca1.88ff.c119",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -15249,7 +15250,7 @@ Tunnel10 is up, line protocol is up
     golden_interface_output_1 = {'execute.return_value' : '''
     Port-channel10 is up, line protocol is up 
 
-      Hardware is GEChannel, address is 006b.f1d5.e8c9 (bia 006b.f1d5.e8c9)
+      Hardware is GEChannel, address is 006b.f1ff.be9f (bia 006b.f1ff.be9f)
 
       MTU 1500 bytes, BW 2000000 Kbit/sec, DLY 10 usec, 
 
@@ -15321,8 +15322,8 @@ Tunnel10 is up, line protocol is up
             'line_protocol': 'up',
             'oper_status': 'up',
             'type': 'GEChannel',
-            'mac_address': '006b.f1d5.e8c9',
-            'phys_address': '006b.f1d5.e8c9',
+            'mac_address': '006b.f1ff.be9f',
+            'phys_address': '006b.f1ff.be9f',
             'delay': 10,
             'mtu': 1500,
             'bandwidth': 2000000,
@@ -15407,7 +15408,7 @@ Tunnel10 is up, line protocol is up
 
     golden_output_1 = {'execute.return_value': '''
         BDI105 is up, line protocol is up
-        Hardware is BDI, address is 2c33.1188.733f(bia 2c33.1188.733f)
+        Hardware is BDI, address is 2c33.11ff.fbc7(bia 2c33.11ff.fbc7)
         Description: PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH
         Internet address is 10.95.2.253/24
         MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
@@ -15433,7 +15434,7 @@ Tunnel10 is up, line protocol is up
         0 output buffer failures, 0 output buffers swapped out
 
       TenGigabitEthernet0/1/86 is administratively down, line protocol is down
-        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a896 (bia 2c33.1188.a896)
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.311f (bia 2c33.11ff.311f)
         MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -15460,7 +15461,7 @@ Tunnel10 is up, line protocol is up
             0 lost carrier, 0 no carrier, 0 pause output
             0 output buffer failures, 0 output buffers swapped out
       TenGigabitEthernet0/1/6 is administratively down, line protocol is down
-        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a896 (bia 2c33.1188.a896)
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.311f (bia 2c33.11ff.311f)
         MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -15487,7 +15488,7 @@ Tunnel10 is up, line protocol is up
             0 lost carrier, 0 no carrier, 0 pause output
             0 output buffer failures, 0 output buffers swapped out
         TenGigabitEthernet0/1/7 is administratively down, line protocol is down
-        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a897 (bia 2c33.1188.a897)
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.3120 (bia 2c33.11ff.3120)
         MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -15514,7 +15515,7 @@ Tunnel10 is up, line protocol is up
             0 lost carrier, 0 no carrier, 0 pause output
             0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0 is up, line protocol is up
-        Hardware is RP management port, address is 2c33.1188.a8c0 (bia 2c33.1188.a8c0)
+        Hardware is RP management port, address is 2c33.11ff.3149 (bia 2c33.11ff.3149)
         Internet address is 172.31.0.24/16
         MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
@@ -15542,7 +15543,7 @@ Tunnel10 is up, line protocol is up
             1 lost carrier, 0 no carrier, 0 pause output
             0 output buffer failures, 0 output buffers swapped out
         BDI106 is up, line protocol is up
-        Hardware is BDI, address is 2c33.1188.a93f (bia 2c33.1188.a93f)
+        Hardware is BDI, address is 2c33.11ff.32c7 (bia 2c33.11ff.32c7)
         Description: PXMS connexion Explore CWS L2 / Backup VLAN for CHRH
         Internet address is 10.1.2.43/24
         MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
@@ -15691,10 +15692,10 @@ Tunnel10 is up, line protocol is up
                 }
             },
             'line_protocol': 'up',
-            'mac_address': '2c33.1188.733f',
+            'mac_address': '2c33.11ff.fbc7',
             'mtu': 1500,
             'oper_status': 'up',
-            'phys_address': '2c33.1188.733f',
+            'phys_address': '2c33.11ff.fbc7',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -15759,11 +15760,11 @@ Tunnel10 is up, line protocol is up
             'last_input': 'never',
             'last_output': '25w2d',
             'line_protocol': 'up',
-            'mac_address': '2c33.1188.a93f',
+            'mac_address': '2c33.11ff.32c7',
             'mtu': 1500,
             'oper_status': 'up',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.a93f',
+            'phys_address': '2c33.11ff.32c7',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -15896,12 +15897,12 @@ Tunnel10 is up, line protocol is up
             'last_output': '00:00:00',
             'line_protocol': 'up',
             'link_type': 'auto',
-            'mac_address': '2c33.1188.a8c0',
+            'mac_address': '2c33.11ff.3149',
             'media_type': 'RJ45',
             'mtu': 1500,
             'oper_status': 'up',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.a8c0',
+            'phys_address': '2c33.11ff.3149',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -16052,11 +16053,11 @@ Tunnel10 is up, line protocol is up
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'down',
-            'mac_address': '2c33.1188.a896',
+            'mac_address': '2c33.11ff.311f',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.a896',
+            'phys_address': '2c33.11ff.311f',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -16134,12 +16135,12 @@ Tunnel10 is up, line protocol is up
             'line_protocol': 'down',
             'link_type': 'force-up',
             'media_type': 'unknown',
-            'mac_address': '2c33.1188.a897',
+            'mac_address': '2c33.11ff.3120',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
             'port_speed': '10000mbps',
-            'phys_address': '2c33.1188.a897',
+            'phys_address': '2c33.11ff.3120',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -16218,11 +16219,11 @@ Tunnel10 is up, line protocol is up
             'link_type': 'force-up',
             'media_type': 'unknown',
             'port_speed': '10000mbps',
-            'mac_address': '2c33.1188.a896',
+            'mac_address': '2c33.11ff.311f',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.a896',
+            'phys_address': '2c33.11ff.311f',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -16316,7 +16317,7 @@ Tunnel10 is up, line protocol is up
 
     golden_output_2 = {'execute.return_value': '''
         TenGigabitEthernet0/1/0 is up, line protocol is up
-        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7290 (bia 2c33.1188.7290)
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.fa19 (bia 2c33.11ff.fa19)
         Internet address is 10.209.98.103/31
         MTU 4000 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
@@ -16344,7 +16345,7 @@ Tunnel10 is up, line protocol is up
             0 lost carrier, 0 no carrier, 0 pause output
             0 output buffer failures, 0 output buffers swapped out
             TenGigabitEthernet0/1/5 is administratively down, line protocol is down
-            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7295 (bia 2c33.1188.7295)
+            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.fa1e (bia 2c33.11ff.fa1e)
             MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
                 reliability 255/255, txload 1/255, rxload 1/255
             Encapsulation ARPA, loopback not set
@@ -16371,7 +16372,7 @@ Tunnel10 is up, line protocol is up
                 0 lost carrier, 0 no carrier, 0 pause output
                 0 output buffer failures, 0 output buffers swapped out
             TenGigabitEthernet0/1/6 is administratively down, line protocol is down
-            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7296 (bia 2c33.1188.7296)
+            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.fa1f (bia 2c33.11ff.fa1f)
             MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
                 reliability 255/255, txload 1/255, rxload 1/255
             Encapsulation ARPA, loopback not set
@@ -16398,7 +16399,7 @@ Tunnel10 is up, line protocol is up
                 0 lost carrier, 0 no carrier, 0 pause output
                 0 output buffer failures, 0 output buffers swapped out
         TenGigabitEthernet0/1/1 is up, line protocol is up
-        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7291 (bia 2c33.1188.7291)
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.11ff.fa1a (bia 2c33.11ff.fa1a)
         Description: Internet OUT Link (Through ASA or Direct)
         MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
             reliability 255/255, txload 1/255, rxload 1/255
@@ -16494,12 +16495,12 @@ Tunnel10 is up, line protocol is up
             'last_output': '02:29:25',
             'line_protocol': 'up',
             'link_type': 'force-up',
-            'mac_address': '2c33.1188.7290',
+            'mac_address': '2c33.11ff.fa19',
             'media_type': 'SFP-LR',
             'mtu': 4000,
             'oper_status': 'up',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.7290',
+            'phys_address': '2c33.11ff.fa19',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -16581,12 +16582,12 @@ Tunnel10 is up, line protocol is up
                 'last_output': '00:00:00',
                 'line_protocol': 'up',
                 'link_type': 'force-up',
-                'mac_address': '2c33.1188.7291',
+                'mac_address': '2c33.11ff.fa1a',
                 'media_type': 'SFP-LR',
                 'mtu': 1500,
                 'oper_status': 'up',
                 'output_hang': 'never',
-                'phys_address': '2c33.1188.7291',
+                'phys_address': '2c33.11ff.fa1a',
                 'port_channel': {
                     'port_channel_member': False
                 },
@@ -16660,12 +16661,12 @@ Tunnel10 is up, line protocol is up
             'last_output': 'never',
             'line_protocol': 'down',
             'link_type': 'force-up',
-            'mac_address': '2c33.1188.7295',
+            'mac_address': '2c33.11ff.fa1e',
             'media_type': 'unknown',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.7295',
+            'phys_address': '2c33.11ff.fa1e',
             'port_channel': {'port_channel_member': False},
             'port_speed': '10000mbps',
             'queues': {
@@ -16742,12 +16743,12 @@ Tunnel10 is up, line protocol is up
             'last_output': 'never',
             'line_protocol': 'down',
             'link_type': 'force-up',
-            'mac_address': '2c33.1188.7296',
+            'mac_address': '2c33.11ff.fa1f',
             'media_type': 'unknown',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
-            'phys_address': '2c33.1188.7296',
+            'phys_address': '2c33.11ff.fa1f',
             'port_channel': {
                 'port_channel_member': False
             },
@@ -17338,8 +17339,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                       "prefix_length": "64",
                       "status": "tentative"
                  },
-                 "2001:DB8:4:4:257:D2FF:FE28:1A64/64": {
-                      "ip": "2001:DB8:4:4:257:D2FF:FE28:1A64",
+                 "2001:DB8:4:4:257:D2FF:FEFF:428C/64": {
+                      "ip": "2001:DB8:4:4:257:D2FF:FEFF:428C",
                       "prefix_length": "64",
                       "status": "tentative",
                       "eui_64": True
@@ -17350,8 +17351,8 @@ class TestShowIpv6Interface(unittest.TestCase):
                       "status": "tentative",
                       "anycast": True
                  },
-                 "FE80::257:D2FF:FE28:1A64": {
-                      "ip": "FE80::257:D2FF:FE28:1A64",
+                 "FE80::257:D2FF:FEFF:428C": {
+                      "ip": "FE80::257:D2FF:FEFF:428C",
                       "status": "tentative",
                       "origin": "link_layer",
                  },
@@ -17479,7 +17480,7 @@ class TestShowIpv6Interface(unittest.TestCase):
         ND NS retransmit interval is 1000 milliseconds
 
         GigabitEthernet1/0/1 is administratively down, line protocol is down
-        IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
+        IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [TEN]
         No Virtual link-local address(es):
         Description: desc
         Global unicast address(es):
@@ -17487,7 +17488,7 @@ class TestShowIpv6Interface(unittest.TestCase):
           2001:DB8:1:1::1, subnet is 2001:DB8:1:1::/64 [TEN]
           2001:DB8:2:2::2, subnet is 2001:DB8:2:2::/64 [TEN]
           2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
-          2001:DB8:4:4:257:D2FF:FE28:1A64, subnet is 2001:DB8:4:4::/64 [EUI/TEN]
+          2001:DB8:4:4:257:D2FF:FEFF:428C, subnet is 2001:DB8:4:4::/64 [EUI/TEN]
         Joined group address(es):
           FF02::1
         MTU is 1500 bytes
@@ -18912,6 +18913,177 @@ class TestShowInterfacesDescription(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
+
+###################################################
+# unit test for show interfaces status
+####################################################
+class TestShowInterfacesStatus(unittest.TestCase):
+    """unit test for show interfaces status """
+
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_interface_output1 = {'execute.return_value': ''' 
+    show interfaces status
+    
+    Port      Name               Status       Vlan       Duplex  Speed Type
+    Gi1/1     To Abcde           notconnect   1            auto   auto 10/100/1000-TX
+    Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+    Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
+    Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+    Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
+    Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/11    APQWSR             connected    136        a-full a-1000 10/100/1000-TX
+    Gi2/12                       notconnect   99           auto   auto 10/100/1000-TX
+    Gi2/23                       connected    140        a-full  a-100 10/100/1000-TX
+    Gi2/24    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+    Te3/2                        inactive     1            full   auto No XCVR
+    Gi3/4                        notconnect   99           full   1000 No Gbic
+    Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
+    Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
+    '''}
+
+    golden_parsed_interface_output1 = {
+        'interfaces': {
+            'GigabitEthernet1/1': {
+                'duplex_code': 'auto',
+                'name': 'To Abcde',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '1',
+            },
+            'GigabitEthernet1/10': {
+                'duplex_code': 'a-full',
+                'name': 'To cft123',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet1/2': {
+                'duplex_code': 'full',
+                'name': 'TelenlqPOIU',
+                'port_speed': '100',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '125',
+            },
+            'GigabitEthernet1/3': {
+                'duplex_code': 'a-full',
+                'name': 'SE',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '132',
+            },
+            'GigabitEthernet1/44': {
+                'duplex_code': 'a-full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '550',
+            },
+            'GigabitEthernet1/45': {
+                'duplex_code': 'a-full',
+                'name': 'ASDFGH',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet1/46': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet1/7': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet2/11': {
+                'duplex_code': 'a-full',
+                'name': 'APQWSR',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '136',
+            },
+            'GigabitEthernet2/12': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': '10/100/1000-TX',
+                'vlan': '99',
+            },
+            'GigabitEthernet2/23': {
+                'duplex_code': 'a-full',
+                'port_speed': 'a-100',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': '140',
+            },
+            'GigabitEthernet2/24': {
+                'duplex_code': 'a-full',
+                'name': 'ASDFGH',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000-TX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet3/4': {
+                'duplex_code': '1000',
+                'name': 'notconnect',
+                'port_speed': 'No',
+                'status': '99',
+                'type': 'Gbic',
+                'vlan': 'full',
+            },
+            'GigabitEthernet3/5': {
+                'duplex_code': 'full',
+                'name': 'To loedutjb234',
+                'port_speed': '1000',
+                'status': 'connected',
+                'type': '1000BaseSX',
+                'vlan': 'trunk',
+            },
+            'GigabitEthernet3/6': {
+                'duplex_code': 'full',
+                'name': 'To loedutjb345',
+                'port_speed': '1000',
+                'status': 'connected',
+                'type': '1000BaseSX',
+                'vlan': 'trunk',
+            },
+            'TenGigabitEthernet3/2': {
+                'duplex_code': 'auto',
+                'name': 'inactive',
+                'port_speed': 'No',
+                'status': '1',
+                'type': 'XCVR',
+                'vlan': 'full',
+            },
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfacesStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_interface_output1)
+        obj = ShowInterfacesStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
 
 if __name__ == '__main__':
     unittest.main()

@@ -135,18 +135,18 @@ class TestShowNvePeers(unittest.TestCase):
                     'peer_state': 'up',
                     'learn_type': 'CP',
                     'uptime': '00:03:05',
-                    'router_mac': '5e00.0002.0007',
+                    'router_mac': '5e00.00ff.0209',
                 },
                 "2001:db8:646:a2bb:0:abcd:1234:3": {
                     "learn_type": "CP",
                     "peer_state": "up",
-                    "router_mac": "5254.0075.bada",
+                    "router_mac": "5254.00ff.3050",
                     "uptime": "05:34:40"
                 },
                 "2001:db8:646:a2bb:0:abcd:1234:5": {
                     "learn_type": "CP",
                     "peer_state": "up",
-                    "router_mac": "5254.00ae.a319",
+                    "router_mac": "5254.00ff.52c7",
                     "uptime": "05:35:40"
                 }
             },
@@ -158,9 +158,9 @@ class TestShowNvePeers(unittest.TestCase):
     Interface Peer-IP          State LearnType Uptime   Router-Mac
     --------- ---------------  ----- --------- -------- -----------------
     nve1      192.168.16.1      Up    CP        01:15:09 n/a
-    nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
-    nve1      2001:db8:646:a2bb:0:abcd:1234:3     Up    CP       05:34:40 5254.0075.bada   
-    nve1      2001:db8:646:a2bb:0:abcd:1234:5     Up    CP       05:35:40 5254.00ae.a319
+    nve1      192.168.106.1        Up    CP        00:03:05 5e00.00ff.0209
+    nve1      2001:db8:646:a2bb:0:abcd:1234:3     Up    CP       05:34:40 5254.00ff.3050   
+    nve1      2001:db8:646:a2bb:0:abcd:1234:5     Up    CP       05:35:40 5254.00ff.52c7
         '''}
 
     def test_show_nve_golden(self):
@@ -529,7 +529,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
             'if_state': "up",
             'encap_type': "vxlan",  # Ops Str 'vxlan'
             'vpc_capability': "vpc-vip-only [notified]",  # Ops Str 'vpc-vip-only [notified]'
-            'local_rmac': "5e00.0005.0007",  # Ops Str '5e00.0005.0007'
+            'local_rmac': "5e00.00ff.050c",  # Ops Str '5e00.00ff.050c'
             'host_reach_mode': "control-plane",  # Ops Str 'control-plane'
             'source_if': "loopback1",  # Conf/Ops Str 'loopback1'
             'primary_ip': "192.168.4.11",  # Ops Str '192.168.4.11'
@@ -542,7 +542,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
             'src_if_holddown_tm': 180,  # Ops Int 180
             'src_if_holdup_tm': 30,  # Ops Int 30
             'src_if_holddown_left': 0,  # Ops Int 0
-            'vip_rmac': "0200.c90c.0b16",  # Ops Str '0200.c90c.0b16'
+            'vip_rmac': "0200.c9ff.1722",  # Ops Str '0200.c9ff.1722'
             'sm_state': "nve-intf-add-complete",  # Ops Str 'nve-intf-add-complete'
             'peer_forwarding_mode': False,  # Ops Bool False
             'dwn_strm_vni_cfg_mode': "n/a",  # Ops Str 'n/a'
@@ -556,7 +556,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
     BL1# show nve interface nve 1 detail
     Interface: nve1, State: Up, encapsulation: VXLAN
      VPC Capability: VPC-VIP-Only [notified]
-     Local Router MAC: 5e00.0005.0007
+     Local Router MAC: 5e00.00ff.050c
      Host Learning Mode: Control-Plane
      Source-Interface: loopback1 (primary: 192.168.4.11, secondary: 192.168.196.22)
      Source Interface State: Up
@@ -567,7 +567,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
      Source Interface hold-down-time: 180
      Source Interface hold-up-time: 30
      Remaining hold-down time: 0 seconds
-     Virtual Router MAC: 0200.c90c.0b16
+     Virtual Router MAC: 0200.c9ff.1722
      Interface state: nve-intf-add-complete
      unknown-peer-forwarding: disable
      down-stream vni config mode: n/a
@@ -582,7 +582,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
             'if_state': "down",
             'encap_type': "vxlan",
             'vpc_capability': "vpc-vip-only [notified]",
-            'local_rmac': "6cb2.ae24.3f17",
+            'local_rmac': "6cb2.aeff.633b",
             'host_reach_mode': "control-plane",
             'source_if': "loopback1",
             'primary_ip': "192.168.111.11",
@@ -597,8 +597,8 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
             'src_if_holddown_left': 0,
             'multisite_convergence_time': 180,
             'multisite_convergence_time_left': 0,
-            'vip_rmac': "0200.c90c.0b16",
-            'vip_rmac_ro': "0200.6565.6565",
+            'vip_rmac': "0200.c9ff.1722",
+            'vip_rmac_ro': "0200.65ff.caca",
             'sm_state': "nve-intf-init",
             'multisite_bgw_if': "loopback2",
             'multisite_bgw_if_ip': '10.4.101.101',
@@ -612,7 +612,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
     MS-VPC-BL1(config-if)# Sh nve interface nve 1 detail
     Interface: nve1, State: Down, encapsulation: VXLAN
      VPC Capability: VPC-VIP-Only [notified]
-     Local Router MAC: 6cb2.ae24.3f17
+     Local Router MAC: 6cb2.aeff.633b
      Host Learning Mode: Control-Plane
      Source-Interface: loopback1 (primary: 192.168.111.11, secondary: 192.168.196.22)
      Source Interface State: Up
@@ -624,8 +624,8 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
      Remaining hold-down time: 0 seconds
      Multi-Site delay-restore time: 180 seconds
      Multi-Site delay-restore time left: 0 seconds
-     Virtual Router MAC: 0200.c90c.0b16
-     Virtual Router MAC Re-origination: 0200.6565.6565
+     Virtual Router MAC: 0200.c9ff.1722
+     Virtual Router MAC Re-origination: 0200.65ff.caca
      Interface state: nve-intf-init
      Multisite bgw-if: loopback2 (ip: 10.4.101.101, admin: Down, oper: Down)
      Multisite bgw-if oper down reason: NVE not up.
@@ -751,8 +751,8 @@ class TestShowNveEthernetSegment(unittest.TestCase):
             'nve1': {
                 'ethernet_segment': {
                     'esi': {
-                        '0300.0000.0001.2c00.0309': {
-                            'esi': '0300.0000.0001.2c00.0309',
+                        '0300.00ff.0001.2c00.0309': {
+                            'esi': '0300.00ff.0001.2c00.0309',
                             'if_name': 'nve1',
                             'es_state': 'up',
                             'po_state': 'n/a',
@@ -788,7 +788,7 @@ class TestShowNveEthernetSegment(unittest.TestCase):
     golden_output = {'execute.return_value': '''
     MS-BL5(config)# sh nve ethernet-segment
 
-    ESI: 0300.0000.0001.2c00.0309
+    ESI: 0300.00ff.0001.2c00.0309
        Parent interface: nve1
       ES State: Up
       Port-channel state: N/A
@@ -842,14 +842,14 @@ class TestShowL2routeEvpnEthernetSegment(unittest.TestCase):
         'evpn': {
             'ethernet_segment': {
                 1: {
-                    'ethernet_segment': '0300.0000.0001.2c00.0309',
+                    'ethernet_segment': '0300.00ff.0001.2c00.0309',
                     'originating_rtr': '192.168.111.55',
                     'prod_name': 'vxlan',
                     'int_ifhdl': 'nve1',
                     'client_nfn': 64,
                 },
                 2: {
-                    'ethernet_segment': '0300.0000.0001.2c00.0309',
+                    'ethernet_segment': '0300.00ff.0001.2c00.0309',
                     'originating_rtr': '192.168.111.66',
                     'prod_name': 'bgp',
                     'int_ifhdl': 'n/a',
@@ -864,8 +864,8 @@ class TestShowL2routeEvpnEthernetSegment(unittest.TestCase):
 
     ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
     ------------------------ -----------------  ----- ----------- ----------
-    0300.0000.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
-    0300.0000.0001.2c00.0309 192.168.111.66         BGP   N/A          32
+    0300.00ff.0001.2c00.0309 192.168.111.55         VXLAN nve1         64
+    0300.00ff.0001.2c00.0309 192.168.111.66         BGP   N/A          32
 
     '''}
 
@@ -908,9 +908,9 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                             'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 20,
                             'rcvd_flag': 0,
-                            'rmac': '5e00.0005.0007',
+                            'rmac': '5e00.00ff.050c',
                             'vrf_id': 3,
-                            'vmac': '0200.c90c.0b16',
+                            'vmac': '0200.c9ff.1722',
                             'flags': 'L3cp',
                             'sub_flags': '--',
                             'prev_flags': '-',
@@ -931,9 +931,9 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                             'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 21,
                             'rcvd_flag': 0,
-                            'rmac': '5e00.0005.0007',
+                            'rmac': '5e00.00ff.050c',
                             'vrf_id': 4,
-                            'vmac': '0200.c90c.0b16',
+                            'vmac': '0200.c9ff.1722',
                             'flags': 'L3cp',
                             'sub_flags': '--',
                             'prev_flags': '-',
@@ -954,9 +954,9 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                             'emulated_ro_ip': '192.168.196.22',
                             'tx_id': 22,
                             'rcvd_flag': 0,
-                            'rmac': '5e00.0005.0007',
+                            'rmac': '5e00.00ff.050c',
                             'vrf_id': 5,
-                            'vmac': '0200.c90c.0b16',
+                            'vmac': '0200.c9ff.1722',
                             'flags': 'L3cp',
                             'sub_flags': '--',
                             'prev_flags': '-',
@@ -979,7 +979,7 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                             'rcvd_flag': 0,
                             'rmac': '0000.0000.0000',
                             'vrf_id': 0,
-                            'vmac': '0200.c90c.0b16',
+                            'vmac': '0200.c9ff.1722',
                             'flags': 'L2cpBgp',
                             'sub_flags': 'Adv-MAC',
                             'prev_flags': '-',
@@ -999,8 +999,8 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                               Emulated IP: 192.168.196.22
                               Emulated RO IP: 192.168.196.22
                               TX-ID: 20 (Rcvd Ack: 0)
-                              RMAC: 5e00.0005.0007, VRFID: 3
-                              VMAC: 0200.c90c.0b16
+                              RMAC: 5e00.00ff.050c, VRFID: 3
+                              VMAC: 0200.c9ff.1722
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 102           Vxlan-10002     VNI: 10002
                               Encap:0 IOD:0 IfHdl:1224736769
@@ -1008,8 +1008,8 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                               Emulated IP: 192.168.196.22
                               Emulated RO IP: 192.168.196.22
                               TX-ID: 21 (Rcvd Ack: 0)
-                              RMAC: 5e00.0005.0007, VRFID: 4
-                              VMAC: 0200.c90c.0b16
+                              RMAC: 5e00.00ff.050c, VRFID: 4
+                              VMAC: 0200.c9ff.1722
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 103           Vxlan-10003     VNI: 10003
                               Encap:0 IOD:0 IfHdl:1224736769
@@ -1017,8 +1017,8 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                               Emulated IP: 192.168.196.22
                               Emulated RO IP: 192.168.196.22
                               TX-ID: 22 (Rcvd Ack: 0)
-                              RMAC: 5e00.0005.0007, VRFID: 5
-                              VMAC: 0200.c90c.0b16
+                              RMAC: 5e00.00ff.050c, VRFID: 5
+                              VMAC: 0200.c9ff.1722
                               Flags: L3cp, Sub_Flags: --, Prev_Flags: -
 1205          Vxlan-8003      VNI: 8003
                               Encap:0 IOD:0 IfHdl:1224736769
@@ -1027,7 +1027,7 @@ class TestShowL2routeTopologyDetail(unittest.TestCase):
                               Emulated RO IP: 192.168.196.22
                               TX-ID: 19 (Rcvd Ack: 0)
                               RMAC: 0000.0000.0000, VRFID: 0
-                              VMAC: 0200.c90c.0b16
+                              VMAC: 0200.c9ff.1722
                               Flags: L2cpBgp, Sub_Flags: Adv-MAC, Prev_Flags: -
 '''}
 
@@ -1104,8 +1104,8 @@ class TestShowL2routeMacAllDetail(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac': {
-                        '5e00.0002.0007': {
-                            'mac_addr': '5e00.0002.0007',
+                        '5e00.00ff.0209': {
+                            'mac_addr': '5e00.00ff.0209',
                             'prod_type': 'vxlan',
                             'flags': 'rmac',
                             'seq_num': 0,
@@ -1118,8 +1118,8 @@ class TestShowL2routeMacAllDetail(unittest.TestCase):
                 },
                 1001: {
                     'mac': {
-                        'fa16.3ea3.fb66': {
-                            'mac_addr': 'fa16.3ea3.fb66',
+                        'fa16.3eff.9f0a': {
+                            'mac_addr': 'fa16.3eff.9f0a',
                             'prod_type': 'local',
                             'flags': 'l',
                             'seq_num': 0,
@@ -1129,8 +1129,8 @@ class TestShowL2routeMacAllDetail(unittest.TestCase):
                             'sent_to': 'bgp',
                             'soo': 774975538,
                         },
-                        'fa16.3ec2.34fe': {
-                            'mac_addr': 'fa16.3ec2.34fe',
+                        'fa16.3eff.f6c1': {
+                            'mac_addr': 'fa16.3eff.f6c1',
                             'prod_type': 'bgp',
                             'flags': 'splrcv',
                             'seq_num': 0,
@@ -1156,17 +1156,17 @@ class TestShowL2routeMacAllDetail(unittest.TestCase):
 
     Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
     ----------- -------------- ------ ------------- ---------- ----------------
-    101         5e00.0002.0007 VXLAN  Rmac          0          192.168.106.1
+    101         5e00.00ff.0209 VXLAN  Rmac          0          192.168.106.1
                 Route Resolution Type: Regular
                 Forwarding State: Resolved (PeerID: 2)
 
-    1001        fa16.3ea3.fb66 Local  L,            0          Eth1/5
+    1001        fa16.3eff.9f0a Local  L,            0          Eth1/5
                 Route Resolution Type: Regular
                 Forwarding State: Resolved
                 Sent To: BGP
                 SOO: 774975538
 
-    1001        fa16.3ec2.34fe BGP    SplRcv        0          192.168.106.1
+    1001        fa16.3eff.f6c1 BGP    SplRcv        0          192.168.106.1
                 Route Resolution Type: Regular
                 Forwarding State: Resolved (PeerID: 2)
                 Sent To: L2FWDER
@@ -1200,16 +1200,16 @@ class TestShowL2routeMacIpAllDetail(unittest.TestCase):
             'topo_id': {
                 1001: {
                     'mac_ip': {
-                        'fa16.3ec2.34fe': {
-                            'mac_addr': 'fa16.3ec2.34fe',
+                        'fa16.3eff.f6c1': {
+                            'mac_addr': 'fa16.3eff.f6c1',
                             'mac_ip_prod_type': 'bgp',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
                             'next_hop1': '192.168.106.1',
                             'host_ip': '10.36.10.11',
                         },
-                        'fa16.3ea3.fb66': {
-                            'mac_addr': 'fa16.3ea3.fb66',
+                        'fa16.3eff.9f0a': {
+                            'mac_addr': 'fa16.3eff.9f0a',
                             'mac_ip_prod_type': 'hmm',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
@@ -1232,8 +1232,8 @@ class TestShowL2routeMacIpAllDetail(unittest.TestCase):
     (Ps):Peer Sync (Ro):Re-Originated
     Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
     ----------- -------------- ------ ---------- --------------- ---------------
-    1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
-    1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
+    1001        fa16.3eff.f6c1 BGP    --            0          10.36.10.11      192.168.106.1
+    1001        fa16.3eff.9f0a HMM    --            0          10.36.10.55      Local
                 Sent To: BGP
                 SOO: 774975538
                 L3-Info: 10001
@@ -1426,16 +1426,16 @@ class TestShowL2routeMacIpAllDetail(unittest.TestCase):
             'topo_id': {
                 1001: {
                     'mac_ip': {
-                        'fa16.3ec2.34fe': {
-                            'mac_addr': 'fa16.3ec2.34fe',
+                        'fa16.3eff.f6c1': {
+                            'mac_addr': 'fa16.3eff.f6c1',
                             'mac_ip_prod_type': 'bgp',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
                             'next_hop1': '192.168.106.1',
                             'host_ip': '10.36.10.11',
                         },
-                        'fa16.3ea3.fb66': {
-                            'mac_addr': 'fa16.3ea3.fb66',
+                        'fa16.3eff.9f0a': {
+                            'mac_addr': 'fa16.3eff.9f0a',
                             'mac_ip_prod_type': 'hmm',
                             'mac_ip_flags': '--',
                             'seq_num': 0,
@@ -1458,8 +1458,8 @@ class TestShowL2routeMacIpAllDetail(unittest.TestCase):
     (Ps):Peer Sync (Ro):Re-Originated
     Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
     ----------- -------------- ------ ---------- --------------- ---------------
-    1001        fa16.3ec2.34fe BGP    --            0          10.36.10.11      192.168.106.1
-    1001        fa16.3ea3.fb66 HMM    --            0          10.36.10.55      Local
+    1001        fa16.3eff.f6c1 BGP    --            0          10.36.10.11      192.168.106.1
+    1001        fa16.3eff.9f0a HMM    --            0          10.36.10.55      Local
                 Sent To: BGP
                 SOO: 774975538
                 L3-Info: 10001
@@ -2719,14 +2719,14 @@ class TestShowL2routeEvpnMacIpEvi(unittest.TestCase):
         (Ps):Peer Sync (Ro):Re-Originated 
         Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops      
         ----------- -------------- ------ ---------- --------------- ---------------
-        101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local          
-        101         fa16.3ed4.83e4 HMM    --            0          10.111.2.3    Local          
-        101         fa16.3e68.b933 HMM    --            0          10.111.3.3    Local          
-        101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66    
-        101         fa16.3ec5.fcab HMM    --            0          10.111.1.4    Local          
-        101         fa16.3e79.6bfe HMM    --            0          10.111.2.4    Local          
-        101         fa16.3e2f.654d HMM    --            0          10.111.3.4    Local          
-        101         fa16.3e9a.e558 BGP    --            0          10.111.8.4    10.84.66.66    
+        101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local          
+        101         fa16.3eff.58b9 HMM    --            0          10.111.2.3    Local          
+        101         fa16.3eff.229b HMM    --            0          10.111.3.3    Local          
+        101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66    
+        101         fa16.3eff.c271 HMM    --            0          10.111.1.4    Local          
+        101         fa16.3eff.e478 HMM    --            0          10.111.2.4    Local          
+        101         fa16.3eff.947c HMM    --            0          10.111.3.4    Local          
+        101         fa16.3eff.80f2 BGP    --            0          10.111.8.4    10.84.66.66    
 
     '''}
 
@@ -2735,67 +2735,67 @@ class TestShowL2routeEvpnMacIpEvi(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac_ip': {
-                        'fa16.3ed1.37b5': {
+                        'fa16.3eff.0987': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ed1.37b5',
+                            'mac_addr': 'fa16.3eff.0987',
                             'host_ip': '10.111.1.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3ed4.83e4': {
+                        'fa16.3eff.58b9': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ed4.83e4',
+                            'mac_addr': 'fa16.3eff.58b9',
                             'host_ip': '10.111.2.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e68.b933': {
+                        'fa16.3eff.229b': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e68.b933',
+                            'mac_addr': 'fa16.3eff.229b',
                             'host_ip': '10.111.3.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e04.e54a': {
+                        'fa16.3eff.e94e': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e04.e54a',
+                            'mac_addr': 'fa16.3eff.e94e',
                             'host_ip': '10.111.8.3',
                             'next_hop1': '10.84.66.66',
                             },
-                        'fa16.3ec5.fcab': {
+                        'fa16.3eff.c271': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ec5.fcab',
+                            'mac_addr': 'fa16.3eff.c271',
                             'host_ip': '10.111.1.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e79.6bfe': {
+                        'fa16.3eff.e478': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e79.6bfe',
+                            'mac_addr': 'fa16.3eff.e478',
                             'host_ip': '10.111.2.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e2f.654d': {
+                        'fa16.3eff.947c': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e2f.654d',
+                            'mac_addr': 'fa16.3eff.947c',
                             'host_ip': '10.111.3.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e9a.e558': {
+                        'fa16.3eff.80f2': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e9a.e558',
+                            'mac_addr': 'fa16.3eff.80f2',
                             'host_ip': '10.111.8.4',
                             'next_hop1': '10.84.66.66',
                             },
@@ -2831,16 +2831,16 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
         (Ps):Peer Sync (Ro):Re-Originated 
         Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops      
         ----------- -------------- ------ ---------- --------------- ---------------
-        101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local          
-        101         fa16.3ed4.83e4 HMM    --            0          10.111.2.3    Local          
-        101         fa16.3e68.b933 HMM    --            0          10.111.3.3    Local          
-        101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66    
-        101         fa16.3ec5.fcab HMM    --            0          10.111.1.4    Local          
-        101         fa16.3e79.6bfe HMM    --            0          10.111.2.4    Local          
-        101         fa16.3e2f.654d HMM    --            0          10.111.3.4    Local          
-        101         fa16.3e9a.e558 BGP    --            0          10.111.8.4    10.84.66.66    
-        202         fa16.3e79.6bfe HMM    --            0          192.168.16.4    Local          
-        202         fa16.3e9a.e558 BGP    --            0          192.168.55.4    10.84.66.66     
+        101         fa16.3eff.0987 HMM    --            0          10.111.1.3    Local          
+        101         fa16.3eff.58b9 HMM    --            0          10.111.2.3    Local          
+        101         fa16.3eff.229b HMM    --            0          10.111.3.3    Local          
+        101         fa16.3eff.e94e BGP    --            0          10.111.8.3    10.84.66.66    
+        101         fa16.3eff.c271 HMM    --            0          10.111.1.4    Local          
+        101         fa16.3eff.e478 HMM    --            0          10.111.2.4    Local          
+        101         fa16.3eff.947c HMM    --            0          10.111.3.4    Local          
+        101         fa16.3eff.80f2 BGP    --            0          10.111.8.4    10.84.66.66    
+        202         fa16.3eff.e478 HMM    --            0          192.168.16.4    Local          
+        202         fa16.3eff.80f2 BGP    --            0          192.168.55.4    10.84.66.66     
 
     '''}
 
@@ -2849,67 +2849,67 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac_ip': {
-                        'fa16.3ed1.37b5': {
+                        'fa16.3eff.0987': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ed1.37b5',
+                            'mac_addr': 'fa16.3eff.0987',
                             'host_ip': '10.111.1.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3ed4.83e4': {
+                        'fa16.3eff.58b9': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ed4.83e4',
+                            'mac_addr': 'fa16.3eff.58b9',
                             'host_ip': '10.111.2.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e68.b933': {
+                        'fa16.3eff.229b': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e68.b933',
+                            'mac_addr': 'fa16.3eff.229b',
                             'host_ip': '10.111.3.3',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e04.e54a': {
+                        'fa16.3eff.e94e': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e04.e54a',
+                            'mac_addr': 'fa16.3eff.e94e',
                             'host_ip': '10.111.8.3',
                             'next_hop1': '10.84.66.66',
                             },
-                        'fa16.3ec5.fcab': {
+                        'fa16.3eff.c271': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3ec5.fcab',
+                            'mac_addr': 'fa16.3eff.c271',
                             'host_ip': '10.111.1.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e79.6bfe': {
+                        'fa16.3eff.e478': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e79.6bfe',
+                            'mac_addr': 'fa16.3eff.e478',
                             'host_ip': '10.111.2.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e2f.654d': {
+                        'fa16.3eff.947c': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e2f.654d',
+                            'mac_addr': 'fa16.3eff.947c',
                             'host_ip': '10.111.3.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e9a.e558': {
+                        'fa16.3eff.80f2': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e9a.e558',
+                            'mac_addr': 'fa16.3eff.80f2',
                             'host_ip': '10.111.8.4',
                             'next_hop1': '10.84.66.66',
                             },
@@ -2917,19 +2917,19 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
                     },
                 202: {
                     'mac_ip': {
-                        'fa16.3e79.6bfe': {
+                        'fa16.3eff.e478': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e79.6bfe',
+                            'mac_addr': 'fa16.3eff.e478',
                             'host_ip': '192.168.16.4',
                             'next_hop1': 'local',
                             },
-                        'fa16.3e9a.e558': {
+                        'fa16.3eff.80f2': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
-                            'mac_addr': 'fa16.3e9a.e558',
+                            'mac_addr': 'fa16.3eff.80f2',
                             'host_ip': '192.168.55.4',
                             'next_hop1': '10.84.66.66',
                             },
@@ -2943,8 +2943,8 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
     leaf3# show l2route evpn mac-ip all
     Topology ID Mac Address    Prod Host IP                 Next Hop (s)
     ----------- -------------- ---- ------------------------------------------------------
-    101         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
-    102         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
+    101         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
+    102         0011.00ff.0034 BGP  10.36.3.2                      10.70.0.2
     '''}
 
     golden_parsed_output_2 = {
@@ -2952,9 +2952,9 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
             'topo_id': {
                 101: {
                     'mac_ip': {
-                        '0011.0000.0034': {
+                        '0011.00ff.0034': {
                             'mac_ip_prod_type': 'bgp',
-                            'mac_addr': '0011.0000.0034',
+                            'mac_addr': '0011.00ff.0034',
                             'host_ip': '10.36.3.2',
                             'next_hop1': '10.70.0.2',
                             },
@@ -2962,9 +2962,9 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
                     },
                 102: {
                     'mac_ip': {
-                        '0011.0000.0034': {
+                        '0011.00ff.0034': {
                             'mac_ip_prod_type': 'bgp',
-                            'mac_addr': '0011.0000.0034',
+                            'mac_addr': '0011.00ff.0034',
                             'host_ip': '10.36.3.2',
                             'next_hop1': '10.70.0.2',
                             },

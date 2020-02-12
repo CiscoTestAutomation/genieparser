@@ -133,7 +133,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
-                if '~' is groups['configured']:
+                if '~' == groups['configured']:
                     configured = True
                 else:
                     configured = False
@@ -211,7 +211,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 groups = m.groupdict()
                 peer = groups['remote']
                 vrf = groups['vrf']
-                if '~' is groups['configured']:
+                if '~' == groups['configured']:
                     configured = True
                 else:
                     configured = False

@@ -121,7 +121,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 peer = groups['remote']
                 # appending ip address in order to trace data in the dictionary for p2 or p3
                 peer_list.append(peer)
-                if '~' is groups['configured']:
+                if '~' == groups['configured']:
                     configured = True
                 else:
                     configured = False

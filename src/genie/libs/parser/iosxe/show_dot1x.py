@@ -136,7 +136,7 @@ class ShowDot1xAllDetail(ShowDot1xAllDetailSchema):
                 eap_method = m.groupdict()['eap'].lower()
                 continue
 
-            # Supplicant                = fa16.3e0b.b5b8
+            # Supplicant                = fa16.3eff.c0c3
             m = p6.match(line)
             if m:
                 client = m.groupdict()['client']
@@ -400,7 +400,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
             line = line.strip()
             line = line.replace('\t', '    ')
             
-            # Fa1                   AUTH             000d.bcef.bfdc           UNAUTHORIZED
+            # Fa1                   AUTH             000d.bcff.afcc           UNAUTHORIZED
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -415,8 +415,8 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
                 client_dict['pae'] = 'authenticator' if 'auth' in group['pae'].lower() else 'supplicant'
                 continue
 
-            #                                        fa16.3ea5.663b           AUTHORIZED
-            #                       AUTH             000d.bcef.bfdc           UNAUTHORIZED
+            #                                        fa16.3eff.0ce0           AUTHORIZED
+            #                       AUTH             000d.bcff.afcc           UNAUTHORIZED
             m = p2.match(line)
             if m:
                 group = m.groupdict()
