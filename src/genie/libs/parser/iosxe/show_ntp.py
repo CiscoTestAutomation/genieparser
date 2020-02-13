@@ -102,7 +102,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
-                if '~' is groups['configured']:
+                if '~' == groups['configured']:
                     configured = True
                 else:
                     configured = False

@@ -44,7 +44,7 @@ class ShowVersionSchema(MetaParser):
               'software_version': str,
               'uptime': str,
               Optional('image'): str,
-              Optional('device_family'): str,
+              'device_family': str,
               Optional('processor'): str,
               Optional('processor_memory_bytes'): str,
               Optional('chassis_detail'): str,
@@ -72,7 +72,7 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS XR Software, Version 6.3.1.15I
         # Cisco IOS XR Software, Version 6.1.4.10I[Default]
         p1 = re.compile(r'\s*Cisco +IOS +XR +Software, +Version'
-                        ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?(\sLNT)?$')
+                        ' +(?P<software_version>[A-Z0-9\.]+)(?:\[Default\])?$')
 
         # System uptime is 1 week, 1 day, 5 hours, 47 minutes
         # PE1 uptime is 3 hours, 11 minutes
@@ -258,7 +258,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
                     str(m.groupdict()['primary_node2'])
                 continue
 
-            # mac addr             : 025e.ea57.a400
+            # mac addr             : 025e.eaff.fb57
             p7 = re.compile(r'\s*mac +addr *:'
                              ' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
             m = p7.match(line)

@@ -533,7 +533,7 @@ class TestShowClnsProtocol(unittest.TestCase):
     golden_parsed_output = {
         'instance':{
             'VRF1':{
-                'system_id': '2222.2222.2222',
+                'system_id': '2222.22ff.4444',
                 'nsel':'00',
                 'process_handle': '0x10001',
                 'is_type': 'level-1-2',
@@ -562,7 +562,7 @@ class TestShowClnsProtocol(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         R2#show clns protocol
         IS-IS Router: VRF1 (0x10001)
-        System Id: 2222.2222.2222.00  IS-Type: level-1-2
+        System Id: 2222.22ff.4444.00  IS-Type: level-1-2
         Manual area address(es):
             49.0001
         Routing for area address(es):
@@ -585,7 +585,7 @@ class TestShowClnsProtocol(unittest.TestCase):
             "null": {
                 "process_handle": "0x10000",
                 "is_type": "level-1",
-                "system_id": "0000.0000.0007",
+                "system_id": "0000.00ff.0007",
                 "nsel": "00",
                 "manual_area_address": ["47.0002"],
                 "routing_for_area_address": ["47.0002"],
@@ -609,7 +609,7 @@ class TestShowClnsProtocol(unittest.TestCase):
     }
     golden_output_2 = {'execute.return_value': '''
         IS-IS Router: <Null Tag> (0x10000)
-          System Id: 0000.0000.0007.00  IS-Type: level-1
+          System Id: 0000.00ff.0007.00  IS-Type: level-1
           Manual area address(es):
             47.0002
           Routing for area address(es):
@@ -634,7 +634,7 @@ class TestShowClnsProtocol(unittest.TestCase):
             "null": {
                 "process_handle": "0x10000",
                 "is_type": "level-1",
-                "system_id": "0000.0000.0002",
+                "system_id": "0000.00ff.0002",
                 "nsel": "00",
                 "manual_area_address": ["47.0002"],
                 "routing_for_area_address": ["47.0002"],
@@ -676,7 +676,7 @@ class TestShowClnsProtocol(unittest.TestCase):
         #show clns protocol
 
         IS-IS Router: <Null Tag> (0x10000)
-          System Id: 0000.0000.0002.00  IS-Type: level-1
+          System Id: 0000.00ff.0002.00  IS-Type: level-1
           Manual area address(es):
                 47.0002
           Routing for area address(es):
@@ -714,7 +714,7 @@ class TestShowClnsProtocol(unittest.TestCase):
         'instance': {
             'test': {
                 'is_type': 'level-1',
-                'system_id': '1111.1111.1111',
+                'system_id': '1111.11ff.2222',
                 'nsel': '00',
                 'manual_area_address': ['49.0001'],
                 'routing_for_area_address': ['49.0001'],
@@ -742,7 +742,7 @@ class TestShowClnsProtocol(unittest.TestCase):
         #show clns protocol
 
         IS-IS Router: test
-        System Id: 1111.1111.1111.00  IS-Type: level-1
+        System Id: 1111.11ff.2222.00  IS-Type: level-1
         Manual area address(es):
                 49.0001
         Routing for area address(es):
@@ -807,12 +807,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                             'L2': {
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
-                                'snpa': '5e00.c006.0007',
+                                'snpa': '5e00.c0ff.060d',
                                 'holdtime': 26,
                                 'protocol': 'M-ISIS',
                                 'area_address': ['49.0002'],
                                 'ip_address': ['10.229.7.7*'],
-                                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
+                                'ipv6_address': ['FE80::5C00:C0FF:FEFF:60D'],
                                 'uptime': '00:23:58',
                                 'nsf': 'capable',
                                 'topology': ['ipv4', 'ipv6'],
@@ -829,10 +829,10 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
 
     Tag VRF1:
     System Id       Interface     SNPA                State  Holdtime  Type Protocol
-    R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
+    R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
       Area Address(es): 49.0002
       IP Address(es):  10.229.7.7*
-      IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+      IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
       Uptime: 00:23:58
       NSF capable
       Topology: IPv4, IPv6
@@ -864,12 +864,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                             "L1L2": {
                                 "holdtime": 26,
                                 "state": "up",
-                                "snpa": "fa16.3e21.73f6",
+                                "snpa": "fa16.3eff.9418",
                                 "protocol": "M-ISIS",
                                 "interface": "GigabitEthernet2.115",
                                 "area_address": ["49.0001"],
                                 "ip_address": ["10.12.115.2*"],
-                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "ipv6_address": ["FE80::F816:3EFF:FEFF:9418"],
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
@@ -881,12 +881,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                             "L1L2": {
                                 "holdtime": 29,
                                 "state": "up",
-                                "snpa": "5e00.8002.0007",
+                                "snpa": "5e00.80ff.0209",
                                 "protocol": "M-ISIS",
                                 "interface": "GigabitEthernet3.115",
                                 "area_address": ["49.0001"],
                                 "ip_address": ["10.13.115.3*"],
-                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "ipv6_address": ["FE80::5C00:80FF:FEFF:209"],
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
@@ -897,17 +897,17 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
             },
             "test1": {
                 "system_id": {
-                    "2222.2222.2222": {
+                    "2222.22ff.4444": {
                         "type": {
                             "L1L2": {
                                 "holdtime": 29,
                                 "state": "init",
-                                "snpa": "fa16.3e21.73f6",
+                                "snpa": "fa16.3eff.9418",
                                 "protocol": "M-ISIS",
                                 "interface": "GigabitEthernet2.415",
                                 "area_address": ["49.0001"],
                                 "ip_address": ["10.12.115.2*"],
-                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "ipv6_address": ["FE80::F816:3EFF:FEFF:9418"],
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
@@ -919,12 +919,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                             "L1L2": {
                                 "holdtime": 29,
                                 "state": "up",
-                                "snpa": "5e00.8002.0007",
+                                "snpa": "5e00.80ff.0209",
                                 "protocol": "M-ISIS",
                                 "interface": "GigabitEthernet3.415",
                                 "area_address": ["49.0001"],
                                 "ip_address": ["10.13.115.3*"],
-                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "ipv6_address": ["FE80::5C00:80FF:FEFF:209"],
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
@@ -939,18 +939,18 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
     golden_output_3 = {'execute.return_value': '''
         Tag test:
         System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        R2_xr           Gi2.115       fa16.3e21.73f6      Up     26        L1L2 M-ISIS
+        R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
           Area Address(es): 49.0001
           IP Address(es):  10.12.115.2*
-          IPv6 Address(es): FE80::F816:3EFF:FE21:73F6
+          IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
           Uptime: 3d21h
           NSF capable
           Topology: IPv4, IPv6
           Interface name: GigabitEthernet2.115
-        R3_nx           Gi3.115       5e00.8002.0007      Up     29        L1L2 M-ISIS
+        R3_nx           Gi3.115       5e00.80ff.0209      Up     29        L1L2 M-ISIS
           Area Address(es): 49.0001
           IP Address(es):  10.13.115.3*
-          IPv6 Address(es): FE80::5C00:80FF:FE02:7
+          IPv6 Address(es): FE80::5C00:80FF:FEFF:209
           Uptime: 3d21h
           NSF capable
           Topology: IPv4, IPv6
@@ -958,18 +958,18 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
 
         Tag test1:
         System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        2222.2222.2222  Gi2.415       fa16.3e21.73f6      Init   29        L1L2 M-ISIS
+        2222.22ff.4444  Gi2.415       fa16.3eff.9418      Init   29        L1L2 M-ISIS
           Area Address(es): 49.0001
           IP Address(es):  10.12.115.2*
-          IPv6 Address(es): FE80::F816:3EFF:FE21:73F6
+          IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
           Uptime: 3d21h
           NSF capable
           Topology: IPv4, IPv6
           Interface name: GigabitEthernet2.415
-        R3_nx           Gi3.415       5e00.8002.0007      Up     29        L1L2 M-ISIS
+        R3_nx           Gi3.415       5e00.80ff.0209      Up     29        L1L2 M-ISIS
           Area Address(es): 49.0001
           IP Address(es):  10.13.115.3*
-          IPv6 Address(es): FE80::5C00:80FF:FE02:7
+          IPv6 Address(es): FE80::5C00:80FF:FEFF:209
           Uptime: 3d21h
           NSF capable
           Topology: IPv4, IPv6
@@ -1023,7 +1023,7 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
                                 'format': 'Phase V',
                                 'area_address': ['49.0002'],
                                 'ip_address': ['10.229.7.7*'],
-                                'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
+                                'ipv6_address': ['FE80::5C00:C0FF:FEFF:60D'],
                                 'uptime': '00:24:24',
                                 'nsf': 'capable',
                                 'topology': ['ipv4', 'ipv6'],
@@ -1043,7 +1043,7 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
     R7              Gi4           Up     L2   64        R2.01              Phase V
       Area Address(es): 49.0002
       IP Address(es):  10.229.7.7*
-      IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+      IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
       Uptime: 00:24:24
       NSF capable
       Topology: IPv4, IPv6
@@ -1109,11 +1109,11 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
             },
             'test1': {
                 'system_id': {
-                    '2222.2222.2222': {
+                    '2222.22ff.4444': {
                         'type': {
                             'L1L2': {
                                 'area_address': ['49.0001'],
-                                'circuit_id': '2222.2222.2222.01',
+                                'circuit_id': '2222.22ff.4444.01',
                                 'format': 'Phase V',
                                 'interface': 'GigabitEthernet2.415',
                                 'ip_address': ['10.12.115.2*'],
@@ -1171,7 +1171,7 @@ class TestShowClnsIsNeighborDetail(unittest.TestCase):
 
         Tag test1:
         System Id       Interface     State  Type Priority  Circuit Id         Format
-        2222.2222.2222  Gi2.415       Init   L1L2 128/128    2222.2222.2222.01  Phase V
+        2222.22ff.4444  Gi2.415       Init   L1L2 128/128    2222.22ff.4444.01  Phase V
           Area Address(es): 49.0001
           IP Address(es):  10.12.115.2*
           IPv6 Address(es): FE80::F816:3EFF:FE67:2452

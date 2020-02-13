@@ -154,7 +154,7 @@ class ShowTrafficCollecterIpv4CountersPrefixDetail(ShowTrafficCollecterIpv4Count
                 counters_dict = ret_dict.setdefault('ipv4_counters', {}).\
                     setdefault('prefix', {}).setdefault(group['prefix'], {})
                 for key in label_list:
-                    value = int (group[key]) if key is 'label'else group[key]
+                    value = int (group[key]) if key == 'label'else group[key]
                     counters_dict.update({key: value})
                 continue
 

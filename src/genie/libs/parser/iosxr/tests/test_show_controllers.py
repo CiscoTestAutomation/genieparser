@@ -610,29 +610,29 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
                 {'vlan': 
                     {4: 
                         {'mac': 
-                            {'00:00:03:00:01:0c': 
+                            {'00:00:03:ff:01:0c': 
                                 {'encap_id': '0x301d',
                                 'gport': '0xc000001',
                                 'trunk': 1}}},
                     2522: 
                         {'mac': 
-                            {'fc:00:00:01:00:02': 
+                            {'fc:00:00:ff:01:03': 
                                 {'encap_id': '0xffffffff',
                                 'gport': '0x9800401d',
                                 'static': True}}},
                     2524: 
                         {'mac': 
-                            {'fc:00:00:01:00:0b': 
+                            {'fc:00:00:ff:01:0c': 
                                 {'encap_id': '0x3001',
                                 'gport': '0xc000000',
                                 'static': True,
                                 'trunk': 0}}},
                     2544: 
                         {'mac': 
-                            {'fc:00:00:01:00:8b': 
+                            {'fc:00:00:ff:01:8c': 
                                 {'encap_id': '0x2007',
                                 'gport': '0x8000048'},
-                            'fc:00:00:01:00:9b': 
+                            'fc:00:00:ff:01:9c': 
                                 {'encap_id': '0x2007',
                                 'gport': '0x8000048',
                                 'trunk': 0}}}}}}}
@@ -641,11 +641,11 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
         RP/0/RP0/CPU0:UUT4#show controller fia diagshell 0 'l2 show' location all
 
         Node ID: 0/0/CPU0
-        mac=fc:00:00:01:00:8b vlan=2544 GPORT=0x8000048 encap_id=0x2007
-        mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
-        mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
-        mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001
-        mac=00:00:03:00:01:0c vlan=4 GPORT=0xc000001 Trunk=1 encap_id=0x301d
+        mac=fc:00:00:ff:01:8c vlan=2544 GPORT=0x8000048 encap_id=0x2007
+        mac=fc:00:00:ff:01:03 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
+        mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+        mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001
+        mac=00:00:03:ff:01:0c vlan=4 GPORT=0xc000001 Trunk=1 encap_id=0x301d
         '''}
 
     def test_empty(self):

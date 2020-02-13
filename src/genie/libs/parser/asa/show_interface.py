@@ -66,7 +66,7 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
         p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
             '(?P<link_status>\w+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
-        # MAC address aa11.bb22.cc33, MTU 1500
+        # MAC address aa11.bbff.ee55, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 10.10.10.1, subnet mask 255.255.255.0
@@ -113,7 +113,7 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                         'config_status': False})
                 continue
 
-            # MAC address 11aa.22bb.33cc, MTU 1500
+            # MAC address 11aa.22ff.ee88, MTU 1500
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -316,7 +316,7 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
             '(?P<link_status>\w+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
-        # MAC address aa11.bb22.cc33, MTU 1500
+        # MAC address aa11.bbff.ee55, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 10.10.10.1, subnet mask 255.255.255.0
@@ -398,7 +398,7 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
                         'config_status': False})
                 continue
 
-            # MAC address aa11.bb22.cc33, MTU 1500
+            # MAC address aa11.bbff.ee55, MTU 1500
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

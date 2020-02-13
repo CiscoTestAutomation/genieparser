@@ -22,11 +22,11 @@ class TestShowIsisHostname(unittest.TestCase):
             'VRF1':{
                 'hostname_db': {
                     'hostname': {
-                        '7777.7777.7777': {
+                        '7777.77ff.eeee': {
                             'hostname': 'R7',
                             'level': 2,
                         },
-                        '2222.2222.2222':{
+                        '2222.22ff.4444':{
                             'hostname': 'R2',
                             'local_router': True,
                         }
@@ -36,32 +36,32 @@ class TestShowIsisHostname(unittest.TestCase):
             'test':{
                 'hostname_db': {
                     'hostname': {
-                        '9999.9999.9999': {
+                        '9999.99ff.3333': {
                             'hostname': 'R9',
                             'level': 2,
                         },
 
-                        '8888.8888.8888': {
+                        '8888.88ff.1111': {
                             'hostname': 'R8',
                             'level': 2,
                         },
-                        '7777.7777.7777': {
+                        '7777.77ff.eeee': {
                             'hostname': 'R7',
                             'level': 2,
                         },
-                        '5555.5555.5555': {
+                        '5555.55ff.aaaa': {
                             'hostname': 'R5',
                             'level': 2,
                         },
-                        '3333.3333.3333': {
+                        '3333.33ff.6666': {
                             'hostname': 'R3',
                             'level': 2,
                         },
-                        '1111.1111.1111': {
+                        '1111.11ff.2222': {
                             'hostname': 'R1',
                             'level': 1,
                         },
-                        '2222.2222.2222': {
+                        '2222.22ff.4444': {
                             'hostname': 'R2',
                             'local_router': True,
                         },
@@ -74,16 +74,16 @@ class TestShowIsisHostname(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
     R2#show isis hostname
     Level  System ID      Dynamic Hostname  (VRF1)
-     2     7777.7777.7777 R7
-         * 2222.2222.2222 R2
+     2     7777.77ff.eeee R7
+         * 2222.22ff.4444 R2
     Level  System ID      Dynamic Hostname  (test)
-     2     9999.9999.9999 R9
-     2     8888.8888.8888 R8
-     2     7777.7777.7777 R7
-     2     5555.5555.5555 R5
-     2     3333.3333.3333 R3
-     1     1111.1111.1111 R1
-         * 2222.2222.2222 R2
+     2     9999.99ff.3333 R9
+     2     8888.88ff.1111 R8
+     2     7777.77ff.eeee R7
+     2     5555.55ff.aaaa R5
+     2     3333.33ff.6666 R3
+     1     1111.11ff.2222 R1
+         * 2222.22ff.4444 R2
            '''
     }
 
@@ -1638,7 +1638,7 @@ class TestShowRunSecIsis(unittest.TestCase):
      ip router isis test1
      ipv6 router isis test1
     router isis test
-     net 49.0001.1111.1111.1111.00
+     net 49.0001.11ff.2211.2222.00
      metric-style wide
      !
      address-family ipv6
@@ -1646,7 +1646,7 @@ class TestShowRunSecIsis(unittest.TestCase):
      exit-address-family
     router isis test1
      vrf VRF1
-     net 49.0001.1111.1111.1111.00
+     net 49.0001.11ff.2211.2222.00
      metric-style wide
      !
      address-family ipv6
@@ -1672,7 +1672,7 @@ class TestShowRunSecIsis(unittest.TestCase):
          ip router isis
          ipv6 router isis
         router isis
-         net 47.0002.0000.0000.0002.00
+         net 47.0002.00ff.0000.0002.00
          is-type level-1
          metric-style wide
          mpls traffic-eng router-id Loopback0
@@ -1737,20 +1737,20 @@ class TestShowIsisNeighbors(unittest.TestCase):
                                 'circuit_id': 'R1_xe.02'}}}}},
             'test1': {
                 'neighbors': {
-                    '2222.2222.2222': {
+                    '2222.22ff.4444': {
                         'type': {
                             'L1': {
                                 'interface': 'Gi2.415',
                                 'ip_address': '10.12.115.2',
                                 'state': 'INIT',
                                 'holdtime': '21',
-                                'circuit_id': '2222.2222.2222.01'},
+                                'circuit_id': '2222.22ff.4444.01'},
                             'L2': {
                                 'interface': 'Gi2.415',
                                 'ip_address': '10.12.115.2',
                                 'state': 'INIT',
                                 'holdtime': '20',
-                                'circuit_id': '2222.2222.2222.01'}}},
+                                'circuit_id': '2222.22ff.4444.01'}}},
                     'R3_nx': {
                         'type': {
                             'L1': {
@@ -1778,8 +1778,8 @@ class TestShowIsisNeighbors(unittest.TestCase):
         
         Tag test1:
         System Id       Type Interface     IP Address      State Holdtime Circuit Id
-        2222.2222.2222  L1   Gi2.415       10.12.115.2     INIT  21       2222.2222.2222.01  
-        2222.2222.2222  L2   Gi2.415       10.12.115.2     INIT  20       2222.2222.2222.01  
+        2222.22ff.4444  L1   Gi2.415       10.12.115.2     INIT  21       2222.22ff.4444.01  
+        2222.22ff.4444  L2   Gi2.415       10.12.115.2     INIT  20       2222.22ff.4444.01  
         R3_nx           L1   Gi3.415       10.13.115.3     UP    21       R1_xe.02           
         R3_nx           L2   Gi3.415       10.13.115.3     UP    27       R1_xe.02           
         

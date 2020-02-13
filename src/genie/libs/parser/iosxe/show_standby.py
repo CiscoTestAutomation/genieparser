@@ -163,7 +163,7 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                     continue
 
             # HSRP MAC Address Table
-            # 240 Gi1/0/1 0000.0c9f.f000
+            # 240 Gi1/0/1 0000.0cff.909f
             p8 = re.compile(r'\s*(?P<hsrp_number>[0-9]+)'
                              ' +(?P<interface>[a-zA-Z0-9\/]+)'
                              ' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
@@ -554,7 +554,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     = tracked_object
                 continue
 
-            # Active virtual MAC address is 0000.0c9f.f000 (MAC In Use)
+            # Active virtual MAC address is 0000.0cff.909f (MAC In Use)
             # Active virtual MAC address is unknown (MAC Not In Use)
             p6 = re.compile(r'\s*Active +virtual +MAC +address +is'
                              ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+)'
@@ -571,9 +571,9 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     group_key['virtual_mac_address_mac_in_use'] = False
                 continue
 
-            # Local virtual MAC address is 0000.0c9f.f000 (v2 default)
-            # Local virtual MAC address is 5254.00a7.0818 (bia)
-            # Local virtual MAC address is aaaa.aaaa.aaaa (cfgd)
+            # Local virtual MAC address is 0000.0cff.909f (v2 default)
+            # Local virtual MAC address is 5254.00ff.afbf (bia)
+            # Local virtual MAC address is aaaa.aaff.5555 (cfgd)
             p7 = re.compile(r'\s*Local +virtual +MAC +address +is'
                              ' +(?P<local_virtual_mac_address>[a-zA-Z0-9\.]+)'
                              ' +\((?P<local_virtual_mac_address_conf>'
