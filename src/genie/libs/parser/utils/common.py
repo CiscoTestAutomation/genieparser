@@ -471,8 +471,9 @@ class Common():
     @classmethod
     def find_deepest_dict(self, data):
         """
-        Args: dictionary
-        Returns: dictionary
+        Args:
+            data(`dict`):
+        Returns:
 
         Finds the deepest dictionary in a nested dictionary
         For example:
