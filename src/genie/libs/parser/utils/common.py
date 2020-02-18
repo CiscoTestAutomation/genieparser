@@ -467,31 +467,3 @@ class Common():
                                         final_seconds)
 
         return normal_time
-
-    @classmethod
-    def find_deepest_dict(self, data):
-        """
-        Args:
-            data(`dict`):
-        Returns:
-
-        Finds the deepest dictionary in a nested dictionary
-        For example:
-            d = {'a':
-                    {'b':
-                        {'c':
-                            {'d': 2}
-                         }
-                     },
-                 'e': 2,
-                 'f': 2}
-            find_deepest(d) returns {d:2}
-        """
-        if not any([isinstance(data.get(k), dict) for k in data]):
-            return data
-        else:
-            for dkey in data:
-                if isinstance(data.get(dkey), dict):
-                    return self.find_deepest_dict(data.get(dkey))
-                else:
-                    continue
