@@ -115,6 +115,35 @@ class ShowLldpEntrySchema(MetaParser):
                     }
                 }
             }
+        },
+        Optional('med_information'): {
+            'fw_revision': str,
+            'manufacturer': str,
+            'model': str,
+            'capabilities': list,
+            'device_type': str,
+            'network_policy': {
+                'voice': {
+                    Any(): {
+                        'tagged': bool,
+                        'layer_2_priority': int,
+                        'dscp': int,
+                    }
+                },
+                'voice_signal': {
+                    Any(): {
+                        'tagged': bool,
+                        'layer_2_priority': int,
+                        'dscp': int,
+                    }
+                }
+            },
+            'pd_device': {
+                'power_source': str,
+                'power_priority': str,
+                'wattage': float,
+            },
+            'location': str,
         }
     }
 
@@ -181,6 +210,35 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p13 = re.compile(r'^Vlan +ID: +(?P<vlan_id>\d+)$')
 
         p14 = re.compile(r'^Total +entries +displayed: +(?P<entry>\d+)$')
+
+        # ==== MED Information patterns =====
+        # F/W revision: 06Q
+        med_p1 = re.compile(r'^F/W revision: (?P<fw_revision>\S+)$')
+
+        # Manufacturer: Avaya-05
+        med_p2 = re.compile(r'^Manufacturer: (?P<manufacturer>\S+)$')
+
+        # Model: 1220 IP Deskphone
+        med_p3 = re.compile(r'^Model: (?P<model>[\S ]+)$')
+
+        # Capabilities: NP, LI, PD, IN
+        med_p4 = re.compile(r'^Capabilities: (?P<capabilities>[\S ]+)$')
+
+        # Device type: Endpoint Class III
+        med_p5 = re.compile(r'^Device type: (?P<device_type>[\S\s]+)$')
+
+        # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
+        # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
+        med_p6 = re.compile(r'^Network Policy\(Voice( (?P<voice_signal>Signal))?\): '
+                            r'(?P<network_policy>[\S ]+), (?P<tagged>tagged), '
+                            r'Layer-2 priority: (?P<layer_2_priority>\d+), DSCP: (?P<dscp>\d+)$')
+
+        # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+        med_p7 = re.compile(r'^PD device, Power source: (?P<power_source>\S+), '
+                            r'Power Priority: (?P<power_priority>\S+), Wattage: (?P<wattage>\S+)$')
+
+        # Location - not advertised
+        med_p8 = re.compile(r'^Location - (?P<location>[\S ]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -333,6 +391,67 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p14.match(line)
             if m:
                 ret_dict['total_entries'] = int(m.groupdict()['entry'])
+                continue
+
+            # ==== Med Information ====
+            # F/W revision: 06Q
+            m = med_p1.match(line)
+            if m:
+                med_dict = ret_dict.setdefault('med_information', {})
+                med_dict['fw_revision'] = m.groupdict()['fw_revision']
+                continue
+
+            # Manufacturer: Avaya-05
+            # Model: 1220 IP Deskphone
+            # Device type: Endpoint Class III
+            m = med_p2.match(line) or med_p3.match(line) or med_p5.match(line)
+            if m:
+                match_key = [*m.groupdict().keys()][0]
+                med_dict[match_key] = m.groupdict()[match_key]
+                continue
+
+            # Capabilities: NP, LI, PD, IN
+            m = med_p4.match(line)
+            if m:
+                list_capabilities = m.groupdict()['capabilities'].split(', ')
+                med_dict['capabilities'] = list_capabilities
+                continue
+
+            # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
+            # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
+            m = med_p6.match(line)
+            if m:
+                group = m.groupdict()
+
+                if group['voice_signal']:
+                    voice = 'voice_signal'
+                else:
+                    voice = 'voice'
+                voice_sub_dict = med_dict.setdefault('network_policy', {}).\
+                                          setdefault(voice, {}).\
+                                          setdefault(group['network_policy'], {})
+                if group['tagged'] == 'tagged':
+                    voice_sub_dict['tagged'] = True
+                else:
+                    voice_sub_dict['tagged'] = False
+
+                voice_sub_dict['layer_2_priority'] = int(group['layer_2_priority'])
+                voice_sub_dict['dscp'] = int(group['dscp'])
+                continue
+
+            # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            m = med_p7.match(line)
+            if m:
+                pd_dict = med_dict.setdefault('pd_device', {})
+                for k in ['power_source', 'power_priority']:
+                    pd_dict[k] = m.groupdict()[k]
+                pd_dict['wattage'] = float(m.groupdict()['wattage'])
+                continue
+
+            # Location - not advertised
+            m = med_p8.match(line)
+            if m:
+                med_dict['location'] = m.groupdict()['location']
                 continue
 
         return ret_dict

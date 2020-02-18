@@ -121,6 +121,8 @@
         * Modified regex to support outputs
     * Updated ShowIpIgmpInterface:
         * Modified schema
+    * Updated ShowLldpEntry:
+        * Added Optional keys to the schema
 
 
 * IOSXR

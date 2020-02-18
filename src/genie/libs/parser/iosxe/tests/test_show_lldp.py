@@ -583,6 +583,72 @@ class test_show_lldp_entry(unittest.TestCase):
 
         '''}
 
+    golden_parsed_output_2 = {
+    'interfaces': {
+        'Not Provided': {
+            'if_name': 'Not Provided',
+            'port_id': {
+                'Ccf9.5493.ba88': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.15',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_id': 'Ccf9.5493.ba88',
+                            'system_description': '',
+                            'system_name': 'not advertised',
+                            'time_remaining': 155,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    'med_information': {
+        'capabilities': ['NP', 'LI', 'PD', 'IN'],
+        'device_type': 'Endpoint Class III',
+        'fw_revision': '06Q',
+        'location': 'not advertised',
+        'manufacturer': 'Avaya-05',
+        'model': '1220 IP Deskphone',
+        'network_policy': {
+            'voice': {
+                'VLAN 110': {
+                    'dscp': 46,
+                    'layer_2_priority': 5,
+                    'tagged': True,
+                },
+            },
+            'voice_signal': {
+                'VLAN 110': {
+                    'dscp': 0,
+                    'layer_2_priority': 0,
+                    'tagged': True,
+                },
+            },
+        },
+        'pd_device': {
+            'power_priority': 'High',
+            'power_source': 'Unknown',
+            'wattage': 6.0,
+        },
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpEntry(device=self.dev1)
@@ -608,11 +674,6 @@ class test_show_lldp_entry(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_2)
         obj = ShowLldpEntry(device=self.dev_c3850)
         parsed_output = obj.parse(entry='*')
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
@@ -885,50 +946,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     '''
     }
 
-    golden_output_2 = {'execute.return_value': '''
-    ------------------------------------------------
-    Chassis id: 10.10.191.15
-    Port id: ccf9.5493.ba88
-    Port Description: Avaya IP Deskphone
-    System Name - not advertised
-    
-    System Description:
-    Avaya 1220 IP Deskphone, Firmware:06Q
-    
-    Time remaining: 155 seconds
-    System Capabilities: B,T
-    Enabled Capabilities: B,T
-    Management Addresses - not advertised
-    Auto Negotiation - supported, enabled
-    Physical media capabilities:
-        100base-TX(FD)
-        100base-TX(HD)
-        10base-T(FD)
-        10base-T(HD)
-    Media Attachment Unit type: 16
-    Vlan ID: - not advertised
-    
-    MED Information:
-    
-        MED Codes:
-              (NP) Network Policy, (LI) Location Identification
-              (PS) Power Source Entity, (PD) Power Device
-              (IN) Inventory
-    
-        F/W revision: 06Q
-        Manufacturer: Avaya-05
-        Model: 1220 IP Deskphone
-        Capabilities: NP, LI, PD, IN
-        Device type: Endpoint Class III
-        Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
-        Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
-        PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
-        Location - not advertised
-    
-    ------------------------------------------------
-
-    '''}
-
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
@@ -941,18 +958,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_golden_2(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_2)
-        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 class test_show_lldp_traffic(unittest.TestCase):
