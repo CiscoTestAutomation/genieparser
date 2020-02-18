@@ -109,7 +109,7 @@ class ShowLldpEntrySchema(MetaParser):
                                 Optional('auto_negotiation'): str,
                                 Optional('physical_media_capabilities'): list,
                                 Optional('unit_type'): int,
-                                Optional('vlan_id'): int
+                                Optional('vlan_id'): str,
                             }
                         }
                     }
@@ -182,7 +182,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
 
-        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-]+)$')
+        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\- ]+)$')
 
         p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S ]+)$')
 
@@ -191,6 +191,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p5_2 = re.compile(r'^(?P<msg>Technical Support.*)$')
         p5_3 = re.compile(r'^(?P<msg>Copyright.*)$')
         p5_4 = re.compile(r'^(?P<msg>Compile.*)$')
+        p5_5 = re.compile(r'^(?P<msg>Avaya.*)$')
 
         p6 = re.compile(r'^Time +remaining: +(?P<time_remaining>\w+) +seconds$')
 
@@ -199,6 +200,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p8 = re.compile(r'^Enabled +Capabilities: +(?P<capab>[\w\,\s]+)$')
 
         p9 = re.compile(r'^IP: +(?P<ip>[\w\.]+)$')
+        p9_1 = re.compile(r'^Management Addresses - (?P<ip>not advertised)$')
 
         p10 = re.compile(r'^Auto +Negotiation +\- +(?P<auto_negotiation>[\w\s\,]+)$')
 
@@ -207,7 +209,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p12 = re.compile(r'^Media +Attachment +Unit +type: +(?P<unit_type>\d+)$')
 
-        p13 = re.compile(r'^Vlan +ID: +(?P<vlan_id>\d+)$')
+        p13 = re.compile(r'^Vlan +ID:( \- )?(?P<vlan_id>[\S ]+)$')
 
         p14 = re.compile(r'^Total +entries +displayed: +(?P<entry>\d+)$')
 
@@ -319,6 +321,12 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict['system_description'] += m.groupdict()['msg']
                 continue
 
+            # Avaya 1220 IP Deskphone, Firmware:06Q
+            m = p5_5.match(line)
+            if m:
+                nei_dict['system_description'] += m.groupdict()['msg']
+                continue
+
             # Time remaining: 112 seconds
             m = p6.match(line)
             if m:
@@ -349,7 +357,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
             # Management Addresses:
             #     IP: 10.9.1.1
-            m = p9.match(line)
+            # Management Addresses - not advertised
+            m = p9.match(line) or p9_1.match(line)
             if m:
                 nei_dict['management_address'] = m.groupdict()['ip']
                 continue
@@ -384,7 +393,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Vlan ID: 1
             m = p13.match(line)
             if m:
-                nei_dict['vlan_id'] = int(m.groupdict()['vlan_id'])
+                nei_dict['vlan_id'] = m.groupdict()['vlan_id'].strip()
                 continue
 
             # Total entries displayed: 4
