@@ -123,6 +123,9 @@
         * Modified schema
     * Updated ShowLldpEntry:
         * Added Optional keys to the schema
+    * Updated ShowIpPimInterfaceDetail:
+        * Added on Optional key to schema
+
 
 
 * IOSXR
@@ -172,7 +175,6 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
-    
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex

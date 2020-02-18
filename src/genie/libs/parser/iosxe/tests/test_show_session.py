@@ -397,6 +397,48 @@ class test_show_users(unittest.TestCase):
     '''
     }
 
+    golden_output_2 = { 'execute.return_value': '''
+    show users
+        Line       User       Host(s)              Idle       Location
+    *  1 vty 0     developer  idle                 00:00:00 10.24.17.55
+    
+      Interface    User               Mode         Idle     Peer Address
+      unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+      unknown      a(ONEP)            com.cisco.sy 00:00:49
+    '''}
+
+    golden_parsed_output_2 = {
+        'interface': {
+            'unknown': {
+                'user': {
+                    'NETCONF(ONEP)': {
+                        'idle': '00:00:49',
+                        'mode': 'com.cisco.ne',
+                    },
+                    'a(ONEP)': {
+                        'idle': '00:00:49',
+                        'mode': 'com.cisco.sy',
+                    },
+                },
+            },
+        },
+        'line': {
+            '1 vty 0': {
+                'active': True,
+                'host': 'idle',
+                'idle': '00:00:00',
+                'location': '10.24.17.55',
+                'user': 'developer',
+            },
+        },
+    }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        users_obj = ShowUsers(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = users_obj.parse()
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         users_obj = ShowUsers(device=self.device)
@@ -404,11 +446,12 @@ class test_show_users(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        users_obj = ShowUsers(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = users_obj.parse()
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        users_obj = ShowUsers(device=self.device)
+        parsed_output = users_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
