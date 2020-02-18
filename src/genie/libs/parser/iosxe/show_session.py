@@ -248,9 +248,11 @@ class ShowUsers(ShowUsersSchema):
 
                 user_sub_dict = user_dict.setdefault('user', {}).\
                                           setdefault(curr_dict['User'], {})
-                user_sub_dict['idle'] = curr_dict['Idle']
-                user_sub_dict['mode'] = curr_dict['Mode']
-                if curr_dict['Peer Address'] != '':
+
+                user_sub_dict.update({'idle': curr_dict['Idle'],
+                                      'mode': curr_dict['Mode']})
+
+                if curr_dict['Peer Address']:
                     user_sub_dict['peer_address'] = curr_dict['Peer Address']
 
                 interface_dict.setdefault(curr_dict['Interface'], user_dict)
