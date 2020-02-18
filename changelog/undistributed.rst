@@ -122,7 +122,7 @@
     * Updated ShowIpIgmpInterface:
         * Modified schema
     * Updated ShowIpPimInterfaceDetail:
-        * Modified schema
+        * Added on Optional key to schema
 
 
 * IOSXR

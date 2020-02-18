@@ -1246,53 +1246,53 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
     '''}
 
     golden_output_intf_detail_3 = {'execute.return_value': '''
-show ip pim interface detail
-Loopback0 is up, line protocol is up
-  Internet address is 1.1.4.14/32
-  Multicast switching: fast
-  Multicast packets in/out: 0/0
-  Multicast TTL threshold: 0
-  PIM: enabled
-    PIM version: 2, mode: sparse
-    PIM DR: 1.1.4.14 (this system)
-    PIM neighbor count: 0
-    PIM Hello/Query interval: 30 seconds
-    PIM Hello packets in/out: 45876/45876
-    PIM J/P interval: 60 seconds
-    PIM State-Refresh processing: enabled
-    PIM State-Refresh origination: disabled
-    PIM NBMA mode: disabled
-    PIM ATM multipoint signalling: disabled
-    PIM domain border: disabled
-    PIM neighbors rpf proxy capable: FALSE
-    PIM BFD: disabled
-    PIM Non-DR-Join: FALSE
-  Multicast Tagswitching: disabled
-Loopback8 is up, line protocol is up
-  Internet protocol processing: disabled
-GigabitEthernet15 is down, line protocol is down
-  Internet protocol processing: disabled
-GigabitEthernet16 is down, line protocol is down
-  Multicast switching: fast
-  Multicast packets in/out: 0/0
-  Multicast TTL threshold: 0
-  PIM: enabled
-    PIM version: 2, mode: sparse
-    PIM DR: 0.0.0.0 (this system)
-    PIM neighbor count: 0
-    PIM Hello/Query interval: 30 seconds
-    PIM Hello packets in/out: 0/0
-    PIM J/P interval: 60 seconds
-    PIM State-Refresh processing: enabled
-    PIM State-Refresh origination: disabled
-    PIM NBMA mode: disabled
-    PIM ATM multipoint signalling: disabled
-    PIM domain border: disabled
-    PIM neighbors rpf proxy capable: FALSE
-    PIM BFD: disabled
-    PIM Non-DR-Join: FALSE
-  Multicast Tagswitching: disabled
-C9606-OD#
+    show ip pim interface detail
+    Loopback0 is up, line protocol is up
+      Internet address is 1.1.4.14/32
+      Multicast switching: fast
+      Multicast packets in/out: 0/0
+      Multicast TTL threshold: 0
+      PIM: enabled
+        PIM version: 2, mode: sparse
+        PIM DR: 1.1.4.14 (this system)
+        PIM neighbor count: 0
+        PIM Hello/Query interval: 30 seconds
+        PIM Hello packets in/out: 45876/45876
+        PIM J/P interval: 60 seconds
+        PIM State-Refresh processing: enabled
+        PIM State-Refresh origination: disabled
+        PIM NBMA mode: disabled
+        PIM ATM multipoint signalling: disabled
+        PIM domain border: disabled
+        PIM neighbors rpf proxy capable: FALSE
+        PIM BFD: disabled
+        PIM Non-DR-Join: FALSE
+      Multicast Tagswitching: disabled
+    Loopback8 is up, line protocol is up
+      Internet protocol processing: disabled
+    GigabitEthernet15 is down, line protocol is down
+      Internet protocol processing: disabled
+    GigabitEthernet16 is down, line protocol is down
+      Multicast switching: fast
+      Multicast packets in/out: 0/0
+      Multicast TTL threshold: 0
+      PIM: enabled
+        PIM version: 2, mode: sparse
+        PIM DR: 0.0.0.0 (this system)
+        PIM neighbor count: 0
+        PIM Hello/Query interval: 30 seconds
+        PIM Hello packets in/out: 0/0
+        PIM J/P interval: 60 seconds
+        PIM State-Refresh processing: enabled
+        PIM State-Refresh origination: disabled
+        PIM NBMA mode: disabled
+        PIM ATM multipoint signalling: disabled
+        PIM domain border: disabled
+        PIM neighbors rpf proxy capable: FALSE
+        PIM BFD: disabled
+        PIM Non-DR-Join: FALSE
+      Multicast Tagswitching: disabled
+    C9606-OD#
     '''}
     golden_parsed_output_intf_detail_3 = {
     'vrf': {

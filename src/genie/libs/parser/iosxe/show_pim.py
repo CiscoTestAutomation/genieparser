@@ -1408,11 +1408,14 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                 continue
 
             # Internet protocol processing: disabled
-            p23 = re.compile(r'^Internet protocol processing: (?P<disabled>disabled)$')
+            p23 = re.compile(r'^Internet protocol processing: (?P<disabled>\S+)$')
             m = p23.match(line)
             if m:
+
+                able_val = m.groupdict()['disabled']
+                able_bool = False if able_val == 'disabled' else True
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                    [af_name]['internet_protocol_processing'] = False
+                    [af_name]['internet_protocol_processing'] = able_bool
                 continue
 
             # Internet address is 10.1.2.1/24
