@@ -188,7 +188,6 @@ class ShowVlan(ShowVlanSchema):
                 if m.groupdict()['remote_span_vlans']:
                     remote_span_vlans = m.groupdict()['remote_span_vlans'].split(',')
 
-                if remote_span_vlans:
                     if 'vlans' not in vlan_dict:
                         vlan_dict['vlans'] = {}
                     for remote_vlan in remote_span_vlans:

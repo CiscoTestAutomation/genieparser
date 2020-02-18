@@ -206,6 +206,9 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
         },
     }
@@ -315,7 +318,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                             }
                         }
                     }
-                }
+                },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             }
         }
     }
@@ -421,6 +427,9 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
             'VRF502': {
                 'address_family': {
@@ -522,6 +531,9 @@ class TestShowRouteIpv4(unittest.TestCase):
 
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': 'not set'
                 },
             },
         },
@@ -673,6 +685,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': '192.168.1.1',
+                    'to_network': '0.0.0.0'
+                },
             },
         },
     }
@@ -801,6 +817,10 @@ class TestShowRouteIpv4(unittest.TestCase):
                             },
                         },
                     },
+                },
+                'last_resort': {
+                    'gateway': '172.16.0.88',
+                    'to_network': '0.0.0.0'
                 },
             },
         },
@@ -1170,50 +1190,111 @@ class TestShowRouteIpv4(unittest.TestCase):
     }
 
     golden_output_10 = {'execute.return_value': '''
-    RP/0/RP0/CPU0:xrv_rtr1#sh route vrf L:192
-    Thu Feb 6 00:29:44.865 UTC
-    
-    Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
-    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-    E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
-    i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
-    ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
-    U - per-user static route, o - ODR, L - local, G - DAGR, l - LISP
-    A - access/subscriber, a - Application route
-    M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
-    
-    Gateway of last resort is not set
-
-    S 10.2.2.2/32 is directly connected, 00:06:36, Null0
-    '''}
+        RP/0/RSP0/CPU0:GENIE-TEST#show route vrf qattwd ipv4 0.0.0.0/0                     
+                                                                                                
+        Routing entry for 0.0.0.0/0                                                             
+        Known via "bgp 65001", distance 200, metric 10, candidate default path                
+        Tag 10584, type internal                                                              
+        Installed Nov 20 07:00:25.367 for 7w5d                                                 
+        Routing Descriptor Blocks                                                             
+            172.23.6.96, from 172.23.15.196                                                     
+            Nexthop in Vrf: "default", Table: "default", IPv4 Unicast, Table Id: 0xe0000000   
+            Route metric is 10                                                                
+        No advertising protos.
+    '''
+    }
 
     golden_parsed_output_10 = {
-    'vrf': {
-        'L:192': {
-            'address_family': {
-                'ipv4': {
-                    'routes': {
-                        '10.2.2.2/32': {
-                            'active': True,
-                            'next_hop': {
-                                'outgoing_interface': {
-                                    'Null0': {
-                                        'outgoing_interface': 'Null0',
-                                        'updated': '00:06:36',
+        'vrf': {
+            'qattwd': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '0.0.0.0/0': {
+                                'active': True,
+                                'distance': 200,
+                                'installed': {
+                                    'date': 'Nov 20 07:00:25.367',
+                                    'for': '7w5d'
+                                },
+                                'ip': '0.0.0.0',
+                                'known_via': 'bgp '
+                                '65001',
+                                'mask': '0',
+                                'metric': 10,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'from': '172.23.15.196',
+                                            'index': 1,
+                                            'address_family': 'IPv4 Unicast',
+                                            'metric': 10,
+                                            'next_hop': '172.23.6.96',
+                                            'nexthop_in_vrf': 'default',
+                                            'table': 'default',
+                                            'table_id': '0xe0000000'
+                                        }
+                                    }
+                                },
+                                'route': '0.0.0.0/0',
+                                'tag': '10584',
+                                'type': 'internal'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_11 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:xrv_rtr1#sh route vrf L:192
+        Thu Feb 6 00:29:44.865 UTC
+        
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+        E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+        i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+        ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+        U - per-user static route, o - ODR, L - local, G - DAGR, l - LISP
+        A - access/subscriber, a - Application route
+        M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+        
+        Gateway of last resort is not set
+
+        S 10.2.2.2/32 is directly connected, 00:06:36, Null0
+    '''}
+
+    golden_parsed_output_11 = {
+        'vrf': {
+            'L:192': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.2.2.2/32': {
+                                'active': True,
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Null0': {
+                                            'outgoing_interface': 'Null0',
+                                            'updated': '00:06:36',
+                                        },
                                     },
                                 },
+                                'route': '10.2.2.2/32',
+                                'source_protocol': 'static',
+                                'source_protocol_codes': 'S',
                             },
-                            'route': '10.2.2.2/32',
-                            'source_protocol': 'static',
-                            'source_protocol_codes': 'S',
                         },
                     },
                 },
+                'last_resort': {
+                    'gateway': 'not set'
+                },
             },
         },
-    },
-}
+    }
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -1295,8 +1376,15 @@ class TestShowRouteIpv4(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_10)
         obj = ShowRouteIpv4(device=self.device)
-        parsed_output = obj.parse(vrf='L:192')
+        parsed_output = obj.parse(route='0.0.0.0/0', vrf='qattwd')
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
+
+    def test_show_route_11(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_11)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse(vrf='L:192')
+        self.assertEqual(parsed_output, self.golden_parsed_output_11)
 
 # ============================================
 # unit test for 'show route ipv6'

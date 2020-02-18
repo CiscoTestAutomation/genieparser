@@ -46,7 +46,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                "joins": 13,
                                "leaves": 3,
                            },
-                           "interface_adress": "10.1.2.1/24",
+                           "interface_address": "10.1.2.1/24",
                            "joined_group": {
                                 "239.3.3.3": {
                                      "number_of_users": 1
@@ -131,7 +131,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                "joins": 9,
                                "leaves": 0,
                            },
-                           "interface_adress": "10.186.2.1/24",
+                           "interface_address": "10.186.2.1/24",
                            "joined_group": {
                                 "224.0.1.40": {
                                      "number_of_users": 1
@@ -194,6 +194,32 @@ class test_show_ip_igmp_interface(unittest.TestCase):
               239.3.3.3(1)  239.4.4.4(1)
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+     Loopback8 is up, line protocol is up
+       Internet protocol processing disabled
+     GigabitEthernet15 is down, line protocol is down
+       Internet protocol processing disabled
+    '''}
+
+    golden_parsed_output_2 = {
+         'vrf': {
+             'default': {
+                 'interface': {
+                     'GigabitEthernet15': {
+                         'interface_status': 'down',
+                         'internet_protocol_processing': False,
+                         'oper_status': 'down',
+                     },
+                     'Loopback8': {
+                         'interface_status': 'up',
+                         'internet_protocol_processing': False,
+                         'oper_status': 'up',
+                     },
+                 },
+             },
+         },
+     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpIgmpInterface(device=self.device)
@@ -212,6 +238,11 @@ class test_show_ip_igmp_interface(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpIgmpInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 # =====================================================
 # Unit test for 'show ip igmp groups detail'

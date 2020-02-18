@@ -21,6 +21,7 @@
     * Updated ShowRouteIpv4:
         * Changed regex to support some VRF values such as 'L:111'
 
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
@@ -33,7 +34,6 @@
         * 'show bootvar'
     * Added ShowInterfaceStatus for:
         * show interface status
-
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -109,12 +109,24 @@
         * Changed schema to support more various output
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
-		
+    * Updated ShowVlan
+        * Modified if-condition to support various output.
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+    * Updated ShowVrfDetail:
+        * Modified regex to support customer output
+    * Updated ShowEthernetServiceInstanceDetail
+        * Modified regex to support outputs
+    * Updated ShowIpIgmpInterface:
+        * Modified schema
+
+
 * IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
     * Updated ShowLacp
         * Change in order to parse show lacp {interface}.
     * Updated ShowBundle
@@ -144,14 +156,10 @@
 
 * IOSXR
     * Updating symbolic link to platform specific unittests
-
-* IOSXR
     * Updated and removed regex to accommodate outputs
     * Added new unittest 
     * Updated and added regex to accommodate more outputs
     * Added new output to unittest
-
-* IOSXR
     * Updated regex to accommodate more outputs
     * Added extra key to schema
     * Added new unittest
@@ -162,3 +170,7 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
+* IOSXR:
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest
