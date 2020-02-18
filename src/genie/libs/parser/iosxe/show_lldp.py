@@ -83,7 +83,7 @@ class ShowLldp(ShowLldpSchema):
 class ShowLldpEntrySchema(MetaParser):
     """Schema for show lldp entry [<WORD>|*]"""
     schema = {
-        'total_entries': int,
+        Optional('total_entries'): int,
         Optional('interfaces'): {
             Any(): {
                 'if_name': str,
@@ -194,7 +194,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c6ff.f1b8
+            # Chassis id: 843d.c638.b980
             m = p2.match(line)
             if m:
                 sub_dict = {}
@@ -205,6 +205,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Port id: Gi1/0/4
             m = p1_1.match(line)
             if m:
+                if 'interfaces' not in ret_dict:
+                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault('Not Provided', {})
+                    intf_dict['if_name'] = 'Not Provided'
                 port_id = Common.convert_intf_name(m.groupdict()['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
