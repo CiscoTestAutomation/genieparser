@@ -121,6 +121,8 @@
         * Modified regex to support outputs
     * Updated ShowIpIgmpInterface:
         * Modified schema
+    * Updated ShowIpPimInterfaceDetail:
+        * Modified schema
 
 
 * IOSXR

@@ -1303,7 +1303,7 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                      Any():{
                          'address_family':{
                              Any():{
-                                 'bfd':{
+                                 Optional('bfd'):{
                                    Optional('enable'): bool,
                                  },
                                  Optional('hello_interval'): int,
@@ -1311,6 +1311,7 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                                  Optional('hello_packets_out'): int,
                                  Optional('oper_status'): str,
                                  Optional('enable'): bool,
+                                 Optional('internet_protocol_processing'): bool,
                                  Optional('address'): list,
                                  Optional('multicast'):{
                                      Optional('switching'): str,
@@ -1404,6 +1405,14 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
 
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
                     [af_name]['enable'] = enable
+                continue
+
+            # Internet protocol processing: disabled
+            p23 = re.compile(r'^Internet protocol processing: (?P<disabled>disabled)$')
+            m = p23.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['internet_protocol_processing'] = False
                 continue
 
             # Internet address is 10.1.2.1/24
