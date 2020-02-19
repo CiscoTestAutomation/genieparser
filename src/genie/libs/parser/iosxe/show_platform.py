@@ -258,6 +258,17 @@ class ShowVersionSchema(MetaParser):
                             },
                         },
                     },
+                    Optional('image'): {
+                        'text_base': str,
+                        'data_base': str,
+                    },
+                    Optional('interfaces'): {
+                        'virtual_ethernet': int,
+                        'gigabit_ethernet': int,
+                    },
+                    Optional('revision'): {
+                        Any(): int,
+                    }
                 }
             }
 
@@ -302,6 +313,12 @@ class ShowVersion(ShowVersionSchema):
             r'^[Cc]isco +IOS +[Ss]oftware\, +(?P<os>([\S]+)) +Software\, '
             r'+(?P<platform>.+) Software +\((?P<image_id>.+)\).+[Vv]ersion '
             r'+(?P<version>\S+) +.*$')
+
+        # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+        p1_1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
+                        r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
+                        r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
 
         # 16.6.5
         p2 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
@@ -444,11 +461,6 @@ class ShowVersion(ShowVersionSchema):
         # system_sn
         p34 = re.compile(r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
 
-        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-        p35 = re.compile(r'(?P<os>([A-Z]+)) \(\S+\)\s+(?P<platform>\S+)\s+'
-                         r'Software\s+\((?P<image_id>\S+)\), Version (?P<version>\S+),'
-                         r'\s*RELEASE\s+SOFTWARE\s+\(\S+\)')
-
         # Compiled Mon 10-Apr-17 04:35 by mcpre
         # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
         p36 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
@@ -505,13 +517,31 @@ class ShowVersion(ShowVersionSchema):
         #     *0        C3900-SPE150/K9       FOC16050QP6
         p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
 
+        # Image text-base: 0x40101040, data-base: 0x42D98000
+        p47 = re.compile(r'^Image text-base: (?P<text_base>\S+), '
+                         r'data-base: (?P<data_base>\S+)$')
+
+        # 1 Virtual Ethernet/IEEE 802.3 interface(s)
+        p48 = re.compile(r'^(?P<interface>\d+) +Virtual '
+                         r'+Ethernet/IEEE 802\.3 +interface\(s\)$')
+
+        # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
+        p49 = re.compile(r'^(?P<interface>\d+) +Gigabit '
+                         r'+Ethernet/IEEE 802\.3 +interface\(s\)$')
+
+        # Dagobah Revision 95, Swamp Revision 6
+        p50 = re.compile(r'^(?P<group1>\S+)\s+Revision\s+(?P<group1_int>\d+),'
+                         r'\s+(?P<group2>\S+)\s+Revision\s+(?P<group2_int>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # version
             # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3) 
             # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)           
-            m = p1.match(line)
+            # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+            m = p1.match(line) or p1_1.match(line)
             if m:
                 version = m.groupdict()['version']
                 # 16.6.5
@@ -855,30 +885,6 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
                 continue
 
-            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-            m = p35.match(line)
-            if m:
-                group = m.groupdict()
-                os = group['os']
-                platform = group['platform']
-                image_id = group['image_id']
-                version = group['version']
-                
-                # 16.6.5
-                result = p2.match(version)
-                version_short_dict = result.groupdict()
-                version_short = version_short_dict['ver_short']
-
-                version_dict2 = version_dict.setdefault('version', {})
-
-                version_dict2['os'] = os
-                version_dict2['version_short'] = version_short
-                version_dict2['platform'] = platform
-                version_dict2['version'] = version
-                version_dict2['image_id'] = image_id
-
-                continue
-
             # Compiled Mon 10-Apr-17 04:35 by mcpre
             # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
             m36 = p36.match(line)
@@ -1031,6 +1037,39 @@ class ShowVersion(ShowVersionSchema):
                 license_udi_sub['sn'] = group['sn']
                 continue
 
+            # Image text-base: 0x40101040, data-base: 0x42D98000
+            m = p47.match(line)
+            if m:
+                version_dict['version']['image'] = {}
+                version_dict['version']['image']['text_base'] = m.groupdict()['text_base']
+                version_dict['version']['image']['data_base'] = m.groupdict()['data_base']
+                continue
+
+            # 1 Virtual Ethernet/IEEE 802.3 interface(s)
+            m = p48.match(line)
+            if m:
+                if 'interfaces' not in version_dict['version']:
+                    version_dict['version']['interfaces'] = {}
+                version_dict['version']['interfaces']['virtual_ethernet'] = \
+                    int(m.groupdict()['interface'])
+                continue
+
+            # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
+            m = p49.match(line)
+            if m:
+                version_dict['version']['interfaces']['gigabit_ethernet'] = \
+                    int(m.groupdict()['interface'])
+                continue
+
+            # Dagobah Revision 95, Swamp Revision 6
+            m = p50.match(line)
+            if m:
+                groupdict = m.groupdict()
+                version_dict['version']['revision'] = {}
+                version_dict['version']['revision'][groupdict['group1']] = int(groupdict['group1_int'])
+                version_dict['version']['revision'][groupdict['group2']] = int(groupdict['group2_int'])
+                continue
+
         # table2 for C3850
         tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
                                            header_fields=
@@ -1098,6 +1137,7 @@ class ShowVersion(ShowVersionSchema):
                             if 'switch_num' != k:
                                 version_dict['version']['switch_num'][key][k] = v
                         version_dict['version']['switch_num'][key]['active'] = False 
+
 
         return version_dict
 

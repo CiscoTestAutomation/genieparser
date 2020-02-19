@@ -173,7 +173,11 @@ class TestShowVersion(unittest.TestCase):
                     'system_restarted_at': '12:22:21 PDT Mon Sep 10 2018',
                     'uptime': '9 weeks, 4 days, 2 hours, 3 minutes',
                     'version': '12.2(55)SE8',
-                    'version_short': '12.2'
+                    'version_short': '12.2',
+                    'image': {
+                        'data_base': '0x02800000',
+                        'text_base': '0x00003000',
+                    },
                     }
     }
 
@@ -278,9 +282,12 @@ class TestShowVersion(unittest.TestCase):
             },
             "mem_size": {"non-volatile configuration": "1917", "packet buffer": "8192"},
             "curr_config_register": "0x2102",
+            'image': {
+                'data_base': '0x42D98000',
+                'text_base': '0x40101040',
+            },
         }
     }
-
 
     golden_output_ios_cat6k = {'execute.return_value': '''
         show version
@@ -575,6 +582,76 @@ class TestShowVersion(unittest.TestCase):
     },
 }
 
+    golden_output_ios_2 = {'execute.return_value': '''
+    show version
+    Cisco Internetwork Operating System Software 
+    IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2005 by cisco Systems, Inc.
+    Compiled Wed 07-Sep-05 11:16 by tinhuang
+    Image text-base: 0x00000000, data-base: 0x010BF898
+    
+    ROM: 12.2(20r)EW1
+    Dagobah Revision 95, Swamp Revision 6
+    
+    ES1SW05AUN2 uptime is 12 years, 43 weeks, 5 days, 20 hours, 59 minutes
+    System returned to ROM by RPR Switchover
+    System restarted at 13:54:51 CET Sun Apr 15 2007
+    System image file is "bootflash:cat4000-i9s-mz.122-18.EW5.bin"
+    
+    cisco WS-C4507R (MPC8245) processor (revision 8) with 524288K bytes of memory.
+    Processor board ID FOX093206HY
+    Last reset from Reload
+    2 Virtual Ethernet/IEEE 802.3  interface(s)
+    244 Gigabit Ethernet/IEEE 802.3 interface(s)
+    511K bytes of non-volatile configuration memory.
+    
+    Configuration register is 0x2102
+    
+    ES1SW05AUN2#
+    '''}
+
+    golden_parsed_output_ios_2 = {
+    'version': {
+        'chassis': 'WS-C4507R',
+        'chassis_sn': 'FOX093206HY',
+        'compiled_by': 'tinhuang',
+        'compiled_date': 'Wed 07-Sep-05 11:16',
+        'curr_config_register': '0x2102',
+        'hostname': 'ES1SW05AUN2',
+        'image': {
+            'data_base': '0x010BF898',
+            'text_base': '0x00000000',
+        },
+        'image_id': 'cat4000-I9S-M',
+        'image_type': 'production image',
+        'interfaces': {
+            'gigabit_ethernet': 244,
+            'virtual_ethernet': 2,
+        },
+        'last_reload_reason': 'Reload',
+        'main_mem': '524288',
+        'mem_size': {
+            'non-volatile configuration': '511',
+        },
+        'os': 'IOS',
+        'platform': 'Catalyst 4000 L3 Switch',
+        'processor_type': 'MPC8245',
+        'returned_to_rom_by': 'RPR Switchover',
+        'revision': {
+            'Dagobah': 95,
+            'Swamp': 6,
+        },
+        'rom': '12.2(20r)EW1',
+        'rtr_type': 'WS-C4507R',
+        'system_image': 'bootflash:cat4000-i9s-mz.122-18.EW5.bin',
+        'system_restarted_at': '13:54:51 CET Sun Apr 15 2007',
+        'uptime': '12 years, 43 weeks, 5 days, 20 hours, 59 minutes',
+        'version': '12.2(18)EW5',
+        'version_short': '12.2',
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -621,6 +698,13 @@ class TestShowVersion(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.parsed_output)
+
+    def test_golden_ios_3(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.golden_output_ios_2)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios_2)
 
 
 class test_dir(unittest.TestCase):
