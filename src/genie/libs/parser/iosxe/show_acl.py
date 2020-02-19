@@ -265,7 +265,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit 172.31.0.0, wildcard bits 0.0.255.255 (8353358 matches)
         p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? '
                                        r'?(?P<actions_forwarding>permit|deny) '
-                                       r'+(?P<src>\S+|any)(?:, +wildcard '
+                                       r'+(?P<src>\S+|any)( log)?(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
                                        r'?(?: +\((?P<matched_packets>\d+)+ matches\))?$')
 
