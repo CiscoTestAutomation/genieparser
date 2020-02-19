@@ -60,9 +60,9 @@ class ShowLacpSysId(ShowLacpSysIdSchema):
             out = output
 
         result_dict = {}
-        # 32768, 001e.49af.8c00
-        # 32768,0014.a93d.4a00
-        # 8000,AC-12-34-56-78-90
+        # 32768, 001e.49ff.3caf
+        # 32768,0014.a9ff.873d
+        # 8000,AC-12-34-FF-CE-E6
         p1 = re.compile(r'^\s*(?P<system_priority>[\d]+), *(?P<system_id_mac>[\w\.\-]+)$')
 
         for line in out.splitlines():
@@ -353,8 +353,8 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
         # Channel group 1 neighbors
         #                   LACP port                        Admin  Oper   Port    Port
         # Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
-        # Gi2       SA      32768     001e.49e6.bc00  25s    0x0    0x1    0x1     0x3D
-        # Gi5/0/0   SP      32768     0011.2026.7300  11s    0x1    0x14   0x3C
+        # Gi2       SA      32768     001e.49ff.a3e6  25s    0x0    0x1    0x1     0x3D
+        # Gi5/0/0   SP      32768     0011.20ff.9926  11s    0x1    0x14   0x3C
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
                         ' +(?P<lacp_port_priority>[\d]+) +(?P<partner_id>[\w\.]+) +(?P<age>[\d]+)s +(?P<admin_key>[\w]+)'
@@ -543,8 +543,8 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
         p1 = re.compile(r'^Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         #           Partner              Partner          Partner         Partner Group
         # Port      Name                 Device ID        Port       Age  Flags   Cap.
-        # Gi0/1     iosvl2-2             5e02.4001.8000   Gi0/1       11s SC      10001
-        # Gi1/0/15    R5                   6c41.6ae4.7880   Gi1/0/1      5s  SC       A0001
+        # Gi0/1     iosvl2-2             5e02.40ff.8101   Gi0/1       11s SC      10001
+        # Gi1/0/15    R5                   6c41.6aff.5d65   Gi1/0/1      5s  SC       A0001
         p2 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +(?P<partner_name>[\w\-\.]+)'
                         ' +(?P<partner_id>[\w\.]+) *(?P<partner_port>[\w\/\.\-]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
                         ' *(?P<group_cap>[\w]+)$')
@@ -1012,7 +1012,7 @@ class ShowLacpNeighborDetail(ShowLacpNeighborDetailSchema):
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)')
 
         # Port           System ID             Port Number     Age         Flags
-        # Gi0/0/1         00127,6487.88af.b840  0x2              28s        FA
+        # Gi0/0/1         00127,6487.88ff.68ef  0x2              28s        FA
         p2 = re.compile(r'^\s*(?P<interface>[\w/]+) +(?P<system_id>[\w,.]+) +(?P<port_num>[\w]+)'
                         ' +(?P<age>[\d]+)s +(?P<flags>[\w]+)$')
 

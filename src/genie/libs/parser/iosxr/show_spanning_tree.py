@@ -94,7 +94,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# CIST Root  Priority	32768
 		p3 = re.compile(r'^CIST\s+Root\s+Priority\s+'
 			'(?P<cist_root_priority>\d+)')
-		# Address	 0021.1bfd.1007
+		# Address	 0021.1bff.0e05
 		p4 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Ext Cost    2000
 		p5 = re.compile(r'^Ext\s+Cost\s+(?P<cist_root_cost>\d+)$')
@@ -112,7 +112,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# Bridge ID Priority 32768 (priority 32768 sys-id-ext 0)
 		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
 			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
-		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bfd.1007 128.1  
+		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
 		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
 			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+'
 			'(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?'
@@ -150,7 +150,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-		   	# Address     0021.1bfd.1007
+		   	# Address     0021.1bff.0e05
 			m = p4.match(line)
 			if m:
 				group = m.groupdict()
@@ -183,12 +183,12 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 			m = p8.match(line)
 			if m:
 				group = m.groupdict()
-				if address_type is 'designated_root_address':
+				if address_type == 'designated_root_address':
 					mst_instances.update({
 						'root_max_age' : int(group['max_age'])})
 					mst_instances.update({
 						'root_forward_delay' : int(group['forward_delay'])})
-				if address_type is 'bridge_address':
+				if address_type == 'bridge_address':
 					mst_instances.update({
 						'bridge_max_age' : int(group['max_age'])})
 					mst_instances.update({
@@ -210,7 +210,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Te0/0/0/16   128.1   2000	  ROOT FWD   32768 0021.1bfd.1007 128.1
+			# Te0/0/0/16   128.1   2000	  ROOT FWD   32768 0021.1bff.0e05 128.1
 			m = p11.match(line)
 			if m:
 				group = m.groupdict()
@@ -317,7 +317,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		p5 = re.compile(r'^Max Age:\s+(?P<max_age>\d+)$')
 		# Provider Bridge: no
 		p6 = re.compile(r'^Provider +Bridge:\s+(?P<provider_bridge>\w+)$')
-		# Bridge ID:       0000.0000.0002
+		# Bridge ID:       0000.00ff.0002
 		p7 = re.compile(r'^Bridge +ID:\s+(?P<bridge_id>[\w\.]+)$')
 		# Port ID:         1
 		p8 = re.compile(r'^Port +ID:\s+(?P<port_id>\d+)$')
@@ -339,7 +339,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		p16 = re.compile(r'^Port +Priority:\s+(?P<port_priority>\d+)$')
 		#     Cost:             0
 		p17 = re.compile(r'^Cost:\s+(?P<cost>\d+)$')
-		#     Root Bridge:      0000.0000.0001
+		#     Root Bridge:      0000.00ff.0001
 		p18 = re.compile(r'^Root +Bridge:\s+(?P<root_bridge>[\w\.]+)$')
 		#     Root Priority:    4096
 		p19 = re.compile(r'^Root +Priority:\s+(?P<root_priority>\d+)$')
@@ -409,7 +409,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 					'provider_bridge':(group['provider_bridge'].lower() == 'yes')})
 				continue
 
-			# Bridge ID:       0000.0000.0002
+			# Bridge ID:       0000.00ff.0002
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
@@ -489,7 +489,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 				instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			#     Root Bridge:      0000.0000.0001
+			#     Root Bridge:      0000.00ff.0001
 			m = p18.match(line)
 			if m:
 				group = m.groupdict()
@@ -570,7 +570,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		# Root ID    Priority    32768
 		p2 = re.compile(r'^Root\s+ID\s+Priority\s+'
 			'(?P<designated_root_priority>\d+)')
-		# Address     0021.1bfc.dc76
+		# Address     0021.1bff.d973
 		p3 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
 		p4 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
@@ -580,7 +580,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Transmit Hold count   6
 		p6 = re.compile(r'^Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)')
-		# Gi0/7/0/0	128.1   20000	 DSGN FWD   32768 8cb6.4fe9.7b9e 128.1
+		# Gi0/7/0/0	128.1   20000	 DSGN FWD   32768 8cb6.4fff.6588 128.1
 		p7 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
 			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>'
 			'\w+)\s+(?P<designated_bridge_priority>\d+)\s+'
@@ -611,7 +611,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
 
-		   	# Address     0021.1bfc.dc76
+		   	# Address     0021.1bff.d973
 			m = p3.match(line)
 			if m:
 				group = m.groupdict()
@@ -622,11 +622,11 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 			m = p4.match(line)
 			if m:
 				group = m.groupdict()
-				if address_type is 'designated_root_address':
+				if address_type == 'designated_root_address':
 					vlan.update({'designated_root_max_age' : int(group['max_age'])})
 					vlan.update({
 						'designated_root_forward_delay' : int(group['forward_delay'])})
-				if address_type is 'bridge_address':
+				if address_type == 'bridge_address':
 					vlan.update({'bridge_max_age' : int(group['max_age'])})
 					vlan.update({
 						'bridge_forward_delay' : int(group['forward_delay'])})
@@ -647,7 +647,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Gi0/7/0/0	128.1   20000	 DSGN FWD   32768 8cb6.4fe9.7b9e 128.1
+			# Gi0/7/0/0	128.1   20000	 DSGN FWD   32768 8cb6.4fff.6588 128.1
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
@@ -746,7 +746,7 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		p7 = re.compile(r'^Cost:\s+(?P<root_cost>\d+)$')
 		# Bridge Priority:  32768
 		p8 = re.compile(r'^Bridge\s+Priority:\s+(?P<bridge_priority>\d+)$')
-		# Bridge ID:        0255.1d30.0c40
+		# Bridge ID:        0255.1dff.3c70
 		p9 = re.compile(r'^Bridge\s+ID:\s+(?P<bridge_id>[\w\.]+)$')
 		# Port Priority:    128
 		p10 = re.compile(r'^Port\s+Priority:\s+(?P<port_priority>\d+)$')
@@ -822,7 +822,7 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge ID:        0255.1d30.0c40
+			# Bridge ID:        0255.1dff.3c70
 			m = p9.match(line)
 			if m:
 				group = m.groupdict()
@@ -956,7 +956,7 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 		p7 = re.compile(r'^Cost:\s+(?P<root_cost>\d+)$')
 		# Bridge Priority:  32768
 		p8 = re.compile(r'^Bridge\s+Priority:\s+(?P<bridge_priority>\d+)$')
-		# Bridge ID:        0255.1d30.0c40
+		# Bridge ID:        0255.1dff.3c70
 		p9 = re.compile(r'^Bridge\s+ID:\s+(?P<bridge_id>[\w\.]+)$')
 		# Port Priority:    128
 		p10 = re.compile(r'^Port\s+Priority:\s+(?P<port_priority>\d+)$')
@@ -1029,7 +1029,7 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge ID:        6c9c.ed0d.8088
+			# Bridge ID:        6c9c.edff.8d95
 			m = p9.match(line)
 			if m:
 				group = m.groupdict()

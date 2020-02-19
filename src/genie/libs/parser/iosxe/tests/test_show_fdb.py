@@ -20,72 +20,72 @@ class test_show_mac_address_table(unittest.TestCase):
             "vlans": {
                   '100': {
                       "mac_addresses": {
-                            "ecbd.1d09.5689": {
+                            "ecbd.1dff.5f92": {
                                 "drop": {
                                       "drop": True,
                                       "entry_type": "dynamic"
                                 },
-                                "mac_address": "ecbd.1d09.5689"
+                                "mac_address": "ecbd.1dff.5f92"
                             },
-                            "3820.5672.fc03": {
+                            "3820.56ff.6f75": {
                                 "interfaces": {
                                       "Port-channel12": {
                                           "interface": "Port-channel12",
                                           "entry_type": "dynamic"
                                       }
                                 },
-                                "mac_address": "3820.5672.fc03"
+                                "mac_address": "3820.56ff.6f75"
                             },
-                            "58bf.eab6.2f51": {
+                            "58bf.eaff.e508": {
                                 "interfaces": {
                                       "Vlan100": {
                                           "interface": "Vlan100",
                                           "entry_type": "static"
                                       }
                                 },
-                                "mac_address": "58bf.eab6.2f51"
+                                "mac_address": "58bf.eaff.e508"
                             }
                       },
                       "vlan": 100
                   },
                   "all": {
                       "mac_addresses": {
-                            "0100.0ccc.cccc": {
+                            "0100.0cff.9999": {
                                 "interfaces": {
                                       "CPU": {
                                           "interface": "CPU",
                                           "entry_type": "static"
                                       }
                                 },
-                                "mac_address": "0100.0ccc.cccc"
+                                "mac_address": "0100.0cff.9999"
                             },
-                            "0100.0ccc.cccd": {
+                            "0100.0cff.999a": {
                                 "interfaces": {
                                       "CPU": {
                                           "interface": "CPU",
                                           "entry_type": "static"
                                       }
                                 },
-                                "mac_address": "0100.0ccc.cccd"
+                                "mac_address": "0100.0cff.999a"
                             }
                       },
                       "vlan": "all"
                   },
                   '20': {
                       "mac_addresses": {
-                            "aaaa.bbbb.cccc": {
+                            "aaaa.bbff.8888": {
                                 "drop": {
                                       "drop": True,
                                       "entry_type": "static"
                                 },
-                                "mac_address": "aaaa.bbbb.cccc"
+                                "mac_address": "aaaa.bbff.8888"
                             }
                       },
                       "vlan": 20
                   },
                   '10': {
                       "mac_addresses": {
-                            "aaaa.bbbb.cccc": {
+                            "aaaa.bbff.8888": {
                                 "interfaces": {
                                       "GigabitEthernet1/0/8": {
                                           "entry": "*",
@@ -104,39 +104,39 @@ class test_show_mac_address_table(unittest.TestCase):
                                       }
                                     
                                 },
-                                "mac_address": "aaaa.bbbb.cccc"
+                                "mac_address": "aaaa.bbff.8888"
                             }
                       },
                       "vlan": 10
                   },
                   '101': {
                       "mac_addresses": {
-                            "58bf.eab6.2f41": {
+                            "58bf.eaff.e5f7": {
                                 "interfaces": {
                                       "Vlan101": {
                                           "interface": "Vlan101",
                                           "entry_type": "static"
                                       }
                                 },
-                                "mac_address": "58bf.eab6.2f41"
+                                "mac_address": "58bf.eaff.e5f7"
                             },
-                            "3820.5672.fc41": {
+                            "3820.56ff.6fb3": {
                                 "interfaces": {
                                       "Port-channel12": {
                                           "interface": "Port-channel12",
                                           "entry_type": "dynamic"
                                       }
                                 },
-                                "mac_address": "3820.5672.fc41"
+                                "mac_address": "3820.56ff.6fb3"
                             },
-                            "3820.5672.fc03": {
+                            "3820.56ff.6f75": {
                                 "interfaces": {
                                       "Port-channel12": {
                                           "interface": "Port-channel12",
                                           "entry_type": "dynamic"
                                       }
                                 },
-                                "mac_address": "3820.5672.fc03"
+                                "mac_address": "3820.56ff.6f75"
                             }
                       },
                       "vlan": 101
@@ -152,16 +152,16 @@ class test_show_mac_address_table(unittest.TestCase):
 
         Vlan    Mac Address       Type        Ports
         ----    -----------       --------    -----
-         All    0100.0ccc.cccc    STATIC      CPU
-         All    0100.0ccc.cccd    STATIC      CPU
-          20    aaaa.bbbb.cccc    STATIC      Drop
-         100    3820.5672.fc03    DYNAMIC     Po12
-         100    58bf.eab6.2f51    STATIC      Vl100
-         100    ecbd.1d09.5689    DYNAMIC     Drop
-         101    3820.5672.fc03    DYNAMIC     Po12
-         101    3820.5672.fc41    DYNAMIC     Po12
-         101    58bf.eab6.2f41    STATIC      Vl101
-         * 10    aaaa.bbbb.cccc    STATIC      Gi1/0/8 Gi1/0/9
+         All    0100.0cff.9999    STATIC      CPU
+         All    0100.0cff.999a    STATIC      CPU
+          20    aaaa.bbff.8888    STATIC      Drop
+         100    3820.56ff.6f75    DYNAMIC     Po12
+         100    58bf.eaff.e508    STATIC      Vl100
+         100    ecbd.1dff.5f92    DYNAMIC     Drop
+         101    3820.56ff.6f75    DYNAMIC     Po12
+         101    3820.56ff.6fb3    DYNAMIC     Po12
+         101    58bf.eaff.e5f7    STATIC      Vl101
+         * 10    aaaa.bbff.8888    STATIC      Gi1/0/8 Gi1/0/9
                                               Vl101
         Total Mac Addresses for this criterion: 10
     '''
@@ -191,7 +191,7 @@ class test_show_mac_address_table_2(unittest.TestCase):
             "vlans": {
                   '100': {
                       "mac_addresses": {
-                            "11aa.22bb.33cc": {
+                            "11aa.22ff.ee88": {
                                 "interfaces": {
                                       "Router": {
                                           "entry": "*",
@@ -200,14 +200,14 @@ class test_show_mac_address_table_2(unittest.TestCase):
                                           "learn": "No"
                                       }
                                 },
-                                "mac_address": "11aa.22bb.33cc"
+                                "mac_address": "11aa.22ff.ee88"
                             }
                       },
                       "vlan": 100
                   },
                   '101': {
                       "mac_addresses": {
-                            "44dd.ee55.ff66": {
+                            "44dd.eeff.55bb": {
                                 "interfaces": {
                                       "GigabitEthernet1/40": {
                                           "entry": "*",
@@ -217,14 +217,14 @@ class test_show_mac_address_table_2(unittest.TestCase):
                                           "age": 10
                                       }
                                 },
-                                "mac_address": "44dd.ee55.ff66"
+                                "mac_address": "44dd.eeff.55bb"
                             }
                       },
                       "vlan": 101
                   },
                   '102': {
                       "mac_addresses": {
-                            "aa11.bb22.cc33": {
+                            "aa11.bbff.ee55": {
                                 "interfaces": {
                                       "GigabitEthernet1/2": {
                                           "entry": "*",
@@ -287,14 +287,14 @@ class test_show_mac_address_table_2(unittest.TestCase):
                                           "learn": "Yes"
                                       }
                                 },
-                                "mac_address": "aa11.bb22.cc33"
+                                "mac_address": "aa11.bbff.ee55"
                             }
                       },
                       "vlan": 102
                   },
                   '200': {
                       "mac_addresses": {
-                            "dd44.55ee.66ff": {
+                            "dd44.55ff.55ee": {
                                 "interfaces": {
                                       "TenGigabitEthernet1/1": {
                                           "entry": "*",
@@ -321,14 +321,14 @@ class test_show_mac_address_table_2(unittest.TestCase):
                                           "learn": "Yes"
                                       },
                                 },
-                                "mac_address": "dd44.55ee.66ff"
+                                "mac_address": "dd44.55ff.55ee"
                             }
                       },
                       "vlan": 200
                   },
                   '300': {
                       "mac_addresses": {
-                            "11aa.22bb.33cc": {
+                            "11aa.22ff.ee88": {
                                 "interfaces": {
                                       "Router": {
                                           "interface": "Router",
@@ -336,19 +336,19 @@ class test_show_mac_address_table_2(unittest.TestCase):
                                           "learn": "No"
                                       }
                                 },
-                                "mac_address": "11aa.22bb.33cc"
+                                "mac_address": "11aa.22ff.ee88"
                             }
                       },
                       "vlan": 300
                   },
                   '301': {
                       "mac_addresses": {
-                            "11aa.22bb.33cc": {
+                            "11aa.22ff.ee88": {
                                 "drop": {
                                       "drop": True,
                                       "entry_type": "static"
                                 },
-                                "mac_address": "11aa.22bb.33cc"
+                                "mac_address": "11aa.22ff.ee88"
                             }
                       },
                       "vlan": 301
@@ -404,14 +404,14 @@ class test_show_mac_address_table_2(unittest.TestCase):
 
         vlan   mac address     type    learn     age              ports
       ------+----------------+--------+-----+----------+--------------------------
-      *  100  11aa.22bb.33cc    static  No           -   Router
-      *  101  44dd.ee55.ff66   dynamic  Yes         10   Gi1/40
-      *  102  aa11.bb22.cc33    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
+      *  100  11aa.22ff.ee88    static  No           -   Router
+      *  101  44dd.eeff.55bb   dynamic  Yes         10   Gi1/40
+      *  102  aa11.bbff.ee55    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
                                                          Gi1/9,Gi1/10,Gi1/11,Gi1/12
                                                          Router,Switch
-      *  200  dd44.55ee.66ff    static  Yes          -   Te1/1,Te1/2,Te1/4,Te1/8
-      300  11aa.22bb.33cc    static  No           -   Router
-      301  11aa.22bb.33cc    static  No           -   Drop
+      *  200  dd44.55ff.55ee    static  Yes          -   Te1/1,Te1/2,Te1/4,Te1/8
+      300  11aa.22ff.ee88    static  No           -   Router
+      301  11aa.22ff.ee88    static  No           -   Drop
       *  ---  0000.0000.0000    static  No           -   Router
       *  400  0000.0000.0000    static  No           -   vPC Peer-Link
                                                         Router

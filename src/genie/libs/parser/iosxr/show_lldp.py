@@ -136,7 +136,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Local Interface: GigabitEthernet0/0/0/0
         p1 = re.compile(r'^Local +Interface: +(?P<local_interface>\S+)$')
-        # Chassis id: 001e.49f7.2c00
+        # Chassis id: 001e.49ff.24f7
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
         # Port id: Gi2
         p3 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
@@ -187,7 +187,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 continue
             
-            # Chassis id: 001e.49f7.2c00
+            # Chassis id: 001e.49ff.24f7
             m = p2.match(line)
             if m:
                 group = m.groupdict()

@@ -9,6 +9,19 @@
                                 New
 --------------------------------------------------------------------------------
 
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowUsers:
+        * Changed regex to support various outputs.
+
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
+
 * IOSXE
     * Added ShowProcessesMemory for:
         * show processes memory
@@ -19,6 +32,8 @@
         * show ip bgp regexp ^$ 
     * Added ShowBootvar for:
         * 'show bootvar'
+    * Added ShowInterfaceStatus for:
+        * show interface status
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -68,16 +83,21 @@
     * Added ShowIpBgpRegexp:
         * show ip bgp regexp ^$ 
     * Moved ShowBootvar to iosxe folder
+    * Added ShowInterfaceStatus for:
+        * show interface status
 
 * SROS
     * Added ShowSystemNtpAll for:
         * show system ntp all
-
-*SROS
     * Added ShowRouterIsisAdjacency for:
         * show router isis adjacency
     * Added ShowRouterIsisAdjacencyDetail for:
         * show router isis adjacency detail
+
+* LINUX
+    * Added Ps for:
+        * ps -ef
+        * ps -ef | grep {grep}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -91,12 +111,26 @@
         * Changed schema to support more various output
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
-		
+    * Updated ShowVlan
+        * Modified if-condition to support various output.
     * Updated ShowClnsProtocol
         * Changed 'Null Tag' to 'null' 
     * Updated ShowInterfacesDescription
 	    * Modified regex to fix parsing as per customer output
+    * Updated ShowVrfDetail:
+        * Modified regex to support customer output
+    * Updated ShowEthernetServiceInstanceDetail
+        * Modified regex to support outputs
+    * Updated ShowIpIgmpInterface:
+        * Modified schema
+    * Updated ShowIpPimInterfaceDetail:
+        * Added on Optional key to schema
+
+
 * IOSXR
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
+
     * Updated ShowLacp
         * Change in order to parse show lacp {interface}.
     * Updated ShowBundle
@@ -118,20 +152,18 @@
 	    * Updated for the case of empty ttl_groups
 		* Updated for udp ACL with incremented counter
 		* Added support for access-lists with object-group references
+    * Updated ShowInventory
+        * Updated for various outputs
 
 * IOSXE
     * Updating symbolic link to platform specific unittests
 
 * IOSXR
     * Updating symbolic link to platform specific unittests
-
-* IOSXR
     * Updated and removed regex to accommodate outputs
     * Added new unittest 
     * Updated and added regex to accommodate more outputs
     * Added new output to unittest
-
-* IOSXR
     * Updated regex to accommodate more outputs
     * Added extra key to schema
     * Added new unittest
@@ -140,5 +172,9 @@
     * Updated ShowNveVniIngressReplication
         * Added regex 
         * Added new unittest
-
-    
+    * Updated ShowIpCefInternal
+	    * Update schema and regex to support more various output
+* IOSXR:
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest
