@@ -588,13 +588,13 @@ class TestShowVersion(unittest.TestCase):
     IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
     Technical Support: http://www.cisco.com/techsupport
     Copyright (c) 1986-2005 by cisco Systems, Inc.
-    Compiled Wed 07-Sep-05 11:16 by tinhuang
+    Compiled Wed 07-Sep-05 11:16 by someone
     Image text-base: 0x00000000, data-base: 0x010BF898
     
     ROM: 12.2(20r)EW1
     Dagobah Revision 95, Swamp Revision 6
     
-    ES1SW05AUN2 uptime is 12 years, 43 weeks, 5 days, 20 hours, 59 minutes
+    GENIE123123 uptime is 1 years, 2 weeks, 3 days, 4 hours, 5 minutes
     System returned to ROM by RPR Switchover
     System restarted at 13:54:51 CET Sun Apr 15 2007
     System image file is "bootflash:cat4000-i9s-mz.122-18.EW5.bin"
@@ -608,17 +608,17 @@ class TestShowVersion(unittest.TestCase):
     
     Configuration register is 0x2102
     
-    ES1SW05AUN2#
+    GENIE123123#
     '''}
 
     golden_parsed_output_ios_2 = {
     'version': {
         'chassis': 'WS-C4507R',
         'chassis_sn': 'FOX093206HY',
-        'compiled_by': 'tinhuang',
+        'compiled_by': 'someone',
         'compiled_date': 'Wed 07-Sep-05 11:16',
         'curr_config_register': '0x2102',
-        'hostname': 'ES1SW05AUN2',
+        'hostname': 'GENIE123123',
         'image': {
             'data_base': '0x010BF898',
             'text_base': '0x00000000',
@@ -646,7 +646,7 @@ class TestShowVersion(unittest.TestCase):
         'rtr_type': 'WS-C4507R',
         'system_image': 'bootflash:cat4000-i9s-mz.122-18.EW5.bin',
         'system_restarted_at': '13:54:51 CET Sun Apr 15 2007',
-        'uptime': '12 years, 43 weeks, 5 days, 20 hours, 59 minutes',
+        'uptime': '1 years, 2 weeks, 3 days, 4 hours, 5 minutes',
         'version': '12.2(18)EW5',
         'version_short': '12.2',
     },
