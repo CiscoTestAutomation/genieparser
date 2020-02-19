@@ -123,26 +123,17 @@ class ShowLldpEntrySchema(MetaParser):
             'capabilities': list,
             'device_type': str,
             'network_policy': {
-                'voice': {
-                    Any(): {
-                        'tagged': bool,
-                        'layer_2_priority': int,
-                        'dscp': int,
-                    }
+                Any(): { # 'voice'; 'voice_signal'
+                    'vlan': int, # 110
+                    'tagged': bool,
+                    'layer_2_priority': int,
+                    'dscp': int,
                 },
-                'voice_signal': {
-                    Any(): {
-                        'tagged': bool,
-                        'layer_2_priority': int,
-                        'dscp': int,
-                    }
-                }
             },
-            'pd_device': {
-                'power_source': str,
-                'power_priority': str,
-                'wattage': float,
-            },
+            'device_type': str,
+            'power_source': str,
+            'power_priority': str,
+            'wattage': float,
             'location': str,
         }
     }
@@ -231,12 +222,12 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
         # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
-        med_p6 = re.compile(r'^Network Policy\(Voice( (?P<voice_signal>Signal))?\): '
-                            r'(?P<network_policy>[\S ]+), (?P<tagged>tagged), '
+        med_p6 = re.compile(r'^Network Policy\(Voice( (?P<voice_signal>Signal))?\):'
+                            r' VLAN (?P<vlan>\d+), (?P<tagged>tagged), '
                             r'Layer-2 priority: (?P<layer_2_priority>\d+), DSCP: (?P<dscp>\d+)$')
 
         # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
-        med_p7 = re.compile(r'^PD device, Power source: (?P<power_source>\S+), '
+        med_p7 = re.compile(r'^(?P<device_type>PD device), Power source: (?P<power_source>\S+), '
                             r'Power Priority: (?P<power_priority>\S+), Wattage: (?P<wattage>\S+)$')
 
         # Location - not advertised
@@ -437,24 +428,23 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 else:
                     voice = 'voice'
                 voice_sub_dict = med_dict.setdefault('network_policy', {}).\
-                                          setdefault(voice, {}).\
-                                          setdefault(group['network_policy'], {})
+                                          setdefault(voice, {})
                 if group['tagged'] == 'tagged':
                     voice_sub_dict['tagged'] = True
                 else:
                     voice_sub_dict['tagged'] = False
 
-                voice_sub_dict['layer_2_priority'] = int(group['layer_2_priority'])
-                voice_sub_dict['dscp'] = int(group['dscp'])
+                for k in ['layer_2_priority', 'dscp', 'vlan']:
+                    voice_sub_dict[k] = int(group[k])
+
                 continue
 
             # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
             m = med_p7.match(line)
             if m:
-                pd_dict = med_dict.setdefault('pd_device', {})
-                for k in ['power_source', 'power_priority']:
-                    pd_dict[k] = m.groupdict()[k]
-                pd_dict['wattage'] = float(m.groupdict()['wattage'])
+                for k in ['device_type', 'power_source', 'power_priority']:
+                    med_dict[k] = m.groupdict()[k]
+                med_dict['wattage'] = float(m.groupdict()['wattage'])
                 continue
 
             # Location - not advertised

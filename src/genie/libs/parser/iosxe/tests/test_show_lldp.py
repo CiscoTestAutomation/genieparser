@@ -635,25 +635,22 @@ class test_show_lldp_entry(unittest.TestCase):
         'model': '1220 IP Deskphone',
         'network_policy': {
             'voice': {
-                'VLAN 110': {
-                    'dscp': 46,
-                    'layer_2_priority': 5,
-                    'tagged': True,
-                },
+                'vlan': 110,
+                'dscp': 46,
+                'layer_2_priority': 5,
+                'tagged': True,
             },
             'voice_signal': {
-                'VLAN 110': {
-                    'dscp': 0,
-                    'layer_2_priority': 0,
-                    'tagged': True,
-                },
+                'vlan': 110,
+                'dscp': 0,
+                'layer_2_priority': 0,
+                'tagged': True,
             },
         },
-        'pd_device': {
-            'power_priority': 'High',
-            'power_source': 'Unknown',
-            'wattage': 6.0,
-        },
+        'device_type': 'PD device',
+        'power_priority': 'High',
+        'power_source': 'Unknown',
+        'wattage': 6.0,
     },
 }
 
