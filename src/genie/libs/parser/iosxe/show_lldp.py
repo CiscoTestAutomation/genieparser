@@ -168,70 +168,70 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         sub_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^Local +Intf: +(?P<intf>[\w\/\.\-]+)$')
-        p1_1 = re.compile(r'^Port +id: +(?P<port_id>[\w\/\.\-]+)$')
+        p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
+        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\w\/\.\-]+)$')
 
-        p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
+        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
-        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-\s]+)$')
+        p3 = re.compile(r'^Port\s+Description:\s+(?P<desc>[\w\/\.\-\s]+)$')
 
-        p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S\s]+)$')
+        p4 = re.compile(r'^System\s+Name(?: +-|:)\s+(?P<name>[\S\s]+)$')
 
-        p5 = re.compile(r'^System +Description:.*$')
+        p5 = re.compile(r'^System\s+Description:.*$')
         p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
         p5_2 = re.compile(r'^(?P<msg>Technical Support.*)$')
         p5_3 = re.compile(r'^(?P<msg>Copyright.*)$')
         p5_4 = re.compile(r'^(?P<msg>Compile.*)$')
         p5_5 = re.compile(r'^(?P<msg>Avaya.*)$')
 
-        p6 = re.compile(r'^Time +remaining: +(?P<time_remaining>\w+) +seconds$')
+        p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
 
-        p7 = re.compile(r'^System +Capabilities: +(?P<capab>[\w\,\s]+)$')
+        p7 = re.compile(r'^System\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
-        p8 = re.compile(r'^Enabled +Capabilities: +(?P<capab>[\w\,\s]+)$')
+        p8 = re.compile(r'^Enabled\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
-        p9 = re.compile(r'^IP: +(?P<ip>[\w\.]+)$')
-        p9_1 = re.compile(r'^Management Addresses - (?P<ip>not advertised)$')
+        p9 = re.compile(r'^IP:\s+(?P<ip>[\w\.]+)$')
+        p9_1 = re.compile(r'^Management\s+Addresses\s+-\s+(?P<ip>not\sadvertised)$')
 
-        p10 = re.compile(r'^Auto +Negotiation +\- +(?P<auto_negotiation>[\w\s\,]+)$')
+        p10 = re.compile(r'^Auto\s+Negotiation\s+\-\s+(?P<auto_negotiation>[\w\s\,]+)$')
 
-        p11 = re.compile(r'^Physical +media +capabilities:$')
+        p11 = re.compile(r'^Physical\s+media\s+capabilities:$')
         p11_1 = re.compile(r'^(?P<physical_media_capabilities>\d+base[\w\-\(\)]+)$')
 
-        p12 = re.compile(r'^Media +Attachment +Unit +type: +(?P<unit_type>\d+)$')
+        p12 = re.compile(r'^Media\s+Attachment\s+Unit\s+type:\s+(?P<unit_type>\d+)$')
 
-        p13 = re.compile(r'^Vlan +ID:( \- )?(?P<vlan_id>[\S\s]+)$')
+        p13 = re.compile(r'^Vlan\s+ID:( \- )?(?P<vlan_id>[\S\s]+)$')
 
-        p14 = re.compile(r'^Total +entries +displayed: +(?P<entry>\d+)$')
+        p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
 
         # ==== MED Information patterns =====
         # F/W revision: 06Q
-        med_p1 = re.compile(r'^F/W revision: (?P<fw_revision>\S+)$')
+        med_p1 = re.compile(r'^F/W revision:\s+(?P<fw_revision>\S+)$')
 
         # Manufacturer: Avaya-05
-        med_p2 = re.compile(r'^Manufacturer: (?P<manufacturer>\S+)$')
+        med_p2 = re.compile(r'^Manufacturer:\s+(?P<manufacturer>\S+)$')
 
         # Model: 1220 IP Deskphone
-        med_p3 = re.compile(r'^Model: (?P<model>[\S\s]+)$')
+        med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
 
         # Capabilities: NP, LI, PD, IN
-        med_p4 = re.compile(r'^Capabilities: (?P<capabilities>[\S\s]+)$')
+        med_p4 = re.compile(r'^Capabilities:\s+(?P<capabilities>[\S\s]+)$')
 
         # Device type: Endpoint Class III
-        med_p5 = re.compile(r'^Device type: (?P<device_type>[\S\s]+)$')
+        med_p5 = re.compile(r'^Device\s+type:\s+(?P<device_type>[\S\s]+)$')
 
         # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
         # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
-        med_p6 = re.compile(r'^Network Policy\(Voice( (?P<voice_signal>Signal))?\):'
-                            r' VLAN (?P<vlan>\d+), (?P<tagged>tagged), '
-                            r'Layer-2 priority: (?P<layer_2_priority>\d+), DSCP: (?P<dscp>\d+)$')
+        med_p6 = re.compile(r'^Network\s+Policy\(Voice(\s+(?P<voice_signal>Signal))?\):'
+                            r'\s+VLAN\s+(?P<vlan>\d+),\s+(?P<tagged>tagged),\s+'
+                            r'Layer-2 priority:\s+(?P<layer_2_priority>\d+),\s+DSCP:\s+(?P<dscp>\d+)$')
 
         # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
-        med_p7 = re.compile(r'^(?P<device_type>PD device), Power source: (?P<power_source>\S+), '
-                            r'Power Priority: (?P<power_priority>\S+), Wattage: (?P<wattage>\S+)$')
+        med_p7 = re.compile(r'^(?P<device_type>PD device),\s+Power\s+source:\s+(?P<power_source>\S+),\s+'
+                            r'Power\s+Priority:\s+(?P<power_priority>\S+),\s+Wattage:\s+(?P<wattage>\S+)$')
 
         # Location - not advertised
-        med_p8 = re.compile(r'^Location - (?P<location>[\S\s]+)$')
+        med_p8 = re.compile(r'^Location\s+-\s+(?P<location>[\S\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
