@@ -173,9 +173,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
 
-        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\- ]+)$')
+        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-\s]+)$')
 
-        p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S ]+)$')
+        p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S\s]+)$')
 
         p5 = re.compile(r'^System +Description:.*$')
         p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
@@ -200,7 +200,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p12 = re.compile(r'^Media +Attachment +Unit +type: +(?P<unit_type>\d+)$')
 
-        p13 = re.compile(r'^Vlan +ID:( \- )?(?P<vlan_id>[\S ]+)$')
+        p13 = re.compile(r'^Vlan +ID:( \- )?(?P<vlan_id>[\S\s]+)$')
 
         p14 = re.compile(r'^Total +entries +displayed: +(?P<entry>\d+)$')
 
@@ -212,10 +212,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         med_p2 = re.compile(r'^Manufacturer: (?P<manufacturer>\S+)$')
 
         # Model: 1220 IP Deskphone
-        med_p3 = re.compile(r'^Model: (?P<model>[\S ]+)$')
+        med_p3 = re.compile(r'^Model: (?P<model>[\S\s]+)$')
 
         # Capabilities: NP, LI, PD, IN
-        med_p4 = re.compile(r'^Capabilities: (?P<capabilities>[\S ]+)$')
+        med_p4 = re.compile(r'^Capabilities: (?P<capabilities>[\S\s]+)$')
 
         # Device type: Endpoint Class III
         med_p5 = re.compile(r'^Device type: (?P<device_type>[\S\s]+)$')
@@ -231,7 +231,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                             r'Power Priority: (?P<power_priority>\S+), Wattage: (?P<wattage>\S+)$')
 
         # Location - not advertised
-        med_p8 = re.compile(r'^Location - (?P<location>[\S ]+)$')
+        med_p8 = re.compile(r'^Location - (?P<location>[\S\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
