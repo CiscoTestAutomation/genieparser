@@ -64,6 +64,8 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
+        * show ssh history
+
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
