@@ -522,12 +522,9 @@ class ShowVersion(ShowVersionSchema):
                          r'data-base: (?P<data_base>\S+)$')
 
         # 1 Virtual Ethernet/IEEE 802.3 interface(s)
-        p48 = re.compile(r'^(?P<interface>\d+) +Virtual '
-                         r'+Ethernet/IEEE 802\.3 +interface\(s\)$')
-
         # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
-        p49 = re.compile(r'^(?P<interface>\d+) +Gigabit '
-                         r'+Ethernet/IEEE 802\.3 +interface\(s\)$')
+        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet)'
+                         r'/IEEE 802\.3 +interface\(s\)$')
 
         # Dagobah Revision 95, Swamp Revision 6
         p50 = re.compile(r'^(?P<group1>\S+)\s+Revision\s+(?P<group1_int>\d+),'
@@ -1046,19 +1043,18 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # 1 Virtual Ethernet/IEEE 802.3 interface(s)
+            # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
             m = p48.match(line)
             if m:
+                group = m.groupdict()
+                ethernet_type = group['ethernet_type']
+                ethernet_type_dict = {'Virtual Ethernet': 'virtual_ethernet',
+                                      'Gigabit Ethernet': 'gigabit_ethernet'}
+
                 if 'interfaces' not in version_dict['version']:
                     version_dict['version']['interfaces'] = {}
-                version_dict['version']['interfaces']['virtual_ethernet'] = \
-                    int(m.groupdict()['interface'])
-                continue
-
-            # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
-            m = p49.match(line)
-            if m:
-                version_dict['version']['interfaces']['gigabit_ethernet'] = \
-                    int(m.groupdict()['interface'])
+                version_dict['version']['interfaces'][ethernet_type_dict[ethernet_type]] = \
+                    int(group['interface'])
                 continue
 
             # Dagobah Revision 95, Swamp Revision 6
