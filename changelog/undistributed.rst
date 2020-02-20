@@ -125,6 +125,8 @@
         * Modified schema
     * Updated ShowIpPimInterfaceDetail:
         * Added on Optional key to schema
+    * Updated ShowAccessLists:
+        * Modified regex to parse more outputs
 
 
 * IOSXR
