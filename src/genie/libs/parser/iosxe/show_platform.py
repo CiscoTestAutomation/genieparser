@@ -1047,13 +1047,11 @@ class ShowVersion(ShowVersionSchema):
             m = p48.match(line)
             if m:
                 group = m.groupdict()
-                ethernet_type = group['ethernet_type']
-                ethernet_type_dict = {'Virtual Ethernet': 'virtual_ethernet',
-                                      'Gigabit Ethernet': 'gigabit_ethernet'}
+                ethernet_type = '_'.join(group['ethernet_type'].lower().split())
 
                 if 'interfaces' not in version_dict['version']:
                     version_dict['version']['interfaces'] = {}
-                version_dict['version']['interfaces'][ethernet_type_dict[ethernet_type]] = \
+                version_dict['version']['interfaces'][ethernet_type] = \
                     int(group['interface'])
                 continue
 
