@@ -178,3 +178,8 @@
     * Updated ShowRouteIpv4
         * Added and updated regex
         * Added unittest
+
+* IOSXE:
+    * Updated ShowBootvar
+        * Fixed crash
+        * Added unittest

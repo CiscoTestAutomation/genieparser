@@ -40,7 +40,7 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
 # ============================
 # Unit test for 'show bootvar'
 # ============================
-class test_show_bootvar(unittest.TestCase):
+class TestShowBootvar(unittest.TestCase):
     '''Unit test for "show bootvar" '''
 
     maxDiff = None
@@ -98,6 +98,26 @@ class test_show_bootvar(unittest.TestCase):
             'configuration_register': '0x2102'},
         'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
 
+    golden_output4 = {'execute.return_value': '''
+        SSR-4400-1#sh bootvar
+        BOOT variable = 
+        CONFIG_FILE variable = bootflash:/taas/psan06_Golden_Config
+        BOOTLDR variable does not exist
+        Configuration register is 0x1
+
+        Standby not ready to show bootvar
+
+        SSR-4400-1#
+    '''
+    }
+    golden_parsed_output4 = {
+        'active': {
+            'configuration_register': '0x1'
+            },
+            'config_file': 'bootflash:/taas/psan06_Golden_Config'
+    }
+
+
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBootvar(device=self.device)
@@ -121,6 +141,12 @@ class test_show_bootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_bootvar_full4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 class TestShowVersion(unittest.TestCase):

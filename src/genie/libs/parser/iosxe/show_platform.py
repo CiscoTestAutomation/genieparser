@@ -132,7 +132,7 @@ class ShowBootvar(ShowBootvarSchema):
             m = p5.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('active', {})['config_file'] = m.groupdict()['var']
+                    boot_dict.update({'config_file': m.groupdict()['var']})
                 continue
 
             # BOOTLDR variable =
