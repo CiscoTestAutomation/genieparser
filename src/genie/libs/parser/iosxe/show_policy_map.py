@@ -629,6 +629,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # Priority: Strict, b/w exceed drops: 0
         p41 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
+        # cos 5
+        p42 = re.compile(r'^(?P<key>cos)\s+(?P<value>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -885,7 +888,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 continue
 
             # ip precedence 6
-            m = p13_1.match(line)
+            # cos 5
+            m = p13_1.match(line) or p42.match(line)
             if m:
                 group = m.groupdict()
                 key = group['key'].strip()
