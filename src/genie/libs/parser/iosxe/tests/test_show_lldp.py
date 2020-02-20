@@ -590,8 +590,8 @@ class test_show_lldp_entry(unittest.TestCase):
 
     golden_parsed_output_2 = {
     'interfaces': {
-        'Not Provided': {
-            'if_name': 'Not Provided',
+        'N/A': {
+            'if_name': 'N/A',
             'port_id': {
                 'Ccf9.5493.ba88': {
                     'neighbors': {

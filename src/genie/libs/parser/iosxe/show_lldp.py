@@ -257,8 +257,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p1_1.match(line)
             if m:
                 if 'interfaces' not in ret_dict:
-                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault('Not Provided', {})
-                    intf_dict['if_name'] = 'Not Provided'
+                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault('N/A', {})
+                    intf_dict['if_name'] = 'N/A'
                 port_id = Common.convert_intf_name(m.groupdict()['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
@@ -382,6 +382,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Vlan ID: 1
+            # Vlan ID: - not advertised
             m = p13.match(line)
             if m:
                 nei_dict['vlan_id'] = m.groupdict()['vlan_id'].strip()
