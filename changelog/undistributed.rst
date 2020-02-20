@@ -21,8 +21,6 @@
         * 'show bootvar'
     * Added ShowInterfaceStatus for:
         * show interface status
-    * Added ShowProcessesMemoryPlatformSorted for:
-        * 'show processes memory platform sorted'
 
 * IOSXR
     * Added ShowMplsInterfaces for:
