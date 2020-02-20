@@ -109,13 +109,13 @@ class TestShowInterface(unittest.TestCase):
                     'route_tag': '10',
                     'secondary': True}},
             'last_link_flapped': '00:00:29',
-            'mac_address': 'aaaa.bbff.8888',
+            'mac_address': 'aaaa.bbbb.cccc',
             'medium': 'broadcast',
             'mtu': 1600,
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False},
-            'phys_address': '5254.00ff.8506',
+            'phys_address': '5254.003b.4aca',
             'port_mode': 'routed',
             'port_speed': '1000',
             'reliability': '255/255',
@@ -135,14 +135,14 @@ class TestShowInterface(unittest.TestCase):
                 'first_dot1q': '10'},
             'ethertype': '0x8100',
             'link_state': 'Administratively down',
-            'mac_address': '5254.00ff.8534',
+            'mac_address': '5254.003b.4af8',
             'medium': 'broadcast',
             'mtu': 1600,
             'oper_status': 'down',
             'port_channel': 
                 {'port_channel_member': False},
             'parent_interface': 'Ethernet2/1',
-            'phys_address': '5254.00ff.8506',
+            'phys_address': '5254.003b.4aca',
             'port_mode': 'routed',
             'reliability': '255/255',
             'rxload': '1/255',
@@ -159,14 +159,14 @@ class TestShowInterface(unittest.TestCase):
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '20'},
             'ethertype': '0x8100',
-            'mac_address': '5254.00ff.8534',
+            'mac_address': '5254.003b.4af8',
             'medium': 'p2p',
             'mtu': 1600,
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False},
             'parent_interface': 'Ethernet2/1',
-            'phys_address': '5254.00ff.8506',
+            'phys_address': '5254.003b.4aca',
             'port_mode': 'routed',
             'reliability': '255/255',
             'rxload': '1/255',
@@ -242,13 +242,13 @@ class TestShowInterface(unittest.TestCase):
                 {'receive': False, 'send': False},
             'interface_reset': 1,
             'last_link_flapped': '00:07:28',
-            'mac_address': '5254.00ff.62da',
+            'mac_address': '5254.00ac.b52e',
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False},
-            'phys_address': '5254.00ff.62da',
+            'phys_address': '5254.00ac.b52e',
             'port_mode': 'trunk',
             'port_speed': '1000',
             'reliability': '255/255',
@@ -279,13 +279,13 @@ class TestShowInterface(unittest.TestCase):
             'encapsulations': 
                 {'encapsulation': 'arpa'},
             'ethertype': '0x0000',
-            'mac_address': '5254.00ff.9c38',
+            'mac_address': '5254.00c9.d26e',
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False},
-            'phys_address': '5254.00ff.9c38',
+            'phys_address': '5254.00c9.d26e',
             'port_mode': 'routed',
             'port_speed': '1000',
             'reliability': '255/255',
@@ -358,12 +358,12 @@ class TestShowInterface(unittest.TestCase):
                                          'prefix_length': '16'}},
             'last_link_flapped': '13:23:37',
             'link_state': 'DCX-No ACK in 100 PDUs',
-            'mac_address': '002a.6aff.4571',
+            'mac_address': '002a.6ab4.90bc',
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'down',
             'media_type': '10G',
-            'phys_address': '002a.6aff.451d',
+            'phys_address': '002a.6ab4.9068',
             'port_channel': {'port_channel_member': False},
             'port_speed': '10',
             'reliability': '255/255',
@@ -380,7 +380,7 @@ class TestShowInterface(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         mgmt0 is up
           admin state is up
-          Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
+          Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
           MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
           reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, medium is broadcast
@@ -399,7 +399,7 @@ class TestShowInterface(unittest.TestCase):
             4 broadcast packets 4726 bytes
         Ethernet2/1 is up
             admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: aaaa.bbbb.cccc (bia 5254.003b.4aca)
               Description: desc-1
               Internet Address is 10.4.4.4/24 secondary tag 10
               MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
@@ -443,7 +443,7 @@ class TestShowInterface(unittest.TestCase):
                 0 Tx pause
         Ethernet2/1.10 is down (Administratively down)
             admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: 5254.003b.4af8 (bia 5254.003b.4aca)
               MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
               reliability 255/255, txload 1/255, rxload 1/255
               Encapsulation 802.1Q Virtual LAN, Vlan ID 10, medium is broadcast
@@ -452,7 +452,7 @@ class TestShowInterface(unittest.TestCase):
               EtherType is 0x8100 
         Ethernet2/1.20 is up
             admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: 5254.003b.4af8 (bia 5254.003b.4aca)
               MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
               reliability 255/255, txload 1/255, rxload 1/255
               Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
@@ -461,7 +461,7 @@ class TestShowInterface(unittest.TestCase):
               EtherType is 0x8100 
         Ethernet2/2 is up
             admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.62da (bia 5254.00ff.62da)
+              Hardware: 10/100/1000 Ethernet, address: 5254.00ac.b52e (bia 5254.00ac.b52e)
               MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
               reliability 255/255, txload 1/255, rxload 1/255
               Encapsulation ARPA, medium is broadcast
@@ -504,7 +504,7 @@ class TestShowInterface(unittest.TestCase):
         Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
          Dedicated Interface 
 
-          Hardware: 1000/10000 Ethernet, address: 002a.6aff.4571 (bia 002a.6aff.451d)
+          Hardware: 1000/10000 Ethernet, address: 002a.6ab4.90bc (bia 002a.6ab4.9068)
           Description: Connection to pe1
           Internet Address is 10.229.1.112/16
           MTU 1500 bytes,  BW 10000000 Kbit, DLY 10 usec
@@ -581,7 +581,7 @@ class TestShowInterface(unittest.TestCase):
 
     golden_output2 = {'execute.return_value': '''
         Vlan1 is down (Administratively down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.29ff.f8a2
+            Hardware is EtherSVI, address is  000c.2958.a04a
             MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
 
             reliability 255/255, txload 1/255, rxload 1/255
@@ -593,7 +593,7 @@ class TestShowInterface(unittest.TestCase):
             ucast: 0 pkts, 0 bytes
 
         Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.29ff.f8a2
+            Hardware is EtherSVI, address is  000c.2958.a04a
             MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
 
             reliability 255/255, txload 1/255, rxload 1/255
@@ -608,7 +608,7 @@ class TestShowInterface(unittest.TestCase):
     golden_output3 = {'execute.return_value': '''
         Ethernet1/6 is down (Link not connected)
         admin state is up, Dedicated Interface
-          Hardware: 100/1000/10000 Ethernet, address: 000c.29ff.e5fd (bia 000c.29ff.e5fd)
+          Hardware: 100/1000/10000 Ethernet, address: 000c.2985.6078 (bia 000c.2985.6078)
           MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
           reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, medium is broadcast
@@ -710,11 +710,11 @@ class TestShowInterface(unittest.TestCase):
                  'interface_reset': 0,
                  'last_link_flapped': 'never',
                  'link_state': 'Link not connected',
-                 'mac_address': '000c.29ff.e5fd',
+                 'mac_address': '000c.2985.6078',
                  'medium': 'broadcast',
                  'mtu': 1500,
                  'oper_status': 'down',
-                 'phys_address': '000c.29ff.e5fd',
+                 'phys_address': '000c.2985.6078',
                  'port_channel': {'port_channel_member': False},
                  'port_mode': 'access',
                  'reliability': '255/255',
@@ -725,7 +725,7 @@ class TestShowInterface(unittest.TestCase):
     golden_output_custom = {'execute.return_value': '''
       Ethernet2/1 is up
             admin state is up, Dedicated Interface
-              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: aaaa.bbbb.cccc (bia 5254.003b.4aca)
               Description: desc-1
               Internet Address is 10.4.4.4/24 secondary tag 10
               MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
@@ -846,13 +846,13 @@ class TestShowInterface(unittest.TestCase):
                        'route_tag': '10',
                        'secondary': True}},
              'last_link_flapped': '00:00:29',
-             'mac_address': 'aaaa.bbff.8888',
+             'mac_address': 'aaaa.bbbb.cccc',
              'medium': 'broadcast',
              'mtu': 1600,
              'oper_status': 'up',
              'port_channel':
                  {'port_channel_member': False},
-             'phys_address': '5254.00ff.8506',
+             'phys_address': '5254.003b.4aca',
              'port_mode': 'routed',
              'port_speed': '1000',
              'reliability': '255/255',
@@ -867,7 +867,7 @@ class TestShowInterface(unittest.TestCase):
 
       mgmt0 is up
       admin state is up,
-        Hardware: GigabitEthernet, address: 80e0.1dff.6bae (bia 80e0.1dff.6bae)
+        Hardware: GigabitEthernet, address: 80e0.1dbf.abee (bia 80e0.1dbf.abee)
         Internet Address is 10.154.64.17/23
         MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
         reliability 255/255, txload 1/255, rxload 1/255
@@ -888,7 +888,7 @@ class TestShowInterface(unittest.TestCase):
       Ethernet1/1 is up
       admin state is up, Dedicated Interface
         Belongs to Po302
-        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6bb6 (bia 80e0.1dff.6bb6)
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dbf.abf6 (bia 80e0.1dbf.abf6)
         Description: << GENIE GIG 0/0/1 >>
         MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
         reliability 255/255, txload 1/255, rxload 4/255
@@ -929,7 +929,7 @@ class TestShowInterface(unittest.TestCase):
 
       Ethernet1/15 is down (Administratively down)
       admin state is down, Dedicated Interface
-        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6cc3 (bia 80e0.1dff.6cc3)
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dbf.ac04 (bia 80e0.1dbf.ac04)
         Description: << LINK TO GENIE PACKET CAPTURE >>
         MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
         reliability 255/255, txload 1/255, rxload 1/255
@@ -1034,12 +1034,12 @@ class TestShowInterface(unittest.TestCase):
                         'flow_control': {'receive': False, 'send': False},
                         'interface_reset': 9,
                         'last_link_flapped': '3d22h',
-                        'mac_address': '80e0.1dff.6bb6',
+                        'mac_address': '80e0.1dbf.abf6',
                         'media_type': '1G',
                         'medium': 'broadcast',
                         'mtu': 1500,
                         'oper_status': 'up',
-                        'phys_address': '80e0.1dff.6bb6',
+                        'phys_address': '80e0.1dbf.abf6',
                         'port_channel': {'port_channel_int': 'Port-channel302',
                                          'port_channel_member': True},
                         'port_mode': 'access',
@@ -1115,12 +1115,12 @@ class TestShowInterface(unittest.TestCase):
                          'flow_control': {'receive': False, 'send': False},
                          'interface_reset': 16,
                          'link_state': 'Administratively down',
-                         'mac_address': '80e0.1dff.6cc3',
+                         'mac_address': '80e0.1dbf.ac04',
                          'media_type': '10G',
                          'medium': 'broadcast',
                          'mtu': 1500,
                          'oper_status': 'down',
-                         'phys_address': '80e0.1dff.6cc3',
+                         'phys_address': '80e0.1dbf.ac04',
                          'port_channel': {'port_channel_member': False},
                          'port_mode': 'access',
                          'port_speed': 'auto-speed',
@@ -1152,11 +1152,11 @@ class TestShowInterface(unittest.TestCase):
                   'ethertype': '0x0000',
                   'ipv4': {'10.154.64.17/23': {'ip': '10.154.64.17',
                                                'prefix_length': '23'}},
-                  'mac_address': '80e0.1dff.6bae',
+                  'mac_address': '80e0.1dbf.abee',
                   'medium': 'broadcast',
                   'mtu': 1500,
                   'oper_status': 'up',
-                  'phys_address': '80e0.1dff.6bae',
+                  'phys_address': '80e0.1dbf.abee',
                   'port_channel': {'port_channel_member': False},
                   'port_speed': '1000',
                   'reliability': '255/255',
@@ -1165,6 +1165,48 @@ class TestShowInterface(unittest.TestCase):
                   'types': 'GigabitEthernet'
                 }
     }
+
+    golden_output5 = {'execute.return_value': '''
+    Ethernet1/1 is up
+ Dedicated Interface 
+  Hardware: 100/1000/10000/40000 Ethernet, address: 24e9.b39e.9b48 (bia 24e9.b39e.9b48)
+  Description: *** To V68-ISCI ***
+  MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
+  reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA
+  Port mode is access
+  full-duplex, 10 Gb/s, media type is 10G
+  Beacon is turned off
+  Input flow-control is on, output flow-control is on
+  Rate mode is dedicated
+  Switchport monitor is off 
+  EtherType is 0x8100 
+  Last link flapped 63week(s) 4day(s)
+  Last clearing of "show interface" counters 08:29:47
+  0 interface resets
+  Load-Interval #1: 30 seconds
+  30 seconds input rate 157293696 bits/sec, 4712 packets/sec
+  30 seconds output rate 134234336 bits/sec, 4344 packets/sec
+  Load-Interval #2: 5 minute (300 seconds)
+    input rate 29.54 Mbps, 1.09 Kpps; output rate 37.05 Mbps, 1.12 Kpps
+  RX
+    18120910 unicast packets  11005 multicast packets  0 broadcast packets
+    18133733 input packets  36469059012 bytes
+    5833842 jumbo packets  0 storm suppression packets
+    0 runts  0 giants  0 CRC  0 no buffer
+    0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+    0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+    0 input with dribble  9994 input discard
+    9994 Rx pause
+  TX
+    19722125 unicast packets  168112 multicast packets  3516 broadcast packets
+    19893753 output packets  69009205682 bytes
+    9595212 jumbo packets
+    0 output errors  0 collision  0 deferred  0 late collision
+    0 lost carrier  0 no carrier  0 babble 0 output discard
+    0 Tx pause
+
+    '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -1206,6 +1248,18 @@ class TestShowInterface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 # #############################################################################
 # # Unitest For Show Ip Interface Vrf All
@@ -3232,7 +3286,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                           '2001:db8:3:3::3/64': {'ip': '2001:db8:3:3::3',
                                                  'prefix_length': '64',
                                                  'status': 'valid'},
-                          '2001:db8:4:4:a8aa:bbff:feff:8888/64': {'ip': '2001:db8:4:4:a8aa:bbff:feff:8888',
+                          '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ip': '2001:db8:4:4:a8aa:bbff:febb:cccc',
                                                                   'prefix_length': '64',
                                                                   'status': 'valid'},
                           'counters': {'multicast_bytes_consumed': 640,
@@ -3249,7 +3303,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                                        'unicast_packets_originated': 0},
                           'ipv6_forwarding_feature': 'disabled',
                           'ipv6_last_reset': 'never',
-                          'ipv6_link_local': 'fe80::a8aa:bbff:feff:8888 ',
+                          'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc ',
                           'ipv6_link_local_state': 'default',
                           'ipv6_ll_state': 'valid',
                           'ipv6_load_sharing': 'none',
@@ -3281,12 +3335,12 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
           IPv6 address: 
             2001:db8:1:1::1/64 [VALID]
             2001:db8:3:3::3/64 [VALID]
-            2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
+            2001:db8:4:4:a8aa:bbff:febb:cccc/64 [VALID]
             2001:db8:2:2::2/64 [VALID]
           IPv6 subnet:  2001:db8:1:1::/64
           Anycast configured addresses:
             2001:db8:2:2::2/64 [VALID]
-          IPv6 link-local address: fe80::a8aa:bbff:feff:8888 (default) [VALID]
+          IPv6 link-local address: fe80::a8aa:bbff:febb:cccc (default) [VALID]
           IPv6 virtual addresses configured: none
           IPv6 multicast routing: disabled
           IPv6 report link local: disabled
@@ -3319,7 +3373,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                           '2001:db8:3:3::3/64': {'ip': '2001:db8:3:3::3',
                                                  'prefix_length': '64',
                                                  'status': 'valid'},
-                          '2001:db8:4:4:a8aa:bbff:feff:8888/64': {'ip': '2001:db8:4:4:a8aa:bbff:feff:8888',
+                          '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ip': '2001:db8:4:4:a8aa:bbff:febb:cccc',
                                                                   'prefix_length': '64',
                                                                   'status': 'valid'},
                           'counters': {'multicast_bytes_consumed': 640,
@@ -3336,7 +3390,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                                        'unicast_packets_originated': 0},
                           'ipv6_forwarding_feature': 'disabled',
                           'ipv6_last_reset': 'never',
-                          'ipv6_link_local': 'fe80::a8aa:bbff:feff:8888 ',
+                          'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc ',
                           'ipv6_link_local_state': 'default',
                           'ipv6_ll_state': 'valid',
                           'ipv6_load_sharing': 'none',
@@ -3363,12 +3417,12 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
               IPv6 address: 
                 2001:db8:1:1::1/64 [VALID]
                 2001:db8:3:3::3/64 [VALID]
-                2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
+                2001:db8:4:4:a8aa:bbff:febb:cccc/64 [VALID]
                 2001:db8:2:2::2/64 [VALID]
               IPv6 subnet:  2001:db8:1:1::/64
               Anycast configured addresses:
                 2001:db8:2:2::2/64 [VALID]
-              IPv6 link-local address: fe80::a8aa:bbff:feff:8888 (default) [VALID]
+              IPv6 link-local address: fe80::a8aa:bbff:febb:cccc (default) [VALID]
               IPv6 virtual addresses configured: none
               IPv6 multicast routing: disabled
               IPv6 report link local: disabled
@@ -3890,7 +3944,7 @@ class TestShowNveInterface(unittest.TestCase):
         CH-P2-TOR-1# sh nve interface nve 1 detail
         Interface: nve1, State: Up, encapsulation: VXLAN
          VPC Capability: VPC-VIP-Only [not-notified]
-         Local Router MAC: 00f2.8bff.737a
+         Local Router MAC: 00f2.8b7a.f8ff
          Host Learning Mode: Control-Plane
          Source-Interface: loopback1 (primary: 10.9.0.1, secondary: 0.0.0.0)
          Source Interface State: Up
