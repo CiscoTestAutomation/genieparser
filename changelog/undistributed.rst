@@ -127,6 +127,8 @@
         * Added on Optional key to schema
     * Updated ShowVersion:
         * Modified schema and parser class
+    * Updated ShowAccessLists:
+        * Modified regex to parse more outputs
 
 
 * IOSXR
