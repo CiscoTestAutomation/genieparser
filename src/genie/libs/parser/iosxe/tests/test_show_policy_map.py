@@ -2958,6 +2958,9 @@ GigabitEthernet0/0/3
         }
     }
 
+    # ---------------------------------------------------------------------
+    # 'show policy-map control-plane'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2994,7 +2997,9 @@ GigabitEthernet0/0/3
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     # ---------------------------------------------------------------------
-
+    # 'show policy-map interface {interface}',
+    # 'show policy-map interface'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
@@ -3051,6 +3056,17 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output20)
 
+    def test_show_policy_map_interface_full9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output21)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output21)
+
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface {interface} output class {class_name}',
+    # 'show policy-map interface {interface} output'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
@@ -3066,6 +3082,24 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(interface='TenGigabitEthernet 0/3/0.41')
         self.assertEqual(parsed_output, self.golden_parsed_output11)
 
+    def test_show_policy_map_interface_output_full_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output22)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output22)
+
+    def test_show_policy_map_interface_output_full_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output23)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output23)
+
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface {interface} input class {class_name}',
+    # 'show policy-map interface {interface} input'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_input_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output12)
@@ -3081,6 +3115,9 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(interface='GigabitEthernet 0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output13)
 
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface class {class_name}'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_class_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output14)
@@ -3095,6 +3132,9 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(class_name='VLAN51_QoS')
         self.assertEqual(parsed_output, self.golden_parsed_output15)
 
+    # ---------------------------------------------------------------------
+    # 'show policy-map target service-group {num}'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_target_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output16)
@@ -3109,28 +3149,7 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(num='1')
         self.assertEqual(parsed_output, self.golden_parsed_output17)
 
-    def test_show_policy_map_interface_class13(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output21)
-        obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output21)
 
-    def test_show_policy_map_interface_output_full_3(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output22)
-        obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
-        self.assertEqual(parsed_output, self.golden_parsed_output22)
-        
-    def test_show_policy_map_interface_output_full_4(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output23)
-        obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
-        self.assertEqual(parsed_output, self.golden_parsed_output23)
-
-        
 # =============================================
 # Unit test for :
 #    *'show policy map'
