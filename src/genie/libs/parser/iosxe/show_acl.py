@@ -266,7 +266,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 deny   1.1.1.2 log (18 matches)
         p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? '
                                        r'?(?P<actions_forwarding>permit|deny) '
-                                       r'+(?P<src>\S+|any)( log)?(?:, +wildcard '
+                                       r'+(?P<src>\S+|any)( (?P<log>log))?(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
                                        r'?(?: +\((?P<matched_packets>\d+)+ matches\))?$')
 
@@ -425,6 +425,15 @@ class ShowAccessLists(ShowAccessListsSchema):
                     stats_dict = seq_dict.setdefault('statistics', {})
                     stats_dict.update(
                         {'matched_packets': int(group['matched_packets'])})
+
+                # Optional keys
+                # actions
+                log = group['log']
+                seq_dict.setdefault('actions', {}) \
+                    .setdefault('forwarding', actions_forwarding)
+
+                if log:
+                    seq_dict['actions']['logging'] = 'log-syslog'
 
                 continue
 

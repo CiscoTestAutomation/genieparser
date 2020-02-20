@@ -2408,6 +2408,7 @@ IPv6 access list OutFilter_IPv6
             '10': {
                 'actions': {
                     'forwarding': 'deny',
+                    'logging': 'log-syslog',
                 },
                 'matches': {
                     'l3': {
