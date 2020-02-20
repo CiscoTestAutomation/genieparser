@@ -19,6 +19,8 @@
         * show ip bgp regexp ^$ 
     * Added ShowBootvar for:
         * 'show bootvar'
+    * Added ShowInterfaceStatus for:
+              * show interface status
     * Added ShowProcessesMemoryPlatformSorted for:
         * 'show processes memory platform sorted'
 
