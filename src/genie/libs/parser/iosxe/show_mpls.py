@@ -1890,7 +1890,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
     """Parser for
         show mpls forwarding-table detail
-        show mpls forwarding-table vrf <vrf> detail"""
+        show mpls forwarding-table vrf <vrf> detail
+        show mpls forwarding-table labels {label} detail
+        show mpls forwarding-table {route} detail"""
 
     cli_command = ['show mpls forwarding-table detail',
                    'show mpls forwarding-table vrf {vrf} detail',
