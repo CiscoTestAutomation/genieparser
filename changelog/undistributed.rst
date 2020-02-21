@@ -64,6 +64,8 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
+        * show ssh history
+
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -119,6 +121,15 @@
         * Modified regex to support customer output
     * Updated ShowEthernetServiceInstanceDetail
         * Modified regex to support outputs
+    * Updated ShowIpIgmpInterface:
+        * Modified schema
+    * Updated ShowIpPimInterfaceDetail:
+        * Added on Optional key to schema
+    * Updated ShowVersion:
+        * Modified schema and parser class
+    * Updated ShowAccessLists:
+        * Modified regex to parse more outputs
+
 
 * IOSXR
     * Updated ShowRouteIpv4:
@@ -167,7 +178,6 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
-    
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex
