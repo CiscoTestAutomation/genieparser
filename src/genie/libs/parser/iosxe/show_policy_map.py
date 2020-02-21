@@ -1552,7 +1552,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # Policy Map police-in
         # Policy Map policy_4-6-3~6
-        p1 = re.compile(r'^^Policy +Map +(?P<policy_map>([\S]+))$')
+        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\S]+))$')
         
         # Class class-default
         # Class class c1
