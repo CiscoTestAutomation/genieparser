@@ -675,6 +675,23 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
+
+class ShowIpBgpRouteDistributer(MetaParser):
+    cli_command = 'show ip bgp {word}'
+
+    def cli(self, word, output=None):
+        
+        if not output:
+            output = self.device.execute(
+                self.cli_command.format(word=word))
+        
+        if '.' in word:
+            parser = ShowIpBgpAllDetail(self.device)
+        else:
+            parser = ShowIpBgp(self.device)
+        self.schema = parser.schema
+        return parser.parse(output=output)
+
 # =============================================
 # Parser for:
 #   * 'show ip bgp'
@@ -695,17 +712,11 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
 
     cli_command = ['show ip bgp {address_family} vrf {vrf}',
                    'show ip bgp {address_family} rd {rd}',
-                   'show ip bgp {address_family}',
                    'show ip bgp',
                    'show ip bgp regexp {regexp}'
                    ]
 
     def cli(self, address_family='', rd='', vrf='', regexp='', output=None):
-
-        if '.' in address_family:
-            parser = ShowIpBgpAllDetail(self.device)
-            self.schema = parser.schema
-            return parser.parse(route=address_family, output=output)
 
         if output is None:
             # Build command
@@ -715,12 +726,10 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
             elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
-            elif address_family:
-                cmd = self.cli_command[2].format(address_family=address_family)
             elif regexp:
-                cmd = self.cli_command[4].format(regexp=regexp)
+                cmd = self.cli_command[3].format(regexp=regexp)
             else:
-                cmd = self.cli_command[3]
+                cmd = self.cli_command[2]
             # Execute command
             show_output = self.device.execute(cmd)
         else:
@@ -1622,7 +1631,6 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
 
     cli_command = ['show ip bgp all detail',
         'show ip bgp {address_family} vrf {vrf} {route}',
-        'show ip bgp {route}'
                    ]
 
     def cli(self, address_family='', vrf='', route='',output=None):
@@ -1631,8 +1639,6 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
             if address_family and vrf and route:
                 cmd = self.cli_command[1].format(address_family=address_family,
                     vrf=vrf, route=route)
-            elif route:
-                cmd = self.cli_command[2].format(route=route)
             else:
                 cmd = self.cli_command[0]
             # Execute command

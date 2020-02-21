@@ -2276,6 +2276,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': '28/nolabel',
                                                                                'next_hop': '172.16.111.2',
                                                                                'next_hop_via': 'vrf '
                                                                                                'VRF100',
@@ -2301,6 +2302,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': '29/nolabel',
                                                                                'next_hop': '172.17.111.2',
                                                                                'next_hop_via': 'vrf '
                                                                                                'VRF100',
@@ -2327,6 +2329,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/28',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2345,6 +2348,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/28',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2371,6 +2375,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/30',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2389,6 +2394,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/30',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2419,6 +2425,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': '30/nolabel',
                                                                                'next_hop': '172.16.211.2',
                                                                                'next_hop_via': 'vrf '
                                                                                                'VRF200',
@@ -2444,6 +2451,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': '31/nolabel',
                                                                                'next_hop': '172.17.211.2',
                                                                                'next_hop_via': 'vrf '
                                                                                                'VRF200',
@@ -2470,6 +2478,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/29',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2488,6 +2497,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/29',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2514,6 +2524,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/31',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2532,6 +2543,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
                                                                                'metric': 0,
+                                                                               'mpls_labels': 'nolabel/31',
                                                                                'next_hop': '10.6.6.6',
                                                                                'next_hop_igp_metric': '4',
                                                                                'next_hop_via': 'default',
@@ -2737,6 +2749,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
                                             'metric': 0,
+                                            'mpls_labels': 'nolabel/37',
                                             'origin_codes': '?',
                                             'status_codes': '*>',
                                             'ext_community': 'RT:12:23',
@@ -2762,6 +2775,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
                                             'metric': 0,
+                                            'mpls_labels': 'nolabel/37',
                                             'origin_codes': '?',
                                             'status_codes': '* i',
                                             'ext_community': 'RT:12:23',
@@ -3012,6 +3026,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                  'gateway': '10.169.197.254',
                                                                  'localpref': 100,
                                                                  'metric': 0,
+                                                                 'mpls_labels': 'nolabel/11438',
                                                                  'next_hop': '10.169.197.254',
                                                                  'next_hop_igp_metric': '1002',
                                                                  'next_hop_via': 'default',
@@ -3037,6 +3052,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '10.169.197.254',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': 'nolabel/2903',
                                                                      'next_hop': '10.169.197.254',
                                                                      'next_hop_igp_metric': '1002',
                                                                      'next_hop_via': 'default',
@@ -3063,6 +3079,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/6197',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3088,6 +3105,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
+                                                                       'mpls_labels': 'nolabel/19273',
                                                                        'next_hop': '10.169.197.254',
                                                                        'next_hop_igp_metric': '1002',
                                                                        'next_hop_via': 'default',
@@ -3113,6 +3131,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
+                                                                       'mpls_labels': 'nolabel/19255',
                                                                        'next_hop': '10.169.197.254',
                                                                        'next_hop_igp_metric': '1002',
                                                                        'next_hop_via': 'default',
@@ -3138,6 +3157,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
+                                                                       'mpls_labels': 'nolabel/17920',
                                                                        'next_hop': '10.169.197.254',
                                                                        'next_hop_igp_metric': '1002',
                                                                        'next_hop_via': 'default',
@@ -3163,6 +3183,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
+                                                                       'mpls_labels': 'nolabel/15114',
                                                                        'next_hop': '10.169.197.254',
                                                                        'next_hop_igp_metric': '1002',
                                                                        'next_hop_via': 'default',
@@ -3189,6 +3210,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/6195',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3214,6 +3236,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/14750',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3239,6 +3262,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/21290',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3264,6 +3288,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/22401',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3289,6 +3314,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/22381',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3314,6 +3340,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/22358',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3339,6 +3366,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/19297',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3364,6 +3392,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': 'nolabel/19294',
                                                                       'next_hop': '10.169.197.254',
                                                                       'next_hop_igp_metric': '1002',
                                                                       'next_hop_via': 'default',
@@ -3574,6 +3603,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                 'gateway': '192.168.10.253',
                                                                 'localpref': 100,
                                                                 'metric': 0,
+                                                                'mpls_labels': '2467/nolabel',
                                                                 'next_hop': '192.168.10.253',
                                                                 'next_hop_via': 'vrf '
                                                                                 'L3VPN-0050',
@@ -3598,6 +3628,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                     'gateway': '192.168.10.253',
                                                                     'localpref': 100,
                                                                     'metric': 0,
+                                                                    'mpls_labels': '6620/nolabel',
                                                                     'next_hop': '192.168.10.253',
                                                                     'next_hop_via': 'vrf '
                                                                                     'L3VPN-0050',
@@ -3622,6 +3653,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2904/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3646,6 +3678,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2903/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3670,6 +3703,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2901/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3694,6 +3728,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '5466/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3718,6 +3753,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '5465/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3742,6 +3778,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '5464/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3766,6 +3803,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2914/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3790,6 +3828,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2913/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3814,6 +3853,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2912/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3838,6 +3878,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2911/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3863,6 +3904,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '2468/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -3886,6 +3928,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2910/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3910,6 +3953,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2909/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3934,6 +3978,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2908/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3958,6 +4003,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2907/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -3982,6 +4028,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2923/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4006,6 +4053,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2922/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4030,6 +4078,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2920/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4054,6 +4103,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2919/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4078,6 +4128,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2918/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4102,6 +4153,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2917/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4126,6 +4178,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '5463/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4150,6 +4203,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2916/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4174,6 +4228,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '2915/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4198,6 +4253,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6630/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4222,6 +4278,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6629/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4246,6 +4303,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6627/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4270,6 +4328,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6626/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4294,6 +4353,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6625/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4318,6 +4378,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6624/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4342,6 +4403,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
+                                                                      'mpls_labels': '6623/nolabel',
                                                                       'next_hop': '192.168.10.253',
                                                                       'next_hop_via': 'vrf '
                                                                                       'L3VPN-0050',
@@ -4366,6 +4428,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '5462/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4390,6 +4453,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '5461/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4414,6 +4478,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '5460/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4438,6 +4503,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '5459/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4462,6 +4528,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '2906/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4486,6 +4553,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
+                                                                     'mpls_labels': '2905/nolabel',
                                                                      'next_hop': '192.168.10.253',
                                                                      'next_hop_via': 'vrf '
                                                                                      'L3VPN-0050',
@@ -4980,6 +5048,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                                 'next_hop_via': 'default',
                                                 'localpref': 100,
                                                 'metric': 0,
+                                                'mpls_labels': 'nolabel/584',
                                                 'origin_codes': '?',
                                                 'status_codes': '*>',
                                                 'refresh_epoch': 9,
