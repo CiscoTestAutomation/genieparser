@@ -1540,7 +1540,9 @@ class ShowIpCef(ShowIpCefSchema):
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         # nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
         # nexthop 106.162.196.213 GigabitEthernet0/1/6 label [16051|16051]-(local:16051) 64588
-        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\[(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)( +(?P<sid>\w+))?$')
+        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\[(?P<outgoing_label>[\S]+)\|'
+                        r'(?P<outgoing_label_backup>[\S]+)\](?:\((?P<outgoing_label_info>\w+)\))?'
+                        r'\-\(local\:(?P<local_label>(\d+))\)( +(?P<sid>\w+))?$')
 
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')

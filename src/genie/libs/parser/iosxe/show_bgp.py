@@ -675,8 +675,14 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
         return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
-
+# =============================================
+# Parser for:
+#   * 'show ip bgp {word}'
+# =============================================
 class ShowIpBgpRouteDistributer(MetaParser):
+    ''' Parser for:
+        * 'show ip bgp {word}'
+    '''
     cli_command = 'show ip bgp {word}'
 
     def cli(self, word, output=None):
@@ -684,9 +690,10 @@ class ShowIpBgpRouteDistributer(MetaParser):
         if not output:
             output = self.device.execute(
                 self.cli_command.format(word=word))
-        
+        # show ip bgp ipv4
         if '.' in word:
             parser = ShowIpBgpAllDetail(self.device)
+        # show ip bgp 192.168.1.1
         else:
             parser = ShowIpBgp(self.device)
         self.schema = parser.schema
