@@ -1551,8 +1551,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                      'msec': 'msec'}
 
         # Policy Map police-in
-        # Policy Map policy_4-6-3~6
-        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\S]+))$')
+        # Policy-map egress policy
+        p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S ]+))$')
         
         # Class class-default
         # Class class c1
@@ -1952,12 +1952,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 priority_level = int(m.groupdict()['priority_levels'])
                 class_map_dict['priority_levels'] = priority_level
 
-                continue
-
-            # priority percent 30
-            m = p10_2.match(line)
-            if m:
-                class_map_dict['priority_percent'] = int(m.groupdict()['percent'])
                 continue
 
             # Set cos 5
