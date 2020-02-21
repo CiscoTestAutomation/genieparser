@@ -810,7 +810,10 @@ class ShowBgpAllDetailSchema(MetaParser):
                                         Optional('index'):
                                             {Any():
                                                 {
-                                                Optional('mpls_labels'): str,    
+                                                Optional('mpls_labels'): {
+                                                    'in': str,
+                                                    'out': str,
+                                                },
                                                 Optional('next_hop'): str,
                                                 Optional('next_hop_igp_metric'): str,
                                                 Optional('gateway'): str,
@@ -1068,7 +1071,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                        r'\[\]\-\&]+))?$')
         
         # mpls labels in/out nolabel/64402
-        p18 = re.compile(r'^mpls +labels +in\/out +(?P<mpls_labels>\w+\/\w+)$')
+        p18 = re.compile(r'^mpls +labels +in\/out +(?P<in>\w+)\/(?P<out>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1482,12 +1485,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
             
             # mpls labels in/out nolabel/64402
-            # p18 = re.compile(r'^mpls +labels +in\/out +(?P<mpls_labels>\w+\/\w+)$')
             m = p18.match(line)
             if m:
-                mpls_labels = str(m.groupdict()['mpls_labels'])
-
-                subdict['mpls_labels'] = mpls_labels
+                group = m.groupdict()
+                label_in = group['in']
+                label_out = group['out']
+                mpls_labels_dict = subdict.setdefault('mpls_labels', {})
+                mpls_labels_dict.update({'in': label_in})
+                mpls_labels_dict.update({'out': label_out})
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
@@ -1637,8 +1642,7 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
     '''
 
     cli_command = ['show ip bgp all detail',
-        'show ip bgp {address_family} vrf {vrf} {route}',
-                   ]
+        'show ip bgp {address_family} vrf {vrf} {route}']
 
     def cli(self, address_family='', vrf='', route='',output=None):
 
