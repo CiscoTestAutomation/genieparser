@@ -1479,13 +1479,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('cir_bps'): int,
                         Optional('cir_upper_bound_bps'): int,
                         Optional('cir_lower_bound_bps'): int,
-                        Optional('fair_queue'): {
-                            'enabled': bool,
-                        },
-                        Optional('priority_percent'): int,
                         Optional('random_detect'): {
-                            Optional('mode'): str, # 'dscp-based'
-                            Optional('dscp'): list, # ['24', '24', '40', 10']
                             Optional('exponential_weight'): int,
                             Optional('bandwidth_percent'): int,
                             Optional('wred_type'): str,
@@ -1558,18 +1552,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # Policy Map police-in
         # Policy Map policy_4-6-3~6
-        # olicy-map GWS-WAN-QOS-ETH-DYNAMIC5-ABC123123123
-        # policy-map ABCD-QWER-TYU
-        # Policy-map egress policy
-        p1 = re.compile(r'^(Policy|policy|olicy)(\-map| Map) +(?P<policy_map>([\S ]+))$')
+        p1 = re.compile(r'^^Policy +Map +(?P<policy_map>([\S]+))$')
         
         # Class class-default
         # Class class c1
         # Class class_4-6-3
         p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
-
-        # class realtime-ABC123123123
-        p2_same = re.compile(r'^class +(?P<class_map>([\S\-]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
@@ -1629,9 +1617,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # bandwidth percent 5
         p7 = re.compile(r'^[bB]andwidth(:? percent)? +(?P<bandwidth>(\d+))(?: \(%\))?$')
 
-        # fair-queue
-        p8_0 = re.compile(r'^fair-queue$')
-
         # Weighted Fair Queueing
         p8 = re.compile(r'^Weighted +Fair +Queueing$')
 
@@ -1667,16 +1652,11 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
 
-        # priority percent 30
-        p10_2 = re.compile(r'^priority percent +(?P<percent>\d+)$')
-
         # Set cos 5
-        # set cos 5
-        p11 = re.compile(r'^(Set|set) +(?P<set>([\w\s]+))$')
+        p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
 
         # Shape average 30m
-        # shape average 99872000
-        p12 = re.compile(r'^(Shape|shape) +average +(?P<shape_average_min>(\d+))(:?m)?$')
+        p12 = re.compile(r'^Shape +average +(?P<shape_average_min>(\d+))m$')
 
         # bandwidth 100
         p13 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
@@ -1707,12 +1687,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # queue-limit 77 packets
         p17_1 = re.compile(r'^queue-limit +(?P<queue_limit_packets>(\d+)) packets$')
 
-        # random-detect dscp-based
-        p18 = re.compile(r'^random-detect +(?P<mode>\S+)$')
-
-        # random-detect dscp 16 24 40 10
-        p18_1 = re.compile(r'^random-detect dscp +(?P<dscp>[\d ]+)$')
-
         for line in out.splitlines():
 
             line = line.strip()
@@ -1726,8 +1700,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
             # Class class-default
             # Class class c1
-            # class network-control-ABC123123123
-            m = p2.match(line) or p2_same.match(line)
+            m = p2.match(line)
             if m:
                 class_map = m.groupdict()['class_map']
                 class_map_dict = policy_map_dict.setdefault('class', {}).setdefault(class_map, {})
@@ -1903,28 +1876,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 elif weight_line != 1:
                     random_detect = class_map_dict.setdefault('random_detect', {})  # initialize random_detect{}
                     random_detect['bandwidth_percent'] = int(m.groupdict()['bandwidth'])
-                continue
-
-            # random-detect dscp-based
-            m = p18.match(line)
-            if m:
-                random_detect = class_map_dict.setdefault('random_detect', {})
-                random_detect['mode'] = m.groupdict()['mode']
-                continue
-
-            # random-detect dscp 16 24 40 10
-            m = p18_1.match(line)
-            if m:
-                if 'random_detect' not in class_map_dict:
-                    random_detect = class_map_dict.setdefault('random_detect', {})
-
-                random_detect['dscp'] = m.groupdict()['dscp'].split()
-                continue
-
-            # fair-queue
-            m = p8_0.match(line)
-            if m:
-                class_map_dict.setdefault('fair_queue', {'enabled': True})
                 continue
 
             # Weighted Fair Queueing
