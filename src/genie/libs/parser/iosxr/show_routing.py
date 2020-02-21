@@ -980,4 +980,5 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     gw_dict.update({'to_network' : group['to_network']})
                 
                 continue
+            
         return ret_dict
