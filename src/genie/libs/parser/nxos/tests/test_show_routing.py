@@ -2395,6 +2395,57 @@ class test_show_ip_route(unittest.TestCase):
             *via 10.23.120.2, Eth1/1.120, [120/2], 2w0d, rip-1, rip
     '''}
 
+    golden_output_11 = {'execute.return_value': '''
+    '*' denotes best ucast next-hop
+    '**' denotes best mcast next-hop
+    '[x/y]' denotes [preference/metric]
+    '%' in via output denotes VRF
+    
+    show ip route static
+    99.0.1.1/32, ubest/mbest: 1/0
+    *via 11.1.10.2, [1/0], 13:35:01, static
+    via 10.1.10.2, [4/0], 13:35:01, static
+    '''}
+
+    golden_parsed_output_11 = {
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'routes': {
+                        '99.0.1.1/32': {
+                            'active': True,
+                            'mbest': 0,
+                            'metric': 0,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'best_ucast_nexthop': True,
+                                        'index': 1,
+                                        'next_hop': '11.1.10.2',
+                                        'source_protocol': 'static',
+                                        'updated': '13:35:01',
+                                    },
+                                    2: {
+                                        'index': 2,
+                                        'next_hop': '10.1.10.2',
+                                        'source_protocol': 'static',
+                                        'updated': '13:35:01',
+                                    },
+                                },
+                            },
+                            'route': '99.0.1.1/32',
+                            'route_preference': 4,
+                            'source_protocol': 'static',
+                            'ubest': 1,
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -2473,6 +2524,17 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(protocol='rip',
                                   interface='e1/1.120')
         self.assertEqual(parsed_output,self.golden_parsed_output_10)
+
+    def test_show_ip_route_11(self):
+        self.device = Mock(**self.golden_output_11)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output,self.golden_parsed_output_11)
 
 
 # ============================================
