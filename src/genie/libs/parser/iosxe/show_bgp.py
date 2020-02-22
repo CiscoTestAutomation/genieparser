@@ -677,23 +677,31 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 
 # =============================================
 # Parser for:
-#   * 'show ip bgp {word}'
+#   * 'show ip bgp {route}'
+#   * 'show ip bgp {address_family}'
 # =============================================
 class ShowIpBgpRouteDistributer(MetaParser):
     ''' Parser for:
-        * 'show ip bgp {word}'
+        * 'show ip bgp {route}'
+        * 'show ip bgp {address_family}'
     '''
-    cli_command = 'show ip bgp {word}'
+    cli_command = ['show ip bgp {route}', 
+        'show ip bgp {address_family}']
 
-    def cli(self, word, output=None):
+    def cli(self, route=None, address_family=None, output=None):
+        
+        if route:
+            cmd = self.cli_command[0].format(route=route)
+        else:
+            cmd = self.cli_command[1].format(address_family=address_family)
         
         if not output:
-            output = self.device.execute(
-                self.cli_command.format(word=word))
-        # show ip bgp ipv4
-        if '.' in word:
-            parser = ShowIpBgpAllDetail(self.device)
+            output = self.device.execute(cmd)
+
         # show ip bgp 192.168.1.1
+        if '.' in route:
+            parser = ShowIpBgpAllDetail(self.device)
+        # show ip bgp ipv4
         else:
             parser = ShowIpBgp(self.device)
         self.schema = parser.schema
