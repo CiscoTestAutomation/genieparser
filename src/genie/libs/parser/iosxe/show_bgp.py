@@ -689,7 +689,6 @@ class ShowIpBgpRouteDistributer(MetaParser):
         'show ip bgp {address_family}']
 
     def cli(self, route=None, address_family=None, output=None):
-        
         if route:
             cmd = self.cli_command[0].format(route=route)
         else:
@@ -699,7 +698,7 @@ class ShowIpBgpRouteDistributer(MetaParser):
             output = self.device.execute(cmd)
 
         # show ip bgp 192.168.1.1
-        if '.' in route:
+        if route or '.' in address_family:
             parser = ShowIpBgpAllDetail(self.device)
         # show ip bgp ipv4
         else:
