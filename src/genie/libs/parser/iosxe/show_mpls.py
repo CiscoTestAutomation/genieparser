@@ -1686,7 +1686,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #            No Label   10.23.120.0/24[V]   \
         # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
         # 39    [M]  16052      10.169.14.241/32   \
-        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        p1 = re.compile(r'((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?(?P<outgoing_label>(\w+|No +Label)) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
