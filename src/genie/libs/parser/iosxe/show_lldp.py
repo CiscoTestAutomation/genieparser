@@ -83,7 +83,7 @@ class ShowLldp(ShowLldpSchema):
 class ShowLldpEntrySchema(MetaParser):
     """Schema for show lldp entry [<WORD>|*]"""
     schema = {
-        Optional('total_entries'): int,
+        'total_entries': int,
         Optional('interfaces'): {
             Any(): {
                 'if_name': str,
@@ -117,7 +117,9 @@ class ShowLldpEntrySchema(MetaParser):
             }
         },
         Optional('med_information'): {
-            'fw_revision': str,
+            'f/w_revision': str,
+            Optional('h/w_revision'): str,
+            Optional('s/w_revision'): str,
             'manufacturer': str,
             'model': str,
             'capabilities': list,
@@ -130,7 +132,7 @@ class ShowLldpEntrySchema(MetaParser):
                     'dscp': int,
                 },
             },
-            'device_type': str,
+            Optional('serial_number'): str,
             'power_source': str,
             'power_priority': str,
             'wattage': float,
@@ -169,7 +171,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
-        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\w\/\.\-]+)$')
+        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>\S+)$')
 
         p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
@@ -178,11 +180,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p4 = re.compile(r'^System\s+Name(?: +-|:)\s+(?P<name>[\S\s]+)$')
 
         p5 = re.compile(r'^System\s+Description:.*$')
-        p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
-        p5_2 = re.compile(r'^(?P<msg>Technical Support.*)$')
-        p5_3 = re.compile(r'^(?P<msg>Copyright.*)$')
-        p5_4 = re.compile(r'^(?P<msg>Compile.*)$')
-        p5_5 = re.compile(r'^(?P<msg>Avaya.*)$')
+        p5_1 = re.compile(r'^(?P<msg>(Cisco +IOS +Software|Technical Support|Copyright|Cisco IP Phone).*)$')
+        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone).*)$')
 
         p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
 
@@ -196,7 +195,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p10 = re.compile(r'^Auto\s+Negotiation\s+\-\s+(?P<auto_negotiation>[\w\s\,]+)$')
 
         p11 = re.compile(r'^Physical\s+media\s+capabilities:$')
-        p11_1 = re.compile(r'^(?P<physical_media_capabilities>\d+base[\w\-\(\)]+)$')
+        p11_1 = re.compile(r'^(?P<physical_media_capabilities>[\S\(\s]+(HD|FD)[\)])$')
 
         p12 = re.compile(r'^Media\s+Attachment\s+Unit\s+type:\s+(?P<unit_type>\d+)$')
 
@@ -206,10 +205,12 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # ==== MED Information patterns =====
         # F/W revision: 06Q
-        med_p1 = re.compile(r'^F/W revision:\s+(?P<fw_revision>\S+)$')
+        # S/W revision: SCCP42.9-3-1ES27S
+        # H/W revision: 12
+        med_p1 = re.compile(r'^(?P<head>(H/W|F/W|S/W)) revision:\s+(?P<revision>\S+)$')
 
         # Manufacturer: Avaya-05
-        med_p2 = re.compile(r'^Manufacturer:\s+(?P<manufacturer>\S+)$')
+        med_p2 = re.compile(r'^Manufacturer:\s+(?P<manufacturer>[\S\s]+)$')
 
         # Model: 1220 IP Deskphone
         med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
@@ -232,6 +233,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Location - not advertised
         med_p8 = re.compile(r'^Location\s+-\s+(?P<location>[\S\s]+)$')
+
+        # Serial number: FCH1610A5S5
+        med_p9 = re.compile(r'^Serial number: (?P<serial_number>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -289,31 +293,18 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+            # Technical Support: http://www.cisco.com/techsupport
+            # Copyright (c) 1986-2011 by Cisco Systems, Inc.
+            # Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S
             m = p5_1.match(line)
             if m:
                 nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
-            # Technical Support: http://www.cisco.com/techsupport 
-            m = p5_2.match(line)
-            if m:
-                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
-                continue
-
-            # Copyright (c) 1986-2011 by Cisco Systems, Inc.
-            m = p5_3.match(line)
-            if m:
-                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
-                continue
-
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
-            m = p5_4.match(line)
-            if m:
-                nei_dict['system_description'] += m.groupdict()['msg']
-                continue
-
             # Avaya 1220 IP Deskphone, Firmware:06Q
-            m = p5_5.match(line)
+            # IP Phone, Firmware:90234AP
+            m = p5_2.match(line)
             if m:
                 nei_dict['system_description'] += m.groupdict()['msg']
                 continue
@@ -396,10 +387,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
             # ==== Med Information ====
             # F/W revision: 06Q
+            # S/W revision: SCCP42.9-3-1ES27S
+            # H/W revision: 12
             m = med_p1.match(line)
             if m:
+                group = m.groupdict()
                 med_dict = ret_dict.setdefault('med_information', {})
-                med_dict['fw_revision'] = m.groupdict()['fw_revision']
+                med_dict[group['head'].lower()+'_revision'] = m.groupdict()['revision']
                 continue
 
             # Manufacturer: Avaya-05
@@ -452,6 +446,12 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = med_p8.match(line)
             if m:
                 med_dict['location'] = m.groupdict()['location']
+                continue
+
+            # Serial number: FCH1610A5S5
+            m = med_p9.match(line)
+            if m:
+                med_dict['serial_number']: m.groupdict()['serial_number']
                 continue
 
         return ret_dict
