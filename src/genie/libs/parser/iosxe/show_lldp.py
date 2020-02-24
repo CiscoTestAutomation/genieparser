@@ -169,45 +169,79 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         item = ''
         sub_dict = {}
 
-        # initial regexp pattern
+        # ==== initial regexp pattern ====
+        # Local Intf: Gi2/0/15
         p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
+
+        # Port id: Gi1/0/4
         p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>\S+)$')
 
+        # Chassis id: 843d.c638.b980
         p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
+        # Port Description: GigabitEthernet1/0/4
         p3 = re.compile(r'^Port\s+Description:\s+(?P<desc>[\w\/\.\-\s]+)$')
 
+        # System Name: R5
+        # System Name - not advertised
         p4 = re.compile(r'^System\s+Name(?: +-|:)\s+(?P<name>[\S\s]+)$')
 
+        # System Description:
         p5 = re.compile(r'^System\s+Description:.*$')
+
+        # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+        # Technical Support: http://www.cisco.com/techsupport
+        # Copyright (c) 1986-2011 by Cisco Systems, Inc.
+        # Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S
         p5_1 = re.compile(r'^(?P<msg>(Cisco +IOS +Software|Technical Support|Copyright|Cisco IP Phone).*)$')
+
+        # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
+        # Avaya 1220 IP Deskphone, Firmware:06Q
+        # IP Phone, Firmware:90234AP
         p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone).*)$')
 
+        # Time remaining: 112 seconds
         p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
 
+        # System Capabilities: B,R
         p7 = re.compile(r'^System\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
+        # Enabled Capabilities: B,R
         p8 = re.compile(r'^Enabled\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
+        # Management Addresses:
+        #     IP: 10.9.1.1
+        # Management Addresses - not advertised
         p9 = re.compile(r'^IP:\s+(?P<ip>[\w\.]+)$')
         p9_1 = re.compile(r'^Management\s+Addresses\s+-\s+(?P<ip>not\sadvertised)$')
 
+        # Auto Negotiation - supported, enabled
         p10 = re.compile(r'^Auto\s+Negotiation\s+\-\s+(?P<auto_negotiation>[\w\s\,]+)$')
 
+        # Physical media capabilities:
         p11 = re.compile(r'^Physical\s+media\s+capabilities:$')
+
+        # 1000baseT(FD)
+        # 100base-TX(HD)
+        # Symm, Asym Pause(FD)
+        # Symm Pause(FD)
         p11_1 = re.compile(r'^(?P<physical_media_capabilities>[\S\(\s]+(HD|FD)[\)])$')
 
+        # Media Attachment Unit type: 30
         p12 = re.compile(r'^Media\s+Attachment\s+Unit\s+type:\s+(?P<unit_type>\d+)$')
 
+        # Vlan ID: 1
+        # Note: not parsing 'not advertised since value type is int
         p13 = re.compile(r'^^Vlan\s+ID:\s+(?P<vlan_id>\d+)$')
 
+        # Total entries displayed: 4
         p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
 
         # ==== MED Information patterns =====
         # F/W revision: 06Q
         # S/W revision: SCCP42.9-3-1ES27S
         # H/W revision: 12
-        med_p1 = re.compile(r'^(?P<head>(H/W|F/W|S/W)) revision:\s+(?P<revision>\S+)$')
+        med_p1 = re.compile(r'^(?P<head>(H/W|F/W|S/W))\s+revision:\s+(?P<revision>\S+)$')
 
         # Manufacturer: Avaya-05
         med_p2 = re.compile(r'^Manufacturer:\s+(?P<manufacturer>[\S\s]+)$')
@@ -357,8 +391,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict['physical_media_capabilities'] = []
                 continue
 
-            #     1000baseT(FD)
-            #     100base-TX(HD)
+            # 1000baseT(FD)
+            # 100base-TX(HD)
+            # Symm, Asym Pause(FD)
+            # Symm Pause(FD)
             m = p11_1.match(line)
             if m:                
                 item = nei_dict.get('physical_media_capabilities', [])
@@ -373,6 +409,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Vlan ID: 1
+            # Note: not parsing 'not advertised since value type is int
             m = p13.match(line)
             if m:
                 nei_dict['vlan_id'] = int(m.groupdict()['vlan_id'])
