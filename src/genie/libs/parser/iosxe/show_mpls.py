@@ -1692,7 +1692,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #            107829     172.16.100.1/32   \
         #                             0             Gi0/1/7    192.168.10.254
         p1 = re.compile(r'((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
-                        r'(?P<outgoing_label>(\w+|No +Label)) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+                        r'(?P<outgoing_label>(\w+|(No|Pop) +Label)) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
