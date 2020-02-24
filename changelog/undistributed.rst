@@ -137,6 +137,8 @@
         * Modified wrong regex
     * Updated ShowIpCef:
         * Modified regex to support SID
+    * Updated ShowMplsForwardingTableDetail:
+        * show mpls forwarding-table {route} detail
 
 
 * IOSXR
