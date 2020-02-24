@@ -840,7 +840,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'port_id': '6400.6a7f.fd89',
                             'system_name': 'not advertised',
                             'time_remaining': 3500,
-                            
                         },
                     },
                 },
@@ -899,7 +898,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'system_name': 'not advertised',
                             'time_remaining': 154,
                             'unit_type': 16,
-                            
                         },
                     },
                 },
@@ -929,7 +927,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'system_name': 'not advertised',
                             'time_remaining': 165,
                             'unit_type': 16,
-                            
                         },
                     },
                 },
@@ -959,7 +956,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'system_name': 'not advertised',
                             'time_remaining': 151,
                             'unit_type': 16,
-                            
                         },
                     },
                 },
@@ -974,7 +970,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'port_id': 'D89e.f33a.1ec4',
                             'system_name': 'not advertised',
                             'time_remaining': 2845,
-                            
                         },
                     },
                 },
@@ -1004,7 +999,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'system_name': 'not advertised',
                             'time_remaining': 158,
                             'unit_type': 16,
-                            
                         },
                     },
                 },
@@ -1031,7 +1025,6 @@ class test_show_lldp_entry(unittest.TestCase):
                             'system_description': 'Cisco IOS Software, ASR920 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc4)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Mon 19-Mar-18 22:59 by mcpre',
                             'system_name': 'router',
                             'time_remaining': 90,
-                            
                         },
                     },
                 },
