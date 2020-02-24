@@ -1900,7 +1900,6 @@ IPv6 access list OutFilter_IPv6
         }
     }
 
-
     golden_output_1 = {'execute.return_value': '''\
         show access-lists
         Standard IP access list NAT_ACL
@@ -2394,6 +2393,71 @@ IPv6 access list OutFilter_IPv6
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+    show access-lists
+    Standard IP access list 1
+        10 deny   1.2.3.4 log (18 matches)
+        20 permit any (58 matches)
+    Extended IP access list meraki-fqdn-dns
+    ntc-pod19-csrv#
+    '''}
+
+    golden_parsed_output_2 = {
+    '1': {
+        'aces': {
+            '10': {
+                'actions': {
+                    'forwarding': 'deny',
+                    'logging': 'log-syslog',
+                },
+                'matches': {
+                    'l3': {
+                        'ipv4': {
+                            'protocol': 'ipv4',
+                            'source_network': {
+                                '1.2.3.4 0.0.0.0': {
+                                    'source_network': '1.2.3.4 0.0.0.0',
+                                },
+                            },
+                        },
+                    },
+                },
+                'name': '10',
+                'statistics': {
+                    'matched_packets': 18,
+                },
+            },
+            '20': {
+                'actions': {
+                    'forwarding': 'permit',
+                },
+                'matches': {
+                    'l3': {
+                        'ipv4': {
+                            'protocol': 'ipv4',
+                            'source_network': {
+                                'any': {
+                                    'source_network': 'any',
+                                },
+                            },
+                        },
+                    },
+                },
+                'name': '20',
+                'statistics': {
+                    'matched_packets': 58,
+                },
+            },
+        },
+        'name': '1',
+        'type': 'ipv4-acl-type',
+    },
+    'meraki-fqdn-dns': {
+        'name': 'meraki-fqdn-dns',
+        'type': 'ipv4-acl-type',
+    },
+}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev1)
@@ -2406,6 +2470,13 @@ IPv6 access list OutFilter_IPv6
         obj = ShowAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowAccessLists(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_ip_access_list_golden(self):
         self.maxDiff = None
@@ -2441,6 +2512,7 @@ IPv6 access list OutFilter_IPv6
         obj = ShowIpAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse(acl='43')
         self.assertEqual(parsed_output, self.golden_parsed_output_customer)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -64,6 +64,8 @@
         * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
+        * show ssh history
+
 * IOS
     * Added ShowAccessSessionInterfaceDetails for:
         * show access-session interface {interface} details
@@ -125,6 +127,10 @@
         * Added Optional keys to the schema
     * Updated ShowIpPimInterfaceDetail:
         * Added on Optional key to schema
+    * Updated ShowVersion:
+        * Modified schema and parser class
+    * Updated ShowAccessLists:
+        * Modified regex to parse more outputs
 
 
 
