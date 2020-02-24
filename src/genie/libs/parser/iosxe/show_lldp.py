@@ -235,7 +235,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         med_p8 = re.compile(r'^Location\s+-\s+(?P<location>[\S\s]+)$')
 
         # Serial number: FCH1610A5S5
-        med_p9 = re.compile(r'^Serial number: (?P<serial_number>\S+)$')
+        med_p9 = re.compile(r'^Serial\s+number:\s+(?P<serial_number>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
