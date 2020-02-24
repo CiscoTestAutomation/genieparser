@@ -1194,6 +1194,63 @@ class test_show_routing(unittest.TestCase):
         '''
                      }
 
+    golden_output_2 = {'execute.return_value': '''
+    '*' denotes best ucast next-hop
+    '**' denotes best mcast next-hop
+    '[x/y]' denotes [preference/metric]
+    '%' in via output denotes VRF
+
+    show ip route static
+    99.0.1.1/32, ubest/mbest: 1/0
+    *via 11.1.10.2, [1/0], 13:35:01, static
+    via 10.1.10.2, [4/0], 13:35:01, static
+    '''}
+
+    golden_parsed_output_2 = {
+        'vrf': {
+            '': {
+                'address_family': {
+                    None: {
+                        'ip': {
+                            '99.0.1.1/32': {
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '11.1.10.2': {
+                                                'protocol': {
+                                                    'static': {
+                                                        'metric': '0',
+                                                        'preference': '1',
+                                                        'uptime': '13:35:01',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'mbest_num': '0',
+                                'routes': {
+                                    'nexthop': {
+                                        '10.1.10.2': {
+                                            'protocol': {
+                                                'static': {
+                                                    'metric': '0',
+                                                    'preference': '4',
+                                                    'uptime': '13:35:01',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'ubest_num': '1',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -1207,6 +1264,12 @@ class test_show_routing(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        bgp_obj = ShowRouting(device=self.device)
+        parsed_output = bgp_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # ============================================
 # Unit tests for:
@@ -2529,11 +2592,6 @@ class test_show_ip_route(unittest.TestCase):
         self.device = Mock(**self.golden_output_11)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output,self.golden_parsed_output_11)
 
 
