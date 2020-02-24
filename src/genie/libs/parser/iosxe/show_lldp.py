@@ -109,7 +109,7 @@ class ShowLldpEntrySchema(MetaParser):
                                 Optional('auto_negotiation'): str,
                                 Optional('physical_media_capabilities'): list,
                                 Optional('unit_type'): int,
-                                Optional('vlan_id'): str,
+                                Optional('vlan_id'): int,
                             }
                         }
                     }
@@ -199,7 +199,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p12 = re.compile(r'^Media\s+Attachment\s+Unit\s+type:\s+(?P<unit_type>\d+)$')
 
-        p13 = re.compile(r'^Vlan\s+ID:( \- )?(?P<vlan_id>[\S\s]+)$')
+        p13 = re.compile(r'^^Vlan\s+ID:\s+(?P<vlan_id>\d+)$')
 
         p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
 
@@ -373,10 +373,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Vlan ID: 1
-            # Vlan ID: - not advertised
             m = p13.match(line)
             if m:
-                nei_dict['vlan_id'] = m.groupdict()['vlan_id'].strip()
+                nei_dict['vlan_id'] = int(m.groupdict()['vlan_id'])
                 continue
 
             # Total entries displayed: 4
