@@ -134,7 +134,9 @@ class Traceroute(TracerouteSchema):
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
                          ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
         # 1  *
-        p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*)$')
+        # 2  *  *
+        # 3  *  *  *
+        p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*( +\*)*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -264,10 +266,15 @@ class Traceroute(TracerouteSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                if group.get('hop'):
+                cur_hop = group.get('hop')
+                if cur_hop:
                     index = 1
                     path_dict = tr_dict.setdefault('hops', {}).\
-                                        setdefault(group['hop'], {}).setdefault('paths',{})
+                                        setdefault(cur_hop, {}).setdefault('paths',{})
+                    hop = cur_hop
+                else:
+                    path_dict = tr_dict.setdefault('hops', {}).\
+                                        setdefault(hop, {}).setdefault('paths',{})
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
                 index_dict['probe_msec'] = group['probe_msec'].strip().\
@@ -300,14 +307,16 @@ class Traceroute(TracerouteSchema):
                                             split()
                 index += 1
                 continue
+
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                if group.get('hop'):
+                cur_hop = group.get('hop')
+                if cur_hop:
                     index = 1
                     path_dict = tr_dict.setdefault('hops', {}).\
-                        setdefault(group['hop'], {}).\
-                        setdefault('paths',{})
+                        setdefault(cur_hop, {}).setdefault('paths',{})
+                    hop = cur_hop
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
                 index += 1

@@ -129,7 +129,6 @@ class TestTraceroute(unittest.TestCase):
                     }}}
         },
     }
-
     golden_output1 = '''\
         router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 10.36.255.248 
         Type escape sequence to abort. 
@@ -187,7 +186,6 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-
     golden_output2 = '''\
         router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
         Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
@@ -225,7 +223,6 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-
     golden_output3 = '''\
         [2019-04-11 11:02:15,834] +++ PE1: executing command 'traceroute www.xyz.com' +++
         traceroute www.xyz.com
@@ -235,6 +232,7 @@ class TestTraceroute(unittest.TestCase):
           1 10.10.10.10 1 msec 1 msec * 
         PE1#
         '''
+
     golden_parsed_output4 = {
         'traceroute': {
             '172.16.51.1': {
@@ -263,7 +261,6 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-
     golden_output4 = '''
         traceroute vrf CE1test 172.16.51.1
         Type escape sequence to abort.
@@ -379,7 +376,6 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-
     golden_output6 = '''
         traceroute 10.151.22.22
         Type escape sequence to abort.
@@ -387,6 +383,104 @@ class TestTraceroute(unittest.TestCase):
         VRF info: (vrf in name/id, vrf out name/id)
         1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
         2 10.0.0.18 351 msec *  8 msec
+    '''
+
+    golden_parsed_output7 = {
+      "traceroute": {
+        "192.168.1.1": {
+          "address": "192.168.1.1",
+          "hops": {
+            "1": {
+              "paths": {
+                1: {
+                  "address": "*  *  *"
+                }
+              }
+            },
+            "2": {
+              "paths": {
+                1: {
+                  "address": "*  *  *"
+                }
+              }
+            },
+            "3": {
+              "paths": {
+                1: {
+                  "address": "*  *"
+                },
+                2: {
+                  "address": "106.187.14.121",
+                  "probe_msec": [
+                    "3"
+                  ],
+                  "label_info": {
+                    "MPLS": {
+                      "label": "16063/459",
+                      "exp": 0
+                    }
+                  }
+                }
+              }
+            },
+            "4": {
+              "paths": {
+                1: {
+                  "address": "106.187.14.158",
+                  "probe_msec": [
+                    "2",
+                    "3",
+                    "3"
+                  ],
+                  "label_info": {
+                    "MPLS": {
+                      "label": "16063/459",
+                      "exp": 0
+                    }
+                  }
+                }
+              }
+            },
+            "5": {
+              "paths": {
+                1: {
+                  "address": "192.168.1.1",
+                  "probe_msec": [
+                    "3",
+                    "*",
+                    "3"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    golden_output7 = '''
+        traceroute vrf MG501
+        Protocol [ip]: 
+        Target IP address: 192.168.1.1
+        Ingress traceroute [n]: 
+        Source address or interface: 
+        DSCP Value [0]: 
+        Numeric display [n]: y
+        Resolve AS number in (G)lobal table, (V)RF or(N)one [G]: 
+        Timeout in seconds [3]: 
+        Probe count [3]: 
+        Minimum Time to Live [1]: 
+        Maximum Time to Live [30]: 
+        Port Number [33434]: 
+        Loose, Strict, Record, Timestamp, Verbose[none]: 
+        Type escape sequence to abort.
+        Tracing the route to 192.168.1.1
+        VRF info: (vrf in name/id, vrf out name/id)
+          1  *  *  * 
+          2  *  *  * 
+          3  *  * 
+            106.187.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
+          4 106.187.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
+          5 192.168.1.1 3 msec *  3 msec
     '''
 
     def test_traceroute_empty(self):
@@ -429,6 +523,12 @@ class TestTraceroute(unittest.TestCase):
         obj = Traceroute(device=self.device)
         parsed_output = obj.parse(output=self.golden_output6)
         self.assertEqual(parsed_output, self.golden_parsed_output6)
+
+    def test_traceroute_golden7(self):
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output7)
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 if __name__ == '__main__':
     unittest.main()
