@@ -16,6 +16,8 @@
 * IOSXE
     * Updated ShowUsers:
         * Changed regex to support various outputs.
+    * Updated Traceroute:
+        * Updated regex to support various outputs.
 
 * IOSXR
     * Updated ShowRouteIpv4:
