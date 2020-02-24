@@ -34,6 +34,10 @@
         * 'show bootvar'
     * Added ShowInterfaceStatus for:
         * show interface status
+* IOSXE
+    * Added ShowIpBgpRouteDistributer for:
+        * show ip bgp {route}
+        * show ip bgp {address_family}
 
 * IOSXR
     * Added ShowMplsInterfaces for:
@@ -129,6 +133,10 @@
         * Modified schema and parser class
     * Updated ShowAccessLists:
         * Modified regex to parse more outputs
+    * Updated ShowMplsForwardingTable:
+        * Modified wrong regex
+    * Updated ShowIpCef:
+        * Modified regex to support SID
 
 
 * IOSXR
