@@ -386,6 +386,8 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('best_mcast_nexthop'): bool,
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
+                                            Optional('route_preference'): int,
+                                            Optional('metric'): int,
                                         },
                                     },
                                 },
@@ -541,7 +543,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         else:
             cmd = self.cli_command[15]
 
-        # excute command to get output
+        # execute command to get output
         if output is None:
             out = self.device.execute(cmd)
         else:
@@ -663,11 +665,22 @@ class ShowIpRoute(ShowIpRouteSchema):
                 tag = process_id = source_protocol_status = interface = next_hop_vrf = next_hop_af = ""
                 star = m.groupdict()['star']
                 cast = None
-                if star:
-                    if len(star) == 1:
-                        cast = 'best_ucast_nexthop'
-                    if len(star) == 2:
-                        cast = 'best_mcast_nexthop'
+
+                star_rp, non_star_rp, star_metrics, non_star_metrics = None, None, None, None
+                if groups['route_preference']:
+                    rp_val = groups['route_preference'].split('/')
+                    rp = int(rp_val[0])
+                    metrics = int(rp_val[1])
+                    if star:
+                        if len(star) == 1:
+                            cast = 'best_ucast_nexthop'
+                        if len(star) == 2:
+                            cast = 'best_mcast_nexthop'
+                        star_rp = rp
+                        star_metrics = metrics
+                    else:
+                        non_star_rp = rp
+                        non_star_metrics = metrics
 
                 if groups['next_hop']:
                     next_hop = groups['next_hop']
@@ -677,12 +690,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                         if ':' in next_hop_vrf:
                             next_hop_af = next_hop_vrf.split(':')[1].lower()
                             next_hop_vrf = next_hop_vrf.split(':')[0]
-
-                if groups['route_preference']:
-                    routepreference = groups['route_preference']
-                    if '/' in routepreference:
-                        route_preference = routepreference.split('/')[0]
-                        metrics = routepreference.split('/')[1]
 
                 if groups['interface']:
                     interface = Common.convert_intf_name(groups['interface'])
@@ -708,20 +715,17 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if hidden:
                     route_dict.update({'hidden': hidden})
 
-                # if vrf:
-                if metrics:
-                    route_dict.update({'metric': int(metrics)})
+                if star_metrics is not None:
+                    route_dict.update({'metric': star_metrics})
 
-                if route_preference:
-                    route_dict.update({'route_preference': int(route_preference)})
+                if star_rp is not None:
+                    route_dict.update({'route_preference': int(star_rp)})
 
                 if process_id:
                     route_dict.update({'process_id': process_id})
 
                 if tag:
                     route_dict.update({'tag': int(tag)})
-                
-                
 
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
@@ -760,6 +764,18 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                     if next_hop_af:
                         index_dict.update({'next_hop_af': next_hop_af})
+
+                    if star_metrics is not None:
+                        index_dict['metric'] = star_metrics
+
+                    if non_star_metrics is not None:
+                        index_dict['metric'] = non_star_metrics
+
+                    if star_rp is not None:
+                        index_dict['route_preference'] = star_rp
+
+                    if non_star_rp is not None:
+                        index_dict['route_preference'] = non_star_rp
 
                 index += 1
                 continue
