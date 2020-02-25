@@ -102,7 +102,7 @@ devnet: package
 	@echo ""
 
 install_build_deps:
-	@echo "Nothing to do"
+	@pip install --upgrade pip setuptools wheel
 
 uninstall_build_deps:
 	@echo "Nothing to do"
