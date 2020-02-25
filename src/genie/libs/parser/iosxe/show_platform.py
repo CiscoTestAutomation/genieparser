@@ -5434,7 +5434,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
             m = p2.match(line)
             if not m:
                 for i, v in enumerate(line):
-                    if v is ' ':
+                    if v == ' ':
                         pass
                     else:
                         tmp[i] += v
@@ -5442,17 +5442,17 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
                 if count == 0:
                     sub_dict = ret_dict.setdefault('60s', {})
                     for i in range(60):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 elif count == 1:
                     sub_dict = ret_dict.setdefault('60m', {})
                     for i in range(60):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 else:
                     sub_dict = ret_dict.setdefault('72h', {})
                     for i in range(72):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
                 tmp = [''] * 72
                 count += 1
 
