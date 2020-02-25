@@ -9,18 +9,25 @@
                                 New
 --------------------------------------------------------------------------------
 
-
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowUsers:
-        * Changed regex to support various outputs.
-
-* IOSXR
-    * Updated ShowRouteIpv4:
-        * Changed regex to support some VRF values such as 'L:111'
-
+* IOS
+    * Added ShowAccessSessionInterfaceDetails for:
+        * show access-session interface {interface} details
+    * Added parsers for ios/cat6k:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+    * Added parsers for ios/c7600:
+        * show version
+        * dir
+        * show redundancy
+        * show inventory
+        * show module
+    * Added ShowIpBgpRegexp:
+        * show ip bgp regexp ^$ 
+    * Moved ShowBootvar to iosxe folder
+    * Added ShowInterfaceStatus for:
+        * show interface status
 
 * IOSXE
     * Added ShowProcessesMemory for:
@@ -42,7 +49,7 @@
     * Added ShowMplsForwarding for:
         * show mpls forwarding
         * show mpls forwarding vrf {vrf}
-    *Added ShowMplsLabelRange for:
+    * Added ShowMplsLabelRange for:
         * show mpls label range
     * Added ShowMplsLabelTablePrivate for:
         * show mpls label table private    
@@ -66,26 +73,6 @@
         * show ssh session details
         * show ssh history
 
-* IOS
-    * Added ShowAccessSessionInterfaceDetails for:
-        * show access-session interface {interface} details
-    * Added parsers for ios/cat6k:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-    * Added parsers for ios/c7600:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-        * show module
-    * Added ShowIpBgpRegexp:
-        * show ip bgp regexp ^$ 
-    * Moved ShowBootvar to iosxe folder
-    * Added ShowInterfaceStatus for:
-        * show interface status
-
 * SROS
     * Added ShowSystemNtpAll for:
         * show system ntp all
@@ -102,7 +89,20 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOS
+    * Updated ShowVersion for:
+        * Optional key issue for ios/cat6k platform
+        * Updating symbolic link to platform specific unittests
+    * Updated ShowAccessLists
+	    * Updated for the case of empty ttl_groups
+		* Updated for udp ACL with incremented counter
+		* Added support for access-lists with object-group references
+    * Updated ShowInventory
+        * Updated for various outputs
+
 * IOSXE
+    * Updating symbolic link to platform specific unittests
     * Updated ShowAuthenticationSessionsInterfaceDetails
 	    * Change in order of Server Policies no longer breaks parsing
     * Updated ShowClnsIsNeighborsDetail
@@ -129,41 +129,26 @@
         * Modified schema and parser class
     * Updated ShowAccessLists:
         * Modified regex to parse more outputs
-
+    * Updated ShowUsers:
+        * Changed regex to support various outputs.
+    * Updated ShowProcessesCpuHistory
+        * Fixed warnings for python3.8
+    * Updated ShowUsers
+        * Fixed warnings for python3.8
 
 * IOSXR
     * Updated ShowRouteIpv4:
         * Changed regex to support some VRF values such as 'L:111'
-
+    * Updated ShowRouteIpv4:
+        * Changed regex to support some VRF values such as 'L:111'
     * Updated ShowLacp
         * Change in order to parse show lacp {interface}.
     * Updated ShowBundle
         * Change in order to parse show bundle {interface} reasons 
-
-* DNAC
-    * Updated Interface for:
-        * Supporting hostname in the schema
-		
-* NXOS
-    * Updated ShowVpc:
-        * Supporting parser for vpc+ outputs
-
-* IOS
-    * Updated ShowVersion for:
-        * Optional key issue for ios/cat6k platform
-        * Updating symbolic link to platform specific unittests
-    * Updated ShowAccessLists
-	    * Updated for the case of empty ttl_groups
-		* Updated for udp ACL with incremented counter
-		* Added support for access-lists with object-group references
-    * Updated ShowInventory
-        * Updated for various outputs
-
-* IOSXE
     * Updating symbolic link to platform specific unittests
-
-* IOSXR
-    * Updating symbolic link to platform specific unittests
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest
     * Updated and removed regex to accommodate outputs
     * Added new unittest 
     * Updated and added regex to accommodate more outputs
@@ -173,12 +158,14 @@
     * Added new unittest
 
 * NXOS
+    * Updated ShowVpc:
+        * Supporting parser for vpc+ outputs
     * Updated ShowNveVniIngressReplication
         * Added regex 
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
-* IOSXR:
-    * Updated ShowRouteIpv4
-        * Added and updated regex
-        * Added unittest
+
+* DNAC
+    * Updated Interface for:
+        * Supporting hostname in the schema
