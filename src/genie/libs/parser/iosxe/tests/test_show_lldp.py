@@ -544,7 +544,7 @@ class test_show_lldp_entry(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         ------------------------------------------------
         Chassis id: 10.10.191.112
-        Port id: 7018.dec7.88dc
+        Port id: 7018.deff.50a4
         Port Description: IP Phone
         System Name - not advertised
         
@@ -583,7 +583,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.104
-        Port id: 7018.dec7.9085
+        Port id: 7018.deff.584d
         Port Description: IP Phone
         System Name - not advertised
         
@@ -622,7 +622,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.93
-        Port id: fca8.41f2.0189
+        Port id: fca8.41ff.f37c
         Port Description: IP Phone
         System Name - not advertised
         
@@ -661,7 +661,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.91
-        Port id: 7052.c598.adae
+        Port id: 7052.c5ff.4647
         Port Description: IP Phone
         System Name - not advertised
         
@@ -699,7 +699,7 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: 00ff.c8fe.3c80
+        Chassis id: 00ff.c8ff.3b7f
         Port id: Gi0/0/0
         Port Description: -X- router
         System Name: router
@@ -722,7 +722,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.107
-        Port id: 7018.dec7.8f65
+        Port id: 7018.deff.572d
         Port Description: IP Phone
         System Name - not advertised
         
@@ -760,8 +760,8 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: d89e.f33a.1ec4
-        Port id: d89e.f33a.1ec4
+        Chassis id: d89e.f3ff.58fe
+        Port id: d89e.f3ff.58fe
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -791,8 +791,8 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: 6400.6a7f.fd89
-        Port id: 6400.6a7f.fd89
+        Chassis id: 6400.6aff.7d09
+        Port id: 6400.6aff.7d09
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -829,21 +829,21 @@ class test_show_lldp_entry(unittest.TestCase):
         'N/A': {
             'if_name': 'N/A',
             'port_id': {
-                '6400.6a7f.fd89': {
+                '6400.6aff.7d09': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
-                            'chassis_id': '6400.6a7f.fd89',
+                            'chassis_id': '6400.6aff.7d09',
                             'management_address': 'not advertised',
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['1000baseT(FD)'],
-                            'port_id': '6400.6a7f.fd89',
+                            'port_id': '6400.6aff.7d09',
                             'system_name': 'not advertised',
                             'time_remaining': 3500,
                         },
                     },
                 },
-                '7018.dec7.88dc': {
+                '7018.deff.50a4': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -864,7 +864,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.88dc',
+                            'port_id': '7018.deff.50a4',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 170,
@@ -872,7 +872,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7018.dec7.8f65': {
+                '7018.deff.572d': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -893,7 +893,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.8f65',
+                            'port_id': '7018.deff.572d',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 154,
@@ -901,7 +901,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7018.dec7.9085': {
+                '7018.deff.584d': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -922,7 +922,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.9085',
+                            'port_id': '7018.deff.584d',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 165,
@@ -930,7 +930,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7052.c598.adae': {
+                '7052.c5ff.4647': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -951,7 +951,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7052.c598.adae',
+                            'port_id': '7052.c5ff.4647',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 151,
@@ -959,21 +959,21 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                'D89e.f33a.1ec4': {
+                'D89e.f3ff.58fe': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
-                            'chassis_id': 'd89e.f33a.1ec4',
+                            'chassis_id': 'd89e.f3ff.58fe',
                             'management_address': 'not advertised',
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['1000baseT(FD)'],
-                            'port_id': 'D89e.f33a.1ec4',
+                            'port_id': 'D89e.f3ff.58fe',
                             'system_name': 'not advertised',
                             'time_remaining': 2845,
                         },
                     },
                 },
-                'Fca8.41f2.0189': {
+                'Fca8.41ff.f37c': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -994,7 +994,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': 'Fca8.41f2.0189',
+                            'port_id': 'Fca8.41ff.f37c',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 158,
@@ -1017,7 +1017,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True,
                                 },
                             },
-                            'chassis_id': '00ff.c8fe.3c80',
+                            'chassis_id': '00ff.c8ff.3b7f',
                             'management_address': '10.10.4.30',
                             'neighbor_id': 'router',
                             'port_description': '-X- router',
