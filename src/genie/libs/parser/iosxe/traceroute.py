@@ -275,12 +275,12 @@ class Traceroute(TracerouteSchema):
                 else:
                     path_dict = tr_dict.setdefault('hops', {}).\
                                         setdefault(hop, {}).setdefault('paths',{})
+
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
-                index_dict['probe_msec'] = group['probe_msec'].strip().\
-                                            replace(" msec", "").\
-                                            replace(" ms", "").\
-                                            split()
+                index_dict.setdefault('probe_msec', []).extend(group['probe_msec'].strip().\
+                                        replace(" msec", "").replace(" ms", "").split())
+
                 if group['label_name']:
                     label_dict = index_dict.setdefault('label_info', {}).\
                                         setdefault(group['label_name'], {})
@@ -308,18 +308,34 @@ class Traceroute(TracerouteSchema):
                 index += 1
                 continue
 
+            # 1  *
+            # 2  *  *
+            # 3  *  *  *
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 cur_hop = group.get('hop')
-                if cur_hop:
-                    index = 1
-                    path_dict = tr_dict.setdefault('hops', {}).\
-                        setdefault(cur_hop, {}).setdefault('paths',{})
-                    hop = cur_hop
-                index_dict = path_dict.setdefault(index, {})
-                index_dict['address'] = group['address']
-                index += 1
+                stars = group['address'].replace(' ', '')
+                check_next_line = len(stars) == 2
+
+                if check_next_line:
+                    if cur_hop:
+                        index = 1
+                        path_dict = tr_dict.setdefault('hops', {}).\
+                            setdefault(cur_hop, {}).setdefault('paths',{})
+                        hop = cur_hop
+                    index_dict = path_dict.setdefault(index, {})
+                    index_dict['probe_msec'] = list(stars)
+                else:
+                    if cur_hop:
+                        index = 1
+                        path_dict = tr_dict.setdefault('hops', {}).\
+                            setdefault(cur_hop, {}).setdefault('paths',{})
+                        hop = cur_hop
+                    index_dict = path_dict.setdefault(index, {})
+                    index_dict['address'] = group['address']
+                    index += 1
+
                 continue
         
         # Update vrf if found from the command
