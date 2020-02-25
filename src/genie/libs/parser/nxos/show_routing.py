@@ -133,8 +133,10 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
     """Parser for show routing ip vrf all
                 show routing ip vrf <vrf>"""
-    cli_command = ['show routing {ip} vrf all', 'show routing vrf all', 'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
+    cli_command = ['show routing {ip} vrf all', 'show routing vrf all',
+                   'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
     exclude = ['uptime']
+
     def cli(self, ip='', vrf='', output=None):
         if ip and vrf:
             cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
@@ -302,10 +304,11 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         return result_dict
 
 
-class ShowRouting(ShowRoutingVrfAll):
+class ShowRouting_old(ShowRoutingVrfAll):
     """Parser for show routing
                 show routing <ip>"""
     cli_command = ['show routing', 'show routing {ip}']
+
     def cli(self, ip='', output=None):
         if output is None:
             if ip:
@@ -541,6 +544,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                     vrf=vrf,
                     )
         else:
+            import pdb
+            pdb.set_trace()
             cmd = self.cli_command[15]
 
         # execute command to get output
@@ -944,3 +949,26 @@ class ShowIpv6Route(ShowIpRoute):
             out = output
 
         return super().cli(vrf=vrf, output=out)
+
+
+class ShowRouting(ShowIpRoute):
+    """
+        Parser for show routing
+        show routing <ip>"""
+    cli_command = ['show routing', 'show routing {protocol}']
+
+    def cli(self, protocol=None, route=None, vrf=None, interface=None, output=None):
+
+        if output is None:
+            if protocol:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                )
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(protocol=protocol, output=out)
+

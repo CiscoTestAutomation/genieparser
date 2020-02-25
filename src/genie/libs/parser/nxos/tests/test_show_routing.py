@@ -1256,6 +1256,11 @@ class test_show_routing(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         bgp_obj = ShowRouting(device=self.device)
         parsed_output = bgp_obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
