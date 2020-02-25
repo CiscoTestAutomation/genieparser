@@ -8,92 +8,25 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowUsers:
-        * Changed regex to support various outputs.
-
-* IOSXR
-    * Updated ShowRouteIpv4:
-        * Changed regex to support some VRF values such as 'L:111'
-
-
-* IOSXE
-    * Added ShowProcessesMemory for:
-        * show processes memory
-        * show processes memory | include {include}
-    * Added ShowAccessSessionInterfaceDetails for:
-        * show access-session interface {interface} details
-    * Added ShowIpBgpRegexp for:
-        * show ip bgp regexp ^$ 
-    * Added ShowBootvar for:
-        * 'show bootvar'
+* IOS
     * Added ShowInterfaceStatus for:
         * show interface status
-
+* IOSXE
+    * Added ShowInterfaceStatus for:
+        * show interface status
+    * Added ShowProcessesMemorySorted for:
+        * show processes memory sorted
+    * Added ShowPlatformSoftwareMemoryBacktrace for:
+        * show platform software memory {process} switch active {slot} alloc backtrace
+    * Added ShowPlatformSoftwareMemoryCallsite for:
+        * show platform software memory {process} switch active {slot} alloc callsite brief
+    * Added ShowProcessesMemoryPlatformSorted for:
+        * show processes memory platform sorted
 * IOSXR
-    * Added ShowMplsInterfaces for:
-        * show mpls interfaces
-        * show mpls interfaces {interface}
-    * Added ShowMplsForwarding for:
-        * show mpls forwarding
-        * show mpls forwarding vrf {vrf}
-    *Added ShowMplsLabelRange for:
-        * show mpls label range
-    * Added ShowMplsLabelTablePrivate for:
-        * show mpls label table private    
-    * Added ShowMplsLdpNeighbor for:
-        * show mpls ldp neighbor
-        * show mpls ldp neighbor {interface}
-    * Added ShowMplsLdpNeighborDetail for:
-        * show mpls ldp neighbor detail
-        * show mpls ldp neighbor {interface} detail
-    * Added ShowIsisFRRSummary for:
-        * show isis fast-reroute summary
-    * Added ShowBgpEgressEngineering for:
-        * show bgp egress-engineering
-    * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
-        * show traffic-collector external-interface
-        * show traffic-collector ipv4 counters prefix <prefix> detail
-    * Added ShowBundleReasons for:  
-        * show bundle reasons
-        * show bundle {interface} reasons
     * Added ShowSsh for:
         * show ssh session details
+    * Added ShowSshHistory for:
         * show ssh history
-
-* IOS
-    * Added ShowAccessSessionInterfaceDetails for:
-        * show access-session interface {interface} details
-    * Added parsers for ios/cat6k:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-    * Added parsers for ios/c7600:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-        * show module
-    * Added ShowIpBgpRegexp:
-        * show ip bgp regexp ^$ 
-    * Moved ShowBootvar to iosxe folder
-    * Added ShowInterfaceStatus for:
-        * show interface status
-
-* SROS
-    * Added ShowSystemNtpAll for:
-        * show system ntp all
-    * Added ShowRouterIsisAdjacency for:
-        * show router isis adjacency
-    * Added ShowRouterIsisAdjacencyDetail for:
-        * show router isis adjacency detail
-
 * LINUX
     * Added Ps for:
         * ps -ef
@@ -102,86 +35,28 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
 * IOSXE
-    * Updated ShowAuthenticationSessionsInterfaceDetails
-	    * Change in order of Server Policies no longer breaks parsing
-    * Updated ShowClnsIsNeighborsDetail
-        * Changed regex and schema to support type 'L1L2'
-    * Updated ShowIsisDatabaseDetail
-        * Changed schema to support more various output
-    * Updated ShowInterfacesDescription
-	    * Modified regex to fix parsing as per customer output
+    * Updated ShowIpCefInternal
+        * Update schema and regex to support more various output
     * Updated ShowVlan
         * Modified if-condition to support various output.
-    * Updated ShowClnsProtocol
-        * Changed 'Null Tag' to 'null' 
-    * Updated ShowInterfacesDescription
-	    * Modified regex to fix parsing as per customer output
-    * Updated ShowVrfDetail:
-        * Modified regex to support customer output
     * Updated ShowEthernetServiceInstanceDetail
         * Modified regex to support outputs
+    * Updated ShowVrfDetail:
+        * Modified regex to support customer output
     * Updated ShowIpIgmpInterface:
-        * Modified schema
-    * Updated ShowLldpEntry:
-        * Added Optional keys to the schema
+        * Modified schema to support more various output
     * Updated ShowIpPimInterfaceDetail:
-        * Added on Optional key to schema
-    * Updated ShowVersion:
-        * Modified schema and parser class
+        * Modified schema to support more varied output
     * Updated ShowAccessLists:
         * Modified regex to parse more outputs
-
-
-
+    * Updated ShowVersion:
+        * Modified schema to support more varied output
+    * Updated ShowLldpEntry:
+        * Added Optional keys to the schema
 * IOSXR
     * Updated ShowRouteIpv4:
-        * Changed regex to support some VRF values such as 'L:111'
-
-    * Updated ShowLacp
-        * Change in order to parse show lacp {interface}.
-    * Updated ShowBundle
-        * Change in order to parse show bundle {interface} reasons 
-
-* DNAC
-    * Updated Interface for:
-        * Supporting hostname in the schema
-		
-* NXOS
-    * Updated ShowVpc:
-        * Supporting parser for vpc+ outputs
-
-* IOS
-    * Updated ShowVersion for:
-        * Optional key issue for ios/cat6k platform
-        * Updating symbolic link to platform specific unittests
-    * Updated ShowAccessLists
-	    * Updated for the case of empty ttl_groups
-		* Updated for udp ACL with incremented counter
-		* Added support for access-lists with object-group references
-    * Updated ShowInventory
-        * Updated for various outputs
-
-* IOSXE
-    * Updating symbolic link to platform specific unittests
-
-* IOSXR
-    * Updating symbolic link to platform specific unittests
-    * Updated and removed regex to accommodate outputs
-    * Added new unittest 
-    * Updated and added regex to accommodate more outputs
-    * Added new output to unittest
-    * Updated regex to accommodate more outputs
-    * Added extra key to schema
-    * Added new unittest
-
-* NXOS
-    * Updated ShowNveVniIngressReplication
-        * Added regex 
-        * Added new unittest
-    * Updated ShowIpCefInternal
-	    * Update schema and regex to support more various output
-* IOSXR:
-    * Updated ShowRouteIpv4
-        * Added and updated regex
-        * Added unittest
+        * Modified regex to support more various output
+    * Updated ShowVersion:
+        * To support output from Cisco 8000 series
