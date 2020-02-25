@@ -6,98 +6,12 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                New
---------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------
-                                Fix
+                                News
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowUsers:
-        * Changed regex to support various outputs.
-
-* IOSXR
-    * Updated ShowRouteIpv4:
-        * Changed regex to support some VRF values such as 'L:111'
-
-
-* IOSXE
-    * Added ShowProcessesMemory for:
-        * show processes memory
-        * show processes memory | include {include}
-    * Added ShowAccessSessionInterfaceDetails for:
-        * show access-session interface {interface} details
-    * Added ShowIpBgpRegexp for:
-        * show ip bgp regexp ^$ 
-    * Added ShowBootvar for:
-        * 'show bootvar'
-    * Added ShowInterfaceStatus for:
-        * show interface status
-
-* IOSXR
-    * Added ShowMplsInterfaces for:
-        * show mpls interfaces
-        * show mpls interfaces {interface}
-    * Added ShowMplsForwarding for:
-        * show mpls forwarding
-        * show mpls forwarding vrf {vrf}
-    *Added ShowMplsLabelRange for:
-        * show mpls label range
-    * Added ShowMplsLabelTablePrivate for:
-        * show mpls label table private    
-    * Added ShowMplsLdpNeighbor for:
-        * show mpls ldp neighbor
-        * show mpls ldp neighbor {interface}
-    * Added ShowMplsLdpNeighborDetail for:
-        * show mpls ldp neighbor detail
-        * show mpls ldp neighbor {interface} detail
-    * Added ShowIsisFRRSummary for:
-        * show isis fast-reroute summary
-    * Added ShowBgpEgressEngineering for:
-        * show bgp egress-engineering
-    * Added ShowTrafficCollecterIpv4CountersPrefixDetail for:
-        * show traffic-collector external-interface
-        * show traffic-collector ipv4 counters prefix <prefix> detail
-    * Added ShowBundleReasons for:  
-        * show bundle reasons
-        * show bundle {interface} reasons
-    * Added ShowSsh for:
-        * show ssh session details
-        * show ssh history
-
-* IOS
-    * Added ShowAccessSessionInterfaceDetails for:
-        * show access-session interface {interface} details
-    * Added parsers for ios/cat6k:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-    * Added parsers for ios/c7600:
-        * show version
-        * dir
-        * show redundancy
-        * show inventory
-        * show module
-    * Added ShowIpBgpRegexp:
-        * show ip bgp regexp ^$ 
-    * Moved ShowBootvar to iosxe folder
-    * Added ShowInterfaceStatus for:
-        * show interface status
-
-* SROS
-    * Added ShowSystemNtpAll for:
-        * show system ntp all
-    * Added ShowRouterIsisAdjacency for:
-        * show router isis adjacency
-    * Added ShowRouterIsisAdjacencyDetail for:
-        * show router isis adjacency detail
-
-* LINUX
-    * Added Ps for:
-        * ps -ef
-        * ps -ef | grep {grep}
+    * Added ShowIpBgpRouteDistributer for:
+        * show ip bgp {route}
+        * show ip bgp {address_family}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -186,3 +100,10 @@
     * Updated ShowRouteIpv4
         * Added and updated regex
         * Added unittest
+    * Updated ShowMplsForwardingTable:
+        * Modified wrong regex
+    * Updated ShowIpCef:
+        * Modified regex to support SID
+    * Updated ShowMplsForwardingTableDetail:
+        * show mpls forwarding-table {route} detail
+
