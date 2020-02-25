@@ -2396,7 +2396,7 @@ IPv6 access list OutFilter_IPv6
     golden_output_2 = {'execute.return_value': '''
     show access-lists
     Standard IP access list 1
-        10 deny   1.2.3.4 log (18 matches)
+        10 deny   10.9.3.4 log (18 matches)
         20 permit any (58 matches)
     Extended IP access list meraki-fqdn-dns
     ntc-pod19-csrv#
@@ -2415,8 +2415,8 @@ IPv6 access list OutFilter_IPv6
                         'ipv4': {
                             'protocol': 'ipv4',
                             'source_network': {
-                                '1.2.3.4 0.0.0.0': {
-                                    'source_network': '1.2.3.4 0.0.0.0',
+                                '10.9.3.4 0.0.0.0': {
+                                    'source_network': '10.9.3.4 0.0.0.0',
                                 },
                             },
                         },

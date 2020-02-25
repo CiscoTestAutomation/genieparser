@@ -176,7 +176,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Port id: Gi1/0/4
         p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>\S+)$')
 
-        # Chassis id: 843d.c638.b980
+        # Chassis id: 843d.c6ff.f1b8
         p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
         # Port Description: GigabitEthernet1/0/4
@@ -283,7 +283,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c638.b980
+            # Chassis id: 843d.c6ff.f1b8
             m = p2.match(line)
             if m:
                 sub_dict = {}
