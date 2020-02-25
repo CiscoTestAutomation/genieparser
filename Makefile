@@ -45,7 +45,7 @@ CYTHON_CMD	  = compileAll
 RELATED_PKGS = genie.libs.parser
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle  sphinx-rtd-theme 
-DEPENDENCIES += pip-tools Cython requests
+DEPENDENCIES += pip-tools Cython requests xmltodict
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
@@ -102,7 +102,7 @@ devnet: package
 	@echo ""
 
 install_build_deps:
-	@echo "Nothing to do"
+	@pip install --upgrade pip setuptools wheel
 
 uninstall_build_deps:
 	@echo "Nothing to do"

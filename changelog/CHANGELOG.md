@@ -1,5 +1,6 @@
 # 2020
 * [January](2020/JANUARY.md)
+* [February](2020/FEBRUARY.md)
 
 # 2019
 
