@@ -1394,7 +1394,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #224.0.0.6  224.0.0.5  224.0.0.2 
-            p5_1 = re.compile(r'^\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
+            p5_1 = re.compile(r'^(?!show)\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
             m = p5_1.match(line)
             if m:
                 multicast_groups_address = str(m.groupdict()['multicast_groups_address'])
