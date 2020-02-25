@@ -304,23 +304,6 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         return result_dict
 
 
-# class ShowRouting_old(ShowRoutingVrfAll):
-#     """Parser for show routing
-#                 show routing <ip>"""
-#     cli_command = ['show routing', 'show routing {ip}']
-#
-#     def cli(self, ip='', output=None):
-#         if output is None:
-#             if ip:
-#                 cmd = self.cli_command[1].format(ip=ip)
-#             else:
-#                 cmd = self.cli_command[0]
-#             out = self.device.execute(cmd)
-#         else:
-#             out = output
-#         return super().cli(ip=ip, output=out)
-
-
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
     """Parser for show routing ipv6 vrf all,
             show routing ipv6 vrf <vrf>"""

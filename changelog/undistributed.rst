@@ -147,6 +147,10 @@
 * NXOS
     * Updated ShowVpc:
         * Supporting parser for vpc+ outputs
+    * Updated ShowIpRoute:
+        * Add keys 'route_preference' and 'metric' into the schema
+    * Updated ShowRouting:
+        * Change its parent class into ShowIpRoute
 
 * IOS
     * Updated ShowVersion for:
