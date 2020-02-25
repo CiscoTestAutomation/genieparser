@@ -1221,7 +1221,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
         for line in out.splitlines():
             line = line.rstrip()
-
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>\S+)$')
@@ -1282,7 +1281,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if intf not in ip_interface_vrf_all_dict:
                         ip_interface_vrf_all_dict[intf] = {}
                 continue
-
+            
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
@@ -1369,6 +1368,20 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if route_preference:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
+                continue
+            
+            # IP address: none
+            p3_2 = re.compile('^\s*IP +address: +(?P<ip>\S+)$')
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                address = group.get('ip', None)
+                if 'ipv4' not in ip_interface_vrf_all_dict:
+                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
+                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip'] = address
                 continue
 
             #IP broadcast address: 255.255.255.255
@@ -1568,7 +1581,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 interface
             except Exception:
                 continue
-
+            
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                 #Unicast packets    : 0/0/0/0/0
                 p20 = re.compile(r'^\s*Unicast *packets *:'
