@@ -1125,58 +1125,73 @@ class test_show_routing(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'vrf':
-            {'default':
-                {'address_family':
-                    {'ipv4 unicast':
-                        {'bgp_distance_extern_as': 20,
-                        'bgp_distance_internal_as': 200,
-                        'ip':
-                            {'10.106.0.0/8':
-                                {'ubest_num': '1',
-                                'mbest_num': '0',
-                                'best_route':
-                                    {'unicast':
-                                        {'nexthop':
-                                            {'vrf default':
-                                                {'protocol':
-                                                    {'bgp':
-                                                        {'uptime': '18:11:28',
-                                                        'preference': '20',
-                                                        'metric': '0',
-                                                        'protocol_id': '333',
-                                                        'attribute': 'external',
-                                                        'tag': '333',
-                                                        'interface': 'Null0'}}}}}}},
-                            '10.16.1.0/24':
-                                {'ubest_num': '1',
-                                'mbest_num': '0',
-                                'best_route':
-                                    {'unicast':
-                                        {'nexthop':
-                                            {'2001:db8:8b05::1002':
-                                                {'protocol':
-                                                    {'bgp':
-                                                        {'uptime': '15:57:39',
-                                                        'preference': '200',
-                                                        'metric': '4444',
-                                                        'protocol_id': '333',
-                                                        'attribute': 'internal',
-                                                        'route_table': 'default',
-                                                        'tag': '333',
-                                                        'interface': 'Ethernet1/1'}}}}}}},
-                            '10.106.0.5/8':
-                                {'ubest_num': '1',
-                                'mbest_num': '0',
-                                'best_route':
-                                    {'unicast':
-                                        {'nexthop':
-                                            {'Null0':
-                                                {'protocol':
-                                                    {'static':
-                                                        {'uptime': '18:47:42',
-                                                        'preference': '1',
-                                                        'metric': '0'}}}}}}}}}}}}}
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'routes': {
+                        '10.106.0.0/8': {
+                            'active': True,
+                            'mbest': 0,
+                            'route': '10.106.0.0/8',
+                            'ubest': 1,
+                        },
+                        '10.106.0.5/8': {
+                            'active': True,
+                            'mbest': 0,
+                            'metric': 0,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'best_ucast_nexthop': True,
+                                        'index': 1,
+                                        'metric': 0,
+                                        'next_hop': 'Null0',
+                                        'route_preference': 1,
+                                        'source_protocol': 'static',
+                                        'updated': '18:47:42',
+                                    },
+                                },
+                            },
+                            'route': '10.106.0.5/8',
+                            'route_preference': 1,
+                            'source_protocol': 'static',
+                            'ubest': 1,
+                        },
+                        '10.16.1.0/24': {
+                            'active': True,
+                            'mbest': 0,
+                            'metric': 4444,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'best_ucast_nexthop': True,
+                                        'index': 1,
+                                        'metric': 4444,
+                                        'next_hop': '2001:db8:8b05::1002',
+                                        'next_hop_vrf': 'default',
+                                        'outgoing_interface': 'Ethernet1/1',
+                                        'route_preference': 200,
+                                        'source_protocol': 'bgp',
+                                        'source_protocol_status': 'internal',
+                                        'updated': '15:57:39',
+                                    },
+                                },
+                            },
+                            'process_id': '333',
+                            'route': '10.16.1.0/24',
+                            'route_preference': 200,
+                            'source_protocol': 'bgp',
+                            'source_protocol_status': 'internal',
+                            'tag': 333,
+                            'ubest': 1,
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     golden_output = {'execute.return_value': '''
         IP Route Table for VRF "default"
@@ -1207,60 +1222,53 @@ class test_show_routing(unittest.TestCase):
     '''}
 
     golden_parsed_output_2 = {
-        'vrf': {
-            '': {
-                'address_family': {
-                    None: {
-                        'ip': {
-                            '99.0.1.1/32': {
-                                'best_route': {
-                                    'unicast': {
-                                        'nexthop': {
-                                            '11.1.10.2': {
-                                                'protocol': {
-                                                    'static': {
-                                                        'metric': '0',
-                                                        'preference': '1',
-                                                        'uptime': '13:35:01',
-                                                    },
-                                                },
-                                            },
-                                        },
+    'vrf': {
+        'default': {
+            'address_family': {
+                'ipv4': {
+                    'routes': {
+                        '99.0.1.1/32': {
+                            'active': True,
+                            'mbest': 0,
+                            'metric': 0,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'best_ucast_nexthop': True,
+                                        'index': 1,
+                                        'metric': 0,
+                                        'next_hop': '11.1.10.2',
+                                        'route_preference': 1,
+                                        'source_protocol': 'static',
+                                        'updated': '13:35:01',
+                                    },
+                                    2: {
+                                        'index': 2,
+                                        'metric': 0,
+                                        'next_hop': '10.1.10.2',
+                                        'route_preference': 4,
+                                        'source_protocol': 'static',
+                                        'updated': '13:35:01',
                                     },
                                 },
-                                'mbest_num': '0',
-                                'routes': {
-                                    'nexthop': {
-                                        '10.1.10.2': {
-                                            'protocol': {
-                                                'static': {
-                                                    'metric': '0',
-                                                    'preference': '4',
-                                                    'uptime': '13:35:01',
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                                'ubest_num': '1',
                             },
+                            'route': '99.0.1.1/32',
+                            'route_preference': 1,
+                            'source_protocol': 'static',
+                            'ubest': 1,
                         },
                     },
                 },
             },
         },
-    }
+    },
+}
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         bgp_obj = ShowRouting(device=self.device)
         parsed_output = bgp_obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):
