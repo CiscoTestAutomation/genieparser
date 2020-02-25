@@ -734,8 +734,8 @@ class ShowBoot(ShowBootSchema):
             p3 = re.compile(r'^\s*sup-1$')
             m = p3.match(line)
             if m:
-                sup_number == 'sup-1'
-                if boot_variable is 'current':
+                sup_number = 'sup-1'
+                if boot_variable == 'current':
                     if 'sup_number' not in boot_dict['current_boot_variable']:
                         boot_dict['current_boot_variable']['sup_number'] = {}
                     if 'sup-1' not in boot_dict['current_boot_variable']['sup_number']:
