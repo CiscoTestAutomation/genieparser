@@ -189,7 +189,7 @@ class ShowUsers(ShowUsersSchema):
             # 'host'
             # 'location'
             for empty in ['user', 'host', 'location']:
-                if curr_dict[empty] is '':
+                if curr_dict[empty] == '':
                     del curr_dict[empty]
 
             # ----------------------------
