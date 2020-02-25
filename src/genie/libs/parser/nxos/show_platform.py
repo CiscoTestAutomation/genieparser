@@ -734,13 +734,13 @@ class ShowBoot(ShowBootSchema):
             p3 = re.compile(r'^\s*sup-1$')
             m = p3.match(line)
             if m:
-                sup_number = 'sup-1'
+                sup_number == 'sup-1'
                 if boot_variable is 'current':
                     if 'sup_number' not in boot_dict['current_boot_variable']:
                         boot_dict['current_boot_variable']['sup_number'] = {}
                     if 'sup-1' not in boot_dict['current_boot_variable']['sup_number']:
                         boot_dict['current_boot_variable']['sup_number']['sup-1'] = {}
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if 'sup_number' not in boot_dict['next_reload_boot_variable']:
                         boot_dict['next_reload_boot_variable']['sup_number'] = {}
                     if 'sup-1' not in boot_dict['next_reload_boot_variable']['sup_number']:
@@ -751,12 +751,12 @@ class ShowBoot(ShowBootSchema):
             m = p4.match(line)
             if m:
                 sup_number = 'sup-2'
-                if boot_variable is 'current':
+                if boot_variable == 'current':
                     if 'sup_number' not in boot_dict['current_boot_variable']:
                         boot_dict['current_boot_variable']['sup_number'] = {}
                     if 'sup-2' not in boot_dict['current_boot_variable']['sup_number']:
                         boot_dict['current_boot_variable']['sup_number']['sup-2'] = {}
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if 'sup_number' not in boot_dict['next_reload_boot_variable']:
                         boot_dict['next_reload_boot_variable']['sup_number'] = {}
                     if 'sup-2' not in boot_dict['next_reload_boot_variable']['sup_number']:
@@ -767,19 +767,19 @@ class ShowBoot(ShowBootSchema):
             p5 = re.compile(r'^\s*kickstart variable = +(?P<kickstart_variable>[a-zA-z0-9\:\-\.\/\s]+)$')
             m = p5.match(line)
             if m:
-                if boot_variable is 'current':
+                if boot_variable == 'current':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['current_boot_variable']['sup_number']['sup-1']['kickstart_variable'] = m.groupdict()['kickstart_variable']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['current_boot_variable']['sup_number']['sup-2']['kickstart_variable'] = m.groupdict()['kickstart_variable']
                     else:
                         boot_dict['current_boot_variable']['kickstart_variable'] = m.groupdict()['kickstart_variable']
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['kickstart_variable'] = m.groupdict()['kickstart_variable']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['kickstart_variable'] = m.groupdict()['kickstart_variable']
                     else:
                         boot_dict['next_reload_boot_variable']['kickstart_variable'] = m.groupdict()['kickstart_variable']
@@ -788,19 +788,19 @@ class ShowBoot(ShowBootSchema):
             p6 = re.compile(r'^\s*system variable = +(?P<system_variable>[a-zA-z0-9\:\-\.\/\s]+)$')
             m = p6.match(line)
             if m:
-                if boot_variable is 'current':
+                if boot_variable == 'current':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['current_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['system_variable']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['current_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['system_variable']
                     else:
                         boot_dict['current_boot_variable']['system_variable'] = m.groupdict()['system_variable']
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['system_variable']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['system_variable']
                     else:
                         boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['system_variable']
@@ -811,19 +811,19 @@ class ShowBoot(ShowBootSchema):
             p5_1 = re.compile(r'^\s*NXOS +variable += +(?P<image>[a-zA-z0-9\:\-\.\/\s]+)$')
             m = p5_1.match(line)
             if m:
-                if boot_variable is 'current':
+                if boot_variable == 'current':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['current_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['current_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
                     else:
                         boot_dict['current_boot_variable']['system_variable'] = m.groupdict()['image']
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
                     else:
                         boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['image']
@@ -832,19 +832,19 @@ class ShowBoot(ShowBootSchema):
             p7 = re.compile(r'^\s*Boot POAP +(?P<boot_poap>[a-zA-z]+)$')
             m = p7.match(line)
             if m:
-                if boot_variable is 'current':
+                if boot_variable == 'current':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['current_boot_variable']['sup_number']['sup-1']['boot_poap'] = m.groupdict()['boot_poap']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['current_boot_variable']['sup_number']['sup-2']['boot_poap'] = m.groupdict()['boot_poap']
                     else:
                         boot_dict['current_boot_variable']['boot_poap'] = m.groupdict()['boot_poap']
-                elif boot_variable is 'next':
+                elif boot_variable == 'next':
                     if sup_number:
-                        if sup_number is 'sup-1':
+                        if sup_number == 'sup-1':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['boot_poap'] = m.groupdict()['boot_poap']
-                        elif sup_number is 'sup-2':
+                        elif sup_number == 'sup-2':
                             boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['boot_poap'] = m.groupdict()['boot_poap']
                     else:
                         boot_dict['next_reload_boot_variable']['boot_poap'] = m.groupdict()['boot_poap']
@@ -957,7 +957,7 @@ class ShowModule(ShowModuleSchema):
                       module_dict['slot'][header_type] = {}
                   lc_name =  m.groupdict()['module_type'].strip()
                   map_dic[header_number] = lc_name
-                if table_header is 'slot':
+                if table_header == 'slot':
                     if header_number in rp_list:
                         if header_number not in module_dict['slot']['rp']:
                             module_dict['slot']['rp'][header_number] = {}
@@ -976,7 +976,7 @@ class ShowModule(ShowModuleSchema):
                         if m.groupdict()['model']:
                             module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
-                elif table_header is 'xbar':
+                elif table_header == 'xbar':
                     if header_number not in module_dict['xbar']:
                         module_dict['xbar'][header_number] = {}
                     module_dict['xbar'][header_number]['ports'] = m.groupdict()['ports'].strip()
@@ -991,7 +991,7 @@ class ShowModule(ShowModuleSchema):
             if m:
                 header_number = m.groupdict()['number']
                 world_wide_name = m.groupdict()['world_wide_name']
-                if table_header is 'slot':
+                if table_header == 'slot':
                     if header_number in rp_list:
                         rp_name = map_dic[header_number]
                         module_dict['slot']['rp'][header_number][rp_name]['software'] = m.groupdict()['software'].strip()
@@ -1005,7 +1005,7 @@ class ShowModule(ShowModuleSchema):
                             module_dict['slot']['rp'][header_number][rp_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
                         else:
                             module_dict['slot']['lc'][header_number][lc_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
-                elif table_header is 'xbar':
+                elif table_header == 'xbar':
                     module_dict['xbar'][header_number]['software'] = m.groupdict()['software'].strip()
                     module_dict['xbar'][header_number]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
@@ -1016,7 +1016,7 @@ class ShowModule(ShowModuleSchema):
             m = p5.match(line)
             if m:
                 header_number = m.groupdict()['number']
-                if table_header is 'slot':
+                if table_header == 'slot':
                     if header_number in rp_list:
                         rp_name = map_dic[header_number]
                         module_dict['slot']['rp'][header_number][rp_name]['mac_address'] = m.groupdict()['mac_address'].strip()
@@ -1025,7 +1025,7 @@ class ShowModule(ShowModuleSchema):
                         lc_name = map_dic[header_number]
                         module_dict['slot']['lc'][header_number][lc_name]['mac_address'] = m.groupdict()['mac_address'].strip()
                         module_dict['slot']['lc'][header_number][lc_name]['serial_number'] = m.groupdict()['serial_number'].strip()
-                elif table_header is 'xbar':
+                elif table_header == 'xbar':
                     module_dict['xbar'][header_number]['mac_address'] = m.groupdict()['mac_address'].strip()
                     module_dict['xbar'][header_number]['serial_number'] = m.groupdict()['serial_number'].strip()
                 continue
