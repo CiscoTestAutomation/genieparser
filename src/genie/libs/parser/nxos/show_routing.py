@@ -644,6 +644,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
             # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
+            # *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
             m = p3.match(line)
             if m:
                 groups = m.groupdict()

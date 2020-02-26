@@ -1264,18 +1264,18 @@ class test_show_routing(unittest.TestCase):
     },
 }
 
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_obj = ShowRouting(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_obj.parse()
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         bgp_obj = ShowRouting(device=self.device)
         parsed_output = bgp_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        bgp_obj = ShowRouting(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_obj.parse()
 
     def test_golden_2(self):
         self.maxDiff = None
@@ -2627,21 +2627,21 @@ class test_show_ip_route(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_ip_route_vrf_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="vni_10100")
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_ip_route_vrf_all(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="all")
-        self.assertEqual(parsed_output,self.golden_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_ip_route_route_protocol_interface_vrf(self):
         self.maxDiff = None
@@ -2660,7 +2660,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(route='10.12.120.0/24',
                                   protocol='rip',
                                   interface='e1/2.120')
-        self.assertEqual(parsed_output,self.golden_parsed_output_5)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
     
     def test_show_ip_route_route_protocol_vrf(self):
         self.maxDiff = None
@@ -2669,7 +2669,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(route='10.12.120.0/24',
                                   protocol='rip',
                                   vrf='default')
-        self.assertEqual(parsed_output,self.golden_parsed_output_6)
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
     
     def test_show_ip_route_protocol_interface_vrf(self):
         self.maxDiff = None
@@ -2678,7 +2678,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(protocol='rip',
                                   interface='e1/2.120',
                                   vrf='default')
-        self.assertEqual(parsed_output,self.golden_parsed_output_7)
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
     
     def test_show_ip_route_route_interface_vrf(self):
         self.maxDiff = None
@@ -2687,7 +2687,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(route='10.12.120.0/24',
                                   interface='e1/2.120',
                                   vrf='default')
-        self.assertEqual(parsed_output,self.golden_parsed_output_8)
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
     
     def test_show_ip_route_route_protocol(self):
         self.maxDiff = None
@@ -2695,7 +2695,7 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(route='10.12.120.0/24',
                                   protocol='rip')
-        self.assertEqual(parsed_output,self.golden_parsed_output_9)
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
     
     def test_show_ip_route_protocol_interface(self):
         self.maxDiff = None
@@ -2703,13 +2703,13 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(protocol='rip',
                                   interface='e1/1.120')
-        self.assertEqual(parsed_output,self.golden_parsed_output_10)
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
     def test_show_ip_route_11(self):
         self.device = Mock(**self.golden_output_11)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_11)
+        self.assertEqual(parsed_output, self.golden_parsed_output_11)
 
 
 # ============================================
