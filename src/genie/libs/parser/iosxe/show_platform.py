@@ -18,6 +18,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import logging
+from collections import OrderedDict
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -258,6 +259,17 @@ class ShowVersionSchema(MetaParser):
                             },
                         },
                     },
+                    Optional('image'): {
+                        'text_base': str,
+                        'data_base': str,
+                    },
+                    Optional('interfaces'): {
+                        'virtual_ethernet': int,
+                        'gigabit_ethernet': int,
+                    },
+                    Optional('revision'): {
+                        Any(): int,
+                    }
                 }
             }
 
@@ -298,10 +310,15 @@ class ShowVersion(ShowVersionSchema):
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
         # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
-        p1 = re.compile(
-            r'^[Cc]isco +IOS +[Ss]oftware\, +(?P<os>([\S]+)) +Software\, '
-            r'+(?P<platform>.+) Software +\((?P<image_id>.+)\).+[Vv]ersion '
-            r'+(?P<version>\S+) +.*$')
+        p1 = re.compile(r'^[Cc]isco +IOS +[Ss]oftware\, +(?P<os>([\S]+)) +Software\, '
+                        r'+(?P<platform>.+) Software +\((?P<image_id>.+)\).+[Vv]ersion '
+                        r'+(?P<version>\S+) +.*$')
+
+        # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+        p1_1 = re.compile(r'^(?P<os>[A-Z]+) +\(.*\) +(?P<platform>.+) +Software'
+                          r' +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion'
+                          r' +(?P<version>\S+), +RELEASE SOFTWARE .*$')
 
         # 16.6.5
         p2 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
@@ -444,11 +461,6 @@ class ShowVersion(ShowVersionSchema):
         # system_sn
         p34 = re.compile(r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
 
-        # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-        p35 = re.compile(r'(?P<os>([A-Z]+)) \(\S+\)\s+(?P<platform>\S+)\s+'
-                         r'Software\s+\((?P<image_id>\S+)\), Version (?P<version>\S+),'
-                         r'\s*RELEASE\s+SOFTWARE\s+\(\S+\)')
-
         # Compiled Mon 10-Apr-17 04:35 by mcpre
         # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
         p36 = re.compile(r'^Compiled +(?P<compiled_date>[\S\s]+) +by '
@@ -505,13 +517,28 @@ class ShowVersion(ShowVersionSchema):
         #     *0        C3900-SPE150/K9       FOC16050QP6
         p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
 
+        # Image text-base: 0x40101040, data-base: 0x42D98000
+        p47 = re.compile(r'^Image text-base: +(?P<text_base>\S+), '
+                         r'data-base: +(?P<data_base>\S+)$')
+
+        # 1 Virtual Ethernet/IEEE 802.3 interface(s)
+        # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
+        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet)'
+                         r'/IEEE 802\.3 +interface\(s\)$')
+
+        # Dagobah Revision 95, Swamp Revision 6
+        p50 = re.compile(r'^(?P<group1>\S+)\s+Revision\s+(?P<group1_int>\d+),'
+                         r'\s+(?P<group2>\S+)\s+Revision\s+(?P<group2_int>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # version
             # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3) 
             # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)           
-            m = p1.match(line)
+            # IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+            m = p1.match(line) or p1_1.match(line)
             if m:
                 version = m.groupdict()['version']
                 # 16.6.5
@@ -855,30 +882,6 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
                 continue
 
-            # IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
-            m = p35.match(line)
-            if m:
-                group = m.groupdict()
-                os = group['os']
-                platform = group['platform']
-                image_id = group['image_id']
-                version = group['version']
-                
-                # 16.6.5
-                result = p2.match(version)
-                version_short_dict = result.groupdict()
-                version_short = version_short_dict['ver_short']
-
-                version_dict2 = version_dict.setdefault('version', {})
-
-                version_dict2['os'] = os
-                version_dict2['version_short'] = version_short
-                version_dict2['platform'] = platform
-                version_dict2['version'] = version
-                version_dict2['image_id'] = image_id
-
-                continue
-
             # Compiled Mon 10-Apr-17 04:35 by mcpre
             # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
             m36 = p36.match(line)
@@ -1031,6 +1034,36 @@ class ShowVersion(ShowVersionSchema):
                 license_udi_sub['sn'] = group['sn']
                 continue
 
+            # Image text-base: 0x40101040, data-base: 0x42D98000
+            m = p47.match(line)
+            if m:
+                version_dict['version']['image'] = {}
+                version_dict['version']['image']['text_base'] = m.groupdict()['text_base']
+                version_dict['version']['image']['data_base'] = m.groupdict()['data_base']
+                continue
+
+            # 1 Virtual Ethernet/IEEE 802.3 interface(s)
+            # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_type = '_'.join(group['ethernet_type'].lower().split())
+
+                if 'interfaces' not in version_dict['version']:
+                    version_dict['version']['interfaces'] = {}
+                version_dict['version']['interfaces'][ethernet_type] = \
+                    int(group['interface'])
+                continue
+
+            # Dagobah Revision 95, Swamp Revision 6
+            m = p50.match(line)
+            if m:
+                groupdict = m.groupdict()
+                version_dict['version']['revision'] = {}
+                version_dict['version']['revision'][groupdict['group1']] = int(groupdict['group1_int'])
+                version_dict['version']['revision'][groupdict['group2']] = int(groupdict['group2_int'])
+                continue
+
         # table2 for C3850
         tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
                                            header_fields=
@@ -1098,6 +1131,7 @@ class ShowVersion(ShowVersionSchema):
                             if 'switch_num' != k:
                                 version_dict['version']['switch_num'][key][k] = v
                         version_dict['version']['switch_num'][key]['active'] = False 
+
 
         return version_dict
 
@@ -5400,7 +5434,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
             m = p2.match(line)
             if not m:
                 for i, v in enumerate(line):
-                    if v is ' ':
+                    if v == ' ':
                         pass
                     else:
                         tmp[i] += v
@@ -5408,17 +5442,17 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
                 if count == 0:
                     sub_dict = ret_dict.setdefault('60s', {})
                     for i in range(60):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 elif count == 1:
                     sub_dict = ret_dict.setdefault('60m', {})
                     for i in range(60):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 else:
                     sub_dict = ret_dict.setdefault('72h', {})
                     for i in range(72):
-                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] is not '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
                 tmp = [''] * 72
                 count += 1
 
@@ -5567,4 +5601,246 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
                 pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
                 continue
             
+        return ret_dict
+
+class ShowPlatformSoftwareMemoryCallsiteSchema(MetaParser):
+    """ Schema for show platform software memory <process> switch active <R0> alloc callsite brief """
+    schema = {
+        'tracekey': str,
+        'callsites': {
+            Any(): {
+                'thread': int,
+                'diff_byte': int,
+                'diff_call': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchema):
+    """ Parser for show platform software memory <process> switch active <R0> alloc callsite brief """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc callsite brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process, slot=slot))
+        else:
+            out = output
+
+        # Init vars
+        parsed_dict = {}
+        if out:
+            callsite_dict = parsed_dict.setdefault('callsites', {})
+
+        # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+        p1 = re.compile(r'The +current +tracekey +is\s*: +(?P<tracekey>[#\d\w]*)')
+
+        # callsite      thread    diff_byte               diff_call
+        # ----------------------------------------------------------
+        # 1617611779    31884     57424                   2
+        p2 = re.compile(r'(?P<callsite>(\d+))\s+(?P<thread>(\d+))\s+(?P<diffbyte>(\d+))\s+(?P<diffcall>(\d+))')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['tracekey'] = str(group['tracekey'])
+                continue
+
+            # callsite      thread    diff_byte               diff_call
+            # ----------------------------------------------------------
+            # 1617611779    31884     57424                   2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = int(group['callsite'])
+                one_callsite_dict = callsite_dict.setdefault(callsite, {})
+                one_callsite_dict['thread'] = int(group['thread'])
+                one_callsite_dict['diff_byte'] = int(group['diffbyte'])
+                one_callsite_dict['diff_call'] = int(group['diffcall'])
+                continue
+
+        return parsed_dict
+
+class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
+    """ Schema for show platform software memory <process> switch active <R0> alloc backtrace """
+    schema = {
+        'backtraces': {
+            Any():
+                {'allocs': int,
+                 'frees': int,
+                 'call_diff': int,
+                 'callsite': int,
+                 'thread_id': int}
+        }
+
+    }
+
+class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
+    """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc backtrace'
+
+    def cli(self, process, slot, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process, slot=slot))
+        else:
+            out = output
+
+        # Init vars
+        parsed_dict = {}
+        if out:
+            backtraces_dict = parsed_dict.setdefault('backtraces', {})
+
+        # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+        p1 = re.compile(r'backtrace: (?P<backtrace>[\w#\d\s:+]+)$')
+
+        #   callsite: 2150603778, thread_id: 31884
+        p2 = re.compile(r'callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)')
+
+        #   allocs: 1, frees: 0, call_diff: 1
+        p3 = re.compile(r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                backtrace = str(group['backtrace'])
+                one_backtrace_dict = backtraces_dict.setdefault(backtrace, {})
+                continue
+
+            #   callsite: 2150603778, thread_id: 31884
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                one_backtrace_dict['callsite'] = int(group['callsite'])
+                one_backtrace_dict['thread_id'] = int(group['thread_id'])
+                continue
+
+            #   allocs: 1, frees: 0, call_diff: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                one_backtrace_dict['allocs'] = int(group['allocs'])
+                one_backtrace_dict['frees'] = int(group['frees'])
+                one_backtrace_dict['call_diff'] = int(group['call_diff'])
+                continue
+
+        return parsed_dict
+
+
+class ShowProcessesMemorySortedSchema(MetaParser):
+    schema = {
+        'processor_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'reserve_p_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'lsmi_io_pool': {
+            'total': int,
+            'used': int,
+            'free': int,
+        },
+        'per_process_memory': {
+            Any(): {
+                'pid': int,
+                'tty': int,
+                'allocated': int,
+                'freed': int,
+                'holding': int,
+                'getbufs': int,
+                'retbufs': int,
+            }
+        }
+    }
+
+
+class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
+    cli_command = 'show processes memory sorted'
+
+    def cli(self, include=None, sorted=None, output=None):
+
+        ret_dict = {}
+        pid_index = {}
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        if out:
+            per_process_memory_dict = ret_dict.setdefault('per_process_memory', OrderedDict())
+
+        # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+        p1 = re.compile(r'^Processor +Pool +Total: +(?P<total>\d+) +'
+                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+
+        # reserve P Pool Total:     102404 Used:         88 Free:     102316
+        p2 = re.compile(r'^reserve +P +Pool +Total: +(?P<total>\d+) +'
+                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+
+        # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+        p3 = re.compile(r'^lsmpi_io +Pool +Total: +(?P<total>\d+) +'
+                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
+
+        # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+        # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+        p4 = re.compile(r'^(?P<pid>\d+) +(?P<tty>\d+) +(?P<allocated>\d+) +'
+                        r'(?P<freed>\d+) +(?P<holding>\d+) +(?P<getbufs>\d+) +'
+                        r'(?P<retbufs>\d+) +(?P<process>[\S ]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('processor_pool', {})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # reserve P Pool Total:     102404 Used:         88 Free:     102316
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # 0   0  678985440  347855496  304892096        428    2134314 *Init*
+            # 1   0    3415536     879912    2565568          0          0 Chunk Manager
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                process_name = str(group['process'])
+                one_process_dict = per_process_memory_dict.setdefault(process_name, {})
+                one_process_dict['pid'] = int(group['pid'])
+                one_process_dict['tty'] = int(group['tty'])
+                one_process_dict['allocated'] = int(group['allocated'])
+                one_process_dict['freed'] = int(group['freed'])
+                one_process_dict['holding'] = int(group['holding'])
+                one_process_dict['getbufs'] = int(group['getbufs'])
+                one_process_dict['retbufs'] = int(group['retbufs'])
+                continue
+
         return ret_dict
