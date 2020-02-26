@@ -16,6 +16,10 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOSXE
+    * Updated Traceroute:
+        * Updated regex to support various outputs.
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
