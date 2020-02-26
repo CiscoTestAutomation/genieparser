@@ -1166,48 +1166,6 @@ class TestShowInterface(unittest.TestCase):
                 }
     }
 
-    golden_output5 = {'execute.return_value': '''
-    Ethernet1/1 is up
- Dedicated Interface 
-  Hardware: 100/1000/10000/40000 Ethernet, address: 24e9.b39e.9b48 (bia 24e9.b39e.9b48)
-  Description: *** To V68-ISCI ***
-  MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
-  reliability 255/255, txload 1/255, rxload 1/255
-  Encapsulation ARPA
-  Port mode is access
-  full-duplex, 10 Gb/s, media type is 10G
-  Beacon is turned off
-  Input flow-control is on, output flow-control is on
-  Rate mode is dedicated
-  Switchport monitor is off 
-  EtherType is 0x8100 
-  Last link flapped 63week(s) 4day(s)
-  Last clearing of "show interface" counters 08:29:47
-  0 interface resets
-  Load-Interval #1: 30 seconds
-  30 seconds input rate 157293696 bits/sec, 4712 packets/sec
-  30 seconds output rate 134234336 bits/sec, 4344 packets/sec
-  Load-Interval #2: 5 minute (300 seconds)
-    input rate 29.54 Mbps, 1.09 Kpps; output rate 37.05 Mbps, 1.12 Kpps
-  RX
-    18120910 unicast packets  11005 multicast packets  0 broadcast packets
-    18133733 input packets  36469059012 bytes
-    5833842 jumbo packets  0 storm suppression packets
-    0 runts  0 giants  0 CRC  0 no buffer
-    0 input error  0 short frame  0 overrun   0 underrun  0 ignored
-    0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
-    0 input with dribble  9994 input discard
-    9994 Rx pause
-  TX
-    19722125 unicast packets  168112 multicast packets  3516 broadcast packets
-    19893753 output packets  69009205682 bytes
-    9595212 jumbo packets
-    0 output errors  0 collision  0 deferred  0 late collision
-    0 lost carrier  0 no carrier  0 babble 0 output discard
-    0 Tx pause
-
-    '''}
-
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -1248,18 +1206,6 @@ class TestShowInterface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
-
-    def test_golden_5(self):
-        self.device = Mock(**self.golden_output5)
-        interface_obj = ShowInterface(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.maxDiff = None
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 # #############################################################################
 # # Unitest For Show Ip Interface Vrf All

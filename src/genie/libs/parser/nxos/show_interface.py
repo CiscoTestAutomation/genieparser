@@ -1020,7 +1020,7 @@ class ShowInterface(ShowInterfaceSchema):
             if tx:
                 #0 unicast packets  0 multicast packets  0 broadcast packets
                 m = p32.match(line)
-                if m:
+                if m and 'counters' in interface_dict[interface]:
                     interface_dict[interface]['counters']['out_unicast_pkts'] = int(m.groupdict()['out_unicast_pkts'])
                     interface_dict[interface]['counters']['out_multicast_pkts'] = int(m.groupdict()['out_multicast_pkts'])
                     interface_dict[interface]['counters']['out_broadcast_pkts'] = int(m.groupdict()['out_broadcast_pkts'])
@@ -1545,8 +1545,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #IP interface statistics last reset: never
-            p18 = re.compile(r'^\s*IP *interface *statistics *last *reset:'
-                              ' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
+            # ip interface statistics last reset: never
+            p18 = re.compile(r'^\s*(IP|ip) *interface *statistics *last *reset:'
+                             r' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
             m = p18.match(line)
             if m:
                 int_stat_last_reset = m.groupdict()['int_stat_last_reset']
