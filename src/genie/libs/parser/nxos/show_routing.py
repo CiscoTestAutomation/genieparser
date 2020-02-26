@@ -534,8 +534,8 @@ class ShowIpRoute(ShowIpRouteSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        if cmd:
-            af = 'ipv6' if 'v6' in cmd else 'ipv4'
+
+        af = 'ipv6' if 'v6' in cmd else 'ipv4'
         result_dict = {}
 
         # IP Route Table for VRF "default"
@@ -844,88 +844,87 @@ class ShowIpv6Route(ShowIpRoute):
         'incoming_interface']
 
     def cli(self, protocol=None, route=None, vrf=None, interface=None, output=None, cmd=None):
-        
-        if protocol and route and interface and vrf:
-            cmd = self.cli_command[0].format(
-                    protocol=protocol,
-                    route=route,
-                    interface=interface,
-                    vrf=vrf,
-                    )
-        elif protocol and route and interface:
-            cmd = self.cli_command[1].format(
-                    protocol=protocol,
-                    route=route,
-                    interface=interface,
-                    )
-        elif protocol and route and vrf:
-            cmd = self.cli_command[2].format(
-                    protocol=protocol,
-                    route=route,
-                    vrf=vrf,
-                    )                 
-        elif protocol and interface and vrf:
-            cmd = self.cli_command[3].format(
-                    protocol=protocol,
-                    vrf=vrf,
-                    interface=interface,
-                    )
-        elif route and interface and vrf:
-            cmd = self.cli_command[4].format(
-                    vrf=vrf,
-                    route=route,
-                    interface=interface,
-                    )
-        elif protocol and route:
-            cmd = self.cli_command[5].format(
-                    protocol=protocol,
-                    route=route,
-                    )
-        elif protocol and interface:
-            cmd = self.cli_command[6].format(
-                    protocol=protocol,
-                    interface=interface,
-                    )
-        elif protocol and vrf:
-            cmd = self.cli_command[7].format(
-                    protocol=protocol,
-                    vrf=vrf,
-                    )
-        elif route and interface:
-            cmd = self.cli_command[8].format(
-                    route=route,
-                    interface=interface,
-                    )
-        elif route and vrf:
-            cmd = self.cli_command[9].format(
-                    route=route,
-                    vrf=vrf,
-                    )
-        elif interface and vrf:
-            cmd = self.cli_command[10].format(
-                    interface=interface,
-                    vrf=vrf,
-                    )
-        elif protocol:
-            cmd = self.cli_command[11].format(
-                    protocol=protocol,
-                    )
-        elif route:
-            cmd = self.cli_command[12].format(
-                    route=route,
-                    )
-        elif interface:
-            cmd = self.cli_command[13].format(
-                    interface=interface,
-                    )
-        elif vrf:
-            cmd = self.cli_command[14].format(
-                    vrf=vrf,
-                    )
-        else:
-            cmd = self.cli_command[15]
 
         if output is None:
+            if protocol and route and interface and vrf:
+                cmd = self.cli_command[0].format(
+                    protocol=protocol,
+                    route=route,
+                    interface=interface,
+                    vrf=vrf,
+                )
+            elif protocol and route and interface:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    route=route,
+                    interface=interface,
+                )
+            elif protocol and route and vrf:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    route=route,
+                    vrf=vrf,
+                )
+            elif protocol and interface and vrf:
+                cmd = self.cli_command[3].format(
+                    protocol=protocol,
+                    vrf=vrf,
+                    interface=interface,
+                )
+            elif route and interface and vrf:
+                cmd = self.cli_command[4].format(
+                    vrf=vrf,
+                    route=route,
+                    interface=interface,
+                )
+            elif protocol and route:
+                cmd = self.cli_command[5].format(
+                    protocol=protocol,
+                    route=route,
+                )
+            elif protocol and interface:
+                cmd = self.cli_command[6].format(
+                    protocol=protocol,
+                    interface=interface,
+                )
+            elif protocol and vrf:
+                cmd = self.cli_command[7].format(
+                    protocol=protocol,
+                    vrf=vrf,
+                )
+            elif route and interface:
+                cmd = self.cli_command[8].format(
+                    route=route,
+                    interface=interface,
+                )
+            elif route and vrf:
+                cmd = self.cli_command[9].format(
+                    route=route,
+                    vrf=vrf,
+                )
+            elif interface and vrf:
+                cmd = self.cli_command[10].format(
+                    interface=interface,
+                    vrf=vrf,
+                )
+            elif protocol:
+                cmd = self.cli_command[11].format(
+                    protocol=protocol,
+                )
+            elif route:
+                cmd = self.cli_command[12].format(
+                    route=route,
+                )
+            elif interface:
+                cmd = self.cli_command[13].format(
+                    interface=interface,
+                )
+            elif vrf:
+                cmd = self.cli_command[14].format(
+                    vrf=vrf,
+                )
+            else:
+                cmd = self.cli_command[15]
             out = self.device.execute(cmd)
         else:
             out = output
