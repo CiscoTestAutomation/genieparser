@@ -18,6 +18,33 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Updating symbolic link to platform specific unittests
+
+* IOSXR
+    * Updating symbolic link to platform specific unittests
+    * Updated and removed regex to accommodate outputs
+    * Added new unittest 
+    * Updated and added regex to accommodate more outputs
+    * Added new output to unittest
+    * Updated regex to accommodate more outputs
+    * Added extra key to schema
+    * Added new unittest
+
+* NXOS
+    * Updated ShowNveVniIngressReplication
+        * Added regex 
+        * Added new unittest
+    * Updated ShowIpCefInternal
+	    * Update schema and regex to support more various output
+* IOSXR:
+    * Updated ShowRouteIpv4
+        * Added and updated regex
+        * Added unittest
+
+* IOSXE:
+    * Updated ShowBootvar
+        * Fixed crash
+        * Added unittest
     * Updated Traceroute:
         * Updated regex to support various outputs.
 * IOSXE
@@ -27,3 +54,4 @@
         * Modified regex to support SID
     * Updated ShowMplsForwardingTableDetail:
         * show mpls forwarding-table {route} detail
+        
