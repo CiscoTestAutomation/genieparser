@@ -140,8 +140,8 @@ class Traceroute(TracerouteSchema):
         # 3  *  *  *
         p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*( +\*)*)$')
 
-        # 202.239.164.18 [AS 2516] 2 msec
-        # 3  202.239.164.18 [AS 2516] 2 msec
+        # 192.168.100.18 [AS 2516] 2 msec
+        # 3  192.168.100.18 [AS 2516] 2 msec
         p7 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\S+) '
                         r'+\[AS +(?P<asn>\d+)\] +(?P<probe_msec>(\d+.*))$')
 
@@ -345,8 +345,8 @@ class Traceroute(TracerouteSchema):
 
                 continue
 
-            # 202.239.164.18 [AS 2516] 2 msec
-            # 3  202.239.164.18 [AS 2516] 2 msec
+            # 192.168.100.18 [AS 2516] 2 msec
+            # 3  192.168.100.18 [AS 2516] 2 msec
             m = p7.match(line)
             if m:
                 group = m.groupdict()

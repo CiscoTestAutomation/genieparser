@@ -412,7 +412,7 @@ class TestTraceroute(unittest.TestCase):
                                     "*",
                                     "3"
                                 ],
-                                "address": "106.187.14.121",
+                                "address": "10.169.14.121",
                                 "label_info": {
                                     "MPLS": {
                                         "label": "16063/459",
@@ -425,7 +425,7 @@ class TestTraceroute(unittest.TestCase):
                     "4": {
                         "paths": {
                             1: {
-                                "address": "106.187.14.158",
+                                "address": "10.169.14.158",
                                 "probe_msec": [
                                     "2",
                                     "3",
@@ -477,20 +477,20 @@ class TestTraceroute(unittest.TestCase):
           1  *  *  * 
           2  *  *  * 
           3  *  * 
-            106.187.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
-          4 106.187.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
+            10.169.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
+          4 10.169.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
           5 192.168.1.1 3 msec *  3 msec
     '''
 
     golden_parsed_output8 = {
         'traceroute': {
-            '202.239.164.252': {
-                'address': '202.239.164.252',
+            '192.168.100.252': {
+                'address': '192.168.100.252',
                 'hops': {
                     '1': {
                         'paths': {
                             1: {
-                                'address': '106.162.196.213',
+                                'address': '10.169.196.213',
                                 'label_info': {
                                     'MPLS': {
                                         'exp': 0,
@@ -504,7 +504,7 @@ class TestTraceroute(unittest.TestCase):
                     '2': {
                         'paths': {
                             1: {
-                                'address': '106.187.14.157',
+                                'address': '10.169.14.157',
                                 'label_info': {
                                     'MPLS': {
                                         'exp': 0,
@@ -518,7 +518,7 @@ class TestTraceroute(unittest.TestCase):
                     '3': {
                         'paths': {
                             1: {
-                                'address': '106.187.14.217',
+                                'address': '10.169.14.217',
                                 'label_info': {
                                     'MPLS': {
                                         'exp': 0,
@@ -532,7 +532,7 @@ class TestTraceroute(unittest.TestCase):
                     '4': {
                         'paths': {
                             1: {
-                                'address': '27.90.135.94',
+                                'address': '10.174.135.94',
                                 'probe_msec': ['36', '7', '2'],
                             },
                         },
@@ -540,7 +540,7 @@ class TestTraceroute(unittest.TestCase):
                     '5': {
                         'paths': {
                             1: {
-                                'address': '202.239.164.18',
+                                'address': '192.168.100.18',
                                 'asn': 2516,
                                 'probe_msec': ['*', '*', '2'],
                             },
@@ -553,7 +553,7 @@ class TestTraceroute(unittest.TestCase):
     golden_output8 = '''
         traceroute
         Protocol [ip]: 
-        Target IP address: 202.239.164.252
+        Target IP address: 192.168.100.252
         Ingress traceroute [n]: 
         Source address or interface: 
         DSCP Value [0]: 
@@ -565,15 +565,15 @@ class TestTraceroute(unittest.TestCase):
         Port Number [33434]: 
         Loose, Strict, Record, Timestamp, Verbose[none]: 
         Type escape sequence to abort.
-        Tracing the route to 202.239.164.252
+        Tracing the route to 192.168.100.252
         VRF info: (vrf in name/id, vrf out name/id)
-          1 106.162.196.213 [MPLS: Labels 16051/67207 Exp 0] 45 msec 46 msec 46 msec
+          1 10.169.196.213 [MPLS: Labels 16051/67207 Exp 0] 45 msec 46 msec 46 msec
           2  *  * 
-            106.187.14.157 [MPLS: Label 67207 Exp 0] 40 msec
-          3 106.187.14.217 [MPLS: Label 24003 Exp 0] 45 msec 46 msec 55 msec
-          4 27.90.135.94 36 msec 7 msec 2 msec
+            10.169.14.157 [MPLS: Label 67207 Exp 0] 40 msec
+          3 10.169.14.217 [MPLS: Label 24003 Exp 0] 45 msec 46 msec 55 msec
+          4 10.174.135.94 36 msec 7 msec 2 msec
           5  *  * 
-            202.239.164.18 [AS 2516] 2 msec
+            192.168.100.18 [AS 2516] 2 msec
     '''
 
     def test_traceroute_empty(self):
