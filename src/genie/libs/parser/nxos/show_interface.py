@@ -147,6 +147,8 @@ class ShowInterfaceSchema(MetaParser):
 # ===========================
 # Parser for 'show interface'
 # ===========================
+
+
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
@@ -194,20 +196,20 @@ class ShowInterface(ShowInterfaceSchema):
             out = output
 
         # Ethernet2/1.10 is down (Administratively down)
-        p1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>(down))'
                             '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
 
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-        p1_1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1_1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>[\w\s]+)'
                             '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
                             'line +protocol +is +(?P<line_protocol>\w+),? *'
                             '(autostate +(?P<autostate>\w+))?$')
 
         # Ethernet2/2 is up
-        p1_2 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1_2 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>(up))'
                             '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
 
@@ -359,7 +361,8 @@ class ShowInterface(ShowInterfaceSchema):
                             ' *(?P<out_rate_pps>[0-9]+) *pps$')
 
         # RX
-        p23_1 = re.compile(r'^(?P<rx>(RX))$')
+        # Rx
+        p23_1 = re.compile(r'^(?P<rx>(RX|Rx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p24 = re.compile(r'^(?P<in_unicast_pkts>[0-9]+) +unicast +packets'
@@ -405,7 +408,7 @@ class ShowInterface(ShowInterfaceSchema):
         p31 = re.compile(r'^(?P<in_mac_pause_frames>[0-9]+) *Rx *pause$')
 
         # TX
-        p31_1 = re.compile(r'^(?P<tx>(TX))$')
+        p31_1 = re.compile(r'^(?P<tx>(TX|Tx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p32 = re.compile(r'^(?P<out_unicast_pkts>[0-9]+) *unicast *packets'
@@ -895,6 +898,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ['out_rate_pps'] = out_rate_pps
                 continue
             # RX
+            # Rx
             m = p23_1.match(line)
             if m:
                 rx = m.groupdict()['rx']
@@ -1008,6 +1012,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['counters']['in_mac_pause_frames'] = in_mac_pause_frames
                 continue
             # TX
+            # Tx
             m = p31_1.match(line)
             if m:
                 rx = False
@@ -1020,7 +1025,7 @@ class ShowInterface(ShowInterfaceSchema):
             if tx:
                 #0 unicast packets  0 multicast packets  0 broadcast packets
                 m = p32.match(line)
-                if m and 'counters' in interface_dict[interface]:
+                if m :
                     interface_dict[interface]['counters']['out_unicast_pkts'] = int(m.groupdict()['out_unicast_pkts'])
                     interface_dict[interface]['counters']['out_multicast_pkts'] = int(m.groupdict()['out_multicast_pkts'])
                     interface_dict[interface]['counters']['out_broadcast_pkts'] = int(m.groupdict()['out_broadcast_pkts'])
