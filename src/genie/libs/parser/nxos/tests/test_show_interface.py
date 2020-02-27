@@ -272,7 +272,9 @@ class TestShowInterface(unittest.TestCase):
                     'in_rate_pkts': 0,
                     'load_interval': 1,
                     'out_rate': 24,
-                    'out_rate_pkts': 0}},
+                    'out_rate_pkts': 0},
+                  'rx': True,
+                  'tx': True},
             'delay': 10,
             'duplex_mode': 'full',
             'enabled': True,
@@ -1144,7 +1146,9 @@ class TestShowInterface(unittest.TestCase):
                                         'in_rate_pkts': 16,
                                         'load_interval': 1,
                                         'out_rate': 51208,
-                                        'out_rate_pkts': 17}},
+                                        'out_rate_pkts': 17},
+                    'rx': True,
+                    'tx': True},
                   'delay': 10,
                   'duplex_mode': 'full',
                   'enabled': True,
@@ -1210,6 +1214,7 @@ class TestShowInterface(unittest.TestCase):
 # #############################################################################
 # # Unitest For Show Ip Interface Vrf All
 # #############################################################################
+
 
 class TestShowIpInterfaceVrfAll(unittest.TestCase):
     
@@ -1292,7 +1297,6 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'wccp_redirect_exclude': 'disabled',
                  'wccp_redirect_inbound': 'disabled',
                  'wccp_redirect_outbound': 'disabled'}}
-
 
     golden_output = {'execute.return_value': '''
         IP Interface Status for VRF "default"
@@ -1868,7 +1872,6 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           "wccp_redirect_exclude": "disabled"
      }
     }
-
 
     golden_output_2 = {'execute.return_value': '''
       IP Interface Status for VRF "default"
@@ -2629,6 +2632,118 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                         'wccp_redirect_inbound': 'disabled',
                         'wccp_redirect_outbound': 'disabled'}
     }
+
+    golden_output_3 = {'execute.return_value': '''
+    IP Interface Status for VRF "default"
+    Vlan355, Interface status: protocol-up/link-up/admin-up, iod: 2,
+      IP address: 10.170.153.133, IP subnet: 10.170.153.128/28 
+      IP broadcast address: 255.255.255.255
+      IP multicast groups locally joined: none
+      IP MTU: 9216 bytes (using link MTU)
+      IP primary address route-preference: 0, tag: 0
+      IP proxy ARP : disabled
+      IP Local Proxy ARP : disabled
+      IP multicast routing: disabled
+      IP icmp redirects: enabled
+      IP directed-broadcast: disabled 
+      IP Forwarding: disabled 
+      IP icmp unreachables (except port): disabled
+      IP icmp port-unreachable: enabled
+      IP unicast reverse path forwarding: none
+      IP load sharing: none 
+      ip interface statistics last reset: never
+      IP interface software stats: (sent/received/forwarded/originated/consumed)
+        Unicast packets    : 5498120/5436721/0/5498120/5436721
+        Unicast bytes      : 1012679263/691502626/0/1012679263/691502626
+        Multicast packets  : 0/50702916/0/0/0
+        Multicast bytes    : 0/5070291600/0/0/0
+        Broadcast packets  : 0/0/0/0/0
+        Broadcast bytes    : 0/0/0/0/0
+        Labeled packets    : 0/0/0/0/0
+        Labeled bytes      : 0/0/0/0/0
+      WCCP Redirect outbound: disabled
+      WCCP Redirect inbound: disabled
+      WCCP Redirect exclude: disabled
+
+    '''}
+
+    golden_parsed_output_3 = {
+    'Vlan355': {
+        'directed_broadcast': 'disabled',
+        'icmp_port_unreachable': 'enabled',
+        'icmp_redirects': 'enabled',
+        'icmp_unreachable': 'disabled',
+        'int_stat_last_reset': 'never',
+        'interface_status': 'protocol-up/link-up/admin-up',
+        'iod': 2,
+        'ip_forwarding': 'disabled',
+        'ip_mtu': 9216,
+        'ipv4': {
+            '10.170.153.133/28': {
+                'broadcast_address': '255.255.255.255',
+                'ip': '10.170.153.133',
+                'ip_subnet': '10.170.153.128',
+                'prefix_length': '28',
+                'route_preference': '0',
+                'route_tag': '0',
+                'secondary': False,
+            },
+            'counters': {
+                'broadcast_bytes_consumed': 0,
+                'broadcast_bytes_forwarded': 0,
+                'broadcast_bytes_originated': 0,
+                'broadcast_bytes_received': 0,
+                'broadcast_bytes_sent': 0,
+                'broadcast_packets_consumed': 0,
+                'broadcast_packets_forwarded': 0,
+                'broadcast_packets_originated': 0,
+                'broadcast_packets_received': 0,
+                'broadcast_packets_sent': 0,
+                'labeled_bytes_consumed': 0,
+                'labeled_bytes_forwarded': 0,
+                'labeled_bytes_originated': 0,
+                'labeled_bytes_received': 0,
+                'labeled_bytes_sent': 0,
+                'labeled_packets_consumed': 0,
+                'labeled_packets_forwarded': 0,
+                'labeled_packets_originated': 0,
+                'labeled_packets_received': 0,
+                'labeled_packets_sent': 0,
+                'multicast_bytes_consumed': 0,
+                'multicast_bytes_forwarded': 0,
+                'multicast_bytes_originated': 0,
+                'multicast_bytes_received': 5070291600,
+                'multicast_bytes_sent': 0,
+                'multicast_packets_consumed': 0,
+                'multicast_packets_forwarded': 0,
+                'multicast_packets_originated': 0,
+                'multicast_packets_received': 50702916,
+                'multicast_packets_sent': 0,
+                'unicast_bytes_consumed': 691502626,
+                'unicast_bytes_forwarded': 0,
+                'unicast_bytes_originated': 1012679263,
+                'unicast_bytes_received': 691502626,
+                'unicast_bytes_sent': 1012679263,
+                'unicast_packets_consumed': 5436721,
+                'unicast_packets_forwarded': 0,
+                'unicast_packets_originated': 5498120,
+                'unicast_packets_received': 5436721,
+                'unicast_packets_sent': 5498120,
+            },
+        },
+        'load_sharing': 'none',
+        'local_proxy_arp': 'disabled',
+        'multicast_groups_address': 'none',
+        'multicast_routing': 'disabled',
+        'proxy_arp': 'disabled',
+        'unicast_reverse_path': 'none',
+        'vrf': 'default',
+        'wccp_redirect_exclude': 'disabled',
+        'wccp_redirect_inbound': 'disabled',
+        'wccp_redirect_outbound': 'disabled',
+    },
+}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
@@ -2662,6 +2777,13 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         parsed_output = ip_interface_vrf_all_obj.parse(vrf='VRF1', interface='Ethernet2/1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 # #############################################################################
 # # Unitest For Show Vrf All Interface
