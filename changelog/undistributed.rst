@@ -49,6 +49,7 @@
         * Added unittest
     * Updated Traceroute:
         * Updated regex to support various outputs.
+        * Updated schema and regex to support AS number.
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
