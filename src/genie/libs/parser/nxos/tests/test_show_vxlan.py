@@ -816,6 +816,63 @@ class TestShowNveEthernetSegment(unittest.TestCase):
       EAD/EVI route timer age: not running
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        ESI: 0300.0000.0000.6400.0309
+        Parent interface: nve1
+        ES State: Up
+        Port-channel state: N/A
+        NVE Interface: nve1
+        NVE State: Up
+        Host Learning Mode: control-plane
+        Active Vlans: 1-99,101-105,1001-1005,1901-2005,2901-3700,3901-3967
+        DF Vlans: 3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,1002,1005,1902,1905,1908,1911,1914,1917,1920,1923,1926,1
+        929,1932,1935,1938,1941,1944,1947,1950,1953,1956,1959,1962,1965,1968,1971,1974,1977,1980,1983,1986,1989,1992,1995,1998,2001,2004,2901,2904,2907,2910,2913,2916,2919,2922,2925
+        Active VNIs: 501001-501005,502001-502005,600001-600005
+        CC failed for VLANs:
+        VLAN CC timer: no-timer
+        Number of ES members: 3
+        My ordinal: 0
+        DF timer start time: 00:00:00
+        Config State: N/A
+        DF List: 201.1.0.51 201.1.0.52 201.1.0.53
+        ES route added to L2RIB: True
+        EAD/ES routes added to L2RIB: True
+        EAD/EVI route timer age: not running
+    '''}
+
+    golden_parsed_output_2 = {
+        'nve': {
+            'nve1': {
+                'ethernet_segment': {
+                    'esi': {
+                        '0300.0000.0000.6400.0309': {
+                            'active_vlans': '1-99,101-105,1001-1005,1901-2005,2901-3700,3901-3967',
+                            'active_vnis': '501001-501005,502001-502005,600001-600005',
+                            'cc_failed_vlans': '',
+                            'cc_timer_left': 'no-timer',
+                            'config_status': 'n/a',
+                            'df_list': '201.1.0.51 201.1.0.52 201.1.0.53',
+                            'df_timer_st': '00:00:00',
+                            'df_vlans': '3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,1002,1005,1902,1905,1908,1911,1914,1917,1920,1923,1926,1,929,1932,1935,1938,1941,1944,1947,1950,1953,1956,1959,1962,1965,1968,1971,1974,1977,1980,1983,1986,1989,1992,1995,1998,2001,2004,2901,2904,2907,2910,2913,2916,2919,2922,2925',
+                            'ead_evi_rt_timer_age': 'not running',
+                            'ead_rt_added': True,
+                            'es_rt_added': True,
+                            'es_state': 'up',
+                            'esi': '0300.0000.0000.6400.0309',
+                            'host_reach_mode': 'control-plane',
+                            'if_name': 'nve1',
+                            'local_ordinal': 0,
+                            'num_es_mem': 3,
+                            'nve_if_name': 'nve1',
+                            'nve_state': 'up',
+                            'po_state': 'n/a',
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_show_nve_ethernet_segment(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -828,6 +885,13 @@ class TestShowNveEthernetSegment(unittest.TestCase):
         obj = ShowNveEthernetSegment(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+    
+    def test_show_nve_ethernet_segment_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNveEthernetSegment(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ==============================================================
