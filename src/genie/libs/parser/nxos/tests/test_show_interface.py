@@ -1170,26 +1170,6 @@ class TestShowInterface(unittest.TestCase):
                 }
     }
 
-    golden_output_5 = {'execute.return_value': '''
-    mgmt0 is up
-      Hardware: GigabitEthernet, address: 24e9.b39e.9b40 (bia 24e9.b39e.9b40)
-      Internet Address is 10.170.46.95/24
-      MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
-      reliability 255/255, txload 1/255, rxload 1/255
-      Encapsulation ARPA
-      full-duplex, 1000 Mb/s
-      EtherType is 0x0000 
-      1 minute input rate 5736 bits/sec 5 packets/sec
-      1 minute output rate 2296 bits/sec 1 packets/sec
-      Rx
-        57621 unicast packets 35751 multicast packets 64719 broadcast packets
-        158091 input packets 22072198 bytes
-      Tx
-        57979 unicast packets 1529 multicast packets 0 broadcast packets
-        59508 output packets 10745680 bytes
-
-    '''}
-
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
