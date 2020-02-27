@@ -37,7 +37,7 @@
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
     * Updated ShowInterface
-        * Update an if-condition to check if key 'counters' in interface_dict[interface]; update regex to cover both 'IP' and 'ip'
+        * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex
