@@ -1410,9 +1410,15 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip_interface_vrf_all_dict[interface]['multicast_groups_address']\
                 = multicast_groups_address
                 continue
+            
+            #     show ip interface vrf all
+            p5_0 = re.compile(r'^\s*show')
+            m = p5_0.match(line)
+            if m:
+                continue
 
             #224.0.0.6  224.0.0.5  224.0.0.2 
-            p5_1 = re.compile(r'^(?!show)\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
+            p5_1 = re.compile(r'^\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
             m = p5_1.match(line)
             if m:
                 multicast_groups_address = str(m.groupdict()['multicast_groups_address'])
@@ -1425,7 +1431,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
