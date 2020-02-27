@@ -135,7 +135,7 @@ class TestShowInterface(unittest.TestCase):
                 'first_dot1q': '10'},
             'ethertype': '0x8100',
             'link_state': 'Administratively down',
-            'mac_address': '5254.003b.4af8',
+            'mac_address': '5254.00ff.8534',
             'medium': 'broadcast',
             'mtu': 1600,
             'oper_status': 'down',
@@ -159,7 +159,7 @@ class TestShowInterface(unittest.TestCase):
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '20'},
             'ethertype': '0x8100',
-            'mac_address': '5254.003b.4af8',
+            'mac_address': '5254.00ff.8534',
             'medium': 'p2p',
             'mtu': 1600,
             'oper_status': 'up',
@@ -360,12 +360,12 @@ class TestShowInterface(unittest.TestCase):
                                          'prefix_length': '16'}},
             'last_link_flapped': '13:23:37',
             'link_state': 'DCX-No ACK in 100 PDUs',
-            'mac_address': '002a.6ab4.90bc',
+            'mac_address': '002a.6aff.4571',
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'down',
             'media_type': '10G',
-            'phys_address': '002a.6ab4.9068',
+            'phys_address': '002a.6aff.451d',
             'port_channel': {'port_channel_member': False},
             'port_speed': '10',
             'reliability': '255/255',
@@ -445,7 +445,7 @@ class TestShowInterface(unittest.TestCase):
                 0 Tx pause
         Ethernet2/1.10 is down (Administratively down)
             admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.003b.4af8 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
               MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
               reliability 255/255, txload 1/255, rxload 1/255
               Encapsulation 802.1Q Virtual LAN, Vlan ID 10, medium is broadcast
@@ -454,7 +454,7 @@ class TestShowInterface(unittest.TestCase):
               EtherType is 0x8100 
         Ethernet2/1.20 is up
             admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
-              Hardware: 10/100/1000 Ethernet, address: 5254.003b.4af8 (bia 5254.00ff.8506)
+              Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
               MTU 1600 bytes, BW 768 Kbit, DLY 10 usec
               reliability 255/255, txload 1/255, rxload 1/255
               Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
@@ -506,7 +506,7 @@ class TestShowInterface(unittest.TestCase):
         Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
          Dedicated Interface 
 
-          Hardware: 1000/10000 Ethernet, address: 002a.6ab4.90bc (bia 002a.6ab4.9068)
+          Hardware: 1000/10000 Ethernet, address: 002a.6aff.4571 (bia 002a.6aff.451d)
           Description: Connection to pe1
           Internet Address is 10.229.1.112/16
           MTU 1500 bytes,  BW 10000000 Kbit, DLY 10 usec
@@ -583,7 +583,7 @@ class TestShowInterface(unittest.TestCase):
 
     golden_output2 = {'execute.return_value': '''
         Vlan1 is down (Administratively down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.2958.a04a
+            Hardware is EtherSVI, address is  000c.29ff.f8a2
             MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
 
             reliability 255/255, txload 1/255, rxload 1/255
@@ -595,7 +595,7 @@ class TestShowInterface(unittest.TestCase):
             ucast: 0 pkts, 0 bytes
 
         Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
-            Hardware is EtherSVI, address is  000c.2958.a04a
+            Hardware is EtherSVI, address is  000c.29ff.f8a2
             MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
 
             reliability 255/255, txload 1/255, rxload 1/255
@@ -610,7 +610,7 @@ class TestShowInterface(unittest.TestCase):
     golden_output3 = {'execute.return_value': '''
         Ethernet1/6 is down (Link not connected)
         admin state is up, Dedicated Interface
-          Hardware: 100/1000/10000 Ethernet, address: 000c.2985.6078 (bia 000c.2985.6078)
+          Hardware: 100/1000/10000 Ethernet, address: 000c.29ff.e5fd (bia 000c.29ff.e5fd)
           MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
           reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, medium is broadcast
@@ -712,11 +712,11 @@ class TestShowInterface(unittest.TestCase):
                  'interface_reset': 0,
                  'last_link_flapped': 'never',
                  'link_state': 'Link not connected',
-                 'mac_address': '000c.2985.6078',
+                 'mac_address': '000c.29ff.e5fd',
                  'medium': 'broadcast',
                  'mtu': 1500,
                  'oper_status': 'down',
-                 'phys_address': '000c.2985.6078',
+                 'phys_address': '000c.29ff.e5fd',
                  'port_channel': {'port_channel_member': False},
                  'port_mode': 'access',
                  'reliability': '255/255',
@@ -3354,7 +3354,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                           '2001:db8:3:3::3/64': {'ip': '2001:db8:3:3::3',
                                                  'prefix_length': '64',
                                                  'status': 'valid'},
-                          '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ip': '2001:db8:4:4:a8aa:bbff:febb:cccc',
+                          '2001:db8:4:4:a8aa:bbff:feff:8888/64': {'ip': '2001:db8:4:4:a8aa:bbff:feff:8888',
                                                                   'prefix_length': '64',
                                                                   'status': 'valid'},
                           'counters': {'multicast_bytes_consumed': 640,
@@ -3403,7 +3403,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
           IPv6 address: 
             2001:db8:1:1::1/64 [VALID]
             2001:db8:3:3::3/64 [VALID]
-            2001:db8:4:4:a8aa:bbff:febb:cccc/64 [VALID]
+            2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
             2001:db8:2:2::2/64 [VALID]
           IPv6 subnet:  2001:db8:1:1::/64
           Anycast configured addresses:
@@ -3441,7 +3441,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
                           '2001:db8:3:3::3/64': {'ip': '2001:db8:3:3::3',
                                                  'prefix_length': '64',
                                                  'status': 'valid'},
-                          '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ip': '2001:db8:4:4:a8aa:bbff:febb:cccc',
+                          '2001:db8:4:4:a8aa:bbff:feff:8888/64': {'ip': '2001:db8:4:4:a8aa:bbff:feff:8888',
                                                                   'prefix_length': '64',
                                                                   'status': 'valid'},
                           'counters': {'multicast_bytes_consumed': 640,
@@ -3485,7 +3485,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
               IPv6 address: 
                 2001:db8:1:1::1/64 [VALID]
                 2001:db8:3:3::3/64 [VALID]
-                2001:db8:4:4:a8aa:bbff:febb:cccc/64 [VALID]
+                2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
                 2001:db8:2:2::2/64 [VALID]
               IPv6 subnet:  2001:db8:1:1::/64
               Anycast configured addresses:
