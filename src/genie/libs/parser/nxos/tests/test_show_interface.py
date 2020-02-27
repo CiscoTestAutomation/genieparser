@@ -2748,7 +2748,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         show ip interface vrf all
         IP Interface Status for VRF "default"
         Vlan100, Interface status: protocol-down/link-down/admin-up, iod: 5,
-        IP address: 162.151.66.113, IP subnet: 162.151.66.112/30 route-preference: 0, tag: 0 
+        IP address: 172.16.76.113, IP subnet: 172.16.76.112/30 route-preference: 0, tag: 0 
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: none
         IP MTU: 9178 bytes (using link MTU)
@@ -2807,7 +2807,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         WCCP Redirect inbound: disabled
         WCCP Redirect exclude: disabled
         Ethernet1/1, Interface status: protocol-up/link-up/admin-up, iod: 14,
-        IP address: 1.1.1.1, IP subnet: 1.1.1.0/24 route-preference: 0, tag: 0 
+        IP address: 10.4.1.1, IP subnet: 10.4.1.0/24 route-preference: 0, tag: 0 
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: none
         IP MTU: 1500 bytes (using link MTU)
@@ -2865,7 +2865,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         WCCP Redirect inbound: disabled
         WCCP Redirect exclude: disabled
         Ethernet1/23, Interface status: protocol-down/link-down/admin-down, iod: 36,
-        IP address: 1.1.1.1, IP subnet: 1.1.1.0/24 route-preference: 0, tag: 0 
+        IP address: 10.4.1.1, IP subnet: 10.4.1.0/24 route-preference: 0, tag: 0 
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: none
         IP MTU: 1500 bytes (using link MTU)
@@ -2894,7 +2894,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         WCCP Redirect inbound: disabled
         WCCP Redirect exclude: disabled
         Ethernet1/48, Interface status: protocol-down/link-down/admin-down, iod: 61,
-        IP address: 4.4.4.3, IP subnet: 4.4.4.0/24 route-preference: 0, tag: 0 
+        IP address: 10.64.4.3, IP subnet: 10.64.4.0/24 route-preference: 0, tag: 0 
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: none
         IP MTU: 1500 bytes (using link MTU)
@@ -3006,10 +3006,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'ip_forwarding': 'disabled',
             'ip_mtu': 1500,
             'ipv4': {
-                '1.1.1.1/24': {
+                '10.4.1.1/24': {
                     'broadcast_address': '255.255.255.255',
-                    'ip': '1.1.1.1',
-                    'ip_subnet': '1.1.1.0',
+                    'ip': '10.4.1.1',
+                    'ip_subnet': '10.4.1.0',
                     'prefix_length': '24',
                     'route_preference': '0',
                     'route_tag': '0',
@@ -3079,10 +3079,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'ip_forwarding': 'disabled',
             'ip_mtu': 1500,
             'ipv4': {
-                '1.1.1.1/24': {
+                '10.4.1.1/24': {
                     'broadcast_address': '255.255.255.255',
-                    'ip': '1.1.1.1',
-                    'ip_subnet': '1.1.1.0',
+                    'ip': '10.4.1.1',
+                    'ip_subnet': '10.4.1.0',
                     'prefix_length': '24',
                     'route_preference': '0',
                     'route_tag': '0',
@@ -3152,10 +3152,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'ip_forwarding': 'disabled',
             'ip_mtu': 1500,
             'ipv4': {
-                '4.4.4.3/24': {
+                '10.64.4.3/24': {
                     'broadcast_address': '255.255.255.255',
-                    'ip': '4.4.4.3',
-                    'ip_subnet': '4.4.4.0',
+                    'ip': '10.64.4.3',
+                    'ip_subnet': '10.64.4.0',
                     'prefix_length': '24',
                     'route_preference': '0',
                     'route_tag': '0',
@@ -3298,10 +3298,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'ip_forwarding': 'disabled',
             'ip_mtu': 9178,
             'ipv4': {
-                '162.151.66.113/30': {
+                '172.16.76.113/30': {
                     'broadcast_address': '255.255.255.255',
-                    'ip': '162.151.66.113',
-                    'ip_subnet': '162.151.66.112',
+                    'ip': '172.16.76.113',
+                    'ip_subnet': '172.16.76.112',
                     'prefix_length': '30',
                     'route_preference': '0',
                     'route_tag': '0',

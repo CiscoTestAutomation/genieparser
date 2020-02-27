@@ -412,7 +412,7 @@ class TestTraceroute(unittest.TestCase):
                                     "*",
                                     "3"
                                 ],
-                                "address": "106.187.14.121",
+                                "address": "10.169.14.121",
                                 "label_info": {
                                     "MPLS": {
                                         "label": "16063/459",
@@ -425,7 +425,7 @@ class TestTraceroute(unittest.TestCase):
                     "4": {
                         "paths": {
                             1: {
-                                "address": "106.187.14.158",
+                                "address": "10.169.14.158",
                                 "probe_msec": [
                                     "2",
                                     "3",
@@ -477,8 +477,8 @@ class TestTraceroute(unittest.TestCase):
           1  *  *  * 
           2  *  *  * 
           3  *  * 
-            106.187.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
-          4 106.187.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
+            10.169.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
+          4 10.169.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
           5 192.168.1.1 3 msec *  3 msec
     '''
 
