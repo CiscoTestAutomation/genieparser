@@ -36,6 +36,8 @@
         * Added new unittest
     * Updated ShowIpCefInternal
 	    * Update schema and regex to support more various output
+    * Updated ShowInterface
+        * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex
