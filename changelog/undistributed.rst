@@ -38,6 +38,8 @@
 	    * Update schema and regex to support more various output
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
+    * Updated ShowIpInterfaceVrfAll
+        * Update regex to support more various output
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex
