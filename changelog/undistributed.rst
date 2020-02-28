@@ -1,4 +1,4 @@
-* Please follow the template we introduced in NOVEMBER.md file.
+
 * Every parser need to be added under the corresponding feature.
 
 | Module                  | Version       |
@@ -19,6 +19,8 @@
 
 * IOSXE
     * Updating symbolic link to platform specific unittests
+    * Updated ShowInterfacesStatus
+        * Update regex to support various output
 
 * IOSXR
     * Updating symbolic link to platform specific unittests
