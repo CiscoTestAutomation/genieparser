@@ -1178,7 +1178,7 @@ class TestShowInterface(unittest.TestCase):
         
         admin state is up, Dedicated Interface
         
-          Hardware: 100/1000/10000 Ethernet, address: 0050.56bf.761b (bia 0050.56bf.761b)
+          Hardware: 100/1000/10000 Ethernet, address: 1234.12ab.345b (bia 1234.12ab.345b)
     '''}
 
     golden_parsed_output_5 = {
@@ -1187,9 +1187,9 @@ class TestShowInterface(unittest.TestCase):
             'dedicated_interface': True,
             'enabled': True,
             'link_state': 'Link not connected',
-            'mac_address': '0050.56bf.761b',
+            'mac_address': '1234.12ab.345b',
             'oper_status': 'down',
-            'phys_address': '0050.56bf.761b',
+            'phys_address': '1234.12ab.345b',
             'port_channel': {
                 'port_channel_member': False,
             },
