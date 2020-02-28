@@ -38,6 +38,7 @@
 	    * Update schema and regex to support more various output
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
+        * Add if-condition to assign True to key 'enabled' when has output 'admin state is up'
 * IOSXR:
     * Updated ShowRouteIpv4
         * Added and updated regex
