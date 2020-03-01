@@ -29,6 +29,9 @@
     * Updated ShowBootvar
         * Fixed crash
         * Added unittest
+    * Updated ShowInterfacesStatus
+        * Updated regex to support various output
+
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
