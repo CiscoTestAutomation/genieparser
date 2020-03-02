@@ -614,7 +614,6 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'entry_addresses': {
                     '10.0.0.7': {}
                 },
-                'capabilities': '',
                 'platform': 'Meraki MV21 Cloud Managed Indoor HD Dom',
                 'port_id': 'Port 0',
                 'local_interface': 'GigabitEthernet3/0/29',
