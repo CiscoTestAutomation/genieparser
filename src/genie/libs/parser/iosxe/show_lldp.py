@@ -4,6 +4,7 @@
      *  show lldp entry *
      *  show lldp entry [<WORD>]
      *  show lldp interface [<WORD>]
+     *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
 """
@@ -628,4 +629,44 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
                 intf_dict[key] = group['value'].lower()
                 continue
         return ret_dict
+
+
+class ShowLldpNeighborsSchema(MetaParser):
+    """
+    Schema for show lldp neighbors
+    """
+    schema = {
+        'total_entries': int,
+        'interface': {
+            Any(): {
+                'device_id': str,
+                'hold_time': int,
+                'capabilities': list,
+                'port_id': str,
+            }
+        }
+    }
+
+class ShowLldpNeighbors(ShowLldpNeighborsSchema):
+    """
+    Parser for show lldp neighbors
+    """
+    CAPABILITY_CODES = {'R': 'router',
+                        'B': 'mac_bridge',
+                        'T': 'telephone',
+                        'C': 'docsis_cable_device',
+                        'W': 'wlan_access_point',
+                        'P': 'repeater',
+                        'S': 'station_only',
+                        'O': 'other'}
+
+    cli_command = ['show lldp neighbors']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
 
