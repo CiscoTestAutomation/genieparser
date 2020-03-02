@@ -197,13 +197,19 @@ class ShowInterface(ShowInterfaceSchema):
 
         # Ethernet2/1.10 is down (Administratively down)
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+        # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
         # Ethernet2/2 is up
+        # Ethernet1/10 is down (Link not connected)
+        # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
         p1 = re.compile(r'^(?P<interface>\S+)\s+is\s*(?P<link_state>(down|up))?'
                         r'(administratively +(?P<admin_1>(down|up)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
+                        r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
                         r'(,\s*line +protocol +is (?P<line_protocol>\w+))?'
-                        r'(,\s+autostate\s+(?P<autostate>\S+))?$')
+                        r'(,\s+autostate\s+(?P<autostate>\S+))?'
+                        r'(\(Link +not +connected\))?'
+                        r'(\(.*ACK.*\))?$')
 
         # admin state is up
         # admin state is up,
@@ -448,8 +454,11 @@ class ShowInterface(ShowInterfaceSchema):
 
             # Ethernet2/1.10 is down (Administratively down)
             # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+            # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
             # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
             # Ethernet2/2 is up
+            # Ethernet1/10 is down (Link not connected)
+            # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
