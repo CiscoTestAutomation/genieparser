@@ -26,6 +26,7 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
 # unitest For Show Interface
 #############################################################################
 
+
 class TestShowInterface(unittest.TestCase):
     device = Device(name='aDevice')
     
@@ -91,7 +92,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 3330,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'desc-1',
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
@@ -128,7 +129,7 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'down',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': False,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
@@ -153,7 +154,7 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'up',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': True,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
@@ -231,7 +232,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
             'enabled': True,
@@ -348,7 +349,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'Connection to pe1',
             'duplex_mode': 'auto',
             'enabled': False,
@@ -702,10 +703,10 @@ class TestShowInterface(unittest.TestCase):
                                        'out_rate_pps': 0},
                               'rx': True,
                               'tx': True},
-                 'dedicated_intface': True,
+                 'dedicated_interface': True,
                  'delay': 10,
                  'efficient_ethernet': 'n/a',
-                 'enabled': False,
+                 'enabled': True,
                  'encapsulations': {'encapsulation': 'arpa'},
                  'ethertype': '0x8100',
                  'flow_control': {'receive': False, 'send': False},
@@ -830,7 +831,7 @@ class TestShowInterface(unittest.TestCase):
                   'rx': True,
                   'tx': True},
              'delay': 3330,
-             'dedicated_intface': True,
+             'dedicated_interface': True,
              'description': 'desc-1',
              'duplex_mode': 'full',
              'efficient_ethernet': 'n/a',
@@ -1025,7 +1026,7 @@ class TestShowInterface(unittest.TestCase):
                                               'out_rate_pkts': 477},
                                      'rx': True,
                                      'tx': True},
-                        'dedicated_intface': True,
+                        'dedicated_interface': True,
                         'delay': 10,
                         'description': '<< GENIE GIG 0/0/1 >>',
                         'duplex_mode': 'full',
@@ -1106,7 +1107,7 @@ class TestShowInterface(unittest.TestCase):
                                                'out_rate_pps': 0},
                                       'rx': True,
                                       'tx': True},
-                         'dedicated_intface': True,
+                         'dedicated_interface': True,
                          'delay': 10,
                          'description': '<< LINK TO GENIE PACKET CAPTURE >>',
                          'duplex_mode': 'auto',
@@ -1170,6 +1171,32 @@ class TestShowInterface(unittest.TestCase):
                 }
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        abc-defg# show int eth1/10
+
+        Ethernet1/10 is down (Link not connected)
+        
+        admin state is up, Dedicated Interface
+        
+          Hardware: 100/1000/10000 Ethernet, address: 1234.12ab.345b (bia 1234.12ab.345b)
+    '''}
+
+    golden_parsed_output_5 = {
+        'Ethernet1/10': {
+            'admin_state': 'up',
+            'dedicated_interface': True,
+            'enabled': True,
+            'link_state': 'Link not connected',
+            'mac_address': '1234.12ab.345b',
+            'oper_status': 'down',
+            'phys_address': '1234.12ab.345b',
+            'port_channel': {
+                'port_channel_member': False,
+            },
+            'types': '100/1000/10000 Ethernet',
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -1211,8 +1238,15 @@ class TestShowInterface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
 # #############################################################################
-# # Unitest For Show Ip Interface Vrf All
+# # Unittest For Show Ip Interface Vrf All
 # #############################################################################
 
 
@@ -2786,7 +2820,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 # #############################################################################
-# # Unitest For Show Vrf All Interface
+# # Unittest For Show Vrf All Interface
 # #############################################################################
 
 class TestShowVrfAllInterface(unittest.TestCase):
@@ -3122,7 +3156,7 @@ class TestShowVrfAllInterface(unittest.TestCase):
 
 
 # #############################################################################
-# # unitest For Show Interface Switchport
+# # Unittest For Show Interface Switchport
 # #############################################################################
 
 
@@ -3331,7 +3365,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_disabled)
 
 # #############################################################################
-# # unitest For Show Ipv6 Interface Vrf All
+# # Unittest For Show Ipv6 Interface Vrf All
 # #############################################################################
 
 
@@ -3531,6 +3565,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
+
 class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3639,6 +3674,7 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
+
 class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3672,6 +3708,8 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
 # ====================================
 # Unit test for 'show interface brief'
 # ====================================
+
+
 class TestShowInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3795,6 +3833,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
 
 class TestShowRunInterface(unittest.TestCase):
     device = Device(name='aDevice')
@@ -3986,6 +4025,7 @@ class TestShowRunInterface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
 
+
 class TestShowNveInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -4044,6 +4084,7 @@ class TestShowNveInterface(unittest.TestCase):
         obj = ShowNveInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(interface='nve1')
+
 
 class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
@@ -4150,8 +4191,10 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
 
 #############################################################################
-# unitest For show interface description
+# unittest For show interface description
 #############################################################################
+
+
 class test_show_interface_description(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
