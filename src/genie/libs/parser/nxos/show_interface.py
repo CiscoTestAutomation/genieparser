@@ -37,7 +37,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('parent_interface'): str,
             'oper_status': str,
             Optional('admin_state'): str,
-            Optional('dedicated_intface'): bool,
+            Optional('dedicated_interface'): bool,
             Optional('line_protocol'): str,
             Optional('autostate'): bool,
             Optional('link_state'): str,
@@ -532,11 +532,13 @@ class ShowInterface(ShowInterfaceSchema):
             m = p2.match(line)
             if m:
                 # admin_state
-                interface_dict[interface]['admin_state'] = \
-                    m.groupdict()['admin_state']
+                admin_state = m.groupdict()['admin_state']
+                interface_dict[interface]['admin_state'] = admin_state
+                if admin_state == 'up':
+                    interface_dict[interface]['enabled'] = True
                 # dedicated_interface
                 if m.groupdict()['dedicated_intf']:
-                    interface_dict[interface]['dedicated_intface'] = True
+                    interface_dict[interface]['dedicated_interface'] = True
                 # parent_interface
                 if m.groupdict()['parent_intf']:
                     interface_dict[interface]['parent_interface'] = \
@@ -546,7 +548,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Dedicated Interface
             m = p2_1.match(line)
             if m:
-                interface_dict[interface]['dedicated_intface'] = True
+                interface_dict[interface]['dedicated_interface'] = True
                 continue
 
             # Belongs to Po1

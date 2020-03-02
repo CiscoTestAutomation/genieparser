@@ -482,6 +482,100 @@ class TestTraceroute(unittest.TestCase):
           5 192.168.1.1 3 msec *  3 msec
     '''
 
+    golden_parsed_output8 = {
+        'traceroute': {
+            '192.168.100.252': {
+                'address': '192.168.100.252',
+                'hops': {
+                    '1': {
+                        'paths': {
+                            1: {
+                                'address': '10.169.196.213',
+                                'label_info': {
+                                    'MPLS': {
+                                        'exp': 0,
+                                        'label': '16051/67207',
+                                    },
+                                },
+                                'probe_msec': ['45', '46', '46'],
+                            },
+                        },
+                    },
+                    '2': {
+                        'paths': {
+                            1: {
+                                'address': '10.169.14.157',
+                                'label_info': {
+                                    'MPLS': {
+                                        'exp': 0,
+                                        'label': '67207',
+                                    },
+                                },
+                                'probe_msec': ['*', '*', '40'],
+                            },
+                        },
+                    },
+                    '3': {
+                        'paths': {
+                            1: {
+                                'address': '10.169.14.217',
+                                'label_info': {
+                                    'MPLS': {
+                                        'exp': 0,
+                                        'label': '24003',
+                                    },
+                                },
+                                'probe_msec': ['45', '46', '55'],
+                            },
+                        },
+                    },
+                    '4': {
+                        'paths': {
+                            1: {
+                                'address': '10.174.135.94',
+                                'probe_msec': ['36', '7', '2'],
+                            },
+                        },
+                    },
+                    '5': {
+                        'paths': {
+                            1: {
+                                'address': '192.168.100.18',
+                                'asn': 2516,
+                                'probe_msec': ['*', '*', '2'],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output8 = '''
+        traceroute
+        Protocol [ip]: 
+        Target IP address: 192.168.100.252
+        Ingress traceroute [n]: 
+        Source address or interface: 
+        DSCP Value [0]: 
+        Numeric display [n]: 
+        Timeout in seconds [3]: 
+        Probe count [3]: 
+        Minimum Time to Live [1]: 
+        Maximum Time to Live [30]: 
+        Port Number [33434]: 
+        Loose, Strict, Record, Timestamp, Verbose[none]: 
+        Type escape sequence to abort.
+        Tracing the route to 192.168.100.252
+        VRF info: (vrf in name/id, vrf out name/id)
+          1 10.169.196.213 [MPLS: Labels 16051/67207 Exp 0] 45 msec 46 msec 46 msec
+          2  *  * 
+            10.169.14.157 [MPLS: Label 67207 Exp 0] 40 msec
+          3 10.169.14.217 [MPLS: Label 24003 Exp 0] 45 msec 46 msec 55 msec
+          4 10.174.135.94 36 msec 7 msec 2 msec
+          5  *  * 
+            192.168.100.18 [AS 2516] 2 msec
+    '''
+
     def test_traceroute_empty(self):
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -528,6 +622,12 @@ class TestTraceroute(unittest.TestCase):
         obj = Traceroute(device=self.device)
         parsed_output = obj.parse(output=self.golden_output7)
         self.assertEqual(parsed_output, self.golden_parsed_output7)
+
+    def test_traceroute_golden8(self):
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output8)
+        self.assertEqual(parsed_output, self.golden_parsed_output8)
 
 if __name__ == '__main__':
     unittest.main()
