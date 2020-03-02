@@ -196,22 +196,14 @@ class ShowInterface(ShowInterfaceSchema):
             out = output
 
         # Ethernet2/1.10 is down (Administratively down)
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>(down))'
-                            '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
-
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-        p1_1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>[\w\s]+)'
-                            '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
-                            'line +protocol +is +(?P<line_protocol>\w+),? *'
-                            '(autostate +(?P<autostate>\w+))?$')
-
         # Ethernet2/2 is up
-        p1_2 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>(up))'
-                            '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
+        p1 = re.compile(r'^(?P<interface>\S+)\s+is\s*(?P<link_state>(down|up))?'
+                        r'(administratively +(?P<admin_1>(down|up)))?\s*'
+                        r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
+                        r'(,\s*line +protocol +is (?P<line_protocol>\w+))?'
+                        r'(,\s+autostate\s+(?P<autostate>\S+))?$')
 
         # admin state is up
         # admin state is up,
@@ -455,74 +447,38 @@ class ShowInterface(ShowInterfaceSchema):
             line = line.strip()
 
             # Ethernet2/1.10 is down (Administratively down)
-            m = p1.match(line)
-            if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
-
-                if interface not in interface_dict:
-                    interface_dict[interface] = {}
-                    interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
-
-                interface_dict[interface]['enabled'] = False
-                interface_dict[interface]['oper_status'] = 'down'
-                continue
-
             # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
             # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-            m = p1_1.match(line)
-            if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
-                line_protocol = m.groupdict()['line_protocol']
-                autostate = m.groupdict()['autostate']
-
-                if interface not in interface_dict:
-                    interface_dict[interface] = {}
-                    interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
-
-                if enabled:
-                    enabled = enabled.lower()
-                    interface_dict[interface]['enabled'] = False if 'down' in enabled else True
-                    interface_dict[interface]['oper_status'] = enabled.strip()
-                if line_protocol:
-                    interface_dict[interface]['line_protocol'] = line_protocol.lower()
-                if autostate:
-                    interface_dict[interface]['autostate'] = True if \
-                        autostate.lower() == 'enabled' else False
-
-                continue
-
             # Ethernet2/2 is up
-            m = p1_2.match(line)
+            m = p1.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
+                group = m.groupdict()
+                interface = group['interface']
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
                     interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
+                    interface_dict[interface]['port_channel']['port_channel_member'] = False
 
-                interface_dict[interface]['enabled'] = True
-                interface_dict[interface]['oper_status'] = 'up'
+                if group['link_state']:
+                    interface_dict[interface]['link_state'] = group['link_state']
+                    if 'oper_status' not in interface_dict[interface]:
+                        interface_dict[interface]['oper_status'] = group['link_state']
+
+                if group['admin_1']:
+                    interface_dict[interface]['enabled'] = True if group['admin_1'] == 'up' else False
+                if group['admin_2']:
+                    interface_dict[interface]['enabled'] = True if group['admin_2'] == 'up' else False
+                else:
+                    interface_dict[interface]['enabled'] = False
+
+                if group['line_protocol']:
+                    interface_dict[interface]['line_protocol'] = group['line_protocol']
+                    if 'oper_status' not in interface_dict[interface]:
+                        interface_dict[interface]['oper_status'] = group['line_protocol']
+
+                if group['autostate']:
+                    interface_dict[interface]['autostate'] = True if group['autostate'] == 'enabled' else False
                 continue
 
             # admin state is up

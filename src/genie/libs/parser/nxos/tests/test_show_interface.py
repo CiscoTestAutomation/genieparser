@@ -1208,6 +1208,11 @@ class TestShowInterface(unittest.TestCase):
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_golden2(self):
