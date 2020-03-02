@@ -1651,10 +1651,6 @@ class test_show_lldp_neighbors(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
-
-
-
 if __name__ == '__main__':
     unittest.main()
 

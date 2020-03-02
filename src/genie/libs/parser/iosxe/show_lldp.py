@@ -669,4 +669,32 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
         else:
             out = output
 
+        parsed_output = {}
+
+        # Total entries displayed: 4
+        p1 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
+
+        # Device ID           Local Intf     Hold-time  Capability      Port ID
+        # router               Gi1/0/52       117        R               Gi0/0/0
+        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+        # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interface>\S+)'
+                        r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
+                        r'\s+(?P<port_id>\S+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total entries displayed: 4
+            m = p1.match(line)
+            if m:
+                parsed_output['total_entries'] = m.groupdict()['entry']
+                continue
+
+            # router               Gi1/0/52       117        R               Gi0/0/0
+            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+            # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+            m = p2.match(line)
+            if m:
+                intf_dict = parsed_output.setdefault('interface', {})
 
