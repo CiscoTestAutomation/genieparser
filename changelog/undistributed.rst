@@ -31,6 +31,8 @@
         * Added unittest
     * Updated ShowInterfacesStatus
         * Updated regex to support various output
+    * Updated ShowNveEthernetSegment
+        * Updated regex to support various output
 
 * NXOS
     * Updated ShowInterface
