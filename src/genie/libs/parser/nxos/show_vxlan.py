@@ -901,7 +901,7 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         p11 = re.compile(r'^\s*Active +VNIs: +(?P<active_vnis>[\d\-\,]+)$')
         p12 = re.compile(r'^\s*CC +failed +for +VLANs:( +(?P<cc_failed_vlans>[\w\/]+))?$')
         #   VLAN CC timer: no-timer
-        p13 = re.compile(r'^\s*VLAN CC timer: +(?P<cc_timer_left>\S+)?$')
+        p13 = re.compile(r'^\s*VLAN +CC +timer: +(?P<cc_timer_left>\S+)?$')
         p14 = re.compile(r'^\s*Number +of +ES +members: +(?P<num_es_mem>[\d]+)?$')
         p15 = re.compile(r'^\s*My +ordinal: +(?P<local_ordinal>[\d]+)$')
         p16 = re.compile(r'^\s*DF +timer +start +time: +(?P<df_timer_start_time>[\w\:]+)$')
