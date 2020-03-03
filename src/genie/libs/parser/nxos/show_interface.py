@@ -202,13 +202,13 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
-        p1 = re.compile(r'^(?P<interface>\S+)\s+is\s*(?P<link_state>(down|up))?'
-                        r'(administratively +(?P<admin_1>(down|up)))?\s*'
+        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
+                        r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
                         r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
-                        r'(,\s*line +protocol +is (?P<line_protocol>\w+))?'
+                        r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
-                        r'(\(Link +not +connected\))?'
+                        r'(\(Link\s+not\s+connected\))?'
                         r'(\(.*ACK.*\))?$')
 
         # admin state is up
@@ -476,7 +476,7 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if group['admin_1']:
                     interface_dict[interface]['enabled'] = True if group['admin_1'] == 'up' else False
-                if group['admin_2']:
+                elif group['admin_2']:
                     interface_dict[interface]['enabled'] = True if group['admin_2'] == 'up' else False
                 else:
                     interface_dict[interface]['enabled'] = False
