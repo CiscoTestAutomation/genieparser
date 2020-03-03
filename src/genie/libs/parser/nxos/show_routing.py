@@ -346,12 +346,6 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('tag'): int,
-                                Optional('mpls'): bool,
-                                Optional('mpls_vpn'): bool,
-                                Optional('evpn'): bool,
-                                Optional('segid'): int,
-                                Optional('tunnelid'): str,
-                                Optional('encap'): str,
                                 Optional('hidden'): bool,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_status'): str,
@@ -380,6 +374,12 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('updated'): str,
                                             Optional('route_preference'): int,
                                             Optional('metric'): int,
+                                            Optional('mpls'): bool,
+                                            Optional('mpls_vpn'): bool,
+                                            Optional('evpn'): bool,
+                                            Optional('segid'): int,
+                                            Optional('tunnelid'): str,
+                                            Optional('encap'): str,
                                         },
                                     },
                                 },
@@ -727,26 +727,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if tag:
                     route_dict.update({'tag': int(tag)})
 
-                segid = m.groupdict()['segid']
-                if segid:
-                    route_dict['segid'] = int(segid)
-
-                tunnelid = m.groupdict()['tunnelid']
-                if tunnelid:
-                    route_dict['tunnelid'] = tunnelid
-
-                encap = m.groupdict()['encap']
-                if encap:
-                    route_dict['encap'] = encap.lower()
-
-                vpn = m.groupdict()['vpn']
-                if vpn and 'mpls-vpn' in vpn:
-                    route_dict['mpls_vpn'] = True
-                elif vpn and 'mpls' in vpn:
-                    route_dict['mpls'] = True
-                elif vpn and 'evpn' in vpn:
-                    route_dict['evpn'] = True
-
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop:
@@ -796,6 +776,26 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                     if non_star_rp is not None:
                         index_dict['route_preference'] = non_star_rp
+
+                    segid = groups['segid']
+                    if segid:
+                        index_dict['segid'] = int(segid)
+
+                    tunnelid = groups['tunnelid']
+                    if tunnelid:
+                        index_dict['tunnelid'] = tunnelid
+
+                    encap = groups['encap']
+                    if encap:
+                        index_dict['encap'] = encap.lower()
+
+                    vpn = groups['vpn']
+                    if vpn and 'mpls-vpn' in vpn:
+                        index_dict['mpls_vpn'] = True
+                    elif vpn and 'mpls' in vpn:
+                        index_dict['mpls'] = True
+                    elif vpn and 'evpn' in vpn:
+                        index_dict['evpn'] = True
 
                 index += 1
                 continue

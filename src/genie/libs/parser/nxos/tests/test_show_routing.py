@@ -2758,7 +2758,6 @@ class test_show_ip_route(unittest.TestCase):
                             'active': True,
                             'mbest': 0,
                             'metric': 41,
-                            'mpls': True,
                             'next_hop': {
                                 'next_hop_list': {
                                     1: {
@@ -2771,6 +2770,7 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'ospf',
                                         'source_protocol_status': 'intra',
                                         'updated': '00:18:35',
+                                        'mpls': True,
                                     },
                                 },
                             },
@@ -2783,8 +2783,6 @@ class test_show_ip_route(unittest.TestCase):
                         },
                         '10.189.1.0/24': {
                             'active': True,
-                            'encap': 'vxlan',
-                            'evpn': True,
                             'mbest': 0,
                             'metric': 0,
                             'next_hop': {
@@ -2799,17 +2797,19 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'bgp',
                                         'source_protocol_status': 'internal',
                                         'updated': '3d10h',
+                                        'encap': 'vxlan',
+                                        'evpn': True,
+                                        'tunnelid': '0x64008203',
+                                        'segid': 50051,
                                     },
                                 },
                             },
                             'process_id': '1',
                             'route': '10.189.1.0/24',
                             'route_preference': 33,
-                            'segid': 50051,
                             'source_protocol': 'bgp',
                             'source_protocol_status': 'internal',
                             'tag': 1,
-                            'tunnelid': '0x64008203',
                             'ubest': 1,
                         },
                         '10.205.0.1/32': {
@@ -2840,7 +2840,6 @@ class test_show_ip_route(unittest.TestCase):
                             'active': True,
                             'mbest': 1,
                             'metric': 0,
-                            'mpls_vpn': True,
                             'next_hop': {
                                 'next_hop_list': {
                                     1: {
@@ -2853,6 +2852,7 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'bgp',
                                         'source_protocol_status': 'internal',
                                         'updated': '5w0d',
+                                        'mpls_vpn': True,
                                     },
                                     2: {
                                         'best_mcast_nexthop': True,
@@ -2864,6 +2864,7 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'bgp',
                                         'source_protocol_status': 'internal',
                                         'updated': '5w0d',
+                                        'mpls_vpn': True,
                                     },
                                 },
                             },
@@ -2913,7 +2914,6 @@ class test_show_ip_route(unittest.TestCase):
                             'active': True,
                             'mbest': 0,
                             'metric': 81,
-                            'mpls': True,
                             'next_hop': {
                                 'next_hop_list': {
                                     1: {
@@ -2926,6 +2926,7 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'ospf',
                                         'source_protocol_status': 'intra',
                                         'updated': '00:18:35',
+                                        'mpls': True,
                                     },
                                     2: {
                                         'best_ucast_nexthop': True,
@@ -2937,6 +2938,7 @@ class test_show_ip_route(unittest.TestCase):
                                         'source_protocol': 'ospf',
                                         'source_protocol_status': 'intra',
                                         'updated': '00:18:35',
+                                        'mpls': True,
                                     },
                                 },
                             },
@@ -3143,6 +3145,7 @@ class test_show_ip_route(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_11)
 
     def test_show_ip_route_12(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output_12)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
