@@ -1288,7 +1288,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if intf not in ip_interface_vrf_all_dict:
                         ip_interface_vrf_all_dict[intf] = {}
                 continue
-            
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
@@ -1382,7 +1381,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             m = p3_2.match(line)
             if m:
                 group = m.groupdict()
-                address = group.get('ip', None)
+                address = group.get('ip')
                 if 'ipv4' not in ip_interface_vrf_all_dict:
                     ip_interface_vrf_all_dict[interface]['ipv4'] = {}
                 if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
