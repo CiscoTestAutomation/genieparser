@@ -15,7 +15,7 @@
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
-        * show ip route summary vrf <vrf>
+        * show ip route summary vrf {vrf}
 
 --------------------------------------------------------------------------------
                                 Fix
