@@ -1228,7 +1228,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
         for line in out.splitlines():
             line = line.rstrip()
-
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>\S+)$')
@@ -1289,7 +1288,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if intf not in ip_interface_vrf_all_dict:
                         ip_interface_vrf_all_dict[intf] = {}
                 continue
-
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
@@ -1377,6 +1375,20 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
                 continue
+            
+            # IP address: none
+            p3_2 = re.compile('^\s*IP +address: +(?P<ip>\S+)$')
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                address = group.get('ip')
+                if 'ipv4' not in ip_interface_vrf_all_dict:
+                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
+                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip'] = address
+                continue
 
             #IP broadcast address: 255.255.255.255
             p4 = re.compile(r'^\s*IP *broadcast *address:'
@@ -1399,6 +1411,12 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip_interface_vrf_all_dict[interface]['multicast_groups_address']\
                 = multicast_groups_address
                 continue
+            
+            #     show ip interface vrf all
+            p5_0 = re.compile(r'^\s*show')
+            m = p5_0.match(line)
+            if m:
+                continue
 
             #224.0.0.6  224.0.0.5  224.0.0.2 
             p5_1 = re.compile(r'^\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
@@ -1414,7 +1432,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
@@ -1576,7 +1594,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 interface
             except Exception:
                 continue
-
+            
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                 #Unicast packets    : 0/0/0/0/0
                 p20 = re.compile(r'^\s*Unicast *packets *:'
