@@ -3370,7 +3370,7 @@ class test_show_ipv6_route(unittest.TestCase):
 
 
 # ================================================
-#  Unit test for 'show ip routing summary vrf all'
+#  Unit test for 'show ip route summary vrf all'
 # =================================================
 
 class test_show_ip_route_summary(unittest.TestCase):
@@ -3439,8 +3439,8 @@ class test_show_ip_route_summary(unittest.TestCase):
     golden_parsed_output = {
         'vrf':
             {'default':
-                 {'Backup paths': 'None',
-                  'Best paths':
+                 {'backup_paths': {},
+                  'best_paths':
                       {'am': 1,
                        'broadcast': 5,
                        'bgp-100': 1000,
@@ -3448,42 +3448,77 @@ class test_show_ip_route_summary(unittest.TestCase):
                        'local': 4,
                        'ospf-1': 6,
                        'ospf-2': 6},
-                  'Num_routes_per_mask':
+                  'num_routes_per_mask':
                       {'/24': 4,
                        '/32': 12,
                        '/8': 1},
-                  'paths': 20,
-                  'routes': 17},
-             'evpn-tenant-0002': {'Backup paths': 'None',
-                                  'Best paths': {'broadcast': 7,
+                  'total_paths': 20,
+                  'total_routes': 17},
+             'evpn-tenant-0002': {'backup_paths': {},
+                                  'best_paths': {'broadcast': 7,
                                                  'direct': 2,
                                                  'local': 2},
-                                  'Num_routes_per_mask': {'/16': 2,
+                                  'num_routes_per_mask': {'/16': 2,
                                                           '/32': 8,
                                                           '/8': 1},
-                                  'paths': 11,
-                                  'routes': 11},
-             'evpn-t-0003': {'Backup paths': 'None',
-                             'Best paths': {'broadcast': 7,
+                                  'total_paths': 11,
+                                  'total_routes': 11},
+             'evpn-t-0003': {'backup_paths': {},
+                             'best_paths': {'broadcast': 7,
                                             'direct': 2,
                                             'local': 2},
-                             'Num_routes_per_mask': {'/16': 2,
+                             'num_routes_per_mask': {'/16': 2,
                                                      '/32': 8,
                                                      '/8': 1},
-                             'paths': 11,
-                             'routes': 11},
-             'management': {'Backup paths': 'None',
-                            'Best paths': {'am': 3,
+                             'total_paths': 11,
+                             'total_routes': 11},
+             'management': {'backup_paths': {},
+                            'best_paths': {'am': 3,
                                            'broadcast': 5,
                                            'direct': 1,
                                            'local': 1,
                                            'static': 1},
-                            'Num_routes_per_mask': {'/0': 1,
+                            'num_routes_per_mask': {'/0': 1,
                                                     '/24': 1,
                                                     '/32': 8,
                                                     '/8': 1},
-                            'paths': 11,
-                            'routes': 11}}}
+                            'total_paths': 11,
+                            'total_routes': 11}}}
+
+    golden_output_2 = {'execute.return_value':'''
+    Router# show ip route summary vrf all
+     IP Route Table for VRF "xxx"
+    Total number of routes: 308
+    Total number of paths:  332
+    
+    Best paths per protocol:      Backup paths per protocol:
+      am             : 214          ospf-1000      : 10
+      local          : 14    
+      direct         : 14    
+      broadcast      : 29    
+      hsrp           : 10    
+      ospf-1000      : 41
+    '''}
+
+    golden_parsed_output_2 = {
+    'vrf': {
+        'xxx': {
+            'backup_paths': {
+                'ospf-1000': 10,
+            },
+            'best_paths': {
+                'am': 214,
+                'broadcast': 29,
+                'direct': 14,
+                'hsrp': 10,
+                'local': 14,
+                'ospf-1000': 41,
+            },
+            'total_paths': 332,
+            'total_routes': 308,
+        },
+    },
+}
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -3497,6 +3532,13 @@ class test_show_ip_route_summary(unittest.TestCase):
         obj = ShowIpRouteSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_route_summary_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpRouteSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
