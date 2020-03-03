@@ -346,6 +346,12 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('tag'): int,
+                                Optional('mpls'): bool,
+                                Optional('mpls_vpn'): bool,
+                                Optional('evpn'): bool,
+                                Optional('segid'): int,
+                                Optional('tunnelid'): str,
+                                Optional('encap'): str,
                                 Optional('hidden'): bool,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_status'): str,
@@ -563,11 +569,16 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
         # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
         # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
-        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\w\:\.\%]+),'
+        # **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+        # *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
+        # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
+        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\%]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
-                        r'( +\((?P<hidden>hidden)\))?$')
+                        r'( +\((?P<hidden>hidden)\))?'
+                        r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid: +(?P<segid>\d+))?,?'
+                        r'( +tunnelid: +(?P<tunnelid>[0-9x]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
 
         #    tag 100
         p4 = re.compile(r'^tag +(?P<tag>\d+)$')
@@ -641,10 +652,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
             # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             # *via 2001:db8:5f1:1::1, Eth1/27, [0/0], 05:56:03, local
+            # *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
             # via 10.4.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
-            # *via 2001:db8:8b05::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+            # **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
+            # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -713,6 +726,26 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if tag:
                     route_dict.update({'tag': int(tag)})
+
+                segid = m.groupdict()['segid']
+                if segid:
+                    route_dict['segid'] = int(segid)
+
+                tunnelid = m.groupdict()['tunnelid']
+                if tunnelid:
+                    route_dict['tunnelid'] = tunnelid
+
+                encap = m.groupdict()['encap']
+                if encap:
+                    route_dict['encap'] = encap.lower()
+
+                vpn = m.groupdict()['vpn']
+                if vpn and 'mpls-vpn' in vpn:
+                    route_dict['mpls_vpn'] = True
+                elif vpn and 'mpls' in vpn:
+                    route_dict['mpls'] = True
+                elif vpn and 'evpn' in vpn:
+                    route_dict['evpn'] = True
 
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
