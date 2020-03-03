@@ -12,6 +12,10 @@
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
+* NXOS
+    * Added ShowIpRouteSummary for:
+        * show ip route summary
+        * show ip route summary vrf <>
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -33,8 +37,6 @@
         * Updated regex to support various output
     * Updated ShowNveEthernetSegment
         * Updated regex to support various output
-    * Updated ShowIpInterfaceVrfAll
-        * Update regex to support more various output
 
 * NXOS
     * Updated ShowInterface

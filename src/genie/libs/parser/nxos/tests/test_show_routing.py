@@ -9,7 +9,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # nxos show_routing
 from genie.libs.parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIpv6VrfAll,\
-                                     ShowIpRoute, ShowIpv6Route, ShowRouting
+                                     ShowIpRoute, ShowIpv6Route, ShowRouting, ShowIpRouteSummary
 
 # =====================================
 #  Unit test for 'show routing vrf all'
@@ -3367,6 +3367,136 @@ class test_show_ipv6_route(unittest.TestCase):
                                   route='2001:2:2:2::2/128',
                                   protocol='eigrp')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
+
+
+# ================================================
+#  Unit test for 'show ip routing summary vrf all'
+# =================================================
+
+class test_show_ip_route_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        Total number of routes: 17
+        Total number of paths:  20
+
+        Best paths per protocol:      Backup paths per protocol:
+          am             : 1            None
+          local          : 4     
+          direct         : 4     
+          broadcast      : 5     
+          ospf-1         : 6         
+          ospf-2         : 6  
+          bgp-100        : 1000
+
+        Number of routes per mask-length:
+          /8 : 1       /24: 4       /32: 12      
+
+
+        IP Route Table for VRF "management"
+        Total number of routes: 11
+        Total number of paths:  11
+
+        Best paths per protocol:      Backup paths per protocol:
+          am             : 3            None
+          local          : 1     
+          direct         : 1     
+          static         : 1     
+          broadcast      : 5     
+
+        Number of routes per mask-length:
+          /0 : 1       /8 : 1       /24: 1       /32: 8       
+
+
+        IP Route Table for VRF "evpn-tenant-0002"
+        Total number of routes: 11
+        Total number of paths:  11
+
+        Best paths per protocol:      Backup paths per protocol:
+          local          : 2            None
+          direct         : 2     
+          broadcast      : 7     
+
+        Number of routes per mask-length:
+          /8 : 1       /16: 2       /32: 8       
+
+
+        IP Route Table for VRF "evpn-t-0003"
+        Total number of routes: 11
+        Total number of paths:  11
+
+        Best paths per protocol:      Backup paths per protocol:
+          local          : 2            None
+          direct         : 2     
+          broadcast      : 7     
+
+        Number of routes per mask-length:
+          /8 : 1       /16: 2       /32: 8       
+            '''}
+
+    golden_parsed_output = {
+        'vrf':
+            {'default':
+                 {'Backup paths': 'None',
+                  'Best paths':
+                      {'am': 1,
+                       'broadcast': 5,
+                       'bgp-100': 1000,
+                       'direct': 4,
+                       'local': 4,
+                       'ospf-1': 6,
+                       'ospf-2': 6},
+                  'Num_routes_per_mask':
+                      {'/24': 4,
+                       '/32': 12,
+                       '/8': 1},
+                  'paths': 20,
+                  'routes': 17},
+             'evpn-tenant-0002': {'Backup paths': 'None',
+                                  'Best paths': {'broadcast': 7,
+                                                 'direct': 2,
+                                                 'local': 2},
+                                  'Num_routes_per_mask': {'/16': 2,
+                                                          '/32': 8,
+                                                          '/8': 1},
+                                  'paths': 11,
+                                  'routes': 11},
+             'evpn-t-0003': {'Backup paths': 'None',
+                             'Best paths': {'broadcast': 7,
+                                            'direct': 2,
+                                            'local': 2},
+                             'Num_routes_per_mask': {'/16': 2,
+                                                     '/32': 8,
+                                                     '/8': 1},
+                             'paths': 11,
+                             'routes': 11},
+             'management': {'Backup paths': 'None',
+                            'Best paths': {'am': 3,
+                                           'broadcast': 5,
+                                           'direct': 1,
+                                           'local': 1,
+                                           'static': 1},
+                            'Num_routes_per_mask': {'/0': 1,
+                                                    '/24': 1,
+                                                    '/32': 8,
+                                                    '/8': 1},
+                            'paths': 11,
+                            'routes': 11}}}
+
+    def test_empty_1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpRouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_route_summary_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpRouteSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

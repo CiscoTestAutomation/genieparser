@@ -928,3 +928,123 @@ class ShowIpv6Route(ShowIpRoute):
             out = output
 
         return super().cli(vrf=vrf, output=out)
+
+
+# =================================
+# Parser for 'show ip route summary'
+# Parser for 'show ip route summary vrf < >'
+# =================================
+
+class ShowIpRouteSummarySchema(MetaParser):
+    """Schema for show ip route summary
+          Show ip route summary vrf < >"""
+
+    schema = {
+        'vrf':
+            {Any():
+                 {'Backup paths': str,
+                  'Best paths':
+                      {Optional('am'): int,
+                       Optional('broadcast'): int,
+                       Optional('direct'): int,
+                       Optional('local'): int,
+                       Optional('static'): int,
+                       Optional(Any()): int,
+                       },
+                  'Num_routes_per_mask':
+                      {Optional('/0'): int,
+                       Optional('/8'): int,
+                       Optional('/16'): int,
+                       Optional('/24'): int,
+                       Optional('/32'): int,
+                       },
+                  'paths': int,
+                  'routes': int,
+                  },
+             },
+    }
+
+
+class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+    """Parser for show ip route summary
+    and show ip route summary vrf <>"""
+
+    def cli(self, vrf_name=''):
+
+        if vrf_name:
+            cmd = 'show ip route summary vrf {}'.format(vrf_name)
+        else:
+            cmd = 'show ip route summary'
+
+        out = self.device.execute(cmd)
+        vrf = None
+        parse_best_path = False
+        parse_num_routes = False
+
+        # Init dict
+        routeSummary_dict = {}
+        sub_dict = {}
+        address_family = None
+
+        p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>[\w-]+)"$')
+        p2 = re.compile(r'^Total +number +of +(?P<route_path>\w+): +(?P<route_path_val>\d+)$')
+        p3 = re.compile(r'^Best +paths +per +protocol.*$')
+        p4 = re.compile(r'^(?P<prot>[\w-]+) +: +(?P<num_prot>\d+)\s*(?P<backup>\w*).*$')
+        p5 = re.compile(r'(?P<route_mask>/\d+)\s*: +(?P<route_mask_len>\d+)')
+        for line in out.splitlines():
+            line = line.strip()
+            # IP Route Table for VRF "default"
+            # OR
+            # IP Route Table for VRF "management"
+            m = p1.match(line)
+            if m:
+                parse_num_routes = False
+                parse_best_path = False
+                vrf = str(m.groupdict()['vrf'])
+                continue
+
+            # Total number of routes: 17
+            # Total number of paths:  20
+            m = p2.match(line)
+            if m:
+                if 'vrf' not in routeSummary_dict:
+                    routeSummary_dict['vrf'] = {}
+                if vrf and vrf not in routeSummary_dict['vrf']:
+                    routeSummary_dict['vrf'][vrf] = {}
+                sub_dict = routeSummary_dict['vrf'][vrf]
+                sub_dict[m.group('route_path')] = int(m.group('route_path_val'))
+                continue
+
+            if parse_num_routes:
+                # /0 : 1       /8 : 1       /24: 1       /32: 8
+                for m1 in p5.finditer(line):
+                    if m1:
+                        sub_dict['Num_routes_per_mask'][m1.group('route_mask')] = int(m1.group('route_mask_len'))
+
+            # Number of routes per mask-length:
+            if line.find('Number of routes per mask-length') >= 0:
+                parse_best_path = False
+                parse_num_routes = True
+                sub_dict['Num_routes_per_mask'] = {}
+
+            if parse_best_path:
+                # am             : 3            None
+                # local          : 1
+                # direct         : 1
+                # static         : 1
+                # broadcast      : 5
+                m = p4.match(line)
+                if m:
+                    sub_dict['Best paths'][m.group('prot')] = int(m.group('num_prot'))
+                    if m.group('backup'):
+                        sub_dict['Backup paths'] = m.group('backup')
+            # Best paths per protocol:      Backup paths per protocol:
+            m = p3.match(line)
+            if m:
+                parse_best_path = True
+                if 'Best paths' not in sub_dict:
+                    sub_dict['Best paths'] = {}
+                    sub_dict['Backup paths'] = {}
+                continue
+
+        return routeSummary_dict
