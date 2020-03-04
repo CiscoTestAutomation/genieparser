@@ -1535,8 +1535,9 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'neighbor_id': 'SEPF8B7E29',
                                 'chassis_id': '10.0.0.7',
                                 'port_id': 'F8B7E2958F6F:P1',
+                                'port_description': 'SW PORT',
                                 'system_name': 'SEPF8B7E29',
-                                'system_description': '',
+                                'system_description': 'Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads\n',
                                 'time_remaining': 178,
                                 'capabilities': {
                                     'mac_bridge': {
@@ -1574,8 +1575,9 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'neighbor_id': 'SEPCC5A536',
                                 'chassis_id': '10.0.0.8',
                                 'port_id': 'CC5A5363E4F6:P1',
+                                'port_description': 'SW PORT',
                                 'system_name': 'SEPCC5A536',
-                                'system_description': '',
+                                'system_description': 'Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads\n',
                                 'time_remaining': 124,
                                 'capabilities': {
                                     'mac_bridge': {
@@ -1627,6 +1629,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
     def test_show_lldp_neighbors_detail_colon_in_port_id(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.device_output_1)
