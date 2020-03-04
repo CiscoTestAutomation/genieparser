@@ -1653,6 +1653,7 @@ class TestShowIpCef(unittest.TestCase):
     """unit test for show ip cef <ip>
                      show ip cef"""
 
+    maxDiff = None
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2018,9 +2019,9 @@ class TestShowIpCef(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'prefix': {
-                            '202.239.164.252/32': {
+                            '192.168.100.252/32': {
                                 'nexthop': {
-                                    '106.162.196.213': {
+                                    '10.169.196.213': {
                                         'outgoing_interface': {
                                             'GigabitEthernet0/3/6': {
                                                 'local_label': 16051,
@@ -2038,9 +2039,9 @@ class TestShowIpCef(unittest.TestCase):
         },
     }
     golden_output_9 = {'execute.return_value': '''
-        show ip cef 202.239.164.252
-        202.239.164.252/32
-            nexthop 106.162.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
+        show ip cef 192.168.100.252
+        192.168.100.252/32
+            nexthop 10.169.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
     '''}
 
     golden_parsed_output_10 = {
@@ -2049,16 +2050,16 @@ class TestShowIpCef(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'prefix': {
-                            '202.239.164.252/32': {
+                            '192.168.100.252/32': {
                                 'nexthop': {
-                                    '106.162.196.213': {
+                                    '10.169.196.213': {
                                         'outgoing_interface': {
                                             'GigabitEthernet0/3/6': {
                                                 'local_label': 16051,
                                                 'local_sid': '223555',
                                                 'outgoing_label': ['16051'],
                                                 'outgoing_label_backup': '16051',
-                                                'repair': 'attached-nexthop 106.162.196.217 GigabitEthernet0/3/7',
+                                                'repair': 'attached-nexthop 10.169.196.217 GigabitEthernet0/3/7',
                                                 'sid': '453955',
                                             },
                                         },
@@ -2072,10 +2073,10 @@ class TestShowIpCef(unittest.TestCase):
         },
     }
     golden_output_10 = {'execute.return_value': '''
-        show ip cef 202.239.164.252
-        202.239.164.252/32
-            nexthop 106.162.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
-                repair: attached-nexthop 106.162.196.217 GigabitEthernet0/3/7
+        show ip cef 192.168.100.252
+        192.168.100.252/32
+            nexthop 10.169.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
+                repair: attached-nexthop 10.169.196.217 GigabitEthernet0/3/7
     '''}
 
     def test_empty(self):
@@ -2085,73 +2086,63 @@ class TestShowIpCef(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.2.3.1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_golden_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.197.104')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_golden_3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='192.168.4.1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_5(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_golden_6(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
     def test_golden_7(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_7)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_golden_8(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_8)
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
     def test_golden_9(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_9)
         obj = ShowIpCef(device=self.device)
-        parsed_output = obj.parse(prefix='202.239.164.252')
+        parsed_output = obj.parse(prefix='192.168.100.252')
         self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
     def test_golden_10(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_10)
         obj = ShowIpCef(device=self.device)
-        parsed_output = obj.parse(prefix='202.239.164.252')
+        parsed_output = obj.parse(prefix='192.168.100.252')
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 

@@ -1533,7 +1533,7 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         #     nexthop 10.1.2.2 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
-        #     nexthop 106.162.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
+        #     nexthop 10.169.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
         p2 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
                         r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
                         r'(-\(local:(?P<local_label>\w+)\))?)?( +(?P<sid>\d+))?(-\(local:(?P<local_sid>\d+)\))?$')
@@ -1542,7 +1542,7 @@ class ShowIpCef(ShowIpCefSchema):
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         # nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
         # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [16051|16051]-(local:16051) 64588
-        # nexthop 106.162.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
+        # nexthop 10.169.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
         p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\[(?P<outgoing_label>[\S]+)\|'
                           r'(?P<outgoing_label_backup>[\S]+)\](?:\((?P<outgoing_label_info>\w+)\))?'
                           r'\-\(local\:(?P<local_label>(\d+))\)( +(?P<sid>\d+))?(-\(local:(?P<local_sid>\d+)\))?$')
