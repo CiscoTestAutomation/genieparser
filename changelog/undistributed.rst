@@ -40,3 +40,8 @@
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
         * Add if-condition to assign True to key 'enabled' when has output 'admin state is up'
+    * Updated ShowIpRoute
+        * Add keys into the schema, modify regex
+    * Updated ShowRouting
+        * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
+
