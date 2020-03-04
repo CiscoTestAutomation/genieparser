@@ -21,6 +21,7 @@
         * Modified wrong regex
     * Updated ShowIpCef:
         * Modified regex to support SID
+        * update regex and schema to support local sid
     * Updated ShowMplsForwardingTableDetail:
         * show mpls forwarding-table {route} detail
     * Updated Traceroute:
