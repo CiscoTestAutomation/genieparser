@@ -37,7 +37,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('parent_interface'): str,
             'oper_status': str,
             Optional('admin_state'): str,
-            Optional('dedicated_intface'): bool,
+            Optional('dedicated_interface'): bool,
             Optional('line_protocol'): str,
             Optional('autostate'): bool,
             Optional('link_state'): str,
@@ -147,6 +147,8 @@ class ShowInterfaceSchema(MetaParser):
 # ===========================
 # Parser for 'show interface'
 # ===========================
+
+
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
@@ -194,20 +196,20 @@ class ShowInterface(ShowInterfaceSchema):
             out = output
 
         # Ethernet2/1.10 is down (Administratively down)
-        p1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>(down))'
                             '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
 
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-        p1_1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1_1 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>[\w\s]+)'
                             '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
                             'line +protocol +is +(?P<line_protocol>\w+),? *'
                             '(autostate +(?P<autostate>\w+))?$')
 
         # Ethernet2/2 is up
-        p1_2 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+        p1_2 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                             ' *(?P<enabled>(up))'
                             '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
 
@@ -359,7 +361,8 @@ class ShowInterface(ShowInterfaceSchema):
                             ' *(?P<out_rate_pps>[0-9]+) *pps$')
 
         # RX
-        p23_1 = re.compile(r'^(?P<rx>(RX))$')
+        # Rx
+        p23_1 = re.compile(r'^(?P<rx>(RX|Rx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p24 = re.compile(r'^(?P<in_unicast_pkts>[0-9]+) +unicast +packets'
@@ -405,7 +408,7 @@ class ShowInterface(ShowInterfaceSchema):
         p31 = re.compile(r'^(?P<in_mac_pause_frames>[0-9]+) *Rx *pause$')
 
         # TX
-        p31_1 = re.compile(r'^(?P<tx>(TX))$')
+        p31_1 = re.compile(r'^(?P<tx>(TX|Tx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p32 = re.compile(r'^(?P<out_unicast_pkts>[0-9]+) *unicast *packets'
@@ -529,11 +532,13 @@ class ShowInterface(ShowInterfaceSchema):
             m = p2.match(line)
             if m:
                 # admin_state
-                interface_dict[interface]['admin_state'] = \
-                    m.groupdict()['admin_state']
+                admin_state = m.groupdict()['admin_state']
+                interface_dict[interface]['admin_state'] = admin_state
+                if admin_state == 'up':
+                    interface_dict[interface]['enabled'] = True
                 # dedicated_interface
                 if m.groupdict()['dedicated_intf']:
-                    interface_dict[interface]['dedicated_intface'] = True
+                    interface_dict[interface]['dedicated_interface'] = True
                 # parent_interface
                 if m.groupdict()['parent_intf']:
                     interface_dict[interface]['parent_interface'] = \
@@ -543,7 +548,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Dedicated Interface
             m = p2_1.match(line)
             if m:
-                interface_dict[interface]['dedicated_intface'] = True
+                interface_dict[interface]['dedicated_interface'] = True
                 continue
 
             # Belongs to Po1
@@ -895,6 +900,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ['out_rate_pps'] = out_rate_pps
                 continue
             # RX
+            # Rx
             m = p23_1.match(line)
             if m:
                 rx = m.groupdict()['rx']
@@ -1008,6 +1014,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['counters']['in_mac_pause_frames'] = in_mac_pause_frames
                 continue
             # TX
+            # Tx
             m = p31_1.match(line)
             if m:
                 rx = False
@@ -1020,7 +1027,7 @@ class ShowInterface(ShowInterfaceSchema):
             if tx:
                 #0 unicast packets  0 multicast packets  0 broadcast packets
                 m = p32.match(line)
-                if m:
+                if m :
                     interface_dict[interface]['counters']['out_unicast_pkts'] = int(m.groupdict()['out_unicast_pkts'])
                     interface_dict[interface]['counters']['out_multicast_pkts'] = int(m.groupdict()['out_multicast_pkts'])
                     interface_dict[interface]['counters']['out_broadcast_pkts'] = int(m.groupdict()['out_broadcast_pkts'])
@@ -1221,7 +1228,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
         for line in out.splitlines():
             line = line.rstrip()
-
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>\S+)$')
@@ -1282,7 +1288,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if intf not in ip_interface_vrf_all_dict:
                         ip_interface_vrf_all_dict[intf] = {}
                 continue
-
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
@@ -1370,6 +1375,20 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
                 continue
+            
+            # IP address: none
+            p3_2 = re.compile('^\s*IP +address: +(?P<ip>\S+)$')
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                address = group.get('ip')
+                if 'ipv4' not in ip_interface_vrf_all_dict:
+                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
+                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip'] = address
+                continue
 
             #IP broadcast address: 255.255.255.255
             p4 = re.compile(r'^\s*IP *broadcast *address:'
@@ -1392,6 +1411,12 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip_interface_vrf_all_dict[interface]['multicast_groups_address']\
                 = multicast_groups_address
                 continue
+            
+            #     show ip interface vrf all
+            p5_0 = re.compile(r'^\s*show')
+            m = p5_0.match(line)
+            if m:
+                continue
 
             #224.0.0.6  224.0.0.5  224.0.0.2 
             p5_1 = re.compile(r'^\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
@@ -1407,7 +1432,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
@@ -1545,8 +1570,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #IP interface statistics last reset: never
-            p18 = re.compile(r'^\s*IP *interface *statistics *last *reset:'
-                              ' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
+            # ip interface statistics last reset: never
+            p18 = re.compile(r'^\s*(IP|ip) *interface *statistics *last *reset:'
+                             r' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
             m = p18.match(line)
             if m:
                 int_stat_last_reset = m.groupdict()['int_stat_last_reset']
@@ -1568,7 +1594,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 interface
             except Exception:
                 continue
-
+            
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                 #Unicast packets    : 0/0/0/0/0
                 p20 = re.compile(r'^\s*Unicast *packets *:'

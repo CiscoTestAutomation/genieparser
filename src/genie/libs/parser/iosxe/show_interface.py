@@ -3227,10 +3227,14 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         # Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
         # Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
         # Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+        # Te3/0/1                      notconnect   1            auto   auto unknown
+        # Te3/0/10                     connected    1          a-full a-1000 10/100/1000BaseTX SFP
 
-        p1 = re.compile(r'^(?P<interfaces>\w+\d+\/\d+)(?: +(?P<name>([\S ]+)))?'
-                        r' +(?P<status>\S+) +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+)'
-                        r' +(?P<port_speed>[\S\-]+) +(?P<type>\S+)$')
+        p1 = re.compile(r'^(?P<interfaces>\S+)(?: +(?P<name>([\S ]+)))?'
+                        r' +(?P<status>(connected|notconnect|inactive|disabled'
+                        r'|err-disabled|monitoring)) +(?P<vlan>\S+)'
+                        r' +(?P<duplex_code>[\S\-]+) +(?P<port_speed>[\S\-]+)'
+                        r' +(?P<type>.+)$')
 
         for line in out.splitlines():
             line = line.strip()

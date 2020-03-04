@@ -18943,6 +18943,8 @@ class TestShowInterfacesStatus(unittest.TestCase):
     Gi3/4                        notconnect   99           full   1000 No Gbic
     Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
     Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
+    Te3/0/1                      notconnect   1            auto   auto unknown
+    Te3/0/10                     connected    1          a-full a-1000 10/100/1000BaseTX SFP
     '''}
 
     golden_parsed_interface_output1 = {
@@ -19039,12 +19041,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'vlan': 'trunk',
             },
             'GigabitEthernet3/4': {
-                'duplex_code': '1000',
-                'name': 'notconnect',
-                'port_speed': 'No',
-                'status': '99',
-                'type': 'Gbic',
-                'vlan': 'full',
+                'duplex_code': 'full',
+                'port_speed': '1000',
+                'status': 'notconnect',
+                'type': 'No Gbic',
+                'vlan': '99',
             },
             'GigabitEthernet3/5': {
                 'duplex_code': 'full',
@@ -19063,12 +19064,25 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'vlan': 'trunk',
             },
             'TenGigabitEthernet3/2': {
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'inactive',
+                'type': 'No XCVR',
+                'vlan': '1',
+            },
+            'TenGigabitEthernet3/0/1': {
                 'duplex_code': 'auto',
-                'name': 'inactive',
-                'port_speed': 'No',
-                'status': '1',
-                'type': 'XCVR',
-                'vlan': 'full',
+                'port_speed': 'auto',
+                'status': 'notconnect',
+                'type': 'unknown',
+                'vlan': '1',
+            },
+            'TenGigabitEthernet3/0/10': {
+                'duplex_code': 'a-full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000BaseTX SFP',
+                'vlan': '1',
             },
         },
     }
