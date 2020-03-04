@@ -2010,7 +2010,73 @@ class TestShowIpCef(unittest.TestCase):
         show ip cef 10.169.196.241
         10.169.196.241/32
             nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
-        '''}
+    '''}
+
+    golden_parsed_output_9 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '202.239.164.252/32': {
+                                'nexthop': {
+                                    '106.162.196.213': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/3/6': {
+                                                'local_label': 16051,
+                                                'outgoing_label': ['16051'],
+                                                'sid': '453955',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_9 = {'execute.return_value': '''
+        show ip cef 202.239.164.252
+        202.239.164.252/32
+            nexthop 106.162.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
+    '''}
+
+    golden_parsed_output_10 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '202.239.164.252/32': {
+                                'nexthop': {
+                                    '106.162.196.213': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/3/6': {
+                                                'local_label': 16051,
+                                                'local_sid': '223555',
+                                                'outgoing_label': ['16051'],
+                                                'outgoing_label_backup': '16051',
+                                                'repair': 'attached-nexthop 106.162.196.217 GigabitEthernet0/3/7',
+                                                'sid': '453955',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_10 = {'execute.return_value': '''
+        show ip cef 202.239.164.252
+        202.239.164.252/32
+            nexthop 106.162.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
+                repair: attached-nexthop 106.162.196.217 GigabitEthernet0/3/7
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -2073,6 +2139,20 @@ class TestShowIpCef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_golden_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='202.239.164.252')
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
+
+    def test_golden_10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='202.239.164.252')
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 
 ###################################################
