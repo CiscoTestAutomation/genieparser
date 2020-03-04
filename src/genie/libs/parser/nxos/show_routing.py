@@ -932,7 +932,7 @@ class ShowIpv6Route(ShowIpRoute):
 
 # =================================
 # Parser for 'show ip route summary'
-# Parser for 'show ip route summary vrf <vrf>'
+# Parser for 'show ip route summary vrf {vrf}'
 # =================================
 
 class ShowIpRouteSummarySchema(MetaParser):
@@ -941,22 +941,22 @@ class ShowIpRouteSummarySchema(MetaParser):
         * show ip route summary vrf {vrf} """
 
     schema = {
-        'vrf':
-            {Any():
-                 {'backup_paths':
-                      {Optional(Any()): int,
-                       },
-                  'best_paths':
-                      {Optional(Any()): int,
-                       },
-                  Optional('num_routes_per_mask'):
-                      {Optional(Any()): int,
-                       },
-                  'total_paths': int,
-                  'total_routes': int,
-                  },
-             },
-    }
+        'vrf': {
+            Any(): {
+                'backup_paths': {
+                    Optional(Any()): int,
+                },
+                'best_paths': {
+                    Optional(Any()): int,
+                },
+                Optional('num_routes_per_mask'): {
+                    Optional(Any()): int,
+                },
+                'total_paths': int,
+                'total_routes': int,
+              },
+         },
+}
 
 
 class ShowIpRouteSummary(ShowIpRouteSummarySchema):
@@ -966,11 +966,14 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
 
     def cli(self, vrf='', output =None):
 
+        cli_command = ['show ip route summary vrf {vrf}',
+                       'show ip route summary']
+
         if output is None:
             if vrf:
-                cmd = 'show ip route summary vrf {vrf}'.format(vrf=vrf)
+                cmd = cli_command[0].format(vrf=vrf)
             else:
-                cmd = 'show ip route summary'
+                cmd = cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -982,7 +985,6 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         # Init dict
         routeSummary_dict = {}
         sub_dict = {}
-        address_family = None
 
         #   IP Route Table for VRF "xxx"
         p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>[\w-]+)"$')
