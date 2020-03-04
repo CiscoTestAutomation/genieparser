@@ -26,6 +26,7 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
 # unitest For Show Interface
 #############################################################################
 
+
 class TestShowInterface(unittest.TestCase):
     device = Device(name='aDevice')
     
@@ -91,7 +92,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 3330,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'desc-1',
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
@@ -128,7 +129,7 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'down',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': False,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
@@ -153,7 +154,7 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'up',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': True,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
@@ -231,7 +232,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
             'enabled': True,
@@ -348,7 +349,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'Connection to pe1',
             'duplex_mode': 'auto',
             'enabled': False,
@@ -702,10 +703,10 @@ class TestShowInterface(unittest.TestCase):
                                        'out_rate_pps': 0},
                               'rx': True,
                               'tx': True},
-                 'dedicated_intface': True,
+                 'dedicated_interface': True,
                  'delay': 10,
                  'efficient_ethernet': 'n/a',
-                 'enabled': False,
+                 'enabled': True,
                  'encapsulations': {'encapsulation': 'arpa'},
                  'ethertype': '0x8100',
                  'flow_control': {'receive': False, 'send': False},
@@ -830,7 +831,7 @@ class TestShowInterface(unittest.TestCase):
                   'rx': True,
                   'tx': True},
              'delay': 3330,
-             'dedicated_intface': True,
+             'dedicated_interface': True,
              'description': 'desc-1',
              'duplex_mode': 'full',
              'efficient_ethernet': 'n/a',
@@ -1025,7 +1026,7 @@ class TestShowInterface(unittest.TestCase):
                                               'out_rate_pkts': 477},
                                      'rx': True,
                                      'tx': True},
-                        'dedicated_intface': True,
+                        'dedicated_interface': True,
                         'delay': 10,
                         'description': '<< GENIE GIG 0/0/1 >>',
                         'duplex_mode': 'full',
@@ -1106,7 +1107,7 @@ class TestShowInterface(unittest.TestCase):
                                                'out_rate_pps': 0},
                                       'rx': True,
                                       'tx': True},
-                         'dedicated_intface': True,
+                         'dedicated_interface': True,
                          'delay': 10,
                          'description': '<< LINK TO GENIE PACKET CAPTURE >>',
                          'duplex_mode': 'auto',
@@ -1170,6 +1171,32 @@ class TestShowInterface(unittest.TestCase):
                 }
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        abc-defg# show int eth1/10
+
+        Ethernet1/10 is down (Link not connected)
+        
+        admin state is up, Dedicated Interface
+        
+          Hardware: 100/1000/10000 Ethernet, address: 1234.12ab.345b (bia 1234.12ab.345b)
+    '''}
+
+    golden_parsed_output_5 = {
+        'Ethernet1/10': {
+            'admin_state': 'up',
+            'dedicated_interface': True,
+            'enabled': True,
+            'link_state': 'Link not connected',
+            'mac_address': '1234.12ab.345b',
+            'oper_status': 'down',
+            'phys_address': '1234.12ab.345b',
+            'port_channel': {
+                'port_channel_member': False,
+            },
+            'types': '100/1000/10000 Ethernet',
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -1211,8 +1238,15 @@ class TestShowInterface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
 # #############################################################################
-# # Unitest For Show Ip Interface Vrf All
+# # Unittest For Show Ip Interface Vrf All
 # #############################################################################
 
 
@@ -2668,81 +2702,195 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
     '''}
 
     golden_parsed_output_3 = {
-    'Vlan355': {
-        'directed_broadcast': 'disabled',
-        'icmp_port_unreachable': 'enabled',
-        'icmp_redirects': 'enabled',
-        'icmp_unreachable': 'disabled',
-        'int_stat_last_reset': 'never',
-        'interface_status': 'protocol-up/link-up/admin-up',
-        'iod': 2,
-        'ip_forwarding': 'disabled',
-        'ip_mtu': 9216,
-        'ipv4': {
-            '10.170.153.133/28': {
-                'broadcast_address': '255.255.255.255',
-                'ip': '10.170.153.133',
-                'ip_subnet': '10.170.153.128',
-                'prefix_length': '28',
-                'route_preference': '0',
-                'route_tag': '0',
-                'secondary': False,
+        'Vlan355': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 2,
+            'ip_forwarding': 'disabled',
+            'ip_mtu': 9216,
+            'ipv4': {
+                '10.170.153.133/28': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': '10.170.153.133',
+                    'ip_subnet': '10.170.153.128',
+                    'prefix_length': '28',
+                    'route_preference': '0',
+                    'route_tag': '0',
+                    'secondary': False,
+                },
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 5070291600,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 50702916,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 691502626,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 1012679263,
+                    'unicast_bytes_received': 691502626,
+                    'unicast_bytes_sent': 1012679263,
+                    'unicast_packets_consumed': 5436721,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 5498120,
+                    'unicast_packets_received': 5436721,
+                    'unicast_packets_sent': 5498120,
+                },
             },
-            'counters': {
-                'broadcast_bytes_consumed': 0,
-                'broadcast_bytes_forwarded': 0,
-                'broadcast_bytes_originated': 0,
-                'broadcast_bytes_received': 0,
-                'broadcast_bytes_sent': 0,
-                'broadcast_packets_consumed': 0,
-                'broadcast_packets_forwarded': 0,
-                'broadcast_packets_originated': 0,
-                'broadcast_packets_received': 0,
-                'broadcast_packets_sent': 0,
-                'labeled_bytes_consumed': 0,
-                'labeled_bytes_forwarded': 0,
-                'labeled_bytes_originated': 0,
-                'labeled_bytes_received': 0,
-                'labeled_bytes_sent': 0,
-                'labeled_packets_consumed': 0,
-                'labeled_packets_forwarded': 0,
-                'labeled_packets_originated': 0,
-                'labeled_packets_received': 0,
-                'labeled_packets_sent': 0,
-                'multicast_bytes_consumed': 0,
-                'multicast_bytes_forwarded': 0,
-                'multicast_bytes_originated': 0,
-                'multicast_bytes_received': 5070291600,
-                'multicast_bytes_sent': 0,
-                'multicast_packets_consumed': 0,
-                'multicast_packets_forwarded': 0,
-                'multicast_packets_originated': 0,
-                'multicast_packets_received': 50702916,
-                'multicast_packets_sent': 0,
-                'unicast_bytes_consumed': 691502626,
-                'unicast_bytes_forwarded': 0,
-                'unicast_bytes_originated': 1012679263,
-                'unicast_bytes_received': 691502626,
-                'unicast_bytes_sent': 1012679263,
-                'unicast_packets_consumed': 5436721,
-                'unicast_packets_forwarded': 0,
-                'unicast_packets_originated': 5498120,
-                'unicast_packets_received': 5436721,
-                'unicast_packets_sent': 5498120,
-            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'default',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
         },
-        'load_sharing': 'none',
-        'local_proxy_arp': 'disabled',
-        'multicast_groups_address': 'none',
-        'multicast_routing': 'disabled',
-        'proxy_arp': 'disabled',
-        'unicast_reverse_path': 'none',
-        'vrf': 'default',
-        'wccp_redirect_exclude': 'disabled',
-        'wccp_redirect_inbound': 'disabled',
-        'wccp_redirect_outbound': 'disabled',
-    },
-}
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show ip interface vrf all
+        IP Interface Status for VRF "test"
+        Vlan3, Interface status: protocol-up/link-up/admin-up, iod: 6,
+        IP address: none
+        IP broadcast address: 255.255.255.255
+        IP multicast groups locally joined: none
+        IP MTU: 1200 bytes (using link MTU)
+        IP proxy ARP : disabled
+        IP Local Proxy ARP : disabled
+        IP multicast routing: disabled
+        IP icmp redirects: enabled
+        IP directed-broadcast: disabled 
+        IP Forwarding: enabled 
+        IP icmp unreachables (except port): disabled
+        IP icmp port-unreachable: enabled
+        IP unicast reverse path forwarding: none
+        IP load sharing: none 
+        IP interface statistics last reset: never
+        IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        WCCP Redirect outbound: disabled
+        WCCP Redirect inbound: disabled
+        WCCP Redirect exclude: disabled
+
+        IP Interface Status for VRF "test1"
+
+        IP Interface Status for VRF "test100"
+
+        IP Interface Status for VRF "test200"
+
+        IP Interface Status for VRF "test400"
+
+    '''}
+
+    golden_parsed_output_4 = {
+        'Vlan3': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 6,
+            'ip_forwarding': 'enabled',
+            'ip_mtu': 1200,
+            'ipv4': {
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 0,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 0,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 0,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 0,
+                    'unicast_bytes_received': 0,
+                    'unicast_bytes_sent': 0,
+                    'unicast_packets_consumed': 0,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 0,
+                    'unicast_packets_received': 0,
+                    'unicast_packets_sent': 0,
+                },
+                'none': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': 'none',
+                },
+            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'test',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
+        },
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -2784,9 +2932,16 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         parsed_output = ip_interface_vrf_all_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 # #############################################################################
-# # Unitest For Show Vrf All Interface
+# # Unittest For Show Vrf All Interface
 # #############################################################################
 
 class TestShowVrfAllInterface(unittest.TestCase):
@@ -3122,7 +3277,7 @@ class TestShowVrfAllInterface(unittest.TestCase):
 
 
 # #############################################################################
-# # unitest For Show Interface Switchport
+# # Unittest For Show Interface Switchport
 # #############################################################################
 
 
@@ -3331,7 +3486,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_disabled)
 
 # #############################################################################
-# # unitest For Show Ipv6 Interface Vrf All
+# # Unittest For Show Ipv6 Interface Vrf All
 # #############################################################################
 
 
@@ -3531,6 +3686,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
+
 class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3639,6 +3795,7 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
+
 class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3672,6 +3829,8 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
 # ====================================
 # Unit test for 'show interface brief'
 # ====================================
+
+
 class TestShowInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3795,6 +3954,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
 
 class TestShowRunInterface(unittest.TestCase):
     device = Device(name='aDevice')
@@ -3986,6 +4146,7 @@ class TestShowRunInterface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
 
+
 class TestShowNveInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -4044,6 +4205,7 @@ class TestShowNveInterface(unittest.TestCase):
         obj = ShowNveInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(interface='nve1')
+
 
 class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
@@ -4150,8 +4312,10 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
 
 #############################################################################
-# unitest For show interface description
+# unittest For show interface description
 #############################################################################
+
+
 class test_show_interface_description(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
