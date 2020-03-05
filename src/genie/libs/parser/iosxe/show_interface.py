@@ -3199,7 +3199,7 @@ class ShowInterfacesStatusSchema(MetaParser):
                 'vlan': str,
                 'duplex_code': str,
                 'port_speed': str,
-                'type': str,
+                Optional('type'): str,
             }
         }
     }
@@ -3220,42 +3220,60 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         else:
             out = output
 
-        parsed_dict = {}
+        result_dict = {}
 
         # Port      Name               Status       Vlan       Duplex  Speed Type
         # Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
-        # Gi1/1/0/1      FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
+        # Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
+        # Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+        # Gi1/10    To cft123          connected    trunk      a-full a-1000 10/100/1000-TX
+        # Gi1/1/0/1 FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
         # Te1/1/2   VSL                connected    trunk        full  a-10G 10GBase-SR
-        # Po1       ES1SW80AUN6        connected    trunk      a-full  a-10G
+        # Te2/1/20                     disabled     1            full   auto No XCVR
+        # Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
+        # Po10      VSL LINK2          connected    trunk      a-full  a-10G
 
-        if out:
-            res = parsergen.oper_fill_tabular(device_output=out,
-                                              device_os='iosxe',
-                                              table_terminal_pattern=r"^\n",
-                                              header_fields=
-                                               [ "Port",
-                                                 "Name",
-                                                 "Status",
-                                                 "Vlan",
-                                                 "Duplex",
-                                                 "Speed",
-                                                 "Type"],
-                                              label_fields=
-                                              ["Interface",
-                                               "name",
-                                               "status",
-                                               "vlan",
-                                               "duplex_code",
-                                               "port_speed",
-                                               "type"],
-                                              index=[0]
-                                              )
 
-            #Building the schema out of the parsergen output
-            if res.entries:
-                 for intf, intf_dict in res.entries.items():
-                     intf = Common.convert_intf_name(intf)
-                     del intf_dict['Interface']
-                     parsed_dict.setdefault('interfaces', {}).update({intf: intf_dict})
+        # Name and Type are optional and also both can have multiple words on it, so find a single regex to match
+        # all cases is hard. I remove the Type column of the line and then the regex works for all cases
+        p1 = re.compile(r'^(?P<interfaces>[\d\w/]+)(?: +(?P<name>([\S ]+)))?'
+                        r' +(?P<status>\S+) +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+)'
+                        r' +(?P<port_speed>[\S\-]+)$')
 
-        return (parsed_dict)
+        type_pos = 0
+        for line in out.splitlines():
+            line = line.strip()
+
+            if "Type" in line:
+                type_pos = line.find("Type")
+                continue
+
+            if len(line) > type_pos:    # Type exists, lets get it and remove it
+                type_val = line[type_pos:].strip()
+                line = line[:type_pos -1]
+            else:
+                type_val = ""   # Type doesn't exists
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
+
+                name_val = group['name'].strip()
+                if len(name_val)>0 :
+                    intf_dict['name'] = name_val
+                if len(type_val)>0 :
+                    intf_dict['type'] = type_val
+
+
+                keys = ['status',
+                        'vlan', 'duplex_code', 'port_speed']
+
+                for k in keys:
+                    intf_dict[k] = group[k]
+                continue
+
+        return result_dict
+
