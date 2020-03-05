@@ -3,7 +3,7 @@ import re
 import unittest
 from unittest.mock import Mock
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
@@ -389,12 +389,175 @@ none    202       community
             },
         },
     }
+
+    golden_output_vlan_3 = {'execute.return_value': '''
+show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa1/17, Fa1/18
+104  VLAN0104                         active    
+319  VLAN0319                         active    
+320  VLAN0320                         active    Fa1/1, Fa1/2, Fa1/3, Fa1/4
+                                                Fa1/5, Fa1/6, Fa1/7, Fa1/8
+                                                Fa1/9, Fa1/10, Fa1/11, Fa1/12
+                                                Fa1/15, Fa1/16
+333  VLAN0333                         active    Fa1/13, Fa1/14
+999  VLAN0999                         active    
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0   
+104  enet  100104     1500  -      -      -        -    -        0      0   
+319  enet  100319     1500  -      -      -        -    -        0      0   
+320  enet  100320     1500  -      -      -        -    -        0      0   
+           
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+333  enet  100333     1500  -      -      -        -    -        0      0   
+999  enet  100999     1500  -      -      -        -    -        0      0   
+1002 fddi  101002     1500  -      -      -        -    -        0      0   
+1003 tr    101003     1500  -      -      -        -    -        0      0   
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+    '''}
+
+    golden_parsed_output_vlan_3 = {
+    'vlans': {
+        '1': {
+            'interfaces': ['FastEthernet1/17', 'FastEthernet1/18'],
+            'mtu': 1500,
+            'name': 'default',
+            'said': 100001,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '1',
+        },
+        '1002': {
+            'mtu': 1500,
+            'name': 'fddi-default',
+            'said': 101002,
+            'shutdown': False,
+            'state': 'unsupport',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'fddi',
+            'vlan_id': '1002',
+        },
+        '1003': {
+            'mtu': 1500,
+            'name': 'token-ring-default',
+            'said': 101003,
+            'shutdown': False,
+            'state': 'unsupport',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'tr',
+            'vlan_id': '1003',
+        },
+        '1004': {
+            'mtu': 1500,
+            'name': 'fddinet-default',
+            'said': 101004,
+            'shutdown': False,
+            'state': 'unsupport',
+            'stp': 'ieee',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'fdnet',
+            'vlan_id': '1004',
+        },
+        '1005': {
+            'mtu': 1500,
+            'name': 'trnet-default',
+            'said': 101005,
+            'shutdown': False,
+            'state': 'unsupport',
+            'stp': 'ibm',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'trnet',
+            'vlan_id': '1005',
+        },
+        '104': {
+            'mtu': 1500,
+            'name': 'VLAN0104',
+            'said': 100104,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '104',
+        },
+        '319': {
+            'mtu': 1500,
+            'name': 'VLAN0319',
+            'said': 100319,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '319',
+        },
+        '320': {
+            'interfaces': ['FastEthernet1/1', 'FastEthernet1/2', 'FastEthernet1/3', 'FastEthernet1/4', 'FastEthernet1/5', 'FastEthernet1/6', 'FastEthernet1/7', 'FastEthernet1/8', 'FastEthernet1/9', 'FastEthernet1/10', 'FastEthernet1/11', 'FastEthernet1/12', 'FastEthernet1/15', 'FastEthernet1/16'],
+            'mtu': 1500,
+            'name': 'VLAN0320',
+            'said': 100320,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '320',
+        },
+        '333': {
+            'interfaces': ['FastEthernet1/13', 'FastEthernet1/14'],
+            'mtu': 1500,
+            'name': 'VLAN0333',
+            'said': 100333,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '333',
+        },
+        '999': {
+            'mtu': 1500,
+            'name': 'VLAN0999',
+            'said': 100999,
+            'shutdown': False,
+            'state': 'active',
+            'trans1': 0,
+            'trans2': 0,
+            'type': 'enet',
+            'vlan_id': '999',
+        },
+    },
+}
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVlan(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
-
 
     def test_show_vlan_1(self):
         self.maxDiff = None
@@ -409,6 +572,13 @@ none    202       community
         obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_vlan_2)
+
+    def test_show_vlan_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vlan_3)
+        obj = ShowVlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_vlan_3)
 
 ###########################################################################
 #

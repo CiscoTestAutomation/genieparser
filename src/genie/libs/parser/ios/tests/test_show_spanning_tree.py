@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -161,7 +161,7 @@ class test_show_spanning_tree(test_show_spanning_tree_iosxe):
                         "priority": 32771,
                         "cost": 20000,
                         "port": 136,
-                        "address": "0050.14bb.6000",
+                        "address": "0050.14ff.1cbb",
                         "hello_time": 2
                     },
                     "bridge": {
@@ -170,7 +170,7 @@ class test_show_spanning_tree(test_show_spanning_tree_iosxe):
                         "forward_delay": 15,
                         "configured_bridge_priority": 32768,
                         "sys_id_ext": 3,
-                        "address": "00d0.003f.8800",
+                        "address": "00d0.00ff.c73f",
                         "hello_time": 2
                     },
                     "interfaces": {
@@ -201,13 +201,13 @@ class test_show_spanning_tree(test_show_spanning_tree_iosxe):
         MST03
           Spanning tree enabled protocol mstp
           Root ID    Priority    32771
-                     Address     0050.14bb.6000
+                     Address     0050.14ff.1cbb
                      Cost        20000
                      Port        136 (GigabitEthernet3/8)
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
 
           Bridge ID  Priority    32771  (priority 32768 sys-id-ext 3)
-                     Address     00d0.003f.8800
+                     Address     00d0.00ff.c73f
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
 
         Interface        Role Sts Cost      Prio.Nbr Status

@@ -41,6 +41,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp sessions'
     * 'show bgp instance all sessions'
     * 'show bgp instance {instance} sessions'
+    * 'show bgp egress-engineering'
 """
 
 # Python
@@ -62,6 +63,121 @@ from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# ========================================
+# Parser for 'show bgp egress-engineering'
+# ========================================
+
+class ShowBgpEgressEngineeringSchema(MetaParser):
+    
+    ''' Schema for show bgp egress-engineering '''
+    schema = {
+        'peer_set':{
+            Any():{
+                'peer_set_id': str,
+                'nexthop': str,
+                'version': int,
+                'rn_version': int,
+                'flags': str,
+                'local_asn': int,
+                'remote_asn': int,
+                'local_rid': str,
+                'remote_rid': str,
+                Optional('local_address'): str,
+                'first_hop': list,
+                'nhid': list,
+                Optional('ifh'): list,
+                'label': int,
+                'refcount': int,
+                'rpc_set': str,
+                Optional('id'): int
+            },
+        },
+    }
+
+class ShowBgpEgressEngineering(ShowBgpEgressEngineeringSchema):
+
+    ''' Parser for show bgp egress-engineering'''
+
+    cli_command = ['show bgp egress-engineering']
+    
+
+    def cli (self, output=None):
+        if output is None:
+            out=self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+        p1 = re.compile(r'Egress +Engineering +Peer +Set: +(?P<prefix>[\d\/\.]+) '
+        '+(?P<peer_set_id>\S+)')
+
+        #   Version: 2, rn_version: 2
+        p2 = re.compile(r'(?P<key_1>[\w\s]+): +(?P<value_1>[\S\s]+), +(?P<key_2>[\w\s]+): '
+        '+(?P<value_2>\d+)')
+
+        #    Local ASN: 1
+        #     Remote ASN: 2
+        #     Local RID: 10.4.1.3
+        #     Remote RID: 10.4.1.4
+        #     First Hop: 192.168.1.2
+        #         NHID: 3
+        p3 = re.compile(r'(?P<key>[\w\s]+): (?P<value>[\S\s]+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                peer_dict = ret_dict.setdefault( 'peer_set',{}).\
+                    setdefault(group['prefix'], {})
+                value = group['peer_set_id'].strip('()')
+                peer_dict.update({'peer_set_id' :value })
+                continue
+
+            # Version: 2, rn_version: 2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                values = list(group.values())
+                for val in range(0, len(values), 2):
+                    update_value = int(values[val+1]) if values[val+1].isdigit() else values[val+1]
+                    peer_dict.update({values[val].strip().lower().\
+                        replace(' ','_') : update_value})
+
+                continue
+
+            #Local ASN: 1
+            #     Remote ASN: 2
+            #     Local RID: 10.4.1.3
+            #     Remote RID: 10.4.1.4
+            #  First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
+            #   NHID: 9, 10, 11
+            #   IFH: 0x110, 0x130, 0x150
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['key'].strip().lower().replace(' ','_') == 'first_hop'\
+                or group['key'].strip().lower().replace(' ','_') == 'nhid'\
+                or group['key'].strip().lower().replace(' ','_') == 'ifh':
+                    update_value = group['value'].strip(',').split(',')
+                    update_value = [int(item.strip()) if item.strip().isdigit() \
+                        else item.strip() for item in update_value]
+                elif group['value'].isdigit():
+                    update_value = int(group['value']) 
+                else:
+                    update_value = group['value'] 
+
+                peer_dict.update({group['key'].strip().lower().\
+                    replace(' ','_') : update_value})
+                    
+                continue
+
+        return ret_dict
+    
 
 # =======================================
 # Parser for 'show bgp instances'
@@ -72,16 +188,17 @@ class ShowBgpInstancesSchema(MetaParser):
     """Schema for show bgp instances"""
 
     schema = {
-        'instance':
-            {Any():
-                {'bgp_id': int,
-                 'instance_id': int,
-                 'placed_grp': str,
-                 'num_vrfs': int,
-                 Optional('address_families'): list
-                }
-            },
-        }
+        'instance':{
+            Any(): {
+                'bgp_id': int,
+                'instance_id': int,
+                'placed_grp': str,
+                'num_vrfs': int,
+                Optional('address_families'): list
+            }
+        },
+        Optional('number_of_bgp_instances'): int,
+    }
 
 class ShowBgpInstances(ShowBgpInstancesSchema):
 
@@ -94,14 +211,15 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        p1 = re.compile(r'^(?P<instance_id>\d+)'
-                        ' +(?P<placed_grp>[\w\-]+)'
-                        ' +(?P<instance>[\w\-]+)'
-                        ' +(?P<bgp_id>\d+)'
-                        ' +(?P<num_vrfs>\d+)'
-                        ' +(?P<address_family>[\w\s\,\-]+)$')
+
+        p1 = re.compile(r'^(?P<instance_id>\d+) +(?P<placed_grp>[\w\_|\-]+) '
+                        r'+(?P<instance>[\w\-]+) +(?P<bgp_id>\d+) '
+                        r'+(?P<num_vrfs>\d+) +(?P<address_family>[\w\s\,\-]+)$')
+
         p1_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
-        p2 = re.compile(r'^(?P<address_family>[\w\s\,\-]+)$')
+        p2 = re.compile(r'^(?P<address_family>[(IPv|VPNv)\d Unicast\,]+)$')
+        p3 = re.compile(r'^Number +of +BGP +instances\: '
+                        r'+(?P<number_of_bgp_instances>\d+)$')
 
         ret_dict = {}
 
@@ -151,6 +269,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             m = p1_1.match(line)
             if m:
                 continue
+
             #                                                     IPv6 Unicast, VPNv6 Unicast
             m = p2.match(line)
             if m:
@@ -160,7 +279,15 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                     address_family_extra_line = [item.strip() for item in address_family_extra_line]
                     address_family_lst.extend(address_family_extra_line)
                     ret_dict['instance'][instance]['address_families'] = address_family_lst
-    
+
+            # Number of BGP instances: 1
+            m3 = p3.match(line)
+            if m3:
+                num = int(m3.groupdict()['number_of_bgp_instances'])
+                ret_dict['number_of_bgp_instances'] = num
+
+                continue
+
         return ret_dict
 
 # =======================================
@@ -4900,8 +5027,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                          r'(?: +\(default +for +vrf +(?P<default_vrf>\S+)\))?$')
 
         # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
-        # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
-        # *> [1][10.4.1.1:1][1234.bcf5.6789.3e11.0505][12564523]/111
+        # *>i[2][0][48][0014.01ff.0001][32][10.249.249.10]/136
+        # *> [1][10.4.1.1:1][1234.bcff.5d7f.3e11.0505][12564523]/111
         p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
                            r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))'
                            r'(?: +(?P<next_hop>\S+))?$')
@@ -5080,7 +5207,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 continue
 
             # *> 2001:db8:cdc9:190::/64   2001:db8:20:1:5::5
-            # *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+            # *>i[2][0][48][0014.01ff.0001][32][10.249.249.10]/136
             m = p16_1.match(line)
             if m:
                 group = m.groupdict()
@@ -5614,7 +5741,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict.update({'local_router_id': local_router_id})
                 continue
 
-            #                     2001:db8:400:13b1:21a:1ff:fe00:161/128
+            #                     2001:db8:400:13b1:21a:1ff:feff:161/128
             m = p3_4.match(line)
             if m:
                 # Get keys
@@ -5901,7 +6028,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             # *>i10.21.33.33/32   10.36.3.3         0        100          0 ?
             # l10.34.34.0/24      0.0.0.0                  100      32768 i
             # *>i2001::33/128     ::ffff:10.36.3.3  0        100          0 ?
-            # *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216
+            # *>l[2]:[0]:[0]:[48]:[0000.19ff.f320]:[0]:[0.0.0.0]/216
             # *>i                 10.186.0.2        0        100          0 ?
             # *>l10.4.1.0/24        0.0.0.0                            100      32768 i
             # *>r10.16.1.0/24        0.0.0.0                4444        100      32768 ?
@@ -6244,8 +6371,8 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         # Route Distinguisher: 10.196.7.7:3
         p1 = re.compile(r'^Route +Distinguisher: +(?P<rd>(\S+))$')
 
-        # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
+        # [2][0][48][7777.77ff.7779][0]/104 is advertised to 10.55.0.10
+        # [1][0009.08ff.0d0c.0403.0201][0]/120 is advertised to 10.100.5.5
         p2 = re.compile(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>(\d+)) +is'
                          ' +advertised +to +(?P<neighbor>(\S+))$')
 
@@ -6298,8 +6425,8 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
                 af = 'l2vpn evpn RD ' + m.groupdict()['rd']
                 continue
 
-            # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-            # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
+            # [2][0][48][7777.77ff.7779][0]/104 is advertised to 10.55.0.10
+            # [1][0009.08ff.0d0c.0403.0201][0]/120 is advertised to 10.100.5.5
             m = p2.match(line)
             if m:
                 group = m.groupdict()

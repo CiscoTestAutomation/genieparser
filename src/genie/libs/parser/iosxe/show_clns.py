@@ -3,8 +3,8 @@
         *  show clns interface
         *  show clns interface <interface>
         *  show clns protocol
-        *  show clns neighbor detail
-        *  show clns is-neighbor detail
+        *  show clns neighbors detail
+        *  show clns is-neighbors detail
         *  show clns traffic
 """
 
@@ -16,6 +16,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                Optional
 
 from genie.libs.parser.utils.common import Common
+
 
 class ShowClnsInterfaceSchema(MetaParser):
     """Schema for show clns interface,
@@ -384,7 +385,7 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
         # IS-IS Router: <Null Tag> (0x10000)
         # IS-IS Router: test
         p1 = re.compile(r'^\s*IS-IS Router: +(?P<tag_process>[\S\s]+?)( +\((?P<tag>\w+)\))?$')
-        # System Id: 2222.2222.2222.00  IS-Type: level-1-2
+        # System Id: 2222.22ff.4444.00  IS-Type: level-1-2
         p2 = re.compile(r'^\s*System Id: +(?P<system_id>[\w\.]+) +IS\-Type: +(?P<is_type>[\w\-]+)$')
         # Manual area address(es):
         p3 = re.compile(r'^\s*Manual +area +address\(es\):$')
@@ -426,14 +427,14 @@ class ShowClnsProtocol(ShowClnsProtocolSchema):
                 tag_process = group['tag_process']
                 tag = group['tag']
                 if tag_process == '<Null Tag>':
-                    tag_process = ''
+                    tag_process = 'null'
                 clns_dict = result_dict.setdefault('instance', {}).setdefault(tag_process, {})
 
                 if tag:
                     clns_dict.update({'process_handle': tag})
                 continue
 
-            # System Id: 2222.2222.2222.00  IS-Type: level-1-2
+            # System Id: 2222.22ff.4444.00  IS-Type: level-1-2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -601,8 +602,8 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         # Tag VRF1:
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
-        # R2_xr           Gi2.115       fa16.3e21.73f6      Up     26        L1L2 M-ISIS
+        # R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
+        # R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
         p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) '
                         r'+(?P<snpa>[\w\.]+) +(?P<state>\w+) +'
                         r'(?P<holdtime>\d+) +(?P<level>[L\d]+) +'
@@ -611,7 +612,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  10.229.7.7*
         p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
-        #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+        #   IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
         p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
         #   Uptime: 00:23:58
         p6 = re.compile(r'^Uptime: +(?P<uptime>[\w\:]+)$')
@@ -632,7 +633,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
                                        .setdefault(group['tag'], {})
                 continue
             # System Id       Interface     SNPA                State  Holdtime  Type Protocol
-            # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
+            # R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -670,7 +671,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
 
                 continue
 
-            #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+            #   IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -758,23 +759,32 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
 
         # Tag VRF1:
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
+
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
+        # R3_nx           Gi3.115       Up     L1L2 64/64     R1_xe.02           Phase V
         p2 = re.compile(r'^(?P<system_id>[\w\.]+)\s+(?P<interface>\S+)\s+'
-                        '(?P<state>\w+)\s+L(?P<type>\d+)\s+(?P<priority>\d+)'
+                        '(?P<state>\w+)\s+(?P<type>\S+)\s+(?P<priority>\d+)'
                         '(\/\d+)*\s+(?P<circuit_id>[\w\.]+)\s+(?P<format>[\S\s]+)$')
+
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
+
         #   IP Address(es):  10.229.7.7*
         p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
-        #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+
+        #   IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
         p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
+
         #   Uptime: 00:24:24
         p6 = re.compile(r'^Uptime: +(?P<uptime>[\w\:]+)$')
+
         #   NSF capable
         p7 = re.compile(r'^NSF +(?P<nsf>\w+)$')
+
         #   Topology: IPv4, IPv6
         p8 = re.compile(r'^Topology: +(?P<topology>[\S\s]+)$')
+
         #   Interface name: GigabitEthernet4
         p9 = re.compile(r'^Interface +name: +(?P<interface>\S+)$')
 
@@ -797,7 +807,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
                 type_dict = clns_dict.setdefault('system_id', {}). \
                                       setdefault(group['system_id'], {}). \
                                       setdefault('type', {}). \
-                                      setdefault(int(group['type']), {})
+                                      setdefault(group['type'], {})
 
                 type_dict.update({'state': group['state'].lower()})
                 type_dict.update({'circuit_id': group['circuit_id']})
@@ -821,7 +831,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
                 type_dict.update({'ip_address': group['ip_address'].split()})
                 continue
 
-            # IPv6 Address(es): FE80::5C00:C0FF:FE06:7
+            # IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -981,7 +991,6 @@ class ShowClnsTrafficSchema(MetaParser):
             }
         }
     }
-
 
 class ShowClnsTraffic(ShowClnsTrafficSchema):
     """Parser for show clns traffic"""

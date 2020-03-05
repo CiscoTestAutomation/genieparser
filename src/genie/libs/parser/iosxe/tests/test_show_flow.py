@@ -6,8 +6,8 @@ from unittest.mock import Mock
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,SchemaMissingKeyError
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # iosxe show_flow
 from genie.libs.parser.iosxe.show_flow import (ShowFlowMonitor,

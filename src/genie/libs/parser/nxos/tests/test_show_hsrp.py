@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Parser
 from genie.libs.parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll,\
@@ -122,7 +122,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                         'hold_msec_flag': False,
                                         'hold_sec': 3},
                                     'upper_fwd_threshold': 110,
-                                    'virtual_mac_address': '0000.0c9f.f000',
+                                    'virtual_mac_address': '0000.0cff.909f',
                                     'virtual_mac_address_status': 'default'},
                                 },
                             },
@@ -142,7 +142,7 @@ class test_show_hsrp_all(unittest.TestCase):
           Active router is unknown
           Standby router is unknown 
           Authentication MD5, key-string "cisco123"
-          Virtual mac address is 0000.0c9f.f000 (Default MAC)
+          Virtual mac address is 0000.0cff.909f (Default MAC)
           0 state changes, last state change never
           IP redundancy name is hsrp-Eth4/1-0 (default)
         '''}
@@ -186,7 +186,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                             'status': 'UP'},
                                         },
                                     'upper_fwd_threshold': 110,
-                                    'virtual_mac_address': '0000.0c9f.f000',
+                                    'virtual_mac_address': '0000.0cff.909f',
                                     'virtual_mac_address_status': 'default'
                                     },
                                 2:
@@ -208,7 +208,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                         'hold_msec_flag': False,
                                         'hold_sec': 10},
                                     'upper_fwd_threshold': 1,
-                                    'virtual_mac_address': '0000.0c9f.f002',
+                                    'virtual_mac_address': '0000.0cff.90a1',
                                     'virtual_mac_address_status': 'default'},
                                 },
                             },
@@ -232,7 +232,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                     'hsrp_router_state': 'active',
                                     'last_state_change': '02:43:40',
                                     'link_local_ipv6_address':
-                                        {'address': 'fe80::5:73ff:fea0:2',
+                                        {'address': 'fe80::5:73ff:feff:a0a2',
                                         'auto_configure': True},
                                     'lower_fwd_threshold': 0,
                                     'num_state_changes': 2,
@@ -249,7 +249,7 @@ class test_show_hsrp_all(unittest.TestCase):
                                         'hold_msec_flag': False,
                                         'hold_sec': 10},
                                     'upper_fwd_threshold': 100,
-                                    'virtual_mac_address': '0005.73a0.0002',
+                                    'virtual_mac_address': '0005.73ff.a0a2',
                                     'virtual_mac_address_status': 'default'},
                                 },
                             },
@@ -270,7 +270,7 @@ class test_show_hsrp_all(unittest.TestCase):
         Active router is local
         Standby router is 192.168.1.2 , priority 90 expires in 2.429000 sec(s)
         Authentication MD5, key-string "cisco123"
-        Virtual mac address is 0000.0c9f.f000 (Default MAC)
+        Virtual mac address is 0000.0cff.909f (Default MAC)
         10 state changes, last state change 00:01:43
           Track object 1 state UP decrement 22        
         IP redundancy name is hsrp-Eth1/3-0 (default)
@@ -283,7 +283,7 @@ class test_show_hsrp_all(unittest.TestCase):
         Active router is unknown
         Standby router is unknown 
         Authentication text "cisco"
-        Virtual mac address is 0000.0c9f.f002 (Default MAC)
+        Virtual mac address is 0000.0cff.90a1 (Default MAC)
         0 state changes, last state change never
         IP redundancy name is hsrp-Eth1/3-2 (default)
 
@@ -292,11 +292,11 @@ class test_show_hsrp_all(unittest.TestCase):
           Forwarding threshold(for vPC), lower: 0 upper: 100 
         Hellotime 3 sec, holdtime 10 sec
         Next hello sent in 0.455000 sec(s)
-        Virtual IP address is fe80::5:73ff:fea0:2 (Auto)
+        Virtual IP address is fe80::5:73ff:feff:a0a2 (Auto)
         Active router is local
         Standby router is fe80::20c:29ff:fe69:14bb , priority 90 expires in 8.960000 sec(s)
         Authentication text "cisco"
-        Virtual mac address is 0005.73a0.0002 (Default MAC)
+        Virtual mac address is 0005.73ff.a0a2 (Default MAC)
         2 state changes, last state change 02:43:40
         IP redundancy name is hsrp-Eth1/3-2-V6 (default)
         Secondary VIP(s):
@@ -332,7 +332,7 @@ class test_show_hsrp_all(unittest.TestCase):
                         'hold_msec_flag': False,
                         'hold_sec': 10},
                     'upper_fwd_threshold': 100,
-                    'virtual_mac_address': '0000.0c07.ac01',
+                    'virtual_mac_address': '0000.0cff.b308',
                     'virtual_mac_address_status': 'default'}}}}}},
         'interface': 'Ethernet1/3',
         'use_bia': False}}
@@ -348,7 +348,7 @@ class test_show_hsrp_all(unittest.TestCase):
           Active router is local
           Standby router is unknown
           Authentication text "cisco"
-          Virtual mac address is 0000.0c07.ac01 (Default MAC)
+          Virtual mac address is 0000.0cff.b308 (Default MAC)
           2 state changes, last state change 00:05:57
           IP redundancy name is hsrp-Eth1/3-1 (default)
         '''}

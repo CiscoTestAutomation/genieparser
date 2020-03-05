@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -28,11 +28,11 @@ class test_show_lacp_sysid(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
     csr1000v-2#show lacp sys-id
-    32768, 001e.49af.8c00
+    32768, 001e.49ff.3caf
     '''}
 
     golden_parsed_output = {
-        'system_id_mac': '001e.49af.8c00',
+        'system_id_mac': '001e.49ff.3caf',
         'system_priority': 32768,
     }
 
@@ -303,16 +303,16 @@ class test_show_lacp_neighbor(unittest.TestCase):
 
                       LACP port                        Admin  Oper   Port    Port
     Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
-    Gi2       SA      32768     001e.49e6.bc00  25s    0x0    0x1    0x1     0x3D
-    Gi3       SA      32768     001e.49e6.bc00  19s    0x0    0x1    0x1     0x3D
+    Gi2       SA      32768     001e.49ff.a3e6  25s    0x0    0x1    0x1     0x3D
+    Gi3       SA      32768     001e.49ff.a3e6  19s    0x0    0x1    0x1     0x3D
 
     Channel group 2 neighbors
 
                       LACP port                        Admin  Oper   Port    Port
     Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
-    Gi4       SP      32768     001e.49e6.bc00  15s    0x0    0x2    0x1     0x3C
-    Gi5       SP      32768     001e.49e6.bc00   1s    0x0    0x2    0x1     0x3C
-    Gi6       SP      32768     001e.49e6.bc00   0s    0x0    0x2    0x1     0x3C
+    Gi4       SP      32768     001e.49ff.a3e6  15s    0x0    0x2    0x1     0x3C
+    Gi5       SP      32768     001e.49ff.a3e6   1s    0x0    0x2    0x1     0x3C
+    Gi6       SP      32768     001e.49ff.a3e6   0s    0x0    0x2    0x1     0x3C
     '''}
 
     golden_parsed_output = {
@@ -329,7 +329,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
                         'activity' : 'active',
-                        'partner_id': '001e.49e6.bc00',
+                        'partner_id': '001e.49ff.a3e6',
                         'age': 25,
                         'port_state': 61
                         },
@@ -342,7 +342,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'flags': 'SA',
                         'activity': 'active',
                         'port_state': 61,
-                        'partner_id': '001e.49e6.bc00',
+                        'partner_id': '001e.49ff.a3e6',
                         'age': 19,
                     },
                 },
@@ -360,7 +360,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'flags': 'SP',
                         'port_state': 60,
                         'activity': 'passive',
-                        'partner_id': '001e.49e6.bc00',
+                        'partner_id': '001e.49ff.a3e6',
                         'age': 15,
                     },
                     'GigabitEthernet5': {
@@ -372,7 +372,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'flags': 'SP',
                         'port_state': 60,
                         'activity': 'passive',
-                        'partner_id': '001e.49e6.bc00',
+                        'partner_id': '001e.49ff.a3e6',
                         'age': 1
                     },
                     'GigabitEthernet6': {
@@ -384,7 +384,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'flags': 'SP',
                         'port_state': 60,
                         'activity': 'passive',
-                        'partner_id': '001e.49e6.bc00',
+                        'partner_id': '001e.49ff.a3e6',
                         'age': 0
                     },
                 },
@@ -422,9 +422,9 @@ class test_show_pagp_neighbor(unittest.TestCase):
         Channel group 14 neighbors
                  Partner              Partner          Partner         Partner Group
         Port      Name                 Device ID        Port       Age  Flags   Cap.
-        Gi1/0/7   R4                   ecbd.1d09.5680	Gi1/0/7     22s SC	E0001
-        Gi1/0/8   R4                   ecbd.1d09.5680	Gi1/0/8     16s SC	E0001
-        Gi1/0/9   R4                   ecbd.1d09.5680	Gi1/0/9     18s SC	E0001
+        Gi1/0/7   R4                   ecbd.1dff.5f89	Gi1/0/7     22s SC	E0001
+        Gi1/0/8   R4                   ecbd.1dff.5f89	Gi1/0/8     16s SC	E0001
+        Gi1/0/9   R4                   ecbd.1dff.5f89	Gi1/0/9     18s SC	E0001
     '''
     }
 
@@ -437,7 +437,7 @@ class test_show_pagp_neighbor(unittest.TestCase):
                         "flags": "SC",
                         "group_cap": "E0001",
                         "interface": "GigabitEthernet1/0/7",
-                        "partner_id": "ecbd.1d09.5680",
+                        "partner_id": "ecbd.1dff.5f89",
                         "partner_name": "R4",
                         "partner_port": "GigabitEthernet1/0/7"
                     },
@@ -446,7 +446,7 @@ class test_show_pagp_neighbor(unittest.TestCase):
                         "flags": "SC",
                         "group_cap": "E0001",
                         "interface": "GigabitEthernet1/0/8",
-                        "partner_id": "ecbd.1d09.5680",
+                        "partner_id": "ecbd.1dff.5f89",
                         "partner_name": "R4",
                         "partner_port": "GigabitEthernet1/0/8"
                     },
@@ -455,7 +455,7 @@ class test_show_pagp_neighbor(unittest.TestCase):
                         "flags": "SC",
                         "group_cap": "E0001",
                         "interface": "GigabitEthernet1/0/9",
-                        "partner_id": "ecbd.1d09.5680",
+                        "partner_id": "ecbd.1dff.5f89",
                         "partner_name": "R4",
                         "partner_port": "GigabitEthernet1/0/9"
                     }
@@ -1111,7 +1111,7 @@ class test_show_lacp_neighbor_detail(unittest.TestCase):
 
                   Partner               Partner                     Partner
         Port           System ID             Port Number     Age         Flags
-        Gi0/0/1         00127,6487.88af.b840  0x2              18s        FA
+        Gi0/0/1         00127,6487.88ff.68ef  0x2              18s        FA
 
                   LACP Partner         Partner         Partner
                   Port Priority        Oper Key        Port State
@@ -1125,7 +1125,7 @@ class test_show_lacp_neighbor_detail(unittest.TestCase):
                   Yes           Yes             No           No 
                   Partner               Partner                     Partner
         Port           System ID             Port Number     Age         Flags
-        Gi0/0/7         00127,6487.88af.b840  0x1               0s        FA
+        Gi0/0/7         00127,6487.88ff.68ef  0x1               0s        FA
 
                   LACP Partner         Partner         Partner
                   Port Priority        Oper Key        Port State
@@ -1160,7 +1160,7 @@ class test_show_lacp_neighbor_detail(unittest.TestCase):
                         'port_num': 2,
                         'port_state': 63,
                         'synchronization': True,
-                        'system_id': '00127,6487.88af.b840',
+                        'system_id': '00127,6487.88ff.68ef',
                         'timeout': 'Short'
                     },
                     'GigabitEthernet0/0/7': {
@@ -1178,7 +1178,7 @@ class test_show_lacp_neighbor_detail(unittest.TestCase):
                         'port_num': 1,
                         'port_state': 15,
                         'synchronization': True,
-                        'system_id': '00127,6487.88af.b840',
+                        'system_id': '00127,6487.88ff.68ef',
                         'timeout': 'Short'
                     }
                 },

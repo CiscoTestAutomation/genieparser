@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -230,7 +230,7 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
 
 
         IS-IS Router: 1
-          System Id: 1c53.0001.0001 
+          System Id: 1c53.00ff.0102 
           Instance Id: 0
           IS Levels: level-2-only
           Manual area address(es):

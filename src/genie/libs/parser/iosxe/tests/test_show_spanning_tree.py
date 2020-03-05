@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -701,7 +701,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "root_of_spanning_tree": True,
                         "hold_time": 1,
                         "topology_changes": 3,
-                        "bridge_address": "d8b1.9009.bf80",
+                        "bridge_address": "d8b1.90ff.c889",
                         "interfaces": {
                              "Port-channel24": {
                                   "number_of_forward_transitions": 1,
@@ -709,7 +709,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "status": "designated forwarding",
                                   "designated_bridge_priority": 32768,
                                   "forward_delay": 0,
-                                  "designated_bridge_address": "d8b1.9009.bf80",
+                                  "designated_bridge_address": "d8b1.90ff.c889",
                                   "designated_path_cost": 0,
                                   "designated_root_priority": 32768,
                                   "port_identifier": "128.2400.",
@@ -718,7 +718,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                        "bpdu_sent": 1099019,
                                        "bpdu_received": 2191582
                                   },
-                                  "designated_root_address": "d8b1.9009.bf80",
+                                  "designated_root_address": "d8b1.90ff.c889",
                                   "boundary": "PVST",
                                   "port_num": 2400,
                                   "port_priority": 128,
@@ -734,7 +734,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "status": "broken  (PVST Sim. Inconsistent)",
                                   "designated_bridge_priority": 32768,
                                   "forward_delay": 0,
-                                  "designated_bridge_address": "d8b1.9009.bf80",
+                                  "designated_bridge_address": "d8b1.90ff.c889",
                                   "designated_path_cost": 0,
                                   "designated_root_priority": 32768,
                                   "port_identifier": "128.2390.",
@@ -743,7 +743,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                        "bpdu_sent": 138231,
                                        "bpdu_received": 167393
                                   },
-                                  "designated_root_address": "d8b1.9009.bf80",
+                                  "designated_root_address": "d8b1.90ff.c889",
                                   "boundary": "PVST",
                                   "port_num": 2390,
                                   "port_priority": 128,
@@ -775,7 +775,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "topology_from_port": "Port-channel12",
                         "topology_detected_flag": False,
                         "topology_change_flag": False,
-                        "bridge_address": "3820.565b.1b80",
+                        "bridge_address": "3820.56ff.76db",
                         "forwarding_delay": 15,
                         "topology_change_times": 35,
                         "hello_timer": 0,
@@ -804,10 +804,10 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "forward_delay": 0,
                                   "name": "Port-channel12",
                                   "designated_root_priority": 24676,
-                                  "designated_bridge_address": "3820.565b.1b80",
+                                  "designated_bridge_address": "3820.56ff.76db",
                                   "status": "designated forwarding",
                                   "port_identifier": "128.2388.",
-                                  "designated_root_address": "3820.565b.1b80",
+                                  "designated_root_address": "3820.56ff.76db",
                                   "cost": 3,
                                   "port_priority": 128,
                                   "designated_port_id": "128.2388"
@@ -842,14 +842,14 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "aging_timer": 300,
                         "topology_from_port": "Port-channel14",
                         "topology_change_timer": 21,
-                        "bridge_address": "ecbd.1d09.5680",
+                        "bridge_address": "ecbd.1dff.5f89",
                         "notification_times": 2,
                         "bridge_priority": 28672,
                         "topology_detected_flag": False,
                         "hello_time": 2,
                         "interfaces": {
                              "GigabitEthernet1/0/5": {
-                                  "designated_bridge_address": "ecbd.1d09.5680",
+                                  "designated_bridge_address": "ecbd.1dff.5f89",
                                   "number_of_forward_transitions": 1,
                                   "port_identifier": "128.5.",
                                   "counters": {
@@ -859,7 +859,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "cost": 4,
                                   "designated_port_id": "128.5",
                                   "designated_root_priority": 24777,
-                                  "designated_root_address": "58bf.eab6.2f00",
+                                  "designated_root_address": "58bf.eaff.e5b6",
                                   "port_num": 5,
                                   "status": "designated forwarding",
                                   "port_priority": 128,
@@ -891,14 +891,14 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "aging_timer": 300,
                         "topology_from_port": "Port-channel12",
                         "topology_change_timer": 0,
-                        "bridge_address": "3820.565b.1b80",
+                        "bridge_address": "3820.56ff.76db",
                         "topology_change_times": 35,
                         "bridge_priority": 24576,
                         "topology_detected_flag": False,
                         "root_of_spanning_tree": True,
                         "interfaces": {
                              "Port-channel12": {
-                                  "designated_bridge_address": "3820.565b.1b80",
+                                  "designated_bridge_address": "3820.56ff.76db",
                                   "number_of_forward_transitions": 1,
                                   "port_identifier": "128.2388.",
                                   "counters": {
@@ -908,7 +908,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "cost": 3,
                                   "designated_port_id": "128.2388",
                                   "designated_root_priority": 24676,
-                                  "designated_root_address": "3820.565b.1b80",
+                                  "designated_root_address": "3820.56ff.76db",
                                   "port_num": 2388,
                                   "status": "designated forwarding",
                                   "port_priority": 128,
@@ -934,7 +934,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
     golden_output_mstp = {'execute.return_value': '''\
         MST0 is executing the mstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 32768, sysid 0, address d8b1.9009.bf80
+          Bridge Identifier has priority 32768, sysid 0, address d8b1.90ff.c889
           Configured hello time 10, max age 40, forward delay 30, transmit hold-count 20
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -946,8 +946,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 2390 (Port-channel14) of MST0 is broken  (PVST Sim. Inconsistent)
            Port path cost 6660, Port priority 128, Port Identifier 128.2390.
-           Designated root has priority 32768, address d8b1.9009.bf80
-           Designated bridge has priority 32768, address d8b1.9009.bf80
+           Designated root has priority 32768, address d8b1.90ff.c889
+           Designated bridge has priority 32768, address d8b1.90ff.c889
            Designated port id is 128.2390, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 0
@@ -957,8 +957,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 2400 (Port-channel24) of MST0 is designated forwarding 
            Port path cost 6660, Port priority 128, Port Identifier 128.2400.
-           Designated root has priority 32768, address d8b1.9009.bf80
-           Designated bridge has priority 32768, address d8b1.9009.bf80
+           Designated root has priority 32768, address d8b1.90ff.c889
+           Designated bridge has priority 32768, address d8b1.90ff.c889
            Designated port id is 128.2400, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -970,7 +970,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
     golden_output_pvst = {'execute.return_value': '''\
         VLAN0100 is executing the ieee compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 100, address 3820.565b.1b80
+          Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
           Configured hello time 2, max age 20, forward delay 15
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -982,8 +982,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
            Port path cost 3, Port priority 128, Port Identifier 128.2388.
-           Designated root has priority 24676, address 3820.565b.1b80
-           Designated bridge has priority 24676, address 3820.565b.1b80
+           Designated root has priority 24676, address 3820.56ff.76db
+           Designated bridge has priority 24676, address 3820.56ff.76db
            Designated port id is 128.2388, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -995,7 +995,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
     golden_output_rapid_pvst = {'execute.return_value': '''\
         VLAN0100 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 100, address 3820.565b.1b80
+          Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
           Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
           We are the root of the spanning tree
           Topology change flag set, detected flag not set
@@ -1007,8 +1007,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
            Port path cost 3, Port priority 128, Port Identifier 128.2388.
-           Designated root has priority 24676, address 3820.565b.1b80
-           Designated bridge has priority 24676, address 3820.565b.1b80
+           Designated root has priority 24676, address 3820.56ff.76db
+           Designated bridge has priority 24676, address 3820.56ff.76db
            Designated port id is 128.2388, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1016,9 +1016,9 @@ class test_show_spanning_tree_detail(unittest.TestCase):
            BPDU: sent 34, received 0
 
         VLAN0201 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 28672, sysid 201, address ecbd.1d09.5680
+          Bridge Identifier has priority 28672, sysid 201, address ecbd.1dff.5f89
           Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
-          Current root has priority 24777, address 58bf.eab6.2f00
+          Current root has priority 24777, address 58bf.eaff.e5b6
           Root port is 2390 (Port-channel14), cost of root path is 3
           Topology change flag set, detected flag not set
           Number of topology changes 1 last change occurred 00:00:14 ago
@@ -1029,8 +1029,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 5 (GigabitEthernet1/0/5) of VLAN0201 is designated forwarding 
            Port path cost 4, Port priority 128, Port Identifier 128.5.
-           Designated root has priority 24777, address 58bf.eab6.2f00
-           Designated bridge has priority 28873, address ecbd.1d09.5680
+           Designated root has priority 24777, address 58bf.eaff.e5b6
+           Designated bridge has priority 28873, address ecbd.1dff.5f89
            Designated port id is 128.5, designated path cost 3
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1041,7 +1041,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
     }
     golden_output_1 = {'execute.return_value': '''\
         VLAN0001 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 1, address 000e.3962.0f40
+          Bridge Identifier has priority 24576, sysid 1, address 000e.39ff.71a2
           Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -1053,8 +1053,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 1671 (Port-channel220) of VLAN0001 is designated forwarding 
            Port path cost 1, Port priority 128, Port Identifier 128.1671.
-           Designated root has priority 24577, address 000e.3962.0f40
-           Designated bridge has priority 24577, address 000e.3962.0f40
+           Designated root has priority 24577, address 000e.39ff.71a2
+           Designated bridge has priority 24577, address 000e.39ff.71a2
            Designated port id is 128.1671, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1063,8 +1063,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 1673 (Port-channel265) of VLAN0001 is designated forwarding 
            Port path cost 3, Port priority 128, Port Identifier 128.1673.
-           Designated root has priority 24577, address 000e.3962.0f40
-           Designated bridge has priority 24577, address 000e.3962.0f40
+           Designated root has priority 24577, address 000e.39ff.71a2
+           Designated bridge has priority 24577, address 000e.39ff.71a2
            Designated port id is 128.1673, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1074,7 +1074,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
                   
         VLAN0115 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 115, address 000e.3962.0f40
+          Bridge Identifier has priority 24576, sysid 115, address 000e.39ff.71a2
           Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -1086,8 +1086,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 1670 (Port-channel210) of VLAN0115 is designated forwarding 
            Port path cost 2, Port priority 128, Port Identifier 128.1670.
-           Designated root has priority 24691, address 000e.3962.0f40
-           Designated bridge has priority 24691, address 000e.3962.0f40
+           Designated root has priority 24691, address 000e.39ff.71a2
+           Designated bridge has priority 24691, address 000e.39ff.71a2
            Designated port id is 128.1670, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1096,7 +1096,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
                   
         VLAN0116 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 116, address 000e.3962.0f40
+          Bridge Identifier has priority 24576, sysid 116, address 000e.39ff.71a2
           Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -1108,8 +1108,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 1670 (Port-channel210) of VLAN0116 is designated forwarding 
            Port path cost 2, Port priority 128, Port Identifier 128.1670.
-           Designated root has priority 24692, address 000e.3962.0f40
-           Designated bridge has priority 24692, address 000e.3962.0f40
+           Designated root has priority 24692, address 000e.39ff.71a2
+           Designated bridge has priority 24692, address 000e.39ff.71a2
            Designated port id is 128.1670, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1118,7 +1118,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
                   
         VLAN0118 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 118, address 000e.3962.0f40
+          Bridge Identifier has priority 24576, sysid 118, address 000e.39ff.71a2
           Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
           We are the root of the spanning tree
           Topology change flag not set, detected flag not set
@@ -1130,8 +1130,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
          Port 1670 (Port-channel210) of VLAN0118 is designated forwarding 
            Port path cost 2, Port priority 128, Port Identifier 128.1670.
-           Designated root has priority 24694, address 000e.3962.0f40
-           Designated bridge has priority 24694, address 000e.3962.0f40
+           Designated root has priority 24694, address 000e.39ff.71a2
+           Designated bridge has priority 24694, address 000e.39ff.71a2
            Designated port id is 128.1670, designated path cost 0
            Timers: message age 0, forward delay 0, hold 0
            Number of transitions to forwarding state: 1
@@ -1149,7 +1149,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
             'vlans': {
                 1: {
                     'aging_timer': 480,
-                    'bridge_address': '000e.3962.0f40',
+                    'bridge_address': '000e.39ff.71a2',
                     'bridge_priority': 24576,
                     'bridge_sysid': 1,
                     'forwarding_delay': 15,
@@ -1164,11 +1164,11 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                 'bpdu_received': 0,
                                 'bpdu_sent': 20120147
                             },
-                            'designated_bridge_address': '000e.3962.0f40',
+                            'designated_bridge_address': '000e.39ff.71a2',
                             'designated_bridge_priority': 24577,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.1671',
-                            'designated_root_address': '000e.3962.0f40',
+                            'designated_root_address': '000e.39ff.71a2',
                             'designated_root_priority': 24577,
                             'forward_delay': 0,
                             'hold': 0,
@@ -1189,11 +1189,11 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                 'bpdu_received': 0,
                                 'bpdu_sent': 21320048
                             },
-                            'designated_bridge_address': '000e.3962.0f40',
+                            'designated_bridge_address': '000e.39ff.71a2',
                             'designated_bridge_priority': 24577,
                             'designated_path_cost': 0,
                             'designated_port_id': '128.1673',
-                            'designated_root_address': '000e.3962.0f40',
+                            'designated_root_address': '000e.39ff.71a2',
                             'designated_root_priority': 24577,
                             'forward_delay': 0,
                             'hold': 0,
@@ -1224,7 +1224,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                 },
                 115: {
                     'aging_timer': 480,
-                    'bridge_address': '000e.3962.0f40',
+                    'bridge_address': '000e.39ff.71a2',
                     'bridge_priority': 24576,
                     'bridge_sysid': 115,
                     'forwarding_delay': 15,
@@ -1239,11 +1239,11 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                 'bpdu_received': 4,
                                 'bpdu_sent': 10172865
                             },
-                           'designated_bridge_address': '000e.3962.0f40',
+                           'designated_bridge_address': '000e.39ff.71a2',
                            'designated_bridge_priority': 24691,
                            'designated_path_cost': 0,
                            'designated_port_id': '128.1670',
-                           'designated_root_address': '000e.3962.0f40',
+                           'designated_root_address': '000e.39ff.71a2',
                            'designated_root_priority': 24691,
                            'forward_delay': 0,
                            'hold': 0,
@@ -1274,7 +1274,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                 },
                 116: {
                     'aging_timer': 480,
-                    'bridge_address': '000e.3962.0f40',
+                    'bridge_address': '000e.39ff.71a2',
                     'bridge_priority': 24576,
                     'bridge_sysid': 116,
                     'forwarding_delay': 15,
@@ -1289,11 +1289,11 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                 'bpdu_received': 4,
                                 'bpdu_sent': 10172829
                             },
-                           'designated_bridge_address': '000e.3962.0f40',
+                           'designated_bridge_address': '000e.39ff.71a2',
                            'designated_bridge_priority': 24692,
                            'designated_path_cost': 0,
                            'designated_port_id': '128.1670',
-                           'designated_root_address': '000e.3962.0f40',
+                           'designated_root_address': '000e.39ff.71a2',
                            'designated_root_priority': 24692,
                            'forward_delay': 0,
                            'hold': 0,
@@ -1323,7 +1323,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                     },
                     118: {
                         'aging_timer': 480,
-                        'bridge_address': '000e.3962.0f40',
+                        'bridge_address': '000e.39ff.71a2',
                         'bridge_priority': 24576,
                         'bridge_sysid': 118,
                         'forwarding_delay': 15,
@@ -1338,11 +1338,11 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                     'bpdu_received': 4,
                                     'bpdu_sent': 10172791
                                 },
-                               'designated_bridge_address': '000e.3962.0f40',
+                               'designated_bridge_address': '000e.39ff.71a2',
                                'designated_bridge_priority': 24694,
                                'designated_path_cost': 0,
                                'designated_port_id': '128.1670',
-                               'designated_root_address': '000e.3962.0f40',
+                               'designated_root_address': '000e.39ff.71a2',
                                'designated_root_priority': 24694,
                                'forward_delay': 0,
                                'hold': 0,
@@ -1433,11 +1433,11 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
                               "bpdu_sent": 493,
                               "bpdu_received": 0
                          },
-                         "designated_regional_root_address": "3820.565b.8600",
+                         "designated_regional_root_address": "3820.56ff.e15b",
                          "status": "designated forwarding",
                          "designated_root_cost": 0,
-                         "designated_bridge_address": "3820.565b.8600",
-                         "designated_root_address": "3820.565b.8600",
+                         "designated_bridge_address": "3820.56ff.e15b",
+                         "designated_root_address": "3820.56ff.e15b",
                          "cost": 20000,
                          "message_expires": 0
                     }
@@ -1450,7 +1450,7 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
                },
                "sysid": 0,
                "root": "CIST",
-               "bridge_address": "3820.565b.8600",
+               "bridge_address": "3820.56ff.e15b",
                "configured": {
                     "max_age": 35,
                     "forward_delay": 30,
@@ -1479,14 +1479,14 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
                          "message_expires": 0,
                          "status": "designated forwarding",
                          "designated_root_cost": 0,
-                         "designated_bridge_address": "3820.565b.8600",
-                         "designated_root_address": "3820.565b.8600",
+                         "designated_bridge_address": "3820.56ff.e15b",
+                         "designated_root_address": "3820.56ff.e15b",
                          "cost": 20000
                     }
                },
                "sysid": 10,
                "root": "MST10",
-               "bridge_address": "3820.565b.8600",
+               "bridge_address": "3820.56ff.e15b",
                "mst_id": 10,
                "vlan": "100-200"
             }
@@ -1495,27 +1495,27 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         ##### MST0    vlans mapped:   1-99,201-4094
-        Bridge        address 3820.565b.8600  priority      32768 (32768 sysid 0)
+        Bridge        address 3820.56ff.e15b  priority      32768 (32768 sysid 0)
         Root          this switch for the CIST
         Operational   hello time 10, forward delay 30, max age 35, txholdcount 20
         Configured    hello time 10, forward delay 30, max age 35, max hops    10
 
         GigabitEthernet1/0/23 of MST0 is designated forwarding 
         Port info             port id         128.23  priority    128  cost       20000
-        Designated root       address 3820.565b.8600  priority  32768  cost           0
-        Design. regional root address 3820.565b.8600  priority  32768  cost           0
-        Designated bridge     address 3820.565b.8600  priority  32768  port id   128.23
+        Designated root       address 3820.56ff.e15b  priority  32768  cost           0
+        Design. regional root address 3820.56ff.e15b  priority  32768  cost           0
+        Designated bridge     address 3820.56ff.e15b  priority  32768  port id   128.23
         Timers: message expires in 0 sec, forward delay 0, forward transitions 1
         Bpdus sent 493, received 0
 
         ##### MST10   vlans mapped:   100-200
-        Bridge        address 3820.565b.8600  priority      61450 (61440 sysid 10)
+        Bridge        address 3820.56ff.e15b  priority      61450 (61440 sysid 10)
         Root          this switch for MST10
 
         GigabitEthernet1/0/23 of MST10 is designated forwarding 
         Port info             port id         128.23  priority    128  cost       20000
-        Designated root       address 3820.565b.8600  priority  61450  cost           0
-        Designated bridge     address 3820.565b.8600  priority  61450  port id   128.23
+        Designated root       address 3820.56ff.e15b  priority  61450  cost           0
+        Designated bridge     address 3820.56ff.e15b  priority  61450  port id   128.23
         Timers: message expires in 0 sec, forward delay 0, forward transitions 1
         Bpdus (MRecords) sent 493, received 0
     '''
@@ -1646,7 +1646,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "hello_time": 7,
                          "priority": 32768,
                          "forward_delay": 15,
-                         "address": "ecbd.1d09.5680",
+                         "address": "ecbd.1dff.5f89",
                          "max_age": 12,
                          "configured_bridge_priority": 32768,
                          "sys_id_ext": 0,
@@ -1686,7 +1686,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 30,
                          "max_age": 35,
                          "cost": 20000,
-                         "address": "3820.565b.8600",
+                         "address": "3820.56ff.e15b",
                          "interface": "GigabitEthernet1/0/5",
                          "port": 5
                     }
@@ -1696,7 +1696,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "hello_time": 7,
                          "priority": 61450,
                          "forward_delay": 15,
-                         "address": "ecbd.1d09.5680",
+                         "address": "ecbd.1dff.5f89",
                          "max_age": 12,
                          "configured_bridge_priority": 61440,
                          "sys_id_ext": 10,
@@ -1725,7 +1725,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "hello_time": 10,
                          "priority": 61450,
                          "forward_delay": 30,
-                         "address": "ecbd.1d09.5680",
+                         "address": "ecbd.1dff.5f89",
                          "max_age": 35
                     }
                }
@@ -1743,7 +1743,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "aging_time": 300,
-                         "address": "ecbd.1d09.5680",
+                         "address": "ecbd.1dff.5f89",
                          "configured_bridge_priority": 28672,
                          "sys_id_ext": 200,
                     },
@@ -1772,7 +1772,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "cost": 3,
-                         "address": "58bf.eab6.2f00",
+                         "address": "58bf.eaff.e5b6",
                          "interface": "Port-channel14",
                          "port": 2390
                     }
@@ -1784,7 +1784,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "aging_time": 300,
-                         "address": "ecbd.1d09.5680",
+                         "address": "ecbd.1dff.5f89",
                          "configured_bridge_priority": 28672,
                          "sys_id_ext": 201,
                     },
@@ -1813,7 +1813,7 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "cost": 3,
-                         "address": "58bf.eab6.2f00",
+                         "address": "58bf.eaff.e5b6",
                          "interface": "Port-channel14",
                          "port": 2390
                     }
@@ -1826,13 +1826,13 @@ class test_show_spanning_tree(unittest.TestCase):
         MST0
           Spanning tree enabled protocol mstp
           Root ID    Priority    32768
-                     Address     3820.565b.8600
+                     Address     3820.56ff.e15b
                      Cost        20000
                      Port        5 (GigabitEthernet1/0/5)
                      Hello Time  10 sec  Max Age 35 sec  Forward Delay 30 sec
 
           Bridge ID  Priority    32768  (priority 32768 sys-id-ext 0)
-                     Address     ecbd.1d09.5680
+                     Address     ecbd.1dff.5f89
                      Hello Time   7 sec  Max Age 12 sec  Forward Delay 15 sec
 
         Interface           Role Sts Cost      Prio.Nbr Type
@@ -1846,12 +1846,12 @@ class test_show_spanning_tree(unittest.TestCase):
         MST10     
           Spanning tree enabled protocol mstp
           Root ID    Priority    61450
-                     Address     ecbd.1d09.5680
+                     Address     ecbd.1dff.5f89
                      This bridge is the root
                      Hello Time  10 sec  Max Age 35 sec  Forward Delay 30 sec
                   
           Bridge ID  Priority    61450  (priority 61440 sys-id-ext 10)
-                     Address     ecbd.1d09.5680
+                     Address     ecbd.1dff.5f89
                      Hello Time   7 sec  Max Age 12 sec  Forward Delay 15 sec
                   
         Interface           Role Sts Cost      Prio.Nbr Type
@@ -1865,13 +1865,13 @@ class test_show_spanning_tree(unittest.TestCase):
         VLAN0200
           Spanning tree enabled protocol rstp
           Root ID    Priority    24776
-                     Address     58bf.eab6.2f00
+                     Address     58bf.eaff.e5b6
                      Cost        3
                      Port        2390 (Port-channel14)
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
 
           Bridge ID  Priority    28872  (priority 28672 sys-id-ext 200)
-                     Address     ecbd.1d09.5680
+                     Address     ecbd.1dff.5f89
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
                      Aging Time  300 sec
 
@@ -1885,13 +1885,13 @@ class test_show_spanning_tree(unittest.TestCase):
         VLAN0201
           Spanning tree enabled protocol rstp
           Root ID    Priority    24777
-                     Address     58bf.eab6.2f00
+                     Address     58bf.eaff.e5b6
                      Cost        3
                      Port        2390 (Port-channel14)
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
 
           Bridge ID  Priority    28873  (priority 28672 sys-id-ext 201)
-                     Address     ecbd.1d09.5680
+                     Address     ecbd.1dff.5f89
                      Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
                      Aging Time  300 sec
 

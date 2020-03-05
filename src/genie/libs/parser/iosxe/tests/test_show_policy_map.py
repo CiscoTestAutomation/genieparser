@@ -1,10 +1,11 @@
 # Python
 import unittest
+
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -304,8 +305,9 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output1 = {'execute.return_value': '''
-        Router#show policy-map control-plane
+        
         Load for five secs: 29%/0%; one minute: 7%; five minutes: 6%
         Time source is NTP, .17:46:23.484 EST Mon Oct 31 2016
 
@@ -496,9 +498,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output2 = {'execute.return_value': '''
-        Device# show policy-map control-plane
-
         Control Plane
         Service-policy input:TEST
         Class-map:TEST (match-all)
@@ -556,8 +557,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output3 = {'execute.return_value': '''
-        Router# show policy-map control-plane
         Control Plane
         Service-policy input: control-plane-in
         Class-map: telnet-class (match-all)
@@ -649,8 +650,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map control-plane
     golden_output4 = {'execute.return_value': '''
-        Router# show policy-map control-plane
         Control Plane
 
         Service-policy input: copp-ftp
@@ -772,8 +773,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/0/0
     golden_output5 = {'execute.return_value': '''
-        Router#show policy-map interface gigabitEthernet 0/0/0
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
         Time source is NTP, 14:58:52.473 EST Fri Oct 28 2016
 
@@ -1065,8 +1066,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                                 'maximum_thresh': '281250',
                                                 'mark_prob': '1/10'}}}}}}}}}}}
 
+    # show policy-map interface
     golden_output6 = {'execute.return_value': '''
-        Router# show policy-map interface
         serial3/1
         Service-policy output: pol
         Class-map: silver (match-all)
@@ -1169,8 +1170,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                             '20': {
                                                 'packets_marked': 500}}}}}}}}}}}
 
+    # show policy-map interface
     golden_output7 = {'execute.return_value': '''
-        Router# show policy-map interface
         FastEthernet4/1/1
             Service-policy input: mypolicy
                 Class-map: class1 (match-all)
@@ -1273,9 +1274,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_output': 0,
                                     'bytes_output': 0}}}}}}}}
 
+    # show policy-map interface TenGigabitEthernet0/0/2
     golden_output8 = {'execute.return_value': '''
-        Device# show policy-map interface TenGigabitEthernet0/0/2
-            show policy-map interface TenGigabitEthernet0/0/2
             TenGigabitEthernet0/0/2
 
                 Service-policy output: shape_priority
@@ -1362,9 +1362,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface GigabitEthernet0/0/1
     golden_output9 = {'execute.return_value': '''
-            PE1#show policy-map interface GigabitEthernet0/0/1
-
             Load for five secs: 3%/0%; one minute: 3%; five minutes: 2%
             Time source is NTP, 17:47:15.313 EST Tue Apr 9 2019
 
@@ -1413,8 +1412,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'target_shape_rate': 500000,
                                     'total_drops': 0}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/1/1 output class class-default
     golden_output10 = {'execute.return_value': '''
-        Router#show policy-map interface gigabitEthernet 0/1/1 output class class-default
         Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
         Time source is NTP, 22:21:45.748 EST Fri Nov 4 2016
 
@@ -1494,9 +1493,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'pkts_output': 0,
                                     'bytes_output': 0}}}}}}}}
 
+    # show policy-map interface TenGigabitEthernet 0/3/0.41 output
     golden_output11 = {'execute.return_value': '''
-        PE1#show policy-map interface TenGigabitEthernet 0/3/0.41 output
-
         Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
         Time source is NTP, 17:42:14.490 EST Tue Apr 9 2019
         
@@ -1564,8 +1562,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'interval': 300,
                                         'offered_rate_bps': 0}}}}}}}}}
 
+    # show policy-map interface gigabitEthernet 0/1/4 input class class-default
     golden_output12 = {'execute.return_value': '''
-            show policy-map interface gigabitEthernet 0/1/4 input class class-default
             Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
             Time source is NTP, 12:22:26.378 EST Wed Oct 26 2016
 
@@ -1603,9 +1601,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map interface GigabitEthernet 0/0/1 input
     golden_output13 = {'execute.return_value': '''
-            PE1#show policy-map interface GigabitEthernet 0/0/1 input
-
             Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
             Time source is NTP, 17:41:12.649 EST Tue Apr 9 2019
 
@@ -1634,9 +1631,8 @@ class test_show_policy_map_type(unittest.TestCase):
                     'policy_name': {
                         'VLAN51_QoS': {}}}}}}
 
+    # show policy-map interface class TEST2
     golden_output14 = {'execute.return_value': '''
-        PE1#show policy-map interface class TEST2
-
         Load for five secs: 4%/0%; one minute: 2%; five minutes: 2%
         Time source is NTP, 18:05:19.663 EST Tue Apr 9 2019
 
@@ -1703,9 +1699,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                             'actions': {"drop": True},
                                             'bps': 0}}}}}}}}}}
 
+    # show policy-map interface class VLAN51_QoS
     golden_output15 = {'execute.return_value': '''
-        PE1#show policy-map interface class VLAN51_QoS
-
         Load for five secs: 4%/0%; one minute: 3%; five minutes: 2%
         Time source is NTP, 18:05:52.025 EST Tue Apr 9 2019
 
@@ -1779,8 +1774,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'drop_rate_bps': 0},
                                     'match': ['any']}}}}}}}}
 
+    # show policy-map target service-group 1
     golden_output16 = {'execute.return_value': '''
-            Router#show policy-map target service-group 1
             Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
             Time source is NTP, 18:59:17.791 EST Wed Nov 9 2016
 
@@ -1857,9 +1852,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'bytes_output': 0,
                                     'bandwidth': 'remaining ratio 2'}}}}}}}}
 
+    # show policy-map target service-group 1
     golden_output17 = {'execute.return_value': '''
-        Device# show policy-map target service-group 1
-
  GigabitEthernet9/5: Service Group 1
 
   Service-policy input: policy1
@@ -2042,8 +2036,8 @@ class test_show_policy_map_type(unittest.TestCase):
     }
     }
 
+    # show policy-map interface te0/0/0.101
     golden_output18 = {'execute.return_value':'''
-    PE1#show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
 
   Service-policy input: L3VPN_in
@@ -2136,8 +2130,8 @@ class test_show_policy_map_type(unittest.TestCase):
                                                             'interval': 300,
                                                             'offered_rate_bps': 0}}}}}}}}}
 
+    # show policy-map interface te0/0/0.101
     golden_output19 = {'execute.return_value':'''
-show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
 
   Service-policy input: L3VPNin
@@ -2195,8 +2189,8 @@ show policy-map interface te0/0/0.101
     }
 }
 
+    # show policy-map interface te0/0/0.101
     golden_output20 = {'execute.return_value':'''
-show policy-map interface te0/0/0.101
  TenGigabitEthernet0/0/0.101
 
   Service-policy input: L3VPNin
@@ -2321,6 +2315,7 @@ show policy-map interface te0/0/0.101
                                         3000000000,
                                     'total_drops': 0}}}}}}}}
 
+    # ShowPolicyMapInterface
     golden_output21 = {'execute.return_value':'''
     GigabitEthernet4.1
     
@@ -2413,6 +2408,7 @@ show policy-map interface te0/0/0.101
 
     '''}
 
+    # ShowPolicyMapInterfaceOutput
     golden_output22 = {'execute.return_value': '''
 TenGigabitEthernet0/0/0
 
@@ -2586,6 +2582,7 @@ TenGigabitEthernet0/0/0
         }
     }
 
+    # ShowPolicyMapInterfaceOutput
     golden_output23 = {'execute.return_value': '''
 TenGigabitEthernet0/0/0
 
@@ -2934,8 +2931,404 @@ GigabitEthernet0/0/3
         'GigabitEthernet0/0/3': {
         }
     }
-                                        
 
+    # show policy-map interface GigabitEthernet0/0/0.2
+    golden_output24 = {'execute.return_value': '''
+    GigabitEthernet0/0/0.2 
+     
+       Service-policy output: ABC-DEF-GHI-JKL-MNO123123123
+     
+         Class-map: class-default (match-any)  
+           0 packets, 0 bytes
+           30 second offered rate 0000 bps, drop rate 0000 bps
+           Match: any 
+           Queueing
+           queue limit 68 packets
+           (queue depth/total drops/no-buffer drops) 0/0/0
+           (pkts output/bytes output) 0/0
+           shape (average) cir 99872000, bc 399488, be 399488
+           target shape rate 99872000
+     
+           Service-policy : ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123
+     
+             queue stats for all priority classes:
+               Queueing
+               queue limit 512 packets
+               (queue depth/total drops/no-buffer drops) 0/0/0
+               (pkts output/bytes output) 0/0
+     
+             Class-map: network-control-XYZ123123123 (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: access-group name NETWORK-CONTROL-XYZ123123123
+               Queueing
+               queue limit 64 packets
+               (queue depth/total drops/no-buffer drops) 0/0/0
+               (pkts output/bytes output) 0/0
+               bandwidth 1% (998 kbps)
+                 Exp-weight-constant: 9 (1/512)
+                 Mean queue depth: 0 packets
+                 dscp       Transmitted         Random drop      Tail 
+     drop          Minimum        Maximum     Mark
+                         pkts/bytes            pkts/bytes       
+     pkts/bytes          thresh         thresh     prob
+                 
+               QoS Set
+                 cos 5
+                   Packets marked 0
+     
+             Class-map: realtime-XYZ123123123 (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef 
+     (46)
+               Priority: 30% (29961 kbps), burst bytes 749000, b/w exceed drops: 
+     0
+               
+               QoS Set
+                 cos 5
+                   Packets marked 0
+     
+             Class-map: interactive3-XYZ123123123 (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)
+               Queueing
+               queue limit 64 packets
+               (queue depth/total drops/no-buffer drops) 0/0/0
+               (pkts output/bytes output) 0/0
+               bandwidth 5% (4993 kbps)
+                 Exp-weight-constant: 9 (1/512)
+                 Mean queue depth: 0 packets
+                 dscp       Transmitted         Random drop      Tail 
+     drop          Minimum        Maximum     Mark
+                         pkts/bytes            pkts/bytes       
+     pkts/bytes          thresh         thresh     prob
+                 
+                 cs3            0/0               0/0              
+     0/0                 24            40  1/10
+                 af31           0/0               0/0              
+     0/0                 24            40  1/10
+                 af32           0/0               0/0              
+     0/0                 24            40  1/10
+                 af33           0/0               0/0              
+     0/0                 24            40  1/10
+               QoS Set
+                 cos 5
+                   Packets marked 0
+     
+             Class-map: interactive21-XYZ123123123 (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)
+               Queueing
+               queue limit 64 packets
+               (queue depth/total drops/no-buffer drops) 0/0/0
+               (pkts output/bytes output) 0/0
+               bandwidth 5% (4993 kbps)
+                 Exp-weight-constant: 9 (1/512)
+                 Mean queue depth: 0 packets
+                 dscp       Transmitted         Random drop      Tail 
+     drop          Minimum        Maximum     Mark
+                         pkts/bytes            pkts/bytes       
+     pkts/bytes          thresh         thresh     prob
+                 
+                 cs2            0/0               0/0              
+     0/0                 24            40  1/10
+                 af21           0/0               0/0              
+     0/0                 24            40  1/10
+                 af22           0/0               0/0              
+     0/0                 24            40  1/10
+                 af23           0/0               0/0              
+     0/0                 24            40  1/10
+               QoS Set
+                 cos 5
+                   Packets marked 0
+     
+             Class-map: besteffort-XYZ123123123 (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: ip dscp cs1 (8)
+               Queueing
+               queue limit 64 packets
+               (queue depth/total drops/no-buffer drops) 0/0/0
+               (pkts output/bytes output) 0/0
+               bandwidth 1% (998 kbps)
+                 Exp-weight-constant: 9 (1/512)
+                 Mean queue depth: 0 packets
+                 dscp       Transmitted         Random drop      Tail 
+     drop          Minimum        Maximum     Mark
+                         pkts/bytes            pkts/bytes       
+     pkts/bytes          thresh         thresh     prob
+                 
+               QoS Set
+                 cos 5
+                   Packets marked 0
+     
+             Class-map: class-default (match-any)  
+               0 packets, 0 bytes
+               30 second offered rate 0000 bps, drop rate 0000 bps
+               Match: any 
+               Queueing
+               queue limit 64 packets
+               (queue depth/total drops/no-buffer drops/flowdrops) 0/0/0/0
+               (pkts output/bytes output) 0/0
+               bandwidth 58% (57925 kbps)
+                 Exp-weight-constant: 9 (1/512)
+                 Mean queue depth: 0 packets
+                 dscp       Transmitted      Random drop      Tail/Flow drop 
+     Minimum Maximum Mark
+                             pkts/bytes       pkts/bytes      pkts/bytes   
+     thresh  thresh  prob
+                 
+                 default        0/0               0/0              
+     0/0                 24            40  1/10
+                 af11           0/0               0/0              
+     0/0                 24            40  1/10
+                 af12           0/0               0/0              
+     0/0                 24            40  1/10
+                 af13           0/0               0/0              
+     0/0                 24            40  1/10
+                 cs6            0/0               0/0              
+     0/0                 24            40  1/10
+                 cs7            0/0               0/0              
+     0/0                 24            40  1/10
+               QoS Set
+                 cos 5
+                   Packets marked 0
+               Fair-queue: per-flow queue limit 16 packets
+    '''}
+    
+    golden_parsed_output24 = {
+    'GigabitEthernet0/0/0.2': {
+        'service_policy': {
+            'output': {
+                'policy_name': {
+                    'ABC-DEF-GHI-JKL-MNO123123123': {
+                        'child_policy_name': {
+                            'ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123': {
+                                'class_map': {
+                                    'besteffort-XYZ123123123': {
+                                        'bandwidth_kbps': 998,
+                                        'bandwidth_percent': 1,
+                                        'bytes': 0,
+                                        'bytes_output': 0,
+                                        'match': ['ip dscp cs1 (8)'],
+                                        'match_evaluation': 'match-any',
+                                        'no_buffer_drops': 0,
+                                        'packets': 0,
+                                        'pkts_output': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'queue_depth': 0,
+                                        'queue_limit_packets': '64',
+                                        'queueing': True,
+                                        'random_detect': {
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0,
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                        'total_drops': 0,
+                                    },
+                                    'class-default': {
+                                        'bandwidth_kbps': 57925,
+                                        'bandwidth_percent': 58,
+                                        'bytes': 0,
+                                        'bytes_output': 0,
+                                        'match': ['any'],
+                                        'match_evaluation': 'match-any',
+                                        'packets': 0,
+                                        'pkts_output': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'queue_limit_packets': '64',
+                                        'queueing': True,
+                                        'random_detect': {
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0,
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                    },
+                                    'interactive21-XYZ123123123': {
+                                        'bandwidth_kbps': 4993,
+                                        'bandwidth_percent': 5,
+                                        'bytes': 0,
+                                        'bytes_output': 0,
+                                        'match': ['ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)'],
+                                        'match_evaluation': 'match-any',
+                                        'no_buffer_drops': 0,
+                                        'packets': 0,
+                                        'pkts_output': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'queue_depth': 0,
+                                        'queue_limit_packets': '64',
+                                        'queueing': True,
+                                        'random_detect': {
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0,
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                        'total_drops': 0,
+                                    },
+                                    'interactive3-XYZ123123123': {
+                                        'bandwidth_kbps': 4993,
+                                        'bandwidth_percent': 5,
+                                        'bytes': 0,
+                                        'bytes_output': 0,
+                                        'match': ['ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)'],
+                                        'match_evaluation': 'match-any',
+                                        'no_buffer_drops': 0,
+                                        'packets': 0,
+                                        'pkts_output': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'queue_depth': 0,
+                                        'queue_limit_packets': '64',
+                                        'queueing': True,
+                                        'random_detect': {
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0,
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                        'total_drops': 0,
+                                    },
+                                    'network-control-XYZ123123123': {
+                                        'bandwidth_kbps': 998,
+                                        'bandwidth_percent': 1,
+                                        'bytes': 0,
+                                        'bytes_output': 0,
+                                        'match': ['access-group name NETWORK-CONTROL-XYZ123123123'],
+                                        'match_evaluation': 'match-any',
+                                        'no_buffer_drops': 0,
+                                        'packets': 0,
+                                        'pkts_output': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'queue_depth': 0,
+                                        'queue_limit_packets': '64',
+                                        'queueing': True,
+                                        'random_detect': {
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0,
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                        'total_drops': 0,
+                                    },
+                                    'realtime-XYZ123123123': {
+                                        'bytes': 0,
+                                        'match': ['ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef'],
+                                        'match_evaluation': 'match-any',
+                                        'packets': 0,
+                                        'qos_set': {
+                                            'cos': {
+                                                '5': {
+                                                    'packets_marked': 0,
+                                                },
+                                            },
+                                        },
+                                        'rate': {
+                                            'drop_rate_bps': 0,
+                                            'interval': 30,
+                                            'offered_rate_bps': 0,
+                                        },
+                                    },
+                                },
+                                'queue_stats_for_all_priority_classes': {
+                                    'priority_level': {
+                                        'default': {
+                                            'bytes_output': 0,
+                                            'no_buffer_drops': 0,
+                                            'pkts_output': 0,
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '512',
+                                            'queueing': True,
+                                            'total_drops': 0,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'class_map': {
+                            'class-default': {
+                                'bytes': 0,
+                                'bytes_output': 0,
+                                'match': ['any'],
+                                'match_evaluation': 'match-any',
+                                'no_buffer_drops': 0,
+                                'packets': 0,
+                                'pkts_output': 0,
+                                'queue_depth': 0,
+                                'queue_limit_packets': '68',
+                                'queueing': True,
+                                'rate': {
+                                    'drop_rate_bps': 0,
+                                    'interval': 30,
+                                    'offered_rate_bps': 0,
+                                },
+                                'shape_bc_bps': 399488,
+                                'shape_be_bps': 399488,
+                                'shape_cir_bps': 99872000,
+                                'shape_type': 'average',
+                                'target_shape_rate': 99872000,
+                                'total_drops': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
+    # ---------------------------------------------------------------------
+    # 'show policy-map control-plane'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2972,7 +3365,9 @@ GigabitEthernet0/0/3
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     # ---------------------------------------------------------------------
-
+    # 'show policy-map interface {interface}',
+    # 'show policy-map interface'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
@@ -3029,6 +3424,24 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output20)
 
+    def test_show_policy_map_interface_full9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output21)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output21)
+
+    def test_show_policy_map_interface_full10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output24)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet0/0/0.2')
+        self.assertEqual(parsed_output, self.golden_parsed_output24)
+
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface {interface} output class {class_name}',
+    # 'show policy-map interface {interface} output'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
@@ -3044,6 +3457,24 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(interface='TenGigabitEthernet 0/3/0.41')
         self.assertEqual(parsed_output, self.golden_parsed_output11)
 
+    def test_show_policy_map_interface_output_full_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output22)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output22)
+
+    def test_show_policy_map_interface_output_full_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output23)
+        obj = ShowPolicyMapInterfaceOutput(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output23)
+
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface {interface} input class {class_name}',
+    # 'show policy-map interface {interface} input'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_input_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output12)
@@ -3059,6 +3490,9 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(interface='GigabitEthernet 0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output13)
 
+    # ---------------------------------------------------------------------
+    # 'show policy-map interface class {class_name}'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_interface_class_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output14)
@@ -3073,6 +3507,9 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(class_name='VLAN51_QoS')
         self.assertEqual(parsed_output, self.golden_parsed_output15)
 
+    # ---------------------------------------------------------------------
+    # 'show policy-map target service-group {num}'
+    # ---------------------------------------------------------------------
     def test_show_policy_map_target_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output16)
@@ -3087,32 +3524,13 @@ GigabitEthernet0/0/3
         parsed_output = obj.parse(num='1')
         self.assertEqual(parsed_output, self.golden_parsed_output17)
 
-    def test_show_policy_map_interface_class13(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output21)
-        obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output21)
 
-    def test_show_policy_map_interface_output_full_3(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output22)
-        obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
-        self.assertEqual(parsed_output, self.golden_parsed_output22)
-        
-    def test_show_policy_map_interface_output_full_4(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output23)
-        obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
-        self.assertEqual(parsed_output, self.golden_parsed_output23)
-        
 # =============================================
 # Unit test for :
 #    *'show policy map'
 #    *'show policy map {name}'
 # =============================================
+
 
 class test_show_policy_map(unittest.TestCase):
     '''Unit test for "show policy map"
@@ -3131,6 +3549,7 @@ class test_show_policy_map(unittest.TestCase):
                         'average_rate_traffic_shaping': True,
                         'cir_bps': 1000000}}}}}
 
+    # show policy-map shape-out
     golden_output1 = {'execute.return_value':'''
         Router#show policy-map shape-out
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 4%
@@ -3154,6 +3573,7 @@ class test_show_policy_map(unittest.TestCase):
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop']}}}}}}
 
+    # show policy-map police-in
     golden_output2 = {'execute.return_value':'''
 
         Router#show policy-map police-in
@@ -3212,6 +3632,7 @@ class test_show_policy_map(unittest.TestCase):
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop']}}}}}}
 
+    # show policy-map
     golden_output3 = {'execute.return_value': '''
         Router# show policy-map
         Policy Map parent-policy
@@ -3291,6 +3712,7 @@ class test_show_policy_map(unittest.TestCase):
                                     'max_threshold': '-',
                                     'mark_probability': '1/10'}}}}}}}}
 
+    # show policy-map
     golden_output4 = {'execute.return_value': '''
         Router# show policy-map
 
@@ -3337,26 +3759,46 @@ class test_show_policy_map(unittest.TestCase):
     '''}
 
     golden_parsed_output5 = {
-        'policy_map': {
-            'PHB': {
-                'class': {
-                    'cos1': {
-                        'police': {
-                            'cir_bc_bytes': 8000,
-                             'cir_bps': 200000,
-                             'conform_action': ['transmit'],
-                             'exceed_action': ['drop']},
-                        'priority': True},
-                    'cos2': {
-                        'bandwidth_kbps': 100,
-                        'bandwidth_remaining_percent': 40},
-                    'cos3': {
-                        'bandwidth_kbps': 200,
-                        'bandwidth_remaining_percent': 50,
-                        'set': 'cos 5'},
-                    'cos5': {
-                        'shape_average_min': 30}}}}}
+    'policy_map': {
+        'PHB': {
+            'class': {
+                'cos1': {
+                    'police': {
+                        'cir_bc_bytes': 8000,
+                        'cir_bps': 200000,
+                        'conform_action': ['transmit'],
+                        'exceed_action': ['drop'],
+                    },
+                    'priority': True,
+                },
+                'cos2': {
+                    'bandwidth_kbps': 100,
+                    'bandwidth_remaining_percent': 40,
+                },
+                'cos3': {
+                    'bandwidth_kbps': 200,
+                    'bandwidth_remaining_percent': 50,
+                },
+            },
+        },
+        'ingress_policy': {
+            'class': {
+                'cos3': {
+                    'set': 'cos 5',
+                },
+            },
+        },
+        'egress policy': {
+            'class': {
+                'cos5': {
+                    'shape_average_min': 30,
+                },
+            },
+        },
+    },
+}
 
+    # show policy-map
     golden_output5 = {'execute.return_value': '''
             Router# show policy-map
                 Policy Map PHB
@@ -3406,6 +3848,7 @@ class test_show_policy_map(unittest.TestCase):
                     'video': {
                         'bandwidth_remaining_percent': 80}}}}}
 
+    # show policy-map child
     golden_output6 = {'execute.return_value': '''
         Router# show policy-map child
 
@@ -3429,6 +3872,7 @@ class test_show_policy_map(unittest.TestCase):
                         'cir_bps': 10000000,
                         'service_policy': 'child'}}}}}
 
+    # show policy-map parent
     golden_output7 = {'execute.return_value': '''
         Router# show policy-map parent
         Policy Map parent
@@ -3452,6 +3896,7 @@ class test_show_policy_map(unittest.TestCase):
                             'exceed_action': ['drop'],
                             'violate_action': ['drop']}}}}}}
 
+    # show policy-map policy1
     golden_output8 = {'execute.return_value': '''
         Router# show policy-map policy1
             Policy Map policy1
@@ -3508,6 +3953,7 @@ class test_show_policy_map(unittest.TestCase):
                                     'max_threshold': '-',
                                     'mark_probability': '1/10'}}}}}}}}
 
+    # show policy-map
     golden_output9 = {'execute.return_value': '''
         Router# show policy-map
         Policy Map pol1
@@ -3542,6 +3988,7 @@ class test_show_policy_map(unittest.TestCase):
                             'exceed_action': ['set-prec-transmit 4', 'set-frde-transmit'],
                             'violate_action': ['set-prec-transmit 2', 'set-frde-transmit']}}}}}}
 
+    # show policy-map police
     golden_output10 = {'execute.return_value': '''
         Router# show policy-map police
         Policy Map police
@@ -3577,6 +4024,7 @@ class test_show_policy_map(unittest.TestCase):
                         'cir_percent': 50,
                         'bandwidth_remaining_ratio': 20}}}}}
 
+    # show policy-map pm_hier2_child_0_2
     golden_output11 = {'execute.return_value': '''
          Router# show policy-map pm_hier2_child_0_2
          Policy Map pm_hier2_child_0_2
@@ -3708,6 +4156,8 @@ class test_show_policy_map(unittest.TestCase):
             }
         }
     }
+
+    # show policy-map
     golden_output14 = {'execute.return_value':'''
         show policy-map
 
@@ -3828,6 +4278,7 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output14)
+
 
 if __name__ == '__main__':
     unittest.main()

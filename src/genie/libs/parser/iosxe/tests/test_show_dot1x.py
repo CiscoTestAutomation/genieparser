@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -60,7 +60,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
                "interface": "FastEthernet7/1",
                "pae": "authenticator",
                "clients": {
-                    "fa16.3e0b.b5b8": {
+                    "fa16.3eff.c0c3": {
                          "session": {
                               "000000000000000E00110F79": {
                                    "session_id": "000000000000000E00110F79",
@@ -69,9 +69,9 @@ class test_show_dot1x_all_details(unittest.TestCase):
                               }
                          },
                          "eap_method": "md5",
-                         "client": "fa16.3e0b.b5b8"
+                         "client": "fa16.3eff.c0c3"
                     },
-                    "fa16.3e42.fd85": {
+                    "fa16.3eff.40c7": {
                          "session": {
                               "000000000000000C00108250": {
                                    "session_id": "000000000000000C00108250",
@@ -80,7 +80,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
                               }
                          },
                          "eap_method": "md5",
-                         "client": "fa16.3e42.fd85"
+                         "client": "fa16.3eff.40c7"
                     }
                },
                "host_mode": "single_host",
@@ -125,13 +125,13 @@ class test_show_dot1x_all_details(unittest.TestCase):
         Dot1x Authenticator Client List
         -------------------------------
         EAP Method                = MD5
-        Supplicant                = fa16.3e0b.b5b8
+        Supplicant                = fa16.3eff.c0c3
         Session ID                = 000000000000000E00110F79
             Auth SM State         = HELD
             Auth BEND SM State    = IDLE
 
         EAP Method                = MD5
-        Supplicant                = fa16.3e42.fd85
+        Supplicant                = fa16.3eff.40c7
         Session ID                = 000000000000000C00108250
             Auth SM State         = AUTHENTICATED
             Auth BEND SM State    = IDLE
@@ -152,7 +152,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
         Dot1x Authenticator Client List
         -------------------------------
         EAP Method                = (13)
-        Supplicant                = 6451.065c.f902
+        Supplicant                = 6451.06ff.565e
         Session ID                = 0A90740B0000A7FD44A5F6A8
             Auth SM State         = AUTHENTICATED
             Auth BEND SM State    = IDLE
@@ -173,8 +173,8 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 "max_reauth_req": 2,
                 "max_req": 1,
                 "clients": {
-                    "6451.065c.f902": {
-                        "client": "6451.065c.f902",
+                    "6451.06ff.565e": {
+                        "client": "6451.06ff.565e",
                         "eap_method": "(13)",
                         "session": {
                             "0A90740B0000A7FD44A5F6A8": {
@@ -253,7 +253,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         "interfaces": {
             "GigabitEthernet0/1": {
                "statistics": {
-                    "lastrxsrcmac": "fa16.3ede.7048",
+                    "lastrxsrcmac": "fa16.3eff.4f27",
                     "txtotal": 2650,
                     "rxinvalid": 0,
                     "txreqid": 890,
@@ -280,7 +280,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 1760    TxReqID = 890   TxTotal = 2650
 
-        RxVersion = 3   LastRxSrcMAC = fa16.3ede.7048
+        RxVersion = 3   LastRxSrcMAC = fa16.3eff.4f27
     '''
     }
 
@@ -295,7 +295,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 3391    TxReqID = 1018  TxTotal = 4821
 
-        RxVersion = 1   LastRxSrcMAC = d481.d75d.f026
+        RxVersion = 1   LastRxSrcMAC = d481.d7ff.4e83
 
         Dot1x Authenticator Port Statistics for GigabitEthernet2/2
         --------------------------------------------
@@ -304,7 +304,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 2480    TxReqID = 525   TxTotal = 3148
 
-        RxVersion = 1   LastRxSrcMAC = 2899.fadd.f021
+        RxVersion = 1   LastRxSrcMAC = 2899.faff.cefe
 
         Dot1x Authenticator Port Statistics for GigabitEthernet2/3
         --------------------------------------------
@@ -313,7 +313,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 2471    TxReqID = 449   TxTotal = 3057
 
-        RxVersion = 1   LastRxSrcMAC = 103a.34e6.d73d
+        RxVersion = 1   LastRxSrcMAC = 103a.34ff.be24
 
         Dot1x Authenticator Port Statistics for GigabitEthernet2/4
         --------------------------------------------
@@ -322,7 +322,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 
         TxReq = 3214    TxReqID = 902   TxTotal = 4304
 
-        RxVersion = 1   LastRxSrcMAC = 0d01.f8ca.b859
+        RxVersion = 1   LastRxSrcMAC = 0d01.f8ff.8324
 
     '''
     }
@@ -331,7 +331,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         "interfaces": {
             "GigabitEthernet2/1": {
                "statistics": {
-                    "lastrxsrcmac": "d481.d75d.f026",
+                    "lastrxsrcmac": "d481.d7ff.4e83",
                     "txtotal": 4821,
                     "rxinvalid": 0,
                     "txreqid": 1018,
@@ -348,7 +348,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
             },
             "GigabitEthernet2/2": {
                 "statistics": {
-                    "lastrxsrcmac": "2899.fadd.f021",
+                    "lastrxsrcmac": "2899.faff.cefe",
                     "txtotal": 3148,
                     "rxinvalid": 0,
                     "txreqid": 525,
@@ -365,7 +365,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
             },
             "GigabitEthernet2/3": {
                 "statistics": {
-                    "lastrxsrcmac": "103a.34e6.d73d",
+                    "lastrxsrcmac": "103a.34ff.be24",
                     "txtotal": 3057,
                     "rxinvalid": 0,
                     "txreqid": 449,
@@ -382,7 +382,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
             },
             "GigabitEthernet2/4": {
                 "statistics": {
-                    "lastrxsrcmac": "0d01.f8ca.b859",
+                    "lastrxsrcmac": "0d01.f8ff.8324",
                     "txtotal": 4304,
                     "rxinvalid": 0,
                     "txreqid": 902,
@@ -437,8 +437,8 @@ class test_show_dot1x_all_summary(unittest.TestCase):
             "FastEthernet1": {
                 "interface": "FastEthernet1",
                 "clients": {
-                    "000d.bcef.bfdc": {
-                        "client": "000d.bcef.bfdc",
+                    "000d.bcff.afcc": {
+                        "client": "000d.bcff.afcc",
                         "status": "authorized",
                         "pae": "authenticator",
                     }
@@ -450,7 +450,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         Interface             PAE             Client                         Status 
         ------------------------------------------------------------------------------------------
-        Fa1                   AUTH             000d.bcef.bfdc           AUTHORIZED
+        Fa1                   AUTH             000d.bcff.afcc           AUTHORIZED
     '''
     }
 
@@ -458,25 +458,25 @@ class test_show_dot1x_all_summary(unittest.TestCase):
         "interfaces": {
             "GigabitEthernet0/1": {
                "clients": {
-                    "fa16.3ede.7048": {
+                    "fa16.3eff.4f27": {
                          "pae": "authenticator",
                          "status": "unauthorized",
-                         "client": "fa16.3ede.7048"
+                         "client": "fa16.3eff.4f27"
                     },
-                    "fa16.3ea5.663a": {
+                    "fa16.3eff.0cdf": {
                          "pae": "authenticator",
                          "status": "authorized",
-                         "client": "fa16.3ea5.663a"
+                         "client": "fa16.3eff.0cdf"
                     },
-                    "fa16.3ea5.663b": {
+                    "fa16.3eff.0ce0": {
                          "pae": "supplicant",
                          "status": "authorized",
-                         "client": "fa16.3ea5.663b"
+                         "client": "fa16.3eff.0ce0"
                     },
-                    "fa16.3ede.7049": {
+                    "fa16.3eff.4f28": {
                          "pae": "supplicant",
                          "status": "unauthorized",
-                         "client": "fa16.3ede.7049"
+                         "client": "fa16.3eff.4f28"
                     }
                },
                "interface": "GigabitEthernet0/1"
@@ -487,10 +487,10 @@ class test_show_dot1x_all_summary(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''\
         Interface       PAE     Client          Status          
         --------------------------------------------------------
-        Gi0/1           AUTH    fa16.3ede.7048  UNAUTHORIZED
-                                fa16.3ea5.663a  AUTHORIZED
-                        SUPP    fa16.3ede.7049  UNAUTHORIZED
-                                fa16.3ea5.663b  AUTHORIZED
+        Gi0/1           AUTH    fa16.3eff.4f27  UNAUTHORIZED
+                                fa16.3eff.0cdf  AUTHORIZED
+                        SUPP    fa16.3eff.4f28  UNAUTHORIZED
+                                fa16.3eff.0ce0  AUTHORIZED
 
     '''
     }

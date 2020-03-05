@@ -82,10 +82,10 @@ class ShowIpArp(ShowIpArpSchema):
 		# Total number of entries: 11
 		p2 = re.compile(r'^Total +number +of +entries:\s+(?P<num_entries>\d+)$')
 
-		# 192.168.16.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
-		# 10.111.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
-		# 10.111.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
-        # 10.23.90.2      00:01:05  fa16.3e5a.9eb3  Ethernet1/1.390
+		# 192.168.16.226 0 0006.d6ff.632b ARPA GigabitEthernet1/1
+		# 10.111.1.3     00:09:20  fa16.3eff.0987  Vlan101         +
+		# 10.111.1.4     00:01:53  fa16.3eff.c271  Vlan101
+        # 10.23.90.2      00:01:05  fa16.3eff.f80e  Ethernet1/1.390
 		p3 = re.compile(r'^(?P<ip_address>[\d\.]+)\s+(?P<age>[\d:-]+)\s+(?P<mac_address>[\w\.]+)\s+'
 						r'((?P<encap_type>ARPA)\s+)?(?P<interface>\S+)(\s+(?P<flags>\S))?$')
 
@@ -111,9 +111,9 @@ class ShowIpArp(ShowIpArpSchema):
 				statistics_dict.update({'entries_total': int(groups['num_entries'])})
 				continue
 
-			# 192.168.16.226 0 0006.d623.4008 ARPA GigabitEthernet1/1
-			# 10.111.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         +
-			# 10.111.1.4     00:01:53  fa16.3ec5.fcab  Vlan101
+			# 192.168.16.226 0 0006.d6ff.632b ARPA GigabitEthernet1/1
+			# 10.111.1.3     00:09:20  fa16.3eff.0987  Vlan101         +
+			# 10.111.1.4     00:01:53  fa16.3eff.c271  Vlan101
 			m = p3.match(line)
 			if m:
 				# Rare case (but found through run_parsers) - Only used to 
@@ -210,7 +210,7 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 		# initial variables
 		ret_dict = {}
 
-		# 10.1.7.1        00:17:15  0012.7f57.ac80  mgmt0            mgmt0
+		# 10.1.7.1        00:17:15  0012.7fff.04d7  mgmt0            mgmt0
 		p1 = re.compile(r'^(?P<address>[\d\.]+) +(?P<age>[\d+\-\:]+) '
 		  '+(?P<mac>[\w\.]+) +(?P<interface>[\w\/\.]+) '
 		  '+(?P<physical_interface>[\w\/\.]+)( +(?P<flag>[\*\w\+\#]+))?$')

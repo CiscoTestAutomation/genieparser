@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -44,7 +44,8 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAll,\
                                              ShowBgpAllNeighborsPolicy,\
                                              ShowIpBgpTemplatePeerSession,\
                                              ShowIpBgpTemplatePeerPolicy,\
-                                             ShowIpBgpAllDampeningParameters
+                                             ShowIpBgpAllDampeningParameters, \
+                                             ShowIpBgpRegexp
 
 
 # ===================================
@@ -1365,12 +1366,18 @@ class TestShowIpBgpAll(unittest.TestCase):
                                                                      'path': '60000',
                                                                      'status_codes': '*>i',
                                                                      'weight': 0}}},
-                                   'i': {'index': {1: {'localpref': 100,
-                                                       'next_hop': '10.13.202.64',
-                                                       'origin_codes': 'i',
-                                                       'path': '60000',
-                                                       'status_codes': '*>',
-                                                       'weight': 0}}}},
+                                   '172.16.200.99/32': {
+                                        'index': {
+                                            1: {
+                                                'localpref': 100,
+                                                'next_hop': '10.13.202.64',
+                                                'origin_codes': 'i',
+                                                'path': '60000',
+                                                'status_codes': '*>i',
+                                                'weight': 0,
+                                            },
+                                        },
+                                    },},
                 'vrf_route_identifier': '192.168.10.254'}}}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -1877,7 +1884,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                              'gateway_address': '0.0.0.0',
                              'label': 30000,
                              'local_vtep': '10.21.33.33',
-                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                             'router_mac': 'MAC:001E.7AFF.FCD2'},
                           'gateway': '0.0.0.0',
                           'inaccessible': False,
                           'localpref': 100,
@@ -1913,7 +1920,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                              'gateway_address': '0.0.0.0',
                              'label': 30000,
                              'local_vtep': '10.21.33.33',
-                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                             'router_mac': 'MAC:001E.7AFF.FCD2'},
                           'gateway': '0.0.0.0',
                           'inaccessible': False,
                           'localpref': 100,
@@ -1938,7 +1945,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                              'gateway_address': '0.0.0.0',
                              'label': 30000,
                              'local_vtep': '10.21.33.33',
-                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                             'router_mac': 'MAC:001E.7AFF.FCD2'},
                           'gateway': '10.36.3.254',
                           'inaccessible': False,
                           'localpref': 100,
@@ -1977,7 +1984,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
-                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'local_router_mac': '001E.7AFF.FCD2',
                                  'vni': '30000',
                                  'vrf': 'evpn1',
                                  'vtep_ip': '10.21.33.33'},
@@ -2012,7 +2019,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
-                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'local_router_mac': '001E.7AFF.FCD2',
                                  'vni': '30000',
                                  'vrf': 'evpn1',
                                  'vtep_ip': '10.21.33.33'},
@@ -2035,7 +2042,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
-                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'local_router_mac': '001E.7AFF.FCD2',
                                  'vni': '30000',
                                  'vrf': 'evpn1',
                                  'vtep_ip': '10.21.33.33'},
@@ -2084,7 +2091,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
             Origin incomplete, metric 0, localpref 100, valid, external
             Local vxlan vtep:
               vrf:evpn1, vni:30000
-              local router mac:001E.7A13.E9BF
+              local router mac:001E.7AFF.FCD2
               encap:8
               vtep-ip:10.21.33.33
               bdi:BDI200
@@ -2095,7 +2102,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
             Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
             Local vxlan vtep:
               vrf:evpn1, vni:30000
-              local router mac:001E.7A13.E9BF
+              local router mac:001E.7AFF.FCD2
               encap:8
               vtep-ip:10.21.33.33
               bdi:BDI200
@@ -2110,7 +2117,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
             Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
             Local vxlan vtep:
               vrf:evpn1, vni:30000
-              local router mac:001E.7A13.E9BF
+              local router mac:001E.7AFF.FCD2
               encap:8
               vtep-ip:10.21.33.33
               bdi:BDI200
@@ -2131,14 +2138,14 @@ class TestShowBgpAllDetail(unittest.TestCase):
           0.0.0.0 (via vrf evpn1) from 0.0.0.0 (10.21.33.33)
             Origin incomplete, metric 0, localpref 100, weight 32768, valid, external, best
             EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
-            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
             rx pathid: 0, tx pathid: 0x0
         Refresh Epoch 1
         65530, imported path from base
           10.36.3.254 (via vrf evpn1) from 10.36.3.254 (10.21.33.22)
             Origin incomplete, metric 0, localpref 100, valid, external
             EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
-            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
             rx pathid: 0, tx pathid: 0
         BGP routing table entry for [5][65535:1][0][24][10.1.1.0]/17, version 4
         Paths: (1 available, best #1, table EVPN-BGP-Table)
@@ -2148,7 +2155,7 @@ class TestShowBgpAllDetail(unittest.TestCase):
           0.0.0.0 (via vrf evpn1) from 0.0.0.0 (10.21.33.33)
             Origin incomplete, metric 0, localpref 100, weight 32768, valid, external, best
             EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
-            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
             rx pathid: 0, tx pathid: 0x0
 
         For address family: VPNv4 Multicast
@@ -5479,7 +5486,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
             rx pathid: 0, tx pathid: 0
         Refresh Epoch 3
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 200::01), (received & used)
+        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
             10.105.5.1 (metric 2) (via vrf sample_vrf) from 10.105.5.1 (10.105.5.1)
             Origin IGP, metric 0, localpref 100, valid, internal, atomic-aggregate
             Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
@@ -5545,7 +5552,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                             2: {
                                                 'atomic_aggregate': True,
                                                 'aggregated_by_as': '65251',
-                                                'aggregated_by_address': '200::01',
+                                                'aggregated_by_address': '2001:db8:4::1',
                                                 'community': '1:1 '
                                                             '65100:101 '
                                                             '65100:175 '
@@ -22712,7 +22719,7 @@ class TestShowIpBgpAllDampeningParameters(unittest.TestCase):
 
 class TestShowIpBgp(unittest.TestCase):
     ''' unit test for show ip bgp '''
-
+    maxDiff = None
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23018,17 +23025,84 @@ class TestShowIpBgp(unittest.TestCase):
     '''}
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', rd='65109:10000')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+class TestShowIpBgpRegexp(unittest.TestCase):
+    ''' unit test for show ip bgp '''
+    maxDiff = None
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    '': {
+                        'routes': {
+                            '10.4.1.1/32': {
+                                'index': {
+                                    1: {
+                                        'metric': 0,
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                        'status_codes': '*>',
+                                        'weight': 32768,
+                                    },
+                                },
+                            },
+                            '10.16.2.2/32': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '10.16.2.2',
+                                        'origin_codes': 'i',
+                                        'status_codes': 'r>i',
+                                        'weight': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        show ip bgp regexp ^$
+        BGP table version is 3, local router ID is 10.4.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                    r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                    x best-external, a additional-path, c RIB-compressed,
+                    t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+            Network          Next Hop            Metric LocPrf Weight Path
+        *>   10.4.1.1/32       0.0.0.0                  0         32768 i
+        r>i  10.16.2.2/32       10.16.2.2                  0    100      0 i
+    '''}
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpRegexp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(regexp='^$')
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgpRegexp(device=self.device)
+        parsed_output = obj.parse(regexp='^$')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 

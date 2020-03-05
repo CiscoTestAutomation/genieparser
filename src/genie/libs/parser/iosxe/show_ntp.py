@@ -102,7 +102,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
-                if '~' is groups['configured']:
+                if '~' == groups['configured']:
                     configured = True
                 else:
                     configured = False
@@ -372,7 +372,7 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server vrf VRF1 10.64.4.4
         # ntp server 10.16.2.2 source Loopback0
 
-        p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
+        p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>\S+))? "
             "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
 
         for line in out.splitlines():

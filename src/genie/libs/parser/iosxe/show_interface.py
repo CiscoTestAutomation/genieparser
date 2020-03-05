@@ -11,6 +11,7 @@
     * show interfaces <interface>
     * show ipv6 interface
     * show interfaces accounting
+    * show interfaces status
 """
 
 import os
@@ -21,7 +22,7 @@ import unittest
 from genie import parsergen
 from collections import defaultdict
 
-from ats.log.utils import banner
+from pyats.log.utils import banner
 import xmltodict
 try:
     import iptools
@@ -30,7 +31,7 @@ except (ImportError, OSError):
     pass
 
 try:
-    from ats import tcl
+    from pyats import tcl
 except Exception:
     pass
 
@@ -216,7 +217,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                            r' +line +protocol +is +(?P<line_protocol>\w+)'
                            r'( *, *(?P<attribute>[\w\s]+))?$')
 
-        # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+        # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
         p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
                         r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
@@ -462,7 +463,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
                 continue
 
-            # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+            # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
             # Hardware is Loopback
             m = p2.match(line)
 
@@ -1059,6 +1060,7 @@ class ShowIpInterfaceBriefSchema(MetaParser):
                 },
             }
 
+
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     """Parser for:
      show ip interface brief
@@ -1139,6 +1141,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         yang_output = self.yang()
         merged_output = merge_dict(yang_output,cli_output)
         return merged_output
+
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     """Parser for:
@@ -1297,6 +1300,7 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIpSchema):
 
         return interface_dict
 
+
 class ShowInterfacesSwitchportSchema(MetaParser):
     """Schema for show interfaces switchport"""
     schema = {
@@ -1342,6 +1346,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     Optional('appliance_trust'): str,
                 },
             }
+
 
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     """parser for show interfaces switchport"""
@@ -1787,6 +1792,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('multicast_groups'): list,
                 },
             }
+
 
 class ShowIpInterface(ShowIpInterfaceSchema):
     """Parser for show ip interface
@@ -2363,7 +2369,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         return interface_dict
 
 
-
 class ShowIpv6InterfaceSchema(MetaParser):
     """Schema for show ipv6 interface"""
     schema = {
@@ -2417,6 +2422,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                 },
             }
 
+
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
     """Parser for show ipv6 interface"""
     cli_command = ['show ipv6 interface {interface}','show ipv6 interface']
@@ -2465,8 +2471,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
-            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
-            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [UNA/TEN]
             p2 = re.compile(r'^IPv6 +is +(?P<status>\w+), +'
                              'link-local +address +is +(?P<link_local>[\w\:]+)'
                              '( *\[(?P<type>[\w\/]+)\])?$')
@@ -2825,6 +2831,7 @@ class ShowInterfacesTrunkSchema(MetaParser):
         }
     }
 
+
 class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
     """parser for show interfaces trunk"""
     cli_command = 'show interfaces trunk'
@@ -2904,6 +2911,7 @@ class ShowInterfacesCountersSchema(MetaParser):
             },
         }
     }
+
 
 class ShowInterfacesCounters(ShowInterfacesCountersSchema):
     """parser for show interfaces <WORD> counters"""
@@ -3110,11 +3118,11 @@ class ShowInterfacesStats(ShowInterfacesStatsSchema):
                 continue
 
         return result_dict
-        
+
+
 # ====================================================
 #  parser for show interfaces description
 # ====================================================
-
 class ShowInterfacesDescriptionSchema(MetaParser):
     """schema for show interfaces description
     """
@@ -3128,6 +3136,7 @@ class ShowInterfacesDescriptionSchema(MetaParser):
             }
         }
     }
+
 
 class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
     """parser for show interfaces description
@@ -3150,12 +3159,14 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
 
         #Interface                      Status         Protocol Description
         #Gi0/0                          up             up 
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
+        #Gi0/1                          admin down     down     to router2
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<status>(\S+)([\s+](\S+))?) +(?P<protocol>(\S+))(?: +(?P<description>(.*)))?$')
 
         for line in out.splitlines():
             line = line.strip()
             #Interface                      Status         Protocol Description
             #Gi0/0                          up             up 
+            #Gi0/1                          admin down     down     to router2
             m = p1.match(line)
             if m and m.groupdict()['protocol'] != 'Protocol':
                 group = m.groupdict()
@@ -3171,3 +3182,77 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                 continue
 
         return result_dict
+
+
+# ====================================================
+#  schema for show interfaces status
+# ====================================================
+class ShowInterfacesStatusSchema(MetaParser):
+    """Schema for:
+        show interfaces status"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'status': str,
+                'vlan': str,
+                'duplex_code': str,
+                'port_speed': str,
+                'type': str,
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for show interfaces status
+# ====================================================
+class ShowInterfacesStatus(ShowInterfacesStatusSchema):
+    """parser for show interfaces status
+        """
+
+    cli_command = 'show interfaces status'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port      Name               Status       Vlan       Duplex  Speed Type
+        # Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+        # Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
+        # Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+        # Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+
+        p1 = re.compile(r'^(?P<interfaces>\w+\d+\/\d+)(?: +(?P<name>([\S ]+)))?'
+                        r' +(?P<status>\S+) +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+)'
+                        r' +(?P<port_speed>[\S\-]+) +(?P<type>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interfaces']), {})
+
+                name_val = group['name'].strip()
+                if len(name_val)>0 :
+                    intf_dict['name'] = name_val
+
+                keys = ['status',
+                        'vlan', 'duplex_code', 'port_speed',
+                        'type']
+
+                for k in keys:
+                    intf_dict[k] = group[k]
+                continue
+
+        return result_dict
+

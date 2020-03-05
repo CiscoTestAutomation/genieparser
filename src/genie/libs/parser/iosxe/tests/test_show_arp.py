@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
@@ -32,14 +32,14 @@ class test_show_arp(unittest.TestCase):
                         '192.168.234.1': {
                             'age': '-',
                             'ip': '192.168.234.1',
-                            'link_layer_address': '58bf.eab6.2f51',
+                            'link_layer_address': '58bf.eaff.e508',
                             'origin': 'static',
                             'protocol': 'Internet',
                             'type': 'ARPA'
                         },
                         '192.168.234.2': {'age': '29',
                             'ip': '192.168.234.2',
-                            'link_layer_address': '3820.5672.fc51',
+                            'link_layer_address': '3820.56ff.6fc3',
                             'origin': 'dynamic',
                             'protocol': 'Internet',
                             'type': 'ARPA'
@@ -53,7 +53,7 @@ class test_show_arp(unittest.TestCase):
                         '192.168.70.1': {
                             'age': '-',
                             'ip': '192.168.70.1',
-                            'link_layer_address': '58bf.eab6.2f62',
+                            'link_layer_address': '58bf.eaff.e519',
                             'origin': 'static',
                             'protocol': 'Internet',
                             'type': 'ARPA'
@@ -66,9 +66,9 @@ class test_show_arp(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-        Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
-        Internet  192.168.234.2          29   3820.5672.fc51  ARPA   Vlan100
-        Internet  192.168.70.1            -   58bf.eab6.2f62  ARPA   Vlan200
+        Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
+        Internet  192.168.234.2          29   3820.56ff.6fc3  ARPA   Vlan100
+        Internet  192.168.70.1            -   58bf.eaff.e519  ARPA   Vlan200
     '''}
     
     golden_parsed_output_1 = {
@@ -79,28 +79,28 @@ class test_show_arp(unittest.TestCase):
                         '10.1.18.1': {
                             'age': '45',
                             'ip': '10.1.18.1',
-                            'link_layer_address': '0012.7f57.ac80',
+                            'link_layer_address': '0012.7fff.04d7',
                             'origin': 'dynamic',
                             'protocol': 'Internet',
                             'type': 'ARPA'},
                         '10.1.18.122': {
                             'age': '-',
                             'ip': '10.1.18.122',
-                            'link_layer_address': '58bf.eab6.2f00',
+                            'link_layer_address': '58bf.eaff.e5b6',
                             'origin': 'static',
                             'protocol': 'Internet',
                             'type': 'ARPA'},
                         '10.1.18.13': {
                             'age': '142',
                             'ip': '10.1.18.13',
-                            'link_layer_address': '00b0.c215.441d',
+                            'link_layer_address': '00b0.c2ff.5932',
                             'origin': 'dynamic',
                             'protocol': 'Internet',
                             'type': 'ARPA'},
                         '10.1.18.254': {
                             'age': '247',
                             'ip': '10.1.18.254',
-                            'link_layer_address': '5cf3.fc25.ab76',
+                            'link_layer_address': '5cf3.fcff.d09b',
                             'origin': 'dynamic',
                             'protocol': 'Internet',
                             'type': 'ARPA'}
@@ -112,17 +112,17 @@ class test_show_arp(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''
         Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-        Internet  10.1.18.122             -   58bf.eab6.2f00  ARPA   GigabitEthernet0/0
-        Internet  10.1.18.1              45   0012.7f57.ac80  ARPA   GigabitEthernet0/0
-        Internet  10.1.18.13            142   00b0.c215.441d  ARPA   GigabitEthernet0/0
-        Internet  10.1.18.254           247   5cf3.fc25.ab76  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.122             -   58bf.eaff.e5b6  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.1              45   0012.7fff.04d7  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.13            142   00b0.c2ff.5932  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.254           247   5cf3.fcff.d09b  ARPA   GigabitEthernet0/0
     '''}
 
     golden_parsed_output_2 = {
         "global_static_table": {
             "10.169.197.93": {
                 "ip_address": "10.169.197.93",
-                "mac_address": "fa16.3e95.2218",
+                "mac_address": "fa16.3eff.b7ad",
                 "encap_type": "ARPA",
                 "age": "-",
                 "protocol": "Internet"
@@ -134,7 +134,7 @@ class test_show_arp(unittest.TestCase):
                     "neighbors": {
                         "10.169.197.94": {
                             "ip": "10.169.197.94",
-                            "link_layer_address": "fa16.3e0b.9fd6",
+                            "link_layer_address": "fa16.3eff.aae1",
                             "type": "ARPA",
                             "origin": "static",
                             "age": "-",
@@ -148,7 +148,7 @@ class test_show_arp(unittest.TestCase):
                     "neighbors": {
                         "10.169.197.97": {
                             "ip": "10.169.197.97",
-                            "link_layer_address": "fa16.3e07.3ea1",
+                            "link_layer_address": "fa16.3eff.45a8",
                             "type": "ARPA",
                             "origin": "dynamic",
                             "age": "18",
@@ -156,7 +156,7 @@ class test_show_arp(unittest.TestCase):
                         },
                         "10.169.197.98": {
                             "ip": "10.169.197.98",
-                            "link_layer_address": "fa16.3e4c.517e",
+                            "link_layer_address": "fa16.3eff.9dca",
                             "type": "ARPA",
                             "origin": "static",
                             "age": "-",
@@ -174,10 +174,10 @@ class test_show_arp(unittest.TestCase):
         Time source is NTP, 00:41:33.830 EST Thu Jun 20 2019
 
         Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-        Internet  10.169.197.93          -   fa16.3e95.2218  ARPA  
-        Internet  10.169.197.94          -   fa16.3e0b.9fd6  ARPA   GigabitEthernet2
-        Internet  10.169.197.97         18   fa16.3e07.3ea1  ARPA   GigabitEthernet4
-        Internet  10.169.197.98          -   fa16.3e4c.517e  ARPA   GigabitEthernet4  
+        Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA  
+        Internet  10.169.197.94          -   fa16.3eff.aae1  ARPA   GigabitEthernet2
+        Internet  10.169.197.97         18   fa16.3eff.45a8  ARPA   GigabitEthernet4
+        Internet  10.169.197.98          -   fa16.3eff.9dca  ARPA   GigabitEthernet4  
     '''}
 
     def test_empty(self):
@@ -218,14 +218,14 @@ class test_show_ip_arp(unittest.TestCase):
                         '10.12.90.1': {
                             'age': '-',
                             'ip': '10.12.90.1',
-                            'link_layer_address': 'fa16.3e24.787a',
+                            'link_layer_address': 'fa16.3eff.9c9e',
                             'origin': 'static',
                             'protocol': 'Internet',
                             'type': 'ARPA'},
                         '10.12.90.2':
                             {'age': '139',
                              'ip': '10.12.90.2',
-                             'link_layer_address': 'fa16.3e8a.cfeb',
+                             'link_layer_address': 'fa16.3eff.5a76',
                              'origin': 'dynamic',
                              'protocol': 'Internet',
                              'type': 'ARPA'}
@@ -238,7 +238,7 @@ class test_show_ip_arp(unittest.TestCase):
                         '10.12.110.1': {
                             'age': '-',
                             'ip': '10.12.110.1',
-                            'link_layer_address': 'fa16.3e24.787a',
+                            'link_layer_address': 'fa16.3eff.9c9e',
                             'origin': 'static',
                             'protocol': 'Internet',
                             'type': 'ARPA'}
@@ -251,9 +251,9 @@ class test_show_ip_arp(unittest.TestCase):
     golden_output = {'execute.return_value':
                          '''
 Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-Internet  10.12.90.1              -   fa16.3e24.787a  ARPA   GigabitEthernet2.390
-Internet  10.12.90.2            139   fa16.3e8a.cfeb  ARPA   GigabitEthernet2.390
-Internet  10.12.110.1             -   fa16.3e24.787a  ARPA   GigabitEthernet2.410
+Internet  10.12.90.1              -   fa16.3eff.9c9e  ARPA   GigabitEthernet2.390
+Internet  10.12.90.2            139   fa16.3eff.5a76  ARPA   GigabitEthernet2.390
+Internet  10.12.110.1             -   fa16.3eff.9c9e  ARPA   GigabitEthernet2.410
             '''}
 
     def test_empty(self):

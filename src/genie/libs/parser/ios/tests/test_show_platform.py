@@ -1,63 +1,61 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                        SchemaMissingKeyError
-from genie.libs.parser.ios.show_platform import ShowVersion,\
-    Dir,\
-    ShowRedundancy,\
-    ShowInventory,\
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
+    SchemaMissingKeyError
+from genie.libs.parser.ios.show_platform import ShowVersion, \
+    Dir, \
+    ShowRedundancy, \
+    ShowInventory, \
     ShowBootvar, \
-    ShowProcessesCpuSorted,\
-    ShowProcessesCpu,\
-    ShowVersionRp,\
-    ShowPlatform,\
-    ShowPlatformPower,\
-    ShowProcessesCpuHistory,\
-    ShowProcessesCpuPlatform,\
-    ShowPlatformSoftwareStatusControl,\
-    ShowPlatformSoftwareSlotActiveMonitorMem,\
-    ShowPlatformHardware,\
-    ShowPlatformHardwarePlim,\
-    ShowPlatformHardwareQfpBqsOpmMapping,\
-    ShowPlatformHardwareQfpBqsIpmMapping,\
-    ShowPlatformHardwareSerdes,\
-    ShowPlatformHardwareSerdesInternal,\
-    ShowPlatformHardwareQfpBqsStatisticsChannelAll,\
-    ShowPlatformHardwareQfpInterfaceIfnameStatistics,\
-    ShowPlatformHardwareQfpStatisticsDrop,\
-    ShowEnvironment,\
-    ShowModule,\
+    ShowProcessesCpuSorted, \
+    ShowProcessesCpu, \
+    ShowVersionRp, \
+    ShowPlatform, \
+    ShowPlatformPower, \
+    ShowProcessesCpuHistory, \
+    ShowProcessesCpuPlatform, \
+    ShowPlatformSoftwareStatusControl, \
+    ShowPlatformSoftwareSlotActiveMonitorMem, \
+    ShowPlatformHardware, \
+    ShowPlatformHardwarePlim, \
+    ShowPlatformHardwareQfpBqsOpmMapping, \
+    ShowPlatformHardwareQfpBqsIpmMapping, \
+    ShowPlatformHardwareSerdes, \
+    ShowPlatformHardwareSerdesInternal, \
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
+    ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
+    ShowPlatformHardwareQfpStatisticsDrop, \
+    ShowEnvironment, \
+    ShowModule, \
     ShowSwitch, ShowSwitchDetail
 
-from genie.libs.parser.iosxe.tests.test_show_platform import TestShowPlatform as test_show_platform_iosxe,\
-    TestShowPlatformPower as test_show_platform_power_iosxe,\
-    TestShowVersionRp as test_show_version_rp_iosxe,\
-    TestShowProcessesCpu as test_show_processes_cpu_iosxe,\
-    TestShowProcessesCpuHistory as test_show_processes_cpu_history_iosxe,\
-    TestShowProcessesCpuPlatform as test_show_processes_cpu_platform_iosxe,\
-    TestShowPlatformSoftwareStatusControlProcessorBrief as test_show_platform_software_status_control_processor_brief_iosxe,\
-    TestShowPlatformSoftwareSlotActiveMonitorMemSwap as test_show_platform_software_slot_active_monitor_Mem_iosxe,\
-    TestShowPlatformHardware as test_show_platform_hardware_iosxe,\
-    TestShowPlatformHardwarePlim as test_show_platform_hardware_plim_iosxe,\
-    TestShowPlatformHardwareQfpBqsOpmMapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe,\
-    TestShowPlatformHardwareQfpBqsIpmMapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe,\
-    TestShowPlatformHardwareSerdesStatistics as test_show_platform_hardware_serdes_statistics_iosxe,\
-    TestShowPlatformHardwareSerdesStatisticsInternal as test_show_platform_hardware_serdes_statistics_internal_iosxe,\
-    ShowPlatformHardwareQfpBqsStatisticsChannelAll as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe,\
-    ShowPlatformHardwareQfpInterface as show_platform_hardware_qfp_interface_iosxe,\
-    TestShowPlatformHardwareQfpStatisticsDrop as test_show_platform_hardware_qfp_statistics_drop_iosxe,\
-    TestShowEnv as test_show_env_iosxe,\
-    TestShowModule as test_show_module_iosxe,\
-    TestShowSwitch as test_show_switch_iosxe,\
+from genie.libs.parser.iosxe.tests.test_show_platform import TestShowPlatform as test_show_platform_iosxe, \
+    TestShowPlatformPower as test_show_platform_power_iosxe, \
+    TestShowVersionRp as test_show_version_rp_iosxe, \
+    TestShowProcessesCpu as test_show_processes_cpu_iosxe, \
+    TestShowProcessesCpuHistory as test_show_processes_cpu_history_iosxe, \
+    TestShowProcessesCpuPlatform as test_show_processes_cpu_platform_iosxe, \
+    TestShowPlatformSoftwareStatusControlProcessorBrief as test_show_platform_software_status_control_processor_brief_iosxe, \
+    TestShowPlatformSoftwareSlotActiveMonitorMemSwap as test_show_platform_software_slot_active_monitor_Mem_iosxe, \
+    TestShowPlatformHardware as test_show_platform_hardware_iosxe, \
+    TestShowPlatformHardwarePlim as test_show_platform_hardware_plim_iosxe, \
+    TestShowPlatformHardwareQfpBqsOpmMapping as test_show_platform_hardware_qfp_bqs_opm_mapping_iosxe, \
+    TestShowPlatformHardwareQfpBqsIpmMapping as test_show_platform_hardware_qfp_bqs_ipm_mapping_iosxe, \
+    TestShowPlatformHardwareSerdesStatistics as test_show_platform_hardware_serdes_statistics_iosxe, \
+    TestShowPlatformHardwareSerdesStatisticsInternal as test_show_platform_hardware_serdes_statistics_internal_iosxe, \
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll as show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe, \
+    ShowPlatformHardwareQfpInterface as show_platform_hardware_qfp_interface_iosxe, \
+    TestShowPlatformHardwareQfpStatisticsDrop as test_show_platform_hardware_qfp_statistics_drop_iosxe, \
+    TestShowEnv as test_show_env_iosxe, \
+    TestShowModule as test_show_module_iosxe, \
+    TestShowSwitch as test_show_switch_iosxe, \
     TestShowSwitchDetail as test_show_switch_detail_iosxe
 
 
-
 class TestShowVersion(unittest.TestCase):
-
     dev1 = Device(name='empty')
     dev_iosv = Device(name='iosv')
     empty_output = {'execute.return_value': ''}
@@ -142,7 +140,7 @@ class TestShowVersion(unittest.TestCase):
 
     golden_parsed_output_ios = {
         'version': {'bootldr': 'C3750E Boot Loader (C3750X-HBOOT-M) Version '
-                    '15.2(3r)E, RELEASE SOFTWARE (fc1)',
+                               '15.2(3r)E, RELEASE SOFTWARE (fc1)',
                     'chassis': 'WS-C3750X-24P',
                     'chassis_sn': 'FDO2028F1WK',
                     'curr_config_register': '0xF',
@@ -173,7 +171,11 @@ class TestShowVersion(unittest.TestCase):
                     'system_restarted_at': '12:22:21 PDT Mon Sep 10 2018',
                     'uptime': '9 weeks, 4 days, 2 hours, 3 minutes',
                     'version': '12.2(55)SE8',
-                    'version_short': '12.2'
+                    'version_short': '12.2',
+                    'image': {
+                        'data_base': '0x02800000',
+                        'text_base': '0x00003000',
+                        },
                     }
     }
 
@@ -222,7 +224,7 @@ class TestShowVersion(unittest.TestCase):
         The password-recovery mechanism is enabled.
 
         512K bytes of flash-simulated non-volatile configuration memory.
-        Base ethernet MAC Address       : 84:3D:C6:38:B9:80
+        Base ethernet MAC Address       : 84:3D:C6:FF:F1:B8
         Motherboard assembly number     : 73-15476-04
         Motherboard serial number       : FDO202907UH
         Model revision number           : W0
@@ -278,9 +280,12 @@ class TestShowVersion(unittest.TestCase):
             },
             "mem_size": {"non-volatile configuration": "1917", "packet buffer": "8192"},
             "curr_config_register": "0x2102",
+            'image': {
+                'data_base': '0x42D98000',
+                'text_base': '0x40101040',
+            },
         }
     }
-
 
     golden_output_ios_cat6k = {'execute.return_value': '''
         show version
@@ -378,7 +383,7 @@ class TestShowVersion(unittest.TestCase):
     The password-recovery mechanism is enabled.
 
     512K bytes of flash-simulated non-volatile configuration memory.
-    Base ethernet MAC Address       : AC:F2:C5:E7:6D:00
+    Base ethernet MAC Address       : AC:F2:C5:FF:55:E7
     Motherboard assembly number     : 73-13061-04
     Motherboard serial number       : FDO1633Q14M
     Model revision number           : A0
@@ -438,10 +443,10 @@ class TestShowVersion(unittest.TestCase):
                         'flash-simulated non-volatile configuration': '512'
                     },
                     'curr_config_register': '0xF'
-                }
-            }
+                    }
+    }
 
-    device_output = {'execute.return_value':'''
+    device_output = {'execute.return_value': '''
     best-c3945-IOS3#show version
     Cisco IOS Software, C3900 Software (C3900-UNIVERSALK9-M), Version 15.0(1)M7, RELEASE SOFTWARE (fc2)
     Technical Support: http://www.cisco.com/techsupport
@@ -510,70 +515,140 @@ class TestShowVersion(unittest.TestCase):
     '''}
 
     parsed_output = {
-    'version': {
-        'chassis': 'CISCO3945-CHASSIS',
-        'chassis_sn': 'FGL161010K8',
-        'compiled_by': 'prod_rel_team',
-        'compiled_date': 'Fri 05-Aug-11 00:32',
-        'curr_config_register': '0x2102',
-        'hostname': 'best-c3945-IOS3',
-        'image_id': 'C3900-UNIVERSALK9-M',
-        'image_type': 'production image',
-        'last_reload_reason': 'Reload Command',
-        'last_reload_type': 'Normal Reload',
-        'license_udi': {
-            'device_num': {
-                '*0': {
-                    'pid': 'C3900-SPE150/K9',
-                    'sn': 'FOC16050QP6'
+        'version': {
+            'chassis': 'CISCO3945-CHASSIS',
+            'chassis_sn': 'FGL161010K8',
+            'compiled_by': 'prod_rel_team',
+            'compiled_date': 'Fri 05-Aug-11 00:32',
+            'curr_config_register': '0x2102',
+            'hostname': 'best-c3945-IOS3',
+            'image_id': 'C3900-UNIVERSALK9-M',
+            'image_type': 'production image',
+            'last_reload_reason': 'Reload Command',
+            'last_reload_type': 'Normal Reload',
+            'license_udi': {
+                'device_num': {
+                    '*0': {
+                        'pid': 'C3900-SPE150/K9',
+                        'sn': 'FOC16050QP6'
+                    }
                 }
-            }
-        },
-        'license_package': {
-            'data': {
-                'license_level': 'datak9',
-                'license_type': 'Permanent',
-                'next_reload_license_level': 'datak9',
             },
-            'ipbase': {
-                'license_level': 'ipbasek9',
-                'license_type': 'Permanent',
-                'next_reload_license_level': 'ipbasek9',
+            'license_package': {
+                'data': {
+                    'license_level': 'datak9',
+                    'license_type': 'Permanent',
+                    'next_reload_license_level': 'datak9',
+                },
+                'ipbase': {
+                    'license_level': 'ipbasek9',
+                    'license_type': 'Permanent',
+                    'next_reload_license_level': 'ipbasek9',
+                },
+                'security': {
+                    'license_level': 'securityk9',
+                    'license_type': 'Permanent',
+                    'next_reload_license_level': 'securityk9',
+                },
+                'uc': {
+                    'license_level': 'None',
+                    'license_type': 'None',
+                    'next_reload_license_level': 'None',
+                },
             },
-            'security': {
-                'license_level': 'securityk9',
-                'license_type': 'Permanent',
-                'next_reload_license_level': 'securityk9',
+            'main_mem': '2027520',
+            'mem_size': {
+                'non-volatile configuration': '255',
             },
-            'uc': {
-                'license_level': 'None',
-                'license_type': 'None',
-                'next_reload_license_level': 'None',
+            'number_of_intfs': {
+                'FastEthernet': '2',
+                'Gigabit Ethernet': '3',
             },
+            'os': 'IOS',
+            'platform': 'C3900',
+            'processor_board_flash': '2000880K',
+            'processor_type': 'C3900-SPE150/K9',
+            'returned_to_rom_at': '10:26:47 EST Mon Dec 9 2019',
+            'returned_to_rom_by': 'reload',
+            'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',
+            'rtr_type': 'CISCO3945-CHASSIS',
+            'system_image': 'flash0:c3900-universalk9-mz.SPA.150-1.M7.bin',
+            'system_restarted_at': '10:27:57 EST Mon Dec 9 2019',
+            'uptime': '1 hour, 20 minutes',
+            'version': '15.0(1)M7',
+            'version_short': '15.0',
         },
-        'main_mem': '2027520',
-        'mem_size': {
-            'non-volatile configuration': '255',
+    }
+
+    golden_output_ios_2 = {'execute.return_value': '''
+    show version
+    Cisco Internetwork Operating System Software 
+    IOS (tm) Catalyst 4000 L3 Switch Software (cat4000-I9S-M), Version 12.2(18)EW5, RELEASE SOFTWARE (fc1)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2005 by cisco Systems, Inc.
+    Compiled Wed 07-Sep-05 11:16 by someone
+    Image text-base: 0x00000000, data-base: 0x010BF898
+    
+    ROM: 12.2(20r)EW1
+    Dagobah Revision 95, Swamp Revision 6
+    
+    GENIE123123 uptime is 1 years, 2 weeks, 3 days, 4 hours, 5 minutes
+    System returned to ROM by RPR Switchover
+    System restarted at 13:54:51 CET Sun Apr 15 2007
+    System image file is "bootflash:cat4000-i9s-mz.122-18.EW5.bin"
+    
+    cisco WS-C4507R (MPC8245) processor (revision 8) with 524288K bytes of memory.
+    Processor board ID FOX093206HY
+    Last reset from Reload
+    2 Virtual Ethernet/IEEE 802.3  interface(s)
+    244 Gigabit Ethernet/IEEE 802.3 interface(s)
+    511K bytes of non-volatile configuration memory.
+    
+    Configuration register is 0x2102
+    
+    GENIE123123#
+    '''}
+
+    golden_parsed_output_ios_2 = {
+        'version': {
+            'chassis': 'WS-C4507R',
+            'chassis_sn': 'FOX093206HY',
+            'compiled_by': 'someone',
+            'compiled_date': 'Wed 07-Sep-05 11:16',
+            'curr_config_register': '0x2102',
+            'hostname': 'GENIE123123',
+            'image': {
+                'data_base': '0x010BF898',
+                'text_base': '0x00000000',
+            },
+            'image_id': 'cat4000-I9S-M',
+            'image_type': 'production image',
+            'interfaces': {
+                'gigabit_ethernet': 244,
+                'virtual_ethernet': 2,
+            },
+            'last_reload_reason': 'Reload',
+            'main_mem': '524288',
+            'mem_size': {
+                'non-volatile configuration': '511',
+            },
+            'os': 'IOS',
+            'platform': 'Catalyst 4000 L3 Switch',
+            'processor_type': 'MPC8245',
+            'returned_to_rom_by': 'RPR Switchover',
+            'revision': {
+                'Dagobah': 95,
+                'Swamp': 6,
+            },
+            'rom': '12.2(20r)EW1',
+            'rtr_type': 'WS-C4507R',
+            'system_image': 'bootflash:cat4000-i9s-mz.122-18.EW5.bin',
+            'system_restarted_at': '13:54:51 CET Sun Apr 15 2007',
+            'uptime': '1 years, 2 weeks, 3 days, 4 hours, 5 minutes',
+            'version': '12.2(18)EW5',
+            'version_short': '12.2',
         },
-        'number_of_intfs': {
-            'FastEthernet': '2',
-            'Gigabit Ethernet': '3',
-        },
-        'os': 'IOS',
-        'platform': 'C3900',
-        'processor_board_flash': '2000880K',
-        'processor_type': 'C3900-SPE150/K9',
-        'returned_to_rom_at': '10:26:47 EST Mon Dec 9 2019',
-        'returned_to_rom_by': 'reload',
-        'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',
-        'rtr_type': 'CISCO3945-CHASSIS',
-        'system_image': 'flash0:c3900-universalk9-mz.SPA.150-1.M7.bin',
-        'system_restarted_at': '10:27:57 EST Mon Dec 9 2019',
-        'uptime': '1 hour, 20 minutes',
-        'version': '15.0(1)M7',
-        'version_short': '15.0',
-    },
-}
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -621,6 +696,13 @@ class TestShowVersion(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.parsed_output)
+
+    def test_golden_ios_3(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.golden_output_ios_2)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios_2)
 
 
 class test_dir(unittest.TestCase):
@@ -1042,7 +1124,6 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
-
     golden_output_2 = {'execute.return_value': '''
         NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
         PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
@@ -1295,105 +1376,105 @@ class TestShowInventory(unittest.TestCase):
     '''}
 
     golden_parsed_output_4 = {
-    'slot': {
-        '1': {
-            'rp': {
-                'WS-C0123X-45T-S': {
-                    'descr': 'WS-C8888X-88',
-                    'name': '1',
-                    'pid': 'WS-C0123X-45T-S',
-                    'sn': 'FDO123R12W',
-                    'subslot': {
-                        '1': {
-                            'C3KX-PWR-350WAC': {
-                                'descr': 'ABC Power Supply',
-                                'name': 'Switch 1 - Power Supply 1',
-                                'pid': 'C3KX-PWR-350WAC',
-                                'sn': 'DTN1504L0E9',
-                                'vid': 'V01D ',
+        'slot': {
+            '1': {
+                'rp': {
+                    'WS-C0123X-45T-S': {
+                        'descr': 'WS-C8888X-88',
+                        'name': '1',
+                        'pid': 'WS-C0123X-45T-S',
+                        'sn': 'FDO123R12W',
+                        'subslot': {
+                            '1': {
+                                'C3KX-PWR-350WAC': {
+                                    'descr': 'ABC Power Supply',
+                                    'name': 'Switch 1 - Power Supply 1',
+                                    'pid': 'C3KX-PWR-350WAC',
+                                    'sn': 'DTN1504L0E9',
+                                    'vid': 'V01D ',
+                                },
+                            },
+                            '1/1/1': {
+                                'SFP-10G-SR': {
+                                    'descr': 'SFP-10GBase-SR',
+                                    'name': 'TenGigabitEthernet1/1/1',
+                                    'pid': 'SFP-10G-SR',
+                                    'sn': 'SPC1519005V',
+                                    'vid': 'V03  ',
+                                },
                             },
                         },
-                        '1/1/1': {
-                            'SFP-10G-SR': {
-                                'descr': 'SFP-10GBase-SR',
-                                'name': 'TenGigabitEthernet1/1/1',
-                                'pid': 'SFP-10G-SR',
-                                'sn': 'SPC1519005V',
-                                'vid': 'V03  ',
-                            },
-                        },
+                        'vid': 'V00  ',
                     },
-                    'vid': 'V00  ',
+                    'WS-C1010XR-48FPS-I': {
+                        'descr': 'WS-C1010XR-48FPS-I',
+                        'name': '1',
+                        'pid': 'WS-C1010XR-48FPS-I',
+                        'sn': 'FD2043B0K3',
+                        'subslot': {
+                            '1': {
+                                'C1010X-STACK': {
+                                    'descr': 'Stacking Module',
+                                    'name': 'Switch 1 - FlexStackPlus Module',
+                                    'pid': 'C1010X-STACK',
+                                    'sn': 'FD232323XXZ',
+                                    'vid': 'V02  ',
+                                },
+                                'PWR-C2-2929WAC': {
+                                    'descr': 'LLL Power Supply',
+                                    'name': 'Switch 1 - Power Supply 1',
+                                    'pid': 'PWR-C2-2929WAC',
+                                    'sn': 'LIT03728KKK',
+                                    'vid': 'V02L ',
+                                },
+                            },
+                            '1/0/49': {
+                                'GLC-SX-MMD': {
+                                    'descr': '1000BaseSX SFP',
+                                    'name': 'GigabitEthernet1/0/49',
+                                    'pid': 'GLC-SX-MMD',
+                                    'sn': 'ACW102938VS',
+                                    'vid': 'V01  ',
+                                },
+                            },
+                        },
+                        'vid': 'V05  ',
+                    },
                 },
-                'WS-C1010XR-48FPS-I': {
-                    'descr': 'WS-C1010XR-48FPS-I',
-                    'name': '1',
-                    'pid': 'WS-C1010XR-48FPS-I',
-                    'sn': 'FD2043B0K3',
-                    'subslot': {
-                        '1': {
-                            'C1010X-STACK': {
-                                'descr': 'Stacking Module',
-                                'name': 'Switch 1 - FlexStackPlus Module',
-                                'pid': 'C1010X-STACK',
-                                'sn': 'FD232323XXZ',
-                                'vid': 'V02  ',
+            },
+            '2': {
+                'rp': {
+                    'WS-C3210X-48T-S': {
+                        'descr': 'WS-C3210X-48',
+                        'name': '2',
+                        'pid': 'WS-C3210X-48T-S',
+                        'sn': 'FD5678Z90P',
+                        'subslot': {
+                            '2': {
+                                'C3KX-PWR-007CBA': {
+                                    'descr': 'BCA Power Supply',
+                                    'name': 'Switch 2 - Power Supply 1',
+                                    'pid': 'C3KX-PWR-007CBA',
+                                    'sn': 'LTP13579L3R',
+                                    'vid': 'V01L ',
+                                },
                             },
-                            'PWR-C2-2929WAC': {
-                                'descr': 'LLL Power Supply',
-                                'name': 'Switch 1 - Power Supply 1',
-                                'pid': 'PWR-C2-2929WAC',
-                                'sn': 'LIT03728KKK',
-                                'vid': 'V02L ',
-                            },
-                        },
-                        '1/0/49': {
-                            'GLC-SX-MMD': {
-                                'descr': '1000BaseSX SFP',
-                                'name': 'GigabitEthernet1/0/49',
-                                'pid': 'GLC-SX-MMD',
-                                'sn': 'ACW102938VS',
-                                'vid': 'V01  ',
+                            '2/1/1': {
+                                'SFP-10G-LR': {
+                                    'descr': 'SFP-10GBase-LR',
+                                    'name': 'TenGigabitEthernet2/1/1',
+                                    'pid': 'SFP-10G-LR',
+                                    'sn': 'ONT182746GZ',
+                                    'vid': 'V02  ',
+                                },
                             },
                         },
+                        'vid': 'V02  ',
                     },
-                    'vid': 'V05  ',
                 },
             },
         },
-        '2': {
-            'rp': {
-                'WS-C3210X-48T-S': {
-                    'descr': 'WS-C3210X-48',
-                    'name': '2',
-                    'pid': 'WS-C3210X-48T-S',
-                    'sn': 'FD5678Z90P',
-                    'subslot': {
-                        '2': {
-                            'C3KX-PWR-007CBA': {
-                                'descr': 'BCA Power Supply',
-                                'name': 'Switch 2 - Power Supply 1',
-                                'pid': 'C3KX-PWR-007CBA',
-                                'sn': 'LTP13579L3R',
-                                'vid': 'V01L ',
-                            },
-                        },
-                        '2/1/1': {
-                            'SFP-10G-LR': {
-                                'descr': 'SFP-10GBase-LR',
-                                'name': 'TenGigabitEthernet2/1/1',
-                                'pid': 'SFP-10G-LR',
-                                'sn': 'ONT182746GZ',
-                                'vid': 'V02  ',
-                            },
-                        },
-                    },
-                    'vid': 'V02  ',
-                },
-            },
-        },
-    },
-}
+    }
 
     golden_output_5 = {'execute.return_value': '''
     best-c3945-IOS3#show inventory
@@ -1410,53 +1491,317 @@ class TestShowInventory(unittest.TestCase):
     PID: PWR-3900-AC       , VID: V03 , SN: QCS1604P0BT
     '''}
     golden_parsed_output_5 = {
-    'main': {
-        'chassis': {
-            'CISCO3945-CHASSIS': {
-                'descr': 'CISCO3945-CHASSIS',
-                'name': 'CISCO3945-CHASSIS',
-                'pid': 'CISCO3945-CHASSIS',
-                'sn': 'FGL161010K8',
-                'vid': 'V05 ',
-            },
-        },
-    },
-    'slot': {
-        '0': {
-            'rp': {
-                'C3900-SPE150/K9': {
-                    'descr': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR',
-                    'name': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0',
-                    'pid': 'C3900-SPE150/K9',
-                    'sn': 'FOC16050QP6',
-                    'subslot': {
-                        '3': {
-                            'HWIC-2FE': {
-                                'descr': 'Two-Port Fast Ethernet High Speed WAN Interface Card',
-                                'name': 'Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3',
-                                'pid': 'HWIC-2FE',
-                                'sn': 'FOC16062824',
-                                'vid': 'V02 ',
-                            },
-                        },
-                    },
+        'main': {
+            'chassis': {
+                'CISCO3945-CHASSIS': {
+                    'descr': 'CISCO3945-CHASSIS',
+                    'name': 'CISCO3945-CHASSIS',
+                    'pid': 'CISCO3945-CHASSIS',
+                    'sn': 'FGL161010K8',
                     'vid': 'V05 ',
                 },
             },
         },
-        'C3900 AC Power Supply 1': {
-            'other': {
-                'C3900 AC Power Supply 1': {
-                    'descr': 'C3900 AC Power Supply 1',
-                    'name': 'C3900 AC Power Supply 1',
-                    'pid': 'PWR-3900-AC',
-                    'sn': 'QCS1604P0BT',
-                    'vid': 'V03 ',
+        'slot': {
+            '0': {
+                'rp': {
+                    'C3900-SPE150/K9': {
+                        'descr': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR',
+                        'name': 'Cisco Services Performance Engine 150 for Cisco 3900 ISR on Slot 0',
+                        'pid': 'C3900-SPE150/K9',
+                        'sn': 'FOC16050QP6',
+                        'subslot': {
+                            '3': {
+                                'HWIC-2FE': {
+                                    'descr': 'Two-Port Fast Ethernet High Speed WAN Interface Card',
+                                    'name': 'Two-Port Fast Ethernet High Speed WAN Interface Card on Slot 0 SubSlot 3',
+                                    'pid': 'HWIC-2FE',
+                                    'sn': 'FOC16062824',
+                                    'vid': 'V02 ',
+                                },
+                            },
+                        },
+                        'vid': 'V05 ',
+                    },
+                },
+            },
+            'C3900 AC Power Supply 1': {
+                'other': {
+                    'C3900 AC Power Supply 1': {
+                        'descr': 'C3900 AC Power Supply 1',
+                        'name': 'C3900 AC Power Supply 1',
+                        'pid': 'PWR-3900-AC',
+                        'sn': 'QCS1604P0BT',
+                        'vid': 'V03 ',
+                    },
                 },
             },
         },
-    },
-}
+    }
+
+    golden_output_6 = {'execute.return_value': '''
+    NAME: "1", DESCR: "SM-ES2-16-P"
+    PID: SM-ES2-16-P       , VID:      , SN: FOC09876NP3
+    '''}
+    golden_parsed_output_6 = {
+        'slot': {
+            '1': {
+                'lc': {
+                    'SM-ES2-16-P': {
+                        'descr': 'SM-ES2-16-P',
+                        'name': '1',
+                        'pid': 'SM-ES2-16-P',
+                        'sn': 'FOC09876NP3',
+                        'vid': '',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+    NAME: "2821 chassis", DESCR: "2821 chassis"
+    PID: CISCO2821         , VID: V07 , SN: FTX1234AMWT
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675U0D
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675W3E
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-2     , VID: V01, SN: FOC2837465E
+    '''}
+
+    golden_parsed_output_7 = {
+        'main': {
+            'chassis': {
+                'CISCO2821': {
+                    'descr': '2821 chassis',
+                    'name': '2821 chassis',
+                    'pid': 'CISCO2821',
+                    'sn': 'FTX1234AMWT',
+                    'vid': 'V07 ',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'other': {
+                    'AIM-VPN/SSL-2': {
+                        'descr': 'Encryption AIM Element',
+                        'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                        'pid': 'AIM-VPN/SSL-2',
+                        'sn': 'FOC2837465E',
+                        'vid': 'V01',
+                        'subslot': {
+                            '0': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC98675U0D',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                            '1': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC98675W3E',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+    NAME: "3825 chassis", DESCR: "3825 chassis"
+    PID: CISCO3825         , VID: V05 , SN: FTX7908A3RQ
+    
+    NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+    PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC65428K9F
+    
+    NAME: "Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1", DESCR: "Wan Interface Card BRI U (2091, 3086)"
+    PID: WIC-1B-U-V2       , VID: V01, SN: 10293847   
+    
+    NAME: "PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4", DESCR: "PVDMII DSP SIMM with four DSPs"
+    PID: PVDM2-64          , VID: V01 , SN: FOC63358WSI
+    
+    NAME: "High Density Voice Module - 8FXS/DID on Slot 1", DESCR: "High Density Voice Module - 8FXS/DID"
+    PID: EVM-HD-8FXS/DID   , VID: V04 , SN: FOC65798TG8
+    
+    NAME: "Six port FXO voice interface daughtercard on Slot 1 SubSlot 1", DESCR: "Six port FXO voice interface daughtercard"
+    PID: EM-HDA-6FXO       , VID: V03 , SN: FOC85389QXB
+    '''}
+
+    golden_parsed_output_8 = {
+        'main': {
+            'chassis': {
+                'CISCO3825': {
+                    'descr': '3825 chassis',
+                    'name': '3825 chassis',
+                    'pid': 'CISCO3825',
+                    'sn': 'FTX7908A3RQ',
+                    'vid': 'V05 ',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'rp': {
+                    'CISCO3825': {
+                        'subslot': {
+                            '0': {
+                                'VWIC2-2MFT-T1/E1': {
+                                    'descr': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1',
+                                    'name': 'VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0',
+                                    'pid': 'VWIC2-2MFT-T1/E1',
+                                    'sn': 'FOC65428K9F',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                            '1': {
+                                'WIC-1B-U-V2': {
+                                    'descr': 'Wan Interface Card BRI U (2091, 3086)',
+                                    'name': 'Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1',
+                                    'pid': 'WIC-1B-U-V2',
+                                    'sn': '10293847',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '4': {
+                                'PVDM2-64': {
+                                    'descr': 'PVDMII DSP SIMM with four DSPs',
+                                    'name': 'PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4',
+                                    'pid': 'PVDM2-64',
+                                    'sn': 'FOC63358WSI',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '1': {
+                'other': {
+                    'EVM-HD-8FXS/DID': {
+                        'descr': 'High Density Voice Module - 8FXS/DID',
+                        'name': 'High Density Voice Module - 8FXS/DID on Slot 1',
+                        'pid': 'EVM-HD-8FXS/DID',
+                        'sn': 'FOC65798TG8',
+                        'subslot': {
+                            '1': {
+                                'EM-HDA-6FXO': {
+                                    'descr': 'Six port FXO voice interface daughtercard',
+                                    'name': 'Six port FXO voice interface daughtercard on Slot 1 SubSlot 1',
+                                    'pid': 'EM-HDA-6FXO',
+                                    'sn': 'FOC85389QXB',
+                                    'vid': 'V03 ',
+                                },
+                            },
+                        },
+                        'vid': 'V04 ',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_9 = {'execute.return_value': '''
+    NAME: "3845 chassis", DESCR: "3845 chassis"
+    PID: CISCO3845         , VID: V05 , SN: FTX6666ARJ9
+    
+    NAME: "c3845 Motherboard with Gigabit Ethernet on Slot 0", DESCR: "c3845 Motherboard with Gigabit Ethernet"
+    PID: CISCO3845-MB      , VID: V09 , SN: FOC729346GQ
+    
+    NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+    PID: AIM-VPN/SSL-3     , VID: V01, SN: FOC758693YO
+    
+    NAME: "Clear/Subrate T3/E3 WAN on Slot 1", DESCR: "Clear/Subrate T3/E3 WAN"
+    PID: NM-1T3/E3=        , VID: V01 , SN: FOC28476ADM
+    
+    NAME: "16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2", DESCR: "16 Port 10BaseT/100BaseTX EtherSwitch"
+    PID: NM-16ESW          , VID: V01 , SN: FOC135464KO
+    
+    NAME: "Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0", DESCR: "Gigabit(1000BaseT) module for EtherSwitch NM"
+    PID: GE-DCARD-ESW      , VID: V01 , SN: FOC91864MNN
+    '''}
+
+    golden_parsed_output_9 = {
+        'main': {
+            'chassis': {
+                'CISCO3845': {
+                    'descr': '3845 chassis',
+                    'name': '3845 chassis',
+                    'pid': 'CISCO3845',
+                    'sn': 'FTX6666ARJ9',
+                    'vid': 'V05 ',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'CISCO3845-MB': {
+                        'descr': 'c3845 Motherboard with Gigabit Ethernet',
+                        'name': 'c3845 Motherboard with Gigabit Ethernet on Slot 0',
+                        'pid': 'CISCO3845-MB',
+                        'sn': 'FOC729346GQ',
+                        'vid': 'V09 ',
+                    },
+                },
+                'other': {
+                    'AIM-VPN/SSL-3': {
+                        'descr': 'Encryption AIM Element',
+                        'name': 'Virtual Private Network (VPN) Module on Slot 0',
+                        'pid': 'AIM-VPN/SSL-3',
+                        'sn': 'FOC758693YO',
+                        'vid': 'V01',
+                    },
+
+                },
+            },
+            '1': {
+                'lc': {
+                    'NM-1T3/E3=': {
+                        'descr': 'Clear/Subrate T3/E3 WAN',
+                        'name': 'Clear/Subrate T3/E3 WAN on Slot 1',
+                        'pid': 'NM-1T3/E3=',
+                        'sn': 'FOC28476ADM',
+                        'vid': 'V01 ',
+                    },
+                },
+            },
+            '16': {
+                'lc': {
+                    'NM-16ESW': {
+                        'descr': '16 Port 10BaseT/100BaseTX EtherSwitch',
+                        'name': '16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2',
+                        'pid': 'NM-16ESW',
+                        'sn': 'FOC135464KO',
+                        'subslot': {
+                            '0': {
+                                'GE-DCARD-ESW': {
+                                    'descr': 'Gigabit(1000BaseT) module for EtherSwitch NM',
+                                    'name': 'Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0',
+                                    'pid': 'GE-DCARD-ESW',
+                                    'sn': 'FOC91864MNN',
+                                    'vid': 'V01 ',
+                                },
+                            },
+                        },
+                        'vid': 'V01 ',
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -1499,6 +1844,34 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
+    def test_golden_output_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_output_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_output_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_golden_output_9(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
+
 
 class test_show_bootvar(unittest.TestCase):
     dev = Device(name='ios')
@@ -1538,7 +1911,6 @@ class test_show_bootvar(unittest.TestCase):
 
 
 class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
-
     dev = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
 
@@ -1760,7 +2132,8 @@ class test_show_processes_cpu_platform(test_show_processes_cpu_platform_iosxe):
             parsed_output = cpu_platform_obj.parse()
 
 
-class test_show_platform_software_status_control_processor_brief(test_show_platform_software_status_control_processor_brief_iosxe):
+class test_show_platform_software_status_control_processor_brief(
+    test_show_platform_software_status_control_processor_brief_iosxe):
 
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -1894,7 +2267,8 @@ class test_show_platform_hardware_serdes_statistics(test_show_platform_hardware_
             parsed_output = obj.parse(slot='0')
 
 
-class test_show_platform_hardware_serdes_statistics_internal(test_show_platform_hardware_serdes_statistics_internal_iosxe):
+class test_show_platform_hardware_serdes_statistics_internal(
+    test_show_platform_hardware_serdes_statistics_internal_iosxe):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output_serdes_internal)
@@ -1911,7 +2285,8 @@ class test_show_platform_hardware_serdes_statistics_internal(test_show_platform_
             parsed_output = obj.parse(slot='0')
 
 
-class show_platform_hardware_qfp_bqs_statistics_channel_all(show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe):
+class show_platform_hardware_qfp_bqs_statistics_channel_all(
+    show_platform_hardware_qfp_bqs_statistics_channel_all_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -2000,30 +2375,30 @@ class test_show_module(test_show_module_iosxe):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowModule(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowModule(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
 
 
 class test_show_switch(test_show_switch_iosxe):
-   
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitch(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowSwitch(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
 
 
 class test_show_switch_detail(test_show_switch_detail_iosxe):
@@ -2032,14 +2407,14 @@ class test_show_switch_detail(test_show_switch_detail_iosxe):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitchDetail(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsed_output = platform_obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowSwitchDetail(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
 
 
 if __name__ == '__main__':

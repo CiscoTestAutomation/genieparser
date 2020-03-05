@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -162,7 +162,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                     'GigabitEthernet3': {
                         'neighbors': {
                             'R1_csr1000v.openstacklocal': {
-                                'chassis_id': '001e.49f7.2c00',
+                                'chassis_id': '001e.49ff.24f7',
                                 'port_description': 'GigabitEthernet3',
                                 'system_name': 'R1_csr1000v.openstacklocal',
                                 'system_description': 'Cisco IOS Software [Everest], '
@@ -193,7 +193,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                     'GigabitEthernet0/0/0/1': {
                         'neighbors': {
                             'R2_xrv9000': {
-                                'chassis_id': '000d.bd09.46fa',
+                                'chassis_id': '000d.bdff.4f04',
                                 'system_name': 'R2_xrv9000',
                                 'system_description': '6.2.2, IOS-XRv 9000',
                                 'time_remaining': 95,
@@ -220,7 +220,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
               (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
             Device ID            Local Intf      Hold-time  Capability  Port ID  
 
-            Chassis id: 001e.49f7.2c00
+            Chassis id: 001e.49ff.24f7
             Port id: Gi3
             Local Port id: Eth1/1
             Port Description: GigabitEthernet3
@@ -237,7 +237,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
             Vlan ID: not advertised
 
 
-            Chassis id: 000d.bd09.46fa
+            Chassis id: 000d.bdff.4f04
             Port id: Gi0/0/0/1
             Local Port id: Eth1/2
             Port Description: null
@@ -270,12 +270,12 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Time remaining: 40 seconds
         System Capabilities: not advertised
         Enabled Capabilities: not advertised
-        Management Address: 98f2.b322.e4d2
+        Management Address: 98f2.b3ff.07f4
         Management Address IPV6: not advertised
         Vlan ID: not advertised
 
 
-        Chassis id: e0cb.bca3.9eec
+        Chassis id: e0cb.bcff.4290
         Port id: 0
         Local Port id: Eth1/38
         Port Description: internet port 0
@@ -289,7 +289,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Vlan ID: not advertised
 
 
-        Chassis id: e0cb.bca3.d708
+        Chassis id: e0cb.bcff.7bab
         Port id: 1
         Local Port id: Eth1/40
         Port Description: internet port 1
@@ -303,7 +303,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Vlan ID: not advertised
 
 
-        Chassis id: 7018.a7e3.9980
+        Chassis id: 7018.a7ff.7d64
         Port id: Te2/0/2
         Local Port id: Eth1/42
         Port Description: - NX1-2 (Eth1/43) -
@@ -320,7 +320,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Vlan ID: 1
 
 
-        Chassis id: 7018.a7e3.9980
+        Chassis id: 7018.a7ff.7d64
         Port id: Te1/0/1
         Local Port id: Eth1/43
         Port Description: - NX1-1 (Eth1/42) -
@@ -337,7 +337,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Vlan ID: not advertised
 
 
-        Chassis id: 70ea.1aa1.1555
+        Chassis id: 70ea.1aff.b6f6
         Port id: Ethernet1/46
         Local Port id: Eth1/46
         Port Description: - NX1-1 (eth1/46) - vPC Peer Keepalive link
@@ -348,12 +348,12 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Time remaining: 116 seconds
         System Capabilities: B, R
         Enabled Capabilities: B, R
-        Management Address: 70ea.1aa1.1555
+        Management Address: 70ea.1aff.b6f6
         Management Address IPV6: not advertised
         Vlan ID: not advertised
 
 
-        Chassis id: 70ea.1aa0.e4ac
+        Chassis id: 70ea.1aff.854d
         Port id: Ethernet1/54
         Local Port id: Eth1/54
         Port Description: - NX1 -
@@ -364,7 +364,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         Time remaining: 116 seconds
         System Capabilities: B, R
         Enabled Capabilities: B, R
-        Management Address: 70ea.1aa0.e4ac
+        Management Address: 70ea.1aff.854d
         Management Address IPV6: not advertised
         Vlan ID: 1
 
@@ -382,7 +382,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                 'null': {
                                     'chassis_id': '3935-5A43-4A37-39373638-35303036574C',
                                     'enabled_capabilities': 'not advertised',
-                                    'management_address_v4': '98f2.b322.e4d2',
+                                    'management_address_v4': '98f2.b3ff.07f4',
                                     'management_address_v6': 'not advertised',
                                     'port_description': 'ConnectX-4 Lx, 25G/10G/1G SFP',
                                     'system_capabilities': 'not advertised',
@@ -407,7 +407,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': 'e0cb.bca3.9eec',
+                                    'chassis_id': 'e0cb.bcff.4290',
                                     'management_address_v4': 'not advertised',
                                     'management_address_v6': 'not advertised',
                                     'port_description': 'internet port 0',
@@ -433,7 +433,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': 'e0cb.bca3.d708',
+                                    'chassis_id': 'e0cb.bcff.7bab',
                                     'management_address_v4': 'not advertised',
                                     'management_address_v6': 'not advertised',
                                     'port_description': 'internet port 1',
@@ -463,7 +463,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': '7018.a7e3.9980',
+                                    'chassis_id': '7018.a7ff.7d64',
                                     'management_address_v4': '10.22.134.6',
                                     'management_address_v6': 'not advertised',
                                     'port_description': '- NX1-2 (Eth1/43) -',
@@ -501,7 +501,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': '7018.a7e3.9980',
+                                    'chassis_id': '7018.a7ff.7d64',
                                     'management_address_v4': '10.22.134.6',
                                     'management_address_v6': 'not advertised',
                                     'port_description': '- NX1-1 (Eth1/42) -',
@@ -539,8 +539,8 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': '70ea.1aa1.1555',
-                                    'management_address_v4': '70ea.1aa1.1555',
+                                    'chassis_id': '70ea.1aff.b6f6',
+                                    'management_address_v4': '70ea.1aff.b6f6',
                                     'management_address_v6': 'not advertised',
                                     'port_description': '- NX1-1 (eth1/46) - '
                                     'vPC Peer Keepalive link',
@@ -575,8 +575,8 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                                             'system': True
                                         }
                                     },
-                                    'chassis_id': '70ea.1aa0.e4ac',
-                                    'management_address_v4': '70ea.1aa0.e4ac',
+                                    'chassis_id': '70ea.1aff.854d',
+                                    'management_address_v4': '70ea.1aff.854d',
                                     'management_address_v6': 'not advertised',
                                     'port_description': '- NX1 -',
                                     'system_description': 'Cisco Nexus Operating '
@@ -598,6 +598,55 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
             'total_entries': 22
         }
 
+    device_output_1 = {'execute.return_value': '''
+              show lldp neighbors detail
+              Capability codes:
+              (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+              (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+              Device ID            Local Intf      Hold-time  Capability  Port ID  
+              Chassis id: 547f.ee44.51e1
+              Port id: mgmt:0
+              Local Port id: mgmt0
+              Port Description: mgmt0
+              System Name: System1
+              System Description: Cisco NX-OS n5000, Software (n5000-uk9), Version 7.3(2)N1(1), RELEASE SOFTWARE Copyright (c) 2002-2012, 2016-2017 by Cisco Systems, Inc. Compiled 5/12/2017 23:00:00
+              Time remaining: 116 seconds
+              System Capabilities: B
+              Enabled Capabilities: B
+              Management Address: 10.0.0.7
+              Vlan ID: not advertised
+              Total entries displayed: 1            
+              '''}
+
+    expected_parsed_output_1 = {
+        'interfaces': {
+            'mgmt0': {
+                'port_id': {
+                    'mgmt0': {
+                        'neighbors': {
+                            'System1': {
+                                'chassis_id': '547f.ee44.51e1',
+                                'port_description': 'mgmt0',
+                                'system_name': 'System1',
+                                'system_description': 'Cisco NX-OS n5000, Software (n5000-uk9), Version 7.3(2)N1(1), RELEASE SOFTWARE Copyright (c) 2002-2012, 2016-2017 by Cisco Systems, Inc. Compiled 5/12/2017 23:00:00',
+                                'time_remaining': 116,
+                                'capabilities': {
+                                    'bridge': {
+                                        'name': 'bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address_v4': '10.0.0.7',
+                                'vlan_id': 'not advertised'
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'total_entries': 1
+    }
 
     def test_empty(self):
         self.maxDiff = None
@@ -619,6 +668,13 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_customer)
+
+    def test_show_lldp_neighbors_detail_missing_ipv6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowLldpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
 # =================================
 # Unit test for 'show lldp traffic'

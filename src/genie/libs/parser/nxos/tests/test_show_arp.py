@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -32,7 +32,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'10.1.3.5': {
 							'age': '-',
 							'ip': '10.1.3.5',
-							'link_layer_address': 'aaaa.bbbb.cccc',
+							'link_layer_address': 'aaaa.bbff.8888',
 							'origin': 'static',
 							'physical_interface': 'Ethernet1/1'}
 					}
@@ -44,7 +44,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.4.2': {
 							'age': '00:01:53',
 							'ip': '192.168.4.2',
-							'link_layer_address': '000c.292a.1eaf',
+							'link_layer_address': '000c.29ff.48d9',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.1'}
 					}
@@ -56,7 +56,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.154.2': {
 							'age': '00:00:47',
 							'ip': '192.168.154.2',
-							'link_layer_address': '000c.292a.1eaf',
+							'link_layer_address': '000c.29ff.48d9',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.2'}
 					}
@@ -68,7 +68,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.106.2': {
 							'age': '00:08:42',
 							'ip': '192.168.106.2',
-							'link_layer_address': '000c.292a.1eaf',
+							'link_layer_address': '000c.29ff.48d9',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/1.4'}
 					}
@@ -80,7 +80,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.154.2': {
 							'age': '00:18:24',
 							'ip': '192.168.154.2',
-							'link_layer_address': '000c.2904.5840',
+							'link_layer_address': '000c.29ff.5c44',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.1'}
 					}
@@ -92,7 +92,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.51.2': {
 							'age': '00:05:21',
 							'ip': '192.168.51.2',
-							'link_layer_address': '000c.2904.5840',
+							'link_layer_address': '000c.29ff.5c44',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.2'}
 					}
@@ -104,7 +104,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'192.168.9.2': {
 							'age': '00:10:51',
 							'ip': '192.168.9.2',
-							'link_layer_address': '000c.2904.5840',
+							'link_layer_address': '000c.29ff.5c44',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/2.4'}
 					}
@@ -116,7 +116,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'10.51.1.101': {
 							'age': '00:01:28',
 							'ip': '10.51.1.101',
-							'link_layer_address': '0000.71c7.6e61',
+							'link_layer_address': '0000.71ff.3629',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.100'}
 					}
@@ -128,7 +128,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'10.154.1.101': {
 							'age': '00:01:28',
 							'ip': '10.154.1.101',
-							'link_layer_address': '0000.71c7.75c1',
+							'link_layer_address': '0000.71ff.3d89',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.101'}
 					}
@@ -140,7 +140,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'10.76.1.101': {
 							'age': '00:01:28',
 							'ip': '10.76.1.101',
-							'link_layer_address': '0000.0068.ce6f',
+							'link_layer_address': '0000.00ff.37d7',
 							'origin': 'dynamic',
 							'physical_interface': 'Ethernet1/4.200'}
 					}
@@ -152,19 +152,19 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'10.1.7.1': {
 							'age': '00:17:15',
 							'ip': '10.1.7.1',
-							'link_layer_address': '0012.7f57.ac80',
+							'link_layer_address': '0012.7fff.04d7',
 							'origin': 'dynamic',
 							'physical_interface': 'mgmt0'},
 						'10.1.7.250': {
 							'age': '00:14:24',
 							'ip': '10.1.7.250',
-							'link_layer_address': '0050.5682.7915',
+							'link_layer_address': '0050.56ff.fb97',
 							'origin': 'dynamic',
 							'physical_interface': 'mgmt0'},
 						'10.1.7.253': {
 							'age': '00:10:22',
 							'ip': '10.1.7.253',
-							'link_layer_address': '0050.56a4.a9fc',
+							'link_layer_address': '0050.56ff.4ea1',
 							'origin': 'dynamic',
 							'physical_interface': 'mgmt0'}
 					}
@@ -186,19 +186,19 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 		IP ARP Table for all contexts
 		Total number of entries: 12
 		Address         Age       MAC Address     Interface        Physical Interface  Flags
-		10.1.7.1        00:17:15  0012.7f57.ac80  mgmt0            mgmt0               
-		10.1.7.250      00:14:24  0050.5682.7915  mgmt0            mgmt0               
-		10.1.7.253      00:10:22  0050.56a4.a9fc  mgmt0            mgmt0               
-		10.1.3.5           -      aaaa.bbbb.cccc  Ethernet1/1      Ethernet1/1              
-		192.168.4.2       00:01:53  000c.292a.1eaf  Ethernet1/1.1    Ethernet1/1.1       
-		192.168.154.2       00:00:47  000c.292a.1eaf  Ethernet1/1.2    Ethernet1/1.2       
-		192.168.106.2       00:08:42  000c.292a.1eaf  Ethernet1/1.4    Ethernet1/1.4       
-		192.168.154.2       00:18:24  000c.2904.5840  Ethernet1/2.1    Ethernet1/2.1       
-		192.168.51.2       00:05:21  000c.2904.5840  Ethernet1/2.2    Ethernet1/2.2       
-		192.168.9.2       00:10:51  000c.2904.5840  Ethernet1/2.4    Ethernet1/2.4       
-		10.51.1.101      00:01:28  0000.71c7.6e61  Ethernet1/4.100  Ethernet1/4.100     
-		10.154.1.101      00:01:28  0000.71c7.75c1  Ethernet1/4.101  Ethernet1/4.101     
-		10.76.1.101      00:01:28  0000.0068.ce6f  Ethernet1/4.200  Ethernet1/4.200  
+		10.1.7.1        00:17:15  0012.7fff.04d7  mgmt0            mgmt0               
+		10.1.7.250      00:14:24  0050.56ff.fb97  mgmt0            mgmt0               
+		10.1.7.253      00:10:22  0050.56ff.4ea1  mgmt0            mgmt0               
+		10.1.3.5           -      aaaa.bbff.8888  Ethernet1/1      Ethernet1/1              
+		192.168.4.2       00:01:53  000c.29ff.48d9  Ethernet1/1.1    Ethernet1/1.1       
+		192.168.154.2       00:00:47  000c.29ff.48d9  Ethernet1/1.2    Ethernet1/1.2       
+		192.168.106.2       00:08:42  000c.29ff.48d9  Ethernet1/1.4    Ethernet1/1.4       
+		192.168.154.2       00:18:24  000c.29ff.5c44  Ethernet1/2.1    Ethernet1/2.1       
+		192.168.51.2       00:05:21  000c.29ff.5c44  Ethernet1/2.2    Ethernet1/2.2       
+		192.168.9.2       00:10:51  000c.29ff.5c44  Ethernet1/2.4    Ethernet1/2.4       
+		10.51.1.101      00:01:28  0000.71ff.3629  Ethernet1/4.100  Ethernet1/4.100     
+		10.154.1.101      00:01:28  0000.71ff.3d89  Ethernet1/4.101  Ethernet1/4.101     
+		10.76.1.101      00:01:28  0000.00ff.37d7  Ethernet1/4.200  Ethernet1/4.200  
 	'''
 	}
 
@@ -788,9 +788,9 @@ class TestShowIpArp(unittest.TestCase):
 		IP ARP Table for context default
 		Total number of entries: 2
 		Address         Age       MAC Address     Interface       Flags
-		10.2.4.4        00:13:42  5e00.0003.0007  Ethernet1/1
-        10.2.4.5           -      aaaa.bbbb.cccc  Ethernet1/1      
-		10.2.5.5        00:00:04  5e00.0004.0007  Ethernet1/2
+		10.2.4.4        00:13:42  5e00.00ff.030a  Ethernet1/1
+        10.2.4.5           -      aaaa.bbff.8888  Ethernet1/1      
+		10.2.5.5        00:00:04  5e00.00ff.040b  Ethernet1/2
 	'''}
 
 	golden_parsed_output = {
@@ -800,14 +800,14 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.2.4.4':{  
 							'ip':'10.2.4.4',
-							'link_layer_address':'5e00.0003.0007',
+							'link_layer_address':'5e00.00ff.030a',
 							'physical_interface':'Ethernet1/1',
 							'origin':'dynamic',
 							'age':'00:13:42'
 						},
 						'10.2.4.5': {
 							'ip':'10.2.4.5',
-							'link_layer_address':'aaaa.bbbb.cccc',
+							'link_layer_address':'aaaa.bbff.8888',
 							'physical_interface':'Ethernet1/1',
 							'origin':'static',
 							'age':'-'
@@ -820,7 +820,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.2.5.5':{  
 							'ip':'10.2.5.5',
-							'link_layer_address':'5e00.0004.0007',
+							'link_layer_address':'5e00.00ff.040b',
 							'physical_interface':'Ethernet1/2',
 							'origin':'dynamic',
 							'age':'00:00:04'
@@ -848,7 +848,7 @@ class TestShowIpArp(unittest.TestCase):
 		IP ARP Table for context vni_10100
 		Total number of entries: 6
 		Address         Age       MAC Address     Interface       Flags
-		10.111.1.3     00:10:42  fa16.3ed1.37b5  Vlan101         + 
+		10.111.1.3     00:10:42  fa16.3eff.0987  Vlan101         + 
 	'''}
 
 	golden_parsed_output_2 = {
@@ -861,7 +861,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors': {
 						'10.111.1.3': {
 							'ip': '10.111.1.3',
-							'link_layer_address': 'fa16.3ed1.37b5',
+							'link_layer_address': 'fa16.3eff.0987',
 							'age': '00:10:42',
 							'origin': 'dynamic',
 							'physical_interface': 'Vlan101',
@@ -887,17 +887,17 @@ class TestShowIpArp(unittest.TestCase):
 		IP ARP Table for all contexts
 		Total number of entries: 11
 		Address         Age       MAC Address     Interface       Flags
-		10.255.8.99     00:00:22  5e00.0009.0000  mgmt0           
-		10.2.4.4        00:13:47  5e00.0003.0007  Ethernet1/1     
-		10.2.5.5        00:00:09  5e00.0004.0007  Ethernet1/2     
-		10.1.3.3        00:00:09  5e00.0002.0007  Ethernet1/6     
-		10.111.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         + 
-		10.111.1.4     00:01:53  fa16.3ec5.fcab  Vlan101         
-		10.111.2.3     00:09:20  fa16.3ed4.83e4  Vlan101         
-		10.111.2.4     00:17:48  fa16.3e79.6bfe  Vlan101         
-		10.111.3.3     00:18:09  fa16.3e68.b933  Vlan101         + 
-		10.111.3.4     00:00:37  fa16.3e2f.654d  Vlan101         + 
-		192.168.16.4     00:17:48  fa16.3e79.6bfe  Vlan202         
+		10.255.8.99     00:00:22  5e00.00ff.0909  mgmt0           
+		10.2.4.4        00:13:47  5e00.00ff.030a  Ethernet1/1     
+		10.2.5.5        00:00:09  5e00.00ff.040b  Ethernet1/2     
+		10.1.3.3        00:00:09  5e00.00ff.0209  Ethernet1/6     
+		10.111.1.3     00:09:20  fa16.3eff.0987  Vlan101         + 
+		10.111.1.4     00:01:53  fa16.3eff.c271  Vlan101         
+		10.111.2.3     00:09:20  fa16.3eff.58b9  Vlan101         
+		10.111.2.4     00:17:48  fa16.3eff.e478  Vlan101         
+		10.111.3.3     00:18:09  fa16.3eff.229b  Vlan101         + 
+		10.111.3.4     00:00:37  fa16.3eff.947c  Vlan101         + 
+		192.168.16.4     00:17:48  fa16.3eff.e478  Vlan202         
 	'''}
 
 	golden_parsed_output_3 = {
@@ -907,7 +907,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.255.8.99':{  
 							'ip':'10.255.8.99',
-							'link_layer_address':'5e00.0009.0000',
+							'link_layer_address':'5e00.00ff.0909',
 							'physical_interface':'mgmt0',
 							'origin':'dynamic',
 							'age':'00:00:22'
@@ -920,7 +920,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.2.4.4':{  
 							'ip':'10.2.4.4',
-							'link_layer_address':'5e00.0003.0007',
+							'link_layer_address':'5e00.00ff.030a',
 							'physical_interface':'Ethernet1/1',
 							'origin':'dynamic',
 							'age':'00:13:47'
@@ -933,7 +933,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.2.5.5':{  
 							'ip':'10.2.5.5',
-							'link_layer_address':'5e00.0004.0007',
+							'link_layer_address':'5e00.00ff.040b',
 							'physical_interface':'Ethernet1/2',
 							'origin':'dynamic',
 							'age':'00:00:09'
@@ -946,7 +946,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.1.3.3':{  
 							'ip':'10.1.3.3',
-							'link_layer_address':'5e00.0002.0007',
+							'link_layer_address':'5e00.00ff.0209',
 							'physical_interface':'Ethernet1/6',
 							'origin':'dynamic',
 							'age':'00:00:09'
@@ -959,7 +959,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'10.111.1.3':{  
 							'ip':'10.111.1.3',
-							'link_layer_address':'fa16.3ed1.37b5',
+							'link_layer_address':'fa16.3eff.0987',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:09:20',
@@ -967,28 +967,28 @@ class TestShowIpArp(unittest.TestCase):
 						},
 						'10.111.1.4':{  
 							'ip':'10.111.1.4',
-							'link_layer_address':'fa16.3ec5.fcab',
+							'link_layer_address':'fa16.3eff.c271',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:01:53'
 						},
 						'10.111.2.3':{  
 							'ip':'10.111.2.3',
-							'link_layer_address':'fa16.3ed4.83e4',
+							'link_layer_address':'fa16.3eff.58b9',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:09:20'
 						},
 						'10.111.2.4':{  
 							'ip':'10.111.2.4',
-							'link_layer_address':'fa16.3e79.6bfe',
+							'link_layer_address':'fa16.3eff.e478',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:17:48'
 						},
 						'10.111.3.3':{  
 							'ip':'10.111.3.3',
-							'link_layer_address':'fa16.3e68.b933',
+							'link_layer_address':'fa16.3eff.229b',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:18:09',
@@ -996,7 +996,7 @@ class TestShowIpArp(unittest.TestCase):
 						},
 						'10.111.3.4':{  
 							'ip':'10.111.3.4',
-							'link_layer_address':'fa16.3e2f.654d',
+							'link_layer_address':'fa16.3eff.947c',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:00:37',
@@ -1010,7 +1010,7 @@ class TestShowIpArp(unittest.TestCase):
 					'neighbors':{  
 						'192.168.16.4':{  
 							'ip':'192.168.16.4',
-							'link_layer_address':'fa16.3e79.6bfe',
+							'link_layer_address':'fa16.3eff.e478',
 							'physical_interface':'Vlan202',
 							'origin':'dynamic',
 							'age':'00:17:48'

@@ -2,12 +2,13 @@
 import unittest
 
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
+                                                  ShowBootvar,\
                                                   ShowRedundancy,\
                                                   ShowRedundancyStates,\
                                                   ShowInventory,\
@@ -16,6 +17,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowSwitch, \
                                                   ShowModule, \
                                                   ShowPlatformSoftwareStatusControl, \
+                                                  ShowPlatformSoftwareMemoryCallsite, \
+                                                  ShowPlatformSoftwareMemoryBacktrace, \
                                                   ShowPlatformSoftwareSlotActiveMonitorMem, \
                                                   ShowProcessesCpuSorted, \
                                                   ShowProcessesCpuPlatform, \
@@ -33,7 +36,93 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
-                                                  ShowProcessesMemory
+                                                  ShowProcessesMemory, \
+                                                  ShowProcessesMemorySorted
+
+# ============================
+# Unit test for 'show bootvar'
+# ============================
+class test_show_bootvar(unittest.TestCase):
+    '''Unit test for "show bootvar" '''
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output1 = {
+        'active': 
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2'},
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
+
+    golden_output2 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable =
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2 (will be 0x2102 at next reload)
+
+        Standby not ready to show bootvar
+
+        asr-MIB-1#
+        '''}
+
+    golden_parsed_output2 = {
+        'active': 
+            {'configuration_register': '0x2',
+            'next_reload_configuration_register': '0x2102'}}
+
+    golden_output3 = {'execute.return_value': '''
+        asr-MIB-1#show bootvar
+        BOOT variable = bootflash:12351822-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x2102
+
+        Standby not ready to show bootvar
+        '''}
+
+    golden_parsed_output3 = {
+        'active': 
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            'configuration_register': '0x2102'},
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
+
+    def test_show_bootvar_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBootvar(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_bootvar_full1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_bootvar_full2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_bootvar_full3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 class TestShowVersion(unittest.TestCase):
@@ -138,7 +227,7 @@ class TestShowVersion(unittest.TestCase):
             'switch_num': {
                 '1': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:72:7d:80',
+                    'mac_address': '38:20:56:ff:ef:f2',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC19315RWV',
                     'model_rev_num': 'U0',
@@ -154,7 +243,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '2': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:7b:00',
+                    'mac_address': '38:20:56:ff:a4:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC19315SCE',
                     'model_rev_num': 'U0',
@@ -170,7 +259,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '3': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:72:a8:00',
+                    'mac_address': '38:20:56:ff:1b:72',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KD',
                     'model_rev_num': 'U0',
@@ -186,7 +275,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '4': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:97:00',
+                    'mac_address': '38:20:56:ff:c0:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KG',
                     'model_rev_num': 'U0',
@@ -202,7 +291,7 @@ class TestShowVersion(unittest.TestCase):
                 },
                 '5': {
                     'uptime': '1 hour, 27 minutes',
-                    'mac_address': '38:20:56:29:49:00',
+                    'mac_address': '38:20:56:ff:72:29',
                     'mb_assembly_num': '73-15805-04',
                     'mb_sn': 'FOC193182KB',
                     'model_rev_num': 'U0',
@@ -292,7 +381,7 @@ class TestShowVersion(unittest.TestCase):
         1609272K bytes of Flash at flash-5:.
         0K bytes of  at webui:.
 
-        Base Ethernet MAC Address          : 38:20:56:72:7d:80
+        Base Ethernet MAC Address          : 38:20:56:ff:ef:f2
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC19315RWV
         Model Revision Number              : U0
@@ -314,7 +403,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:7b:00
+        Base Ethernet MAC Address          : 38:20:56:ff:a4:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC19315SCE
         Model Revision Number              : U0
@@ -326,7 +415,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:72:a8:00
+        Base Ethernet MAC Address          : 38:20:56:ff:1b:72
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KD
         Model Revision Number              : U0
@@ -338,7 +427,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:97:00
+        Base Ethernet MAC Address          : 38:20:56:ff:c0:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KG
         Model Revision Number              : U0
@@ -350,7 +439,7 @@ class TestShowVersion(unittest.TestCase):
         ---------
         Switch uptime                      : 1 hour, 27 minutes 
 
-        Base Ethernet MAC Address          : 38:20:56:29:49:00
+        Base Ethernet MAC Address          : 38:20:56:ff:72:29
         Motherboard Assembly Number        : 73-15805-04
         Motherboard Serial Number          : FOC193182KB
         Model Revision Number              : U0
@@ -2998,7 +3087,7 @@ Switch#   Role        Priority      State
 
     golden_parsed_output_c3850 = {
                                     'main': {
-                                        'switch_mac_address': '0057.d21b.cc00',
+                                        'switch_mac_address': '0057.d2ff.e71b',
                                         'mac_persistency_wait_time': 'indefinite',
                                         'swstack': True,
                                     },
@@ -3007,7 +3096,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V07',
-                                                    'mac_address': '0057.d21b.cc00',
+                                                    'mac_address': '0057.d2ff.e71b',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '3',
@@ -3023,7 +3112,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.565b.8e80',
+                                                    'mac_address': '3820.56ff.e9db',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3039,7 +3128,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.8e00',
+                                                    'mac_address': '3820.56ff.b729',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3055,7 +3144,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.da80',
+                                                    'mac_address': '3820.56ff.04a9',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3071,7 +3160,7 @@ Switch#   Role        Priority      State
                                             'rp': {
                                                 'WS-C3850-24P-E': {
                                                     'hw_ver': 'V06',
-                                                    'mac_address': '3820.5629.7a00',
+                                                    'mac_address': '3820.56ff.a329',
                                                     'name': 'WS-C3850-24P-E',
                                                     'ports': '32',
                                                     'swstack_priority': '1',
@@ -3089,12 +3178,12 @@ Switch#   Role        Priority      State
     golden_output_c3850 = {'execute.return_value': '''\
 Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
 ------  -----   ---------             -----------  --------------  -------       --------
- 1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d21b.cc00  V07           16.6.1        
- 2       32     WS-C3850-24P-E        FCW1932D0TF  3820.565b.8e80  V06           16.6.1        
- 3       32     WS-C3850-24P-E        FCW1932D0L8  3820.5629.8e00  V06           16.6.1        
- 4       32     WS-C3850-24P-E        FCW1932C0VB  3820.5629.da80  V06           16.6.1        
- 5       32     WS-C3850-24P-E        FCW1932C0M9  3820.5629.7a00  V06           16.6.1        
-Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+ 1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1        
+ 2       32     WS-C3850-24P-E        FCW1932D0TF  3820.56ff.e9db  V06           16.6.1        
+ 3       32     WS-C3850-24P-E        FCW1932D0L8  3820.56ff.b729  V06           16.6.1        
+ 4       32     WS-C3850-24P-E        FCW1932C0VB  3820.56ff.04a9  V06           16.6.1        
+ 5       32     WS-C3850-24P-E        FCW1932C0M9  3820.56ff.a329  V06           16.6.1        
+Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
 Mac persistency wait time: Indefinite
                                    Current
 Switch#   Role        Priority      State 
@@ -3964,7 +4053,7 @@ class TestShowSwitchDetail(unittest.TestCase):
                     },
                     "state": "ready",
                     "priority": "3",
-                    "mac_address": "689c.e2d9.df00"
+                    "mac_address": "689c.e2ff.b9d9"
                },
                "3": {
                     "role": "member",
@@ -4001,19 +4090,19 @@ class TestShowSwitchDetail(unittest.TestCase):
                     "mac_address": "c800.84ff.7e00"
                }
             },
-            "mac_address": "689c.e2d9.df00",
+            "mac_address": "689c.e2ff.b9d9",
             "mac_persistency_wait_time": "indefinite"
         }
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
         show switch detail
-        Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
+        Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
         Switch#   Role    Mac Address     Priority Version  State 
         -------------------------------------------------------------------------------------
-        *1       Active   689c.e2d9.df00     3      V04     Ready                
+        *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
          3       Member   c800.84ff.4800     1      V05     Ready                
 
@@ -4030,13 +4119,13 @@ class TestShowSwitchDetail(unittest.TestCase):
 
     golden_parsed_output1 = {
         "switch": {
-            "mac_address": "00d6.fe70.3c80",
+            "mac_address": "00d6.feff.acf0",
             "mac_persistency_wait_time": "indefinite",
             "stack": {
                 "1": {
                     "role": "active",
                     "state": "ready",
-                    "mac_address": "00d6.fe70.3c80",
+                    "mac_address": "00d6.feff.acf0",
                     "priority": "1",
                     "hw_ver": "V02",
                     "ports": {
@@ -4055,12 +4144,12 @@ class TestShowSwitchDetail(unittest.TestCase):
     }
     golden_output1 = {'execute.return_value': '''\
         show switch detail
-        Switch/Stack Mac Address : 00d6.fe70.3c80 - Local Mac Address
+        Switch/Stack Mac Address : 00d6.feff.acf0 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                     H/W   Current
         Switch#   Role    Mac Address     Priority Version  State
         ------------------------------------------------------------
-        *1       Active   00d6.fe70.3c80     1      V02     Ready
+        *1       Active   00d6.feff.acf0     1      V02     Ready
 
                 Stack Port Status             Neighbors
         Switch#  Port 1     Port 2           Port 1   Port 2
@@ -4101,7 +4190,7 @@ class TestShowSwitch(unittest.TestCase):
                     "hw_ver": "V04",
                     "state": "ready",
                     "priority": "3",
-                    "mac_address": "689c.e2d9.df00"
+                    "mac_address": "689c.e2ff.b9d9"
                },
                "3": {
                     "role": "member",
@@ -4118,18 +4207,18 @@ class TestShowSwitch(unittest.TestCase):
                     "mac_address": "c800.84ff.7e00"
                }
             },
-            "mac_address": "689c.e2d9.df00",
+            "mac_address": "689c.e2ff.b9d9",
             "mac_persistency_wait_time": "indefinite"
         }
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
-        Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
+        Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
         Switch#   Role    Mac Address     Priority Version  State 
         -------------------------------------------------------------------------------------
-        *1       Active   689c.e2d9.df00     3      V04     Ready                
+        *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
          3       Member   c800.84ff.4800     1      V05     Ready 
     '''
@@ -4166,7 +4255,7 @@ class TestShowModule(unittest.TestCase):
             },
             "1": {
                "serial_number": "foc1902x062",
-               "mac_address": "689c.e2d9.df00",
+               "mac_address": "689c.e2ff.b9d9",
                "sw_ver": "16.9.1",
                "model": "ws-c3850-48p-e",
                "hw_ver": "v04",
@@ -4186,7 +4275,7 @@ class TestShowModule(unittest.TestCase):
     golden_output_c3850 = {'execute.return_value': '''\
         Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
         ------  -----   ---------             -----------  --------------  -------       --------
-         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1        
+         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2ff.b9d9  V04           16.9.1        
          2       32     WS-C3850-24P-E        FCW1909C0N2  c800.84ff.7e00  V05           16.9.1        
          3       32     WS-C3850-24P-E        FCW1909D0JC  c800.84ff.4800  V05           16.9.1
     '''
@@ -4204,6 +4293,290 @@ class TestShowModule(unittest.TestCase):
         platform_obj = ShowModule(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+# ==================================================================================================
+# Unit test for "show platfrom software memory <process> switch active <plane> alloc callsite brief"
+# ==================================================================================================
+class TestShowPlatformSoftwareMemoryCallsite(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'tracekey': '1#2315ece11e07bc883d89421df58e37b6',
+        'callsites':
+            {1617611779:
+                {'thread': 31884,
+                'diff_byte': 57424,
+                'diff_call': 2},
+            1617569792:
+                {'thread': 31884,
+                'diff_byte': 57360,
+                'diff_call': 1},
+            1617562624:
+                {'thread': 31884,
+                'diff_byte': 16960,
+                'diff_call': 1},
+            2150603778:
+                {'thread': 31884,
+                'diff_byte': 9545,
+                'diff_call': 67},
+            1617611780:
+                {'thread': 31884,
+                'diff_byte': 8208,
+                'diff_call': 1},
+            809417733:
+                {'thread': 31884,
+                'diff_byte': 7776,
+                'diff_call': 36},
+            2154573825:
+                {'thread': 31884,
+                'diff_byte': 6768,
+                'diff_call': 18},
+            1617611778:
+                {'thread': 31884,
+                'diff_byte': 1872,
+                'diff_call': 2},
+            1617611832:
+                {'thread': 31884,
+                'diff_byte': 1688,
+                'diff_call': 1},
+            2150603781:
+                {'thread': 31884,
+                'diff_byte': 1512,
+                'diff_call': 1},
+            2150603776:
+                {'thread': 31884,
+                'diff_byte': 1303,
+                'diff_call': 55},
+            2150603777:
+                {'thread': 31884,
+                'diff_byte': 880,
+                'diff_call': 55},
+            2154579970:
+                {'thread': 31884,
+                'diff_byte': 720,
+                'diff_call': 18},
+            2154593280:
+                {'thread': 31884,
+                'diff_byte': 432,
+                'diff_call': 18},
+            1356969988:
+                {'thread': 31884,
+                'diff_byte': 88,
+                'diff_call': 1},
+            1617614849:
+                {'thread': 31884,
+                'diff_byte': 56,
+                'diff_call': 1},
+            1356969989:
+                {'thread': 31884,
+                'diff_byte': 49,
+                'diff_call': 2},
+            1617611909:
+                {'thread': 31884,
+                'diff_byte': 40,
+                'diff_call': 1},
+            1617611907:
+                {'thread': 31884,
+                'diff_byte': 40,
+                'diff_call': 1},
+            1617611908:
+                {'thread': 31884,
+                'diff_byte': 36,
+                'diff_call': 1},
+            1617614856:
+                {'thread': 31884,
+                'diff_byte': 32,
+                'diff_call': 1},
+            1617948702:
+                {'thread': 31884,
+                'diff_byte': 12,
+                'diff_call': 1}
+            }
+    }
+
+    golden_output = {'execute.return_value': '''
+        The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
+
+  callsite      thread    diff_byte               diff_call
+  ----------------------------------------------------------
+  1617611779    31884     57424                   2
+  1617569792    31884     57360                   1
+  1617562624    31884     16960                   1
+  2150603778    31884     9545                    67
+  1617611780    31884     8208                    1
+  809417733     31884     7776                    36
+  2154573825    31884     6768                    18
+  1617611778    31884     1872                    2
+  1617611832    31884     1688                    1
+  2150603781    31884     1512                    1
+  2150603776    31884     1303                    55
+  2150603777    31884     880                     55
+  2154579970    31884     720                     18
+  2154593280    31884     432                     18
+  1356969988    31884     88                      1
+  1617614849    31884     56                      1
+  1356969989    31884     49                      2
+  1617611909    31884     40                      1
+  1617611907    31884     40                      1
+  1617611908    31884     36                      1
+  1617614856    31884     32                      1
+  1617948702    31884     12                      1
+           '''}
+
+ 
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareMemoryCallsite(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process='dbm', slot='R0')  
+
+    def test_golden_output(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareMemoryCallsite(device=self.device)
+        parsed_output = obj.parse(process='dbm', slot='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ==================================================================================================
+# Unit test for "show platfrom software memory <process> switch active <plane> alloc backtrace"
+# ==================================================================================================
+class TestShowPlatformSoftwareMemoryBacktrace(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'backtraces': {
+            '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B9800 re_mgr:7F7AFA351000+122BC re_mgr:7F7AFA351000+2C203 re_mgr:7F7AFA351000+16EA5 re_mgr:7F7AFA351000+136FD prelib:7F7B033EE000+3F8E':
+                {'allocs': 198,
+                'frees': 0,
+                'call_diff': 198,
+                'callsite': 3761680384,
+                'thread_id': 16066
+                },
+            '1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B985E re_mgr:7F7AFA351000+123FA :556841E8C000+CE61E :556841E8C000+CD815 re_mgr:7F7AFA351000+1DDC4 re_mgr:7F7AFA351000+16EA5':
+                {'allocs': 11,
+                'frees': 0,
+                'call_diff': 11,
+                'callsite': 3761680384,
+                'thread_id': 16066
+                }
+        }
+    }
+
+    golden_parsed_output2 = {
+        'backtraces': {
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 1,
+                'frees': 0,
+                'call_diff': 1,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7A0F5 ui:7F74770E4000+471E1 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 1,
+                'frees': 0,
+                'call_diff': 1,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7B63A ui:7F74770E4000+47232 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 1,
+                'frees': 0,
+                'call_diff': 1,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 tdllib:7F7474D05000+6D0D1 cdlcore:7F7466A6B000+37D15 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745 evlib:7F7478862000+8E37':
+                {'allocs': 3,
+                'frees': 0,
+                'call_diff': 3,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+3380A cdlcore:7F7466A6B000+345FC cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 2,
+                'frees': 0,
+                'call_diff': 2,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2C185 cdlcore:7F7466A6B000+34651 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 2,
+                'frees': 0,
+                'call_diff': 2,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                },
+            '1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2D67B cdlcore:7F7466A6B000+346A2 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745':
+                {'allocs': 2,
+                'frees': 0,
+                'call_diff': 2,
+                'callsite': 2150603778,
+                'thread_id': 31884
+                }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+          backtrace: 1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B9800 re_mgr:7F7AFA351000+122BC re_mgr:7F7AFA351000+2C203 re_mgr:7F7AFA351000+16EA5 re_mgr:7F7AFA351000+136FD prelib:7F7B033EE000+3F8E
+      callsite: 3761680384, thread_id: 16066
+      allocs: 198, frees: 0, call_diff: 198
+      backtrace: 1#ddac160bc10f3c3aa9f42cd39bb21fe4   binos:7F7AF7917000+E783 maroon:7F7ACEE48000+5880 :556841E8C000+B9C0D :556841E8C000+B985E re_mgr:7F7AFA351000+123FA :556841E8C000+CE61E :556841E8C000+CD815 re_mgr:7F7AFA351000+1DDC4 re_mgr:7F7AFA351000+16EA5
+      callsite: 3761680384, thread_id: 16066
+      allocs: 11, frees: 0, call_diff: 11
+      '''}
+
+    golden_output2 = {'execute.return_value': '''
+          backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7A0F5 ui:7F74770E4000+471E1 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+7B63A ui:7F74770E4000+47232 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 1, frees: 0, call_diff: 1
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 tdllib:7F7474D05000+6D0D1 cdlcore:7F7466A6B000+37D15 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745 evlib:7F7478862000+8E37
+      callsite: 2150603778, thread_id: 31884
+      allocs: 3, frees: 0, call_diff: 3
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+3380A cdlcore:7F7466A6B000+345FC cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2C185 cdlcore:7F7466A6B000+34651 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+      backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 cdlcore:7F7466A6B000+2D67B cdlcore:7F7466A6B000+346A2 cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
+      callsite: 2150603778, thread_id: 31884
+      allocs: 2, frees: 0, call_diff: 2
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process='chassis-manager', slot='R0')  
+
+    def test_golden_output(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        parsed_output = obj.parse(process='chassis-manager', slot='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_output2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPlatformSoftwareMemoryBacktrace(device=self.device)
+        parsed_output = obj.parse(process='dbm', slot='R0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
 
 
 class TestShowPlatformSoftwareStatusControlProcessorBrief(unittest.TestCase):
@@ -18931,7 +19304,7 @@ class TestShowProcessMemory(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''\
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
-        Time source is NTP, 21:28:35.662 JST Mon May 11 2020
+        Time source is NTP, 21:28:35.662 EST Mon May 11 2020
 
         Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
         reserve P Pool Total:     102404 Used:         88 Free:     102316
@@ -18969,6 +19342,7 @@ class TestShowProcessMemory(unittest.TestCase):
         lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
     '''}
 
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowProcessesMemory(device=self.device)
@@ -18988,6 +19362,86 @@ class TestShowProcessMemory(unittest.TestCase):
         platform_obj = ShowProcessesMemory(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+class TestShowProcessMemorySorted(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+
+    golden_parsed_output_sorted = {
+        'lsmi_io_pool': {
+        'free': 832,
+        'total': 6295128,
+        'used': 6294296,
+        },
+        'per_process_memory': {
+            '*Init*': {
+                'allocated': 300693520,
+                'freed': 48258952,
+                'getbufs': 0,
+                'holding': 232782240,
+                'pid': 0,
+                'retbufs': 0,
+                'tty': 0
+            },
+            'RF Slave Main Th': {
+                'allocated': 22517320,
+                'freed': 103960,
+                'getbufs': 0,
+                'holding': 22275464,
+                'pid': 4,
+                'retbufs': 0,
+                'tty': 0
+            },
+            'IOSD ipc task': {
+                'allocated': 327917232,
+                'freed': 3336888,
+                'getbufs': 0,
+                'holding': 15636504,
+                'pid': 82,
+                'retbufs': 0,
+                'tty': 0
+            }
+        },
+        'processor_pool': {
+            'free': 1057412724,
+            'total': 1371713468,
+            'used': 314300744,
+        },
+        'reserve_p_pool': {
+            'free': 102316,
+            'total': 102404,
+            'used': 88,
+        }
+    }
+
+
+    golden_output_sorted = {'execute.return_value': '''\
+        Processor Pool Total: 1371713468 Used:  314300744 Free: 1057412724
+        reserve P Pool Total:     102404 Used:         88 Free:     102316
+         lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+
+         PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+           0   0  300693520   48258952  232782240          0          0 *Init*
+           4   0   22517320     103960   22275464          0          0 RF Slave Main Th
+          82   0  327917232    3336888   15636504          0          0 IOSD ipc task
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowProcessesMemory(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_sorted)
+        platform_obj = ShowProcessesMemorySorted(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_sorted)
+
 
 if __name__ == '__main__':
     unittest.main()

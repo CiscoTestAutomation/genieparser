@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -46,6 +46,7 @@ class test_show_lldp(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
 class test_show_lldp_entry(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
@@ -60,7 +61,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -95,7 +96,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
                                 'system_name': 'R5',
@@ -130,7 +131,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -166,7 +167,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'R5': {
                                 'neighbor_id': 'R5',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
                                 'system_name': 'R5',
@@ -203,7 +204,7 @@ class test_show_lldp_entry(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         ------------------------------------------------
         Local Intf: Gi2/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/4
         Port Description: GigabitEthernet1/0/4
         System Name: R5
@@ -231,7 +232,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/16
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/2
         Port Description: GigabitEthernet1/0/2
         System Name: R5
@@ -259,7 +260,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/17
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/3
         Port Description: GigabitEthernet1/0/3
         System Name: R5
@@ -287,7 +288,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/1
         Port Description: GigabitEthernet1/0/1
         System Name: R5
@@ -326,7 +327,7 @@ class test_show_lldp_entry(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         ------------------------------------------------
         Local Intf: Gi1/0/13
-        Chassis id: 00fe.4fe1.7834e
+        Chassis id: 00fe.4fff.5a16e
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-genie-3
@@ -349,7 +350,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/11
-        Chassis id: 4500.1ede.8800
+        Chassis id: 4500.1eff.67de
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-genie.lab
@@ -372,8 +373,8 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Te1/1/3
-        Chassis id: 5a3e.7069.ed49
-        Port id: 5169.53ae.51ac
+        Chassis id: 5a3e.70ff.57b2
+        Port id: 5169.53ff.005b
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -389,7 +390,7 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/10
-        Chassis id: 8dc3.4100.2988
+        Chassis id: 8dc3.41ff.2988
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
         System Name: C9300-Edge.genie
@@ -436,7 +437,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True
                                     }
                                 },
-                            'chassis_id': '8dc3.4100.2988',
+                            'chassis_id': '8dc3.41ff.2988',
                             'management_address': '10.1.23.102',
                             'neighbor_id': 'C9300-Edge.genie',
                             'port_description': 'GigabitEthernet0/0',
@@ -468,7 +469,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                         'system': True
                                         }
                                     },
-                                'chassis_id': '4500.1ede.8800',
+                                'chassis_id': '4500.1eff.67de',
                                 'management_address': '10.1.23.23',
                                 'neighbor_id': 'C9300-genie.lab',
                                 'port_description': 'GigabitEthernet0/0',
@@ -477,7 +478,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                                     '16.9.3, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\n'
                                                     'Copyright (c) 1986-2019 by Cisco Systems, Inc.\nCompiled Wed 20-Mar-19 08:02 by mcpre',
                                 'system_name': 'C9300-genie.lab',
-                                'time_remaining': 101
+                                'time_remaining': 101,
                                 },
                             },
                         },
@@ -502,7 +503,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True
                                     }
                                 },
-                            'chassis_id': '00fe.4fe1.7834e',
+                            'chassis_id': '00fe.4fff.5a16e',
                             'management_address': '10.1.2.203',
                             'neighbor_id': 'C9300-genie-3',
                             'port_description': 'GigabitEthernet0/0',
@@ -512,7 +513,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                                 'Copyright (c) 1986-2019 by Cisco Systems, Inc.\n'
                                                 'Compiled Sun 02-Jun-19 06:34 by mcpre',
                             'system_name': 'C9300-genie-3',
-                            'time_remaining': 93
+                            'time_remaining': 93,
                             },
                         },
                     },
@@ -521,15 +522,16 @@ class test_show_lldp_entry(unittest.TestCase):
         'TenGigabitEthernet1/1/3': {
             'if_name': 'TenGigabitEthernet1/1/3',
             'port_id': {
-                '5169.53ae.51ac': {
+                '5169.53ff.005b': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'not supported',
-                            'chassis_id': '5a3e.7069.ed49',
+                            'chassis_id': '5a3e.70ff.57b2',
                             'neighbor_id': 'not advertised',
-                            'port_id': '5169.53ae.51ac',
+                            'port_id': '5169.53ff.005b',
                             'system_name': 'not advertised',
-                            'time_remaining': 97
+                            'time_remaining': 97,
+                            'management_address': 'not advertised',
                             },
                         },
                     },
@@ -538,6 +540,524 @@ class test_show_lldp_entry(unittest.TestCase):
         },
         'total_entries': 4
     }
+
+    golden_output_2 = {'execute.return_value': '''
+        ------------------------------------------------
+        Chassis id: 10.10.191.112
+        Port id: 7018.dec7.88dc
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 170 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.104
+        Port id: 7018.dec7.9085
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 165 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.93
+        Port id: fca8.41f2.0189
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 158 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.91
+        Port id: 7052.c598.adae
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 151 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 00ff.c8fe.3c80
+        Port id: Gi0/0/0
+        Port Description: -X- router
+        System Name: router
+        
+        System Description:
+        Cisco IOS Software, ASR920 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc4)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 19-Mar-18 22:59 by mcpre
+        
+        Time remaining: 90 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: R
+        Management Addresses:
+            IP: 10.10.4.30
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.107
+        Port id: 7018.dec7.8f65
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 154 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: d89e.f33a.1ec4
+        Port id: d89e.f33a.1ec4
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 2845 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities:
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 6400.6a7f.fd89
+        Port id: 6400.6a7f.fd89
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 3500 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities:
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+                
+        Total entries displayed: 8
+        '''}
+
+    golden_parsed_output_2 = {
+    'interfaces': {
+        'N/A': {
+            'if_name': 'N/A',
+            'port_id': {
+                '6400.6a7f.fd89': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'chassis_id': '6400.6a7f.fd89',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['1000baseT(FD)'],
+                            'port_id': '6400.6a7f.fd89',
+                            'system_name': 'not advertised',
+                            'time_remaining': 3500,
+                        },
+                    },
+                },
+                '7018.dec7.88dc': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.112',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_description': 'IP Phone',
+                            'port_id': '7018.dec7.88dc',
+                            'system_description': 'IP Phone, Firmware:90234AP',
+                            'system_name': 'not advertised',
+                            'time_remaining': 170,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+                '7018.dec7.8f65': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.107',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_description': 'IP Phone',
+                            'port_id': '7018.dec7.8f65',
+                            'system_description': 'IP Phone, Firmware:90234AP',
+                            'system_name': 'not advertised',
+                            'time_remaining': 154,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+                '7018.dec7.9085': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.104',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_description': 'IP Phone',
+                            'port_id': '7018.dec7.9085',
+                            'system_description': 'IP Phone, Firmware:90234AP',
+                            'system_name': 'not advertised',
+                            'time_remaining': 165,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+                '7052.c598.adae': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.91',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_description': 'IP Phone',
+                            'port_id': '7052.c598.adae',
+                            'system_description': 'IP Phone, Firmware:90234AP',
+                            'system_name': 'not advertised',
+                            'time_remaining': 151,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+                'D89e.f33a.1ec4': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'chassis_id': 'd89e.f33a.1ec4',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['1000baseT(FD)'],
+                            'port_id': 'D89e.f33a.1ec4',
+                            'system_name': 'not advertised',
+                            'time_remaining': 2845,
+                        },
+                    },
+                },
+                'Fca8.41f2.0189': {
+                    'neighbors': {
+                        'not advertised': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.191.93',
+                            'management_address': 'not advertised',
+                            'neighbor_id': 'not advertised',
+                            'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
+                            'port_description': 'IP Phone',
+                            'port_id': 'Fca8.41f2.0189',
+                            'system_description': 'IP Phone, Firmware:90234AP',
+                            'system_name': 'not advertised',
+                            'time_remaining': 158,
+                            'unit_type': 16,
+                        },
+                    },
+                },
+                'GigabitEthernet0/0/0': {
+                    'neighbors': {
+                        'router': {
+                            'auto_negotiation': 'not supported',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'router': {
+                                    'enabled': True,
+                                    'name': 'router',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '00ff.c8fe.3c80',
+                            'management_address': '10.10.4.30',
+                            'neighbor_id': 'router',
+                            'port_description': '-X- router',
+                            'port_id': 'GigabitEthernet0/0/0',
+                            'system_description': 'Cisco IOS Software, ASR920 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc4)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Mon 19-Mar-18 22:59 by mcpre',
+                            'system_name': 'router',
+                            'time_remaining': 90,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    'med_information': {
+        'capabilities': ['NP', 'LI', 'PD', 'IN'],
+        'device_type': 'Endpoint Class I',
+        'f/w_revision': '90234AP',
+        'location': 'not advertised',
+        'manufacturer': 'Phone-05',
+        'model': '1220 IP Deskphone',
+        'network_policy': {
+            'voice': {
+                'dscp': 46,
+                'layer_2_priority': 5,
+                'tagged': True,
+                'vlan': 210,
+            },
+            'voice_signal': {
+                'dscp': 0,
+                'layer_2_priority': 0,
+                'tagged': True,
+                'vlan': 210,
+            },
+        },
+        'power_priority': 'High',
+        'power_source': 'Unknown',
+        'wattage': 6.0,
+    },
+    'total_entries': 8,
+}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -550,14 +1070,22 @@ class test_show_lldp_entry(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output)
         obj = ShowLldpEntry(device=self.dev_c3850)
         parsed_output = obj.parse(entry='*')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_1(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_1)
         obj = ShowLldpEntry(device=self.dev_c3850)
         parsed_output = obj.parse(entry='*')
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowLldpEntry(device=self.dev_c3850)
+        parsed_output = obj.parse(entry='*')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 class test_show_lldp_neighbor_detail(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -573,7 +1101,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -608,7 +1136,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
                                 'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
@@ -643,7 +1171,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
                                 'system_name': 'R5',
@@ -678,7 +1206,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
-                                'chassis_id': '843d.c638.b980',
+                                'chassis_id': '843d.c6ff.f1b8',
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
                                 'system_name': 'R5',
@@ -713,7 +1241,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         ------------------------------------------------
         Local Intf: Gi2/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/4
         Port Description: GigabitEthernet1/0/4
         System Name: R5
@@ -741,7 +1269,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/16
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/2
         Port Description: GigabitEthernet1/0/2
         System Name: R5
@@ -769,7 +1297,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/17
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/3
         Port Description: GigabitEthernet1/0/3
         System Name: R5
@@ -797,7 +1325,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/15
-        Chassis id: 843d.c638.b980
+        Chassis id: 843d.c6ff.f1b8
         Port id: Gi1/0/1
         Port Description: GigabitEthernet1/0/1
         System Name: R5
@@ -828,6 +1356,260 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     '''
     }
 
+    golden_output_2 = {'execute.return_value': '''
+    Local Intf: Gi0/1/7
+    Chassis id: 10.10.0.1
+    Port id: C8F9F9D61BC2:P1
+    Port Description: SW PORT
+    System Name: SEPC8F9F9D61BC2
+    
+    System Description:
+    Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S
+    
+    Time remaining: 127 seconds
+    System Capabilities: B,T
+    Enabled Capabilities: B,T
+    Management Addresses:
+        IP: 10.10.0.1
+    Auto Negotiation - supported, enabled
+    Physical media capabilities:
+        1000baseT(HD)
+        1000baseX(FD)
+        Symm, Asym Pause(FD)
+        Symm Pause(FD)
+    Media Attachment Unit type: 16
+    Vlan ID: - not advertised
+    
+    MED Information:
+    
+        MED Codes:
+    
+            (NP) Network Policy, (LI) Location Identification
+            (PS) Power Source Entity, (PD) Power Device
+            (IN) Inventory
+            
+        H/W revision: 12
+        F/W revision: tnp62.8-3-1-21a.bin
+        S/W revision: SCCP42.9-3-1ES27S
+        Serial number: FCH1610A5S5
+        Manufacturer: Cisco Systems, Inc.
+        Model: CP-7962G
+        Capabilities: NP, PD, IN
+        Device type: Endpoint Class III
+        Network Policy(Voice): VLAN 10, tagged, Layer-2 priority: 5, DSCP: 46
+        Network Policy(Voice Signal): VLAN 10, tagged, Layer-2 priority: 4, DSCP: 32
+        PD device, Power source: Unknown, Power Priority: Unknown, Wattage: 6.3
+        Location - not advertised
+        
+    Total entries displayed: 1
+    '''}
+
+    golden_parsed_output_2 = {
+    'interfaces': {
+        'GigabitEthernet0/1/7': {
+            'if_name': 'GigabitEthernet0/1/7',
+            'port_id': {
+                'C8F9F9D61BC2:P1': {
+                    'neighbors': {
+                        'SEPC8F9F9D61BC2': {
+                            'auto_negotiation': 'supported, enabled',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True,
+                                },
+                                'telephone': {
+                                    'enabled': True,
+                                    'name': 'telephone',
+                                    'system': True,
+                                },
+                            },
+                            'chassis_id': '10.10.0.1',
+                            'management_address': '10.10.0.1',
+                            'neighbor_id': 'SEPC8F9F9D61BC2',
+                            'physical_media_capabilities': ['1000baseT(HD)', '1000baseX(FD)', 'Symm, Asym Pause(FD)', 'Symm Pause(FD)'],
+                            'port_description': 'SW PORT',
+                            'port_id': 'C8F9F9D61BC2:P1',
+                            'system_description': 'Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S\n',
+                            'system_name': 'SEPC8F9F9D61BC2',
+                            'time_remaining': 127,
+                            'unit_type': 16,
+                            
+                        },
+                    },
+                },
+            },
+        },
+    },
+    'med_information': {
+        'capabilities': ['NP', 'PD', 'IN'],
+        'device_type': 'PD device',
+        'f/w_revision': 'tnp62.8-3-1-21a.bin',
+        's/w_revision': 'SCCP42.9-3-1ES27S',
+        'h/w_revision': '12',
+        'location': 'not advertised',
+        'manufacturer': 'Cisco Systems, Inc.',
+        'model': 'CP-7962G',
+        'network_policy': {
+            'voice': {
+                'dscp': 46,
+                'layer_2_priority': 5,
+                'tagged': True,
+                'vlan': 10,
+            },
+            'voice_signal': {
+                'dscp': 32,
+                'layer_2_priority': 4,
+                'tagged': True,
+                'vlan': 10,
+            },
+        },
+        'power_priority': 'Unknown',
+        'power_source': 'Unknown',
+        'wattage': 6.3,
+    },
+    'total_entries': 1,
+}
+
+    device_output_1 = {'execute.return_value': '''\
+            ------------------------------------------------
+            Local Intf: Gi4/0/38
+            Chassis id: 10.0.0.7
+            Port id: F8B7E2958F6F:P1
+            Port Description: SW PORT
+            System Name: SEPF8B7E29
+            
+            System Description:
+            Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads
+            
+            Time remaining: 178 seconds
+            System Capabilities: B,T
+            Enabled Capabilities: B,T
+            Management Addresses:
+                IP: 10.0.0.7
+            Auto Negotiation - supported, enabled
+            Physical media capabilities:
+                1000baseT(FD)
+                100base-TX(FD)
+                100base-TX(HD)
+                10base-T(FD)
+                10base-T(HD)
+            Media Attachment Unit type: 30
+            Vlan ID: - not advertised
+            ------------------------------------------------
+            Local Intf: Gi4/0/15
+            Chassis id: 10.0.0.8
+            Port id: CC5A5363E4F6:P1
+            Port Description: SW PORT
+            System Name: SEPCC5A536
+            
+            System Description:
+            Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads
+            
+            Time remaining: 124 seconds
+            System Capabilities: B,T
+            Enabled Capabilities: B,T
+            Management Addresses:
+                IP: 10.0.0.8
+            Auto Negotiation - supported, enabled
+            Physical media capabilities:
+                1000baseT(FD)
+                100base-TX(FD)
+                100base-TX(HD)
+                10base-T(FD)
+                10base-T(HD)
+            Media Attachment Unit type: 30
+            Vlan ID: - not advertised
+            Total entries displayed: 2
+        '''}
+
+    expected_parsed_output_1 = {
+        'interfaces': {
+            'GigabitEthernet4/0/38': {
+                'if_name': 'GigabitEthernet4/0/38',
+                'port_id': {
+                    'F8B7E2958F6F:P1': {
+                        'neighbors': {
+                            'SEPF8B7E29': {
+                                'neighbor_id': 'SEPF8B7E29',
+                                'chassis_id': '10.0.0.7',
+                                'port_id': 'F8B7E2958F6F:P1',
+                                'port_description': 'SW PORT',
+                                'system_name': 'SEPF8B7E29',
+                                'system_description': 'Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads\n',
+                                'time_remaining': 178,
+                                'capabilities': {
+                                    'mac_bridge': {
+                                        'name': 'mac_bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    },
+                                    'telephone': {
+                                        'name': 'telephone',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address': '10.0.0.7',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)',
+                                    '100base-TX(FD)',
+                                    '100base-TX(HD)',
+                                    '10base-T(FD)',
+                                    '10base-T(HD)'
+                                ],
+                                'unit_type': 30
+                            }
+                        }
+                    }
+                }
+            },
+            'GigabitEthernet4/0/15': {
+                'if_name': 'GigabitEthernet4/0/15',
+                'port_id': {
+                    'CC5A5363E4F6:P1': {
+                        'neighbors': {
+                            'SEPCC5A536': {
+                                'neighbor_id': 'SEPCC5A536',
+                                'chassis_id': '10.0.0.8',
+                                'port_id': 'CC5A5363E4F6:P1',
+                                'port_description': 'SW PORT',
+                                'system_name': 'SEPCC5A536',
+                                'system_description': 'Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads\n',
+                                'time_remaining': 124,
+                                'capabilities': {
+                                    'mac_bridge': {
+                                        'name': 'mac_bridge',
+                                        'system': True,
+                                        'enabled': True
+                                    },
+                                    'telephone': {
+                                        'name': 'telephone',
+                                        'system': True,
+                                        'enabled': True
+                                    }
+                                },
+                                'management_address': '10.0.0.8',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)',
+                                    '100base-TX(FD)',
+                                    '100base-TX(HD)',
+                                    '10base-T(FD)',
+                                    '10base-T(HD)'
+                                ],
+                                'unit_type': 30
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'total_entries': 2
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
@@ -840,6 +1622,20 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_show_lldp_neighbors_detail_colon_in_port_id(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.device_output_1)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.expected_parsed_output_1)
 
 
 class test_show_lldp_traffic(unittest.TestCase):

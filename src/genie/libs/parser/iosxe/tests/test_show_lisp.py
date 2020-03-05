@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -1893,14 +1893,14 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                     {'vni': '193',
                                     'entries': 4,
                                     'mappings': 
-                                        {'b827.eb51.f5ce/48': 
+                                        {'b827.ebff.4720/48': 
                                             {'eid': 
                                                 {'address_type': 'ipv4-afi',
                                                 'ipv4': 
-                                                    {'ipv4': 'b827.eb51.f5ce/48'},
+                                                    {'ipv4': 'b827.ebff.4720/48'},
                                                 'vrf': '101'},
                                             'time_to_live': '01:10:17',
-                                            'id': 'b827.eb51.f5ce/48',
+                                            'id': 'b827.ebff.4720/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
@@ -1917,14 +1917,14 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                             'virtual_network_id': '193'}}}},
                                             'creation_time': '22:49:42',
                                             'via': 'WLC Map-Notify, complete'},
-                                        'b827.eb73.159c/48': 
+                                        'b827.ebff.8810/48': 
                                             {'eid': 
                                                 {'address_type': 'ipv4-afi',
                                                 'ipv4': 
-                                                    {'ipv4': 'b827.eb73.159c/48'},
+                                                    {'ipv4': 'b827.ebff.8810/48'},
                                                 'vrf': '101'},
                                             'time_to_live': '08:57:24',
-                                            'id': 'b827.eb73.159c/48',
+                                            'id': 'b827.ebff.8810/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
@@ -1942,14 +1942,14 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                             }}}},
                                             'creation_time': '15:02:35',
                                             'via': 'WLC Map-Notify, complete'},
-                                        'b827.ebd0.acc6/48': 
+                                        'b827.ebff.7d97/48': 
                                             {'eid': 
                                                 {'address_type': 'ipv4-afi',
                                                 'ipv4': 
-                                                    {'ipv4': 'b827.ebd0.acc6/48'},
+                                                    {'ipv4': 'b827.ebff.7d97/48'},
                                                 'vrf': '101'},
                                             'time_to_live': '08:57:25',
-                                            'id': 'b827.ebd0.acc6/48',
+                                            'id': 'b827.ebff.7d97/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
@@ -1966,14 +1966,14 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
                                                             'virtual_network_id': '193'}}}},
                                             'creation_time': '15:02:34',
                                             'via': 'WLC Map-Notify, complete'},
-                                        'b827.ebd6.0c63/48': 
+                                        'b827.ebff.e23a/48': 
                                             {'eid': 
                                                 {'address_type': 'ipv4-afi',
                                                 'ipv4': 
-                                                    {'ipv4': 'b827.ebd6.0c63/48'},
+                                                    {'ipv4': 'b827.ebff.e23a/48'},
                                                 'vrf': '101'},
                                             'time_to_live': '09:02:44',
-                                            'id': 'b827.ebd6.0c63/48',
+                                            'id': 'b827.ebff.e23a/48',
                                             'positive_mapping': 
                                                 {'rlocs': 
                                                     {1: 
@@ -2003,16 +2003,16 @@ class test_show_lisp_service_map_cache(unittest.TestCase):
         =================================================
         LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
 
-        b827.eb51.f5ce/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
+        b827.ebff.4720/48, uptime: 22:49:42, expires: 01:10:17, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
           10.151.22.1 22:49:42  up           0/0         -
-        b827.eb73.159c/48, uptime: 15:02:35, expires: 08:57:24, via WLC Map-Notify, complete
+        b827.ebff.8810/48, uptime: 15:02:35, expires: 08:57:24, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
           10.151.22.1 15:02:35  up           0/0         -
-        b827.ebd0.acc6/48, uptime: 15:02:34, expires: 08:57:25, via WLC Map-Notify, complete
+        b827.ebff.7d97/48, uptime: 15:02:34, expires: 08:57:25, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
           10.151.22.1 15:02:34  up           0/0         -
-        b827.ebd6.0c63/48, uptime: 14:57:15, expires: 09:02:44, via WLC Map-Notify, complete
+        b827.ebff.e23a/48, uptime: 14:57:15, expires: 09:02:44, via WLC Map-Notify, complete
           Locator     Uptime    State      Pri/Wgt     Encap-IID
           10.151.22.1 14:57:15  up           0/0         -
 
@@ -2982,24 +2982,24 @@ class test_show_lisp_service_database(unittest.TestCase):
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
-                                        {'0050.56b0.6a0e/48': 
+                                        {'0050.56ff.1bbe/48': 
                                             {'dynamic_eid': 'Auto-L2-group-1',
                                             'eid_address': 
                                                 {'address_type': 'ethernet',
                                                 'vrf': '101'},
-                                            'id': '0050.56b0.6a0e/48',
+                                            'id': '0050.56ff.1bbe/48',
                                             'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
                                             'state': 'site-self, reachable',
                                             'weight': 100},
-                                      'cafe.cafe.cafe/48': 
+                                      'cafe.caff.c9fd/48': 
                                         {'dynamic_eid': 'Auto-L2-group-1',
                                         'eid_address': 
                                             {'address_type': 'ethernet',
                                             'vrf': '101'},
-                                        'id': 'cafe.cafe.cafe/48',
+                                        'id': 'cafe.caff.c9fd/48',
                                         'loopback_address': '10.229.11.1',
                                         'priority': 1,
                                         'rlocs': 'RLOC',
@@ -3012,24 +3012,24 @@ class test_show_lisp_service_database(unittest.TestCase):
                                     'no_route_eid_entries': 0,
                                     'inactive_eid_entries': 0,
                                     'dynamic_eids': 
-                                        {'0050.56b0.60de/48': 
+                                        {'0050.56ff.118f/48': 
                                             {'dynamic_eid': 'Auto-L2-group-2',
                                             'eid_address': 
                                                 {'address_type': 'ethernet',
                                                 'vrf': '102'},
-                                            'id': '0050.56b0.60de/48',
+                                            'id': '0050.56ff.118f/48',
                                             'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
                                             'source': 'cfg-intf',
                                             'state': 'site-self, reachable',
                                             'weight': 100},
-                                        'face.0171.0001/48': 
+                                        'face.01ff.7172/48': 
                                             {'dynamic_eid': 'Auto-L2-group-2',
                                             'eid_address': 
                                                 {'address_type': 'ethernet',
                                                 'vrf': '102'},
-                                            'id': 'face.0171.0001/48',
+                                            'id': 'face.01ff.7172/48',
                                             'loopback_address': '10.229.11.1',
                                             'priority': 1,
                                             'rlocs': 'RLOC',
@@ -3050,10 +3050,10 @@ class test_show_lisp_service_database(unittest.TestCase):
         LISP ETR MAC Mapping Database for EID-table Vlan 101 (IID 1), LSBs: 0x1
         Entries total 2, no-route 0, inactive 0
 
-        0050.56b0.6a0e/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        0050.56ff.1bbe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
           10.229.11.1   1/100  cfg-intf   site-self, reachable
-        cafe.cafe.cafe/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
+        cafe.caff.c9fd/48, dynamic-eid Auto-L2-group-1, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
           10.229.11.1   1/100  cfg-intf   site-self, reachable
 
@@ -3063,10 +3063,10 @@ class test_show_lisp_service_database(unittest.TestCase):
         LISP ETR MAC Mapping Database for EID-table Vlan 102 (IID 2), LSBs: 0x1
         Entries total 2, no-route 0, inactive 0
 
-        0050.56b0.60de/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
+        0050.56ff.118f/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
           10.229.11.1    1/100  cfg-intf   site-self, reachable
-        face.0171.0001/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
+        face.01ff.7172/48, dynamic-eid Auto-L2-group-2, inherited from default locator-set RLOC
           Locator     Pri/Wgt  Source     State
           10.229.11.1    1/100  cfg-intf   site-self, reachable
 

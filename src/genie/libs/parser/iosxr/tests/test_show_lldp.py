@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -63,7 +63,7 @@ class TestShowLldpEntry(unittest.TestCase):
                     'GigabitEthernet2': {
                         'neighbors': {
                             'Ge_nie1000v.openstacklocal': {
-                                'chassis_id': '001e.49f7.2c00',
+                                'chassis_id': '001e.49ff.24f7',
                                 'port_description': 'GigabitEthernet2',
                                 'system_name': 'Ge_nie1000v.openstacklocal',
                                 'neighbor_id': 'Ge_nie1000v.openstacklocal',
@@ -90,7 +90,7 @@ class TestShowLldpEntry(unittest.TestCase):
                     'Ethernet1/2': {
                         'neighbors': {
                             'G1_n9ie': {
-                                'chassis_id': '5e00.8002.0009',
+                                'chassis_id': '5e00.80ff.020b',
                                 'port_description': 'Ethernet1/2',
                                 'system_name': 'G1_n9ie',
                                 'neighbor_id': 'G1_n9ie',
@@ -124,7 +124,7 @@ class TestShowLldpEntry(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: GigabitEthernet0/0/0/0
-        Chassis id: 001e.49f7.2c00
+        Chassis id: 001e.49ff.24f7
         Port id: Gi2
         Port Description: GigabitEthernet2
         System Name: Ge_nie1000v.openstacklocal
@@ -146,7 +146,7 @@ class TestShowLldpEntry(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: GigabitEthernet0/0/0/1
-        Chassis id: 5e00.8002.0009
+        Chassis id: 5e00.80ff.020b
         Port id: Ethernet1/2
         Port Description: Ethernet1/2
         System Name: G1_n9ie
@@ -175,7 +175,7 @@ class TestShowLldpEntry(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: TenGigE0/0/0/41
-        Chassis id: 00bc.6017.68d9
+        Chassis id: 00bc.60ff.7ff0
         Port id: TenGigE0/0/0/0/0
         Port Description - not advertised
         System Name: genie1-ggN1.ie-genie1
@@ -190,12 +190,12 @@ class TestShowLldpEntry(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.2
 
-        Peer MAC Address: 00:bc:60:17:68:00
+        Peer MAC Address: 00:bc:60:ff:7f:17
 
 
         ------------------------------------------------
         Local Interface: HundredGigE0/0/1/1
-        Chassis id: 008a.960b.2481
+        Chassis id: 008a.96ff.2f8c
         Port id: HundredGigE0/0/0/2
         Port Description: to gen-8 nie  0/0/1/1 via gee1.dev 29-30 
         System Name: system2
@@ -210,12 +210,12 @@ class TestShowLldpEntry(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.10
 
-        Peer MAC Address: 00:8a:96:0b:20:08
+        Peer MAC Address: 00:8a:96:ff:2b:13
 
 
         ------------------------------------------------
         Local Interface: HundredGigE0/0/1/0
-        Chassis id: 008a.960b.0c81
+        Chassis id: 008a.96ff.178c
         Port id: HundredGigE0/0/0/2
         Port Description: to gen-8 nie  0/0/1/0 via gee1.dev 31-32 
         System Name: system1
@@ -230,7 +230,7 @@ class TestShowLldpEntry(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.11
 
-        Peer MAC Address: 00:8a:96:0b:08:08
+        Peer MAC Address: 00:8a:96:ff:13:13
 
 
         Total entries displayed: 3
@@ -249,7 +249,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '008a.960b.0c81',
+                                'chassis_id': '008a.96ff.178c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.11',
                                 'neighbor_id': 'system1',
@@ -273,7 +273,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '008a.960b.2481',
+                                'chassis_id': '008a.96ff.2f8c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.10',
                                 'neighbor_id': 'system2',
@@ -297,7 +297,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '00bc.6017.68d9',
+                                'chassis_id': '00bc.60ff.7ff0',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
                                 'neighbor_id': 'genie1-ggN1.ie-genie1',
@@ -317,7 +317,7 @@ class TestShowLldpEntry(unittest.TestCase):
     device_output2 = {'execute.return_value': '''
         Local Interface: TenGigE0/1/0/0
     Parent Interface: Bundle-Ether1
-    Chassis id: ccd8.c1cb.7d11
+    Chassis id: ccd8.c1ff.49dc
     Port id: Bundle-Ether2
     Port Description: 10G to ge1-genie port Ge1/1/1/1:GG1 
     System Name: geni5-genie
@@ -333,10 +333,10 @@ class TestShowLldpEntry(unittest.TestCase):
     Management Addresses:
       IPv4 address: 10.10.10.12
 
-    Peer MAC Address: cc:d8:c1:cb:7d:14
+    Peer MAC Address: cc:d8:c1:ff:49:df
 
         Local Interface: TenGigE0/5/0/5
-    Chassis id: c471.fec3.ac00
+    Chassis id: c471.feff.70c3
     Port id: Te0/1/0/3
     Port Description: 10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)
     System Name: system3
@@ -352,10 +352,10 @@ class TestShowLldpEntry(unittest.TestCase):
     Management Addresses:
       IPv4 address: 10.10.10.13
 
-    Peer MAC Address: c4:71:fe:c3:af:79
+    Peer MAC Address: c4:71:fe:ff:73:3d
 
         Local Interface: TenGigE0/5/0/6
-    Chassis id: 8426.2bbc.2c9d
+    Chassis id: 8426.2bff.e85a
     Port id: 1611153480
     Port Description: 2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"
     System Name: GENIE02GEN2
@@ -373,7 +373,7 @@ class TestShowLldpEntry(unittest.TestCase):
     Management Addresses:
       IPv4 address: 10.10.10.14
 
-    Peer MAC Address: a0:f3:e4:c6:52:0e
+    Peer MAC Address: a0:f3:e4:ff:19:d4
 
     Total entries displayed: 3
     '''}
@@ -390,7 +390,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': 'ccd8.c1cb.7d11',
+                                'chassis_id': 'ccd8.c1ff.49dc',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.12',
                                 'neighbor_id': 'geni5-genie',
@@ -414,7 +414,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': 'c471.fec3.ac00',
+                                'chassis_id': 'c471.feff.70c3',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.13',
                                 'neighbor_id': 'system3',
@@ -442,7 +442,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '8426.2bbc.2c9d',
+                                'chassis_id': '8426.2bff.e85a',
                                 'hold_time': 121,
                                 'management_address': '10.10.10.14',
                                 'neighbor_id': 'GENIE02GEN2',
@@ -497,7 +497,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                     'GigabitEthernet2': {
                         'neighbors': {
                             'Ge_nie1000v.openstacklocal': {
-                                'chassis_id': '001e.49f7.2c00',
+                                'chassis_id': '001e.49ff.24f7',
                                 'port_description': 'GigabitEthernet2',
                                 'system_name': 'Ge_nie1000v.openstacklocal',
                                 'neighbor_id': 'Ge_nie1000v.openstacklocal',
@@ -524,7 +524,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                     'Ethernet1/2': {
                         'neighbors': {
                             'G1_n9ie': {
-                                'chassis_id': '5e00.8002.0009',
+                                'chassis_id': '5e00.80ff.020b',
                                 'port_description': 'Ethernet1/2',
                                 'system_name': 'G1_n9ie',
                                 'neighbor_id': 'G1_n9ie',
@@ -558,7 +558,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
     ------------------------------------------------
     Local Interface: GigabitEthernet0/0/0/0
-    Chassis id: 001e.49f7.2c00
+    Chassis id: 001e.49ff.24f7
     Port id: Gi2
     Port Description: GigabitEthernet2
     System Name: Ge_nie1000v.openstacklocal
@@ -580,7 +580,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
     ------------------------------------------------
     Local Interface: GigabitEthernet0/0/0/1
-    Chassis id: 5e00.8002.0009
+    Chassis id: 5e00.80ff.020b
     Port id: Ethernet1/2
     Port Description: Ethernet1/2
     System Name: G1_n9ie
@@ -602,7 +602,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''
         Local Interface: GigabitEthernet0/0/0/8
-        Chassis id: 0026.9815.c3e6
+        Chassis id: 0026.98ff.d8fb
         Port id: Gi0/0/0/8
         Port Description: GigabitEthernet0/0/0/8
         System Name: gee1a-2
@@ -622,7 +622,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: GigabitEthernet0/0/0/8
-        Chassis id: 0026.9815.c3e6
+        Chassis id: 0026.98ff.d8fb
         Port id: Gi0/0/0/8.1
         Port Description: GigabitEthernet0/0/0/8.1
         System Name: gee1a-2
@@ -650,7 +650,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                     'GigabitEthernet0/0/0/8': {
                         'neighbors': {
                             'gee1a-2': {
-                                'chassis_id': '0026.9815.c3e6',
+                                'chassis_id': '0026.98ff.d8fb',
                                 'port_description': 'GigabitEthernet0/0/0/8',
                                 'system_name': 'gee1a-2',
                                 'neighbor_id': 'gee1a-2',
@@ -670,7 +670,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                     'GigabitEthernet0/0/0/8.1': {
                         'neighbors': {
                             'gee1a-2': {
-                                'chassis_id': '0026.9815.c3e6',
+                                'chassis_id': '0026.98ff.d8fb',
                                 'port_description': 'GigabitEthernet0/0/0/8.1',
                                 'system_name': 'gee1a-2',
                                 'neighbor_id': 'gee1a-2',
@@ -700,7 +700,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: TenGigE0/0/0/41
-        Chassis id: 00bc.6017.68d9
+        Chassis id: 00bc.60ff.7ff0
         Port id: TenGigE0/0/0/0/0
         Port Description - not advertised
         System Name: genie1-ggN1.ie-genie1
@@ -715,12 +715,12 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.2
 
-        Peer MAC Address: 00:bc:60:17:68:00
+        Peer MAC Address: 00:bc:60:ff:7f:17
 
 
         ------------------------------------------------
         Local Interface: HundredGigE0/0/1/1
-        Chassis id: 008a.960b.2481
+        Chassis id: 008a.96ff.2f8c
         Port id: HundredGigE0/0/0/2
         Port Description: to gen-8 nie  0/0/1/1 via gee1.dev 29-30 
         System Name: system2
@@ -735,12 +735,12 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.10
 
-        Peer MAC Address: 00:8a:96:0b:20:08
+        Peer MAC Address: 00:8a:96:ff:2b:13
 
 
         ------------------------------------------------
         Local Interface: HundredGigE0/0/1/0
-        Chassis id: 008a.960b.0c81
+        Chassis id: 008a.96ff.178c
         Port id: HundredGigE0/0/0/2
         Port Description: to gen-8 nie  0/0/1/0 via gee1.dev 31-32 
         System Name: system1
@@ -755,7 +755,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         Management Addresses:
           IPv4 address: 10.10.10.11
 
-        Peer MAC Address: 00:8a:96:0b:08:08
+        Peer MAC Address: 00:8a:96:ff:13:13
 
 
         Total entries displayed: 3
@@ -774,7 +774,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '008a.960b.0c81',
+                                'chassis_id': '008a.96ff.178c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.11',
                                 'neighbor_id': 'system1',
@@ -798,7 +798,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '008a.960b.2481',
+                                'chassis_id': '008a.96ff.2f8c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.10',
                                 'neighbor_id': 'system2',
@@ -822,7 +822,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '00bc.6017.68d9',
+                                'chassis_id': '00bc.60ff.7ff0',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
                                 'neighbor_id': 'genie1-ggN1.ie-genie1',

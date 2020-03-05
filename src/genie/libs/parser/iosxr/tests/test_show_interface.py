@@ -3,7 +3,7 @@ import re
 import unittest
 from unittest.mock import Mock
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
                                               SchemaMissingKeyError)
@@ -80,9 +80,9 @@ class test_show_interface_detail(unittest.TestCase):
             'line_protocol': 'administratively down',
             'oper_status': 'down',
             'location': 'unknown',
-            'mac_address': 'aaaa.bbbb.cccc',
+            'mac_address': 'aaaa.bbff.8888',
             'mtu': 1600,
-            'phys_address': '5254.0077.9407',
+            'phys_address': '5254.00ff.0c7e',
             'port_speed': '1000Mb/s',
             'reliability': '255/255',
             'rxload': '0/255',
@@ -117,7 +117,7 @@ class test_show_interface_detail(unittest.TestCase):
                                       'last_output': 'never',
                                       'line_protocol': 'administratively down',
                                       'oper_status': 'down',
-                                      'mac_address': 'aaaa.bbbb.cccc',
+                                      'mac_address': 'aaaa.bbff.8888',
                                       'mtu': 1608,
                                       'reliability': '255/255',
                                       'rxload': '0/255',
@@ -151,7 +151,7 @@ class test_show_interface_detail(unittest.TestCase):
                                       'last_output': 'never',
                                       'line_protocol': 'administratively down',
                                       'oper_status': 'down',
-                                      'mac_address': 'aaaa.bbbb.cccc',
+                                      'mac_address': 'aaaa.bbff.8888',
                                       'mtu': 1604,
                                       'reliability': '255/255',
                                       'rxload': '0/255',
@@ -210,9 +210,9 @@ class test_show_interface_detail(unittest.TestCase):
                                    'line_protocol': 'up',
                                    'oper_status': 'up',
                                    'location': 'unknown',
-                                   'mac_address': '5254.0078.ebe0',
+                                   'mac_address': '5254.00ff.6459',
                                    'mtu': 1514,
-                                   'phys_address': '5254.0078.ebe0',
+                                   'phys_address': '5254.00ff.6459',
                                    'port_speed': '1000Mb/s',
                                    'reliability': '255/255',
                                    'rxload': '0/255',
@@ -266,9 +266,9 @@ class test_show_interface_detail(unittest.TestCase):
                               'line_protocol': 'administratively down',
                               'oper_status': 'down',
                               'location': 'unknown',
-                              'mac_address': '5254.00c3.6c43',
+                              'mac_address': '5254.00ff.3007',
                               'mtu': 1514,
-                              'phys_address': '5254.00c3.6c43',
+                              'phys_address': '5254.00ff.3007',
                               'port_speed': '0',
                               'reliability': '255/255',
                               'rxload': 'unknown',
@@ -375,9 +375,9 @@ class test_show_interface_detail(unittest.TestCase):
             'line_protocol': 'up',
             'oper_status': 'up',
             'location': 'unknown',
-            'mac_address': '5254.0078.ebe0',
+            'mac_address': '5254.00ff.6459',
             'mtu': 1514,
-            'phys_address': '5254.0078.ebe0',
+            'phys_address': '5254.00ff.6459',
             'port_speed': '1000Mb/s',
             'reliability': '255/255',
             'rxload': '0/255',
@@ -405,7 +405,7 @@ class test_show_interface_detail(unittest.TestCase):
 
     MgmtEth0/0/CPU0/0 is administratively down, line protocol is administratively down 
       Interface state transitions: 0
-      Hardware is Management Ethernet, address is 5254.00c3.6c43 (bia 5254.00c3.6c43)
+      Hardware is Management Ethernet, address is 5254.00ff.3007 (bia 5254.00ff.3007)
       Internet address is Unknown
       MTU 1514 bytes, BW 0 Kbit
          reliability 255/255, txload Unknown, rxload Unknown
@@ -431,7 +431,7 @@ class test_show_interface_detail(unittest.TestCase):
 
     GigabitEthernet0/0/0/0 is administratively down, line protocol is administratively down 
       Interface state transitions: 0
-      Hardware is GigabitEthernet, address is aaaa.bbbb.cccc (bia 5254.0077.9407)
+      Hardware is GigabitEthernet, address is aaaa.bbff.8888 (bia 5254.00ff.0c7e)
       Description: desc
       Internet address is 10.1.1.1/24
       MTU 1600 bytes, BW 768 Kbit (Max: 1000000 Kbit)
@@ -460,7 +460,7 @@ class test_show_interface_detail(unittest.TestCase):
 
     GigabitEthernet0/0/0/0.10 is administratively down, line protocol is administratively down 
       Interface state transitions: 0
-      Hardware is VLAN sub-interface(s), address is aaaa.bbbb.cccc
+      Hardware is VLAN sub-interface(s), address is aaaa.bbff.8888
       Internet address is Unknown
       MTU 1608 bytes, BW 768 Kbit (Max: 1000000 Kbit)
          reliability 255/255, txload 0/255, rxload 0/255
@@ -478,7 +478,7 @@ class test_show_interface_detail(unittest.TestCase):
 
     GigabitEthernet0/0/0/0.20 is administratively down, line protocol is administratively down 
       Interface state transitions: 0
-      Hardware is VLAN sub-interface(s), address is aaaa.bbbb.cccc
+      Hardware is VLAN sub-interface(s), address is aaaa.bbff.8888
       Internet address is Unknown
       MTU 1604 bytes, BW 768 Kbit (Max: 1000000 Kbit)
          reliability 255/255, txload 0/255, rxload 0/255
@@ -495,7 +495,7 @@ class test_show_interface_detail(unittest.TestCase):
 
     GigabitEthernet0/0/0/1 is up, line protocol is up 
         Interface state transitions: 1
-        Hardware is GigabitEthernet, address is 5254.0078.ebe0 (bia 5254.0078.ebe0)
+        Hardware is GigabitEthernet, address is 5254.00ff.6459 (bia 5254.00ff.6459)
         Internet address is 10.1.5.1/24
         MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
          reliability 255/255, txload 0/255, rxload 0/255
@@ -538,7 +538,7 @@ class test_show_interface_detail(unittest.TestCase):
     golden_interface_output={'execute.return_value':'''
     GigabitEthernet0/0/0/1 is up, line protocol is up 
         Interface state transitions: 1
-        Hardware is GigabitEthernet, address is 5254.0078.ebe0 (bia 5254.0078.ebe0)
+        Hardware is GigabitEthernet, address is 5254.00ff.6459 (bia 5254.00ff.6459)
         Internet address is 10.1.5.1/24
         MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
          reliability 255/255, txload 0/255, rxload 0/255
@@ -964,7 +964,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                                             'ipv6_prefix_length': '64',
                                                             'ipv6_status': 'tentative',
                                                             'ipv6_subnet': '2001:db8:2:2::'},
-                                     '2001:db8:3:3:a8aa:bbff:febb:cccc/64': {'ipv6': '2001:db8:3:3:a8aa:bbff:febb:cccc',
+                                     '2001:db8:3:3:a8aa:bbff:feff:8888/64': {'ipv6': '2001:db8:3:3:a8aa:bbff:feff:8888',
                                                                              'ipv6_eui64': True,
                                                                              'ipv6_prefix_length': '64',
                                                                              'ipv6_status': 'tentative',
@@ -984,7 +984,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'incomplete_glean_adj': '0',
                                      'incomplete_protocol_adj': '0',
                                      'ipv6_groups': ['ff02::2', 'ff02::1'],
-                                     'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc',
+                                     'ipv6_link_local': 'fe80::a8aa:bbff:feff:8888',
                                      'ipv6_link_local_state': 'tentative',
                                      'ipv6_mtu': '1600',
                                      'ipv6_mtu_available': '1586',
@@ -1133,12 +1133,12 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
       IPv6 is disabled, link-local address unassigned
       No global unicast address is configured
     GigabitEthernet0/0/0/0 is Shutdown, ipv6 protocol is Down, Vrfid is VRF1 (0x60000002)
-      IPv6 is enabled, link-local address is fe80::a8aa:bbff:febb:cccc [TENTATIVE]
+      IPv6 is enabled, link-local address is fe80::a8aa:bbff:feff:8888 [TENTATIVE]
       Global unicast address(es):
         2001:db8:1:1::1, subnet is 2001:db8:1:1::/64 [TENTATIVE]
         2001:db8:2:2::2, subnet is 2001:db8:2:2::/64 [TENTATIVE]
         2001:db8:4:4::4, subnet is 2001:db8:4:4::/64 [TENTATIVE] with route-tag 10
-        2001:db8:3:3:a8aa:bbff:febb:cccc, subnet is 2001:db8:3:3::/64 [TENTATIVE]
+        2001:db8:3:3:a8aa:bbff:feff:8888, subnet is 2001:db8:3:3::/64 [TENTATIVE]
       Joined group address(es): ff02::2 ff02::1
       MTU is 1600 (1586 is available to IPv6)
       ICMP redirects are disabled
@@ -1695,7 +1695,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         IPv6 is disabled, link-local address unassigned
         No global unicast address is configured
         BVI1401 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
-        IPv6 is enabled, link-local address is fe80::259:14ff:fe00:1 [TENTATIVE]
+        IPv6 is enabled, link-local address is fe80::259:14ff:feff:1 [TENTATIVE]
         No global unicast address is configured
         Joined group address(es): ff02::2 ff02::1
         MTU is 1514 (1500 is available to IPv6)
@@ -1718,7 +1718,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Dropped protocol request: 0
         Dropped glean request: 0
         BVI1403 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
-        IPv6 is enabled, link-local address is fe80::259:14ff:fe03:1 [TENTATIVE]
+        IPv6 is enabled, link-local address is fe80::259:14ff:feff:304 [TENTATIVE]
         Global unicast address(es):
             2001:60:1403::1, subnet is 2001:60:1403::/64 [TENTATIVE]
         Joined group address(es): ff02::2 ff02::1
@@ -1742,7 +1742,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Dropped protocol request: 0
         Dropped glean request: 0
         BVI1405 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
-        IPv6 is enabled, link-local address is fe80::259:14ff:fe05:1 [TENTATIVE]
+        IPv6 is enabled, link-local address is fe80::259:14ff:feff:506 [TENTATIVE]
         Global unicast address(es):
             2001:59:1405::1, subnet is 2001:59:1405::/64 [TENTATIVE]
         Joined group address(es): ff02::2 ff02::1
@@ -1766,7 +1766,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Dropped protocol request: 0
         Dropped glean request: 0
         BVI1407 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
-        IPv6 is enabled, link-local address is fe80::259:14ff:fe07:1 [TENTATIVE]
+        IPv6 is enabled, link-local address is fe80::259:14ff:feff:708 [TENTATIVE]
         Global unicast address(es):
             2001:60:1407::1, subnet is 2001:60:1407::/64 [TENTATIVE]
         Joined group address(es): ff02::2 ff02::1
@@ -1790,7 +1790,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         Dropped protocol request: 0
         Dropped glean request: 0
         BVI1410 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
-        IPv6 is enabled, link-local address is fe80::259:14ff:fe10:1 [TENTATIVE]
+        IPv6 is enabled, link-local address is fe80::259:14ff:feff:1011 [TENTATIVE]
         Global unicast address(es):
             2001:60:1410::1, subnet is 2001:60:1410::/64 [TENTATIVE]
         Joined group address(es): ff02::2 ff02::1
@@ -2106,7 +2106,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                         'ipv6_subnet': '2001:60:1403::',
                     },
                     'ipv6_link_local_state': 'tentative',
-                    'ipv6_link_local': 'fe80::259:14ff:fe03:1',
+                    'ipv6_link_local': 'fe80::259:14ff:feff:304',
                     'ipv6_groups': ['ff02::2', 'ff02::1'],
                     'ipv6_mtu': '1514',
                     'ipv6_mtu_available': '1500',
@@ -2144,7 +2144,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                         'ipv6_subnet': '2001:59:1405::',
                     },
                     'ipv6_link_local_state': 'tentative',
-                    'ipv6_link_local': 'fe80::259:14ff:fe05:1',
+                    'ipv6_link_local': 'fe80::259:14ff:feff:506',
                     'ipv6_groups': ['ff02::2', 'ff02::1'],
                     'ipv6_mtu': '1514',
                     'ipv6_mtu_available': '1500',
@@ -2182,7 +2182,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                         'ipv6_subnet': '2001:60:1407::',
                     },
                     'ipv6_link_local_state': 'tentative',
-                    'ipv6_link_local': 'fe80::259:14ff:fe07:1',
+                    'ipv6_link_local': 'fe80::259:14ff:feff:708',
                     'ipv6_groups': ['ff02::2', 'ff02::1'],
                     'ipv6_mtu': '1514',
                     'ipv6_mtu_available': '1500',
@@ -2220,7 +2220,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                         'ipv6_subnet': '2001:60:1410::',
                     },
                     'ipv6_link_local_state': 'tentative',
-                    'ipv6_link_local': 'fe80::259:14ff:fe10:1',
+                    'ipv6_link_local': 'fe80::259:14ff:feff:1011',
                     'ipv6_groups': ['ff02::2', 'ff02::1'],
                     'ipv6_mtu': '1514',
                     'ipv6_mtu_available': '1500',
@@ -3230,7 +3230,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0000.5960.0051",
+            "mac_address": "0000.59ff.60b1",
             "description": "NPON_Mcast_VLAN",
             "ipv4": {
                 "192.168.166.9/30": {
@@ -3269,7 +3269,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.0100.0001",
+            "mac_address": "0059.01ff.0001",
             "description": "au-hikari-mansion-100",
             "ipv4": {
                 "192.168.36.254/24": {
@@ -3308,7 +3308,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.0301.0001",
+            "mac_address": "0059.03ff.0102",
             "ipv4": {
                 "192.168.1.254/24": {
                     "ip": "192.168.1.254",
@@ -3346,7 +3346,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.1400.0001",
+            "mac_address": "0059.14ff.0001",
             "description": "au-hikari-home",
             "ipv4": {
                 "192.168.1.254/24": {
@@ -3396,7 +3396,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.1403.0001",
+            "mac_address": "0059.14ff.0304",
             "description": "UQ-BS",
             "ipv4": {
                 "192.168.169.254/24": {
@@ -3435,7 +3435,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.1405.0001",
+            "mac_address": "0059.14ff.0506",
             "description": "au-hikari-mansion-giga",
             "ipv4": {
                 "192.168.36.254/24": {
@@ -3474,7 +3474,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.1407.0001",
+            "mac_address": "0059.14ff.0708",
             "description": "au-hikari-business",
             "ipv4": {
                 "192.168.166.254/24": {
@@ -3513,7 +3513,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Bridge-Group Virtual Interface",
-            "mac_address": "0059.1410.0001",
+            "mac_address": "0059.14ff.1011",
             "description": "JCOM",
             "ipv4": {
                 "192.168.121.254/24": {
@@ -3552,7 +3552,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 9,
             "type": "Aggregated Ethernet interface(s)",
-            "mac_address": "00bc.603c.d4dc",
+            "mac_address": "00bc.60ff.1119",
             "description": "to-ML26-BE1",
             "ipv4": {
                 "192.168.0.25/30": {
@@ -3633,7 +3633,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 1,
             "type": "Aggregated Ethernet interface(s)",
-            "mac_address": "00bc.603c.d4db",
+            "mac_address": "00bc.60ff.1118",
             "mtu": 1514,
             "bandwidth": 10000000,
             "bandwidth_max": 10000000,
@@ -3705,7 +3705,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 1,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4db",
+            "mac_address": "00bc.60ff.1118",
             "layer2": True,
             "mtu": 1518,
             "bandwidth": 10000000,
@@ -3744,7 +3744,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 1,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4db",
+            "mac_address": "00bc.60ff.1118",
             "layer2": True,
             "mtu": 1518,
             "bandwidth": 10000000,
@@ -3783,7 +3783,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Aggregated Ethernet interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "mtu": 1514,
             "bandwidth": 0,
             "reliability": "255/255",
@@ -3817,7 +3817,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "Down Mansion-100",
             "layer2": True,
             "mtu": 1518,
@@ -3845,7 +3845,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "Home Downlink",
             "layer2": True,
             "mtu": 1518,
@@ -3873,7 +3873,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "UQ_BS Downlink",
             "layer2": True,
             "mtu": 1518,
@@ -3901,7 +3901,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "au-hikari-mansion-giga Downlink",
             "layer2": True,
             "mtu": 1518,
@@ -3929,7 +3929,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "au Hikari Business Downlink",
             "layer2": True,
             "mtu": 1518,
@@ -3957,7 +3957,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "VLAN sub-interface(s)",
-            "mac_address": "00bc.603c.d4da",
+            "mac_address": "00bc.60ff.1117",
             "description": "JCOM Downlink",
             "layer2": True,
             "mtu": 1518,
@@ -3985,7 +3985,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "down",
             "interface_state_transitions": 0,
             "type": "Aggregated Ethernet interface(s)",
-            "mac_address": "00bc.603c.d4d9",
+            "mac_address": "00bc.60ff.1116",
             "mtu": 1514,
             "bandwidth": 0,
             "reliability": "255/255",
@@ -4123,8 +4123,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "administratively down",
             "interface_state_transitions": 0,
             "type": "GigabitEthernet",
-            "mac_address": "00bc.603c.d415",
-            "phys_address": "00bc.603c.d415",
+            "mac_address": "00bc.60ff.1151",
+            "phys_address": "00bc.60ff.1151",
             "mtu": 1514,
             "bandwidth": 1000000,
             "bandwidth_max": 1000000,
@@ -4191,8 +4191,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 13,
             "type": "GigabitEthernet",
-            "mac_address": "00bc.603c.d417",
-            "phys_address": "00bc.603c.d417",
+            "mac_address": "00bc.60ff.1153",
+            "phys_address": "00bc.60ff.1153",
             "mtu": 1514,
             "bandwidth": 1000000,
             "bandwidth_max": 1000000,
@@ -4261,8 +4261,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "administratively down",
             "interface_state_transitions": 0,
             "type": "GigabitEthernet",
-            "mac_address": "00bc.603c.d41b",
-            "phys_address": "00bc.603c.d41b",
+            "mac_address": "00bc.60ff.1157",
+            "phys_address": "00bc.60ff.1157",
             "mtu": 1514,
             "bandwidth": 1000000,
             "bandwidth_max": 1000000,
@@ -4329,8 +4329,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 1,
             "type": "TenGigE",
-            "mac_address": "00bc.603c.d400",
-            "phys_address": "00bc.603c.d400",
+            "mac_address": "00bc.60ff.113c",
+            "phys_address": "00bc.60ff.113c",
             "description": "to-ML24",
             "ipv4": {
                 "192.168.0.22/30": {
@@ -4408,8 +4408,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 1,
             "type": "TenGigE",
-            "mac_address": "00bc.603c.d401",
-            "phys_address": "00bc.603c.d401",
+            "mac_address": "00bc.60ff.113d",
+            "phys_address": "00bc.60ff.113d",
             "description": "L2SW Po12",
             "mtu": 1518,
             "bandwidth": 10000000,
@@ -4479,8 +4479,8 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 3,
             "type": "TenGigE",
-            "mac_address": "00bc.603c.d402",
-            "phys_address": "00bc.603c.d402",
+            "mac_address": "00bc.60ff.113e",
+            "phys_address": "00bc.60ff.113e",
             "layer2": True,
             "mtu": 1514,
             "bandwidth": 10000000,
@@ -4551,7 +4551,7 @@ class test_show_interfaces(unittest.TestCase):
         Sat Aug  3 03:25:29.028 EST
         BVI51 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0000.5960.0051
+          Hardware is Bridge-Group Virtual Interface, address is 0000.59ff.60b1
           Description: NPON_Mcast_VLAN
           Internet address is 192.168.166.9/30
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4565,7 +4565,7 @@ class test_show_interfaces(unittest.TestCase):
 
         BVI100 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.0100.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.01ff.0001
           Description: au-hikari-mansion-100
           Internet address is 192.168.36.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4579,7 +4579,7 @@ class test_show_interfaces(unittest.TestCase):
 
         BVI301 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.0301.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.03ff.0102
           Internet address is 192.168.1.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -4592,7 +4592,7 @@ class test_show_interfaces(unittest.TestCase):
 
         BVI1401 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.1400.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0001
           Description: au-hikari-home
           Internet address is 192.168.1.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4611,7 +4611,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         BVI1403 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.1403.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0304
           Description: UQ-BS  
           Internet address is 192.168.169.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4625,7 +4625,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         BVI1405 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.1405.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0506
           Description: au-hikari-mansion-giga
           Internet address is 192.168.36.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4639,7 +4639,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         BVI1407 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.1407.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0708
           Description: au-hikari-business
           Internet address is 192.168.166.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4653,7 +4653,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         BVI1410 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Bridge-Group Virtual Interface, address is 0059.1410.0001
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.1011
           Description: JCOM  
           Internet address is 192.168.121.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -4667,7 +4667,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1 is up, line protocol is up 
           Interface state transitions: 9
-          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4dc
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1119
           Description: to-ML26-BE1
           Internet address is 192.168.0.25/30
           MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
@@ -4696,7 +4696,7 @@ class test_show_interfaces(unittest.TestCase):
 
         Bundle-Ether100 is up, line protocol is up 
           Interface state transitions: 1
-          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4db
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1118
           Internet address is Unknown
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -4723,7 +4723,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether100.12 is up, line protocol is up 
           Interface state transitions: 1
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4db
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1118
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability Unknown, txload Unknown, rxload Unknown
@@ -4741,7 +4741,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether100.22 is up, line protocol is up 
           Interface state transitions: 1
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4db
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1118
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability Unknown, txload Unknown, rxload Unknown
@@ -4759,7 +4759,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4da
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1117
           Internet address is Unknown
           MTU 1514 bytes, BW 0 Kbit
              reliability 255/255, txload Unknown, rxload Unknown
@@ -4774,7 +4774,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.100 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: Down Mansion-100
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4789,7 +4789,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.1400 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: Home Downlink
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4804,7 +4804,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.1402 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: UQ_BS Downlink
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4819,7 +4819,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.1404 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: au-hikari-mansion-giga Downlink
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4834,7 +4834,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.1406 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: au Hikari Business Downlink
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4849,7 +4849,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether1001.1410 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
           Description: JCOM Downlink
           Layer 2 Transport Mode
           MTU 1518 bytes, BW 0 Kbit
@@ -4864,7 +4864,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         Bundle-Ether3333 is down, line protocol is down 
           Interface state transitions: 0
-          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4d9
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1116
           Internet address is Unknown
           MTU 1514 bytes, BW 0 Kbit
              reliability 255/255, txload Unknown, rxload Unknown
@@ -4920,7 +4920,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         GigabitEthernet0/0/0/21 is administratively down, line protocol is administratively down 
           Interface state transitions: 0
-          Hardware is GigabitEthernet, address is 00bc.603c.d415 (bia 00bc.603c.d415)
+          Hardware is GigabitEthernet, address is 00bc.60ff.1151 (bia 00bc.60ff.1151)
           Internet address is Unknown
           MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -4946,7 +4946,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         GigabitEthernet0/0/0/23 is up, line protocol is up 
           Interface state transitions: 13
-          Hardware is GigabitEthernet, address is 00bc.603c.d417 (bia 00bc.603c.d417)
+          Hardware is GigabitEthernet, address is 00bc.60ff.1153 (bia 00bc.60ff.1153)
           Internet address is Unknown
           MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -4973,7 +4973,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         GigabitEthernet0/0/0/27 is administratively down, line protocol is administratively down 
           Interface state transitions: 0
-          Hardware is GigabitEthernet, address is 00bc.603c.d41b (bia 00bc.603c.d41b)
+          Hardware is GigabitEthernet, address is 00bc.60ff.1157 (bia 00bc.60ff.1157)
           Internet address is Unknown
           MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -4999,7 +4999,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         TenGigE0/0/0/0 is up, line protocol is up 
           Interface state transitions: 1
-          Hardware is TenGigE, address is 00bc.603c.d400 (bia 00bc.603c.d400)
+          Hardware is TenGigE, address is 00bc.60ff.113c (bia 00bc.60ff.113c)
           Description: to-ML24
           Internet address is 192.168.0.22/30
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -5028,7 +5028,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         TenGigE0/0/0/1 is up, line protocol is up 
           Interface state transitions: 1
-          Hardware is TenGigE, address is 00bc.603c.d401 (bia 00bc.603c.d401)
+          Hardware is TenGigE, address is 00bc.60ff.113d (bia 00bc.60ff.113d)
           Description: L2SW Po12
           Internet address is Unknown
           MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
@@ -5056,7 +5056,7 @@ class test_show_interfaces(unittest.TestCase):
                   
         TenGigE0/0/0/2 is up, line protocol is up 
           Interface state transitions: 3
-          Hardware is TenGigE, address is 00bc.603c.d402 (bia 00bc.603c.d402)
+          Hardware is TenGigE, address is 00bc.60ff.113e (bia 00bc.60ff.113e)
           Layer 2 Transport Mode
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
@@ -5089,7 +5089,7 @@ class test_show_interfaces(unittest.TestCase):
             "oper_status": "up",
             "interface_state_transitions": 9,
             "type": "Aggregated Ethernet interface(s)",
-            "mac_address": "00bc.603c.d4dc",
+            "mac_address": "00bc.60ff.1119",
             "description": "to-ML26-BE1",
             "ipv4": {
                 "192.168.0.25/30": {
@@ -5169,7 +5169,7 @@ class test_show_interfaces(unittest.TestCase):
     golden_interface_output = {'execute.return_value': '''
       Bundle-Ether1 is up, line protocol is up 
       Interface state transitions: 9
-      Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4dc
+      Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1119
       Description: to-ML26-BE1
       Internet address is 192.168.0.25/30
       MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)

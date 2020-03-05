@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
@@ -106,7 +106,7 @@ class test_show_vtp_status(unittest.TestCase):
 
     golden_parsed_output_3 = {
         'vtp': {
-            'device_id': '3820.5622.a580',
+            'device_id': '3820.56ff.c7a2',
             'feature': {
                 'mst': {
                     'configuration_revision': 0,
@@ -129,7 +129,7 @@ class test_show_vtp_status(unittest.TestCase):
                                   '0x92 0xC2 0xC7 0xFC',
                     'operating_mode': 'primary server',
                     'primary_description': 'SW1',
-                    'primary_id': '3820.5622.a580',
+                    'primary_id': '3820.56ff.c7a2',
                 },
             },
 
@@ -146,7 +146,7 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Domain Name                 : 
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
-        Device ID                       : 3820.5622.a580
+        Device ID                       : 3820.56ff.c7a2
 
         Feature VLAN:
         --------------
@@ -155,7 +155,7 @@ class test_show_vtp_status(unittest.TestCase):
         Number of existing extended VLANs : 0
         Maximum VLANs supported locally   : 4096
         Configuration Revision            : 2
-        Primary ID                        : 3820.5622.a580
+        Primary ID                        : 3820.56ff.c7a2
         Primary Description               : SW1
         MD5 digest                        : 0xC2 0x3C 0x1A 0x2C 0x1C 0x48 0x7D 0xFC 
                                             0x6B 0x17 0x15 0x87 0x92 0xC7 0x70 0x25 
@@ -182,7 +182,7 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Domain Name                 : GENIE
         VTP Pruning Mode                : Disabled
         VTP Traps Generation            : Disabled
-        Device ID                       : 885a.92d1.aac0
+        Device ID                       : 885a.92ff.7c92
         
         Feature VLAN:
         --------------
@@ -191,7 +191,7 @@ class test_show_vtp_status(unittest.TestCase):
         Number of existing extended VLANs : 0
         Maximum VLANs supported locally   : 2048
         Configuration Revision            : 15
-        Primary ID                        : 501c.bf9d.0c80
+        Primary ID                        : 501c.bfff.a91e
         Primary Description               : sw001
         MD5 digest                        : 0xD9 0xAA 0x42 0x1D 0xD7 0xD6 0xA7 0x23
                                             0xE8 0xBE 0xA0 0xB3 0x33 0xB1 0x7A 0x62
@@ -215,7 +215,7 @@ class test_show_vtp_status(unittest.TestCase):
                     'existing_extended_vlans': 0,
                     'maximum_vlans': 2048,
                     'configuration_revision': 15,
-                    'primary_id': '501c.bf9d.0c80',
+                    'primary_id': '501c.bfff.a91e',
                     'primary_description': 'sw001',
                     'md5_digest': '0x1D 0x23 0x33 0x42 0x62 0x7A 0xA0 0xA7 0xAA 0xB1 0xB3 0xBE 0xD6 0xD7 0xD9 0xE8'
                 },
@@ -227,7 +227,7 @@ class test_show_vtp_status(unittest.TestCase):
                 'domain_name': 'GENIE',
                 'pruning_mode': False,
                 'traps_generation': False,
-                'device_id': '885a.92d1.aac0'
+                'device_id': '885a.92ff.7c92'
             }
         }
     

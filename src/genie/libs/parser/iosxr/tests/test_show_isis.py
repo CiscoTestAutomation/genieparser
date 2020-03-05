@@ -20,7 +20,122 @@ from genie.libs.parser.iosxr.show_isis import (
     ShowIsisSpfLogDetail,
     ShowIsisDatabaseDetail,
     ShowIsisSegmentRoutingLabelTable,
+    ShowIsisFastRerouteSummary
 )
+
+# ==================================================
+#  Unit test for 'show isis fast-reroute summary'
+# ==================================================
+class TestShowIsisFastRerouteSummary(unittest.TestCase):
+
+    ''' Unit test for 'show isis fast-reroute summary' '''
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance':{
+            'SR':{
+                'topology':{
+                    'IPv4 Unicast':{
+                        'level':{
+                            1:{
+                                'all_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                    },
+                                'some_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                    },
+                                'unprotected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 4,
+                                    'low_priority' : 6,
+                                    'total' : 10,
+                                    },
+                                'protection_coverage':{
+                                    'critical_priority' : '0.00%',
+                                    'high_priority' : '0.00%',
+                                    'medium_priority' : '0.00%',
+                                    'low_priority' : '0.00%',
+                                    'total' : '0.00%',
+                                    },
+                                    },
+                            2:{
+                                'all_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'some_paths_protected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 0,
+                                    'low_priority' : 0,
+                                    'total' : 0,
+                                },
+                                'unprotected':{
+                                    'critical_priority' : 0,
+                                    'high_priority' : 0,
+                                    'medium_priority' : 1,
+                                    'low_priority' : 0,
+                                    'total' : 1,
+                                },
+                                'protection_coverage':{
+                                    'critical_priority' : '0.00%',
+                                    'high_priority' : '0.00%',
+                                    'medium_priority' : '0.00%',
+                                    'low_priority' : '0.00%',
+                                    'total' : '0.00%',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RP0/CPU0:R3#show isis fast-reroute summary 
+    Thu Aug 29 15:31:09.046 UTC
+
+    IS-IS SR IPv4 Unicast FRR summary
+ 
+                          Critical   High       Medium     Low        Total     
+                          Priority   Priority   Priority   Priority             
+    Prefixes reachable in L1
+        All paths protected     0          0          0          0          0         
+        Some paths protected    0          0          0          0          0         
+        Unprotected             0          0          4          6          10        
+        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+    Prefixes reachable in L2
+        All paths protected     0          0          0          0          0         
+        Some paths protected    0          0          0          0          0         
+        Unprotected             0          0          1          0          1         
+        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
+    '''}
+
+    def test_show_isis_fast_reroute_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisFastRerouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_fast_reroute_summary_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIsisFastRerouteSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
@@ -55,7 +170,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             '12a4': {
                                                 'interface': 'GigabitEthernet0/6/0/2',
-                                                'snpa': '0004.2893.f2f6',
+                                                'snpa': '0004.28ff.868a',
                                                 'state': 'Up',
                                                 'hold': '56',
                                                 'changed': '00:04:01',
@@ -78,7 +193,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             '12a4': {
                                                 'interface': 'GigabitEthernet0/6/0/2',
-                                                'snpa': '0004.2893.f2f6',
+                                                'snpa': '0004.28ff.868a',
                                                 'state': 'Up',
                                                 'hold': '26',
                                                 'changed': '00:00:13',
@@ -90,14 +205,14 @@ class TestShowIsisAdjacency(unittest.TestCase):
           IS-IS p Level-1 adjacencies:
           System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
           12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  Init
-          12a4           Gi0/6/0/2        0004.2893.f2f6 Up    56       00:04:01 Capable  Up
+          12a4           Gi0/6/0/2        0004.28ff.868a Up    56       00:04:01 Capable  Up
           
           Total adjacency count: 2
           
           IS-IS p Level-2 adjacencies:
           System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
           12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
-          12a4           Gi0/6/0/2        0004.2893.f2f6 Up    26       00:00:13 Capable  Init
+          12a4           Gi0/6/0/2        0004.28ff.868a Up    26       00:00:13 Capable  Init
           
           Total adjacency count: 2
     '''}
@@ -114,7 +229,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             'R1_xe': {
                                                 'interface': 'GigabitEthernet0/0/0/0.115',
-                                                'snpa': 'fa16.3eab.a39d',
+                                                'snpa': 'fa16.3eff.4f49',
                                                 'state': 'Up',
                                                 'hold': '23',
                                                 'changed': '22:30:27',
@@ -125,7 +240,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             'R3_nx': {
                                                 'interface': 'GigabitEthernet0/0/0/1.115',
-                                                'snpa': '5e00.4002.0007',
+                                                'snpa': '5e00.40ff.0209',
                                                 'state': 'Up',
                                                 'hold': '20',
                                                 'changed': '22:30:27',
@@ -139,7 +254,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             'R1_xe': {
                                                 'interface': 'GigabitEthernet0/0/0/0.115',
-                                                'snpa': 'fa16.3eab.a39d',
+                                                'snpa': 'fa16.3eff.4f49',
                                                 'state': 'Up',
                                                 'hold': '26',
                                                 'changed': '22:30:26',
@@ -150,7 +265,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                         'system_id': {
                                             'R3_nx': {
                                                 'interface': 'GigabitEthernet0/0/0/1.115',
-                                                'snpa': '5e00.4002.0007',
+                                                'snpa': '5e00.40ff.0209',
                                                 'state': 'Up',
                                                 'hold': '23',
                                                 'changed': '22:30:27',
@@ -175,16 +290,16 @@ class TestShowIsisAdjacency(unittest.TestCase):
         IS-IS test Level-1 adjacencies:
         System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
                                                                                BFD  BFD
-        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    23   22:30:27 Yes None None
-        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    20   22:30:27 Yes None None
+        R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    23   22:30:27 Yes None None
+        R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    20   22:30:27 Yes None None
         
         Total adjacency count: 2
         
         IS-IS test Level-2 adjacencies:
         System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
                                                                                BFD  BFD
-        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    26   22:30:26 Yes None None
-        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    23   22:30:27 Yes None None
+        R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
+        R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    23   22:30:27 Yes None None
         
         Total adjacency count: 2
         
@@ -236,7 +351,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
                             'GigabitEthernet0/0/0/0.115': {
                                 'neighbors': {
                                     'R1_xe': {
-                                        'snpa': 'fa16.3eab.a39d',
+                                        'snpa': 'fa16.3eff.4f49',
                                         'state': 'Up',
                                         'holdtime': '24',
                                         'type': 'L1L2',
@@ -244,7 +359,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
                             'GigabitEthernet0/0/0/1.115': {
                                 'neighbors': {
                                     'R3_nx': {
-                                        'snpa': '5e00.4002.0007',
+                                        'snpa': '5e00.40ff.0209',
                                         'state': 'Up',
                                         'holdtime': '25',
                                         'type': 'L1L2',
@@ -258,8 +373,8 @@ class TestShowIsisNeighbors(unittest.TestCase):
 
         IS-IS test neighbors:
         System Id      Interface        SNPA           State Holdtime Type IETF-NSF
-        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    24       L1L2 Capable
-        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    25       L1L2 Capable
+        R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
+        R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    25       L1L2 Capable
         
         Total neighbor count: 2
     '''}
@@ -273,7 +388,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
                             'GigabitEthernet0/0/0/0.115': {
                                 'neighbors': {
                                     'R1_xe': {
-                                        'snpa': 'fa16.3eab.a39d',
+                                        'snpa': 'fa16.3eff.4f49',
                                         'state': 'Up',
                                         'holdtime': '22',
                                         'type': 'L1L2',
@@ -281,7 +396,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
                             'GigabitEthernet0/0/0/1.115': {
                                 'neighbors': {
                                     'R3_nx': {
-                                        'snpa': '5e00.4002.0007',
+                                        'snpa': '5e00.40ff.0209',
                                         'state': 'Up',
                                         'holdtime': '22',
                                         'type': 'L1L2',
@@ -297,8 +412,8 @@ class TestShowIsisNeighbors(unittest.TestCase):
         
         IS-IS test neighbors:
         System Id      Interface        SNPA           State Holdtime Type IETF-NSF
-        R1_xe          Gi0/0/0/0.115    fa16.3eab.a39d Up    22       L1L2 Capable
-        R3_nx          Gi0/0/0/1.115    5e00.4002.0007 Up    22       L1L2 Capable
+        R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    22       L1L2 Capable
+        R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    22       L1L2 Capable
         
         Total neighbor count: 2
         
@@ -391,7 +506,7 @@ class TestShowIsis(unittest.TestCase):
                 "instance": "0",
                 "vrf": {
                     "default": {
-                        "system_id": "3333.3333.3333",
+                        "system_id": "3333.33ff.6666",
                         "is_levels": "level-1-2",
                         "manual_area_address": ["49.0002"],
                         "routing_area_address": ["49.0002", "49.0001"],
@@ -470,7 +585,7 @@ class TestShowIsis(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''
         IS-IS Router: test
-          System Id: 3333.3333.3333
+          System Id: 3333.33ff.6666
           Instance Id: 0
           IS Levels: level-1-2
           Manual area address(es):
@@ -521,7 +636,7 @@ class TestShowIsis(unittest.TestCase):
                 'instance': '0',
                 'vrf': {
                     'default': {
-                        'system_id': '1781.8132.1195',
+                        'system_id': '1781.81ff.43c7',
                         'is_levels': 'level-2-only',
                         'manual_area_address': ['49.0000'],
                         'routing_area_address': ['49.0000'],
@@ -595,7 +710,7 @@ class TestShowIsis(unittest.TestCase):
         Mon Oct  7 16:22:11.993 EDT
 
         IS-IS Router: Cisco
-        System Id: 1781.8132.1195 
+        System Id: 1781.81ff.43c7 
         Instance Id: 0
         IS Levels: level-2-only
         Manual area address(es):
@@ -639,7 +754,7 @@ class TestShowIsis(unittest.TestCase):
                 'instance': '0',
                 'vrf': {
                     'default': {
-                        'system_id': '4444.4444.4444',
+                        'system_id': '4444.44ff.8888',
                         'is_levels': 'level-1',
                         'manual_area_address': ['49.0002'],
                         'routing_area_address': ['49.0002'],
@@ -704,7 +819,7 @@ class TestShowIsis(unittest.TestCase):
         Mon Nov 25 22:23:10.670 UTC
 
         IS-IS Router: test
-        System Id: 4444.4444.4444
+        System Id: 4444.44ff.8888
         Instance Id: 0
         IS Levels: level-1
         Manual area address(es):
@@ -1345,15 +1460,15 @@ class TestIsisHostname(unittest.TestCase):
                         'level': {
                             2: {
                                 'system_id': {
-                                    '5286.4470.2149': {
+                                    '5286.44ff.91b9': {
                                         'dynamic_hostname': 'host-1.bla-site3'}, 
-                                    '9839.2319.8337': {
+                                    '9839.23ff.9c50': {
                                         'dynamic_hostname': 'host3-bla'}, 
-                                    '3549.6375.2540': {
+                                    '3549.63ff.9ab5': {
                                         'dynamic_hostname': 'abc-3.bla-site4'}, 
-                                    '0670.7021.9090': {
+                                    '0670.70ff.b1b1': {
                                             'dynamic_hostname': 'host2-abc'},
-                                    '9853.9997.6489': {
+                                    '9853.99ff.fb21': {
                                         'dynamic_hostname': 'abc2-xyz', 
                                         'local_router': True}}}}}}}}}
 
@@ -1364,11 +1479,11 @@ class TestIsisHostname(unittest.TestCase):
 
         IS-IS TEST1 hostnames
         Level  System ID      Dynamic Hostname
-         2     5286.4470.2149 host-1.bla-site3
-         2     9839.2319.8337 host3-bla
-         2     3549.6375.2540 abc-3.bla-site4
-         2     0670.7021.9090 host2-abc
-         2   * 9853.9997.6489 abc2-xyz
+         2     5286.44ff.91b9 host-1.bla-site3
+         2     9839.23ff.9c50 host3-bla
+         2     3549.63ff.9ab5 abc-3.bla-site4
+         2     0670.70ff.b1b1 host2-abc
+         2   * 9853.99ff.fb21 abc2-xyz
     '''}
 
     golden_parsed_output_2 = {
@@ -1379,35 +1494,35 @@ class TestIsisHostname(unittest.TestCase):
                         "level": {
                             2: {
                                 "system_id": {
-                                    "2222.2222.2222": {
+                                    "2222.22ff.4444": {
                                         "dynamic_hostname": "R2"},
-                                    "8888.8888.8888": {
+                                    "8888.88ff.1111": {
                                         "dynamic_hostname": "R8"},
-                                    "7777.7777.7777": {
+                                    "7777.77ff.eeee": {
                                         "dynamic_hostname": "R7"},
-                                    "3333.3333.3333": {
+                                    "3333.33ff.6666": {
                                         "dynamic_hostname": "R3",
                                         "local_router": True,
                                     },
-                                    "5555.5555.5555": {
+                                    "5555.55ff.aaaa": {
                                         "dynamic_hostname": "R5"},
-                                    "9999.9999.9999": {
+                                    "9999.99ff.3333": {
                                         "dynamic_hostname": "R9"},
                                 }
                             },
                             1: {
                                 "system_id": {
-                                    "4444.4444.4444": {
+                                    "4444.44ff.8888": {
                                         "dynamic_hostname": "R4"},
-                                    "6666.6666.6666": {
+                                    "6666.66ff.cccc": {
                                         "dynamic_hostname": "R6"},
-                                    "7777.7777.7777": {
+                                    "7777.77ff.eeee": {
                                         "dynamic_hostname": "R7"},
-                                    "3333.3333.3333": {
+                                    "3333.33ff.6666": {
                                         "dynamic_hostname": "R3",
                                         "local_router": True,
                                     },
-                                    "5555.5555.5555": {
+                                    "5555.55ff.aaaa": {
                                         "dynamic_hostname": "R5"},
                                 }
                             },
@@ -1423,14 +1538,14 @@ class TestIsisHostname(unittest.TestCase):
         show isis hostname
         IS-IS test hostnames
         Level  System ID      Dynamic Hostname
-         2     2222.2222.2222 R2
-         1     4444.4444.4444 R4
-         1     6666.6666.6666 R6
-         2     8888.8888.8888 R8
-         1,2   7777.7777.7777 R7
-         1,2 * 3333.3333.3333 R3
-         1,2   5555.5555.5555 R5
-         2     9999.9999.9999 R9
+         2     2222.22ff.4444 R2
+         1     4444.44ff.8888 R4
+         1     6666.66ff.cccc R6
+         2     8888.88ff.1111 R8
+         1,2   7777.77ff.eeee R7
+         1,2 * 3333.33ff.6666 R3
+         1,2   5555.55ff.aaaa R5
+         2     9999.99ff.3333 R9
     '''}
 
     def test_empty_output(self):
@@ -1931,7 +2046,7 @@ class TestShowIsisProtocol(unittest.TestCase):
                 "instance": "0",
                 "vrf": {
                     "default": {
-                        "system_id": "0123.4567.8910",
+                        "system_id": "0123.45ff.f077",
                         "is_levels": "level-2-only",
                         "manual_area_address": ["90.0000"],
                         "routing_area_address": ["90.0000"],
@@ -2008,7 +2123,7 @@ class TestShowIsisProtocol(unittest.TestCase):
         Wed Oct  9 13:07:59.452 EDT
 
         IS-IS Router: TEST
-          System Id: 0123.4567.8910
+          System Id: 0123.45ff.f077
           Instance Id: 0
           IS Levels: level-2-only
           Manual area address(es):
@@ -2047,7 +2162,7 @@ class TestShowIsisProtocol(unittest.TestCase):
                 "instance": "0",
                 "vrf": {
                     "default": {
-                        "system_id": "2222.2222.2222",
+                        "system_id": "2222.22ff.4444",
                         "is_levels": "level-1-2",
                         "manual_area_address": ["49.0001"],
                         "routing_area_address": ["49.0001"],
@@ -2118,7 +2233,7 @@ class TestShowIsisProtocol(unittest.TestCase):
                 "instance": "0",
                 "vrf": {
                     "VRF1": {
-                        "system_id": "2222.2222.2222",
+                        "system_id": "2222.22ff.4444",
                         "is_levels": "level-1-2",
                         "manual_area_address": ["49.0001"],
                         "routing_area_address": ["49.0001"],
@@ -2203,7 +2318,7 @@ class TestShowIsisProtocol(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         # show isis protocol
         IS-IS Router: test
-          System Id: 2222.2222.2222
+          System Id: 2222.22ff.4444
           Instance Id: 0
           IS Levels: level-1-2
           Manual area address(es):
@@ -2245,7 +2360,7 @@ class TestShowIsisProtocol(unittest.TestCase):
 
         IS-IS Router: test1
           VRF context: VRF1
-          System Id: 2222.2222.2222
+          System Id: 2222.22ff.4444
           Instance Id: 0
           IS Levels: level-1-2
           Manual area address(es):
@@ -2804,7 +2919,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         "clns_io": {
                             "protocol_state": "Up",
                             "mtu": 1497,
-                            "snpa": "fa16.3ee6.6bd7",
+                            "snpa": "fa16.3eff.52be",
                             "layer2_mcast_groups_membership": {
                                 "all_level_1_iss": "Yes",
                                 "all_level_2_iss": "Yes",
@@ -2880,7 +2995,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": ["fe80::f816:3eff:fee6:6bd7"],
+                                "forwarding_address": ["fe80::f816:3eff:feff:52be"],
                                 "global_prefix": ["2001:db8:10:2::/64"],
                             },
                         },
@@ -2932,7 +3047,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         "clns_io": {
                             "protocol_state": "Up",
                             "mtu": 1497,
-                            "snpa": "fa16.3eb0.d50f",
+                            "snpa": "fa16.3eff.86bf",
                             "layer2_mcast_groups_membership": {
                                 "all_level_1_iss": "Yes",
                                 "all_level_2_iss": "Yes",
@@ -3008,7 +3123,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": ["fe80::f816:3eff:feb0:d50f"],
+                                "forwarding_address": ["fe80::f816:3eff:feff:86bf"],
                                 "global_prefix": ["2001:db8:10:3::/64"],
                             },
                         },
@@ -3060,7 +3175,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         "clns_io": {
                             "protocol_state": "Up",
                             "mtu": 1497,
-                            "snpa": "fa16.3ead.2906",
+                            "snpa": "fa16.3eff.d6b3",
                             "layer2_mcast_groups_membership": {
                                 "all_level_1_iss": "Yes",
                                 "all_level_2_iss": "Yes",
@@ -3136,7 +3251,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": ["fe80::f816:3eff:fead:2906"],
+                                "forwarding_address": ["fe80::f816:3eff:feff:d6b3"],
                                 "global_prefix": ["None (No global addresses are configured)"],
                             },
                         },
@@ -3188,7 +3303,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         "clns_io": {
                             "protocol_state": "Up",
                             "mtu": 1497,
-                            "snpa": "fa16.3e1c.d826",
+                            "snpa": "fa16.3eff.f442",
                             "layer2_mcast_groups_membership": {
                                 "all_level_1_iss": "Yes",
                                 "all_level_2_iss": "Yes",
@@ -3264,7 +3379,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": ["fe80::f816:3eff:fe1c:d826"],
+                                "forwarding_address": ["fe80::f816:3eff:feff:f442"],
                                 "global_prefix": ["None (No global addresses are configured)"],
                             },
                         },
@@ -3380,7 +3495,7 @@ class TestShowIsisInterface(unittest.TestCase):
           CLNS I/O
             Protocol State:         Up
             MTU:                    1497
-            SNPA:                   fa16.3ee6.6bd7
+            SNPA:                   fa16.3eff.52be
             Layer-2 MCast Groups Membership:
               All Level-1 ISs:      Yes
               All Level-2 ISs:      Yes
@@ -3410,7 +3525,7 @@ class TestShowIsisInterface(unittest.TestCase):
             Global Prefix(es):      10.2.3.0/24
           IPv6 Address Family:      Enabled
             Protocol State:         Up
-            Forwarding Address(es): fe80::f816:3eff:fee6:6bd7
+            Forwarding Address(es): fe80::f816:3eff:feff:52be
             Global Prefix(es):      2001:db8:10:2::/64
 
           LSP transmit timer expires in 0 ms
@@ -3452,7 +3567,7 @@ class TestShowIsisInterface(unittest.TestCase):
           CLNS I/O
             Protocol State:         Up
             MTU:                    1497
-            SNPA:                   fa16.3eb0.d50f
+            SNPA:                   fa16.3eff.86bf
             Layer-2 MCast Groups Membership:
               All Level-1 ISs:      Yes
               All Level-2 ISs:      Yes
@@ -3482,7 +3597,7 @@ class TestShowIsisInterface(unittest.TestCase):
             Global Prefix(es):      10.3.6.0/24
           IPv6 Address Family:      Enabled
             Protocol State:         Up
-            Forwarding Address(es): fe80::f816:3eff:feb0:d50f
+            Forwarding Address(es): fe80::f816:3eff:feff:86bf
             Global Prefix(es):      2001:db8:10:3::/64
 
           LSP transmit timer expires in 0 ms
@@ -3524,7 +3639,7 @@ class TestShowIsisInterface(unittest.TestCase):
           CLNS I/O
             Protocol State:         Up
             MTU:                    1497
-            SNPA:                   fa16.3ead.2906
+            SNPA:                   fa16.3eff.d6b3
             Layer-2 MCast Groups Membership:
               All Level-1 ISs:      Yes
               All Level-2 ISs:      Yes
@@ -3554,7 +3669,7 @@ class TestShowIsisInterface(unittest.TestCase):
             Global Prefix(es):      10.3.4.0/24
           IPv6 Address Family:      Enabled
             Protocol State:         Up
-            Forwarding Address(es): fe80::f816:3eff:fead:2906
+            Forwarding Address(es): fe80::f816:3eff:feff:d6b3
             Global Prefix(es):      None (No global addresses are configured)
 
           LSP transmit timer expires in 0 ms
@@ -3596,7 +3711,7 @@ class TestShowIsisInterface(unittest.TestCase):
           CLNS I/O
             Protocol State:         Up
             MTU:                    1497
-            SNPA:                   fa16.3e1c.d826
+            SNPA:                   fa16.3eff.f442
             Layer-2 MCast Groups Membership:
               All Level-1 ISs:      Yes
               All Level-2 ISs:      Yes
@@ -3626,7 +3741,7 @@ class TestShowIsisInterface(unittest.TestCase):
             Global Prefix(es):      10.3.5.0/24
           IPv6 Address Family:      Enabled
             Protocol State:         Up
-            Forwarding Address(es): fe80::f816:3eff:fe1c:d826
+            Forwarding Address(es): fe80::f816:3eff:feff:f442
             Global Prefix(es):      None (No global addresses are configured)
 
           LSP transmit timer expires in 0 ms
@@ -3666,7 +3781,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         'clns_io': {
                             'protocol_state': 'Up',
                             'mtu': 9199,
-                            'snpa': '008a.960b.0c85',
+                            'snpa': '008a.96ff.1790',
                             'layer2_mcast_groups_membership': {
                                 'all_level_1_iss': 'Yes',
                                 'all_level_2_iss': 'Yes',
@@ -3800,7 +3915,7 @@ class TestShowIsisInterface(unittest.TestCase):
                         'clns_io': {
                             'protocol_state': 'Up',
                             'mtu': 9199,
-                            'snpa': '008a.960b.0810',
+                            'snpa': '008a.96ff.131b',
                             'layer2_mcast_groups_membership': {
                                 'all_level_1_iss': 'Yes',
                                 'all_level_2_iss': 'Yes',
@@ -3899,7 +4014,7 @@ class TestShowIsisInterface(unittest.TestCase):
         CLNS I/O
             Protocol State:         Up
             MTU:                    9199
-            SNPA:                   008a.960b.0c85
+            SNPA:                   008a.96ff.1790
             Layer-2 MCast Groups Membership:
             All ISs:              Yes
         
@@ -3967,7 +4082,7 @@ class TestShowIsisInterface(unittest.TestCase):
         CLNS I/O
             Protocol State:         Up
             MTU:                    9199
-            SNPA:                   008a.960b.0810
+            SNPA:                   008a.96ff.131b
             Layer-2 MCast Groups Membership:
             All ISs:              Yes
         
@@ -5448,7 +5563,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                 "level": {
                     1: {
                         "lspid": {
-                            "0000.0C00.0C35.00-00": {
+                            "0000.0CFF.0C35.00-00": {
                                 "lsp": {
                                     "seq_num": "0x0000000C",
                                     "checksum": "0x5696",
@@ -5460,13 +5575,13 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "area_address": "39.0001",
                                 "is_neighbor": {
-                                    "0000.0C00.62E6.03": {
+                                    "0000.0CFF.62E6.03": {
                                         "metric": 10}},
                                 "es_neighbor": {
-                                    "0000.0C00.0C35": {
+                                    "0000.0CFF.0C35": {
                                         "metric": 0}},
                             },
-                            "0000.0C00.40AF.00-00": {
+                            "0000.0CFF.40AF.00-00": {
                                 "lsp": {
                                     "seq_num": "0x00000009",
                                     "checksum": "0x8452",
@@ -5476,20 +5591,20 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     "p_bit": 0,
                                     "overload_bit": 0,
                                 },
-                                "area_address": "47.0004.004D.0001",
+                                "area_address": "47.0004.00FF.4D4E",
                                 "topology": ["IPv4 (0x0)", "IPv6 (0x2)"],
                                 "nlpid": ["0x8E"],
                                 "ip_address": "172.16.21.49",
                                 "is_neighbor": {
-                                    "0800.2B16.24EA.01": {
+                                    "0800.2BFF.3A01.01": {
                                         "metric": 10},
-                                    "0000.0C00.62E6.03": {
+                                    "0000.0CFF.62E6.03": {
                                         "metric": 10},
                                     "cisco.03": {
                                         "metric": 10},
                                 },
                                 "es_neighbor": {
-                                    "0000.0C00.40AF": {
+                                    "0000.0CFF.40AF": {
                                         "metric": 0}},
                                 "ipv6_address": "2001:0DB8::/32",
                                 "ipv6_reachability": {
@@ -5517,19 +5632,19 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
     golden_output_3 = {'execute.return_value': '''
         IS-IS Level-1 Link State Database
         LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
-        0000.0C00.0C35.00-00  0x0000000C   0x5696        325           0/0/0
-          Area Address: 47.0004.004D.0001
+        0000.0CFF.0C35.00-00  0x0000000C   0x5696        325           0/0/0
+          Area Address: 47.0004.00FF.4D4E
           Area Address: 39.0001
-          Metric: 10   IS 0000.0C00.62E6.03
-          Metric: 0    ES 0000.0C00.0C35
-        0000.0C00.40AF.00-00* 0x00000009   0x8452        608           1/0/0
-          Area Address: 47.0004.004D.0001
+          Metric: 10   IS 0000.0CFF.62E6.03
+          Metric: 0    ES 0000.0CFF.0C35
+        0000.0CFF.40AF.00-00* 0x00000009   0x8452        608           1/0/0
+          Area Address: 47.0004.00FF.4D4E
           Topology: IPv4 (0x0) IPv6 (0x2)
           NLPID: 0xCC 0x8E
           IP Address: 172.16.21.49
-          Metric: 10   IS 0800.2B16.24EA.01
-          Metric: 10   IS 0000.0C00.62E6.03
-          Metric: 0    ES 0000.0C00.40AF
+          Metric: 10   IS 0800.2BFF.3A01.01
+          Metric: 10   IS 0000.0CFF.62E6.03
+          Metric: 0    ES 0000.0CFF.40AF
           IPv6 Address: 2001:0DB8::/32
           Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
           Metric: 5    IS-Extended cisco.03
@@ -6500,7 +6615,7 @@ class TestShowIsisPrivateAll(unittest.TestCase):
                                     },
                                     'snpa_info': {
                                         'im_attr_macaddr_notify_handle': '0x1514d188',
-                                        'snpa': '00c1.641b.33d7',
+                                        'snpa': '00c1.64ff.4ef2',
                                         'is_snpa_ok': True,
                                     },
                                 },
@@ -7315,7 +7430,7 @@ class TestShowIsisPrivateAll(unittest.TestCase):
             mcast_state.is_mcast_group_member               : TRUE
             mcast_state.mcast_join_reason                   : 2
             snpa_info.im_attr_macaddr_notify_handle         : 0x1514d188
-            snpa_info.snpa                                  : 00c1.641b.33d7
+            snpa_info.snpa                                  : 00c1.64ff.4ef2
             snpa_info.is_snpa_ok                            : TRUE
           clns.im_node.exist_registered                     : TRUE
           clns.im_node.node_exists                          : TRUE

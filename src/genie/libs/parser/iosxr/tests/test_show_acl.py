@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -440,8 +440,8 @@ class test_show_acl_ethernet_services(unittest.TestCase):
 		            'matches': {
 		                'l2': {
 		                    'eth': {
-		                        'destination_mac_address': 'host bbbb.bbbb.bbbb',
-		                        'source_mac_address': 'host aaaa.aaaa.aaaa',
+		                        'destination_mac_address': 'host bbbb.bbff.7777',
+		                        'source_mac_address': 'host aaaa.aaff.5555',
 		                        'ether_type': '80f3',
 		                        },
 		                    },
@@ -462,7 +462,7 @@ ethernet-services access-list mac_acl
  10 permit host 0000.0000.0000 host 0000.0000.0000
  20 deny host 0000.0000.0000 host 0000.0000.0000 8041
  30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
- 40 permit host aaaa.aaaa.aaaa host bbbb.bbbb.bbbb 80f3
+ 40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3
     '''
     }
     def test_empty(self):

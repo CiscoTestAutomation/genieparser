@@ -1,13 +1,12 @@
 
 # Python
 import unittest
-
 from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Genie
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -30,7 +29,282 @@ from genie.libs.parser.iosxr.show_bgp import (ShowPlacementProgramAll,
                                               ShowBgpSessions,
                                               ShowBgpInstanceAllSessions,
                                               ShowBgpNeighbors,
-                                              ShowBgpSummary)
+                                              ShowBgpSummary,
+                                              ShowBgpEgressEngineering)
+
+
+# ================================================================================
+# Unit test for 'show bgp egress-engineering'
+# ================================================================================
+class TestShowBgpEgressEngineering(unittest.TestCase):
+        
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 =  {
+        'peer_set':{
+            '192.168.1.2/32':{
+                'peer_set_id': '10b87210',
+                'nexthop': '192.168.1.2',
+                'version': 2,
+                'rn_version': 2,
+                'flags': '0x00000002',
+                'local_asn': 1,
+                'remote_asn': 2,
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.4',
+                'first_hop': ['192.168.1.2'],
+                'nhid': [3],
+                'label': 24002,
+                'refcount': 3,
+                'rpc_set': '10b9d408'
+            },
+            '192.168.1.3/32':{
+                'peer_set_id': '10be61d4',
+                'nexthop': '192.168.1.3',
+                'version': 3,
+                'rn_version': 3,
+                'flags': '0x00000002',
+                'local_asn': 1,
+                'remote_asn': 3,
+                'local_rid': '10.4.1.3',
+                'remote_rid': '10.4.1.5',
+                'first_hop': ['192.168.1.3'],
+                'nhid': [4],
+                'label': 24003,
+                'refcount': 3,
+                'rpc_set': '10be6250'
+            },
+        },
+    }
+
+    
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router_C# show bgp egress-engineering 
+
+        Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
+            Nexthop: 192.168.1.2
+            Version: 2, rn_version: 2
+              Flags: 0x00000002
+          Local ASN: 1
+         Remote ASN: 2
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.4
+          First Hop: 192.168.1.2
+               NHID: 3
+              Label: 24002, Refcount: 3
+            rpc_set: 10b9d408
+    
+        Egress Engineering Peer Set: 192.168.1.3/32 (10be61d4)
+            Nexthop: 192.168.1.3
+            Version: 3, rn_version: 3
+              Flags: 0x00000002
+          Local ASN: 1
+         Remote ASN: 3
+          Local RID: 10.4.1.3
+         Remote RID: 10.4.1.5
+          First Hop: 192.168.1.3
+               NHID: 4
+              Label: 24003, Refcount: 3
+            rpc_set: 10be6250
+
+        '''}
+
+    golden_parsed_output2 =  {
+        'peer_set':{
+            '10.19.0.2/32':{
+                'peer_set_id': '0xa968758',
+                'nexthop': '10.19.0.2',
+                'version': 2,
+                'rn_version': 2,
+                'flags': '0x00000006',
+                'local_asn': 100,
+                'remote_asn': 200,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.2',
+                'local_address': '10.19.0.1',
+                'first_hop': ['10.19.0.2'],
+                'nhid': [2],
+                'label': 24002,
+                'ifh': ['0x1000060'],
+                'refcount': 3,
+                'rpc_set': '0xe91d2fd8',
+                'id': 1
+            }, 
+            '10.30.30.30/32':{
+                'peer_set_id': '0xa9686b4',
+                'nexthop': '10.30.30.30',
+                'version': 3,
+                'rn_version': 3,
+                'flags': '0x00000006',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.166.13.13',
+                'first_hop': ['10.121.88.1', '10.1.0.1', '10.204.0.1'],
+                'nhid': [9, 10, 11],
+                'ifh': ['0x110', '0x130', '0x150'],
+                'label': 24008,
+                'refcount': 3,
+                'rpc_set': '0xe91d4160',
+                'id': 10
+            },
+            '10.121.88.1/32':{
+                'peer_set_id': '0xa9684c8',
+                'nexthop': '10.121.88.1',
+                'version': 6,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.121.88.2',
+                'first_hop': ['10.121.88.1'],
+                'nhid': [9],
+                'ifh': ['0x110'],
+                'label': 24004,
+                'refcount': 3,
+                'rpc_set': '0xe91d4060',
+                'id': 7
+            },
+            '10.1.0.1/32':{
+                'peer_set_id': '0xa96856c',
+                'nexthop': '10.1.0.1',
+                'version': 5,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.1.0.2',
+                'first_hop': ['10.1.0.1'],
+                'nhid': [10],
+                'ifh': ['0x130'],
+                'label': 24006,
+                'refcount': 3,
+                'rpc_set': '0xe91d40e0',
+                'id': 9
+            },
+            '10.204.0.1/32':{
+                'peer_set_id': '0xa968610',
+                'nexthop': '10.204.0.1',
+                'version': 4,
+                'rn_version': 6,
+                'flags': '0x0000000a',
+                'local_asn': 100,
+                'remote_asn': 300,
+                'local_rid': '192.168.2.1',
+                'remote_rid': '192.168.1.3',
+                'local_address': '10.204.0.2',
+                'first_hop': ['10.204.0.1'],
+                'nhid': [11],
+                'ifh': ['0x150'],
+                'label': 24010,
+                'refcount': 3,
+                'rpc_set': '0xe91d4548',
+                'id': 11
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''  
+        RP/0/0/CPU0:R1#show bgp egress-engineering 
+        Wed Apr 25 15:45:31.170
+
+     Egress Engineering Peer Set: 10.19.0.2/32 (0xa968758)
+            Nexthop: 10.19.0.2
+            Version: 2, rn_version: 2
+              Flags: 0x00000006
+          Local ASN: 100
+         Remote ASN: 200
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.2
+      Local Address: 10.19.0.1
+          First Hop: 10.19.0.2
+               NHID: 2
+                IFH: 0x1000060
+              Label: 24002, Refcount: 3
+            rpc_set: 0xe91d2fd8, ID: 1
+     Egress Engineering Peer Set: 10.30.30.30/32 (0xa9686b4)
+            Nexthop: 10.30.30.30
+            Version: 3, rn_version: 3
+              Flags: 0x00000006
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.166.13.13
+          First Hop: 10.121.88.1, 10.1.0.1, 10.204.0.1
+               NHID: 9, 10, 11
+                IFH: 0x110, 0x130, 0x150
+              Label: 24008, Refcount: 3
+            rpc_set: 0xe91d4160, ID: 10
+     Egress Engineering Peer Set: 10.121.88.1/32 (0xa9684c8)
+            Nexthop: 10.121.88.1
+            Version: 6, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.121.88.2
+          First Hop: 10.121.88.1
+               NHID: 9
+                IFH: 0x110
+              Label: 24004, Refcount: 3
+            rpc_set: 0xe91d4060, ID: 7
+     Egress Engineering Peer Set: 10.1.0.1/32 (0xa96856c)
+            Nexthop: 10.1.0.1
+            Version: 5, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.1.0.2
+          First Hop: 10.1.0.1
+               NHID: 10
+                IFH: 0x130
+              Label: 24006, Refcount: 3
+            rpc_set: 0xe91d40e0, ID: 9
+     Egress Engineering Peer Set: 10.204.0.1/32 (0xa968610)
+            Nexthop: 10.204.0.1
+            Version: 4, rn_version: 6
+              Flags: 0x0000000a
+          Local ASN: 100
+         Remote ASN: 300
+          Local RID: 192.168.2.1
+         Remote RID: 192.168.1.3
+      Local Address: 10.204.0.2
+          First Hop: 10.204.0.1
+               NHID: 11
+                IFH: 0x150
+              Label: 24010, Refcount: 3
+            rpc_set: 0xe91d4548, ID: 11 
+
+        '''}
+    
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowBgpEgressEngineering(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpEgressEngineering(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpEgressEngineering(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ==================================
@@ -86,6 +360,36 @@ class TestShowBgpInstances(unittest.TestCase):
         3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
                                                             IPv6 Unicast, VPNv6 Unicast
       '''}
+    
+    golden_output1 = {'execute.return_value': '''
+        
+        show bgp instances
+
+        Number of BGP instances: 1
+
+        ID  Placed-Grp  Name              AS        VRFs    Address Families
+        --------------------------------------------------------------------------------
+        0   v4_routing  default           34984     12      IPv4 Unicast, VPNv4 Unicast,
+                                                            IPv6 Unicast
+    '''
+    }
+
+    golden_parsed_output1 = {
+        'instance': {
+            'default': {
+                'address_families': [
+                    'ipv4 unicast',
+                    'vpnv4 unicast',
+                    'ipv6 unicast'
+                ],
+                'bgp_id': 34984,
+                'instance_id': 0,
+                'num_vrfs': 12,
+                'placed_grp': 'v4_routing'
+            }
+        },
+        'number_of_bgp_instances': 1
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -99,6 +403,13 @@ class TestShowBgpInstances(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstances(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ==========================================
@@ -3564,9 +3875,7 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
 
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'
@@ -6254,7 +6563,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                                         }
                                     }
                                 },
-                                "[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696": {
+                                "[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.70ff.b179.00]][L[i172.16.0.198][n172.16.0.199]]/696": {
                                     "index": {
                                         1: {
                                             "next_hop": "10.36.3.3",
@@ -6329,7 +6638,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                               10.4.1.1                  100      0 i
         *>i[V][L2][I2x2][N[c5678][b0.0.0.0][s10.100.5.5]]/328
                               10.16.2.2                  100      0 i
-        *>i[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.7021.9058.00]][L[i172.16.0.198][n172.16.0.199]]/696
+        *>i[E][L2][I3x3][N[c9124][b0.0.0.0][s10.16.2.200]][R[c64577][b0.0.0.0][s0670.70ff.b179.00]][L[i172.16.0.198][n172.16.0.199]]/696
                               10.36.3.3                  100      0 i
         *>i[T][L2][I4x4][N[c4567][b0.0.0.0][s10.144.6.0]][P[p10.154.219.57/32]]/400
                               10.64.4.4                  100      0 i
@@ -7453,12 +7762,12 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                           'status_codes': '*>i',
                                                                                                                                                           'weight': '0'}}}},
                                                                                                  'route_distinguisher': '172.16.2.88:1'},
-                                                                 'l2vpn evpn RD 172.16.2.88:1000': {'prefix': {'[2][0][48][0014.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                 'l2vpn evpn RD 172.16.2.88:1000': {'prefix': {'[2][0][48][0014.01ff.0001][0]/104': {'index': {1: {'metric': '100',
                                                                                                                                                                    'next_hop': '172.16.2.88',
                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                    'status_codes': '*>i',
                                                                                                                                                                    'weight': '0'}}},
-                                                                                                               '[2][0][48][0014.0100.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0014.01ff.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
                                                                                                                                                                                    'next_hop': '172.16.2.88',
                                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                                    'status_codes': '*>i',
@@ -7469,7 +7778,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                             'status_codes': '*>i',
                                                                                                                                                             'weight': '0'}}}},
                                                                                                     'route_distinguisher': '172.16.2.88:1000'},
-                                                                 'l2vpn evpn RD 172.16.2.89:1': {'prefix': {'[1][172.16.2.89:1][0001.0000.0102.0000.0011][4294967295]/184': {'index': {1: {'metric': '100',
+                                                                 'l2vpn evpn RD 172.16.2.89:1': {'prefix': {'[1][172.16.2.89:1][0001.00ff.0102.0000.0011][4294967295]/184': {'index': {1: {'metric': '100',
                                                                                                                                                                                            'next_hop': '172.16.2.89',
                                                                                                                                                                                            'origin_codes': 'i',
                                                                                                                                                                                            'status_codes': '*>i',
@@ -7481,17 +7790,17 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                           'status_codes': '*>i',
                                                                                                                                                           'weight': '0'}}}},
                                                                                                  'route_distinguisher': '172.16.2.89:1'},
-                                                                 'l2vpn evpn RD 172.16.2.89:1000': {'prefix': {'[1][0001.0000.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
+                                                                 'l2vpn evpn RD 172.16.2.89:1000': {'prefix': {'[1][0001.00ff.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
                                                                                                                                                                       'next_hop': '172.16.2.89',
                                                                                                                                                                       'origin_codes': 'i',
                                                                                                                                                                       'status_codes': '*>i',
                                                                                                                                                                       'weight': '0'}}},
-                                                                                                               '[2][0][48][0013.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0013.01ff.0001][0]/104': {'index': {1: {'metric': '100',
                                                                                                                                                                    'next_hop': '172.16.2.89',
                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                    'status_codes': '*>i',
                                                                                                                                                                    'weight': '0'}}},
-                                                                                                               '[2][0][48][0013.0100.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0013.01ff.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
                                                                                                                                                                                    'next_hop': '172.16.2.89',
                                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                                    'status_codes': '*>i',
@@ -7503,32 +7812,32 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
                                                                                                                                                             'weight': '0'}}}},
                                                                                                     'route_distinguisher': '172.16.2.89:1000'},
                                                                  'l2vpn evpn RD 172.16.2.90:1000': {'default_vrf': 'evpn-multicast-btv',
-                                                                                                    'prefix': {'[1][0001.0000.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
+                                                                                                    'prefix': {'[1][0001.00ff.0102.0000.0011][0]/120': {'index': {1: {'metric': '100',
                                                                                                                                                                       'next_hop': '172.16.2.89',
                                                                                                                                                                       'origin_codes': 'i',
                                                                                                                                                                       'status_codes': '*>i',
                                                                                                                                                                       'weight': '0'}}},
-                                                                                                               '[1][0001.0000.0102.0000.0011][4294967295]/120': {'index': {1: {'metric': '100',
+                                                                                                               '[1][0001.00ff.0102.0000.0011][4294967295]/120': {'index': {1: {'metric': '100',
                                                                                                                                                                                'next_hop': '172.16.2.89',
                                                                                                                                                                                'origin_codes': 'i',
                                                                                                                                                                                'status_codes': '*>i',
                                                                                                                                                                                'weight': '0'}}},
-                                                                                                               '[2][0][48][0013.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0013.01ff.0001][0]/104': {'index': {1: {'metric': '100',
                                                                                                                                                                    'next_hop': '172.16.2.89',
                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                    'status_codes': '*>i',
                                                                                                                                                                    'weight': '0'}}},
-                                                                                                               '[2][0][48][0013.0100.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0013.01ff.0001][32][10.249.248.10]/136': {'index': {1: {'metric': '100',
                                                                                                                                                                                    'next_hop': '172.16.2.89',
                                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                                    'status_codes': '*>i',
                                                                                                                                                                                    'weight': '0'}}},
-                                                                                                               '[2][0][48][0014.0100.0001][0]/104': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0014.01ff.0001][0]/104': {'index': {1: {'metric': '100',
                                                                                                                                                                    'next_hop': '172.16.2.88',
                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                    'status_codes': '*>i',
                                                                                                                                                                    'weight': '0'}}},
-                                                                                                               '[2][0][48][0014.0100.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
+                                                                                                               '[2][0][48][0014.01ff.0001][32][10.249.249.10]/136': {'index': {1: {'metric': '100',
                                                                                                                                                                                    'next_hop': '172.16.2.88',
                                                                                                                                                                                    'origin_codes': 'i',
                                                                                                                                                                                    'status_codes': '*>i',
@@ -7788,38 +8097,38 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         *>i[5][0][22][10.249.248.0]/80
                             172.16.2.88              0    100      0 ?
         Route Distinguisher: 172.16.2.88:1000
-        *>i[2][0][48][0014.0100.0001][0]/104
+        *>i[2][0][48][0014.01ff.0001][0]/104
                             172.16.2.88                   100      0 i
-        *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+        *>i[2][0][48][0014.01ff.0001][32][10.249.249.10]/136
                             172.16.2.88                   100      0 i
         *>i[3][0][32][172.16.2.88]/80
                             172.16.2.88                   100      0 i
         Route Distinguisher: 172.16.2.89:1
-        *>i[1][172.16.2.89:1][0001.0000.0102.0000.0011][4294967295]/184
+        *>i[1][172.16.2.89:1][0001.00ff.0102.0000.0011][4294967295]/184
                             172.16.2.89                   100      0 i
         *>i[5][0][22][10.249.248.0]/80
                             172.16.2.89              0    100      0 ?
         Route Distinguisher: 172.16.2.89:1000
-        *>i[1][0001.0000.0102.0000.0011][0]/120
+        *>i[1][0001.00ff.0102.0000.0011][0]/120
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0013.0100.0001][0]/104
+        *>i[2][0][48][0013.01ff.0001][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0013.0100.0001][32][10.249.248.10]/136
+        *>i[2][0][48][0013.01ff.0001][32][10.249.248.10]/136
                             172.16.2.89                   100      0 i
         *>i[3][0][32][172.16.2.89]/80
                             172.16.2.89                   100      0 i
         Route Distinguisher: 172.16.2.90:1000 (default for vrf EVPN-Multicast-BTV)
-        *>i[1][0001.0000.0102.0000.0011][0]/120
+        *>i[1][0001.00ff.0102.0000.0011][0]/120
                             172.16.2.89                   100      0 i
-        *>i[1][0001.0000.0102.0000.0011][4294967295]/120
+        *>i[1][0001.00ff.0102.0000.0011][4294967295]/120
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0013.0100.0001][0]/104
+        *>i[2][0][48][0013.01ff.0001][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0013.0100.0001][32][10.249.248.10]/136
+        *>i[2][0][48][0013.01ff.0001][32][10.249.248.10]/136
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0014.0100.0001][0]/104
+        *>i[2][0][48][0014.01ff.0001][0]/104
                             172.16.2.88                   100      0 i
-        *>i[2][0][48][0014.0100.0001][32][10.249.249.10]/136
+        *>i[2][0][48][0014.01ff.0001][32][10.249.249.10]/136
                             172.16.2.88                   100      0 i
         *>i[3][0][32][172.16.2.88]/80
                             172.16.2.88                   100      0 i
@@ -8517,7 +8826,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         "default_vrf": "L2",
                         "local_router_id": "10.16.2.1",
                         "prefixes": {
-                            "[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272": {
+                            "[2]:[0]:[0]:[48]:[0001.00ff.1011]:[32]:[10.1.1.2]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8528,7 +8837,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272": {
+                            "[2]:[0]:[0]:[48]:[0010.00ff.1011]:[32]:[10.1.1.4]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8539,7 +8848,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2001:db8:3664:121::1:2]/368": {
+                            "[2]:[0]:[0]:[48]:[0011.01ff.0001]:[128]:[2001:db8:3664:121::1:2]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8550,7 +8859,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2001:db8:3664:121::1:3]/368": {
+                            "[2]:[0]:[0]:[48]:[0011.01ff.0002]:[128]:[2001:db8:3664:121::1:3]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8561,7 +8870,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2001:db8:3664:121::4:2]/368": {
+                            "[2]:[0]:[0]:[48]:[0014.01ff.0001]:[128]:[2001:db8:3664:121::4:2]/368": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8591,7 +8900,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         "default_vrf": "L2",
                         "local_router_id": "10.16.2.1",
                         "prefixes": {
-                            "[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272": {
+                            "[2]:[0]:[0]:[48]:[0020.01ff.0007]:[32]:[10.2.2.2]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8609,7 +8918,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272": {
+                            "[2]:[0]:[0]:[48]:[0020.01ff.0008]:[32]:[10.2.2.3]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8627,7 +8936,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272": {
+                            "[2]:[0]:[0]:[48]:[0020.01ff.0009]:[32]:[10.2.2.4]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8645,7 +8954,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272": {
+                            "[2]:[0]:[0]:[48]:[0020.01ff.000a]:[32]:[10.2.2.5]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8663,7 +8972,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272": {
+                            "[2]:[0]:[0]:[48]:[0020.01ff.000b]:[32]:[10.2.2.6]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8681,7 +8990,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     }
                                 }
                             },
-                            "[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272": {
+                            "[2]:[0]:[0]:[48]:[1000.01ff.0007]:[32]:[10.2.1.2]/272": {
                                 "index": {
                                     1: {
                                         "localprf": 100,
@@ -8719,31 +9028,31 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
         Route Distinguisher: 10.16.2.1:12345    (L2VNI 10001)
 
-        *>l[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272
+        *>l[2]:[0]:[0]:[48]:[0001.00ff.1011]:[32]:[10.1.1.2]/272
 
                               2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272
+        *>l[2]:[0]:[0]:[48]:[0010.00ff.1011]:[32]:[10.1.1.4]/272
 
                               2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2001:db8:3664:121::1:2]/368
+        *>l[2]:[0]:[0]:[48]:[0011.01ff.0001]:[128]:[2001:db8:3664:121::1:2]/368
 
                               2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2001:db8:3664:121::1:3]/368
+        *>l[2]:[0]:[0]:[48]:[0011.01ff.0002]:[128]:[2001:db8:3664:121::1:3]/368
 
                               2001:db8:400:100:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>l[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2001:db8:3664:121::4:2]/368
+        *>l[2]:[0]:[0]:[48]:[0014.01ff.0001]:[128]:[2001:db8:3664:121::4:2]/368
 
                               2001:db8:400:100:0:abcd:5678:1
 
@@ -8759,13 +9068,13 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
         Route Distinguisher: 10.16.2.1:33333    (L2VNI 20002)
 
-        *>l[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272
+        *>l[2]:[0]:[0]:[48]:[1000.01ff.0007]:[32]:[10.2.1.2]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:1
 
                                                                 100      33445 i
 
-        *>i[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272
+        *>i[2]:[0]:[0]:[48]:[0020.01ff.0007]:[32]:[10.2.2.2]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:3
 
@@ -8775,7 +9084,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
                                                                 100          0 i
 
-        *>i[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272
+        *>i[2]:[0]:[0]:[48]:[0020.01ff.0008]:[32]:[10.2.2.3]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:3
 
@@ -8785,7 +9094,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
                                                                 100          0 i
 
-        *>i[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272
+        *>i[2]:[0]:[0]:[48]:[0020.01ff.0009]:[32]:[10.2.2.4]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:3
 
@@ -8795,7 +9104,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
                                                                 100          0 i
 
-        *>i[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272
+        *>i[2]:[0]:[0]:[48]:[0020.01ff.000a]:[32]:[10.2.2.5]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:3
 
@@ -8805,7 +9114,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
                                                                 100          0 i
 
-        *>i[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272
+        *>i[2]:[0]:[0]:[48]:[0020.01ff.000b]:[32]:[10.2.2.6]/272
 
                               2001:db8:400:a2bb:0:abcd:5678:3
 
@@ -8910,7 +9219,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '172.16.2.88:1000',
                         'prefixes': {
-                            '[2][0][48][0012.0100.0001][0]/104': {
+                            '[2][0][48][0012.01ff.0001][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8919,7 +9228,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0002][0]/104': {
+                            '[2][0][48][0012.01ff.0002][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8928,7 +9237,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0003][0]/104': {
+                            '[2][0][48][0012.01ff.0003][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8937,7 +9246,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0004][0]/104': {
+                            '[2][0][48][0012.01ff.0004][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8946,7 +9255,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0005][0]/104': {
+                            '[2][0][48][0012.01ff.0005][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8955,7 +9264,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0006][0]/104': {
+                            '[2][0][48][0012.01ff.0006][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8964,7 +9273,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0007][0]/104': {
+                            '[2][0][48][0012.01ff.0007][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8973,7 +9282,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0008][0]/104': {
+                            '[2][0][48][0012.01ff.0008][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8982,7 +9291,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0009][0]/104': {
+                            '[2][0][48][0012.01ff.0009][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -8991,7 +9300,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000a][0]/104': {
+                            '[2][0][48][0012.01ff.000a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9000,7 +9309,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000b][0]/104': {
+                            '[2][0][48][0012.01ff.000b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9009,7 +9318,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000c][0]/104': {
+                            '[2][0][48][0012.01ff.000c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9018,7 +9327,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000d][0]/104': {
+                            '[2][0][48][0012.01ff.000d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9027,7 +9336,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000e][0]/104': {
+                            '[2][0][48][0012.01ff.000e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9036,7 +9345,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000f][0]/104': {
+                            '[2][0][48][0012.01ff.000f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9045,7 +9354,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0010][0]/104': {
+                            '[2][0][48][0012.01ff.0010][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9054,7 +9363,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0011][0]/104': {
+                            '[2][0][48][0012.01ff.0011][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9063,7 +9372,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0012][0]/104': {
+                            '[2][0][48][0012.01ff.0012][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9072,7 +9381,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0013][0]/104': {
+                            '[2][0][48][0012.01ff.0013][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9081,7 +9390,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0014][0]/104': {
+                            '[2][0][48][0012.01ff.0014][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9090,7 +9399,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0015][0]/104': {
+                            '[2][0][48][0012.01ff.0015][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9099,7 +9408,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0016][0]/104': {
+                            '[2][0][48][0012.01ff.0016][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9108,7 +9417,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0017][0]/104': {
+                            '[2][0][48][0012.01ff.0017][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9117,7 +9426,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0018][0]/104': {
+                            '[2][0][48][0012.01ff.0018][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9126,7 +9435,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0019][0]/104': {
+                            '[2][0][48][0012.01ff.0019][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9135,7 +9444,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001a][0]/104': {
+                            '[2][0][48][0012.01ff.001a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9144,7 +9453,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001b][0]/104': {
+                            '[2][0][48][0012.01ff.001b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9153,7 +9462,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001c][0]/104': {
+                            '[2][0][48][0012.01ff.001c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9162,7 +9471,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001d][0]/104': {
+                            '[2][0][48][0012.01ff.001d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9171,7 +9480,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001e][0]/104': {
+                            '[2][0][48][0012.01ff.001e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9180,7 +9489,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001f][0]/104': {
+                            '[2][0][48][0012.01ff.001f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9189,7 +9498,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0020][0]/104': {
+                            '[2][0][48][0012.01ff.0020][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9198,7 +9507,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0021][0]/104': {
+                            '[2][0][48][0012.01ff.0021][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9207,7 +9516,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0022][0]/104': {
+                            '[2][0][48][0012.01ff.0022][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9216,7 +9525,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0023][0]/104': {
+                            '[2][0][48][0012.01ff.0023][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9225,7 +9534,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0024][0]/104': {
+                            '[2][0][48][0012.01ff.0024][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9234,7 +9543,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0025][0]/104': {
+                            '[2][0][48][0012.01ff.0025][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9243,7 +9552,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0026][0]/104': {
+                            '[2][0][48][0012.01ff.0026][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9252,7 +9561,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0027][0]/104': {
+                            '[2][0][48][0012.01ff.0027][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9261,7 +9570,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0028][0]/104': {
+                            '[2][0][48][0012.01ff.0028][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9270,7 +9579,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0029][0]/104': {
+                            '[2][0][48][0012.01ff.0029][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9279,7 +9588,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002a][0]/104': {
+                            '[2][0][48][0012.01ff.002a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9288,7 +9597,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002b][0]/104': {
+                            '[2][0][48][0012.01ff.002b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9297,7 +9606,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002c][0]/104': {
+                            '[2][0][48][0012.01ff.002c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9306,7 +9615,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002d][0]/104': {
+                            '[2][0][48][0012.01ff.002d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9315,7 +9624,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002e][0]/104': {
+                            '[2][0][48][0012.01ff.002e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9324,7 +9633,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002f][0]/104': {
+                            '[2][0][48][0012.01ff.002f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9333,7 +9642,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0030][0]/104': {
+                            '[2][0][48][0012.01ff.0030][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9342,7 +9651,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0031][0]/104': {
+                            '[2][0][48][0012.01ff.0031][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9351,7 +9660,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0032][0]/104': {
+                            '[2][0][48][0012.01ff.0032][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9360,7 +9669,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0001][0]/104': {
+                            '[2][0][48][0012.02ff.0001][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9369,7 +9678,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0002][0]/104': {
+                            '[2][0][48][0012.02ff.0002][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9378,7 +9687,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0003][0]/104': {
+                            '[2][0][48][0012.02ff.0003][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9387,7 +9696,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0004][0]/104': {
+                            '[2][0][48][0012.02ff.0004][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9396,7 +9705,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0005][0]/104': {
+                            '[2][0][48][0012.02ff.0005][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9405,7 +9714,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0006][0]/104': {
+                            '[2][0][48][0012.02ff.0006][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9414,7 +9723,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0007][0]/104': {
+                            '[2][0][48][0012.02ff.0007][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9423,7 +9732,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0008][0]/104': {
+                            '[2][0][48][0012.02ff.0008][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9432,7 +9741,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0009][0]/104': {
+                            '[2][0][48][0012.02ff.0009][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9441,7 +9750,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000a][0]/104': {
+                            '[2][0][48][0012.02ff.000a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9450,7 +9759,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000b][0]/104': {
+                            '[2][0][48][0012.02ff.000b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9459,7 +9768,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000c][0]/104': {
+                            '[2][0][48][0012.02ff.000c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9468,7 +9777,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000d][0]/104': {
+                            '[2][0][48][0012.02ff.000d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9477,7 +9786,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000e][0]/104': {
+                            '[2][0][48][0012.02ff.000e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9486,7 +9795,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.000f][0]/104': {
+                            '[2][0][48][0012.02ff.000f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9495,7 +9804,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0010][0]/104': {
+                            '[2][0][48][0012.02ff.0010][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9504,7 +9813,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0011][0]/104': {
+                            '[2][0][48][0012.02ff.0011][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9513,7 +9822,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0012][0]/104': {
+                            '[2][0][48][0012.02ff.0012][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9522,7 +9831,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0013][0]/104': {
+                            '[2][0][48][0012.02ff.0013][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9531,7 +9840,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0014][0]/104': {
+                            '[2][0][48][0012.02ff.0014][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9540,7 +9849,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0015][0]/104': {
+                            '[2][0][48][0012.02ff.0015][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9549,7 +9858,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0016][0]/104': {
+                            '[2][0][48][0012.02ff.0016][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9558,7 +9867,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0017][0]/104': {
+                            '[2][0][48][0012.02ff.0017][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9567,7 +9876,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0018][0]/104': {
+                            '[2][0][48][0012.02ff.0018][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9576,7 +9885,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0019][0]/104': {
+                            '[2][0][48][0012.02ff.0019][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9585,7 +9894,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001a][0]/104': {
+                            '[2][0][48][0012.02ff.001a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9594,7 +9903,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001b][0]/104': {
+                            '[2][0][48][0012.02ff.001b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9603,7 +9912,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001c][0]/104': {
+                            '[2][0][48][0012.02ff.001c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9612,7 +9921,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001d][0]/104': {
+                            '[2][0][48][0012.02ff.001d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9621,7 +9930,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001e][0]/104': {
+                            '[2][0][48][0012.02ff.001e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9630,7 +9939,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.001f][0]/104': {
+                            '[2][0][48][0012.02ff.001f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9639,7 +9948,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0020][0]/104': {
+                            '[2][0][48][0012.02ff.0020][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9648,7 +9957,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0021][0]/104': {
+                            '[2][0][48][0012.02ff.0021][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9657,7 +9966,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0022][0]/104': {
+                            '[2][0][48][0012.02ff.0022][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9666,7 +9975,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0023][0]/104': {
+                            '[2][0][48][0012.02ff.0023][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9675,7 +9984,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0024][0]/104': {
+                            '[2][0][48][0012.02ff.0024][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9684,7 +9993,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0025][0]/104': {
+                            '[2][0][48][0012.02ff.0025][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9693,7 +10002,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0026][0]/104': {
+                            '[2][0][48][0012.02ff.0026][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9702,7 +10011,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0027][0]/104': {
+                            '[2][0][48][0012.02ff.0027][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9711,7 +10020,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0028][0]/104': {
+                            '[2][0][48][0012.02ff.0028][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9720,7 +10029,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0029][0]/104': {
+                            '[2][0][48][0012.02ff.0029][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9729,7 +10038,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002a][0]/104': {
+                            '[2][0][48][0012.02ff.002a][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9738,7 +10047,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002b][0]/104': {
+                            '[2][0][48][0012.02ff.002b][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9747,7 +10056,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002c][0]/104': {
+                            '[2][0][48][0012.02ff.002c][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9756,7 +10065,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002d][0]/104': {
+                            '[2][0][48][0012.02ff.002d][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9765,7 +10074,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002e][0]/104': {
+                            '[2][0][48][0012.02ff.002e][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9774,7 +10083,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.002f][0]/104': {
+                            '[2][0][48][0012.02ff.002f][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9783,7 +10092,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0030][0]/104': {
+                            '[2][0][48][0012.02ff.0030][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9792,7 +10101,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0031][0]/104': {
+                            '[2][0][48][0012.02ff.0031][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9801,7 +10110,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0200.0032][0]/104': {
+                            '[2][0][48][0012.02ff.0032][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -9863,7 +10172,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '172.16.2.89:1000',
                         'prefixes': {
-                            '[2][0][48][0012.0100.0001][0]/104': {
+                            '[2][0][48][0012.01ff.0001][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9872,7 +10181,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0002][0]/104': {
+                            '[2][0][48][0012.01ff.0002][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9881,7 +10190,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0003][0]/104': {
+                            '[2][0][48][0012.01ff.0003][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9890,7 +10199,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0004][0]/104': {
+                            '[2][0][48][0012.01ff.0004][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9899,7 +10208,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0005][0]/104': {
+                            '[2][0][48][0012.01ff.0005][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9908,7 +10217,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0006][0]/104': {
+                            '[2][0][48][0012.01ff.0006][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9917,7 +10226,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0007][0]/104': {
+                            '[2][0][48][0012.01ff.0007][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9926,7 +10235,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0008][0]/104': {
+                            '[2][0][48][0012.01ff.0008][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9935,7 +10244,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0009][0]/104': {
+                            '[2][0][48][0012.01ff.0009][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9944,7 +10253,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000a][0]/104': {
+                            '[2][0][48][0012.01ff.000a][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9953,7 +10262,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000b][0]/104': {
+                            '[2][0][48][0012.01ff.000b][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9962,7 +10271,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000c][0]/104': {
+                            '[2][0][48][0012.01ff.000c][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9971,7 +10280,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000d][0]/104': {
+                            '[2][0][48][0012.01ff.000d][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9980,7 +10289,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000e][0]/104': {
+                            '[2][0][48][0012.01ff.000e][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9989,7 +10298,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.000f][0]/104': {
+                            '[2][0][48][0012.01ff.000f][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -9998,7 +10307,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0010][0]/104': {
+                            '[2][0][48][0012.01ff.0010][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10007,7 +10316,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0011][0]/104': {
+                            '[2][0][48][0012.01ff.0011][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10016,7 +10325,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0012][0]/104': {
+                            '[2][0][48][0012.01ff.0012][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10025,7 +10334,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0013][0]/104': {
+                            '[2][0][48][0012.01ff.0013][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10034,7 +10343,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0014][0]/104': {
+                            '[2][0][48][0012.01ff.0014][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10043,7 +10352,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0015][0]/104': {
+                            '[2][0][48][0012.01ff.0015][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10052,7 +10361,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0016][0]/104': {
+                            '[2][0][48][0012.01ff.0016][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10061,7 +10370,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0017][0]/104': {
+                            '[2][0][48][0012.01ff.0017][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10070,7 +10379,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0018][0]/104': {
+                            '[2][0][48][0012.01ff.0018][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10079,7 +10388,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0019][0]/104': {
+                            '[2][0][48][0012.01ff.0019][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10088,7 +10397,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001a][0]/104': {
+                            '[2][0][48][0012.01ff.001a][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10097,7 +10406,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001b][0]/104': {
+                            '[2][0][48][0012.01ff.001b][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10106,7 +10415,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001c][0]/104': {
+                            '[2][0][48][0012.01ff.001c][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10115,7 +10424,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001d][0]/104': {
+                            '[2][0][48][0012.01ff.001d][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10124,7 +10433,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001e][0]/104': {
+                            '[2][0][48][0012.01ff.001e][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10133,7 +10442,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.001f][0]/104': {
+                            '[2][0][48][0012.01ff.001f][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10142,7 +10451,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0020][0]/104': {
+                            '[2][0][48][0012.01ff.0020][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10151,7 +10460,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0021][0]/104': {
+                            '[2][0][48][0012.01ff.0021][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10160,7 +10469,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0022][0]/104': {
+                            '[2][0][48][0012.01ff.0022][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10169,7 +10478,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0023][0]/104': {
+                            '[2][0][48][0012.01ff.0023][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10178,7 +10487,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0024][0]/104': {
+                            '[2][0][48][0012.01ff.0024][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10187,7 +10496,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0025][0]/104': {
+                            '[2][0][48][0012.01ff.0025][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10196,7 +10505,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0026][0]/104': {
+                            '[2][0][48][0012.01ff.0026][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10205,7 +10514,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0027][0]/104': {
+                            '[2][0][48][0012.01ff.0027][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10214,7 +10523,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0028][0]/104': {
+                            '[2][0][48][0012.01ff.0028][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10223,7 +10532,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0029][0]/104': {
+                            '[2][0][48][0012.01ff.0029][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10232,7 +10541,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002a][0]/104': {
+                            '[2][0][48][0012.01ff.002a][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10241,7 +10550,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002b][0]/104': {
+                            '[2][0][48][0012.01ff.002b][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10250,7 +10559,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002c][0]/104': {
+                            '[2][0][48][0012.01ff.002c][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10259,7 +10568,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002d][0]/104': {
+                            '[2][0][48][0012.01ff.002d][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10268,7 +10577,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002e][0]/104': {
+                            '[2][0][48][0012.01ff.002e][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10277,7 +10586,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.002f][0]/104': {
+                            '[2][0][48][0012.01ff.002f][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10286,7 +10595,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0030][0]/104': {
+                            '[2][0][48][0012.01ff.0030][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10295,7 +10604,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0031][0]/104': {
+                            '[2][0][48][0012.01ff.0031][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10304,7 +10613,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0012.0100.0032][0]/104': {
+                            '[2][0][48][0012.01ff.0032][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -10472,205 +10781,205 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
         Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 172.16.2.88:1000 (default for vrf EVPN-Multicast-BTV)
-        *>i[2][0][48][0012.0100.0001][0]/104
+        *>i[2][0][48][0012.01ff.0001][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0002][0]/104
+        *>i[2][0][48][0012.01ff.0002][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0003][0]/104
+        *>i[2][0][48][0012.01ff.0003][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0004][0]/104
+        *>i[2][0][48][0012.01ff.0004][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0005][0]/104
+        *>i[2][0][48][0012.01ff.0005][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0006][0]/104
+        *>i[2][0][48][0012.01ff.0006][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0007][0]/104
+        *>i[2][0][48][0012.01ff.0007][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0008][0]/104
+        *>i[2][0][48][0012.01ff.0008][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0009][0]/104
+        *>i[2][0][48][0012.01ff.0009][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000a][0]/104
+        *>i[2][0][48][0012.01ff.000a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000b][0]/104
+        *>i[2][0][48][0012.01ff.000b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000c][0]/104
+        *>i[2][0][48][0012.01ff.000c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000d][0]/104
+        *>i[2][0][48][0012.01ff.000d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000e][0]/104
+        *>i[2][0][48][0012.01ff.000e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000f][0]/104
+        *>i[2][0][48][0012.01ff.000f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0010][0]/104
+        *>i[2][0][48][0012.01ff.0010][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0011][0]/104
+        *>i[2][0][48][0012.01ff.0011][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0012][0]/104
+        *>i[2][0][48][0012.01ff.0012][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0013][0]/104
+        *>i[2][0][48][0012.01ff.0013][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0014][0]/104
+        *>i[2][0][48][0012.01ff.0014][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0015][0]/104
+        *>i[2][0][48][0012.01ff.0015][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0016][0]/104
+        *>i[2][0][48][0012.01ff.0016][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0017][0]/104
+        *>i[2][0][48][0012.01ff.0017][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0018][0]/104
+        *>i[2][0][48][0012.01ff.0018][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0019][0]/104
+        *>i[2][0][48][0012.01ff.0019][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001a][0]/104
+        *>i[2][0][48][0012.01ff.001a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001b][0]/104
+        *>i[2][0][48][0012.01ff.001b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001c][0]/104
+        *>i[2][0][48][0012.01ff.001c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001d][0]/104
+        *>i[2][0][48][0012.01ff.001d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001e][0]/104
+        *>i[2][0][48][0012.01ff.001e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001f][0]/104
+        *>i[2][0][48][0012.01ff.001f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0020][0]/104
+        *>i[2][0][48][0012.01ff.0020][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0021][0]/104
+        *>i[2][0][48][0012.01ff.0021][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0022][0]/104
+        *>i[2][0][48][0012.01ff.0022][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0023][0]/104
+        *>i[2][0][48][0012.01ff.0023][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0024][0]/104
+        *>i[2][0][48][0012.01ff.0024][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0025][0]/104
+        *>i[2][0][48][0012.01ff.0025][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0026][0]/104
+        *>i[2][0][48][0012.01ff.0026][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0027][0]/104
+        *>i[2][0][48][0012.01ff.0027][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0028][0]/104
+        *>i[2][0][48][0012.01ff.0028][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0029][0]/104
+        *>i[2][0][48][0012.01ff.0029][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002a][0]/104
+        *>i[2][0][48][0012.01ff.002a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002b][0]/104
+        *>i[2][0][48][0012.01ff.002b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002c][0]/104
+        *>i[2][0][48][0012.01ff.002c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002d][0]/104
+        *>i[2][0][48][0012.01ff.002d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002e][0]/104
+        *>i[2][0][48][0012.01ff.002e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002f][0]/104
+        *>i[2][0][48][0012.01ff.002f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0030][0]/104
+        *>i[2][0][48][0012.01ff.0030][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0031][0]/104
+        *>i[2][0][48][0012.01ff.0031][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0032][0]/104
+        *>i[2][0][48][0012.01ff.0032][0]/104
                             172.16.2.89                   100      0 i
-        *> [2][0][48][0012.0200.0001][0]/104
+        *> [2][0][48][0012.02ff.0001][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0002][0]/104
+        *> [2][0][48][0012.02ff.0002][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0003][0]/104
+        *> [2][0][48][0012.02ff.0003][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0004][0]/104
+        *> [2][0][48][0012.02ff.0004][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0005][0]/104
+        *> [2][0][48][0012.02ff.0005][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0006][0]/104
+        *> [2][0][48][0012.02ff.0006][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0007][0]/104
+        *> [2][0][48][0012.02ff.0007][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0008][0]/104
+        *> [2][0][48][0012.02ff.0008][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0009][0]/104
+        *> [2][0][48][0012.02ff.0009][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000a][0]/104
+        *> [2][0][48][0012.02ff.000a][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000b][0]/104
+        *> [2][0][48][0012.02ff.000b][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000c][0]/104
+        *> [2][0][48][0012.02ff.000c][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000d][0]/104
+        *> [2][0][48][0012.02ff.000d][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000e][0]/104
+        *> [2][0][48][0012.02ff.000e][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.000f][0]/104
+        *> [2][0][48][0012.02ff.000f][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0010][0]/104
+        *> [2][0][48][0012.02ff.0010][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0011][0]/104
+        *> [2][0][48][0012.02ff.0011][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0012][0]/104
+        *> [2][0][48][0012.02ff.0012][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0013][0]/104
+        *> [2][0][48][0012.02ff.0013][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0014][0]/104
+        *> [2][0][48][0012.02ff.0014][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0015][0]/104
+        *> [2][0][48][0012.02ff.0015][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0016][0]/104
+        *> [2][0][48][0012.02ff.0016][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0017][0]/104
+        *> [2][0][48][0012.02ff.0017][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0018][0]/104
+        *> [2][0][48][0012.02ff.0018][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0019][0]/104
+        *> [2][0][48][0012.02ff.0019][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001a][0]/104
+        *> [2][0][48][0012.02ff.001a][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001b][0]/104
+        *> [2][0][48][0012.02ff.001b][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001c][0]/104
+        *> [2][0][48][0012.02ff.001c][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001d][0]/104
+        *> [2][0][48][0012.02ff.001d][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001e][0]/104
+        *> [2][0][48][0012.02ff.001e][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.001f][0]/104
+        *> [2][0][48][0012.02ff.001f][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0020][0]/104
+        *> [2][0][48][0012.02ff.0020][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0021][0]/104
+        *> [2][0][48][0012.02ff.0021][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0022][0]/104
+        *> [2][0][48][0012.02ff.0022][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0023][0]/104
+        *> [2][0][48][0012.02ff.0023][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0024][0]/104
+        *> [2][0][48][0012.02ff.0024][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0025][0]/104
+        *> [2][0][48][0012.02ff.0025][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0026][0]/104
+        *> [2][0][48][0012.02ff.0026][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0027][0]/104
+        *> [2][0][48][0012.02ff.0027][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0028][0]/104
+        *> [2][0][48][0012.02ff.0028][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0029][0]/104
+        *> [2][0][48][0012.02ff.0029][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002a][0]/104
+        *> [2][0][48][0012.02ff.002a][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002b][0]/104
+        *> [2][0][48][0012.02ff.002b][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002c][0]/104
+        *> [2][0][48][0012.02ff.002c][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002d][0]/104
+        *> [2][0][48][0012.02ff.002d][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002e][0]/104
+        *> [2][0][48][0012.02ff.002e][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.002f][0]/104
+        *> [2][0][48][0012.02ff.002f][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0030][0]/104
+        *> [2][0][48][0012.02ff.0030][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0031][0]/104
+        *> [2][0][48][0012.02ff.0031][0]/104
                             0.0.0.0                                0 i
-        *> [2][0][48][0012.0200.0032][0]/104
+        *> [2][0][48][0012.02ff.0032][0]/104
                             0.0.0.0                                0 i
         *> [3][0][32][172.16.2.88]/80
                             0.0.0.0                                0 i
@@ -10682,105 +10991,105 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         *>i[5][0][22][10.249.248.0]/80
                             172.16.2.89              0    100      0 ?
         Route Distinguisher: 172.16.2.89:1000
-        *>i[2][0][48][0012.0100.0001][0]/104
+        *>i[2][0][48][0012.01ff.0001][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0002][0]/104
+        *>i[2][0][48][0012.01ff.0002][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0003][0]/104
+        *>i[2][0][48][0012.01ff.0003][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0004][0]/104
+        *>i[2][0][48][0012.01ff.0004][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0005][0]/104
+        *>i[2][0][48][0012.01ff.0005][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0006][0]/104
+        *>i[2][0][48][0012.01ff.0006][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0007][0]/104
+        *>i[2][0][48][0012.01ff.0007][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0008][0]/104
+        *>i[2][0][48][0012.01ff.0008][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0009][0]/104
+        *>i[2][0][48][0012.01ff.0009][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000a][0]/104
+        *>i[2][0][48][0012.01ff.000a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000b][0]/104
+        *>i[2][0][48][0012.01ff.000b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000c][0]/104
+        *>i[2][0][48][0012.01ff.000c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000d][0]/104
+        *>i[2][0][48][0012.01ff.000d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000e][0]/104
+        *>i[2][0][48][0012.01ff.000e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.000f][0]/104
+        *>i[2][0][48][0012.01ff.000f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0010][0]/104
+        *>i[2][0][48][0012.01ff.0010][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0011][0]/104
+        *>i[2][0][48][0012.01ff.0011][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0012][0]/104
+        *>i[2][0][48][0012.01ff.0012][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0013][0]/104
+        *>i[2][0][48][0012.01ff.0013][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0014][0]/104
+        *>i[2][0][48][0012.01ff.0014][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0015][0]/104
+        *>i[2][0][48][0012.01ff.0015][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0016][0]/104
+        *>i[2][0][48][0012.01ff.0016][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0017][0]/104
+        *>i[2][0][48][0012.01ff.0017][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0018][0]/104
+        *>i[2][0][48][0012.01ff.0018][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0019][0]/104
+        *>i[2][0][48][0012.01ff.0019][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001a][0]/104
+        *>i[2][0][48][0012.01ff.001a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001b][0]/104
+        *>i[2][0][48][0012.01ff.001b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001c][0]/104
+        *>i[2][0][48][0012.01ff.001c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001d][0]/104
+        *>i[2][0][48][0012.01ff.001d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001e][0]/104
+        *>i[2][0][48][0012.01ff.001e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.001f][0]/104
+        *>i[2][0][48][0012.01ff.001f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0020][0]/104
+        *>i[2][0][48][0012.01ff.0020][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0021][0]/104
+        *>i[2][0][48][0012.01ff.0021][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0022][0]/104
+        *>i[2][0][48][0012.01ff.0022][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0023][0]/104
+        *>i[2][0][48][0012.01ff.0023][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0024][0]/104
+        *>i[2][0][48][0012.01ff.0024][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0025][0]/104
+        *>i[2][0][48][0012.01ff.0025][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0026][0]/104
+        *>i[2][0][48][0012.01ff.0026][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0027][0]/104
+        *>i[2][0][48][0012.01ff.0027][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0028][0]/104
+        *>i[2][0][48][0012.01ff.0028][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0029][0]/104
+        *>i[2][0][48][0012.01ff.0029][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002a][0]/104
+        *>i[2][0][48][0012.01ff.002a][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002b][0]/104
+        *>i[2][0][48][0012.01ff.002b][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002c][0]/104
+        *>i[2][0][48][0012.01ff.002c][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002d][0]/104
+        *>i[2][0][48][0012.01ff.002d][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002e][0]/104
+        *>i[2][0][48][0012.01ff.002e][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.002f][0]/104
+        *>i[2][0][48][0012.01ff.002f][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0030][0]/104
+        *>i[2][0][48][0012.01ff.0030][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0031][0]/104
+        *>i[2][0][48][0012.01ff.0031][0]/104
                             172.16.2.89                   100      0 i
-        *>i[2][0][48][0012.0100.0032][0]/104
+        *>i[2][0][48][0012.01ff.0032][0]/104
                             172.16.2.89                   100      0 i
         *>i[3][0][32][172.16.2.89]/80
                             172.16.2.89                   100      0 i
@@ -10987,7 +11296,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         * i                   10.154.219.64                  100      0 i
         * i                   10.154.219.64                  100      0 i
         Route Distinguisher: 10.154.219.101:1
-        *>i[1][10.154.219.101:1][0100.233e.65d6.5080.1600][4294967295]/184
+        *>i[1][10.154.219.101:1][0100.23ff.a315.5080.1600][4294967295]/184
                             10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
@@ -11997,19 +12306,19 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         Route Distinguisher: 10.154.219.101:2112
-        *>i[1][0100.233e.65d6.5080.1600][0]/120
+        *>i[1][0100.23ff.a315.5080.1600][0]/120
                             10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
-        *>i[2][0][48][0000.25b1.33d3][0]/104
+        *>i[2][0][48][0000.25ff.e485][0]/104
                             10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
-        *>i[2][0][48][4c96.14e6.f82e][0]/104
+        *>i[2][0][48][4c96.14ff.df15][0]/104
                             10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
-        *>i[2][0][48][4c96.14e6.f82e][32][10.246.100.1]/136
+        *>i[2][0][48][4c96.14ff.df15][32][10.246.100.1]/136
                             10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
@@ -12018,30 +12327,30 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         * i                   10.154.219.101                 100      0 i
         * i                   10.154.219.101                 100      0 i
         Route Distinguisher: 10.154.219.150:0
-        *>i[4][0000.0100.acce.7700.bbbb][32][10.154.219.150]/128
+        *>i[4][0000.01ff.acce.7700.bbbb][32][10.154.219.150]/128
                             10.154.219.150                 100      0 i
-        *>i[4][0000.0100.acce.7700.cccc][32][10.154.219.150]/128
+        *>i[4][0000.01ff.acce.7700.cccc][32][10.154.219.150]/128
                             10.154.219.150                 100      0 i
         Route Distinguisher: 10.154.219.150:1
-        *>i[1][10.154.219.150:1][0000.0100.acce.7700.bbbb][4294967295]/184
+        *>i[1][10.154.219.150:1][0000.01ff.acce.7700.bbbb][4294967295]/184
                             10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         Route Distinguisher: 10.154.219.150:2
-        *>i[1][10.154.219.150:2][0000.0100.acce.7700.cccc][4294967295]/184
+        *>i[1][10.154.219.150:2][0000.01ff.acce.7700.cccc][4294967295]/184
                             10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         Route Distinguisher: 10.154.219.150:19
-        *>i[1][0000.0100.acce.7700.bbbb][0]/120
+        *>i[1][0000.01ff.acce.7700.bbbb][0]/120
                             10.154.219.150                 100      0 i
-        *>i[1][0000.0100.acce.7700.cccc][0]/120
+        *>i[1][0000.01ff.acce.7700.cccc][0]/120
                             10.154.219.150                 100      0 i
-        *>i[2][0][48][0009.0f09.000d][0]/104
+        *>i[2][0][48][0009.0fff.0916][0]/104
                             10.154.219.150                 100      0 i
-        *>i[2][0][48][0009.0f09.000d][32][10.169.19.4]/136
+        *>i[2][0][48][0009.0fff.0916][32][10.169.19.4]/136
                             10.154.219.150                 100      0 i
         *>i[3][0][32][10.154.219.150]/80
                             10.154.219.150                 100      0 i
@@ -13258,7 +13567,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         Route Distinguisher: 10.154.219.150:2112
-        *>i[2][0][48][0000.25b3.1127][0]/104
+        *>i[2][0][48][0000.25ff.c4da][0]/104
                             10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
@@ -13269,33 +13578,33 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         * i                   10.154.219.150                 100      0 i
         * i                   10.154.219.150                 100      0 i
         Route Distinguisher: 10.19.196.5:0 (default for vrf ES:GLOBAL)
-        *> [1][10.19.196.5:2][0000.0100.acce.7700.bbbb][4294967295]/184
+        *> [1][10.19.196.5:2][0000.01ff.acce.7700.bbbb][4294967295]/184
                             0.0.0.0                                0 i
-        *> [1][10.19.196.5:3][0000.0100.acce.7700.cccc][4294967295]/184
+        *> [1][10.19.196.5:3][0000.01ff.acce.7700.cccc][4294967295]/184
                             0.0.0.0                                0 i
-        *>i[4][0000.0100.acce.7700.bbbb][32][10.154.219.150]/128
+        *>i[4][0000.01ff.acce.7700.bbbb][32][10.154.219.150]/128
                             10.154.219.150                 100      0 i
-        *> [4][0000.0100.acce.7700.bbbb][32][10.19.196.5]/128
+        *> [4][0000.01ff.acce.7700.bbbb][32][10.19.196.5]/128
                             0.0.0.0                                0 i
-        *>i[4][0000.0100.acce.7700.cccc][32][10.154.219.150]/128
+        *>i[4][0000.01ff.acce.7700.cccc][32][10.154.219.150]/128
                             10.154.219.150                 100      0 i
-        *> [4][0000.0100.acce.7700.cccc][32][10.19.196.5]/128
+        *> [4][0000.01ff.acce.7700.cccc][32][10.19.196.5]/128
                             0.0.0.0                                0 i
         Route Distinguisher: 10.19.196.5:19 (default for vrf evpn_fortinet)
-        *> [1][0000.0100.acce.7700.bbbb][0]/120
+        *> [1][0000.01ff.acce.7700.bbbb][0]/120
                             0.0.0.0                                0 i
         * i                   10.154.219.150                 100      0 i
-        *>i[1][0000.0100.acce.7700.bbbb][4294967295]/120
+        *>i[1][0000.01ff.acce.7700.bbbb][4294967295]/120
                             10.154.219.150                 100      0 i
-        *> [1][0000.0100.acce.7700.cccc][0]/120
+        *> [1][0000.01ff.acce.7700.cccc][0]/120
                             0.0.0.0                                0 i
         * i                   10.154.219.150                 100      0 i
-        *>i[1][0000.0100.acce.7700.cccc][4294967295]/120
+        *>i[1][0000.01ff.acce.7700.cccc][4294967295]/120
                             10.154.219.150                 100      0 i
-        *> [2][0][48][0009.0f09.000d][0]/104
+        *> [2][0][48][0009.0fff.0916][0]/104
                             0.0.0.0                                0 i
         * i                   10.154.219.150                 100      0 i
-        *> [2][0][48][0009.0f09.000d][32][10.169.19.4]/136
+        *> [2][0][48][0009.0fff.0916][32][10.169.19.4]/136
                             0.0.0.0                                0 i
         * i                   10.154.219.150                 100      0 i
         *>i[3][0][32][10.154.219.150]/80
@@ -14717,17 +15026,17 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         *> [3][0][32][10.19.196.5]/80
                             0.0.0.0                                0 i
         Route Distinguisher: 10.19.196.5:2112 (default for vrf 2112_evpn_access)
-        *>i[1][0100.233e.65d6.5080.1600][0]/120
+        *>i[1][0100.23ff.a315.5080.1600][0]/120
                             10.154.219.101                 100      0 i
-        *>i[1][0100.233e.65d6.5080.1600][4294967295]/120
+        *>i[1][0100.23ff.a315.5080.1600][4294967295]/120
                             10.154.219.101                 100      0 i
-        *>i[2][0][48][0000.25b1.33d3][0]/104
+        *>i[2][0][48][0000.25ff.e485][0]/104
                             10.154.219.101                 100      0 i
-        *>i[2][0][48][0000.25b3.1127][0]/104
+        *>i[2][0][48][0000.25ff.c4da][0]/104
                             10.154.219.150                 100      0 i
-        *>i[2][0][48][4c96.14e6.f82e][0]/104
+        *>i[2][0][48][4c96.14ff.df15][0]/104
                             10.154.219.101                 100      0 i
-        *>i[2][0][48][4c96.14e6.f82e][32][10.246.100.1]/136
+        *>i[2][0][48][4c96.14ff.df15][32][10.246.100.1]/136
                             10.154.219.101                 100      0 i
         *>i[3][0][32][10.154.219.101]/80
                             10.154.219.101                 100      0 i
@@ -14780,7 +15089,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.101:1',
                         'prefixes': {
-                            '[1][10.154.219.101:1][0100.233e.65d6.5080.1600][4294967295]/184': {
+                            '[1][10.154.219.101:1][0100.23ff.a315.5080.1600][4294967295]/184': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18011,7 +18320,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.101:2112',
                         'prefixes': {
-                            '[1][0100.233e.65d6.5080.1600][0]/120': {
+                            '[1][0100.23ff.a315.5080.1600][0]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18020,7 +18329,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0000.25b1.33d3][0]/104': {
+                            '[2][0][48][0000.25ff.e485][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18029,7 +18338,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][4c96.14e6.f82e][0]/104': {
+                            '[2][0][48][4c96.14ff.df15][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18038,7 +18347,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][4c96.14e6.f82e][32][10.246.100.1]/136': {
+                            '[2][0][48][4c96.14ff.df15][32][10.246.100.1]/136': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18063,7 +18372,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.150:0',
                         'prefixes': {
-                            '[4][0000.0100.acce.7700.bbbb][32][10.154.219.150]/128': {
+                            '[4][0000.01ff.acce.7700.bbbb][32][10.154.219.150]/128': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18072,7 +18381,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[4][0000.0100.acce.7700.cccc][32][10.154.219.150]/128': {
+                            '[4][0000.01ff.acce.7700.cccc][32][10.154.219.150]/128': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18088,7 +18397,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.150:1',
                         'prefixes': {
-                            '[1][10.154.219.150:1][0000.0100.acce.7700.bbbb][4294967295]/184': {
+                            '[1][10.154.219.150:1][0000.01ff.acce.7700.bbbb][4294967295]/184': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18103,7 +18412,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.150:2',
                         'prefixes': {
-                            '[1][10.154.219.150:2][0000.0100.acce.7700.cccc][4294967295]/184': {
+                            '[1][10.154.219.150:2][0000.01ff.acce.7700.cccc][4294967295]/184': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18118,7 +18427,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.150:19',
                         'prefixes': {
-                            '[1][0000.0100.acce.7700.bbbb][0]/120': {
+                            '[1][0000.01ff.acce.7700.bbbb][0]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18127,7 +18436,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[1][0000.0100.acce.7700.cccc][0]/120': {
+                            '[1][0000.01ff.acce.7700.cccc][0]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18136,7 +18445,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0009.0f09.000d][0]/104': {
+                            '[2][0][48][0009.0fff.0916][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -18145,7 +18454,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0009.0f09.000d][32][10.169.19.4]/136': {
+                            '[2][0][48][0009.0fff.0916][32][10.169.19.4]/136': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21402,7 +21711,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.154.219.150:2112',
                         'prefixes': {
-                            '[2][0][48][0000.25b3.1127][0]/104': {
+                            '[2][0][48][0000.25ff.c4da][0]/104': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21427,7 +21736,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.19.196.5:0',
                         'prefixes': {
-                            '[4][0000.0100.acce.7700.bbbb][32][10.154.219.150]/128': {
+                            '[4][0000.01ff.acce.7700.bbbb][32][10.154.219.150]/128': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -21436,7 +21745,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[4][0000.0100.acce.7700.bbbb][32][10.19.196.5]/128': {
+                            '[4][0000.01ff.acce.7700.bbbb][32][10.19.196.5]/128': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21445,7 +21754,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[4][0000.0100.acce.7700.cccc][32][10.154.219.150]/128': {
+                            '[4][0000.01ff.acce.7700.cccc][32][10.154.219.150]/128': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -21454,7 +21763,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[4][0000.0100.acce.7700.cccc][32][10.19.196.5]/128': {
+                            '[4][0000.01ff.acce.7700.cccc][32][10.19.196.5]/128': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21470,7 +21779,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.19.196.5:19',
                         'prefixes': {
-                            '[1][0000.0100.acce.7700.bbbb][0]/120': {
+                            '[1][0000.01ff.acce.7700.bbbb][0]/120': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -21479,7 +21788,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[1][0000.0100.acce.7700.bbbb][4294967295]/120': {
+                            '[1][0000.01ff.acce.7700.bbbb][4294967295]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21488,7 +21797,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[1][0000.0100.acce.7700.cccc][0]/120': {
+                            '[1][0000.01ff.acce.7700.cccc][0]/120': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -21497,7 +21806,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[1][0000.0100.acce.7700.cccc][4294967295]/120': {
+                            '[1][0000.01ff.acce.7700.cccc][4294967295]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -21506,7 +21815,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0009.0f09.000d][0]/104': {
+                            '[2][0][48][0009.0fff.0916][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -21515,7 +21824,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0009.0f09.000d][32][10.169.19.4]/136': {
+                            '[2][0][48][0009.0fff.0916][32][10.169.19.4]/136': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -28417,7 +28726,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'local_router_id': '',
                         'route_distinguisher': '10.19.196.5:2112',
                         'prefixes': {
-                            '[1][0100.233e.65d6.5080.1600][0]/120': {
+                            '[1][0100.23ff.a315.5080.1600][0]/120': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -28426,7 +28735,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[1][0100.233e.65d6.5080.1600][4294967295]/120': {
+                            '[1][0100.23ff.a315.5080.1600][4294967295]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
@@ -28435,7 +28744,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0000.25b1.33d3][0]/104': {
+                            '[2][0][48][0000.25ff.e485][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -28444,7 +28753,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][0000.25b3.1127][0]/104': {
+                            '[2][0][48][0000.25ff.c4da][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -28453,7 +28762,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][4c96.14e6.f82e][0]/104': {
+                            '[2][0][48][4c96.14ff.df15][0]/104': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -28462,7 +28771,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                     },
                                 },
                             },
-                            '[2][0][48][4c96.14e6.f82e][32][10.246.100.1]/136': {
+                            '[2][0][48][4c96.14ff.df15][32][10.246.100.1]/136': {
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
@@ -29416,7 +29725,7 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
                 {'address_family': 
                     {'l2vpn evpn RD 10.196.7.7:3':
                         {'advertised': 
-                            {'[1][0009.0807.0605.0403.0201][0]/120': 
+                            {'[1][0009.08ff.0d0c.0403.0201][0]/120': 
                                 {'index': 
                                     {1: 
                                         {'neighbor': 'Local',
@@ -29443,7 +29752,7 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
         Mon Jul 11 19:22:38.235 UTC
 
         Route Distinguisher: 10.196.7.7:3
-         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
+         [1][0009.08ff.0d0c.0403.0201][0]/120 is advertised to 10.100.5.5
          Path info:
            neighbor: Local           neighbor router id: 10.196.7.7
            valid  redistributed  best  import-candidate  

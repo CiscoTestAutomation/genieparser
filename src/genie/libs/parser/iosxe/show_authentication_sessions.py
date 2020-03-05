@@ -26,9 +26,9 @@ from genie.libs.parser.utils.common import Common
 Device# show authentication sessions 
 
 Interface  MAC Address     Method   Domain   Status         Session ID
-Gi1/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
-Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
-Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
+Gi1/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+Gi1/5      000f.23ff.69c5  mab      DATA     Authz Success  0A3462B10000000D24F80B58
+Gi1/5      0014.bfff.30ca  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
 '''
 
 
@@ -94,9 +94,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         p2 = re.compile(r'^Interface +Identifier +Method +Domain +Status +Fg +Session +ID')
 
         # Matching patterns
-        # Gi1/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
-        # Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
-        # Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
+        # Gi1/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+        # Gi1/5      000f.23ff.69c5  mab      DATA     Authz Success  0A3462B10000000D24F80B58
+        # Gi1/5      0014.bfff.30ca  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
         p4 = re.compile(r'^(?P<interface>\S+) +'
                         '(?P<client>\w+\.\w+\.\w+) +'
                         '(?P<method>\w+) +'
@@ -115,8 +115,8 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
             if p1.match(line) or p2.match(line):
                 continue
 
-            # Gi1/0/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
-            # Gi1/7/35  0000.0022.2222 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
+            # Gi1/0/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+            # Gi1/7/35  0000.00ff.4444 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
             m = p4.match(line)
 
             if m:
@@ -230,7 +230,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
         # Interface:  GigabitEthernet3/0/2
         # IIF-ID:  0x1055240000001F6 
-        # MAC Address:  0010.0010.0001
+        # MAC Address:  0010.00ff.1011
         # IPv6 Address:  Unknown
         # IPv4 Address:  192.0.2.1
         # User-Name:  auto601
@@ -300,6 +300,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         ret_dict = {}
         hold_dict = {}
         mac_dict = {}
+        policies_dict = {}
         policies_flag = False
         index = 1
 
@@ -316,6 +317,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()            
                 if policies_flag:
+                    if index != 1:
+                        index += 1
                     if not policies_dict:
                         policies_dict = mac_dict.setdefault('server_policies', {})
                         index_dict = policies_dict.setdefault(index, {})
@@ -323,7 +326,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                         index_dict.update({'security_policy': group['policy_status']})
                     elif group['security_name'] == 'Status':
                         index_dict.update({'security_status': group['policy_status']})
-                    index += 1
                 else:
                     security_dict = mac_dict.setdefault('local_policies', {})
                     if group['security_name'] == 'Policy':
@@ -370,7 +372,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # match these lines:
             #             Interface:  GigabitEthernet3/0/2
             #                IIF-ID:  0x1055240000001F6 
-            #           MAC Address:  0010.0010.0001
+            #           MAC Address:  0010.00ff.1011
             #          IPv6 Address:  Unknown
             #          IPv4 Address:  192.0.2.1
             #             User-Name:  auto601

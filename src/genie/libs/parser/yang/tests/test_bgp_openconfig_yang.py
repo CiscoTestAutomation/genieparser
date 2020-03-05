@@ -5,8 +5,8 @@ from unittest.mock import Mock
 import xml.etree.ElementTree as ET
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError

@@ -99,7 +99,7 @@ __version__ = 1.0
 #*   import os
 #*   import sys
 #*   import xmltodict
-#*   from ats import tcl
+#*   from pyats import tcl
 #*   from genie.metaparser import MetaParser
 #*
 #* Read More:
@@ -206,13 +206,13 @@ class ShowParser(MetaParser):
     #* (eg.: regular expression).
     #*
     #* Example 1 - calling existing cli parser lib: CAAS
-    #*     from ats import tcl
+    #*     from pyats import tcl
     #*     output = tcl.q.caas.abstract(device=self.device.handle, 
     #*                                  exec='show version')
     #*     parsed_output = tcl.cast_any(output[1])
     #
     #* Example 2 - calling existing cli parser lib: ROUTER_SHOW
-    #*     from ats import tcl
+    #*     from pyats import tcl
     #*     parsed_output = tcl.q.router_show(device=device.handle, 
     #*                                       cmd=show version)
     #*
@@ -267,7 +267,7 @@ class ShowParser(MetaParser):
     #* libraries, or implementing new parsing mechanism here.
     #*
     #* Example - calling existing xml parser lib: CAAS
-    #*     from ats import tcl
+    #*     from pyats import tcl
     #*     output = tcl.q.caas.abstract(device=self.device.handle, 
     #*                                  exec='show version | xml')
     #*     parsed_output = tcl.cast_any(output[1])

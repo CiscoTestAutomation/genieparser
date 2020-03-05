@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Parser
 from genie.libs.parser.nxos.show_system import ShowSystemInternalSysmgrServiceName, \
@@ -120,19 +120,19 @@ class test_show_system_internal_l2fwder(unittest.TestCase):
 
     golden_parsed_output = {
         'vlans':
-            {'1': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+            {'1': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                       'mac_aging_time': '-',
                                                       'mac_type': 'static',
                                                       'ntfy': 'F',
                                                       'ports': 'sup-eth1(R)',
                                                       'secure': 'F'}}},
-           '100': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '100': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'},
-                                     'fa16.3e59.d0b2': {'entry': '*',
+                                     'fa16.3eff.2a0c': {'entry': '*',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
@@ -140,121 +140,121 @@ class test_show_system_internal_l2fwder(unittest.TestCase):
                                                                  'nve-peer1 '
                                                                  '93.1.1.',
                                                         'secure': 'F'},
-                                     'fa16.3ec1.a96f': {'entry': '*',
+                                     'fa16.3eff.6b31': {'entry': '*',
                                                         'mac_aging_time': '00:01:43',
                                                         'mac_type': 'dynamic',
                                                         'ntfy': 'F',
                                                         'ports': 'Eth1/4',
                                                         'secure': 'F'}}},
-           '1000': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1000': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '1005': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1005': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '1006': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1006': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '1007': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1007': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '1008': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1008': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '1009': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '1009': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                          'mac_aging_time': '-',
                                                          'mac_type': 'static',
                                                          'ntfy': 'F',
                                                          'ports': 'sup-eth1(R)',
                                                          'secure': 'F'}}},
-           '101': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '101': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '102': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '102': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '103': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '103': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '105': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '105': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '106': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '106': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '107': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '107': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '108': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '108': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '109': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '109': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '110': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '110': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '111': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '111': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '112': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '112': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '113': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '113': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
                                                         'ports': 'sup-eth1(R)',
                                                         'secure': 'F'}}},
-           '114': {'mac_addresses': {'5e01.8000.0007': {'entry': 'G',
+           '114': {'mac_addresses': {'5e01.80ff.0007': {'entry': 'G',
                                                         'mac_aging_time': '-',
                                                         'mac_type': 'static',
                                                         'ntfy': 'F',
@@ -269,30 +269,30 @@ class test_show_system_internal_l2fwder(unittest.TestCase):
                 (T) - True, (F) - False, C - ControlPlane MAC
            VLAN     MAC Address      Type      age     Secure NTFY Ports
         ---------+-----------------+--------+---------+------+----+------------------
-        G  1008    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G  1009    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G  1006    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G  1007    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G  1005    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G  1000    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   114    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   112    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   113    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   110    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   111    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   108    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   109    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   106    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   107    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        *   100    fa16.3e59.d0b2    static   -          F     F  (0x47000001) nve-peer1 93.1.1.  
-        G   105    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   102    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   103    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   100    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G   101    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        G     1    5e01.8000.0007    static   -          F     F   sup-eth1(R)
-        *   100    fa16.3ec1.a96f   dynamic   00:01:43   F     F     Eth1/4  
-            1           1         -00:00:de:ad:be:ef         -             1
+        G  1008    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G  1009    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G  1006    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G  1007    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G  1005    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G  1000    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   114    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   112    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   113    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   110    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   111    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   108    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   109    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   106    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   107    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        *   100    fa16.3eff.2a0c    static   -          F     F  (0x47000001) nve-peer1 93.1.1.  
+        G   105    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   102    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   103    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   100    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G   101    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        G     1    5e01.80ff.0007    static   -          F     F   sup-eth1(R)
+        *   100    fa16.3eff.6b31   dynamic   00:01:43   F     F     Eth1/4  
+            1           1         -00:00:de:ff:6c:9d         -             1
     '''}
 
     def test_show_system_internal_l2fwder_golden(self):

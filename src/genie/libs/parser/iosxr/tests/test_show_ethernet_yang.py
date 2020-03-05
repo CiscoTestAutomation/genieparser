@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import xml.etree.ElementTree as ET
 
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.ops.base import Context
 
@@ -50,10 +50,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:a0:af:6d</address>
+              <address>52:54:00:ff:50:0e</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:a0:af:6d</address>
+              <address>52:54:00:ff:50:0e</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -137,7 +137,7 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <is-dampening-enabled>false</is-dampening-enabled>
              <speed>1000000</speed>
              <mac-address>
-              <address>52:54:00:a0:af:6d</address>
+              <address>52:54:00:ff:50:0e</address>
              </mac-address>
              <carrier-delay>
               <carrier-delay-up>0</carrier-delay-up>
@@ -239,10 +239,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:c0:73:42</address>
+              <address>52:54:00:ff:34:03</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:c0:73:42</address>
+              <address>52:54:00:ff:34:03</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -331,10 +331,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:ac:93:a1</address>
+              <address>52:54:00:ff:40:4e</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:ac:93:a1</address>
+              <address>52:54:00:ff:40:4e</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -423,10 +423,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:a4:55:b9</address>
+              <address>52:54:00:ff:f9:5e</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:a4:55:b9</address>
+              <address>52:54:00:ff:f9:5e</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -515,10 +515,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:db:47:8f</address>
+              <address>52:54:00:ff:23:6b</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:db:47:8f</address>
+              <address>52:54:00:ff:23:6b</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -607,10 +607,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:0c:e9:48</address>
+              <address>52:54:00:ff:f5:54</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:0c:e9:48</address>
+              <address>52:54:00:ff:f5:54</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -699,10 +699,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:ec:e5:c4</address>
+              <address>52:54:00:ff:d2:b1</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:ec:e5:c4</address>
+              <address>52:54:00:ff:d2:b1</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -791,10 +791,10 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <in-flow-control>im-attr-flow-control-off</in-flow-control>
              <out-flow-control>im-attr-flow-control-off</out-flow-control>
              <mac-address>
-              <address>52:54:00:ef:a9:52</address>
+              <address>52:54:00:ff:99:42</address>
              </mac-address>
              <burned-in-address>
-              <address>52:54:00:ef:a9:52</address>
+              <address>52:54:00:ff:99:42</address>
              </burned-in-address>
              <carrier-delay>
               <carrier-delay-up>10</carrier-delay-up>
@@ -985,7 +985,7 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
              <is-dampening-enabled>false</is-dampening-enabled>
              <speed>1000000</speed>
              <mac-address>
-              <address>52:54:00:a0:af:6d</address>
+              <address>52:54:00:ff:50:0e</address>
              </mac-address>
              <carrier-delay>
               <carrier-delay-up>0</carrier-delay-up>

@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -34,7 +34,7 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                         'next_hop': {
                             'BE1.7': {
                                 'mac_address': {
-                                    '7777.7777.0002': {
+                                    '7777.77ff.7779': {
                                         'ip_address': []}}}}}}},
             '6': {
                 'producer': {
@@ -42,9 +42,9 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                         'next_hop': {
                             'BV1': {
                                 'mac_address': {
-                                    '0000.f65a.357c': {
-                                        'ip_address': ['fe80::200:f6ff:fe5a:357c']},
-                                    '1000.0001.0001': {
+                                    '0000.f6ff.8fd6': {
+                                        'ip_address': ['fe80::200:f6ff:feff:8fd6']},
+                                    '1000.00ff.0102': {
                                         'ip_address': ['10.1.1.11']}}}}}}},
             '7': {
                 'producer': {
@@ -52,18 +52,18 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                         'next_hop': {
                             'BV2': {
                                 'mac_address': {
-                                    '0000.f65a.3570': {
+                                    '0000.f6ff.8fca': {
                                         'ip_address': [
                                             '10.1.2.91', '10.1.2.93']}}}}}}}}}
 
     device_output = {'execute.return_value': '''
         Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
 
-        6        0/0/CPU0   BV1        1000.0001.0001      10.1.1.11
-        7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.91
-        7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.93
-        1        0/0/CPU0   BE1.7      7777.7777.0002
-        6        0/0/CPU0   BV1        0000.f65a.357c      fe80::200:f6ff:fe5a:357c
+        6        0/0/CPU0   BV1        1000.00ff.0102      10.1.1.11
+        7        0/0/CPU0   BV2        0000.f6ff.8fca      10.1.2.91
+        7        0/0/CPU0   BV2        0000.f6ff.8fca      10.1.2.93
+        1        0/0/CPU0   BE1.7      7777.77ff.7779
+        6        0/0/CPU0   BV1        0000.f6ff.8fd6      fe80::200:f6ff:feff:8fd6
 
     '''}
 
@@ -419,7 +419,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         'mac_table': {
             'Te0/0/1/0/3.3': {
                 'mac_address': {
-                    '0001.0000.0002': {
+                    '0001.00ff.0002': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -428,7 +428,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0003': {
+                    '0001.00ff.0003': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -437,7 +437,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0004': {
+                    '0001.00ff.0004': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -446,7 +446,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0005': {
+                    '0001.00ff.0005': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -455,7 +455,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0006': {
+                    '0001.00ff.0006': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -464,7 +464,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0007': {
+                    '0001.00ff.0007': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -473,7 +473,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0008': {
+                    '0001.00ff.0008': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -482,7 +482,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0009': {
+                    '0001.00ff.0009': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -491,7 +491,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                     '0001.0000.000a': {
+                     '0001.00ff.000a': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -500,7 +500,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.000b': {
+                    '0001.00ff.000b': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -509,7 +509,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.000c': {
+                    '0001.00ff.000c': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -518,7 +518,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.000d': {
+                    '0001.00ff.000d': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -527,7 +527,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.000e': {
+                    '0001.00ff.000e': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -536,7 +536,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.000f': {
+                    '0001.00ff.000f': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -545,7 +545,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0010': {
+                    '0001.00ff.0010': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -554,7 +554,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0011': {
+                    '0001.00ff.0011': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -563,7 +563,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0012': {
+                    '0001.00ff.0012': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -572,7 +572,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                    '0001.0000.0013': {
+                    '0001.00ff.0013': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -594,31 +594,31 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
 
         Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to 
         -------------- ------- --------------------------- ---------- ---------------------- -------------- 
-        0001.0000.0002 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0003 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0004 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0005 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0006 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0007 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0008 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0009 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000a dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000b dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000c dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000d dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000e dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000f dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0010 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0011 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0012 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0013 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.00ff.0002 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0003 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0004 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0005 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0006 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0007 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0008 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0009 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000a dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000b dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000c dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000d dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000e dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.000f dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0010 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0011 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0012 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        0001.00ff.0013 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
     '''}
 
     golden_parsed_output_1 = {
         'mac_table': {
             '(10.25.40.40, 10007)': {
                 'mac_address': {
-                    '0021.0001.0002': {
+                    '0021.00ff.0103': {
                         'lc_learned': 'N/A',
                         'learned_from': '(10.25.40.40, '
                                        '10007)',
@@ -627,7 +627,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                      'Mar '
                                      '12:46:04',
                         'type': 'dynamic'},
-                    '1234.0001.0005': {'lc_learned': 'N/A',
+                    '1234.00ff.0106': {'lc_learned': 'N/A',
                         'learned_from': '(10.25.40.40, '
                                        '10007)',
                         'mapped_to': 'N/A',
@@ -637,50 +637,50 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
             },
             'BD id:0': {
                 'mac_address': {
-                    '0021.0001.0001': {
+                    '0021.00ff.0102': {
                         'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '0021.0001.0003': {'lc_learned': 'N/A',
+                    '0021.00ff.0104': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '0021.0001.0004': {'lc_learned': 'N/A',
+                    '0021.00ff.0105': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '0021.0001.0005': {'lc_learned': 'N/A',
+                    '0021.00ff.0106': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '1234.0001.0001': {'lc_learned': 'N/A',
+                    '1234.00ff.0102': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '1234.0001.0002': {'lc_learned': 'N/A',
+                    '1234.00ff.0103': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '1234.0001.0003': {'lc_learned': 'N/A',
+                    '1234.00ff.0104': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
                                       'resync_age': 'N/A',
                                       'type': 'EVPN'},
-                    '1234.0001.0004': {'lc_learned': 'N/A',
+                    '1234.00ff.0105': {'lc_learned': 'N/A',
                                       'learned_from': 'BD '
                                                       'id:0',
                                       'mapped_to': 'N/A',
@@ -690,7 +690,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
             },
             'BE1.2': {
                 'mac_address': {
-                    '0021.0002.0005': {
+                    '0021.00ff.0207': {
                         'lc_learned': 'N/A',
                         'learned_from': 'BE1.2',
                         'mapped_to': 'N/A',
@@ -698,7 +698,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       'Mar '
                                       '12:46:04',
                         'type': 'dynamic'},
-                    '1234.0002.0004': {
+                    '1234.00ff.0206': {
                         'lc_learned': 'N/A',
                         'learned_from': 'BE1.2',
                         'mapped_to': 'N/A',
@@ -713,18 +713,18 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         RP/0/RP0/CPU0:router# show l2vpn forwarding bridge-domain mac-address location 0
         Mac Address    Type    Learned from/Filtered on    LC learned Resync Age/Last Change Mapped to
         -------------- ------- --------------------------- ---------- ---------------------- --------------
-        0021.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
-        0021.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
-        0021.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
-        0021.0001.0005 EVPN    BD id: 0                    N/A        N/A                    N/A
-        1234.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
-        1234.0001.0002 EVPN    BD id: 0                    N/A        N/A                    N/A
-        1234.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
-        1234.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
-        0021.0001.0002 dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
-        1234.0001.0005 static  (10.25.40.40, 10007)        N/A        N/A                    N/A
-        0021.0002.0005 dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
-        1234.0002.0004 static  BE1.2                       N/A        N/A                    N/A
+        0021.00ff.0102 EVPN    BD id: 0                    N/A        N/A                    N/A
+        0021.00ff.0104 EVPN    BD id: 0                    N/A        N/A                    N/A
+        0021.00ff.0105 EVPN    BD id: 0                    N/A        N/A                    N/A
+        0021.00ff.0106 EVPN    BD id: 0                    N/A        N/A                    N/A
+        1234.00ff.0102 EVPN    BD id: 0                    N/A        N/A                    N/A
+        1234.00ff.0103 EVPN    BD id: 0                    N/A        N/A                    N/A
+        1234.00ff.0104 EVPN    BD id: 0                    N/A        N/A                    N/A
+        1234.00ff.0105 EVPN    BD id: 0                    N/A        N/A                    N/A
+        0021.00ff.0103 dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
+        1234.00ff.0106 static  (10.25.40.40, 10007)        N/A        N/A                    N/A
+        0021.00ff.0207 dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
+        1234.00ff.0206 static  BE1.2                       N/A        N/A                    N/A
     '''}
 
     def test_empty(self):
@@ -1155,7 +1155,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mac_limit_reached': 'yes',
                                     'security': 'disabled',
                                     'dhcp_v4_snooping': 'disabled',
-                                    'static_mac_address': ['0000.0000.0000', '0001.0002.0003'],
+                                    'static_mac_address': ['0000.0000.0000', '0001.00ff.0205'],
                                     'statistics': {
                                         'packet_totals': {
                                             'receive': 3919680,
@@ -1292,7 +1292,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             DHCPv4 snooping: disabled
             Static MAC addresses:
                 0000.0000.0000
-                0001.0002.0003
+                0001.00ff.0205
             Statistics:
                 packet totals: receive 3919680,send 9328
                 byte totals: receive 305735040,send 15022146
@@ -1608,7 +1608,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mtu': 1514,
                                     'xc_id': '0x8000000b',
                                     'interworking': 'none',
-                                    'bvi_mac_address': ['1000.1000.1000'],
+                                    'bvi_mac_address': ['1000.10ff.1000'],
                                     'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
@@ -1790,7 +1790,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             Type Routed-Interface
             MTU 1514; XC ID 0x8000000b; interworking none
             BVI MAC address:
-                1000.1000.1000
+                1000.10ff.1000
             Split Horizon Group: Access
             AC: Bundle-Ether3.100, state is down (Segment-down)
             Type VLAN; Num Ranges: 1
@@ -1900,7 +1900,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             MTU 1514; XC ID 0x8000000d; interworking none
             Error: Need at least 1 bridge port up
             BVI MAC address:
-                00c1.6474.81ca
+                00c1.64ff.f53f
             Split Horizon Group: Access
         List of Access PWs:
             EVPN: neighbor 0.0.0.0, PW ID: evi 601, ac-id 1, state is down ( local ready ) (Transport LSP Down)
@@ -1989,7 +1989,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             MTU 1514; XC ID 0x8000000b; interworking none
             Error: Need at least 1 bridge port up
             BVI MAC address:
-                1000.1000.1000
+                1000.10ff.1000
             Split Horizon Group: Access
             AC: Bundle-Ether3.100, state is down (Segment-down)
             Type VLAN; Num Ranges: 1
@@ -2103,7 +2103,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'xc_id': '0x8000000d',
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
-                                    'bvi_mac_address': ['00c1.6474.81ca'],
+                                    'bvi_mac_address': ['00c1.64ff.f53f'],
                                     'split_horizon_group': 'Access',
                                 },
                             },
@@ -2255,7 +2255,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'xc_id': '0x8000000b',
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
-                                    'bvi_mac_address': ['1000.1000.1000'],
+                                    'bvi_mac_address': ['1000.10ff.1000'],
                                     'split_horizon_group': 'Access',
                                 },
                                 'Bundle-Ether3.100': {
@@ -2409,7 +2409,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             MTU 1514; XC ID 0x80000007; interworking none
             Error: Need at least 1 bridge port up
             BVI MAC address:
-                1000.1000.1000
+                1000.10ff.1000
             Split Horizon Group: Access
             PD System Data: AF-LIF-IPv4: 0x00000000  AF-LIF-IPv6: 0x00000000
 
@@ -2505,7 +2505,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'xc_id': '0x80000007',
                                     'interworking': 'none',
                                     'error': 'Need at least 1 bridge port up',
-                                    'bvi_mac_address': ['1000.1000.1000'],
+                                    'bvi_mac_address': ['1000.10ff.1000'],
                                     'split_horizon_group': 'Access',
                                     'pd_system_data': {
                                         'af_lif_ipv4': '0x00000000',
@@ -2628,9 +2628,9 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             Type Routed-Interface
             MTU 1514; XC ID 0x800001ab; interworking none
             BVI MAC address:
-              78ba.f96e.a1fe
+              78ba.f9ff.106d
             Virtual MAC addresses:
-              0000.5e00.0101
+              0000.5eff.0101
             Split Horizon Group: Access
           AC: GigabitEthernet0/4/0/1.100, state is up
             Type VLAN; Num Ranges: 1
@@ -2774,7 +2774,8 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mtu': 1514,
                                     'xc_id': '0x800001ab',
                                     'interworking': 'none',
-                                    'bvi_mac_address': ['78ba.f96e.a1fe', '0000.5e00.0101'],
+                                    'bvi_mac_address': ['78ba.f9ff.106d'],
+                                    'virtual_mac_address': ['0000.5eff.0101'],
                                     'split_horizon_group': 'Access',
                                 },
                                 'GigabitEthernet0/4/0/1.100': {

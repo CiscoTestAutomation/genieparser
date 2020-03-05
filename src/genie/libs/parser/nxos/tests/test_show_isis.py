@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import (SchemaMissingKeyError,
                                               SchemaEmptyParserError)
@@ -31,7 +31,7 @@ class TestShowIsis(unittest.TestCase):
                 'vrf': {
                     'default': {
                         'vrf': 'default',
-                        'system_id': '3333.3333.3333',
+                        'system_id': '3333.33ff.6666',
                         'is_type': 'L1-L2',
                         'sap': 412,
                         'queue_handle': 15,
@@ -93,7 +93,7 @@ class TestShowIsis(unittest.TestCase):
                     },
                     'VRF1': {
                         'vrf': 'VRF1',
-                        'system_id': '3333.3333.3333',
+                        'system_id': '3333.33ff.6666',
                         'is_type': 'L1-L2',
                         'sap': 412,
                         'queue_handle': 15,
@@ -165,7 +165,7 @@ class TestShowIsis(unittest.TestCase):
         UUID: 1090519320
         Process ID 1581
         VRF: default
-        System ID : 3333.3333.3333  IS-Type : L1-L2
+        System ID : 3333.33ff.6666  IS-Type : L1-L2
         SAP : 412  Queue Handle : 15
         Maximum LSP MTU: 1492
         Stateful HA enabled
@@ -213,7 +213,7 @@ class TestShowIsis(unittest.TestCase):
         UUID: 1090519320
         Process ID 1581
         VRF: VRF1
-        System ID : 3333.3333.3333  IS-Type : L1-L2
+        System ID : 3333.33ff.6666  IS-Type : L1-L2
         SAP : 412  Queue Handle : 15
         Maximum LSP MTU: 1492
         Stateful HA enabled
@@ -1255,7 +1255,7 @@ class TestShowIsisHostname(unittest.TestCase):
                     'VRF1': {
                         'hostname_db': {
                             'hostname': {
-                                '3333.3333.3333': {
+                                '3333.33ff.6666': {
                                     'hostname': 'R3_nx',
                                     'level': [1],
                                     'local_router': True,
@@ -1266,15 +1266,15 @@ class TestShowIsisHostname(unittest.TestCase):
                     'default': {
                         'hostname_db': {
                             'hostname': {
-                                '1111.1111.1111': {
+                                '1111.11ff.2222': {
                                     'hostname': 'R1_ios',
                                     'level': [1],
                                 },
-                                '2222.2222.2222': {
+                                '2222.22ff.4444': {
                                     'hostname': 'R2_xr',
                                     'level': [1],
                                 },
-                                '3333.3333.3333': {
+                                '3333.33ff.6666': {
                                     'hostname': 'R3_nx',
                                     'level': [1],
                                     'local_router': True,
@@ -1290,13 +1290,13 @@ class TestShowIsisHostname(unittest.TestCase):
         R3_nx# show isis hostname vrf all
         IS-IS Process: test dynamic hostname table VRF: default
         Level  System ID       Dynamic hostname
-        1      1111.1111.1111  R1_ios
-        1      2222.2222.2222  R2_xr
-        1      3333.3333.3333* R3_nx
+        1      1111.11ff.2222  R1_ios
+        1      2222.22ff.4444  R2_xr
+        1      3333.33ff.6666* R3_nx
 
         IS-IS Process: test dynamic hostname table VRF: VRF1
         Level  System ID       Dynamic hostname
-        1      3333.3333.3333* R3_nx
+        1      3333.33ff.6666* R3_nx
     '''}
 
     def test_empty(self):
@@ -1323,20 +1323,20 @@ class TestShowIsisHostnameDetail(unittest.TestCase):
                     'VRF1': {
                         'hostname_db': {
                             'hostname': {
-                                '1111.1111.1111': {
+                                '1111.11ff.2222': {
                                     'hostname': 'R1_ios',
                                     'level': [1],
                                 },
-                                '2222.2222.2222.00-00': {
+                                '2222.22ff.4444.00-00': {
                                     'hostname': 'R2',
                                     'level': [2],
                                 },
-                                '3333.3333.3333': {
+                                '3333.33ff.6666': {
                                     'hostname': 'R3_nx',
                                     'level': [1],
                                     'local_router': True,
                                 },
-                                '7777.7777.7777.00-00': {
+                                '7777.77ff.eeee.00-00': {
                                     'hostname': 'R7',
                                     'level': [1, 2],
                                     'local_router': True,
@@ -1347,36 +1347,36 @@ class TestShowIsisHostnameDetail(unittest.TestCase):
                     'default': {
                         'hostname_db': {
                             'hostname': {
-                                '2222.2222.2222.00-00': {
+                                '2222.22ff.4444.00-00': {
                                     'hostname': 'R2',
                                     'level': [2],
                                 },
-                                '3333.3333.3333.00-00': {
+                                '3333.33ff.6666.00-00': {
                                     'hostname': 'R3',
                                     'level': [1, 2],
                                 },
-                                '4444.4444.4444.00-00': {
+                                '4444.44ff.8888.00-00': {
                                     'hostname': 'R4',
                                     'level': [1],
                                 },
-                                '5555.5555.5555.00-00': {
+                                '5555.55ff.aaaa.00-00': {
                                     'hostname': 'R5',
                                     'level': [1, 2],
                                 },
-                                '6666.6666.6666.00-00': {
+                                '6666.66ff.cccc.00-00': {
                                     'hostname': 'R6',
                                     'level': [1],
                                 },
-                                '7777.7777.7777.00-00': {
+                                '7777.77ff.eeee.00-00': {
                                     'hostname': 'R7',
                                     'level': [1, 2],
                                     'local_router': True,
                                 },
-                                '8888.8888.8888.00-00': {
+                                '8888.88ff.1111.00-00': {
                                     'hostname': 'R8',
                                     'level': [2],
                                 },
-                                '9999.9999.9999.00-00': {
+                                '9999.99ff.3333.00-00': {
                                     'hostname': 'R9',
                                     'level': [2],
                                 },
@@ -1391,25 +1391,25 @@ class TestShowIsisHostnameDetail(unittest.TestCase):
     golden_output = {'execute.return_value': '''\
         IS-IS Process: test dynamic hostname table VRF: default
         Level  LSP ID                Dynamic hostname
-        2      2222.2222.2222.00-00  R2
-        1      3333.3333.3333.00-00  R3
-        2      3333.3333.3333.00-00  R3
-        1      4444.4444.4444.00-00  R4
-        1      5555.5555.5555.00-00  R5
-        2      5555.5555.5555.00-00  R5
-        1      6666.6666.6666.00-00  R6
-        1      7777.7777.7777.00-00* R7
-        2      7777.7777.7777.00-00* R7
-        2      8888.8888.8888.00-00  R8
-        2      9999.9999.9999.00-00  R9
+        2      2222.22ff.4444.00-00  R2
+        1      3333.33ff.6666.00-00  R3
+        2      3333.33ff.6666.00-00  R3
+        1      4444.44ff.8888.00-00  R4
+        1      5555.55ff.aaaa.00-00  R5
+        2      5555.55ff.aaaa.00-00  R5
+        1      6666.66ff.cccc.00-00  R6
+        1      7777.77ff.eeee.00-00* R7
+        2      7777.77ff.eeee.00-00* R7
+        2      8888.88ff.1111.00-00  R8
+        2      9999.99ff.3333.00-00  R9
 
         IS-IS Process: test dynamic hostname table VRF: VRF1
         Level  LSP ID                Dynamic hostname
-        2      2222.2222.2222.00-00  R2
-        1      7777.7777.7777.00-00* R7
-        2      7777.7777.7777.00-00* R7
-        1      1111.1111.1111  R1_ios
-        1      3333.3333.3333* R3_nx
+        2      2222.22ff.4444.00-00  R2
+        1      7777.77ff.eeee.00-00* R7
+        2      7777.77ff.eeee.00-00* R7
+        1      1111.11ff.2222  R1_ios
+        1      3333.33ff.6666* R3_nx
     '''}
 
     def test_empty(self):
@@ -1440,7 +1440,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                 'adjacencies': {
                                     'R2_xr': {
                                         'neighbor_snpa': {
-                                            'fa16.3e44.0679': {
+                                            'fa16.3eff.4abd': {
                                                 'level': {
                                                     1: {
                                                         'hold_time': '00:00:09',
@@ -1460,7 +1460,7 @@ class TestShowIsisAdjacency(unittest.TestCase):
                                 'adjacencies': {
                                     'R1_ios': {
                                         'neighbor_snpa': {
-                                            'fa16.3e0e.fd03': {
+                                            'fa16.3eff.0c11': {
                                                 'level': {
                                                     1: {
                                                         'hold_time': '00:00:07',
@@ -1482,9 +1482,9 @@ class TestShowIsisAdjacency(unittest.TestCase):
                         'interfaces': {
                             'Ethernet1/1.415': {
                                 'adjacencies': {
-                                    '2222.2222.2222': {
+                                    '2222.22ff.4444': {
                                         'neighbor_snpa': {
-                                            'fa16.3e44.0679': {
+                                            'fa16.3eff.4abd': {
                                                 'level': {
                                                     1: {
                                                         'hold_time': '00:00:32',
@@ -1512,17 +1512,17 @@ class TestShowIsisAdjacency(unittest.TestCase):
         IS-IS adjacency database:
         Legend: '!': No AF level connectivity in given topology
         System ID       SNPA            Level  State  Hold Time  Interface
-        R2_xr           fa16.3e44.0679  1      UP     00:00:09   Ethernet1/1.115
-        R2_xr           fa16.3e44.0679  2      UP     00:00:07   Ethernet1/1.115
-        R1_ios          fa16.3e0e.fd03  1      UP     00:00:07   Ethernet1/2.115
-        R1_ios          fa16.3e0e.fd03  2      UP     00:00:10   Ethernet1/2.115
+        R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
+        R2_xr           fa16.3eff.4abd  2      UP     00:00:07   Ethernet1/1.115
+        R1_ios          fa16.3eff.0c11  1      UP     00:00:07   Ethernet1/2.115
+        R1_ios          fa16.3eff.0c11  2      UP     00:00:10   Ethernet1/2.115
 
         IS-IS process: test VRF: VRF1
         IS-IS adjacency database:
         Legend: '!': No AF level connectivity in given topology
         System ID       SNPA            Level  State  Hold Time  Interface
-        2222.2222.2222  fa16.3e44.0679  1      INIT   00:00:32   Ethernet1/1.415
-        2222.2222.2222  fa16.3e44.0679  2      INIT   00:00:24   Ethernet1/1.415
+        2222.22ff.4444  fa16.3eff.4abd  1      INIT   00:00:32   Ethernet1/1.415
+        2222.22ff.4444  fa16.3eff.4abd  2      INIT   00:00:24   Ethernet1/1.415
     '''}
 
     def test_empty(self):

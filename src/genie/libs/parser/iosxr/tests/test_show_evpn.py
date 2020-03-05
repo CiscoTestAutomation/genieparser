@@ -4,8 +4,8 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
-from ats.topology import loader
+from pyats.topology import Device
+from pyats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -188,9 +188,9 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         RT Auto  : none
         Route Targets in Use           Type   
         ------------------------------ -------
-        0100.9e00.0210                 Import 
-        0100.be01.ce00                 Import 
-        0100.be02.0101                 Import
+        0100.9eff.0210                 Import 
+        0100.beff.cf01                 Import 
+        0100.beff.0303                 Import
 
         '''}
     
@@ -432,7 +432,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         'vpn_id': {
             7: {
                 'mac_address': {
-                    '001b.0100.0001': {
+                    '001b.01ff.0001': {
                         'next_hop': 'N/A',
                         'label': 24014,
                         'ip_address': '10.196.7.8',
@@ -562,7 +562,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         
         MAC address    Nexthop                                 Label    vpn-id 
         -------------- --------------------------------------- -------- --------
-        001b.0100.0001 N/A                                     24014    7      
+        001b.01ff.0001 N/A                                     24014    7      
         IP Address   : 10.196.7.8
         Ether.Segment: 0000.0000.0000.0000.0000
         ESI port key : 0x0000
@@ -600,7 +600,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         'vpn_id': {
             19: {
                 'mac_address': {
-                    '0000.0000.0019': {
+                    '0000.00ff.0019': {
                         'ip_address': '::',
                         'next_hop': 'BVI19',
                         'label': 114012,
@@ -765,14 +765,14 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                             },
                         },
                     },
-                    '0009.0f09.000d': {
+                    '0009.0fff.0916': {
                         'ip_address': '10.169.19.4',
                         'next_hop': 'Bundle-Ether1.19',
                         'label': 114012,
                         'ethernet_tag': 0,
                         'multipaths_resolved': 'False',
                         'static': 'No',
-                        'local_ethernet_segment': '0000.0100.acce.7700.cccc',
+                        'local_ethernet_segment': '0000.01ff.acce.7700.cccc',
                         'remote_ethernet_segment': '0000.0000.0000.0000.0000',
                         'local_sequence_number': 0,
                         'remote_sequence_number': 0,
@@ -1062,7 +1062,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             },
             1994: {
                 'mac_address': {
-                    '78ba.f96e.a1fe': {
+                    '78ba.f9ff.106d': {
                         'ip_address': '::',
                         'next_hop': 'BVI900',
                         'label': 114416,
@@ -1231,7 +1231,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             },
             2112: {
                 'mac_address': {
-                    '0000.25b1.33d3': {
+                    '0000.25ff.e485': {
                         'ip_address': '::',
                         'next_hop': '10.154.219.101',
                         'label': 100965,
@@ -1340,7 +1340,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                             },
                         },
                     },
-                    '0000.25b3.1127': {
+                    '0000.25ff.c4da': {
                         'ip_address': '::',
                         'next_hop': '10.154.219.150',
                         'label': 114483,
@@ -1409,7 +1409,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                             },
                         },
                     },
-                    '4c96.14e6.f82e': {
+                    '4c96.14ff.df15': {
                         'ip_address': '::',
                         'next_hop': '10.154.219.101',
                         'label': 100965,
@@ -1417,7 +1417,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'multipaths_resolved': 'True',
                         'static': 'No',
                         'local_ethernet_segment': '0000.0000.0000.0000.0000',
-                        'remote_ethernet_segment': '0100.233e.65d6.5080.1600',
+                        'remote_ethernet_segment': '0100.23ff.a315.5080.1600',
                         'local_sequence_number': 0,
                         'remote_sequence_number': 0,
                         'local_encapsulation': 'N/A',
@@ -1479,7 +1479,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         },
                     },
                     '10.246.100.1': {
-                        'encap': '4c96.14e6.f82e',
+                        'encap': '4c96.14ff.df15',
                         'ip_address': '10.154.219.101',
                         'next_hop': '',
                         'label': 100965,
@@ -1487,7 +1487,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                         'multipaths_resolved': 'True',
                         'static': 'No',
                         'local_ethernet_segment': '0000.0000.0000.0000.0000',
-                        'remote_ethernet_segment': '0100.233e.65d6.5080.1600',
+                        'remote_ethernet_segment': '0100.23ff.a315.5080.1600',
                         'local_sequence_number': 0,
                         'remote_sequence_number': 0,
                         'local_encapsulation': 'N/A',
@@ -1552,7 +1552,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             },
             65535: {
                 'mac_address': {
-                    '78ba.f96e.a1fd': {
+                    '78ba.f9ff.106c': {
                         'ip_address': '::',
                         'next_hop': 'Local',
                         'label': 0,
@@ -1666,7 +1666,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
 
         EVI        MAC address    IP address                               Nexthop                                 Label   
         ---------- -------------- ---------------------------------------- --------------------------------------- --------
-        19         0000.0000.0019 ::                                       BVI19                                   114012  
+        19         0000.00ff.0019 ::                                       BVI19                                   114012  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : Yes
@@ -1710,11 +1710,11 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             May 25 18:08:39.936 MAC advertise rejected        00000011, 00000000 -  - 
             May 25 18:08:39.936 FSM Event (event, state)      00000001, 00020002 -  - 
         ----------------------------------------------------------------------------
-        19         0009.0f09.000d ::                                       Bundle-Ether1.19                        114012  
+        19         0009.0fff.0916 ::                                       Bundle-Ether1.19                        114012  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
-        Local Ethernet Segment                  : 0000.0100.acce.7700.cccc
+        Local Ethernet Segment                  : 0000.01ff.acce.7700.cccc
         Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
         Local Sequence Number                   : 7
         Remote Sequence Number                  : 0
@@ -1754,11 +1754,11 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Jul 23 11:30:27.968 L2RIB Download                00000000, 00000000 -  - 
             Aug 21 09:09:20.512 Ignore BGP update             00000000, 00000000 M  - 
         ----------------------------------------------------------------------------
-        19         0009.0f09.000d 10.169.19.4                               Bundle-Ether1.19                        114012  
+        19         0009.0fff.0916 10.169.19.4                               Bundle-Ether1.19                        114012  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
-        Local Ethernet Segment                  : 0000.0100.acce.7700.cccc
+        Local Ethernet Segment                  : 0000.01ff.acce.7700.cccc
         Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
         Local Sequence Number                   : 0
         Remote Sequence Number                  : 0
@@ -1798,7 +1798,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Oct  5 23:25:47.904 FSM Event (event, state)      00000000, 00010001 -  - 
             Oct  5 23:25:47.904 Encode NLRI                   08204110, 00000061 M  - 
         ----------------------------------------------------------------------------
-        1994       78ba.f96e.a1fe ::                                       BVI900                                  114416  
+        1994       78ba.f9ff.106d ::                                       BVI900                                  114416  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : Yes
@@ -1842,7 +1842,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             May 25 18:09:23.456 MAC advertise rejected        00000011, 00000000 -  - 
             Jun 12 12:01:15.776 MAC advertise rejected        0000000b, 00000000 -  - 
         ----------------------------------------------------------------------------
-        2112       0000.25b1.33d3 ::                                       10.154.219.101                           100965  
+        2112       0000.25ff.e485 ::                                       10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -1879,7 +1879,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040004 -  - 
             Oct  5 19:36:45.824 L2RIB Download                00018a65, 01000000 -  - 
         ----------------------------------------------------------------------------
-        2112       0000.25b3.1127 ::                                       10.154.219.150                           114483  
+        2112       0000.25ff.c4da ::                                       10.154.219.150                           114483  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -1911,12 +1911,12 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Oct  5 19:36:45.824 FSM Event (event, state)      00000003, 00040000 -  - 
             Oct  5 19:36:45.824 L2RIB Download                0001bf33, 01000000 -  - 
         ----------------------------------------------------------------------------
-        2112       4c96.14e6.f82e ::                                       10.154.219.101                           100965  
+        2112       4c96.14ff.df15 ::                                       10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : True
         Static                                  : No
         Local Ethernet Segment                  : 0000.0000.0000.0000.0000
-        Remote Ethernet Segment                 : 0100.233e.65d6.5080.1600
+        Remote Ethernet Segment                 : 0100.23ff.a315.5080.1600
         Local Sequence Number                   : 0
         Remote Sequence Number                  : 0
         Local Encapsulation                     : N/A
@@ -1943,12 +1943,12 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
             Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
         ----------------------------------------------------------------------------
-        2112       4c96.14e6.f82e 10.246.100.1                             10.154.219.101                           100965  
+        2112       4c96.14ff.df15 10.246.100.1                             10.154.219.101                           100965  
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : True
         Static                                  : No
         Local Ethernet Segment                  : 0000.0000.0000.0000.0000
-        Remote Ethernet Segment                 : 0100.233e.65d6.5080.1600
+        Remote Ethernet Segment                 : 0100.23ff.a315.5080.1600
         Local Sequence Number                   : 0
         Remote Sequence Number                  : 0
         Local Encapsulation                     : N/A
@@ -1975,7 +1975,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
             Sep 24 07:09:11.040 FSM Event (event, state)      00000003, 00040000 -  - 
             Sep 24 07:09:27.424 L2RIB Download                0001888a, 01010000 -  - 
         ----------------------------------------------------------------------------
-        65535      78ba.f96e.a1fd ::                                       Local                                   0       
+        65535      78ba.f9ff.106c ::                                       Local                                   0       
         Ethernet Tag                            : 0
         Multi-paths Resolved                    : False
         Static                                  : No
@@ -2054,7 +2054,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
     golden_parsed_output1 = {
         'evi':
             {5:
-                {'esi': '0012.1200.0000.0000.0002',
+                {'esi': '0012.12ff.0000.0000.0002',
                 'eth_tag': 0,
                 'evi': 5,
                 'label': 24114,
@@ -2083,7 +2083,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                             '10.70.20.20':
                                 {'label': 24212}}}}},
             100:
-                {'esi': '0100.0000.acce.5500.0100',
+                {'esi': '0100.00ff.acce.5500.0100',
                 'eth_tag': 0,
                 'evi': 100,
                 'label': 24005}}}
@@ -2094,8 +2094,8 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 
         EVI   Ethernet Segment Id                     EtherTag Label   
         ----- --------------------------------------- -------- --------
-        100   0100.0000.acce.5500.0100                0        24005
-        5     0012.1200.0000.0000.0002                0        24114
+        100   0100.00ff.acce.5500.0100                0        24005
+        5     0012.12ff.0000.0000.0002                0        24114
 
               Multi-paths resolved: TRUE (Remote single-active)
               MAC     10.70.20.20                              24212
@@ -2109,7 +2109,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
     golden_parsed_output2 = {
         'evi': 
             {145: 
-                {'esi': 'ff00.0002.be23.ce01.0000',
+                {'esi': 'ff00.00ff.c025.ce01.0000',
                 'eth_tag': 0,
                 'evi': 145,
                 'label': 24005,
@@ -2125,7 +2125,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 
         EVI   Ethernet Segment Id                     EtherTag Label   
         ----- --------------------------------------- -------- --------
-        145   ff00.0002.be23.ce01.0000                0        24005
+        145   ff00.00ff.c025.ce01.0000                0        24005
               Summary 192.168.0.3                              524288
 
         '''}
@@ -2134,7 +2134,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         'vpn_id':
             {16001:
                 {'encap': 'VXLAN',
-                'esi': '0001.0407.0405.0607.0811',
+                'esi': '0001.04ff.0b0c.0607.0811',
                 'eth_tag': 0,
                 'label': 24002,
                 'mp_internal_label': 24002,
@@ -2157,7 +2157,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'vpn_id': 16001},
             16002:
                 {'encap': 'VXLAN',
-                'esi': '0001.0407.0405.0607.0811',
+                'esi': '0001.04ff.0b0c.0607.0811',
                 'eth_tag': 0,
                 'label': 24003,
                 'mp_internal_label': 24003,
@@ -2180,7 +2180,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'vpn_id': 16002},
             16003: 
                 {'encap': 'VXLAN',
-                'esi': '0001.0407.0405.0607.0811',
+                'esi': '0001.04ff.0b0c.0607.0811',
                 'eth_tag': 0,
                 'label': 24004,
                 'mp_resolved': True,
@@ -2193,7 +2193,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 
         VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label   
         ---------- ------ --------------------------- --------   --------
-        16001      VXLAN  0001.0407.0405.0607.0811    0          24002   
+        16001      VXLAN  0001.04ff.0b0c.0607.0811    0          24002   
            Multi-paths resolved: TRUE (Remote all-active) 
            Multi-paths Internal label: 24002
            Pathlists:
@@ -2202,7 +2202,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
            Summary pathlist:
              0x03000001 10.76.1.2                                16001          
 
-        16002      VXLAN  0001.0407.0405.0607.0811    0          24003   
+        16002      VXLAN  0001.04ff.0b0c.0607.0811    0          24003   
            Multi-paths resolved: TRUE (Remote all-active) 
            Multi-paths Internal label: 24003
            Pathlists:
@@ -2211,14 +2211,14 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
            Summary pathlist:
              0x03000001 10.76.1.2                                16002          
 
-        16003      VXLAN  0001.0407.0405.0607.0811    0          24004   
+        16003      VXLAN  0001.04ff.0b0c.0607.0811    0          24004   
            Multi-paths resolved: TRUE (Remote all-active) 
         '''}
 
     device_output = {'execute.return_value': '''
             VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label   
         ---------- ------ --------------------------- ----------   --------
-        1000       MPLS   0001.0000.0102.0000.0011    0            100001  
+        1000       MPLS   0001.00ff.0102.0000.0011    0            100001  
            Multi-paths resolved: TRUE (Remote all-active) (ECMP Disable)
            Multi-paths Internal label: None
             MAC         172.16.2.89                              100001         
@@ -2232,7 +2232,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         'vpn_id': {
             1000: {
                 'encap': 'MPLS',
-                'esi': '0001.0000.0102.0000.0011',
+                'esi': '0001.00ff.0102.0000.0011',
                 'eth_tag': 0,
                 'label': 100001,
                 'mp_info': 'Remote all-active, ECMP Disable',
@@ -2282,7 +2282,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 
         VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label   
         ---------- ------ --------------------------- ----------   --------
-        1000       MPLS   0001.0000.0102.0000.0011    0                    
+        1000       MPLS   0001.00ff.0102.0000.0011    0                    
         Multi-paths resolved: FALSE (Remote all-active) (ECMP Disable)
             Reason: No EAD/ES
         Multi-paths Internal label: None
@@ -2297,7 +2297,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
             1000: {
                 'vpn_id': 1000,
                 'encap': 'MPLS',
-                'esi': '0001.0000.0102.0000.0011',
+                'esi': '0001.00ff.0102.0000.0011',
                 'eth_tag': 0,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active, ECMP Disable',
@@ -2363,42 +2363,42 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
 
     golden_parsed_output1 = {
         'segment_id': {
-            '0012.1200.0000.0000.0000': {
+            '0012.12ff.0000.0000.0000': {
                 'interface': {
                     'Nv101': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
             },
-            '0012.1200.0001.0000.0001': {
+            '0012.12ff.0001.0000.0001': {
                 'interface': {
                     'PW:10.25.40.40,10001': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
             },
-            '0012.1200.0001.0000.0002': {
+            '0012.12ff.0001.0000.0002': {
                 'interface': {
                     'Bundle-Ether1': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
             },
-            '0012.1200.0001.0000.0003': {
+            '0012.12ff.0001.0000.0003': {
                 'interface': {
                     'VFI:ves-vfi-1': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
             },
-            '0012.1200.0002.0000.0001': {
+            '0012.12ff.0002.0000.0001': {
                 'interface': {
                     'PW:10.25.40.40,10011': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
             },
-            '0012.1200.0002.0000.0003': {
+            '0012.12ff.0002.0000.0003': {
                 'interface': {
                     'VFI:ves-vfi-2': {
                         'next_hops': ['10.10.10.10'],
@@ -2423,12 +2423,12 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops
         ------------------------ ---------------------------------- --------------------
-        0012.1200.0000.0000.0000 nv101                              10.10.10.10
-        0012.1200.0001.0000.0001 PW:10.25.40.40,10001               10.10.10.10
-        0012.1200.0001.0000.0002 BE1                                10.10.10.10
-        0012.1200.0001.0000.0003 VFI:ves-vfi-1                      10.10.10.10
-        0012.1200.0002.0000.0001 PW:10.25.40.40,10011               10.10.10.10
-        0012.1200.0002.0000.0003 VFI:ves-vfi-2                      10.10.10.10
+        0012.12ff.0000.0000.0000 nv101                              10.10.10.10
+        0012.12ff.0001.0000.0001 PW:10.25.40.40,10001               10.10.10.10
+        0012.12ff.0001.0000.0002 BE1                                10.10.10.10
+        0012.12ff.0001.0000.0003 VFI:ves-vfi-1                      10.10.10.10
+        0012.12ff.0002.0000.0001 PW:10.25.40.40,10011               10.10.10.10
+        0012.12ff.0002.0000.0003 VFI:ves-vfi-2                      10.10.10.10
         N/A                      PW:10.25.40.40,10007               10.10.10.10
         N/A                      PW:10.25.40.40,10017               10.10.10.10
     '''}
@@ -2459,7 +2459,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
     golden_parsed_output1 = {
         'segment_id': {
-            '0210.0300.9e00.0210.0000': {
+            '0210.03ff.9e00.0210.0000': {
                 'interface': {
                     'GigabitEthernet0/3/0/0': {
                         'next_hops': ['10.1.100.100', '10.204.100.100'],
@@ -2471,7 +2471,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'state': 'Up',
                             'redundancy': 'Not Defined',
                         },
-                        'source_mac': '0001.ed9e.0001 (PBB BSA)',
+                        'source_mac': '0001.edff.9e9f (PBB BSA)',
                         'topology': {
                             'operational': 'MHN',
                             'configured': 'A/A per service (default)',
@@ -2497,7 +2497,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                     },
                 },
             },
-            'be01.0300.be01.ce00.0001': {
+            'be01.03ff.be01.ce00.0001': {
                 'interface': {
                     'Bundle-Ether1': {
                         'next_hops': ['10.1.100.100', '10.204.100.100'],
@@ -2509,7 +2509,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'state': 'Up',
                             'redundancy': 'Active',
                         },
-                        'source_mac': '0024.be01.ce00 (Local)',
+                        'source_mac': '0024.beff.cf01 (Local)',
                         'topology': {
                             'operational': 'MHN',
                             'configured': 'A/A per flow (default)',
@@ -2558,7 +2558,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface      Nexthops                                
         ------------------------ -------------- ----------------------------------------
-        0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100                           
+        0210.03ff.9e00.0210.0000 Gi0/3/0/0      10.1.100.100                           
                                                 10.204.100.100                           
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
@@ -2567,7 +2567,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             IfHandle       : 0x1800300
             State          : Up
             Redundancy     : Not Defined
-        Source MAC        : 0001.ed9e.0001 (PBB BSA)
+        Source MAC        : 0001.edff.9e9f (PBB BSA)
         Topology          :
             Operational    : MHN
             Configured     : A/A per service (default)
@@ -2583,7 +2583,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Recovery timer    : 20 sec [not running]
         Flushagain timer  : 60 sec
 
-        be01.0300.be01.ce00.0001 BE1            10.1.100.100                           
+        be01.03ff.be01.ce00.0001 BE1            10.1.100.100                           
                                                 10.204.100.100                           
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
@@ -2592,7 +2592,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             IfHandle       : 0x000480
             State          : Up
             Redundancy     : Active
-        Source MAC        : 0024.be01.ce00 (Local)
+        Source MAC        : 0024.beff.cf01 (Local)
         Topology          :
             Operational    : MHN
             Configured     : A/A per flow (default)
@@ -2611,7 +2611,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
     golden_parsed_output2 = {
         'segment_id': {
-            '0001.0000.aaab.0000.0003': {
+            '0001.00ff.aaab.00ff.0003': {
                 'interface': {
                     'Bundle-Ether3': {
                         'next_hops': ['10.154.219.84'],
@@ -2619,16 +2619,16 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether3',
-                            'interface_mac': '00c1.6428.7cec',
+                            'interface_mac': '00c1.64ff.a415',
                             'if_handle': '0x080002a0',
                             'state': 'Down',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0000.aaab.0000.0003',
+                            'value': '01.0000.aaff.abab.0003',
                         },
-                        'es_import_rt': 'aaab.0000.0003 (Local)',
+                        'es_import_rt': 'aaab.00ff.0003 (Local)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'SH',
@@ -2658,7 +2658,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                     },
                 },
             },
-            '0001.0000.aaab.0000.0004': {
+            '0001.00ff.aaab.00ff.0004': {
                 'interface': {
                     'Bundle-Ether4': {
                         'next_hops': ['10.154.219.84'],
@@ -2666,16 +2666,16 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether4',
-                            'interface_mac': '00c1.6428.7ceb',
+                            'interface_mac': '00c1.64ff.a414',
                             'if_handle': '0x080002e0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0000.aaab.0000.0004',
+                            'value': '01.0000.aaff.abab.0004',
                         },
-                        'es_import_rt': 'aaab.0000.0004 (Local)',
+                        'es_import_rt': 'aaab.00ff.0004 (Local)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'SH',
@@ -2713,7 +2713,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'GigabitEthernet0/0/0/12',
-                            'interface_mac': '00c1.641f.6048',
+                            'interface_mac': '00c1.64ff.7f67',
                             'if_handle': '0x000005c0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
@@ -2722,7 +2722,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'type': 'Invalid',
                         },
                         'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
-                        'source_mac': '00c1.6428.7ce8 (PBB BSA, no ESI)',
+                        'source_mac': '00c1.64ff.a411 (PBB BSA, no ESI)',
                         'topology': {
                             'operational': 'SH',
                             'configured': 'Single-active (AApS) (default)',
@@ -2776,18 +2776,18 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops            
         ------------------------ ---------------------------------- --------------------
-        0001.0000.aaab.0000.0003 BE3                                10.154.219.84
+        0001.00ff.aaab.00ff.0003 BE3                                10.154.219.84
         ES to BGP Gates   : M
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether3
-        Interface MAC  : 00c1.6428.7cec
+        Interface MAC  : 00c1.64ff.a415
             IfHandle       : 0x080002a0
             State          : Down
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 01.0000.aaab.0000.0003
-        ES Import RT      : aaab.0000.0003 (Local)
+            Value          : 01.0000.aaff.abab.0003
+        ES Import RT      : aaab.00ff.0003 (Local)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : SH
@@ -2806,18 +2806,18 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Local SHG label   : 100564
         Remote SHG labels : 0
 
-        0001.0000.aaab.0000.0004 BE4                                10.154.219.84
+        0001.00ff.aaab.00ff.0004 BE4                                10.154.219.84
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether4
-            Interface MAC  : 00c1.6428.7ceb
+            Interface MAC  : 00c1.64ff.a414
             IfHandle       : 0x080002e0
             State          : Up
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 01.0000.aaab.0000.0004
-        ES Import RT      : aaab.0000.0004 (Local)
+            Value          : 01.0000.aaff.abab.0004
+        ES Import RT      : aaab.00ff.0004 (Local)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : SH
@@ -2841,13 +2841,13 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : GigabitEthernet0/0/0/12
-            Interface MAC  : 00c1.641f.6048
+            Interface MAC  : 00c1.64ff.7f67
             IfHandle       : 0x000005c0
             State          : Up
             Redundancy     : Not Defined
         ESI type          : Invalid
         ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
-        Source MAC        : 00c1.6428.7ce8 (PBB BSA, no ESI)
+        Source MAC        : 00c1.64ff.a411 (PBB BSA, no ESI)
         Topology          :
             Operational    : SH
         Configured     : Single-active (AApS) (default)
@@ -2900,7 +2900,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
     golden_parsed_output1 = {
         'segment_id': {
-            '0047.4700.0000.0000.2200': {
+            '0047.47ff.0000.0000.2200': {
                 'interface': {
                     'Bundle-Ether200': {
                         'next_hops': ['10.64.4.47', '10.64.4.48'],
@@ -2908,17 +2908,17 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether100',
-                            'interface_mac': '119b.1755.e9ee',
+                            'interface_mac': '119b.17ff.3f44',
                             'if_handle': '0x0900001c',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '47.4811.1111.1111.2211',
+                            'value': '47.4811.11ff.2222.2211',
                         },
-                        'es_import_rt': '4748.1111.1111 (from ESI)',
-                        'source_mac': '1111.1111.1111 (N/A)',
+                        'es_import_rt': '4748.11ff.2222 (from ESI)',
+                        'source_mac': '1111.11ff.2222 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
                             'configured': 'All-active (AApF) (default)',
@@ -2956,7 +2956,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
     }
 
     golden_output1 = {'execute.return_value': '''
-        show evpn ethernet-segment esi 0047.4700.0000.0000.2200 detail
+        show evpn ethernet-segment esi 0047.47ff.0000.0000.2200 detail
 
         Legend:
 
@@ -2994,7 +2994,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
         ------------------------ ---------------------------------- --------------------
 
-        0047.4700.0000.0000.2200 BE200                              10.64.4.47
+        0047.47ff.0000.0000.2200 BE200                              10.64.4.47
 
                                                                     10.64.4.48
 
@@ -3006,7 +3006,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
             Interface name : Bundle-Ether100
 
-            Interface MAC  : 119b.1755.e9ee
+            Interface MAC  : 119b.17ff.3f44
 
             IfHandle       : 0x0900001c
 
@@ -3016,11 +3016,11 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
         ESI type          : 0
 
-            Value          : 47.4811.1111.1111.2211
+            Value          : 47.4811.11ff.2222.2211
 
-        ES Import RT      : 4748.1111.1111 (from ESI)
+        ES Import RT      : 4748.11ff.2222 (from ESI)
 
-        Source MAC        : 1111.1111.1111 (N/A)
+        Source MAC        : 1111.11ff.2222 (N/A)
 
         Topology          :
 
@@ -3061,13 +3061,13 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEthernetSegmentEsiDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(esi='0047.4700.0000.0000.2200')
+            parsed_output = obj.parse(esi='0047.47ff.0000.0000.2200')
 
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowEvpnEthernetSegmentEsiDetail(device=self.device)
-        parsed_output = obj.parse(esi='0047.4700.0000.0000.2200')
+        parsed_output = obj.parse(esi='0047.47ff.0000.0000.2200')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 # ===================================================
@@ -3084,7 +3084,7 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
         'evi': {
             1000: {
                 'ethernet_segment_id': {
-                    '0000.0102.0304.0506.07aa': {
+                    '0000.01ff.0506.0506.07aa': {
                         'index': {
                             1: {
                                 'ether_tag': '0',
@@ -3104,15 +3104,15 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         EVI     Ethernet    Segment Id                 EtherTag Label
         ----- --------------------------------------- -------- --------
-        1000    0000.0102.0304.0506.07aa                0       None
-        1000    0000.0102.0304.0506.07aa                200     24011
+        1000    0000.01ff.0506.0506.07aa                0       None
+        1000    0000.01ff.0506.0506.07aa                200     24011
         '''}
 
     golden_parsed_output2 = {
         'evi': {
             1: {
                 'ethernet_segment_id': {
-                    '0055.5555.5555.5555.5555': {
+                    '0055.55ff.aaaa.5555.5555': {
                         'index': {
                             1: {
                                 'ether_tag': '0',
@@ -3151,7 +3151,7 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
                             },
                         },
                     },
-                    '0088.8888.8888.8888.8888': {
+                    '0088.88ff.1111.8888.8888': {
                         'index': {
                             1: {
                                 'ether_tag': '0',
@@ -3243,32 +3243,32 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
 
     VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label
     ---------- ------ --------------------------- ----------   --------
-    1          MPLS   0055.5555.5555.5555.5555    0            None
+    1          MPLS   0055.55ff.aaaa.5555.5555    0            None
 
-    1          MPLS   0055.5555.5555.5555.5555    1            29348
+    1          MPLS   0055.55ff.aaaa.5555.5555    1            29348
     Summary pathlist:
     0xffffffff (P) 192.168.0.3                              29213
 
-    1          MPLS   0055.5555.5555.5555.5555    3            29352
+    1          MPLS   0055.55ff.aaaa.5555.5555    3            29352
     Summary pathlist:
     0xffffffff (P) 192.168.0.3                              29224
 
-    1          MPLS   0088.8888.8888.8888.8888    0            None
+    1          MPLS   0088.88ff.1111.8888.8888    0            None
 
-    1          MPLS   0088.8888.8888.8888.8888    1            29350
+    1          MPLS   0088.88ff.1111.8888.8888    1            29350
     Summary pathlist:
     0xffffffff (P) 192.168.0.4                              29340
 
-    1          MPLS   0088.8888.8888.8888.8888    2            29349
+    1          MPLS   0088.88ff.1111.8888.8888    2            29349
     Summary pathlist:
     0xffffffff (P) 192.168.0.3                              29216
     0x00000000 (B) 192.168.0.4                              29341
 
-    1          MPLS   0088.8888.8888.8888.8888    3            29355
+    1          MPLS   0088.88ff.1111.8888.8888    3            29355
     Summary pathlist:
     0xffffffff (P) 192.168.0.4                              29352
 
-    1          MPLS   0088.8888.8888.8888.8888    4            29354
+    1          MPLS   0088.88ff.1111.8888.8888    4            29354
     Summary pathlist:
     0xffffffff (P) 192.168.0.3                              29226
     0x00000000 (B) 192.168.0.4                              29353
@@ -3306,7 +3306,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
     golden_parsed_output1 = {
         'segment_id': {
-            '0001.0000.aaab.0000.0003': {
+            '0001.00ff.aaab.00ff.0003': {
                 'interface': {
                     'Bundle-Ether3': {
                         'next_hops': ['10.154.219.84<'],
@@ -3314,16 +3314,16 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether3',
-                            'interface_mac': '00c1.6428.7cec',
+                            'interface_mac': '00c1.64ff.a415',
                             'if_handle': '0x080002a0',
                             'state': 'Down',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0000.aaab.0000.0003',
+                            'value': '01.0000.aaff.abab.0003',
                         },
-                        'es_import_rt': 'aaab.0000.0003 (Local)',
+                        'es_import_rt': 'aaab.00ff.0003 (Local)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'SH',
@@ -3903,7 +3903,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0001.0000.aaab.0000.0004': {
+            '0001.00ff.aaab.00ff.0004': {
                 'interface': {
                     'Bundle-Ether4': {
                         'next_hops': ['10.154.219.84<'],
@@ -3911,16 +3911,16 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether4',
-                            'interface_mac': '00c1.6428.7ceb',
+                            'interface_mac': '00c1.64ff.a414',
                             'if_handle': '0x080002e0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0000.aaab.0000.0004',
+                            'value': '01.0000.aaff.abab.0004',
                         },
-                        'es_import_rt': 'aaab.0000.0004 (Local)',
+                        'es_import_rt': 'aaab.00ff.0004 (Local)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'SH',
@@ -4592,7 +4592,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'GigabitEthernet0/0/0/12',
-                            'interface_mac': '00c1.641f.6048',
+                            'interface_mac': '00c1.64ff.7f67',
                             'if_handle': '0x000005c0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
@@ -4601,7 +4601,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'type': 'Invalid',
                         },
                         'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
-                        'source_mac': '00c1.6428.7ce8 (PBB BSA, no ESI)',
+                        'source_mac': '00c1.64ff.a411 (PBB BSA, no ESI)',
                         'topology': {
                             'operational': 'SH',
                             'configured': 'Single-active (AApS) (default)',
@@ -4927,18 +4927,18 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops (*stale)   
         ------------------------ ---------------------------------- --------------------
-        0001.0000.aaab.0000.0003 BE3                                10.154.219.84<
+        0001.00ff.aaab.00ff.0003 BE3                                10.154.219.84<
         ES to BGP Gates   : M
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether3
-        Interface MAC  : 00c1.6428.7cec
+        Interface MAC  : 00c1.64ff.a415
             IfHandle       : 0x080002a0
             State          : Down
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 01.0000.aaab.0000.0003
-        ES Import RT      : aaab.0000.0003 (Local)
+            Value          : 01.0000.aaff.abab.0003
+        ES Import RT      : aaab.00ff.0003 (Local)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : SH
@@ -5053,18 +5053,18 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES EAD Update     :
             Num RDs:       : 0
 
-        0001.0000.aaab.0000.0004 BE4                                10.154.219.84<
+        0001.00ff.aaab.00ff.0004 BE4                                10.154.219.84<
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether4
-            Interface MAC  : 00c1.6428.7ceb
+            Interface MAC  : 00c1.64ff.a414
             IfHandle       : 0x080002e0
             State          : Up
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 01.0000.aaab.0000.0004
-        ES Import RT      : aaab.0000.0004 (Local)
+            Value          : 01.0000.aaff.abab.0004
+        ES Import RT      : aaab.00ff.0004 (Local)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : SH
@@ -5196,13 +5196,13 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : GigabitEthernet0/0/0/12
-            Interface MAC  : 00c1.641f.6048
+            Interface MAC  : 00c1.64ff.7f67
             IfHandle       : 0x000005c0
             State          : Up
             Redundancy     : Not Defined
         ESI type          : Invalid
         ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
-        Source MAC        : 00c1.6428.7ce8 (PBB BSA, no ESI)
+        Source MAC        : 00c1.64ff.a411 (PBB BSA, no ESI)
         Topology          :
             Operational    : SH
             Configured     : Single-active (AApS) (default)
@@ -5306,19 +5306,19 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops (*stale)   
         ------------------------ ---------------------------------- --------------------
-        0001.0001.0007.0001.0007 BE7                                192.168.0.1
+        0001.00ff.0108.0001.0007 BE7                                192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether7
-            Interface MAC  : 02ef.af8d.8002
+            Interface MAC  : 02ef.afff.0e8f
             IfHandle       : 0x00004110
             State          : Standby
             Redundancy     : Active
         ESI type          : 0
-            Value          : 01.0001.0007.0001.0007
-        ES Import RT      : 0100.0100.0700 (from ESI)
+            Value          : 01.0001.00ff.0708.0007
+        ES Import RT      : 0100.01ff.0700 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH
@@ -5423,19 +5423,19 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                 100:1, 100:2, 100:3, 100:4, 100:5, 
                 100:6, 100:13, 100:14, 100:15, 100:16, 
                 100:17, 100:18, 
-        0001.0001.000b.0001.000b Gi0/3/0/3                          192.168.0.1
+        0001.00ff.010c.0001.000b Gi0/3/0/3                          192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : GigabitEthernet0/3/0/3
-            Interface MAC  : 02d4.6f3b.010a
+            Interface MAC  : 02d4.6fff.3c45
             IfHandle       : 0x018040c0
             State          : Up
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 01.0001.000b.0001.000b
-        ES Import RT      : 0100.0100.0b00 (from ESI)
+            Value          : 01.0001.00ff.0b0c.000b
+        ES Import RT      : 0100.01ff.0b00 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, Single-active
@@ -5533,19 +5533,19 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             RD: 192.168.0.1:1, Num RTs: 6      RT List:
                 100:4, 100:5, 100:6, 100:16, 100:17, 
                 100:18, 
-        0001.0001.0015.0001.0015 BE21                               192.168.0.1
+        0001.00ff.0116.0001.0015 BE21                               192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether21
-            Interface MAC  : 02ef.af8d.8008
+            Interface MAC  : 02ef.afff.0e95
             IfHandle       : 0x00004190
             State          : Up
             Redundancy     : Active
         ESI type          : 0
-            Value          : 01.0001.0015.0001.0015
-        ES Import RT      : 0100.0100.1500 (from ESI)
+            Value          : 01.0001.00ff.1516.0015
+        ES Import RT      : 0100.01ff.1500 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, Single-active
@@ -5648,21 +5648,21 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             RD: 192.168.0.1:7, Num RTs: 6      RT List:
                 100:4, 100:5, 100:6, 100:16, 100:17, 
                 100:18, 
-        0100.0105.acce.5500.0500 BE5                                192.168.0.1
+        0100.01ff.b1d3.5500.0500 BE5                                192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether5
-            Interface MAC  : 02ef.af8d.8004
+            Interface MAC  : 02ef.afff.0e91
             IfHandle       : 0x000040d0
             State          : Up
             Redundancy     : Active
         ESI type          : 1
-            System-id      : 0001.05ac.ce55
+            System-id      : 0001.05ff.7b02
             Port key       : 0005
-        ES Import RT      : 0001.05ac.ce55 (from ESI)
-        Source MAC        : 0201.05ac.ce55 (from ESI)
+        ES Import RT      : 0001.05ff.7b02 (from ESI)
+        Source MAC        : 0201.05ff.7b02 (from ESI)
         Topology          :
             Operational    : MH, All-active
             Configured     : All-active (AApF) (default)
@@ -5756,20 +5756,20 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES EAD Update  :
             Num RDs:     : 0
 
-        0100.0106.acce.5500.0600 BE6                                192.168.0.1
+        0100.01ff.b2d4.5500.0600 BE6                                192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether6
-            Interface MAC  : 02ef.af8d.8003
+            Interface MAC  : 02ef.afff.0e90
             IfHandle       : 0x000040f0
             State          : Up
             Redundancy     : Active
         ESI type          : 1
-            System-id      : 0001.06ac.ce55
+            System-id      : 0001.06ff.7b02
             Port key       : 0006
-        ES Import RT      : 0001.06ac.ce55 (from ESI)
+        ES Import RT      : 0001.06ff.7b02 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, All-active
@@ -5872,20 +5872,20 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                 100:6, 100:7, 100:8, 100:9, 100:13, 
                 100:14, 100:15, 100:16, 100:17, 100:18, 
                 
-        0100.0111.acce.5500.1100 BE17                               192.168.0.1
+        0100.01ff.bddf.5500.1100 BE17                               192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether17
-            Interface MAC  : 02ef.af8d.800a
+            Interface MAC  : 02ef.afff.0e97
             IfHandle       : 0x00004150
             State          : Up
             Redundancy     : Active
         ESI type          : 1
-            System-id      : 0001.11ac.ce55
+            System-id      : 0001.11ff.7b02
             Port key       : 0011
-        ES Import RT      : 0001.11ac.ce55 (from ESI)
+        ES Import RT      : 0001.11ff.7b02 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, All-active
@@ -5985,20 +5985,20 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             RD: 192.168.0.1:4, Num RTs: 6      RT List:
                 100:1, 100:2, 100:3, 100:13, 100:14, 
                 100:15, 
-        0100.0112.acce.5500.1200 BE18                               192.168.0.1
+        0100.01ff.bee0.5500.1200 BE18                               192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether18
-            Interface MAC  : 02ef.af8d.8009
+            Interface MAC  : 02ef.afff.0e96
             IfHandle       : 0x00004170
             State          : Up
             Redundancy     : Active
         ESI type          : 1
-            System-id      : 0001.12ac.ce55
+            System-id      : 0001.12ff.7b02
             Port key       : 0012
-        ES Import RT      : 0001.12ac.ce55 (from ESI)
+        ES Import RT      : 0001.12ff.7b02 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, All-active
@@ -6099,20 +6099,20 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             RD: 192.168.0.1:3, Num RTs: 6      RT List:
                 100:4, 100:5, 100:6, 100:16, 100:17, 
                 100:18, 
-        0100.0117.acce.5500.1700 BE23                               192.168.0.1
+        0100.01ff.c3e5.5500.1700 BE23                               192.168.0.1
                                                                     192.168.0.3
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : O
         Main port         :
             Interface name : Bundle-Ether23
-            Interface MAC  : 02ef.af8d.8007
+            Interface MAC  : 02ef.afff.0e94
             IfHandle       : 0x000041b0
             State          : Up
             Redundancy     : Active
         ESI type          : 1
-            System-id      : 0001.17ac.ce55
+            System-id      : 0001.17ff.7b02
             Port key       : 0017
-        ES Import RT      : 0001.17ac.ce55 (from ESI)
+        ES Import RT      : 0001.17ff.7b02 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, All-active
@@ -6216,13 +6216,13 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : GigabitEthernet0/3/0/0
-            Interface MAC  : 023f.e86f.8612
+            Interface MAC  : 023f.e8ff.f581
             IfHandle       : 0x01804060
             State          : Up
             Redundancy     : Not Defined
         ESI type          : Invalid
         ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
-        Source MAC        : 0001.ed9e.0001 (PBB BSA, no ESI)
+        Source MAC        : 0001.edff.9e9f (PBB BSA, no ESI)
         Topology          :
             Operational    : SH
             Configured     : Single-active (AApS) (default)
@@ -6310,13 +6310,13 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : GigabitEthernet0/4/0/0
-            Interface MAC  : 0259.cd23.62c7
+            Interface MAC  : 0259.cdff.85ea
             IfHandle       : 0x02004060
             State          : Up
             Redundancy     : Not Defined
         ESI type          : Invalid
         ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
-        Source MAC        : 0001.ed9e.0001 (PBB BSA, no ESI)
+        Source MAC        : 0001.edff.9e9f (PBB BSA, no ESI)
         Topology          :
             Operational    : SH
             Configured     : Single-active (AApS) (default)
@@ -6405,7 +6405,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
     
     golden_parsed_output2 = {
         'segment_id': {
-            '0001.0001.0007.0001.0007': {
+            '0001.00ff.0108.0001.0007': {
                 'interface': {
                     'Bundle-Ether7': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -6413,16 +6413,16 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether7',
-                            'interface_mac': '02ef.af8d.8002',
+                            'interface_mac': '02ef.afff.0e8f',
                             'if_handle': '0x00004110',
                             'state': 'Standby',
                             'redundancy': 'Active',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0001.0007.0001.0007',
+                            'value': '01.0001.00ff.0708.0007',
                         },
-                        'es_import_rt': '0100.0100.0700 (from ESI)',
+                        'es_import_rt': '0100.01ff.0700 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH',
@@ -6807,7 +6807,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0001.0001.000b.0001.000b': {
+            '0001.00ff.010c.0001.000b': {
                 'interface': {
                     'GigabitEthernet0/3/0/3': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -6815,16 +6815,16 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'GigabitEthernet0/3/0/3',
-                            'interface_mac': '02d4.6f3b.010a',
+                            'interface_mac': '02d4.6fff.3c45',
                             'if_handle': '0x018040c0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0001.000b.0001.000b',
+                            'value': '01.0001.00ff.0b0c.000b',
                         },
-                        'es_import_rt': '0100.0100.0b00 (from ESI)',
+                        'es_import_rt': '0100.01ff.0b00 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, Single-active',
@@ -7160,7 +7160,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0001.0001.0015.0001.0015': {
+            '0001.00ff.0116.0001.0015': {
                 'interface': {
                     'Bundle-Ether21': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -7168,16 +7168,16 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether21',
-                            'interface_mac': '02ef.af8d.8008',
+                            'interface_mac': '02ef.afff.0e95',
                             'if_handle': '0x00004190',
                             'state': 'Up',
                             'redundancy': 'Active',
                         },
                         'esi': {
                             'type': '0',
-                            'value': '01.0001.0015.0001.0015',
+                            'value': '01.0001.00ff.1516.0015',
                         },
-                        'es_import_rt': '0100.0100.1500 (from ESI)',
+                        'es_import_rt': '0100.01ff.1500 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, Single-active',
@@ -7553,7 +7553,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0100.0105.acce.5500.0500': {
+            '0100.01ff.b1d3.5500.0500': {
                 'interface': {
                     'Bundle-Ether5': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -7561,7 +7561,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether5',
-                            'interface_mac': '02ef.af8d.8004',
+                            'interface_mac': '02ef.afff.0e91',
                             'if_handle': '0x000040d0',
                             'state': 'Up',
                             'redundancy': 'Active',
@@ -7569,10 +7569,10 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'esi': {
                             'type': '1',
                         },
-                        'systemid': '0001.05ac.ce55',
+                        'systemid': '0001.05ff.7b02',
                         'port_key': '0x00006f74',
-                        'es_import_rt': '0001.05ac.ce55 (from ESI)',
-                        'source_mac': '0201.05ac.ce55 (from ESI)',
+                        'es_import_rt': '0001.05ff.7b02 (from ESI)',
+                        'source_mac': '0201.05ff.7b02 (from ESI)',
                         'topology': {
                             'operational': 'MH, All-active',
                             'configured': 'All-active (AApF) (default)',
@@ -7904,7 +7904,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0100.0106.acce.5500.0600': {
+            '0100.01ff.b2d4.5500.0600': {
                 'interface': {
                     'Bundle-Ether6': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -7912,7 +7912,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether6',
-                            'interface_mac': '02ef.af8d.8003',
+                            'interface_mac': '02ef.afff.0e90',
                             'if_handle': '0x000040f0',
                             'state': 'Up',
                             'redundancy': 'Active',
@@ -7920,9 +7920,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'esi': {
                             'type': '1',
                         },
-                        'systemid': '0001.06ac.ce55',
+                        'systemid': '0001.06ff.7b02',
                         'port_key': '0x00006f75',
-                        'es_import_rt': '0001.06ac.ce55 (from ESI)',
+                        'es_import_rt': '0001.06ff.7b02 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
@@ -8283,7 +8283,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0100.0111.acce.5500.1100': {
+            '0100.01ff.bddf.5500.1100': {
                 'interface': {
                     'Bundle-Ether17': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -8291,7 +8291,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether17',
-                            'interface_mac': '02ef.af8d.800a',
+                            'interface_mac': '02ef.afff.0e97',
                             'if_handle': '0x00004150',
                             'state': 'Up',
                             'redundancy': 'Active',
@@ -8299,9 +8299,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'esi': {
                             'type': '1',
                         },
-                        'systemid': '0001.11ac.ce55',
+                        'systemid': '0001.11ff.7b02',
                         'port_key': '0x00006f77',
-                        'es_import_rt': '0001.11ac.ce55 (from ESI)',
+                        'es_import_rt': '0001.11ff.7b02 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
@@ -8654,7 +8654,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0100.0112.acce.5500.1200': {
+            '0100.01ff.bee0.5500.1200': {
                 'interface': {
                     'Bundle-Ether18': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -8662,7 +8662,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether18',
-                            'interface_mac': '02ef.af8d.8009',
+                            'interface_mac': '02ef.afff.0e96',
                             'if_handle': '0x00004170',
                             'state': 'Up',
                             'redundancy': 'Active',
@@ -8670,9 +8670,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'esi': {
                             'type': '1',
                         },
-                        'systemid': '0001.12ac.ce55',
+                        'systemid': '0001.12ff.7b02',
                         'port_key': '0x00006f78',
-                        'es_import_rt': '0001.12ac.ce55 (from ESI)',
+                        'es_import_rt': '0001.12ff.7b02 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
@@ -9032,7 +9032,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                     },
                 },
             },
-            '0100.0117.acce.5500.1700': {
+            '0100.01ff.c3e5.5500.1700': {
                 'interface': {
                     'Bundle-Ether23': {
                         'next_hops': ['192.168.0.1', '192.168.0.3'],
@@ -9040,7 +9040,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'O',
                         'main_port': {
                             'interface': 'Bundle-Ether23',
-                            'interface_mac': '02ef.af8d.8007',
+                            'interface_mac': '02ef.afff.0e94',
                             'if_handle': '0x000041b0',
                             'state': 'Up',
                             'redundancy': 'Active',
@@ -9048,9 +9048,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'esi': {
                             'type': '1',
                         },
-                        'systemid': '0001.17ac.ce55',
+                        'systemid': '0001.17ff.7b02',
                         'port_key': '0x00006f7a',
-                        'es_import_rt': '0001.17ac.ce55 (from ESI)',
+                        'es_import_rt': '0001.17ff.7b02 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
@@ -9410,7 +9410,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'GigabitEthernet0/3/0/0',
-                            'interface_mac': '023f.e86f.8612',
+                            'interface_mac': '023f.e8ff.f581',
                             'if_handle': '0x01804060',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
@@ -9419,7 +9419,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'type': 'Invalid',
                         },
                         'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
-                        'source_mac': '0001.ed9e.0001 (PBB BSA, no ESI)',
+                        'source_mac': '0001.edff.9e9f (PBB BSA, no ESI)',
                         'topology': {
                             'operational': 'SH',
                             'configured': 'Single-active (AApS) (default)',
@@ -9685,7 +9685,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'GigabitEthernet0/4/0/0',
-                            'interface_mac': '0259.cd23.62c7',
+                            'interface_mac': '0259.cdff.85ea',
                             'if_handle': '0x02004060',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
@@ -9694,7 +9694,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'type': 'Invalid',
                         },
                         'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
-                        'source_mac': '0001.ed9e.0001 (PBB BSA, no ESI)',
+                        'source_mac': '0001.edff.9e9f (PBB BSA, no ESI)',
                         'topology': {
                             'operational': 'SH',
                             'configured': 'Single-active (AApS) (default)',

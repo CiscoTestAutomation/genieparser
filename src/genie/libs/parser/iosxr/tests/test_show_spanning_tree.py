@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
@@ -25,17 +25,17 @@ class show_spanning_tree_mst(unittest.TestCase):
 		                'mst_id': '0',
 		                'vlan': '1-4094',
 		                'cist_root_priority': 32768,
-		                'cist_root_address': '0021.1bfd.1007',
+		                'cist_root_address': '0021.1bff.0e05',
 		                'cist_root_cost': 2000,
 		                'designated_root_priority': 32768,
-		                'designated_root_address': 'd867.d938.ace7',
+		                'designated_root_address': 'd867.d9ff.e420',
 		                'this_bridge_is': 'the root',
 		                'root_cost': 0,
 		                'root_max_age': 20,
 		                'root_forward_delay': 15,
 		                'bridge_priority': 32768,
 		                'sys_id_ext': 0,
-		                'bridge_address': 'd867.d938.ace7',
+		                'bridge_address': 'd867.d9ff.e420',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_max_hops': 20,
@@ -49,7 +49,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfd.1007',
+		                        'designated_bridge_address': '0021.1bff.0e05',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -61,7 +61,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfd.1007',
+		                        'designated_bridge_address': '0021.1bff.0e05',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -86,18 +86,18 @@ class show_spanning_tree_mst(unittest.TestCase):
 	  VLANS Mapped: 1-4094
 
 	  CIST Root  Priority    32768
-	             Address     0021.1bfd.1007
+	             Address     0021.1bff.0e05
 	             Ext Cost    2000
 
 	  Root ID    Priority    32768
-	             Address     d867.d938.ace7
+	             Address     d867.d9ff.e420
 	             This bridge is the root
 	             Int Cost    0
 	             Max Age 20 sec, Forward Delay 15 sec
 
 
 	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     d867.d938.ace7
+	             Address     d867.d9ff.e420
 	             Max Age 20 sec, Forward Delay 15 sec
 	             Max Hops 20, Transmit Hold count  6
 
@@ -105,8 +105,8 @@ class show_spanning_tree_mst(unittest.TestCase):
 	Interface    Port ID           Role State Designated           Port ID
 	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bfd.1007 128.1  
-	Te0/0/0/17   128.2   2000      ALT  BLK   32768 0021.1bfd.1007 128.2  
+	Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
+	Te0/0/0/17   128.2   2000      ALT  BLK   32768 0021.1bff.0e05 128.2  
 	'''}
 
 	golden_parsed_output_2 = {
@@ -124,7 +124,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 		                        'port_num': 196,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 4097,
-		                        'designated_bridge_address': '0004.9b78.0800',
+		                        'designated_bridge_address': '0004.9bff.8078',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 195,
 		                        },
@@ -142,7 +142,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 	Interface                Port ID                     Designated               Port ID
 	Name                     Prio.Nbr Cost   Role State  Cost Bridge ID           Prio.Nbr
 	----------------------   -------- ------ ---------   ------------------------ --------
-	GigabitEthernet0/0/4/4      128.196  200000 ALT  BLK    0    4097 0004.9b78.0800 128.195
+	GigabitEthernet0/0/4/4      128.196  200000 ALT  BLK    0    4097 0004.9bff.8078 128.195
 
 	'''}
 
@@ -182,7 +182,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                'revision': 1,
 		                'max_age': 20,
 		                'provider_bridge': False,
-		                'bridge_id': '0000.0000.0002',
+		                'bridge_id': '0000.00ff.0002',
 		                'port_id': 1,
 		                'external_cost': 0,
 		                'hello_time': 2,
@@ -198,7 +198,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                    'priority': 8192,
 		                    'port_priority': 128,
 		                    'cost': 0,
-		                    'root_bridge': '0000.0000.0001',
+		                    'root_bridge': '0000.00ff.0001',
 		                    'root_priority': 4096,
 		                    'counters': {
 		                        'topology_changes': 31,
@@ -210,7 +210,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                    'priority': 4096,
 		                    'port_priority': 128,
 		                    'cost': 0,
-		                    'root_bridge': '0000.0000.0002',
+		                    'root_bridge': '0000.00ff.0002',
 		                    'root_priority': 4096,
 		                    'counters': {
 		                        'topology_changes': 51,
@@ -230,7 +230,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	  Revision:        1
 	  Max Age:         20
 	  Provider Bridge: no
-	  Bridge ID:       0000.0000.0002
+	  Bridge ID:       0000.00ff.0002
 	  Port ID:         1
 	  External Cost:   0
 	  Hello Time:      2
@@ -241,7 +241,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    Bridge Priority:  8192
 	    Port Priority:    128
 	    Cost:             0
-	    Root Bridge:      0000.0000.0001
+	    Root Bridge:      0000.00ff.0001
 	    Root Priority:    4096
 	    Topology Changes: 31
 	  MSTI 1
@@ -249,7 +249,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    Bridge Priority:  4096
 	    Port Priority:    128
 	    Cost:             0
-	    Root Bridge:      0000.0000.0002
+	    Root Bridge:      0000.00ff.0002
 	    Root Priority:    4096
 	    Topology Changes: 51
 
@@ -263,7 +263,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	  Revision:        0
 	  Max Age:         20
 	  Provider Bridge: no
-	  Bridge ID:       6161.6161.6161
+	  Bridge ID:       6161.61ff.c2c2
 	  Port ID:         1
 	  External Cost:   0
 	  Hello Time:      2
@@ -275,7 +275,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    Bridge Priority:  32768
 	    Port Priority:    128
 	    Cost:             0
-	    Root Bridge:      6161.6161.6161
+	    Root Bridge:      6161.61ff.c2c2
 	    Root Priority:    32768
 	    Topology Changes: 123
 	  MSTI 2
@@ -284,7 +284,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    Bridge Priority:  32768
 	    Port Priority:    128
 	    Cost:             0
-	    Root Bridge:      6161.6161.6161
+	    Root Bridge:      6161.61ff.c2c2
 	    Root Priority:    32768
 	    Topology Changes: 123
 	  MSTI 10
@@ -293,7 +293,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    Bridge Priority:  32768
 		Port Priority:    128
 	    Cost:             200000000
-	    Root Bridge:      6161.6161.6161
+	    Root Bridge:      6161.61ff.c2c2
 	    Root Priority:    61440
 	    Topology Changes: 0
 	'''}
@@ -310,7 +310,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                'revision': 0,
 		                'max_age': 20,
 		                'provider_bridge': False,
-		                'bridge_id': '6161.6161.6161',
+		                'bridge_id': '6161.61ff.c2c2',
 		                'port_id': 1,
 		                'external_cost': 0,
 		                'hello_time': 2,
@@ -326,7 +326,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                    'priority': 32768,
 		                    'port_priority': 128,
 		                    'cost': 0,
-		                    'root_bridge': '6161.6161.6161',
+		                    'root_bridge': '6161.61ff.c2c2',
 		                    'root_priority': 32768,
 		                    'counters': {
 		                        'topology_changes': 123,
@@ -338,7 +338,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                    'priority': 32768,
 		                    'port_priority': 128,
 		                    'cost': 0,
-		                    'root_bridge': '6161.6161.6161',
+		                    'root_bridge': '6161.61ff.c2c2',
 		                    'root_priority': 32768,
 		                    'counters': {
 		                        'topology_changes': 123,
@@ -350,7 +350,7 @@ class show_spanning_tree_mstag(unittest.TestCase):
 		                    'priority': 32768,
 		                    'port_priority': 128,
 		                    'cost': 200000000,
-		                    'root_bridge': '6161.6161.6161',
+		                    'root_bridge': '6161.61ff.c2c2',
 		                    'root_priority': 61440,
 		                    'counters': {
 		                        'topology_changes': 0,
@@ -394,12 +394,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            2: {
 		                'vlan_id': 2,
 		                'designated_root_priority': 32768,
-		                'designated_root_address': '0021.1bfc.dc76',
+		                'designated_root_address': '0021.1bff.d973',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 32768,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -412,7 +412,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -424,7 +424,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -436,7 +436,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 3,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 3,
 		                        },
@@ -448,7 +448,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 4,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 4,
 		                        },
@@ -457,12 +457,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            3: {
 		                'vlan_id': 3,
 		                'designated_root_priority': 32768,
-		                'designated_root_address': '0021.1bfc.dc76',
+		                'designated_root_address': '0021.1bff.d973',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 32768,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -475,7 +475,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -487,7 +487,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -499,7 +499,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 3,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 3,
 		                        },
@@ -511,7 +511,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 4,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 4,
 		                        },
@@ -520,12 +520,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            4: {
 		                'vlan_id': 4,
 		                'designated_root_priority': 32768,
-		                'designated_root_address': '0021.1bfc.dc76',
+		                'designated_root_address': '0021.1bff.d973',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 32768,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -538,7 +538,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -550,7 +550,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -562,7 +562,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 3,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 3,
 		                        },
@@ -574,7 +574,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 4,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 32768,
-		                        'designated_bridge_address': '0021.1bfc.dc76',
+		                        'designated_bridge_address': '0021.1bff.d973',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 4,
 		                        },
@@ -594,12 +594,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	VLAN 2:
 
 	  Root ID    Priority    32768
-	             Address     0021.1bfc.dc76
+	             Address     0021.1bff.d973
 	             Max Age 20 sec, Forward Delay 15 sec
 
 
 	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fe9.7b9e
+	             Address     8cb6.4fff.6588
 	             Max Age 20 sec, Forward Delay 15 sec
 	             Transmit Hold count   6
 
@@ -607,20 +607,20 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface    Port ID           Role State Designated           Port ID
 	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.1
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bfc.dc76 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bfc.dc76 128.4  
+	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
 
 	VLAN 3:
 
 	  Root ID    Priority    32768
-	             Address     0021.1bfc.dc76
+	             Address     0021.1bff.d973
 	             Max Age 20 sec, Forward Delay 15 sec
 
 
 	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fe9.7b9e
+	             Address     8cb6.4fff.6588
 	             Max Age 20 sec, Forward Delay 15 sec
 	             Transmit Hold count  6
 
@@ -628,20 +628,20 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface    Port ID           Role State Designated           Port ID
 	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.1  
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bfc.dc76 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bfc.dc76 128.4  
+	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
 
 	VLAN 4:
 
 	  Root ID    Priority    32768
-	             Address     0021.1bfc.dc76
+	             Address     0021.1bff.d973
 	             Max Age 20 sec, Forward Delay 15 sec
 
 
 	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fe9.7b9e
+	             Address     8cb6.4fff.6588
 	             Max Age 20 sec, Forward Delay 15 sec
 	             Transmit Hold count  6
 
@@ -649,10 +649,10 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface    Port ID           Role State Designated           Port ID
 	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.1  
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bfc.dc76 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bfc.dc76 128.4
+	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4
 
 	'''}
 
@@ -665,13 +665,13 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	VLAN 10:
 
 	Root ID Priority 4096
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	This bridge is the root
 	Max Age 20 sec, Forward Delay 15 sec
 
 
 	Bridge ID Priority 4096 (priority 4096 sys-id-ext 0)
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	Max Age 20 sec, Forward Delay 15 sec
 	Transmit Hold count 6
 
@@ -679,18 +679,18 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface Port ID Role State Designated Port ID
 	Pri.Nbr Cost Bridge ID Pri.Nbr
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.1
-	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.2
+	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fff.6588 128.1
+	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fff.6588 128.2
 
 	VLAN 20:
 
 	Root ID Priority 8192
-	Address c062.6bac.a07e
+	Address c062.6bff.4d2b
 	Max Age 20 sec, Forward Delay 15 sec
 
 
 	Bridge ID Priority 16384 (priority 16384 sys-id-ext 0)
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	Max Age 20 sec, Forward Delay 15 sec
 	Transmit Hold count 6
 
@@ -698,8 +698,8 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface Port ID Role State Designated Port ID
 	Pri.Nbr Cost Bridge ID Pri.Nbr
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bac.a07e 128.1
-	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bac.a07e 128.2
+	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bff.4d2b 128.1
+	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bff.4d2b 128.2
 	'''}
 
 	golden_parsed_output_2 = {
@@ -710,12 +710,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            10: {
 		                'vlan_id': 10,
 		                'designated_root_priority': 4096,
-		                'designated_root_address': '8cb6.4fe9.7b9e',
+		                'designated_root_address': '8cb6.4fff.6588',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 4096,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -728,7 +728,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 4096,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -740,7 +740,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 4096,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -749,12 +749,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            20: {
 		                'vlan_id': 20,
 		                'designated_root_priority': 8192,
-		                'designated_root_address': 'c062.6bac.a07e',
+		                'designated_root_address': 'c062.6bff.4d2b',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 16384,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -767,7 +767,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 8192,
-		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_bridge_address': 'c062.6bff.4d2b',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -779,7 +779,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 8192,
-		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_bridge_address': 'c062.6bff.4d2b',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -800,13 +800,13 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 
 
 	Root ID Priority 4096
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	This bridge is the root
 	Max Age 20 sec, Forward Delay 15 sec
 
 
 	Bridge ID Priority 4096 (priority 4096 sys-id-ext 0)
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	Max Age 20 sec, Forward Delay 15 sec
 	Transmit Hold count 6
 
@@ -814,18 +814,18 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface Port ID Role State Designated Port ID
 	Pri.Nbr Cost Bridge ID Pri.Nbr
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.1
-	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.2
+	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fff.6588 128.1
+	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fff.6588 128.2
 
 	VLAN 20:
 
 	Root ID Priority 8192
-	Address c062.6bac.a07e
+	Address c062.6bff.4d2b
 	Max Age 20 sec, Forward Delay 15 sec
 
 
 	Bridge ID Priority 16384 (priority 16384 sys-id-ext 0)
-	Address 8cb6.4fe9.7b9e
+	Address 8cb6.4fff.6588
 	Max Age 20 sec, Forward Delay 15 sec
 	Transmit Hold count 6
 
@@ -833,8 +833,8 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	Interface Port ID Role State Designated Port ID
 	Pri.Nbr Cost Bridge ID Pri.Nbr
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bac.a07e 128.1
-	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bac.a07e 128.2
+	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bff.4d2b 128.1
+	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bff.4d2b 128.2
 	'''}
 
 	golden_parsed_output_3 = {
@@ -845,12 +845,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            10: {
 		                'vlan_id': 10,
 		                'designated_root_priority': 4096,
-		                'designated_root_address': '8cb6.4fe9.7b9e',
+		                'designated_root_address': '8cb6.4fff.6588',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 4096,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -863,7 +863,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 4096,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -875,7 +875,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 4096,
-		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_bridge_address': '8cb6.4fff.6588',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -884,12 +884,12 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		            20: {
 		                'vlan_id': 20,
 		                'designated_root_priority': 8192,
-		                'designated_root_address': 'c062.6bac.a07e',
+		                'designated_root_address': 'c062.6bff.4d2b',
 		                'designated_root_max_age': 20,
 		                'designated_root_forward_delay': 15,
 		                'bridge_priority': 16384,
 		                'sys_id_ext': 0,
-		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_address': '8cb6.4fff.6588',
 		                'bridge_max_age': 20,
 		                'bridge_forward_delay': 15,
 		                'bridge_transmit_hold_count': 6,
@@ -902,7 +902,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 1,
 		                        'port_state': 'FWD',
 		                        'designated_bridge_priority': 8192,
-		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_bridge_address': 'c062.6bff.4d2b',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 1,
 		                        },
@@ -914,7 +914,7 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		                        'port_num': 2,
 		                        'port_state': 'BLK',
 		                        'designated_bridge_priority': 8192,
-		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_bridge_address': 'c062.6bff.4d2b',
 		                        'designated_port_priority': 128,
 		                        'designated_port_num': 2,
 		                        },
@@ -973,7 +973,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                        'root_bridge': '0000.0000.0000',
 		                        'root_cost': 1,
 		                        'bridge_priority': 32768,
-		                        'bridge_id': '0255.1d30.0c40',
+		                        'bridge_id': '0255.1dff.3c70',
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
@@ -998,7 +998,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		                        'root_bridge': '0000.0000.0000',
 		                        'root_cost': 0,
 		                        'bridge_priority': 32768,
-		                        'bridge_id': '021a.9eeb.6a59',
+		                        'bridge_id': '021a.9eff.5645',
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
@@ -1027,7 +1027,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 	    Root Bridge: 0000.0000.0000
 	    Cost:             1
 	    Bridge Priority:  32768
-	    Bridge ID:        0255.1d30.0c40
+	    Bridge ID:        0255.1dff.3c70
 	    Port Priority:    128
 	    Port ID           1
 	    Hello Time:       2
@@ -1044,7 +1044,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 	    Root Bridge:      0000.0000.0000
 	    Cost:             0
 	    Bridge Priority:  32768
-	    Bridge ID:        021a.9eeb.6a59
+	    Bridge ID:        021a.9eff.5645
 	    Port Priority:    128
 	    Port ID           1
 	    Hello Time:       2
@@ -1088,7 +1088,7 @@ class show_spanning_tree_pvstag(unittest.TestCase):
 		                        'root_bridge': '0000.0000.0000',
 		                        'root_cost': 0,
 		                        'bridge_priority': 32768,
-		                        'bridge_id': '6c9c.ed0d.8088',
+		                        'bridge_id': '6c9c.edff.8d95',
 		                        'port_priority': 128,
 		                        'port_id': 1,
 		                        'hello_time': 2,
@@ -1116,7 +1116,7 @@ class show_spanning_tree_pvstag(unittest.TestCase):
 	    Root Bridge:      0000.0000.0000
 	    Cost:             0
 	    Bridge Priority:  32768
-	    Bridge ID:        6c9c.ed0d.8088
+	    Bridge ID:        6c9c.edff.8d95
 	    Port Priority:    128
 	    Port ID           1
 	    Hello Time:       2

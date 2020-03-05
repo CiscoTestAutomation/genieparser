@@ -386,7 +386,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 inst_dict[self.MODE_KEY_MAP[mode]] = int(group['inst'])
                 continue
 
-            # Bridge Identifier has priority 32768, sysid 0, address d8b1.9009.bf80
+            # Bridge Identifier has priority 32768, sysid 0, address d8b1.90ff.c889
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -473,7 +473,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
-            # Designated root has priority 32768, address d8b1.9009.bf80
+            # Designated root has priority 32768, address d8b1.90ff.c889
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -481,7 +481,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 intf_dict['designated_root_address'] = group['designated_root_address']
                 continue
 
-            # Designated bridge has priority 32768, address d8b1.9009.bf80
+            # Designated bridge has priority 32768, address d8b1.90ff.c889
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -671,7 +671,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                 inst_dict['vlan'] = group['vlan']
                 continue
 
-            # Bridge        address d8b1.9009.bf80  priority      32768 (32768 sysid 0)
+            # Bridge        address d8b1.90ff.c889  priority      32768 (32768 sysid 0)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -716,7 +716,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                 intf_dict.update({k:int(v) for k,v in group.items()})
                 continue
             
-            # Designated root       address 3820.565b.8600  priority  32768  cost           0
+            # Designated root       address 3820.56ff.e15b  priority  32768  cost           0
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -724,7 +724,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                 intf_dict.update({k:int(v) for k,v in group.items()})
                 continue
             
-            # Design. regional root address 3820.565b.8600  priority  32768  cost           0
+            # Design. regional root address 3820.56ff.e15b  priority  32768  cost           0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -733,7 +733,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                 intf_dict.update({k:int(v) for k,v in group.items()})
                 continue
             
-            # Designated bridge     address 3820.565b.8600  priority  32768  port id   128.23
+            # Designated bridge     address 3820.56ff.e15b  priority  32768  port id   128.23
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -887,8 +887,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 'Desg': 'designated',
                 'Root': 'root',
                 'BLK': 'blocking',
-                'Altn': 'alternate',
-                'Back': 'backup'}
+                'Altn': 'alternate',}
     cli_command = ['show spanning-tree vlan {vlan}','show spanning-tree mst {mst}','show spanning-tree']
 
     def cli(self, mst='', vlan='',output=None):
@@ -954,7 +953,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 role_dict['priority'] = int(m.groupdict()['priority'])
                 continue
 
-            # Address     58bf.eab6.2f00
+            # Address     58bf.eaff.e5b6
             m = p5.match(line)
             if m:
                 role_dict['address'] = m.groupdict()['address']

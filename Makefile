@@ -45,7 +45,7 @@ CYTHON_CMD	  = compileAll
 RELATED_PKGS = genie.libs.parser
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle  sphinx-rtd-theme 
-DEPENDENCIES += pip-tools Cython requests
+DEPENDENCIES += pip-tools Cython requests xmltodict
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
@@ -102,7 +102,7 @@ devnet: package
 	@echo ""
 
 install_build_deps:
-	@echo "Nothing to do"
+	@pip install --upgrade pip setuptools wheel
 
 uninstall_build_deps:
 	@echo "Nothing to do"
@@ -179,6 +179,11 @@ distribute:
 	@echo ""
 
 json:
-	./sdk_generator/parser -datafile sdk_generator/github/parser_datafile.yaml -save_location sdk_generator/outputs/github_parser.json
-	./sdk_generator/parser -datafile sdk_generator/bitbucket/parser_datafile.yaml -save_location sdk_generator/outputs/bitbucket_parser.json
-	@cp sdk_generator/outputs/github_parser.json  ../genieparser/src/genie/libs/parser/parsers.json
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Generating Parser json file"
+	@echo ""
+	@python -c "from genie.json.make_json import make_genieparser; make_genieparser()"
+	@echo ""
+	@echo "Done."
+	@echo ""

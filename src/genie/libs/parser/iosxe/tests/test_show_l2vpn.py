@@ -1,7 +1,7 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
@@ -634,12 +634,12 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     '''
     }
 
-
     golden_parsed_output_2 = {
         'service_instance': {
             100: {
                 'interfaces': {
                     'TenGigabitEthernet0/1': {
+                        'description': 'Fiber Connexion to XXX-111-1111',
                         'dot1q_tunnel_ethertype': '0x8100',
                         'efp_statistics': {
                             'bytes_in': 3955205745,
@@ -669,6 +669,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
             2000: {
                 'interfaces': {
                     'TenGigabitEthernet0/1': {
+                        'description': 'Fiber Connexion (Layer 2) to XXX-200-2222',
                         'dot1q_tunnel_ethertype': '0x8100',
                         'efp_statistics': {
                             'bytes_in': 51800659418,
@@ -753,7 +754,6 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
 
     '''
     }
-
 
     golden_parsed_output_interface = {
         'service_instance': {
@@ -990,6 +990,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
             },
         },
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
@@ -1003,15 +1004,12 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
     def test_golden_full_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
-
-
 
     def test_golden_interface(self):
         self.maxDiff = None

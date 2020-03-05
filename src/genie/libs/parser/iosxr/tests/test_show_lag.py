@@ -1,11 +1,11 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-from ats.topology import Device
+from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_lag import ShowLacpSystemId, ShowBundle, ShowLacp
+from genie.libs.parser.iosxr.show_lag import ShowLacpSystemId, ShowBundle, ShowBundleReasons, ShowLacp
 
 
 ###################################################
@@ -19,7 +19,7 @@ class test_show_lacp_sysid(unittest.TestCase):
 
     golden_parsed_output = {
         "system_priority": 100,
-        "system_id_mac": "00-1b-0c-10-5a-26"
+        "system_id_mac": "00-1b-0c-ff-6a-36"
     }
 
     golden_output = {'execute.return_value': '''
@@ -28,7 +28,7 @@ class test_show_lacp_sysid(unittest.TestCase):
 
         Priority  MAC Address
         --------  -----------------
-          0x0064  00-1b-0c-10-5a-26
+          0x0064  00-1b-0c-ff-6a-36
     '''}
 
     def test_empty(self):
@@ -69,7 +69,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 2000000,
                     "available": 2000000
                 },
-                "mac_address": "001b.0c10.5a25",
+                "mac_address": "001b.0cff.6a35",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 1,
@@ -103,7 +103,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Active",
                         "port_id": "0x000a, 0x0001",
                         "bw_kbps": 1000000,
-                        "link_state": "Active"
+                        "link_state": "Link is Active"
                     },
                     "GigabitEthernet0/0/0/1": {
                         "interface": "GigabitEthernet0/0/0/1",
@@ -111,7 +111,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Active",
                         "port_id": "0x8000, 0x0002",
                         "bw_kbps": 1000000,
-                        "link_state": "Active"
+                        "link_state": "Link is Active"
                     }
                 }
             },
@@ -128,7 +128,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 2000000,
                     "available": 2000000
                 },
-                "mac_address": "001b.0c10.5a24",
+                "mac_address": "001b.0cff.6a34",
                 "mac_address_source": "Chassis pool",
                 "inter_chassis_link": "No",
                 "min_active_link": 2,
@@ -162,7 +162,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Standby",
                         "port_id": "0x8000, 0x0005",
                         "bw_kbps": 1000000,
-                        "link_state": "Standby due to maximum-active links configuration"
+                        "link_state": "Link is Standby due to maximum-active links configuration"
                     },
                     "GigabitEthernet0/0/0/3": {
                         "interface": "GigabitEthernet0/0/0/3",
@@ -170,7 +170,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Active",
                         "port_id": "0x8000, 0x0004",
                         "bw_kbps": 1000000,
-                        "link_state": "Active"
+                        "link_state": "Link is Active"
                     },
                     "GigabitEthernet0/0/0/4": {
                         "interface": "GigabitEthernet0/0/0/4",
@@ -178,7 +178,7 @@ class test_show_bundle(unittest.TestCase):
                         "state": "Active",
                         "port_id": "0x8000, 0x0003",
                         "bw_kbps": 1000000,
-                        "link_state": "Active"
+                        "link_state": "Link is Active"
                     }
                 }
             }
@@ -193,7 +193,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up
           Local links <active/standby/configured>:   2 / 0 / 2
           Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a25 (Chassis pool)
+          MAC address (source):                      001b.0cff.6a35 (Chassis pool)
           Inter-chassis link:                        No
           Minimum active links / bandwidth:          1 / 1 kbps
           Maximum active links:                      8
@@ -221,7 +221,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up
           Local links <active/standby/configured>:   2 / 1 / 3
           Local bandwidth <effective/available>:     2000000 (2000000) kbps
-          MAC address (source):                      001b.0c10.5a24 (Chassis pool)
+          MAC address (source):                      001b.0cff.6a34 (Chassis pool)
           Inter-chassis link:                        No
           Minimum active links / bandwidth:          2 / 1 kbps
           Maximum active links:                      2
@@ -263,7 +263,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 100000,
                     "available": 100000
                 },
-                "mac_address": "1234.4321.1111",
+                "mac_address": "1234.43ff.3232",
                 "mac_address_source": "GigabitEthernet0/0/0/1",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 500,
@@ -326,7 +326,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 100000,
                     "available": 100000
                 },
-                "mac_address": "1234.4321.2222",
+                "mac_address": "1234.43ff.4343",
                 "mac_address_source": "chassis pool",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 500,
@@ -366,7 +366,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                     Up
           Local links <active/standby/configured>:   1 / 0 / 1
           Local bandwidth <effective/available>:     100000 (100000) kbps
-          MAC address (source):                      1234.4321.1111 (Gi0/0/0/1)
+          MAC address (source):                      1234.43ff.3232 (Gi0/0/0/1)
           Minimum active links / bandwidth:          1 / 500 kbps
           Maximum active links:                      32
           Wait-while timer:                          2000 ms
@@ -399,7 +399,7 @@ class test_show_bundle(unittest.TestCase):
           Status:                                    Up 
           Local links <active/standby/configured>:   1 / 0 / 1
           Local bandwidth <effective/available>:     100000 / 100000 kbps
-          MAC address (source):                      1234.4321.2222 (chassis pool)
+          MAC address (source):                      1234.43ff.4343 (chassis pool)
           Minimum active links / bandwidth:          1 / 500 kbps
           Maximum active links:                      32 (from partner)
           Wait-while timer:                          100 ms
@@ -433,7 +433,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 1000000,
                     "available": 1000000
                 },
-                "mac_address": "0000.deaf.0000",
+                "mac_address": "0000.deff.afaf",
                 "mac_address_source": "Configured",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 1,
@@ -462,7 +462,7 @@ class test_show_bundle(unittest.TestCase):
                         "device": "10.81.3.2",
                         "state": "Standby",
                         "port_id": "0x8002, 0xa001",
-                        "link_state": "marked as Standby by mLACP peer"
+                        "link_state": "Link is marked as Standby by mLACP peer"
                     }
                 }
             }
@@ -476,7 +476,7 @@ class test_show_bundle(unittest.TestCase):
         Status: Up
         Local links <active/standby/configured>: 1 / 0 / 1
         Local bandwidth <effective/available>: 1000000 (1000000) kbps
-        MAC address (source): 0000.deaf.0000 (Configured)
+        MAC address (source): 0000.deff.afaf (Configured)
         Minimum active links / bandwidth: 1 / 1 kbps
         Maximum active links: 64
         Wait while timer: 100 ms
@@ -514,7 +514,7 @@ class test_show_bundle(unittest.TestCase):
                     "effective": 0,
                     "available": 0
                 },
-                "mac_address": "0000.deaf.0000",
+                "mac_address": "0000.deff.afaf",
                 "mac_address_source": "Configured",
                 "min_active_link": 1,
                 "min_active_bw_kbps": 1,
@@ -543,7 +543,7 @@ class test_show_bundle(unittest.TestCase):
                         "device": "10.81.3.2",
                         "state": "Active",
                         "port_id": "0x8002, 0xa001",
-                        "link_state": "Active"
+                        "link_state": "Link is Active"
                     }
                 }
             }
@@ -558,7 +558,7 @@ class test_show_bundle(unittest.TestCase):
         Status: mLACP hot standby
         Local links <active/standby/configured>: 0 / 1 / 1
         Local bandwidth <effective/available>: 0 (0) kbps
-        MAC address (source): 0000.deaf.0000 (Configured)
+        MAC address (source): 0000.deff.afaf (Configured)
         Minimum active links / bandwidth: 1 / 1 kbps
         Maximum active links: 64
         Wait while timer: 100 ms
@@ -616,17 +616,312 @@ class test_show_bundle(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+###################################################
+# unit test for show bundle
+####################################################
+class test_show_bundle_reasons(unittest.TestCase):
+
+    """unit test for 
+    show bundle
+    show bundle {interface} reasons
+    """
+    
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None 
+
+    golden_parsed_output1 = {
+        "interfaces": {
+            "Bundle-Ether12": {
+                "name": "Bundle-Ether12",
+                "bundle_id": 12,
+                "oper_status": "up",
+                "local_links": {
+                    "active": 2,
+                    "standby": 0,
+                    "configured": 2
+                },
+                "local_bandwidth_kbps": {
+                    "effective": 2000000,
+                    "available": 2000000
+                },
+                "mac_address": "0006.c1ff.5574",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
+                "min_active_link": 1,
+                "min_active_bw_kbps": 1,
+                "max_active_link": 24,
+                "wait_while_timer_ms": 2000,
+                "load_balance": {
+                    "link_order_signaling": "Not configured",
+                    "hash_type": "Default",
+                    "locality_threshold": "None"
+                },
+                "lacp": {
+                    "lacp": "Operational",
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
+                },
+                "mlacp": {
+                    "mlacp": "Not configured"
+                },
+                "ipv4_bfd": {
+                    "ipv4_bfd": "Not configured"
+                },
+                "ipv6_bfd": {
+                    "ipv6_bfd": "Not configured"
+                },
+                "port": {
+                    "GigabitEthernet0/0/0/2": {
+                        "interface": "GigabitEthernet0/0/0/2",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0002",
+                        "bw_kbps": 1000000,
+                        "link_state": "Link is Active"
+                    },
+                    "GigabitEthernet0/0/0/3": {
+                        "interface": "GigabitEthernet0/0/0/3",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0001",
+                        "bw_kbps": 1000000,
+                        "link_state": "Link is Active"
+                    }
+                }
+            },
+            "Bundle-Ether23": {
+                "name": "Bundle-Ether23",
+                "bundle_id": 23,
+                "oper_status": "up",
+                "local_links": {
+                    "active": 1,
+                    "standby": 0,
+                    "configured": 2
+                },
+                "local_bandwidth_kbps": {
+                    "effective": 1000000,
+                    "available": 1000000
+                },
+                "mac_address": "0006.c1ff.5573",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
+                "min_active_link": 1,
+                "min_active_bw_kbps": 1,
+                "max_active_link": 24,
+                "wait_while_timer_ms": 2000,
+                "load_balance": {
+                    "link_order_signaling": "Not configured",
+                    "hash_type": "Default",
+                    "locality_threshold": "None"
+                },
+                "lacp": {
+                    "lacp": "Operational",
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
+                },
+                "mlacp": {
+                    "mlacp": "Not configured"
+                },
+                "ipv4_bfd": {
+                    "ipv4_bfd": "Not configured"
+                },
+                "ipv6_bfd": {
+                    "ipv6_bfd": "Not configured"
+                },
+                "port": {
+                    "GigabitEthernet0/0/0/4": {
+                        "interface": "GigabitEthernet0/0/0/4",
+                        "device": "Local",
+                        "state": "Configured",
+                        "port_id": "0x8000, 0x0004",
+                        "bw_kbps": 1000000,
+                        "link_state": "Partner System ID/Key do not match that of the Selected links"
+                    },
+                    "GigabitEthernet0/0/0/5": {
+                        "interface": "GigabitEthernet0/0/0/5",
+                        "device": "Local",
+                        "state": "Active",
+                        "port_id": "0x8000, 0x0003",
+                        "bw_kbps": 1000000,
+                        "link_state": "Link is Active"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output1 = {'execute.return_value': ''' 
+    RP/0/RP0/CPU0:R2_xr#show bundle reasons
+    Thu Jan  2 20:40:07.953 UTC
+
+    Bundle-Ether12
+      Status:                                    Up
+      Local links <active/standby/configured>:   2 / 0 / 2
+      Local bandwidth <effective/available>:     2000000 (2000000) kbps
+      MAC address (source):                      0006.c1ff.5574 (Chassis pool)
+      Inter-chassis link:                        No
+      Minimum active links / bandwidth:          1 / 1 kbps
+      Maximum active links:                      24
+      Wait while timer:                          2000 ms
+      Load balancing:                            
+        Link order signaling:                    Not configured
+        Hash type:                               Default
+        Locality threshold:                      None
+      LACP:                                      Operational
+        Flap suppression timer:                  Off
+        Cisco extensions:                        Disabled
+        Non-revertive:                           Disabled
+      mLACP:                                     Not configured
+      IPv4 BFD:                                  Not configured
+      IPv6 BFD:                                  Not configured
+
+      Port                  Device           State        Port ID         B/W, kbps
+      --------------------  ---------------  -----------  --------------  ----------
+      Gi0/0/0/2             Local            Active       0x8000, 0x0002     1000000
+          Link is Active
+      Gi0/0/0/3             Local            Active       0x8000, 0x0001     1000000
+          Link is Active
+
+    Bundle-Ether23
+      Status:                                    Up
+      Local links <active/standby/configured>:   1 / 0 / 2
+      Local bandwidth <effective/available>:     1000000 (1000000) kbps
+      MAC address (source):                      0006.c1ff.5573 (Chassis pool)
+      Inter-chassis link:                        No
+      Minimum active links / bandwidth:          1 / 1 kbps
+      Maximum active links:                      24
+      Wait while timer:                          2000 ms
+      Load balancing:                            
+        Link order signaling:                    Not configured
+        Hash type:                               Default
+        Locality threshold:                      None
+      LACP:                                      Operational
+        Flap suppression timer:                  Off
+        Cisco extensions:                        Disabled
+        Non-revertive:                           Disabled
+      mLACP:                                     Not configured
+      IPv4 BFD:                                  Not configured
+      IPv6 BFD:                                  Not configured
+
+      Port                  Device           State        Port ID         B/W, kbps
+      --------------------  ---------------  -----------  --------------  ----------
+      Gi0/0/0/4             Local            Configured   0x8000, 0x0004     1000000
+          Partner System ID/Key do not match that of the Selected links
+      Gi0/0/0/5             Local            Active       0x8000, 0x0003     1000000
+          Link is Active
+    '''
+    }
+
+    golden_parsed_output2 = {
+        "interfaces": {
+            "Bundle-Ether23": {
+                "name": "Bundle-Ether23",
+                "bundle_id": 23,
+                "oper_status": "down",
+                "local_links": {
+                    "active": 0,
+                    "standby": 0,
+                    "configured": 0
+                },
+                "local_bandwidth_kbps": {
+                    "effective": 0,
+                    "available": 0
+                },
+                "mac_address": "000e.83ff.4444",
+                "mac_address_source": "Chassis pool",
+                "inter_chassis_link": "No",
+                "min_active_link": 1,
+                "min_active_bw_kbps": 1,
+                "max_active_link": 24,
+                "wait_while_timer_ms": 2000,
+                "load_balance": {
+                    "link_order_signaling": "Not configured",
+                    "hash_type": "Default",
+                    "locality_threshold": "None"
+                },
+                "lacp": {
+                    "lacp": "Not operational",
+                    "flap_suppression_timer": "Off",
+                    "cisco_extensions": "Disabled",
+                    "non_revertive": "Disabled"
+                },
+                "mlacp": {
+                    "mlacp": "Not configured"
+                },
+                "ipv4_bfd": {
+                    "ipv4_bfd": "Not configured"
+                },
+                "ipv6_bfd": {
+                    "ipv6_bfd": "Not configured"
+                },
+            },
+        }
+    }
+
+
+    golden_output2 = {'execute.return_value': '''
+    [2020-01-09 18:43:58,295] +++ R2_xr: executing command 'show bundle Bundle-Ether23 reasons' +++
+    show bundle Bundle-Ether23 reasons
+    Thu Jan  9 23:43:50.462 UTC
+    
+    Bundle-Ether23
+      Status:                                    Down
+      Local links <active/standby/configured>:   0 / 0 / 0
+      Local bandwidth <effective/available>:     0 (0) kbps
+      MAC address (source):                      000e.83ff.4444 (Chassis pool)
+      Inter-chassis link:                        No
+      Minimum active links / bandwidth:          1 / 1 kbps
+      Maximum active links:                      24
+      Wait while timer:                          2000 ms
+      Load balancing:
+        Link order signaling:                    Not configured
+        Hash type:                               Default
+        Locality threshold:                      None
+      LACP:                                      Not operational
+        Flap suppression timer:                  Off
+        Cisco extensions:                        Disabled
+        Non-revertive:                           Disabled
+      mLACP:                                     Not configured
+      IPv4 BFD:                                  Not configured
+      IPv6 BFD:                                  Not configured
+    
+     '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBundle(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBundle(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBundle(device=self.device)
+        parsed_output = obj.parse(interface="Bundle-Ether23")
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+
 
 ###################################################
 # unit test for show lacp
 ####################################################
 class test_show_lacp(unittest.TestCase):
-    """unit test for show lacp"""
+    """unit test for 
+    show lacp
+    show lacp {interface}
+    """
     
-    device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None 
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         "interfaces": {
             "Bundle-Ether1": {
                 "name": "Bundle-Ether1",
@@ -640,7 +935,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x000a,0x0001",
                         "key": "0x0001",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -650,7 +945,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x000a,0x0001",
                             "key": "0x0001",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -670,7 +965,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0002",
                         "key": "0x0001",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -680,7 +975,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0005",
                             "key": "0x0001",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -707,7 +1002,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "a---A---",
                         "port_id": "0x8000,0x0005",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "out_sync",
                         "collecting": False,
@@ -717,7 +1012,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "as--A---",
                             "port_id": "0x8000,0x0004",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": False,
@@ -737,7 +1032,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0004",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -747,7 +1042,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0003",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -767,7 +1062,7 @@ class test_show_lacp(unittest.TestCase):
                         "state": "ascdA---",
                         "port_id": "0x8000,0x0003",
                         "key": "0x0002",
-                        "system_id": "0x0064,00-1b-0c-10-5a-26",
+                        "system_id": "0x0064,00-1b-0c-ff-6a-36",
                         "aggregatable": True,
                         "synchronization": "in_sync",
                         "collecting": True,
@@ -777,7 +1072,7 @@ class test_show_lacp(unittest.TestCase):
                             "state": "ascdA---",
                             "port_id": "0x8000,0x0002",
                             "key": "0x0002",
-                            "system_id": "0x8000,00-0c-86-5e-68-23",
+                            "system_id": "0x8000,00-0c-86-ff-c6-81",
                             "aggregatable": True,
                             "synchronization": "in_sync",
                             "collecting": True,
@@ -795,7 +1090,7 @@ class test_show_lacp(unittest.TestCase):
         }
     }
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:iosxrv9000-1#show lacp
         Tue Apr  3 20:32:49.966 UTC
         State: a - Port is marked as Aggregatable.
@@ -812,10 +1107,10 @@ class test_show_lacp(unittest.TestCase):
           Port          (rate)  State    Port ID       Key    System ID
           --------------------  -------- ------------- ------ ------------------------
         Local
-          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/0        30s  ascdA--- 0x000a,0x0001 0x0001 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x000a,0x0001 0x0001 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/1        30s  ascdA--- 0x8000,0x0002 0x0001 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0005 0x0001 0x8000,00-0c-86-ff-c6-81
 
           Port                  Receive    Period Selection  Mux       A Churn P Churn
           --------------------  ---------- ------ ---------- --------- ------- -------
@@ -828,12 +1123,12 @@ class test_show_lacp(unittest.TestCase):
           Port          (rate)  State    Port ID       Key    System ID
           --------------------  -------- ------------- ------ ------------------------
         Local
-          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-5e-68-23
-          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-10-5a-26
-           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-5e-68-23
+          Gi0/0/0/2        30s  a---A--- 0x8000,0x0005 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  as--A--- 0x8000,0x0004 0x0002 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/3        30s  ascdA--- 0x8000,0x0004 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0003 0x0002 0x8000,00-0c-86-ff-c6-81
+          Gi0/0/0/4        30s  ascdA--- 0x8000,0x0003 0x0002 0x0064,00-1b-0c-ff-6a-36
+           Partner         30s  ascdA--- 0x8000,0x0002 0x0002 0x8000,00-0c-86-ff-c6-81
 
           Port                  Receive    Period Selection  Mux       A Churn P Churn
           --------------------  ---------- ------ ---------- --------- ------- -------
@@ -843,18 +1138,125 @@ class test_show_lacp(unittest.TestCase):
           Gi0/0/0/4             Current    Slow   Selected   Distrib   None    None  
         '''}
 
+    golden_parsed_output2 =  {
+        "interfaces": {
+            "Bundle-Ether8": {
+                "name": "Bundle-Ether8",
+                "bundle_id": 8,
+                "lacp_mode": "active",
+                "port": {
+                    "TenGigabitEthernet0/0/0/0": {
+                        "interface": "TenGigabitEthernet0/0/0/0",
+                        "bundle_id": 8,
+                        "rate": 1,
+                        "state": "ascdAF--",
+                        "port_id": "0x8000,0x0002",
+                        "key": "0x0008",
+                        "system_id": "0x8000,40-55-39-ff-6c-0f",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
+                        "partner": {
+                            "rate": 1,
+                            "state": "ascdAF--",
+                            "port_id": "0x0001,0x0006",
+                            "key": "0x0008",
+                            "system_id": "0x0001,cc-ef-48-ff-23-0a",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
+                        },
+                        "receive": "Current",
+                        "period": "Fast",
+                        "selection": "Selected",
+                        "mux": "Distrib",
+                        "a_churn": "None",
+                        "p_churn": "None"
+                    },
+                    "TenGigabitEthernet0/1/0/0": {
+                        "interface": "TenGigabitEthernet0/1/0/0",
+                        "bundle_id": 8,
+                        "rate": 1,
+                        "state": "ascdAF--",
+                        "port_id": "0x8000,0x0001",
+                        "key": "0x0008",
+                        "system_id": "0x8000,40-55-39-ff-6c-0f",
+                        "aggregatable": True,
+                        "synchronization": "in_sync",
+                        "collecting": True,
+                        "distributing": True,
+                        "partner": {
+                            "rate": 1,
+                            "state": "ascdAF--",
+                            "port_id": "0x8000,0x0004",
+                            "key": "0x0008",
+                            "system_id": "0x0001,cc-ef-48-ff-23-0a",
+                            "aggregatable": True,
+                            "synchronization": "in_sync",
+                            "collecting": True,
+                            "distributing": True
+                        },
+                        "receive": "Current",
+                        "period": "Fast",
+                        "selection": "Selected",
+                        "mux": "Distrib",
+                        "a_churn": "None",
+                        "p_churn": "None"
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:iosxrv9000-1#show lacp Bundle-Ether8
+        Tue Apr  3 20:32:49.966 UTC
+        State: a - Port is marked as Aggregatable.
+               s - Port is Synchronized with peer.
+               c - Port is marked as Collecting.
+               d - Port is marked as Distributing.
+               A - Device is in Active mode.
+               F - Device requests PDUs from the peer at fast rate.
+               D - Port is using default values for partner information.
+               E - Information about partner has expired.
+
+        Bundle-Ether8
+
+          Port          (rate)  State    Port ID       Key    System ID
+          --------------------  -------- ------------- ------ ------------------------
+        Local
+          Te0/0/0/0         1s  ascdAF-- 0x8000,0x0002 0x0008 0x8000,40-55-39-ff-6c-0f
+           Partner          1s  ascdAF-- 0x0001,0x0006 0x0008 0x0001,cc-ef-48-ff-23-0a
+          Te0/1/0/0         1s  ascdAF-- 0x8000,0x0001 0x0008 0x8000,40-55-39-ff-6c-0f
+           Partner          1s  ascdAF-- 0x8000,0x0004 0x0008 0x0001,cc-ef-48-ff-23-0a
+
+          Port                  Receive    Period Selection  Mux       A Churn P Churn
+          --------------------  ---------- ------ ---------- --------- ------- -------
+        Local
+          Te0/0/0/0             Current    Fast   Selected   Distrib   None    None   
+          Te0/1/0/0             Current    Fast   Selected   Distrib   None    None   
+
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowLacp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
         obj = ShowLacp(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLacp(device=self.device)
+        parsed_output = obj.parse(interface='Bundle-Ether8')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

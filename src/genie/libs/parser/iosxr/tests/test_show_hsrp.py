@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Parser
 from genie.libs.parser.iosxr.show_hsrp import ShowHsrpSummary, ShowHsrpDetail
@@ -226,7 +226,7 @@ class test_show_hsrp_detail(unittest.TestCase):
                     'num_tracked_objects': 3,
                     'num_tracked_objects_up': 1
                   },
-                  'virtual_mac_address': '0000.0c07.ac05'
+                  'virtual_mac_address': '0000.0cff.b30c'
                   }
                 }
               }
@@ -276,7 +276,7 @@ class test_show_hsrp_detail(unittest.TestCase):
                     'hold_msec': 10000,
                     'hold_msec_flag': True
                   },
-                  'virtual_mac_address': '0000.0c07.ac08'
+                  'virtual_mac_address': '0000.0cff.b30f'
                   }
                 }
               }
@@ -301,7 +301,7 @@ class test_show_hsrp_detail(unittest.TestCase):
           Hot standby IP address is 192.168.1.254 configured
           Active router is local
           Standby router is 192.168.1.5 expires in 00:00:03
-          Standby virtual mac address is 0000.0c07.ac05, state is active
+          Standby virtual mac address is 0000.0cff.b30c, state is active
           Authentication text, string "cisco123"
           4 state changes, last state change 2d07h
           State change history:
@@ -325,7 +325,7 @@ class test_show_hsrp_detail(unittest.TestCase):
           Hot standby IP address is 192.168.2.254 configured
           Active router is 192.168.1.2 expires in 00:00:02
           Standby router is unknown expired
-          Standby virtual mac address is 0000.0c07.ac08, state is stored
+          Standby virtual mac address is 0000.0cff.b30f, state is stored
           Authentication text, string "cisco123"
           0 state changes, last state change never
           State change history:
@@ -381,7 +381,7 @@ class test_show_hsrp_detail(unittest.TestCase):
                     'hold_msec': 3000,
                     'hold_msec_flag': True
                   },
-                  'virtual_mac_address': '0000.0c07.ac00'
+                  'virtual_mac_address': '0000.0cff.b307'
                   }
                 }
               }
@@ -398,15 +398,15 @@ class test_show_hsrp_detail(unittest.TestCase):
                   'group_number': 1,
                   'hsrp_router_state': 'active',
                   'link_local_ipv6_address': {
-                    'address': 'fe80::205:73ff:fea0:1'
+                    'address': 'fe80::205:73ff:feff:a0a1'
                   },
                   'preempt': True,
                   'priority': 120,
                   'standby_expire': '00:00:02',
-                  'standby_ipv6_address': 'fe80::5000:1cff:fe0a:1, '
-                  '5200.1c0a.0001',
-                  'standby_router': 'fe80::5000:1cff:fe0a:1, '
-                  '5200.1c0a.0001',
+                  'standby_ipv6_address': 'fe80::5000:1cff:feff:a0b, '
+                  '5200.1cff.0a0b',
+                  'standby_router': 'fe80::5000:1cff:feff:a0b, '
+                  '5200.1cff.0a0b',
                   'standby_state': 'active',
                   'statistics': {
                     'last_coup_received': 'Never',
@@ -430,7 +430,7 @@ class test_show_hsrp_detail(unittest.TestCase):
                     'hold_msec': 3000,
                     'hold_msec_flag': True
                   },
-                  'virtual_mac_address': '0005.73a0.0001'
+                  'virtual_mac_address': '0005.73ff.a0a1'
                   }
                 }
               }
@@ -455,7 +455,7 @@ class test_show_hsrp_detail(unittest.TestCase):
           Hot standby IP address is 192.168.1.254 configured
           Active router is local
           Standby router is 192.168.1.2 expires in 00:00:02
-          Standby virtual mac address is 0000.0c07.ac00, state is active
+          Standby virtual mac address is 0000.0cff.b307, state is active
           Authentication text, string "cisco123"
           2 state changes, last state change 01:18:43
           State change history:
@@ -470,10 +470,10 @@ class test_show_hsrp_detail(unittest.TestCase):
           Hellotime 1000 msec holdtime 3000 msec
           Configured hellotime 1000 msec holdtime 3000 msec
           Minimum delay 5 sec, reload delay 10 sec
-          Hot standby IP address is fe80::205:73ff:fea0:1 configured
+          Hot standby IP address is fe80::205:73ff:feff:a0a1 configured
           Active router is local
-          Standby router is fe80::5000:1cff:fe0a:1, 5200.1c0a.0001 expires in 00:00:02
-          Standby virtual mac address is 0005.73a0.0001, state is active
+          Standby router is fe80::5000:1cff:feff:a0b, 5200.1cff.0a0b expires in 00:00:02
+          Standby virtual mac address is 0005.73ff.a0a1, state is active
           2 state changes, last state change 00:17:01
           State change history:
           Aug 11 09:28:07.063 UTC  Init     -> Listen   Delay timer expired

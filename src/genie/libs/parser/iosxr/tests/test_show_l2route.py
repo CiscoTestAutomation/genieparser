@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # ATS
-from ats.topology import Device
+from pyats.topology import Device
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
@@ -77,42 +77,42 @@ class TestShowL2RouteEvpnMacAll(unittest.TestCase):
         'topo_id': {
             '0': {
                 'mac_address': {
-                    '0012.0100.0001': {
+                    '0012.01ff.0001': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0002': {
+                    '0012.01ff.0002': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0003': {
+                    '0012.01ff.0003': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0004': {
+                    '0012.01ff.0004': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0005': {
+                    '0012.01ff.0005': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0006': {
+                    '0012.01ff.0006': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0007': {
+                    '0012.01ff.0007': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'},
-                    '0012.0100.0008': {
+                    '0012.01ff.0008': {
                         'producer': 'L2VPN',
                         'next_hop': '172.16.2.89/100001/ME'}}}}}
 
     device_output = {'execute.return_value': '''
         Topo ID  Mac Address    Producer    Next Hop(s)
         -------- -------------- ----------- ----------------------------------------
-        0        0012.0100.0001 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0002 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0003 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0004 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0007 L2VPN       172.16.2.89/100001/ME
-        0        0012.0100.0008 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0001 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0002 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0003 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0004 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0005 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0006 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0007 L2VPN       172.16.2.89/100001/ME
+        0        0012.01ff.0008 L2VPN       172.16.2.89/100001/ME
     '''}
 
     def test_empty(self):
@@ -140,7 +140,7 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
         'topo_id': {
             '0': {
                 'mac_address': {
-                    '0001.0003.0004': {
+                    '0001.00ff.0307': {
                         'ip_address': {
                             '10.1.0.250': {
                                 'next_hop': 'N/A',
@@ -148,22 +148,22 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
                             '2001:db8::250': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'}}},
-                    '0aaa.0bbb.0000': {
+                    '0aaa.0bff.bbbb': {
                         'ip_address': {
                             '10.1.0.3': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'}}},
-                    '0aaa.0bbb.0001': {
+                    '0aaa.0bff.bbbc': {
                         'ip_address': {
                             '10.1.0.4': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'}}},
-                    'fc00.0001.0006': {
+                    'fc00.00ff.0107': {
                         'ip_address': {
                             '192.168.166.3': {
                                 'next_hop': 'Bundle-Ether1.0',
                                 'producer': 'L2VPN'}}},
-                    'fc00.0001.0008': {
+                    'fc00.00ff.0109': {
                         'ip_address': {
                             '192.168.49.3': {
                                 'next_hop': '68101/I/ME',
@@ -172,12 +172,12 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
     device_output = {'execute.return_value': '''
         Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
         -------- -------------- --------------- ----------- ----------------------------------------
-        0        0001.0003.0004 10.1.0.250    LOCAL       N/A
-        0        0001.0003.0004 2001:db8::250   LOCAL       N/A
-        0        0aaa.0bbb.0000 10.1.0.3      LOCAL       N/A
-        0        0aaa.0bbb.0001 10.1.0.4      LOCAL       N/A
-        0        fc00.0001.0006 192.168.166.3   L2VPN  Bundle-Ether1.0
-        0        fc00.0001.0008 192.168.49.3    L2VPN  68101/I/ME
+        0        0001.00ff.0307 10.1.0.250    LOCAL       N/A
+        0        0001.00ff.0307 2001:db8::250   LOCAL       N/A
+        0        0aaa.0bff.bbbb 10.1.0.3      LOCAL       N/A
+        0        0aaa.0bff.bbbc 10.1.0.4      LOCAL       N/A
+        0        fc00.00ff.0107 192.168.166.3   L2VPN  Bundle-Ether1.0
+        0        fc00.00ff.0109 192.168.49.3    L2VPN  68101/I/ME
     '''}
 
     def test_empty(self):
