@@ -964,7 +964,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         * show ip route summary
         * show ip route summary vrf {vrf}"""
 
-    def cli(self, vrf='', output =None):
+    def cli(self, vrf='', output=None):
 
         cli_command = ['show ip route summary vrf {vrf}',
                        'show ip route summary']
@@ -986,8 +986,9 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         routeSummary_dict = {}
         sub_dict = {}
 
-        #   IP Route Table for VRF "xxx"
-        p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>[\w-]+)"$')
+        # IP Route Table for VRF "xxx"
+        # IP Route Table for VRF "evpn-t-0003"
+        p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +\"(?P<vrf>\S+)\"$')
 
         # Total number of routes: 308
         # Total number of paths:  332
@@ -1009,8 +1010,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             line = line.strip()
 
             # IP Route Table for VRF "default"
-            # OR
-            # IP Route Table for VRF "management"
+            # IP Route Table for VRF "evpn-t-0003"
             m = p1.match(line)
             if m:
                 parse_num_routes = False
@@ -1043,9 +1043,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if parse_best_path:
                 # am             : 3            None
                 # local          : 1
-                # direct         : 1
-                # static         : 1
-                # broadcast      : 5
+                #  am             : 4            ospf-1         : 1
                 m = p4.match(line)
                 if m:
                     group = m.groupdict()
