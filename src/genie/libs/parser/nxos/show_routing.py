@@ -37,6 +37,8 @@ NXOS parser for the following show commands:
     * show ipv6 route vrf {vrf}
     * show ipv6 route vrf all
     * show ipv6 route
+    * show ip route summary vrf {vrf}
+    * show ip route summary
 """
 
 # Python
@@ -314,6 +316,138 @@ class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
     def cli(self, vrf='', output=None):
         return super().cli(ip='ipv6', vrf=vrf, output=output)
 
+
+# =================================
+# Parser for 'show ip route summary'
+# Parser for 'show ip route summary vrf {vrf}'
+# =================================
+
+class ShowIpRouteSummarySchema(MetaParser):
+    """Schema for
+        * show ip route summary
+        * show ip route summary vrf {vrf} """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'backup_paths': {
+                    Optional(Any()): int,
+                },
+                'best_paths': {
+                    Optional(Any()): int,
+                },
+                Optional('num_routes_per_mask'): {
+                    Optional(Any()): int,
+                },
+                'total_paths': int,
+                'total_routes': int,
+              },
+         },
+}
+
+
+class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+    """Parser for
+        * show ip route summary
+        * show ip route summary vrf {vrf}"""
+
+    cli_command = ['show ip route summary vrf {vrf}',
+                   'show ip route summary']
+
+    def cli(self, vrf='', output=None):
+
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        vrf = None
+        parse_best_path = False
+        parse_num_routes = False
+
+        # Init dict
+        routeSummary_dict = {}
+        sub_dict = {}
+
+        # IP Route Table for VRF "xxx"
+        # IP Route Table for VRF "evpn-t-0003"
+        p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +\"(?P<vrf>\S+)\"$')
+
+        # Total number of routes: 308
+        p2 = re.compile(r'^Total +number +of +(?P<route_path>\w+): +(?P<route_path_val>\d+)$')
+
+        # Best paths per protocol:      Backup paths per protocol:
+        p3 = re.compile(r'^Best +paths +per +protocol.*$')
+
+        # am             : 214          ospf-1000      : 10
+        # local          : 14
+        # am             : 1            None
+        p4 = re.compile(r'^(?P<best>[\w-]+) +: +(?P<best_val>\d+)'
+                        r'( +(None|((?P<backup>\S+) +: +(?P<backup_val>\d+))))?$')
+
+        #   /8 : 1       /24: 4       /32: 12
+        p5 = re.compile(r'(?P<route_mask>/\d+) *: +(?P<route_mask_len>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IP Route Table for VRF "default"
+            # IP Route Table for VRF "evpn-t-0003"
+            m = p1.match(line)
+            if m:
+                parse_num_routes = False
+                parse_best_path = False
+                vrf = m.groupdict()['vrf']
+                continue
+
+            # Total number of routes: 17
+            # Total number of paths:  20
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = routeSummary_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                sub_dict.update({'total_'+group['route_path']: int(group['route_path_val'])})
+
+                continue
+
+            if parse_num_routes:
+                # /0 : 1       /8 : 1       /24: 1       /32: 8
+                for m1 in p5.finditer(line):
+                    if m1:
+                        sub_dict['num_routes_per_mask'][m1.group('route_mask')] = int(m1.group('route_mask_len'))
+
+            # Number of routes per mask-length:
+            if line.find('Number of routes per mask-length') >= 0:
+                parse_best_path = False
+                parse_num_routes = True
+                sub_dict['num_routes_per_mask'] = {}
+
+            if parse_best_path:
+                # am             : 3            None
+                # local          : 1
+                #  am             : 4            ospf-1         : 1
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    sub_dict['best_paths'][group['best']] = int(group['best_val'])
+
+                    if group['backup'] and group['backup_val']:
+                        sub_dict['backup_paths'][group['backup']] = int(group['backup_val'])
+
+            # Best paths per protocol:      Backup paths per protocol:
+            m = p3.match(line)
+            if m:
+                parse_best_path = True
+                if 'best_paths' not in sub_dict:
+                    sub_dict['best_paths'] = {}
+                    sub_dict['backup_paths'] = {}
+                continue
+
+        return routeSummary_dict
 
 # ====================================================
 # Schema for:
@@ -985,4 +1119,6 @@ class ShowRouting(ShowIpRoute):
             out = output
 
         return super().cli(protocol=protocol, route=route, vrf=vrf, interface=interface, output=out, cmd=cmd)
+
+
 
