@@ -36,4 +36,11 @@ $ pip install genie.metaparser
 
 Change logs can be found [here](changelog/CHANGELOG.md).
 
+### How to write parsers
+
+[Guide] 
+
+[Guide]: https://github.com/CiscoTestAutomation/getting-started/blob/master/develop-guide/writeparser/writeparser.rst
+
+
 > Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
