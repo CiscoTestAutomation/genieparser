@@ -40,7 +40,7 @@ Change logs can be found [here](changelog/CHANGELOG.md).
 
 [Guide] 
 
-[Guide]: https://github.com/CiscoTestAutomation/getting-started/blob/master/develop-guide/writeparser/writeparser.rst
+[Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html#
 
 
 > Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
