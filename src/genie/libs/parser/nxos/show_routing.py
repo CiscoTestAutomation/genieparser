@@ -351,16 +351,16 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
         * show ip route summary
         * show ip route summary vrf {vrf}"""
 
-    def cli(self, vrf='', output=None):
+    cli_command = ['show ip route summary vrf {vrf}',
+                   'show ip route summary']
 
-        cli_command = ['show ip route summary vrf {vrf}',
-                       'show ip route summary']
+    def cli(self, vrf='', output=None):
 
         if output is None:
             if vrf:
-                cmd = cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                cmd = cli_command[1]
+                cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
             out = output
