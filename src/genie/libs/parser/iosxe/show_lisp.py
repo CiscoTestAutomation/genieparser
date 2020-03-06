@@ -2061,7 +2061,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
         p4_2 = re.compile(r'(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+))(?P<rloc_status>([@*]?)) +(?P<db_no_route>(\d+))'
+                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
