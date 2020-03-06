@@ -816,6 +816,63 @@ class TestShowNveEthernetSegment(unittest.TestCase):
       EAD/EVI route timer age: not running
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        ESI: 0300.00ff.0001.2c00.0309
+        Parent interface: nve1
+        ES State: Up
+        Port-channel state: N/A
+        NVE Interface: nve1
+        NVE State: Up
+        Host Learning Mode: control-plane
+        Active Vlans: 1-99,101-105,1001-1005,1901-2005,2901-3700,3901-3967
+        DF Vlans: 102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024
+        1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056
+        Active VNIs: 501001-501100,502001-502100,503001-503005,600101-600105
+        CC failed for VLANs:
+        VLAN CC timer: no-timer
+        Number of ES members: 3
+        My ordinal: 0
+        DF timer start time: 00:00:00
+        Config State: N/A
+        DF List: 192.168.111.55 192.168.111.66
+        ES route added to L2RIB: True
+        EAD/ES routes added to L2RIB: True
+        EAD/EVI route timer age: not running
+    '''}
+
+    golden_parsed_output_2 = {
+        'nve': {
+            'nve1': {
+                'ethernet_segment': {
+                    'esi': {
+                        '0300.00ff.0001.2c00.0309': {
+                            'active_vlans': '1-99,101-105,1001-1005,1901-2005,2901-3700,3901-3967',
+                            'active_vnis': '501001-501100,502001-502100,503001-503005,600101-600105',
+                            'cc_failed_vlans': '',
+                            'cc_timer_left': 'no-timer',
+                            'config_status': 'n/a',
+                            'df_list': '192.168.111.55 192.168.111.66',
+                            'df_timer_st': '00:00:00',
+                            'df_vlans': '102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024,1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056',
+                            'ead_evi_rt_timer_age': 'not running',
+                            'ead_rt_added': True,
+                            'es_rt_added': True,
+                            'es_state': 'up',
+                            'esi': '0300.00ff.0001.2c00.0309',
+                            'host_reach_mode': 'control-plane',
+                            'if_name': 'nve1',
+                            'local_ordinal': 0,
+                            'num_es_mem': 3,
+                            'nve_if_name': 'nve1',
+                            'nve_state': 'up',
+                            'po_state': 'n/a',
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_show_nve_ethernet_segment(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -828,6 +885,13 @@ class TestShowNveEthernetSegment(unittest.TestCase):
         obj = ShowNveEthernetSegment(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+    
+    def test_show_nve_ethernet_segment_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNveEthernetSegment(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ==============================================================

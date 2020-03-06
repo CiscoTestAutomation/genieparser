@@ -110,6 +110,7 @@ class TestShowInterface(unittest.TestCase):
                     'route_tag': '10',
                     'secondary': True}},
             'last_link_flapped': '00:00:29',
+            'link_state': 'up',
             'mac_address': 'aaaa.bbff.8888',
             'medium': 'broadcast',
             'mtu': 1600,
@@ -135,7 +136,7 @@ class TestShowInterface(unittest.TestCase):
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '10'},
             'ethertype': '0x8100',
-            'link_state': 'Administratively down',
+            'link_state': 'down',
             'mac_address': '5254.00ff.8534',
             'medium': 'broadcast',
             'mtu': 1600,
@@ -160,6 +161,7 @@ class TestShowInterface(unittest.TestCase):
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '20'},
             'ethertype': '0x8100',
+            'link_state': 'up',
             'mac_address': '5254.00ff.8534',
             'medium': 'p2p',
             'mtu': 1600,
@@ -243,6 +245,7 @@ class TestShowInterface(unittest.TestCase):
                 {'receive': False, 'send': False},
             'interface_reset': 1,
             'last_link_flapped': '00:07:28',
+            'link_state': 'up',
             'mac_address': '5254.00ff.62da',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -282,6 +285,7 @@ class TestShowInterface(unittest.TestCase):
             'encapsulations': 
                 {'encapsulation': 'arpa'},
             'ethertype': '0x0000',
+            'link_state': 'up',
             'mac_address': '5254.00ff.9c38',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -360,7 +364,7 @@ class TestShowInterface(unittest.TestCase):
             'ipv4': {'10.229.1.112/16': {'ip': '10.229.1.112',
                                          'prefix_length': '16'}},
             'last_link_flapped': '13:23:37',
-            'link_state': 'DCX-No ACK in 100 PDUs',
+            'link_state': 'down',
             'mac_address': '002a.6aff.4571',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -375,7 +379,8 @@ class TestShowInterface(unittest.TestCase):
             'txload': '1/255',
             'types': '1000/10000 Ethernet'},
         'nve1': 
-            {'enabled': True,
+            {'enabled': False,
+             'link_state': 'up',
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False}}}
@@ -549,7 +554,7 @@ class TestShowInterface(unittest.TestCase):
 
     golden_parsed_output2 = {
         "Vlan1": {
-          "link_state": "Administratively down",
+          "link_state": "down",
           "autostate": True,
           "rxload": "1/255",
           "line_protocol": "down",
@@ -566,7 +571,7 @@ class TestShowInterface(unittest.TestCase):
           "delay": 10
        },
        "Vlan200": {
-            "link_state": "VLAN/BD is down",
+            "link_state": "down",
             "autostate": True,
             "rxload": "1/255",
             "line_protocol": "down",
@@ -712,7 +717,7 @@ class TestShowInterface(unittest.TestCase):
                  'flow_control': {'receive': False, 'send': False},
                  'interface_reset': 0,
                  'last_link_flapped': 'never',
-                 'link_state': 'Link not connected',
+                 'link_state': 'down',
                  'mac_address': '000c.29ff.e5fd',
                  'medium': 'broadcast',
                  'mtu': 1500,
@@ -849,6 +854,7 @@ class TestShowInterface(unittest.TestCase):
                        'route_tag': '10',
                        'secondary': True}},
              'last_link_flapped': '00:00:29',
+             'link_state': 'up',
              'mac_address': 'aaaa.bbff.8888',
              'medium': 'broadcast',
              'mtu': 1600,
@@ -1037,6 +1043,7 @@ class TestShowInterface(unittest.TestCase):
                         'flow_control': {'receive': False, 'send': False},
                         'interface_reset': 9,
                         'last_link_flapped': '3d22h',
+                        'link_state': 'up',
                         'mac_address': '80e0.1dff.6bb6',
                         'media_type': '1G',
                         'medium': 'broadcast',
@@ -1117,7 +1124,7 @@ class TestShowInterface(unittest.TestCase):
                          'ethertype': '0x8100',
                          'flow_control': {'receive': False, 'send': False},
                          'interface_reset': 16,
-                         'link_state': 'Administratively down',
+                         'link_state': 'down',
                          'mac_address': '80e0.1dff.6cc3',
                          'media_type': '10G',
                          'medium': 'broadcast',
@@ -1157,6 +1164,7 @@ class TestShowInterface(unittest.TestCase):
                   'ethertype': '0x0000',
                   'ipv4': {'10.154.64.17/23': {'ip': '10.154.64.17',
                                                'prefix_length': '23'}},
+                  'link_state': 'up',
                   'mac_address': '80e0.1dff.6bae',
                   'medium': 'broadcast',
                   'mtu': 1500,
@@ -1186,7 +1194,7 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'up',
             'dedicated_interface': True,
             'enabled': True,
-            'link_state': 'Link not connected',
+            'link_state': 'down',
             'mac_address': '1234.12ab.345b',
             'oper_status': 'down',
             'phys_address': '1234.12ab.345b',
@@ -2702,81 +2710,195 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
     '''}
 
     golden_parsed_output_3 = {
-    'Vlan355': {
-        'directed_broadcast': 'disabled',
-        'icmp_port_unreachable': 'enabled',
-        'icmp_redirects': 'enabled',
-        'icmp_unreachable': 'disabled',
-        'int_stat_last_reset': 'never',
-        'interface_status': 'protocol-up/link-up/admin-up',
-        'iod': 2,
-        'ip_forwarding': 'disabled',
-        'ip_mtu': 9216,
-        'ipv4': {
-            '10.170.153.133/28': {
-                'broadcast_address': '255.255.255.255',
-                'ip': '10.170.153.133',
-                'ip_subnet': '10.170.153.128',
-                'prefix_length': '28',
-                'route_preference': '0',
-                'route_tag': '0',
-                'secondary': False,
+        'Vlan355': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 2,
+            'ip_forwarding': 'disabled',
+            'ip_mtu': 9216,
+            'ipv4': {
+                '10.170.153.133/28': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': '10.170.153.133',
+                    'ip_subnet': '10.170.153.128',
+                    'prefix_length': '28',
+                    'route_preference': '0',
+                    'route_tag': '0',
+                    'secondary': False,
+                },
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 5070291600,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 50702916,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 691502626,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 1012679263,
+                    'unicast_bytes_received': 691502626,
+                    'unicast_bytes_sent': 1012679263,
+                    'unicast_packets_consumed': 5436721,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 5498120,
+                    'unicast_packets_received': 5436721,
+                    'unicast_packets_sent': 5498120,
+                },
             },
-            'counters': {
-                'broadcast_bytes_consumed': 0,
-                'broadcast_bytes_forwarded': 0,
-                'broadcast_bytes_originated': 0,
-                'broadcast_bytes_received': 0,
-                'broadcast_bytes_sent': 0,
-                'broadcast_packets_consumed': 0,
-                'broadcast_packets_forwarded': 0,
-                'broadcast_packets_originated': 0,
-                'broadcast_packets_received': 0,
-                'broadcast_packets_sent': 0,
-                'labeled_bytes_consumed': 0,
-                'labeled_bytes_forwarded': 0,
-                'labeled_bytes_originated': 0,
-                'labeled_bytes_received': 0,
-                'labeled_bytes_sent': 0,
-                'labeled_packets_consumed': 0,
-                'labeled_packets_forwarded': 0,
-                'labeled_packets_originated': 0,
-                'labeled_packets_received': 0,
-                'labeled_packets_sent': 0,
-                'multicast_bytes_consumed': 0,
-                'multicast_bytes_forwarded': 0,
-                'multicast_bytes_originated': 0,
-                'multicast_bytes_received': 5070291600,
-                'multicast_bytes_sent': 0,
-                'multicast_packets_consumed': 0,
-                'multicast_packets_forwarded': 0,
-                'multicast_packets_originated': 0,
-                'multicast_packets_received': 50702916,
-                'multicast_packets_sent': 0,
-                'unicast_bytes_consumed': 691502626,
-                'unicast_bytes_forwarded': 0,
-                'unicast_bytes_originated': 1012679263,
-                'unicast_bytes_received': 691502626,
-                'unicast_bytes_sent': 1012679263,
-                'unicast_packets_consumed': 5436721,
-                'unicast_packets_forwarded': 0,
-                'unicast_packets_originated': 5498120,
-                'unicast_packets_received': 5436721,
-                'unicast_packets_sent': 5498120,
-            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'default',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
         },
-        'load_sharing': 'none',
-        'local_proxy_arp': 'disabled',
-        'multicast_groups_address': 'none',
-        'multicast_routing': 'disabled',
-        'proxy_arp': 'disabled',
-        'unicast_reverse_path': 'none',
-        'vrf': 'default',
-        'wccp_redirect_exclude': 'disabled',
-        'wccp_redirect_inbound': 'disabled',
-        'wccp_redirect_outbound': 'disabled',
-    },
-}
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show ip interface vrf all
+        IP Interface Status for VRF "test"
+        Vlan3, Interface status: protocol-up/link-up/admin-up, iod: 6,
+        IP address: none
+        IP broadcast address: 255.255.255.255
+        IP multicast groups locally joined: none
+        IP MTU: 1200 bytes (using link MTU)
+        IP proxy ARP : disabled
+        IP Local Proxy ARP : disabled
+        IP multicast routing: disabled
+        IP icmp redirects: enabled
+        IP directed-broadcast: disabled 
+        IP Forwarding: enabled 
+        IP icmp unreachables (except port): disabled
+        IP icmp port-unreachable: enabled
+        IP unicast reverse path forwarding: none
+        IP load sharing: none 
+        IP interface statistics last reset: never
+        IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        WCCP Redirect outbound: disabled
+        WCCP Redirect inbound: disabled
+        WCCP Redirect exclude: disabled
+
+        IP Interface Status for VRF "test1"
+
+        IP Interface Status for VRF "test100"
+
+        IP Interface Status for VRF "test200"
+
+        IP Interface Status for VRF "test400"
+
+    '''}
+
+    golden_parsed_output_4 = {
+        'Vlan3': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 6,
+            'ip_forwarding': 'enabled',
+            'ip_mtu': 1200,
+            'ipv4': {
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 0,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 0,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 0,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 0,
+                    'unicast_bytes_received': 0,
+                    'unicast_bytes_sent': 0,
+                    'unicast_packets_consumed': 0,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 0,
+                    'unicast_packets_received': 0,
+                    'unicast_packets_sent': 0,
+                },
+                'none': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': 'none',
+                },
+            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'test',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
+        },
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -2818,6 +2940,13 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         parsed_output = ip_interface_vrf_all_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 # #############################################################################
 # # Unittest For Show Vrf All Interface
