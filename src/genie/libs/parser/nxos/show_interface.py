@@ -11,6 +11,8 @@ NXOS parsers for the following show commands:
     * show interface brief
     * show interface {interface} brief
     * show running-config interface {interface}
+    * show interface status
+    * show interface {interface} status
 '''
 
 # python
@@ -3294,6 +3296,77 @@ class ShowInterfaceDescription(ShowInterfaceDescriptionSchema):
                     intf_dict['speed'] = str(group['speed'])
                 intf_dict['description'] = str(group['description'])
                 index += 1                
+                continue
+
+        return result_dict
+
+
+#############################################################################
+# Parser For show interface status
+#############################################################################
+
+class ShowInterfaceStatusSchema(MetaParser):
+    """schema for show interface status
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'status': str,
+                'vlan': str,
+                'duplex_code': str,
+                'port_speed': str,
+                Optional('type'): str,
+            }
+        }
+    }
+
+
+class ShowInterfaceStatus(ShowInterfaceStatusSchema):
+    """parser for show interface status
+    """
+
+    cli_command = ['show interface status', 'show interface {interface} status']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port          Name               Status    Vlan      Duplex  Speed   Type
+        # --------------------------------------------------------------------------------
+        # Eth1/1        KeepAlive          connected routed    full    10G     10g
+        # Eth1/2        AOTLXPRISS10004    connected trunk     full    10G     10g
+        # mgmt0         --                 connected routed    full    1000    --
+        # Po1           VPC_PeerLink       connected trunk     full    40G     --
+        # Vlan366       BigData            connected routed    auto    auto    --
+
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? +(?P<status>(\S+))? +(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+)) +(?P<port_speed>(\S+)) +(?P<type>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            line = line.replace('\t', '')
+
+            m = p1.match(line)
+            if m and m.groupdict()['name'] != 'Name':
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                keys = ['name','status', 'vlan', 'duplex_code', 'port_speed', 'type']
+
+                for k in keys:
+                    if group[k] != '--':
+                        intf_dict[k] = group[k]
                 continue
 
         return result_dict

@@ -3199,7 +3199,7 @@ class ShowInterfacesStatusSchema(MetaParser):
                 'vlan': str,
                 'duplex_code': str,
                 'port_speed': str,
-                'type': str,
+                Optional('type'): str,
             }
         }
     }
@@ -3226,11 +3226,16 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         # Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
         # Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
         # Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
-        # Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+        # Gi1/10    To cft123          connected    trunk      a-full a-1000 10/100/1000-TX
+        # Gi1/1/0/1 FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
+        # Te1/1/2   VSL                connected    trunk        full  a-10G 10GBase-SR
+        # Te2/1/20                     disabled     1            full   auto No XCVR
+        # Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
+        # Po10      VSL LINK2          connected    trunk      a-full  a-10G
 
-        p1 = re.compile(r'^(?P<interfaces>\w+\d+\/\d+)(?: +(?P<name>([\S ]+)))?'
-                        r' +(?P<status>\S+) +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+)'
-                        r' +(?P<port_speed>[\S\-]+) +(?P<type>\S+)$')
+        p1 = re.compile(r'^(?P<interfaces>\S+)(?: +(?P<name>([\S ]+)))?'
+                        r' +(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
+                        r' +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+) +(?P<port_speed>[\S\-]+)( +(?P<type>.+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3251,7 +3256,8 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
                         'type']
 
                 for k in keys:
-                    intf_dict[k] = group[k]
+                    if group[k]:
+                        intf_dict[k] = group[k].strip()
                 continue
 
         return result_dict

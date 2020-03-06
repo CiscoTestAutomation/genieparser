@@ -8,8 +8,15 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* NXOS
+    * Added ShowInterfaceStatus for:
+        * show interface status
+        * show interface {interface} status
 
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInterfacesStatus
+        * Update schema and regex to support more various output
