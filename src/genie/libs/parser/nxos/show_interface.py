@@ -3306,7 +3306,7 @@ class ShowInterfaceDescription(ShowInterfaceDescriptionSchema):
 #############################################################################
 
 class ShowInterfaceStatusSchema(MetaParser):
-    """schema for show interface description
+    """schema for show interface status
     """
 
     schema = {
