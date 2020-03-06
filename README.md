@@ -38,7 +38,7 @@ Change logs can be found [here](changelog/CHANGELOG.md).
 
 
 
-# How to write parsers
+# To contributors:
 
 [Guide] 
 
