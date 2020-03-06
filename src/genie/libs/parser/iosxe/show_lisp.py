@@ -1491,9 +1491,8 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                             Optional('negative_mapping'):
                                                 {'map_reply_action': str,
                                                 },
-                                            Optional('encap_to_proxy'):
-                                                {'device': str,
-                                                },
+                                            Optional('encap_to_petr'): bool,
+                                            Optional('encap_to_petr_iid'): str,
                                             Optional('positive_mapping'):
                                                 {'rlocs':
                                                     {Any():
