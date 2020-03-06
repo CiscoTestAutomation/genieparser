@@ -20,7 +20,8 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowRunningConfigInterface,
                                                    ShowNveInterface,
                                                    ShowIpInterfaceBriefVrfAll,
-                                                   ShowInterfaceDescription)
+                                                   ShowInterfaceDescription,
+                                                   ShowInterfaceStatus)
 
 #############################################################################
 # unitest For Show Interface
@@ -4216,6 +4217,133 @@ class test_show_interface_description(unittest.TestCase):
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+
+#############################################################################
+# unitest For show interface status
+#############################################################################
+class test_show_interface_status(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10001',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': 'trunk'
+            },
+            'Ethernet1/2': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10004',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': '360'
+            },
+            'Ethernet1/43': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': '10g',
+                'vlan': '1'
+            },
+            'Ethernet1/52.511': {
+                'duplex_code': 'full',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10Gbase-LR',
+                'vlan': 'routed'
+            },
+            'Port-channel147': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10112',
+                'port_speed': '10G',
+                'status': 'connected',
+                'vlan': '360'
+            },
+            'Vlan1': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'down',
+                'vlan': 'routed'
+            },
+            'Vlan366': {
+                'duplex_code': 'auto',
+                'name': 'BigData',
+                'port_speed': 'auto',
+                'status': 'connected',
+                'vlan': 'routed'
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'name': 'ES1SW18AUN6_6/22',
+                'port_speed': '1000',
+                'status': 'connected',
+                'vlan': 'routed'
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        --------------------------------------------------------------------------------
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        mgmt0         ES1SW18AUN6_6/22   connected routed    full    1000    --         
+        
+        --------------------------------------------------------------------------------
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g        
+        Eth1/2        AOTLXPRPBD10004    connected 360       full    10G     10g        
+        Eth1/43       --                 disabled  1         auto    auto    10g
+        Eth1/52.511   --                 connected routed    full    10G     10Gbase-LR
+        Po147         AOTLXPRPBD10112    connected 360       full    10G     --         
+        Vlan1         --                 down      routed    auto    auto    --
+        Vlan366       BigData            connected routed    auto    auto    --        
+    '''}
+
+    golden_parsed_interface_output = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10001',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': 'trunk'}
+        }
+    }
+
+
+    golden_interface_output = {'execute.return_value': '''
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g     
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse(interface='Eth1/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':
