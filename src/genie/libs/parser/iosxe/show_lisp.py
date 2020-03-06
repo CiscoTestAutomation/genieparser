@@ -1699,11 +1699,14 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 rloc_id += 1
                 continue
 
-            # Encapsulating to proxy <device>
+            # Encapsulating to proxy ETR
+            # Encapsulating to proxy ETR Encap-IID 3
             m = p6.match(line)
             if m:
-                encap_dict = mapping_dict.setdefault('encap_to_proxy', {})
-                encap_dict['device'] = m.groupdict()['device']
+                encap_dict['encap_to_petr'] = True
+                encap_to_petr_iid = m.groupdict()['encap_to_petr_iid']
+                if encap_to_petr_iid:
+                    encap_dict['encap_to_petr_iid'] = encap_to_petr_iid
                 continue
 
         return parsed_dict
