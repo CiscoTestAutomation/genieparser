@@ -1591,7 +1591,8 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
 
-        # Encapsulating to proxy <device>
+        # Encapsulating to proxy ETR
+        # Encapsulating to proxy ETR Encap-IID 3
         p6 = re.compile(r'Encapsulating +to +proxy +(?P<device>(\S+)).*$')
 
         for line in out.splitlines():
