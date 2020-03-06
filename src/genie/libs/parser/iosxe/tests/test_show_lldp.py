@@ -1615,10 +1615,8 @@ class test_show_lldp_neighbors(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
 
-    # golden_parsed_output =
-
+    # show lldp neighbors
     golden_output = {'execute.return_value': '''
-        switch#show lldp neighbors
         Capability codes:
             (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
@@ -1637,6 +1635,74 @@ class test_show_lldp_neighbors(unittest.TestCase):
         
         switch#
         '''}
+
+    golden_parsed_output = {
+        'interface': {
+            'GigabitEthernet1/0/14': {
+                'device_id': {
+                    '10.10.191.107': {
+                        'capabilities': ['B', 'T'],
+                        'hold_time': 155,
+                        'port_id': '7038.eec7.8f65',
+                    },
+                },
+            },
+            'GigabitEthernet1/0/16': {
+                'device_id': {
+                    '10.10.191.104': {
+                        'capabilities': ['B', 'T'],
+                        'hold_time': 166,
+                        'port_id': '7038.eec7.9085',
+                    },
+                    '6400.6a7f.fd89': {
+                        'hold_time': 2781,
+                        'port_id': '6400.6a7f.fd89',
+                    },
+                },
+            },
+            'GigabitEthernet1/0/31': {
+                'device_id': {
+                    '10.10.191.93': {
+                        'capabilities': ['B', 'T'],
+                        'hold_time': 159,
+                        'port_id': 'fca8.41f2.0189',
+                    },
+                },
+            },
+            'GigabitEthernet1/0/33': {
+                'device_id': {
+                    '10.10.191.91': {
+                        'capabilities': ['B', 'T'],
+                        'hold_time': 152,
+                        'port_id': '7052.c598.adae',
+                    },
+                    'd89e.f33a.1ec4': {
+                        'hold_time': 3070,
+                        'port_id': 'd89e.f33a.1ec4',
+                    },
+                },
+            },
+            'GigabitEthernet1/0/44': {
+                'device_id': {
+                    '10.10.191.112': {
+                        'capabilities': ['B', 'T'],
+                        'hold_time': 171,
+                        'port_id': '7038.eec7.88dc',
+                    },
+                },
+            },
+            'GigabitEthernet1/0/52': {
+                'device_id': {
+                    'router': {
+                        'capabilities': ['R'],
+                        'hold_time': 117,
+                        'port_id': 'Gi0/0/0',
+                    },
+                },
+            },
+        },
+        'total_entries': 8,
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)

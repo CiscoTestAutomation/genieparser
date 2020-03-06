@@ -639,10 +639,13 @@ class ShowLldpNeighborsSchema(MetaParser):
         'total_entries': int,
         'interface': {
             Any(): {
-                'device_id': str,
-                'hold_time': int,
-                'capabilities': list,
-                'port_id': str,
+                'device_id': {
+                    Any(): {
+                        'hold_time': int,
+                        Optional('capabilities'): list,
+                        'port_id': str,
+                    }
+                }
             }
         }
     }
@@ -664,7 +667,7 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
 
     def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command[1]
+            cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -688,13 +691,31 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
             # Total entries displayed: 4
             m = p1.match(line)
             if m:
-                parsed_output['total_entries'] = m.groupdict()['entry']
+                parsed_output['total_entries'] = int(m.groupdict()['entry'])
                 continue
 
+            # Device ID           Local Intf     Hold-time  Capability      Port ID
             # router               Gi1/0/52       117        R               Gi0/0/0
             # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
             # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
             m = p2.match(line)
             if m:
-                intf_dict = parsed_output.setdefault('interface', {})
+                group = m.groupdict()
 
+                intf = Common.convert_intf_name(group['interface'])
+                device_dict = parsed_output.setdefault('interface', {}). \
+                                          setdefault(intf, {}). \
+                                          setdefault('device_id', {}). \
+                                          setdefault(group['device_id'], {})
+
+                device_dict['hold_time'] = int(group['hold_time'])
+
+                if group['capabilities']:
+                    capabilities = list(map(lambda x: x.strip(), group['capabilities'].split(',')))
+                    device_dict['capabilities'] = capabilities
+
+                device_dict['port_id'] = group['port_id']
+
+            continue
+
+        return parsed_output
