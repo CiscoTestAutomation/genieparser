@@ -1593,7 +1593,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
         # Encapsulating to proxy ETR
         # Encapsulating to proxy ETR Encap-IID 3
-        p6 = re.compile(r'Encapsulating +to +proxy +(?P<device>(\S+)).*$')
+        p6 = re.compile(r'Encapsulating\s+to\s+proxy\s+ETR(\s+Encap-IID\s+(?P<encap_to_petr_iid>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()
