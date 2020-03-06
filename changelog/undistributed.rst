@@ -12,6 +12,8 @@
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
+    * Added ShowLldpNeighbors for
+        * show lldp neighbors
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
