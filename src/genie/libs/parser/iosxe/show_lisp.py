@@ -2056,7 +2056,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
         # blue                  LISP0.102@    1      0      1   0.0%    0%  ITR-ETR
         # blue                  LISP0.102*    1      0      1   0.0%    0%  ITR-ETR
         p4_1 = re.compile(r'(?P<vrf>(\S+)) +(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+))(?P<rloc_status>([@*]?)) +(?P<db_no_route>(\d+))'
+                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
