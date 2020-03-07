@@ -1586,7 +1586,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         #   10.1.8.8 00:04:02  up          50/50        -
         # State can be: up, down, route-rejec plus self
         p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
-                         ' +(?P<state>(up|down|route-rejec)) *,? *(?P<self>(self)?)'
+                         ' +(?P<state>(\S+|up, self))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
 
