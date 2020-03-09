@@ -42,6 +42,8 @@
         * Update regex to support more various output
     * Update ShowEnvironment
         * Update regex to support more various output
+    * Update ShowIpOspfNeighborDetail
+        * Update regex to support more various output
 
 * NXOS
     * Updated ShowInterface
