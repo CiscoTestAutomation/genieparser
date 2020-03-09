@@ -3171,16 +3171,16 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                         'interfaces': {
                                             'TenGigabitEthernet3/1/1': {
                                                 'neighbors': {
-                                                    '10.16.0.101': {
+                                                    '10.25.0.102': {
                                                         'address': '10.16.255.210',
                                                         'bdr_ip_addr': '0.0.0.0',
-                                                        'dead_timer': '00:00:05',
+                                                        'dead_timer': '00:00:07',
                                                         'dr_ip_addr': '0.0.0.0',
                                                         'first': '0x0(0)/0x0(0)',
                                                         'index': '8/9,',
                                                         'bfd_state': 'enabled',
                                                         'interface': 'TenGigabitEthernet3/1/1',
-                                                        'neighbor_router_id': '10.16.0.101',
+                                                        'neighbor_router_id': '10.25.0.102',
                                                         'next': '0x0(0)/0x0(0)',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -3217,14 +3217,14 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         raw1 = '''\
             nhq-choke-VSS#sh ip ospf neighbor detail
             show ip ospf neighbor detail
-            Neighbor 10.16.0.101, interface address 10.16.255.210
+            Neighbor 10.25.0.102, interface address 10.16.255.210
                 In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
                 Neighbor priority is 0, State is FULL, 6 state changes
                 DR is 0.0.0.0 BDR is 0.0.0.0
                 Options is 0x12 in Hello (E-bit, L-bit)
                 Options is 0x52 in DBD (E-bit, L-bit, O-bit)
                 LLS Options is 0x1 (LR)
-                Dead timer due in 00:00:05
+                Dead timer due in 00:00:07
                 Neighbor is up for 8w0d    
                 Index 8/9, retransmission queue length 0, number of retransmission 383
                 First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
@@ -3252,7 +3252,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 Last flood scan length is 1, maximum is 51
                 Last flood scan time is 0 msec, maximum is 4 msec
                 Neighbor Count is 1, Adjacent neighbor count is 1 
-                    Adjacent with neighbor 10.16.0.101
+                    Adjacent with neighbor 10.25.0.102
                 Suppress hello for 0 neighbor(s)
             '''
         raw3_2 = '''\
