@@ -3338,6 +3338,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 continue
 
             # In the area 0 via interface GigabitEthernet2
+            # In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
             m = p2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
