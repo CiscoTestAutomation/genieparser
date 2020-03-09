@@ -2375,10 +2375,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet1'] = raw2_2
-        self.outputs['show ip ospf interface | section OSPF_SL1'] = raw2_3
-        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_4
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet1'] = raw2_2
+        self.outputs['show ip ospf interface OSPF_SL1'] = raw2_3
+        self.outputs['show ip ospf interface GigabitEthernet3'] = raw2_4
         self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw3_1
         self.outputs['show running-config | i sham-link | i 10.151.22.22'] = raw3_2
         self.outputs['show running-config | section router ospf 1'] = raw4_1
@@ -2544,9 +2544,9 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_VL1'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet0/1'] = raw2_2
-        self.outputs['show ip ospf interface | section GigabitEthernet0/0'] = raw2_3
+        self.outputs['show ip ospf interface OSPF_VL1'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet0/1'] = raw2_2
+        self.outputs['show ip ospf interface GigabitEthernet0/0'] = raw2_3
 
         self.outputs['show ip ospf virtual-links | i OSPF_VL1'] = raw3_1
         self.outputs['show running-config | i virtual-link | i 10.100.5.5'] = raw3_2
@@ -2783,11 +2783,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/1'] = raw2_1
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/2'] = raw2_2
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/3'] = raw2_3
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/4'] = raw2_4
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/5'] = raw2_5
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/1'] = raw2_1
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/2'] = raw2_2
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/3'] = raw2_3
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/4'] = raw2_4
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/5'] = raw2_5
 
         self.outputs['show running-config | section router ospf 1666'] = raw3_1
         self.outputs['show running-config | section router ospf 1668'] = raw3_2
@@ -3138,10 +3138,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section GigabitEthernet5'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet4'] = raw2_2
-        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_3
-        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_4
+        self.outputs['show ip ospf interface GigabitEthernet5'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet4'] = raw2_2
+        self.outputs['show ip ospf interface GigabitEthernet3'] = raw2_3
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw2_4
 
         self.outputs['show running-config | section router ospf 65109'] = raw3_1
 
@@ -3263,7 +3263,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 default-information originate
             '''
         self.outputs = {}
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/1'] = raw2_1
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/1'] = raw2_1
         self.outputs['show ip ospf neighbor detail'] = raw1
         self.outputs['show running-config | section router ospf 1668'] = raw3_2
         self.device.execute = Mock()
@@ -3373,7 +3373,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf sham-links'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_SL0'] = raw2
+        self.outputs['show ip ospf interface OSPF_SL0'] = raw2
         self.outputs['show running-config | section router ospf 2'] = raw3
 
         self.device.execute = Mock()
@@ -3496,7 +3496,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf virtual-links'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_VL0'] = raw2
+        self.outputs['show ip ospf interface OSPF_VL0'] = raw2
         self.outputs['show running-config | section router ospf 2'] = raw3
 
         self.device.execute = Mock()

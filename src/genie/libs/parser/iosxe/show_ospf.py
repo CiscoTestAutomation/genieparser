@@ -2642,7 +2642,7 @@ class ShowIpOspfLinksParser(MetaParser):
                     real_link_name = interface
                 
                 # Get OSPF process ID from 'show ip ospf interface'
-                cmd = 'show ip ospf interface | section {}'.format(interface)
+                cmd = 'show ip ospf interface {}'.format(interface)
                 out = self.device.execute(cmd)
 
                 for line in out.splitlines():
@@ -3347,7 +3347,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 router_id = None
                 bfd_state = m.groupdict().get('bfd_state', None)
                 # Get OSPF process ID from 'show ip ospf interface'
-                cmd = 'show ip ospf interface | section {}'.format(interface)
+                cmd = 'show ip ospf interface {}'.format(interface)
                 out = self.device.execute(cmd)
 
                 for line in out.splitlines():
