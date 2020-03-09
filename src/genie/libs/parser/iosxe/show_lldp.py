@@ -637,18 +637,22 @@ class ShowLldpNeighborsSchema(MetaParser):
     """
     schema = {
         'total_entries': int,
-        'interface': {
+        'interfaces': {
             Any(): {
-                'device_id': {
+                'port_id': {
                     Any(): {
-                        'hold_time': int,
-                        Optional('capabilities'): list,
-                        'port_id': str,
+                        'neighbors': {
+                            Any(): {
+                                'hold_time': int,
+                                Optional('capabilities'): list,
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
 
 class ShowLldpNeighbors(ShowLldpNeighborsSchema):
     """
@@ -681,7 +685,7 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
         # router               Gi1/0/52       117        R               Gi0/0/0
         # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
         # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
-        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interface>\S+)'
+        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interfaces>\S+)'
                         r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
                         r'\s+(?P<port_id>\S+)')
 
@@ -702,10 +706,12 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
             if m:
                 group = m.groupdict()
 
-                intf = Common.convert_intf_name(group['interface'])
-                device_dict = parsed_output.setdefault('interface', {}). \
+                intf = Common.convert_intf_name(group['interfaces'])
+                device_dict = parsed_output.setdefault('interfaces', {}). \
                                           setdefault(intf, {}). \
-                                          setdefault('device_id', {}). \
+                                          setdefault('port_id', {}). \
+                                          setdefault(group['port_id'], {}).\
+                                          setdefault('neighbors', {}). \
                                           setdefault(group['device_id'], {})
 
                 device_dict['hold_time'] = int(group['hold_time'])
@@ -714,7 +720,6 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
                     capabilities = list(map(lambda x: x.strip(), group['capabilities'].split(',')))
                     device_dict['capabilities'] = capabilities
 
-                device_dict['port_id'] = group['port_id']
 
             continue
 

@@ -1637,66 +1637,90 @@ class test_show_lldp_neighbors(unittest.TestCase):
         '''}
 
     golden_parsed_output = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet1/0/14': {
-                'device_id': {
-                    '10.10.191.107': {
-                        'capabilities': ['B', 'T'],
-                        'hold_time': 155,
-                        'port_id': '7038.eec7.8f65',
+                'port_id': {
+                    '7038.eec7.8f65': {
+                        'neighbors': {
+                            '10.10.191.107': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 155,
+                            },
+                        },
                     },
                 },
             },
             'GigabitEthernet1/0/16': {
-                'device_id': {
-                    '10.10.191.104': {
-                        'capabilities': ['B', 'T'],
-                        'hold_time': 166,
-                        'port_id': '7038.eec7.9085',
-                    },
+                'port_id': {
                     '6400.6a7f.fd89': {
-                        'hold_time': 2781,
-                        'port_id': '6400.6a7f.fd89',
+                        'neighbors': {
+                            '6400.6a7f.fd89': {
+                                'hold_time': 2781,
+                            },
+                        },
+                    },
+                    '7038.eec7.9085': {
+                        'neighbors': {
+                            '10.10.191.104': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 166,
+                            },
+                        },
                     },
                 },
             },
             'GigabitEthernet1/0/31': {
-                'device_id': {
-                    '10.10.191.93': {
-                        'capabilities': ['B', 'T'],
-                        'hold_time': 159,
-                        'port_id': 'fca8.41f2.0189',
+                'port_id': {
+                    'fca8.41f2.0189': {
+                        'neighbors': {
+                            '10.10.191.93': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 159,
+                            },
+                        },
                     },
                 },
             },
             'GigabitEthernet1/0/33': {
-                'device_id': {
-                    '10.10.191.91': {
-                        'capabilities': ['B', 'T'],
-                        'hold_time': 152,
-                        'port_id': '7052.c598.adae',
+                'port_id': {
+                    '7052.c598.adae': {
+                        'neighbors': {
+                            '10.10.191.91': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 152,
+                            },
+                        },
                     },
                     'd89e.f33a.1ec4': {
-                        'hold_time': 3070,
-                        'port_id': 'd89e.f33a.1ec4',
+                        'neighbors': {
+                            'd89e.f33a.1ec4': {
+                                'hold_time': 3070,
+                            },
+                        },
                     },
                 },
             },
             'GigabitEthernet1/0/44': {
-                'device_id': {
-                    '10.10.191.112': {
-                        'capabilities': ['B', 'T'],
-                        'hold_time': 171,
-                        'port_id': '7038.eec7.88dc',
+                'port_id': {
+                    '7038.eec7.88dc': {
+                        'neighbors': {
+                            '10.10.191.112': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 171,
+                            },
+                        },
                     },
                 },
             },
             'GigabitEthernet1/0/52': {
-                'device_id': {
-                    'router': {
-                        'capabilities': ['R'],
-                        'hold_time': 117,
-                        'port_id': 'Gi0/0/0',
+                'port_id': {
+                    'Gi0/0/0': {
+                        'neighbors': {
+                            'router': {
+                                'capabilities': ['R'],
+                                'hold_time': 117,
+                            },
+                        },
                     },
                 },
             },
