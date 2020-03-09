@@ -1237,8 +1237,8 @@ class test_show_routing(unittest.TestCase):
     '%' in via output denotes VRF
 
     show ip route static
-    99.0.1.1/32, ubest/mbest: 1/0
-    *via 11.1.10.2, [1/0], 13:35:01, static
+    10.111.1.1/32, ubest/mbest: 1/0
+    *via 10.144.10.2, [1/0], 13:35:01, static
     via 10.1.10.2, [4/0], 13:35:01, static
     '''}
 
@@ -1248,7 +1248,7 @@ class test_show_routing(unittest.TestCase):
             'address_family': {
                 'ipv4': {
                     'routes': {
-                        '99.0.1.1/32': {
+                        '10.111.1.1/32': {
                             'active': True,
                             'mbest': 0,
                             'metric': 0,
@@ -1258,7 +1258,7 @@ class test_show_routing(unittest.TestCase):
                                         'best_ucast_nexthop': True,
                                         'index': 1,
                                         'metric': 0,
-                                        'next_hop': '11.1.10.2',
+                                        'next_hop': '10.144.10.2',
                                         'route_preference': 1,
                                         'source_protocol': 'static',
                                         'updated': '13:35:01',
@@ -1273,7 +1273,7 @@ class test_show_routing(unittest.TestCase):
                                     },
                                 },
                             },
-                            'route': '99.0.1.1/32',
+                            'route': '10.111.1.1/32',
                             'route_preference': 1,
                             'source_protocol': 'static',
                             'ubest': 1,
@@ -2631,8 +2631,8 @@ class test_show_ip_route(unittest.TestCase):
     '%' in via output denotes VRF
     
     show ip route static
-    99.0.1.1/32, ubest/mbest: 1/0
-    *via 11.1.10.2, [1/0], 13:35:01, static
+    10.111.1.1/32, ubest/mbest: 1/0
+    *via 10.144.10.2, [1/0], 13:35:01, static
     via 10.1.10.2, [4/0], 13:35:01, static
     '''}
 
@@ -2642,7 +2642,7 @@ class test_show_ip_route(unittest.TestCase):
             'address_family': {
                 'ipv4': {
                     'routes': {
-                        '99.0.1.1/32': {
+                        '10.111.1.1/32': {
                             'active': True,
                             'mbest': 0,
                             'metric': 0,
@@ -2651,7 +2651,7 @@ class test_show_ip_route(unittest.TestCase):
                                     1: {
                                         'best_ucast_nexthop': True,
                                         'index': 1,
-                                        'next_hop': '11.1.10.2',
+                                        'next_hop': '10.144.10.2',
                                         'source_protocol': 'static',
                                         'updated': '13:35:01',
                                         'route_preference': 1,
@@ -2667,7 +2667,7 @@ class test_show_ip_route(unittest.TestCase):
                                     },
                                 },
                             },
-                            'route': '99.0.1.1/32',
+                            'route': '10.111.1.1/32',
                             'route_preference': 1,
                             'source_protocol': 'static',
                             'ubest': 1,
