@@ -4,6 +4,7 @@
      *  show lldp entry *
      *  show lldp entry [<WORD>]
      *  show lldp interface [<WORD>]
+     *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
 """
@@ -629,3 +630,97 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
                 continue
         return ret_dict
 
+
+class ShowLldpNeighborsSchema(MetaParser):
+    """
+    Schema for show lldp neighbors
+    """
+    schema = {
+        'total_entries': int,
+        'interfaces': {
+            Any(): {
+                'port_id': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {
+                                'hold_time': int,
+                                Optional('capabilities'): list,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLldpNeighbors(ShowLldpNeighborsSchema):
+    """
+    Parser for show lldp neighbors
+    """
+    CAPABILITY_CODES = {'R': 'router',
+                        'B': 'mac_bridge',
+                        'T': 'telephone',
+                        'C': 'docsis_cable_device',
+                        'W': 'wlan_access_point',
+                        'P': 'repeater',
+                        'S': 'station_only',
+                        'O': 'other'}
+
+    cli_command = ['show lldp neighbors']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_output = {}
+
+        # Total entries displayed: 4
+        p1 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
+
+        # Device ID           Local Intf     Hold-time  Capability      Port ID
+        # router               Gi1/0/52       117        R               Gi0/0/0
+        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+        # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interfaces>\S+)'
+                        r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
+                        r'\s+(?P<port_id>\S+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total entries displayed: 4
+            m = p1.match(line)
+            if m:
+                parsed_output['total_entries'] = int(m.groupdict()['entry'])
+                continue
+
+            # Device ID           Local Intf     Hold-time  Capability      Port ID
+            # router               Gi1/0/52       117        R               Gi0/0/0
+            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+            # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf = Common.convert_intf_name(group['interfaces'])
+                device_dict = parsed_output.setdefault('interfaces', {}). \
+                                          setdefault(intf, {}). \
+                                          setdefault('port_id', {}). \
+                                          setdefault(group['port_id'], {}).\
+                                          setdefault('neighbors', {}). \
+                                          setdefault(group['device_id'], {})
+
+                device_dict['hold_time'] = int(group['hold_time'])
+
+                if group['capabilities']:
+                    capabilities = list(map(lambda x: x.strip(), group['capabilities'].split(',')))
+                    device_dict['capabilities'] = capabilities
+
+
+            continue
+
+        return parsed_output

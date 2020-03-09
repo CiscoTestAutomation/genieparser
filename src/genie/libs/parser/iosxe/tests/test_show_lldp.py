@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_lldp import ShowLldp, ShowLldpEntry, \
                                    ShowLldpNeighborsDetail, \
                                    ShowLldpTraffic, \
-                                   ShowLldpInterface
+                                   ShowLldpInterface, \
+                                   ShowLldpNeighbors
 
 
 class test_show_lldp(unittest.TestCase):
@@ -1609,8 +1610,136 @@ class test_show_lldp_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
+class test_show_lldp_neighbors(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
 
+    # show lldp neighbors
+    golden_output = {'execute.return_value': '''
+        Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        
+        Device ID           Local Intf     Hold-time  Capability      Port ID
+        10.10.191.112       Gi1/0/44       171        B,T             7038.eec7.88dc
+        10.10.191.104       Gi1/0/16       166        B,T             7038.eec7.9085
+        10.10.191.93        Gi1/0/31       159        B,T             fca8.41f2.0189
+        10.10.191.91        Gi1/0/33       152        B,T             7052.c598.adae
+        router               Gi1/0/52       117        R               Gi0/0/0
+        10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+        d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        6400.6a7f.fd89      Gi1/0/16       2781                       6400.6a7f.fd89
+        
+        Total entries displayed: 8
+        
+        switch#
+        '''}
 
+    golden_parsed_output = {
+        'interfaces': {
+            'GigabitEthernet1/0/14': {
+                'port_id': {
+                    '7038.eec7.8f65': {
+                        'neighbors': {
+                            '10.10.191.107': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 155,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/16': {
+                'port_id': {
+                    '6400.6a7f.fd89': {
+                        'neighbors': {
+                            '6400.6a7f.fd89': {
+                                'hold_time': 2781,
+                            },
+                        },
+                    },
+                    '7038.eec7.9085': {
+                        'neighbors': {
+                            '10.10.191.104': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 166,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/31': {
+                'port_id': {
+                    'fca8.41f2.0189': {
+                        'neighbors': {
+                            '10.10.191.93': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 159,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/33': {
+                'port_id': {
+                    '7052.c598.adae': {
+                        'neighbors': {
+                            '10.10.191.91': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 152,
+                            },
+                        },
+                    },
+                    'd89e.f33a.1ec4': {
+                        'neighbors': {
+                            'd89e.f33a.1ec4': {
+                                'hold_time': 3070,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/44': {
+                'port_id': {
+                    '7038.eec7.88dc': {
+                        'neighbors': {
+                            '10.10.191.112': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 171,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/52': {
+                'port_id': {
+                    'Gi0/0/0': {
+                        'neighbors': {
+                            'router': {
+                                'capabilities': ['R'],
+                                'hold_time': 117,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 8,
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowLldpNeighbors(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowLldpNeighbors(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
