@@ -693,7 +693,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
         parsed_output = obj.parse(interface="nve1")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_show_nve_vni_golden(self):
+    def test_show_nve_vni_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowNveInterfaceDetail(device=self.device)
