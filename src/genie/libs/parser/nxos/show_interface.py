@@ -1127,9 +1127,9 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
          'unicast_reverse_path': str,
          'load_sharing': str,
          'int_stat_last_reset': str,
-         'wccp_redirect_outbound': str,
-         'wccp_redirect_inbound': str,
-         'wccp_redirect_exclude': str
+         Optional('wccp_redirect_outbound'): str,
+         Optional('wccp_redirect_inbound'): str,
+         Optional('wccp_redirect_exclude'): str
         },
     }   
 
@@ -1173,7 +1173,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             'oil_uptime',
             'iod',
             '(tunnel.*)',
+            'wccp_redirect_outbound',
+            'wccp_redirect_inbound',
+            'wccp_redirect_exclude'
             'multicast_groups_address']
+
     def cli(self, interface='', vrf='', output=None):
         if interface and vrf:
             cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
