@@ -12,6 +12,10 @@
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
+* NXOS
+    * Added ShowIpRouteSummary for:
+        * show ip route summary
+        * show ip route summary vrf {vrf}
 
 --------------------------------------------------------------------------------
                                 Fix
