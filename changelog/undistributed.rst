@@ -44,6 +44,8 @@
         * Update regex to support more various output
     * Update ShowEnvironment
         * Update regex to support more various output
+    * Update ShowNveInterfaceDetail
+        * Update regex to support more various output
 
 * NXOS
     * Updated ShowInterface
