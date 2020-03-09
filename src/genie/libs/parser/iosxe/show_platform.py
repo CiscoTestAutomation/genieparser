@@ -3357,8 +3357,9 @@ class ShowEnvironment(ShowEnvironmentSchema):
 
         p3 = re.compile(r'^Number +of +Minor +alarms: +(?P<min_alarms>\d+)$')
 
-        p4 = re.compile(r'^(?P<slot>([\w\d]+)) +(?P<sensor_name>([\w\d\:]+( [\w]+( [\w]+)?)?))'
-                         ' +(?P<state>([\w]+ [\w]+ [\d%]+)|([\w]+)) +(?P<reading>[\w\d\s]+)$')
+        p4 = re.compile(r'(?P<slot>\S+) +(?P<sensor_name>\S+|\w+\: +\S+(:? +\S+)?) +'
+                        r'(?P<state>Normal|Fan +Speed +\S+) +(?P<reading>\d+ +\S+'
+                        r'(:? +AC)?)(:? +\S+)?$')
 
         for line in out.splitlines():
             line = line.strip()

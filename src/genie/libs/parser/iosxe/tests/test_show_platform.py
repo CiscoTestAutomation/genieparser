@@ -6969,9 +6969,7 @@ class TestShowEnv(unittest.TestCase):
                             'V2: VME': {'reading': '1098 mV',
                                         'state': 'Normal'},
                             'V2: VMF': {'reading': '1000 mV',
-                                        'state': 'Normal'}}},
-          'Slot': {'sensor': {'Sensor': {'reading': 'State       Reading',
-                                         'state': 'Current'}}}}}
+                                        'state': 'Normal'}}}}}
 
     golden_output = {'execute.return_value': '''\
         Router#show environment
@@ -7209,6 +7207,23 @@ class TestShowEnv(unittest.TestCase):
         P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
     '''}
 
+    golden_parsed_output3 = {
+        'slot': {
+            'P6': {
+                'sensor': {
+                    'Temp1': {
+                        'reading': '1791 mV',
+                        'state': 'Normal',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        show environment | include Fan Speed
+        P6          Temp1        Normal          1791 mV        na
+    '''}
     
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -7229,6 +7244,13 @@ class TestShowEnv(unittest.TestCase):
         obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse(include='Fan Speed')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output3)
+        obj = ShowEnvironment(device=self.dev)
+        parsed_output = obj.parse(include='Temp')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 class TestShowProcessesCpu(unittest.TestCase):
 

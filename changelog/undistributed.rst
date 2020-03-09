@@ -40,6 +40,8 @@
         * Updated regex to support various output
     * Updated ShowIpInterfaceVrfAll
         * Update regex to support more various output
+    * Update ShowEnvironment
+        * Update regex to support more various output
 
 * NXOS
     * Updated ShowInterface
