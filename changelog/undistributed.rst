@@ -44,6 +44,8 @@
         * Update regex to support more various output
     * Update ShowEnvironment
         * Update regex to support more various output
+    * Update ShowIpNatTranslations
+        * Fix typo in cli_command
 
 * NXOS
     * Updated ShowInterface
