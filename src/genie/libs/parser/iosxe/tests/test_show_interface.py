@@ -19081,20 +19081,6 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'type': 'No XCVR',
                 'vlan': '1',
             },
-            'TenGigabitEthernet3/0/1': {
-                'duplex_code': 'auto',
-                'port_speed': 'auto',
-                'status': 'notconnect',
-                'type': 'unknown',
-                'vlan': '1',
-            },
-            'TenGigabitEthernet3/0/10': {
-                'duplex_code': 'a-full',
-                'port_speed': 'a-1000',
-                'status': 'connected',
-                'type': '10/100/1000BaseTX SFP',
-                'vlan': '1',
-            },
             'TenGigabitEthernet1/1/2': {
                 'duplex_code': 'full',
                 'name': 'VSL',
@@ -19118,6 +19104,13 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'type': 'No XCVR',
                 'vlan': '1'
             },
+            'Port-channel10': {
+                'duplex_code': 'a-full',
+                'name': 'VSL LINK2',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': 'trunk'
+                },
             'TenGigabitEthernet3/2': {
                 'duplex_code': 'full',
                 'port_speed': 'auto',
