@@ -62,7 +62,7 @@ class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirds
         # Protocol                                                  : 0x1
         p4 = re.compile(r'^Protocol +: +(?P<protocol>\S+)$')
 
-        # Rewrite MAC                                               : 00:00:00:02:00:01 
+        # Rewrite MAC                                               : 00:00:00:ff:02:03 
         p5 = re.compile(r'^Rewrite +MAC +: +(?P<rewrite_mac>\S+)$')
 
         # Rewrite VNID                                              : 0xf08007
@@ -93,7 +93,7 @@ class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirds
                 group = m.groupdict()
                 groud_id_dict.update({'src_ip': group['src_ip']})
                 continue
-            # Dst IP                                                    : 9.9.9.9/32 
+            # Dst IP                                                    : 10.69.9.9/32 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -105,7 +105,7 @@ class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirds
                 group = m.groupdict()
                 groud_id_dict.update({'protocol': group['protocol']})
                 continue
-            # Rewrite MAC                                               : 00:00:00:02:00:01 
+            # Rewrite MAC                                               : 00:00:00:ff:02:03 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
