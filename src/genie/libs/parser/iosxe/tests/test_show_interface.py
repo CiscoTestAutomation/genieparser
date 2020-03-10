@@ -18931,7 +18931,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
     Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
     Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
     Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/10    To cft123          connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
     Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
@@ -18943,8 +18943,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
     Gi3/4                        notconnect   99           full   1000 No Gbic
     Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
     Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
-    Te3/0/1                      notconnect   1            auto   auto unknown
-    Te3/0/10                     connected    1          a-full a-1000 10/100/1000BaseTX SFP
+    Gi1/1/0/1 FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
+    Te1/1/2   VSL                connected    trunk        full  a-10G 10GBase-SR
+    Te2/1/20                     disabled     1            full   auto No XCVR
+    Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
+    Po10      VSL LINK2          connected    trunk      a-full  a-10G
     '''}
 
     golden_parsed_interface_output1 = {
@@ -18955,7 +18958,15 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '1',
+                'vlan': '1'
+            },
+            'GigabitEthernet1/1/0/1': {
+                'duplex_code': 'a-full',
+                'name': 'FAST-HELLO',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000BaseTX',
+                'vlan': '4094'
             },
             'GigabitEthernet1/10': {
                 'duplex_code': 'a-full',
@@ -18963,7 +18974,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet1/2': {
                 'duplex_code': 'full',
@@ -18971,7 +18982,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '100',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '125',
+                'vlan': '125'
             },
             'GigabitEthernet1/3': {
                 'duplex_code': 'a-full',
@@ -18979,14 +18990,14 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '132',
+                'vlan': '132'
             },
             'GigabitEthernet1/44': {
                 'duplex_code': 'a-full',
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '550',
+                'vlan': '550'
             },
             'GigabitEthernet1/45': {
                 'duplex_code': 'a-full',
@@ -18994,21 +19005,21 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet1/46': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet1/7': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet2/11': {
                 'duplex_code': 'a-full',
@@ -19016,21 +19027,21 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '136',
+                'vlan': '136'
             },
             'GigabitEthernet2/12': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet2/23': {
                 'duplex_code': 'a-full',
                 'port_speed': 'a-100',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '140',
+                'vlan': '140'
             },
             'GigabitEthernet2/24': {
                 'duplex_code': 'a-full',
@@ -19038,7 +19049,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet3/4': {
                 'duplex_code': 'full',
@@ -19053,7 +19064,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '1000',
                 'status': 'connected',
                 'type': '1000BaseSX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet3/6': {
                 'duplex_code': 'full',
@@ -19061,7 +19072,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '1000',
                 'status': 'connected',
                 'type': '1000BaseSX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'TenGigabitEthernet3/2': {
                 'duplex_code': 'full',
@@ -19084,7 +19095,37 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'type': '10/100/1000BaseTX SFP',
                 'vlan': '1',
             },
-        },
+            'TenGigabitEthernet1/1/2': {
+                'duplex_code': 'full',
+                'name': 'VSL',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': '10GBase-SR',
+                'vlan': 'trunk'
+            },
+            'TenGigabitEthernet2/1/20': {
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': 'No XCVR',
+                'vlan': '1'
+            },
+            'TenGigabitEthernet2/1/21': {
+                'duplex_code': 'full',
+                'name': 'VSL LINK1',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': 'No XCVR',
+                'vlan': '1'
+            },
+            'TenGigabitEthernet3/2': {
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'inactive',
+                'type': 'No XCVR',
+                'vlan': '1'
+            }
+        }
     }
 
     def test_empty(self):

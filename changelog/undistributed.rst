@@ -18,6 +18,10 @@
     * Added ShowIpRouteSummary for:
         * show ip route summary
         * show ip route summary vrf {vrf}
+    * Added ShowInterfaceStatus for:
+        * show interface status
+        * show interface {interface} status
+
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -61,3 +65,5 @@
         * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
+    * Updated ShowInterfacesStatus
+        * Update schema and regex to support more various output
