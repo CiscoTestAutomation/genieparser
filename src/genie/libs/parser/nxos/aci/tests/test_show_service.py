@@ -15,668 +15,440 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
     golden_parsed_output = {
         'group_id': {
             366: {
-                'name': {
-                    'destgrp-366': {
-                        'destination': {
-                            'dest-[2001:172:16:32::10]-[vxlan-2424832': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[2001:172:16:32::10]-[vxlan-2424832': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-366',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             367: {
-                'name': {
-                    'destgrp-367': {
-                        'destination': {
-                            'dest-[172.16.32.10]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.32.20]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB2': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.32.30]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB3': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.32.40]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB4': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.32.10]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB1',
+                    },
+                    'dest-[172.16.32.20]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB2',
+                    },
+                    'dest-[172.16.32.30]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB3',
+                    },
+                    'dest-[172.16.32.40]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB4',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-367',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             368: {
-                'name': {
-                    'destgrp-368': {
-                        'destination': {
-                            'dest-[172.16.32.1]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.32.1]-[vxlan-2424832]': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-368',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             369: {
-                'name': {
-                    'destgrp-369': {
-                        'destination': {
-                            'dest-[2001:172:16:33::10]-[vxlan-2424832': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[2001:172:16:33::10]-[vxlan-2424832': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-369',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             370: {
-                'name': {
-                    'destgrp-370': {
-                        'destination': {
-                            'dest-[172.16.33.10]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.33.20]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB2': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.33.30]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB3': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[172.16.33.40]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'shangl-PBR::LB4': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.33.10]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB1',
+                    },
+                    'dest-[172.16.33.20]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB2',
+                    },
+                    'dest-[172.16.33.30]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB3',
+                    },
+                    'dest-[172.16.33.40]-[vxlan-2424832]': {
+                        'hg_name': 'shangl-PBR::LB4',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-370',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             371: {
-                'name': {
-                    'destgrp-371': {
-                        'destination': {
-                            'dest-[172.16.33.1]-[vxlan-2424832]': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.33.1]-[vxlan-2424832]': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-371',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             394: {
-                'name': {
-                    'destgrp-394': {
-                        'destination': {
-                            'No valid destinations': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'No valid destinations': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-394',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             395: {
-                'name': {
-                    'destgrp-395': {
-                        'destination': {
-                            'No valid destinations': {
-                                'hg_name': {
-                                    'Not attached': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'no',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'No valid destinations': {
+                        'hg_name': 'Not attached',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-395',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'no',
             },
             396: {
-                'name': {
-                    'destgrp-396': {
-                        'destination': {
-                            'dest-[172.16.32.1]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp::LB1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.32.3]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp::LB3': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.32.4]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.32.1]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp::LB1',
+                    },
+                    'dest-[172.16.32.3]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp::LB3',
+                    },
+                    'dest-[172.16.32.4]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-396',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             397: {
-                'name': {
-                    'destgrp-397': {
-                        'destination': {
-                            'dest-[172.16.33.1]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[172.16.33.3]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp::LB3': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.33.4]-[vxlan-3014660]': {
-                                'hg_name': {
-                                    'shangl-vPC-vrrp::LB4': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.33.1]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp',
+                    },
+                    'dest-[172.16.33.3]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp::LB3',
+                    },
+                    'dest-[172.16.33.4]-[vxlan-3014660]': {
+                        'hg_name': 'shangl-vPC-vrrp::LB4',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-397',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             402: {
-                'name': {
-                    'destgrp-402': {
-                        'destination': {
-                            'dest-[172.16.228.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::NAT': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.228.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::NAT',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-402',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             403: {
-                'name': {
-                    'destgrp-403': {
-                        'destination': {
-                            'dest-[172.16.227.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::NAT': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.227.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::NAT',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-403',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             404: {
-                'name': {
-                    'destgrp-404': {
-                        'destination': {
-                            'dest-[172.16.223.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::GW-': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.223.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::GW-',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-404',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             405: {
-                'name': {
-                    'destgrp-405': {
-                        'destination': {
-                            'dest-[172.16.225.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::LB-': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.225.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::LB-',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-405',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             406: {
-                'name': {
-                    'destgrp-406': {
-                        'destination': {
-                            'dest-[172.16.224.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::GW-': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.224.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::GW-',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-406',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             407: {
-                'name': {
-                    'destgrp-407': {
-                        'destination': {
-                            'dest-[172.16.226.1]-[vxlan-2555904]': {
-                                'hg_name': {
-                                    'toka-GiLAN::LB-': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.226.1]-[vxlan-2555904]': {
+                        'hg_name': 'toka-GiLAN::LB-',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-407',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             429: {
-                'name': {
-                    'destgrp-429': {
-                        'destination': {
-                            'dest-[21.0.0.1]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::FW1': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[21.0.0.1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::FW1',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-429',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             430: {
-                'name': {
-                    'destgrp-430': {
-                        'destination': {
-                            'dest-[21.0.0.3]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::FW3': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[21.0.0.3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::FW3',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-430',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             431: {
-                'name': {
-                    'destgrp-431': {
-                        'destination': {
-                            'dest-[21.0.0.4]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::FW4': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[21.0.0.4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::FW4',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-431',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             439: {
-                'name': {
-                    'destgrp-439': {
-                        'destination': {
-                            'dest-[21.0.0.2]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::FW2': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[21.0.0.2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::FW2',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-439',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             512: {
-                'name': {
-                    'destgrp-512': {
-                        'destination': {
-                            'dest-[172.16.11.1]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.11.2]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW2': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.11.3]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW3': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.11.4]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW4': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.11.1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW1',
+                    },
+                    'dest-[172.16.11.2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW2',
+                    },
+                    'dest-[172.16.11.3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW3',
+                    },
+                    'dest-[172.16.11.4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW4',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-512',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             513: {
-                'name': {
-                    'destgrp-513': {
-                        'destination': {
-                            'dest-[172.16.12.1]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.12.2]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW2': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[172.16.12.3]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW3': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.12.4]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW4': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.12.1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW1',
+                    },
+                    'dest-[172.16.12.2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW2',
+                    },
+                    'dest-[172.16.12.3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW3',
+                    },
+                    'dest-[172.16.12.4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW4',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-513',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             522: {
-                'name': {
-                    'destgrp-522': {
-                        'destination': {
-                            'dest-[2001:16:11::1]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW1v6': {
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:11::2]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW2': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:11::3]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW3v6': {
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:11::4]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW4v6': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[2001:16:11::1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW1v6',
+                    },
+                    'dest-[2001:16:11::2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW2',
+                    },
+                    'dest-[2001:16:11::3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW3v6',
+                    },
+                    'dest-[2001:16:11::4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW4v6',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-522',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             523: {
-                'name': {
-                    'destgrp-523': {
-                        'destination': {
-                            'dest-[2001:16:12::1]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW1v6': {
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:12::2]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW2v6': {
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:12::3]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW3': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'disabled',
-                                        'oper_st_qual': 'tracked-as-down',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[2001:16:12::4]-[vxlan-2293760]': {
-                                'hg_name': {
-                                    'SP-A-CISCO::GW4v6': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[2001:16:12::1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW1v6',
+                    },
+                    'dest-[2001:16:12::2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW2v6',
+                    },
+                    'dest-[2001:16:12::3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW3',
+                    },
+                    'dest-[2001:16:12::4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO::GW4v6',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-523',
+                'oper_st': 'disabled',
+                'oper_st_qual': 'tracked-as-down',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             548: {
-                'name': {
-                    'destgrp-548': {
-                        'destination': {
-                            'dest-[172.16.2.1]-[vxlan-2818053]': {
-                                'hg_name': {
-                                    'shangl-testauto': {
-                                        'hp': 'srconly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                            'dest-[172.16.2.2]-[vxlan-2818053]': {
-                                'hg_name': {
-                                    'shangl-testauto::vGW2': {
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.2.1]-[vxlan-2818053]': {
+                        'hg_name': 'shangl-testauto',
+                    },
+                    'dest-[172.16.2.2]-[vxlan-2818053]': {
+                        'hg_name': 'shangl-testauto::vGW2',
                     },
                 },
+                'hp': 'srconly',
+                'name': 'destgrp-548',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
             549: {
-                'name': {
-                    'destgrp-549': {
-                        'destination': {
-                            'dest-[172.16.3.1]-[vxlan-2818053]': {
-                                'hg_name': {
-                                    'shangl-testauto::vGW1': {
-                                    },
-                                },
-                            },
-                            'dest-[172.16.3.2]-[vxlan-2818053]': {
-                                'hg_name': {
-                                    'shangl-testauto': {
-                                        'hp': 'dstonly',
-                                        'oper_st': 'enabled',
-                                        'oper_st_qual': 'no-oper-grp',
-                                        'th': 0,
-                                        'tl': 0,
-                                        'tracking': 'yes',
-                                    },
-                                },
-                            },
-                        },
+                'destination': {
+                    'dest-[172.16.3.1]-[vxlan-2818053]': {
+                        'hg_name': 'shangl-testauto::vGW1',
+                    },
+                    'dest-[172.16.3.2]-[vxlan-2818053]': {
+                        'hg_name': 'shangl-testauto',
                     },
                 },
+                'hp': 'dstonly',
+                'name': 'destgrp-549',
+                'oper_st': 'enabled',
+                'oper_st_qual': 'no-oper-grp',
+                'th': 0,
+                'tl': 0,
+                'tracking': 'yes',
             },
         },
     }

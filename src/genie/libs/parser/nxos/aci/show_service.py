@@ -19,22 +19,16 @@ class ShowServiceRedirInfoGroupSchema(MetaParser):
     schema = {
         'group_id': {
             Any(): {
-                'name': {
+                'name': str,
+                'oper_st': str,
+                'oper_st_qual': str,
+                'th': int,
+                'tl': int,
+                'hp': str,
+                'tracking': str,
+                'destination': {
                     Any(): {
-                        'destination': {
-                            Any(): {
-                                'hg_name': {
-                                    Any() : {
-                                        Optional('oper_st'): str,
-                                        Optional('oper_st_qual'): str,
-                                        Optional('tl'): int,
-                                        Optional('th'): int,
-                                        Optional('hp'): str,
-                                        Optional('tracking'): str,
-                                    }
-                                }
-                            }
-                        }
+                        'hg_name': str
                     }
                 }
             }
@@ -79,34 +73,31 @@ class ShowServiceRedirInfoGroup(ShowServiceRedirInfoGroupSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                group_name_dict = ret_dict.setdefault('group_id', {}). \
-                    setdefault(int(group['group_id']), {}). \
-                    setdefault('name', {}). \
-                    setdefault(group['name'], {})
-                destination_dict = group_name_dict. \
+                group_id_dict = ret_dict.setdefault('group_id', {}). \
+                    setdefault(int(group['group_id']), {})
+                destination_dict = group_id_dict. \
                     setdefault('destination', {}). \
                     setdefault(group['destination'], {})
                 hg_name_dict = destination_dict. \
-                    setdefault('hg_name', {}). \
-                    setdefault(group['hg_name'], {})
-                hg_name_dict.update({'oper_st': group['oper_st']})
-                hg_name_dict.update({'oper_st_qual': group['oper_st_qual']})
-                hg_name_dict.update({'tl': int(group['tl'])})
-                hg_name_dict.update({'th': int(group['th'])})
-                hg_name_dict.update({'hp': group['hp']})
-                hg_name_dict.update({'tracking': group['tracking']})
+                    setdefault('hg_name', group['hg_name'])
+                group_id_dict.update({'name': group['name']})
+                group_id_dict.update({'oper_st': group['oper_st']})
+                group_id_dict.update({'oper_st_qual': group['oper_st_qual']})
+                group_id_dict.update({'tl': int(group['tl'])})
+                group_id_dict.update({'th': int(group['th'])})
+                group_id_dict.update({'hp': group['hp']})
+                group_id_dict.update({'tracking': group['tracking']})
                 continue
 
             # dest-[172.16.32.20]-[vxlan-2424832]      shangl-PBR::LB2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                destination_dict = group_name_dict. \
+                destination_dict = group_id_dict. \
                     setdefault('destination', {}). \
                     setdefault(group['destination'], {})
                 hg_name_dict = destination_dict. \
-                    setdefault('hg_name', {}). \
-                    setdefault(group['hg_name'], {})
+                    setdefault('hg_name', group['hg_name'])
                 continue
 
         return ret_dict
