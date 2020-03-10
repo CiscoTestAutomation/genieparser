@@ -50,7 +50,6 @@
         * Update regex to support more various output
     * Update ShowIpOspfNeighborDetail
         * Update regex to support more various output
->>>>>>> dev
 
 * NXOS
     * Updated ShowInterface
