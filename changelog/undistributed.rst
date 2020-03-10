@@ -46,6 +46,8 @@
         * Update regex to support more various output
     * Update ShowNveInterfaceDetail
         * Update regex to support more various output
+    * Update ShowIpOspfNeighborDetail
+        * Update regex to support more various output
 
 * NXOS
     * Updated ShowInterface
@@ -55,3 +57,5 @@
         * Add keys into the schema, modify regex
     * Updated ShowRouting
         * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
+    * Update ShowIpInterfaceVrfAll
+        * Changed wccp_* keys to be optional from mandatory to support new output
