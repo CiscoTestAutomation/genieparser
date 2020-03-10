@@ -41,6 +41,7 @@
         * Fixed crash
         * Added unittest
     * Updated ShowInterfacesStatus
+        * Change key mandatory 'type' into optional
         * Updated regex to support various output
     * Updated ShowNveEthernetSegment
         * Updated regex to support various output
@@ -54,6 +55,8 @@
         * Update regex to support more various output
     * Update ShowIpOspfNeighborDetail
         * Update regex to support more various output
+    * Update ShowCdpNeighborsDetail
+        * Change key mandatory 'capabilities' into optional
 
 * NXOS
     * Updated ShowInterface
