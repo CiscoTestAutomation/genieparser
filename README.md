@@ -36,4 +36,23 @@ $ pip install genie.metaparser
 
 Change logs can be found [here](changelog/CHANGELOG.md).
 
+
+
+# To contributors:
+
+[Guide] 
+
+[Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html#
+
+
+Once you create a new parser, don't forget to check 1, 2, and 3;
+if you only update the parser class without modifying/creating the schema, please check 2 and 3. 
+- [ ] 1. `make json`
+- [ ] 2. cd tests; and execute `python -m unittest -v`
+- [ ] 3. update [changelog] by following the existing format
+
+[changelog]: https://github.com/CiscoTestAutomation/genieparser/blob/master/changelog/undistributed.rst
+
+
+
 > Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
