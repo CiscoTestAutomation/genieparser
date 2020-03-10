@@ -68,5 +68,3 @@
         * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
-    * Updated ShowInterfacesStatus
-        * Update schema and regex to support more various output
