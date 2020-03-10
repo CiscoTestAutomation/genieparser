@@ -42,7 +42,7 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
 # ============================
 # Unit test for 'show bootvar'
 # ============================
-class test_show_bootvar(unittest.TestCase):
+class TestShowBootvar(unittest.TestCase):
     '''Unit test for "show bootvar" '''
 
     maxDiff = None
@@ -100,6 +100,26 @@ class test_show_bootvar(unittest.TestCase):
             'configuration_register': '0x2102'},
         'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
 
+    golden_output4 = {'execute.return_value': '''
+        SSR-4400-1#sh bootvar
+        BOOT variable = 
+        CONFIG_FILE variable = bootflash:/taas/psan06_Golden_Config
+        BOOTLDR variable does not exist
+        Configuration register is 0x1
+
+        Standby not ready to show bootvar
+
+        SSR-4400-1#
+    '''
+    }
+    golden_parsed_output4 = {
+        'active': {
+            'configuration_register': '0x1'
+            },
+            'config_file': 'bootflash:/taas/psan06_Golden_Config'
+    }
+
+
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBootvar(device=self.device)
@@ -123,6 +143,12 @@ class test_show_bootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_bootvar_full4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 class TestShowVersion(unittest.TestCase):
@@ -6943,9 +6969,7 @@ class TestShowEnv(unittest.TestCase):
                             'V2: VME': {'reading': '1098 mV',
                                         'state': 'Normal'},
                             'V2: VMF': {'reading': '1000 mV',
-                                        'state': 'Normal'}}},
-          'Slot': {'sensor': {'Sensor': {'reading': 'State       Reading',
-                                         'state': 'Current'}}}}}
+                                        'state': 'Normal'}}}}}
 
     golden_output = {'execute.return_value': '''\
         Router#show environment
@@ -7183,6 +7207,23 @@ class TestShowEnv(unittest.TestCase):
         P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
     '''}
 
+    golden_parsed_output3 = {
+        'slot': {
+            'P6': {
+                'sensor': {
+                    'Temp1': {
+                        'reading': '1791 mV',
+                        'state': 'Normal',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        show environment | include Fan Speed
+        P6          Temp1        Normal          1791 mV        na
+    '''}
     
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
@@ -7203,6 +7244,13 @@ class TestShowEnv(unittest.TestCase):
         obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse(include='Fan Speed')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output3)
+        obj = ShowEnvironment(device=self.dev)
+        parsed_output = obj.parse(include='Temp')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 class TestShowProcessesCpu(unittest.TestCase):
 

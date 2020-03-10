@@ -1248,13 +1248,13 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
     golden_output_intf_detail_3 = {'execute.return_value': '''
     show ip pim interface detail
     Loopback0 is up, line protocol is up
-      Internet address is 1.1.4.14/32
+      Internet address is 10.4.4.14/32
       Multicast switching: fast
       Multicast packets in/out: 0/0
       Multicast TTL threshold: 0
       PIM: enabled
         PIM version: 2, mode: sparse
-        PIM DR: 1.1.4.14 (this system)
+        PIM DR: 10.4.4.14 (this system)
         PIM neighbor count: 0
         PIM Hello/Query interval: 30 seconds
         PIM Hello packets in/out: 45876/45876
@@ -1346,13 +1346,13 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                 'Loopback0': {
                     'address_family': {
                         'ipv4': {
-                            'address': ['1.1.4.14/32'],
+                            'address': ['10.4.4.14/32'],
                             'atm_multipoint_signalling': 'disabled',
                             'bfd': {
                                 'enable': False,
                             },
                             'bsr_border': False,
-                            'dr_address': '1.1.4.14',
+                            'dr_address': '10.4.4.14',
                             'enable': True,
                             'hello_interval': 30,
                             'hello_packets_in': 45876,

@@ -3209,7 +3209,8 @@ class ShowInterfacesStatusSchema(MetaParser):
 #  parser for show interfaces status
 # ====================================================
 class ShowInterfacesStatus(ShowInterfacesStatusSchema):
-    """parser for show interfaces status
+    """parser for 
+            * show interfaces status
         """
 
     cli_command = 'show interfaces status'

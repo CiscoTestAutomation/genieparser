@@ -69,7 +69,7 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         * show ip nat translations vrf {vrf} verbose
     """
 
-    cli_command = ['show ip nat translation',
+    cli_command = ['show ip nat translations',
                    'show ip nat translations verbose',
                    'show ip nat translations vrf {vrf}',
                    'show ip nat translations vrf {vrf} verbose']

@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_lldp import ShowLldp, ShowLldpEntry, \
                                    ShowLldpNeighborsDetail, \
                                    ShowLldpTraffic, \
-                                   ShowLldpInterface
+                                   ShowLldpInterface, \
+                                   ShowLldpNeighbors
 
 
 class test_show_lldp(unittest.TestCase):
@@ -544,7 +545,7 @@ class test_show_lldp_entry(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         ------------------------------------------------
         Chassis id: 10.10.191.112
-        Port id: 7018.dec7.88dc
+        Port id: 7018.deff.50a4
         Port Description: IP Phone
         System Name - not advertised
         
@@ -583,7 +584,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.104
-        Port id: 7018.dec7.9085
+        Port id: 7018.deff.584d
         Port Description: IP Phone
         System Name - not advertised
         
@@ -622,7 +623,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.93
-        Port id: fca8.41f2.0189
+        Port id: fca8.41ff.f37c
         Port Description: IP Phone
         System Name - not advertised
         
@@ -661,7 +662,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.91
-        Port id: 7052.c598.adae
+        Port id: 7052.c5ff.4647
         Port Description: IP Phone
         System Name - not advertised
         
@@ -699,7 +700,7 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: 00ff.c8fe.3c80
+        Chassis id: 00ff.c8ff.3b7f
         Port id: Gi0/0/0
         Port Description: -X- router
         System Name: router
@@ -722,7 +723,7 @@ class test_show_lldp_entry(unittest.TestCase):
         
         ------------------------------------------------
         Chassis id: 10.10.191.107
-        Port id: 7018.dec7.8f65
+        Port id: 7018.deff.572d
         Port Description: IP Phone
         System Name - not advertised
         
@@ -760,8 +761,8 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: d89e.f33a.1ec4
-        Port id: d89e.f33a.1ec4
+        Chassis id: d89e.f3ff.58fe
+        Port id: d89e.f3ff.58fe
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -791,8 +792,8 @@ class test_show_lldp_entry(unittest.TestCase):
             Location - not advertised
         
         ------------------------------------------------
-        Chassis id: 6400.6a7f.fd89
-        Port id: 6400.6a7f.fd89
+        Chassis id: 6400.6aff.7d09
+        Port id: 6400.6aff.7d09
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -829,21 +830,21 @@ class test_show_lldp_entry(unittest.TestCase):
         'N/A': {
             'if_name': 'N/A',
             'port_id': {
-                '6400.6a7f.fd89': {
+                '6400.6aff.7d09': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
-                            'chassis_id': '6400.6a7f.fd89',
+                            'chassis_id': '6400.6aff.7d09',
                             'management_address': 'not advertised',
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['1000baseT(FD)'],
-                            'port_id': '6400.6a7f.fd89',
+                            'port_id': '6400.6aff.7d09',
                             'system_name': 'not advertised',
                             'time_remaining': 3500,
                         },
                     },
                 },
-                '7018.dec7.88dc': {
+                '7018.deff.50a4': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -864,7 +865,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.88dc',
+                            'port_id': '7018.deff.50a4',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 170,
@@ -872,7 +873,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7018.dec7.8f65': {
+                '7018.deff.572d': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -893,7 +894,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.8f65',
+                            'port_id': '7018.deff.572d',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 154,
@@ -901,7 +902,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7018.dec7.9085': {
+                '7018.deff.584d': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -922,7 +923,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7018.dec7.9085',
+                            'port_id': '7018.deff.584d',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 165,
@@ -930,7 +931,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                '7052.c598.adae': {
+                '7052.c5ff.4647': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -951,7 +952,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': '7052.c598.adae',
+                            'port_id': '7052.c5ff.4647',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 151,
@@ -959,21 +960,21 @@ class test_show_lldp_entry(unittest.TestCase):
                         },
                     },
                 },
-                'D89e.f33a.1ec4': {
+                'D89e.f3ff.58fe': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
-                            'chassis_id': 'd89e.f33a.1ec4',
+                            'chassis_id': 'd89e.f3ff.58fe',
                             'management_address': 'not advertised',
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['1000baseT(FD)'],
-                            'port_id': 'D89e.f33a.1ec4',
+                            'port_id': 'D89e.f3ff.58fe',
                             'system_name': 'not advertised',
                             'time_remaining': 2845,
                         },
                     },
                 },
-                'Fca8.41f2.0189': {
+                'Fca8.41ff.f37c': {
                     'neighbors': {
                         'not advertised': {
                             'auto_negotiation': 'supported, enabled',
@@ -994,7 +995,7 @@ class test_show_lldp_entry(unittest.TestCase):
                             'neighbor_id': 'not advertised',
                             'physical_media_capabilities': ['100base-TX(FD)', '100base-TX(HD)', '10base-T(FD)', '10base-T(HD)'],
                             'port_description': 'IP Phone',
-                            'port_id': 'Fca8.41f2.0189',
+                            'port_id': 'Fca8.41ff.f37c',
                             'system_description': 'IP Phone, Firmware:90234AP',
                             'system_name': 'not advertised',
                             'time_remaining': 158,
@@ -1017,7 +1018,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                     'system': True,
                                 },
                             },
-                            'chassis_id': '00ff.c8fe.3c80',
+                            'chassis_id': '00ff.c8ff.3b7f',
                             'management_address': '10.10.4.30',
                             'neighbor_id': 'router',
                             'port_description': '-X- router',
@@ -1472,144 +1473,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     'total_entries': 1,
 }
 
-    device_output_1 = {'execute.return_value': '''\
-            ------------------------------------------------
-            Local Intf: Gi4/0/38
-            Chassis id: 10.0.0.7
-            Port id: F8B7E2958F6F:P1
-            Port Description: SW PORT
-            System Name: SEPF8B7E29
-            
-            System Description:
-            Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads
-            
-            Time remaining: 178 seconds
-            System Capabilities: B,T
-            Enabled Capabilities: B,T
-            Management Addresses:
-                IP: 10.0.0.7
-            Auto Negotiation - supported, enabled
-            Physical media capabilities:
-                1000baseT(FD)
-                100base-TX(FD)
-                100base-TX(HD)
-                10base-T(FD)
-                10base-T(HD)
-            Media Attachment Unit type: 30
-            Vlan ID: - not advertised
-            ------------------------------------------------
-            Local Intf: Gi4/0/15
-            Chassis id: 10.0.0.8
-            Port id: CC5A5363E4F6:P1
-            Port Description: SW PORT
-            System Name: SEPCC5A536
-            
-            System Description:
-            Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads
-            
-            Time remaining: 124 seconds
-            System Capabilities: B,T
-            Enabled Capabilities: B,T
-            Management Addresses:
-                IP: 10.0.0.8
-            Auto Negotiation - supported, enabled
-            Physical media capabilities:
-                1000baseT(FD)
-                100base-TX(FD)
-                100base-TX(HD)
-                10base-T(FD)
-                10base-T(HD)
-            Media Attachment Unit type: 30
-            Vlan ID: - not advertised
-            Total entries displayed: 2
-        '''}
-
-    expected_parsed_output_1 = {
-        'interfaces': {
-            'GigabitEthernet4/0/38': {
-                'if_name': 'GigabitEthernet4/0/38',
-                'port_id': {
-                    'F8B7E2958F6F:P1': {
-                        'neighbors': {
-                            'SEPF8B7E29': {
-                                'neighbor_id': 'SEPF8B7E29',
-                                'chassis_id': '10.0.0.7',
-                                'port_id': 'F8B7E2958F6F:P1',
-                                'port_description': 'SW PORT',
-                                'system_name': 'SEPF8B7E29',
-                                'system_description': 'Cisco IP Phone 8865, V1, sip8845_65.12-1-1SR1-4.loads\n',
-                                'time_remaining': 178,
-                                'capabilities': {
-                                    'mac_bridge': {
-                                        'name': 'mac_bridge',
-                                        'system': True,
-                                        'enabled': True
-                                    },
-                                    'telephone': {
-                                        'name': 'telephone',
-                                        'system': True,
-                                        'enabled': True
-                                    }
-                                },
-                                'management_address': '10.0.0.7',
-                                'auto_negotiation': 'supported, enabled',
-                                'physical_media_capabilities': [
-                                    '1000baseT(FD)',
-                                    '100base-TX(FD)',
-                                    '100base-TX(HD)',
-                                    '10base-T(FD)',
-                                    '10base-T(HD)'
-                                ],
-                                'unit_type': 30
-                            }
-                        }
-                    }
-                }
-            },
-            'GigabitEthernet4/0/15': {
-                'if_name': 'GigabitEthernet4/0/15',
-                'port_id': {
-                    'CC5A5363E4F6:P1': {
-                        'neighbors': {
-                            'SEPCC5A536': {
-                                'neighbor_id': 'SEPCC5A536',
-                                'chassis_id': '10.0.0.8',
-                                'port_id': 'CC5A5363E4F6:P1',
-                                'port_description': 'SW PORT',
-                                'system_name': 'SEPCC5A536',
-                                'system_description': 'Cisco IP Phone 8845, V1, sip8845_65.12-5-1SR1-4.loads\n',
-                                'time_remaining': 124,
-                                'capabilities': {
-                                    'mac_bridge': {
-                                        'name': 'mac_bridge',
-                                        'system': True,
-                                        'enabled': True
-                                    },
-                                    'telephone': {
-                                        'name': 'telephone',
-                                        'system': True,
-                                        'enabled': True
-                                    }
-                                },
-                                'management_address': '10.0.0.8',
-                                'auto_negotiation': 'supported, enabled',
-                                'physical_media_capabilities': [
-                                    '1000baseT(FD)',
-                                    '100base-TX(FD)',
-                                    '100base-TX(HD)',
-                                    '10base-T(FD)',
-                                    '10base-T(HD)'
-                                ],
-                                'unit_type': 30
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        'total_entries': 2
-    }
-
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
@@ -1629,13 +1492,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
-
-    def test_show_lldp_neighbors_detail_colon_in_port_id(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.device_output_1)
-        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.expected_parsed_output_1)
 
 
 class test_show_lldp_traffic(unittest.TestCase):
@@ -1754,8 +1610,136 @@ class test_show_lldp_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
+class test_show_lldp_neighbors(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
 
+    # show lldp neighbors
+    golden_output = {'execute.return_value': '''
+        Capability codes:
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        
+        Device ID           Local Intf     Hold-time  Capability      Port ID
+        10.10.191.112       Gi1/0/44       171        B,T             7038.eec7.88dc
+        10.10.191.104       Gi1/0/16       166        B,T             7038.eec7.9085
+        10.10.191.93        Gi1/0/31       159        B,T             fca8.41f2.0189
+        10.10.191.91        Gi1/0/33       152        B,T             7052.c598.adae
+        router               Gi1/0/52       117        R               Gi0/0/0
+        10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+        d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        6400.6a7f.fd89      Gi1/0/16       2781                       6400.6a7f.fd89
+        
+        Total entries displayed: 8
+        
+        switch#
+        '''}
 
+    golden_parsed_output = {
+        'interfaces': {
+            'GigabitEthernet1/0/14': {
+                'port_id': {
+                    '7038.eec7.8f65': {
+                        'neighbors': {
+                            '10.10.191.107': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 155,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/16': {
+                'port_id': {
+                    '6400.6a7f.fd89': {
+                        'neighbors': {
+                            '6400.6a7f.fd89': {
+                                'hold_time': 2781,
+                            },
+                        },
+                    },
+                    '7038.eec7.9085': {
+                        'neighbors': {
+                            '10.10.191.104': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 166,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/31': {
+                'port_id': {
+                    'fca8.41f2.0189': {
+                        'neighbors': {
+                            '10.10.191.93': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 159,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/33': {
+                'port_id': {
+                    '7052.c598.adae': {
+                        'neighbors': {
+                            '10.10.191.91': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 152,
+                            },
+                        },
+                    },
+                    'd89e.f33a.1ec4': {
+                        'neighbors': {
+                            'd89e.f33a.1ec4': {
+                                'hold_time': 3070,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/44': {
+                'port_id': {
+                    '7038.eec7.88dc': {
+                        'neighbors': {
+                            '10.10.191.112': {
+                                'capabilities': ['B', 'T'],
+                                'hold_time': 171,
+                            },
+                        },
+                    },
+                },
+            },
+            'GigabitEthernet1/0/52': {
+                'port_id': {
+                    'Gi0/0/0': {
+                        'neighbors': {
+                            'router': {
+                                'capabilities': ['R'],
+                                'hold_time': 117,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 8,
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowLldpNeighbors(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowLldpNeighbors(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
