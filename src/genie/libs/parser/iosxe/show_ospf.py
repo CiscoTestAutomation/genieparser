@@ -2642,7 +2642,7 @@ class ShowIpOspfLinksParser(MetaParser):
                     real_link_name = interface
                 
                 # Get OSPF process ID from 'show ip ospf interface'
-                cmd = 'show ip ospf interface | section {}'.format(interface)
+                cmd = 'show ip ospf interface {}'.format(interface)
                 out = self.device.execute(cmd)
 
                 for line in out.splitlines():
@@ -3153,6 +3153,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'state': str,
                                                         'dr_ip_addr': str,
                                                         'bdr_ip_addr': str,
+                                                        Optional('bfd_state'): str,
                                                         Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
                                                         Optional('sr_adj_label'): str,
@@ -3287,7 +3288,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                             '(?:, +interface-id +(?P<intf_id>(\S+)))?$')
         
         p2 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                            ' +(?P<interface>(\S+))$')
+                            ' +(?P<interface>(\S+))(, +BFD +(?P<bfd_state>\S+))?$')
         
         p3 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
                             ' +State +is +(?P<state>(\S+)),'
@@ -3337,15 +3338,16 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 continue
 
             # In the area 0 via interface GigabitEthernet2
+            # In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
             m = p2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
                 interface = str(m.groupdict()['interface'])
                 instance = None
                 router_id = None
-
+                bfd_state = m.groupdict().get('bfd_state', None)
                 # Get OSPF process ID from 'show ip ospf interface'
-                cmd = 'show ip ospf interface | section {}'.format(interface)
+                cmd = 'show ip ospf interface {}'.format(interface)
                 out = self.device.execute(cmd)
 
                 for line in out.splitlines():
@@ -3538,6 +3540,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     del interface_id
                 except Exception:
                     pass
+                if bfd_state:
+                    sub_dict['bfd_state'] = bfd_state
                 continue
 
             # Neighbor priority is 1, State is FULL, 6 state changes
