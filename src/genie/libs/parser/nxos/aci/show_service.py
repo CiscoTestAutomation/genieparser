@@ -25,12 +25,12 @@ class ShowServiceRedirInfoGroupSchema(MetaParser):
                             Any(): {
                                 'hg_name': {
                                     Any() : {
-                                        'oper_st': str,
-                                        'oper_st_qual': str,
-                                        'tl': int,
-                                        'th': int,
-                                        'hp': str,
-                                        'tracking': str,
+                                        Optional('oper_st'): str,
+                                        Optional('oper_st_qual'): str,
+                                        Optional('tl'): int,
+                                        Optional('th'): int,
+                                        Optional('hp'): str,
+                                        Optional('tracking'): str,
                                     }
                                 }
                             }
@@ -91,8 +91,8 @@ class ShowServiceRedirInfoGroup(ShowServiceRedirInfoGroupSchema):
                     setdefault(group['hg_name'], {})
                 hg_name_dict.update({'oper_st': group['oper_st']})
                 hg_name_dict.update({'oper_st_qual': group['oper_st_qual']})
-                hg_name_dict.update({'tl': group['tl']})
-                hg_name_dict.update({'th': group['th']})
+                hg_name_dict.update({'tl': int(group['tl'])})
+                hg_name_dict.update({'th': int(group['th'])})
                 hg_name_dict.update({'hp': group['hp']})
                 hg_name_dict.update({'tracking': group['tracking']})
                 continue
