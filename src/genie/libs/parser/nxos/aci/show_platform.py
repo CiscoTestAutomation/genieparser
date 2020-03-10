@@ -33,12 +33,12 @@ class ShowPlatformInternalHalPolicyRedirdstSchema(MetaParser):
 
 
 class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirdstSchema):
-    """Parser for show service redir info group"""
+    """Parser for 'vsh_lc -c "show platform internal hal policy redirdst group_id {group_id} {address_family} src_ip {src_ip} dst_ip {dst_ip} protocol {protocol}'"""
 
-    cli_command = 'show platform internal hal policy ' \
+    cli_command = 'vsh_lc -c "show platform internal hal policy ' \
                   'redirdst group_id {group_id} {address_family} ' \
                   'src_ip {src_ip} dst_ip {dst_ip} protocol ' \
-                  '{protocol}'
+                  '{protocol}"'
 
     def cli(self, group_id, address_family, src_ip, dst_ip, protocol, output=None):
         if output is None:
