@@ -46,6 +46,11 @@
         * Update regex to support more various output
     * Update ShowIpNatTranslations
         * Fix typo in cli_command
+    * Update ShowNveInterfaceDetail
+        * Update regex to support more various output
+    * Update ShowIpOspfNeighborDetail
+        * Update regex to support more various output
+>>>>>>> dev
 
 * NXOS
     * Updated ShowInterface

@@ -608,6 +608,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
 
         },
     }
+
     golden_output_2 = {'execute.return_value': '''
     MS-VPC-BL1(config-if)# Sh nve interface nve 1 detail
     Interface: nve1, State: Down, encapsulation: VXLAN
@@ -632,12 +633,72 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output_3 = {
+        'nve1': {
+            'adv_vmac': False,
+            'encap_type': 'vxlan',
+            'host_reach_mode': 'control-plane',
+            'if_state': 'up',
+            'local_rmac': '6cb2.aeff.633b',
+            'multisite_bgw_if': 'loopback2',
+            'multisite_bgw_if_admin_state': 'up',
+            'multisite_bgw_if_ip': '10.4.101.101',
+            'multisite_bgw_if_oper_state': 'up',
+            'multisite_convergence_time': 120,
+            'nve_flags': '',
+            'nve_if_handle': 1224736769,
+            'nve_name': 'nve1',
+            'primary_ip': '192.168.111.11',
+            'secondary_ip': '192.168.196.22',
+            'sm_state': 'nve-intf-add-complete',
+            'source_if': 'loopback1',
+            'src_if_holddown_left': 0,
+            'src_if_holddown_tm': 180,
+            'src_if_holdup_tm': 30,
+            'src_if_state': 'up',
+            'vip_rmac': 'N/A',
+            'vip_rmac_ro': '0200.65ff.caca',
+            'vpc_capability': 'vpc-vip-only [not-notified]',
+        },
+    }
+    golden_output_3 = {'execute.return_value': '''
+    show nve interface nve 1 detail
+        Interface: nve1, State: Up, encapsulation: VXLAN
+        VPC Capability: VPC-VIP-Only [not-notified]
+        Local Router MAC: 6cb2.aeff.633b
+        Host Learning Mode: Control-Plane
+        Source-Interface: loopback1 (primary: 192.168.111.11, secondary: 192.168.196.22)
+        Source Interface State: Up
+        Virtual RMAC Advertisement: No
+        NVE Flags: 
+        Interface Handle: 0x49000001
+        Source Interface hold-down-time: 180
+        Source Interface hold-up-time: 30
+        Remaining hold-down time: 0 seconds
+        Virtual Router MAC: N/A
+        Virtual Router MAC Re-origination: 0200.65ff.caca
+        Interface state: nve-intf-add-complete
+        Multisite delay-restore time: 120 seconds
+        Multisite delay-restore time left: 0 seconds
+        Multisite dci-advertise-pip configured: True
+        Multisite bgw-if: loopback2 (ip: 10.4.101.101, admin: Up, oper: Up)
+        Multisite bgw-if oper down reason:
+
+    '''}
+
     def test_show_nve_vni_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowNveInterfaceDetail(device=self.device)
         parsed_output = obj.parse(interface="nve1")
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_nve_vni_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowNveInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(interface="nve1")
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_nve_vni_empty(self):
         self.device = Mock(**self.empty_output)
