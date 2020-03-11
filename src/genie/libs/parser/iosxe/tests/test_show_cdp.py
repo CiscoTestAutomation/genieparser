@@ -562,6 +562,88 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Total cdp entries displayed : 2
     '''}
 
+    device_output_6 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
+        Device ID: e0553d849f1a
+        Entry address(es):
+          IP address: 10.0.0.7
+        Platform: Meraki MV21 Cloud Managed Indoor HD Dom
+        Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
+        Holdtime : 145 sec
+
+        Version :
+        1
+
+        advertisement version: 2
+        Power drawn: 0.000 Watts
+        Power request id: 31314, Power management id: 0
+        Power request levels are:15400 0 0 0 0
+
+        -------------------------
+        Device ID: System1
+        Entry address(es):
+          IP address: 10.0.0.8
+        Platform: cisco ISR4351/K9,  Capabilities: Router Switch IGMP
+        Interface: GigabitEthernet1/0/47,  Port ID (outgoing port): GigabitEthernet0/0/2
+        Holdtime : 129 sec
+
+        Version :
+        Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2019 by Cisco Systems, Inc.
+        Compiled Thu 22-Aug-19 18:09 by mcpre
+
+        advertisement version: 2
+        VTP Management Domain: ''
+        Duplex: full
+        Management address(es):
+          IP address: 10.0.0.8
+
+        Total cdp entries displayed : 2
+    '''}
+
+    expected_parsed_output_6 = {
+        'total_entries_displayed': 2,
+        'index': {
+            1: {
+                'device_id': 'e0553d849f1a',
+                'duplex_mode': '',
+                'vtp_management_domain': '',
+                'native_vlan': '',
+                'management_addresses': {},
+                'entry_addresses': {
+                    '10.0.0.7': {}
+                },
+                'platform': 'Meraki MV21 Cloud Managed Indoor HD Dom',
+                'port_id': 'Port 0',
+                'local_interface': 'GigabitEthernet3/0/29',
+                'hold_time': 145,
+                'software_version': '1',
+                'advertisement_ver': 2},
+            2: {
+                'device_id': 'System1',
+                'duplex_mode': 'full',
+                'vtp_management_domain': ' ',
+                'native_vlan': '',
+                'management_addresses': {
+                    '10.0.0.8': {}
+                },
+                'entry_addresses': {
+                    '10.0.0.8': {}
+                },
+                'capabilities': 'Router Switch IGMP',
+                'platform': 'cisco ISR4351/K9',
+                'port_id': 'GigabitEthernet0/0/2',
+                'local_interface': 'GigabitEthernet1/0/47',
+                'hold_time': 129,
+                'software_version': 'Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)\n'
+                                    'Technical Support: http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2019 by Cisco Systems, Inc.\n'
+                                    'Compiled Thu 22-Aug-19 18:09 by mcpre',
+                'advertisement_ver': 2},
+        },
+    }
+
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
@@ -596,6 +678,13 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
+
+    def test_show_cdp_neighbors_detail_missing_capabilities(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_6)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_6)
 
 if __name__ == '__main__':
     unittest.main()
