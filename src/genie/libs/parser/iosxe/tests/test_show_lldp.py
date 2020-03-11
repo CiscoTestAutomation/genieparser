@@ -1622,14 +1622,14 @@ class test_show_lldp_neighbors(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         
         Device ID           Local Intf     Hold-time  Capability      Port ID
-        10.10.191.112       Gi1/0/44       171        B,T             7038.eec7.88dc
-        10.10.191.104       Gi1/0/16       166        B,T             7038.eec7.9085
-        10.10.191.93        Gi1/0/31       159        B,T             fca8.41f2.0189
-        10.10.191.91        Gi1/0/33       152        B,T             7052.c598.adae
+        10.10.191.112       Gi1/0/44       171        B,T             7038.eeff.50a4
+        10.10.191.104       Gi1/0/16       166        B,T             7038.eeff.584d
+        10.10.191.93        Gi1/0/31       159        B,T             fca8.41ff.f37c
+        10.10.191.91        Gi1/0/33       152        B,T             7052.c5ff.4647
         router               Gi1/0/52       117        R               Gi0/0/0
-        10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
-        d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
-        6400.6a7f.fd89      Gi1/0/16       2781                       6400.6a7f.fd89
+        10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+        d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
+        6400.6aff.7d09      Gi1/0/16       2781                       6400.6aff.7d09
         
         Total entries displayed: 8
         
@@ -1640,7 +1640,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/14': {
                 'port_id': {
-                    '7038.eec7.8f65': {
+                    '7038.eeff.572d': {
                         'neighbors': {
                             '10.10.191.107': {
                                 'capabilities': ['B', 'T'],
@@ -1652,14 +1652,14 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/16': {
                 'port_id': {
-                    '6400.6a7f.fd89': {
+                    '6400.6aff.7d09': {
                         'neighbors': {
-                            '6400.6a7f.fd89': {
+                            '6400.6aff.7d09': {
                                 'hold_time': 2781,
                             },
                         },
                     },
-                    '7038.eec7.9085': {
+                    '7038.eeff.584d': {
                         'neighbors': {
                             '10.10.191.104': {
                                 'capabilities': ['B', 'T'],
@@ -1671,7 +1671,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/31': {
                 'port_id': {
-                    'fca8.41f2.0189': {
+                    'fca8.41ff.f37c': {
                         'neighbors': {
                             '10.10.191.93': {
                                 'capabilities': ['B', 'T'],
@@ -1683,7 +1683,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/33': {
                 'port_id': {
-                    '7052.c598.adae': {
+                    '7052.c5ff.4647': {
                         'neighbors': {
                             '10.10.191.91': {
                                 'capabilities': ['B', 'T'],
@@ -1691,9 +1691,9 @@ class test_show_lldp_neighbors(unittest.TestCase):
                             },
                         },
                     },
-                    'd89e.f33a.1ec4': {
+                    'd89e.f3ff.58fe': {
                         'neighbors': {
-                            'd89e.f33a.1ec4': {
+                            'd89e.f3ff.58fe': {
                                 'hold_time': 3070,
                             },
                         },
@@ -1702,7 +1702,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/44': {
                 'port_id': {
-                    '7038.eec7.88dc': {
+                    '7038.eeff.50a4': {
                         'neighbors': {
                             '10.10.191.112': {
                                 'capabilities': ['B', 'T'],

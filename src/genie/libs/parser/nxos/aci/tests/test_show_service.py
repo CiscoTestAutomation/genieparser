@@ -7,6 +7,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
 from genie.libs.parser.nxos.aci.show_service import ShowServiceRedirInfoGroup
+
+
 class TestShowServiceRedirInfoGroup(unittest.TestCase):
 
     dev = Device(name='aci')

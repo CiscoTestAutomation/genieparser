@@ -1,4 +1,4 @@
-"""ASR1K implementation of show_service.py
+"""aci implementation of show_service.py
 
 """
 import re

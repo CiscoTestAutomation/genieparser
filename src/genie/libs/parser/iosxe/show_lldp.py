@@ -175,9 +175,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
 
         # Port id: Gi1/0/4
-        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>\S+)$')
+        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\S\s]+)$')
 
-        # Chassis id: 843d.c6ff.f1b8
+        # Chassis id:  843d.c6ff.f1b8
         p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
         # Port Description: GigabitEthernet1/0/4
@@ -284,7 +284,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c6ff.f1b8
+            # Chassis id:  843d.c6ff.f1b8
             m = p2.match(line)
             if m:
                 sub_dict = {}
@@ -683,8 +683,8 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
 
         # Device ID           Local Intf     Hold-time  Capability      Port ID
         # router               Gi1/0/52       117        R               Gi0/0/0
-        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
-        # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+        # d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
         p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interfaces>\S+)'
                         r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
                         r'\s+(?P<port_id>\S+)')
@@ -700,8 +700,8 @@ class ShowLldpNeighbors(ShowLldpNeighborsSchema):
 
             # Device ID           Local Intf     Hold-time  Capability      Port ID
             # router               Gi1/0/52       117        R               Gi0/0/0
-            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
-            # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+            # d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
             m = p2.match(line)
             if m:
                 group = m.groupdict()
