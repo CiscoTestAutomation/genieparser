@@ -2904,7 +2904,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
     golden_output_5 = {'execute.return_value': '''
         IP Interface Status for VRF "default"
         loopback0, Interface status: protocol-up/link-up/admin-up, iod: 94,
-          IP address: 91.1.1.0, IP subnet: 91.1.1.0/32 route-preference: 0, tag: 0 
+          IP address: 10.49.1.0, IP subnet: 10.49.1.0/32 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -2931,8 +2931,8 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         loopback1, Interface status: protocol-down/link-down/admin-up, iod: 95,
-          IP address: 91.1.1.1, IP subnet: 91.1.1.1/32 route-preference: 0, tag: 0 
-          IP address: 91.1.2.1, IP subnet: 91.1.2.1/32 secondary route-preference: 0, tag: 0 
+          IP address: 10.49.1.1, IP subnet: 10.49.1.1/32 route-preference: 0, tag: 0 
+          IP address: 10.49.2.1, IP subnet: 10.49.2.1/32 secondary route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -2959,7 +2959,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Ethernet1/3, Interface status: protocol-up/link-up/admin-up, iod: 7,
-          IP address: 111.111.111.2, IP subnet: 111.111.111.0/24 route-preference: 0, tag: 0 
+          IP address: 10.69.111.2, IP subnet: 10.69.111.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.6  224.0.0.5  224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3016,7 +3016,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9100"
         Vlan100, Interface status: protocol-up/link-up/admin-up, iod: 71,
-          IP address: 100.100.11.1, IP subnet: 100.100.11.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.11.1, IP subnet: 10.220.11.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3043,7 +3043,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan101, Interface status: protocol-up/link-up/admin-up, iod: 72,
-          IP address: 100.100.12.1, IP subnet: 100.100.12.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.12.1, IP subnet: 10.220.12.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3070,7 +3070,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan102, Interface status: protocol-down/link-down/admin-up, iod: 73,
-          IP address: 100.100.13.1, IP subnet: 100.100.13.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.13.1, IP subnet: 10.220.13.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3150,7 +3150,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9105"
         Vlan105, Interface status: protocol-up/link-up/admin-up, iod: 75,
-          IP address: 100.100.16.1, IP subnet: 100.100.16.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.16.1, IP subnet: 10.220.16.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3177,7 +3177,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan110, Interface status: protocol-up/link-up/admin-up, iod: 80,
-          IP address: 100.100.21.1, IP subnet: 100.100.21.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.21.1, IP subnet: 10.220.21.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3232,7 +3232,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9106"
         Vlan106, Interface status: protocol-up/link-up/admin-up, iod: 76,
-          IP address: 100.100.17.1, IP subnet: 100.100.17.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.17.1, IP subnet: 10.220.17.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3259,7 +3259,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan111, Interface status: protocol-up/link-up/admin-up, iod: 81,
-          IP address: 100.100.22.1, IP subnet: 100.100.22.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.22.1, IP subnet: 10.220.22.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3314,7 +3314,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9107"
         Vlan107, Interface status: protocol-up/link-up/admin-up, iod: 77,
-          IP address: 100.100.18.1, IP subnet: 100.100.18.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.18.1, IP subnet: 10.220.18.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3341,7 +3341,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan112, Interface status: protocol-up/link-up/admin-up, iod: 82,
-          IP address: 100.100.23.1, IP subnet: 100.100.23.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.23.1, IP subnet: 10.220.23.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3396,7 +3396,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9108"
         Vlan108, Interface status: protocol-up/link-up/admin-up, iod: 78,
-          IP address: 100.100.19.1, IP subnet: 100.100.19.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.19.1, IP subnet: 10.220.19.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3423,7 +3423,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan113, Interface status: protocol-up/link-up/admin-up, iod: 83,
-          IP address: 100.100.24.1, IP subnet: 100.100.24.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.24.1, IP subnet: 10.220.24.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3478,7 +3478,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9109"
         Vlan109, Interface status: protocol-up/link-up/admin-up, iod: 79,
-          IP address: 100.100.20.1, IP subnet: 100.100.20.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.20.1, IP subnet: 10.220.20.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3505,7 +3505,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan114, Interface status: protocol-up/link-up/admin-up, iod: 84,
-          IP address: 100.100.25.1, IP subnet: 100.100.25.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.25.1, IP subnet: 10.220.25.0/24 route-preference: 0, tag: 0 
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: 
               224.0.0.2  224.0.0.1  224.0.0.13  
@@ -3573,10 +3573,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'ip_forwarding': 'disabled',
             'ip_mtu': 1500,
             'ipv4': 
-                {'111.111.111.2/24': 
+                {'10.69.111.2/24': 
                     {'broadcast_address': '255.255.255.255',
-                    'ip': '111.111.111.2',
-                    'ip_subnet': '111.111.111.0',
+                    'ip': '10.69.111.2',
+                    'ip_subnet': '10.69.111.0',
                     'prefix_length': '24',
                     'route_preference': '0',
                     'route_tag': '0'},
@@ -3641,9 +3641,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 71,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.11.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.11.1',
-                                              'ip_subnet': '100.100.11.0',
+                 'ipv4': {'10.220.11.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.11.1',
+                                              'ip_subnet': '10.220.11.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4051,9 +4051,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 72,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.12.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.12.1',
-                                              'ip_subnet': '100.100.12.0',
+                 'ipv4': {'10.220.12.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.12.1',
+                                              'ip_subnet': '10.220.12.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4113,9 +4113,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 73,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.13.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.13.1',
-                                              'ip_subnet': '100.100.13.0',
+                 'ipv4': {'10.220.13.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.13.1',
+                                              'ip_subnet': '10.220.13.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4175,9 +4175,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 75,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.16.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.16.1',
-                                              'ip_subnet': '100.100.16.0',
+                 'ipv4': {'10.220.16.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.16.1',
+                                              'ip_subnet': '10.220.16.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4237,9 +4237,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 76,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.17.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.17.1',
-                                              'ip_subnet': '100.100.17.0',
+                 'ipv4': {'10.220.17.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.17.1',
+                                              'ip_subnet': '10.220.17.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4299,9 +4299,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 77,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.18.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.18.1',
-                                              'ip_subnet': '100.100.18.0',
+                 'ipv4': {'10.220.18.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.18.1',
+                                              'ip_subnet': '10.220.18.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4361,9 +4361,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 78,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.19.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.19.1',
-                                              'ip_subnet': '100.100.19.0',
+                 'ipv4': {'10.220.19.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.19.1',
+                                              'ip_subnet': '10.220.19.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4423,9 +4423,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 79,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.20.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.20.1',
-                                              'ip_subnet': '100.100.20.0',
+                 'ipv4': {'10.220.20.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.20.1',
+                                              'ip_subnet': '10.220.20.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4485,9 +4485,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 80,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.21.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.21.1',
-                                              'ip_subnet': '100.100.21.0',
+                 'ipv4': {'10.220.21.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.21.1',
+                                              'ip_subnet': '10.220.21.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4547,9 +4547,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 81,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.22.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.22.1',
-                                              'ip_subnet': '100.100.22.0',
+                 'ipv4': {'10.220.22.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.22.1',
+                                              'ip_subnet': '10.220.22.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4609,9 +4609,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 82,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.23.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.23.1',
-                                              'ip_subnet': '100.100.23.0',
+                 'ipv4': {'10.220.23.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.23.1',
+                                              'ip_subnet': '10.220.23.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4671,9 +4671,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 83,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.24.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.24.1',
-                                              'ip_subnet': '100.100.24.0',
+                 'ipv4': {'10.220.24.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.24.1',
+                                              'ip_subnet': '10.220.24.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4733,9 +4733,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'iod': 84,
                  'ip_forwarding': 'disabled',
                  'ip_mtu': 1500,
-                 'ipv4': {'100.100.25.1/24': {'broadcast_address': '255.255.255.255',
-                                              'ip': '100.100.25.1',
-                                              'ip_subnet': '100.100.25.0',
+                 'ipv4': {'10.220.25.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '10.220.25.1',
+                                              'ip_subnet': '10.220.25.0',
                                               'prefix_length': '24',
                                               'route_preference': '0',
                                               'route_tag': '0'},
@@ -4853,9 +4853,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                    'iod': 94,
                    'ip_forwarding': 'disabled',
                    'ip_mtu': 1500,
-                   'ipv4': {'91.1.1.0/32': {'broadcast_address': '255.255.255.255',
-                                            'ip': '91.1.1.0',
-                                            'ip_subnet': '91.1.1.0',
+                   'ipv4': {'10.49.1.0/32': {'broadcast_address': '255.255.255.255',
+                                            'ip': '10.49.1.0',
+                                            'ip_subnet': '10.49.1.0',
                                             'prefix_length': '32',
                                             'route_preference': '0',
                                             'route_tag': '0'},
@@ -4915,9 +4915,9 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                    'iod': 95,
                    'ip_forwarding': 'disabled',
                    'ip_mtu': 1500,
-                   'ipv4': {'91.1.1.1/32': {'broadcast_address': '255.255.255.255',
-                                            'ip': '91.1.1.1',
-                                            'ip_subnet': '91.1.1.1',
+                   'ipv4': {'10.49.1.1/32': {'broadcast_address': '255.255.255.255',
+                                            'ip': '10.49.1.1',
+                                            'ip_subnet': '10.49.1.1',
                                             'prefix_length': '32',
                                             'route_preference': '0',
                                             'route_tag': '0'},
