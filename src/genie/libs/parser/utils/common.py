@@ -128,12 +128,13 @@ def _find_command(command, data, device):
 
         match = re.match(reg, command)
         if match:
-            if device.os == 'aci':
-                os_found = False
-                for k in data[key].keys():
-                    if device.os in data[key][k]:
-                        os_found = True
-                if not os_found:
+            
+            try:
+                order_list = device.custom.get('abstraction').get('order', [])
+            except AttributeError:
+                order_list = None
+            if order_list:
+                if getattr(device, order_list[0]) not in data[key].keys():
                     continue
             elif device.os not in data[key].keys():
                 continue
