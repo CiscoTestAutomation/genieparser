@@ -14,7 +14,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 
 class ShowPlatformInternalHalPolicyRedirdstSchema(MetaParser):
-    """Schema for show service redir info group"""
+    """Schema for 'vsh_lc -c "show platform internal hal policy redirdst group_id {group_id} {address_family} src_ip {src_ip} dst_ip {dst_ip} protocol {protocol}'"""
 
     schema = {
         'group_id': {
@@ -87,48 +87,56 @@ class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirds
                 groud_id_dict = ret_dict.setdefault('group_id', {}). \
                     setdefault(group['group_id'], {})
                 continue
+
             # Src IP                                                    : 10.1.1.1/32 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'src_ip': group['src_ip']})
                 continue
+
             # Dst IP                                                    : 10.69.9.9/32 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'dst_ip': group['dst_ip']})
                 continue
+
             # Protocol                                                  : 0x1 
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'protocol': group['protocol']})
                 continue
+
             # Rewrite MAC                                               : 00:00:00:ff:02:03 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'rewrite_mac': group['rewrite_mac']})
                 continue
+
             # Rewrite VNID                                              : 0xf08007 
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'rewrite_vnid': group['rewrite_vnid']})
                 continue
+
             # Outgoing L2 IfIndex                                       : 0x1801001e 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'outgoing_l2_ifindex': group['outgoing_l2_ifindex']})
                 continue
+
             # Outgoing IfName                                           : Tunnel30 
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 groud_id_dict.update({'outgoing_ifname': group['outgoing_ifname']})
                 continue
+            
             # Packet's Hash                                             : 0x29d2 
             m = p9.match(line)
             if m:
