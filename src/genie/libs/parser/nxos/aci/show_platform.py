@@ -22,11 +22,11 @@ class ShowPlatformInternalHalPolicyRedirdstSchema(MetaParser):
                 'src_ip': str,
                 'dst_ip': str,
                 'protocol': str,
-                'rewrite_mac': str,
-                'rewrite_vnid': str,
-                'outgoing_l2_ifindex': str,
-                'outgoing_ifname': str,
-                'packets_hash': str,
+                Optional('rewrite_mac'): str,
+                Optional('rewrite_vnid'): str,
+                Optional('outgoing_l2_ifindex'): str,
+                Optional('outgoing_ifname'): str,
+                Optional('packets_hash'): str,
             }
         }
     }
@@ -42,7 +42,14 @@ class ShowPlatformInternalHalPolicyRedirdst(ShowPlatformInternalHalPolicyRedirds
 
     def cli(self, group_id, address_family, src_ip, dst_ip, protocol, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(
+                group_id=group_id,
+                address_family=address_family,
+                src_ip=src_ip,
+                dst_ip=dst_ip,
+                protocol=protocol
+            )
+            out = self.device.execute(cmd)
         else:
             out = output
 
