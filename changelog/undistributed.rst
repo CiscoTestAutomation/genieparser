@@ -57,6 +57,8 @@
         * Update regex to support more various output
     * Update ShowCdpNeighborsDetail
         * Change key mandatory 'capabilities' into optional
+    * Update ShowMacAddressTable
+        * Update regex to support various output
 
 * NXOS
     * Updated ShowInterface
@@ -68,3 +70,11 @@
         * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
+    * Update ShowPlatformInternalHalPolicyRedirdst:
+        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
+            outgoing_ifname, packets_hash as optional
+
+--------------------------------------------------------------------------------
+                                common.py
+--------------------------------------------------------------------------------
+* updated _find_command to find command for nxos in aci mode
