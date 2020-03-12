@@ -59,6 +59,8 @@
         * Change key mandatory 'capabilities' into optional
     * Update ShowMacAddressTable
         * Update regex to support various output
+    * Update ShowAccessLists
+        * Update regex to support various output
 
 * NXOS
     * Updated ShowInterface

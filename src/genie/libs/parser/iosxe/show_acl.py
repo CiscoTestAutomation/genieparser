@@ -335,7 +335,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 deny ip any object-group GENIE log-input
         p_ip_object_group = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
-            r'+(?P<src>any|(?:object-group+)(?: '
+            r'+(?P<src>(?:any )?(?:object-group+)(?: '
             r'+\S+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:host|object-group+)'
             r'(?: +\d+\.\d+\.\d+\.\d+)?(?: [a-zA-Z\-]*(?!.*[eq])+)?)?(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
