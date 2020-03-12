@@ -57,6 +57,8 @@
         * Update regex to support more various output
     * Update ShowCdpNeighborsDetail
         * Change key mandatory 'capabilities' into optional
+    * Update ShowMacAddressTable
+        * Update regex to support various output
 
 * NXOS
     * Updated ShowInterface
