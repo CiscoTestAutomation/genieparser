@@ -1491,9 +1491,8 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                             Optional('negative_mapping'):
                                                 {'map_reply_action': str,
                                                 },
-                                            Optional('encap_to_proxy'):
-                                                {'device': str,
-                                                },
+                                            Optional('encap_to_petr'): bool,
+                                            Optional('encap_to_petr_iid'): str,
                                             Optional('positive_mapping'):
                                                 {'rlocs':
                                                     {Any():
@@ -1585,14 +1584,15 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
         #   10.1.8.8 00:04:02  up          50/50        -
-        # State can be: up, down, route-rejec plus self
+        # State can be: 'up', 'down', 'route-rejec', 'up, self' and etc
         p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
-                         ' +(?P<state>(up|down|route-rejec)) *,? *(?P<self>(self)?)'
+                         ' +(?P<state>(\S+|up, self))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
 
-        # Encapsulating to proxy <device>
-        p6 = re.compile(r'Encapsulating +to +proxy +(?P<device>(\S+)).*$')
+        # Encapsulating to proxy ETR
+        # Encapsulating to proxy ETR Encap-IID 3
+        p6 = re.compile(r'Encapsulating\s+to\s+proxy\s+ETR(\s+Encap-IID\s+(?P<encap_to_petr_iid>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1698,11 +1698,14 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 rloc_id += 1
                 continue
 
-            # Encapsulating to proxy <device>
+            # Encapsulating to proxy ETR
+            # Encapsulating to proxy ETR Encap-IID 3
             m = p6.match(line)
             if m:
-                encap_dict = mapping_dict.setdefault('encap_to_proxy', {})
-                encap_dict['device'] = m.groupdict()['device']
+                encap_dict['encap_to_petr'] = True
+                encap_to_petr_iid = m.groupdict()['encap_to_petr_iid']
+                if encap_to_petr_iid:
+                    encap_dict['encap_to_petr_iid'] = encap_to_petr_iid
                 continue
 
         return parsed_dict
@@ -2052,12 +2055,12 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
         # blue                  LISP0.102@    1      0      1   0.0%    0%  ITR-ETR
         # blue                  LISP0.102*    1      0      1   0.0%    0%  ITR-ETR
         p4_1 = re.compile(r'(?P<vrf>(\S+)) +(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+))(?P<rloc_status>([@*]?)) +(?P<db_no_route>(\d+))'
+                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
         p4_2 = re.compile(r'(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+))(?P<rloc_status>([@*]?)) +(?P<db_no_route>(\d+))'
+                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
