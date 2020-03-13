@@ -61,6 +61,8 @@
         * Update regex to support various output
     * Update ShowAccessLists
         * Update regex to support various output
+    * Update ShowVrf
+        * Update regex to support various output
 
 * NXOS
     * Updated ShowInterface
