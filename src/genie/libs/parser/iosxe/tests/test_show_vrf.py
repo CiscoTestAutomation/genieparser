@@ -127,7 +127,29 @@ class TestShowVrf(unittest.TestCase):
       test                             10.116.83.34:100      ipv4,ipv6   Lo100
     '''}
 
-    golden_parsed_output_2
+    golden_parsed_output_2 = {
+        'vrf': {
+            'BT-RBG-LAB': {
+                'interfaces': ['GigabitEthernet0/0/0'],
+                'protocols': ['ipv4'],
+                'route_distinguisher': '10.116.83.34:99',
+            },
+            'Mgmt-intf': {
+                'interfaces': ['GigabitEthernet0'],
+                'protocols': ['ipv4', 'ipv6'],
+            },
+            'rb-bcn-lab': {
+                'interfaces': ['Loopback9', 'TenGigabitEthernet0/0/1'],
+                'protocols': ['ipv4', 'ipv6'],
+                'route_distinguisher': '10.116.83.34:1',
+            },
+            'test': {
+                'interfaces': ['Loopback100'],
+                'protocols': ['ipv4', 'ipv6'],
+                'route_distinguisher': '10.116.83.34:100',
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

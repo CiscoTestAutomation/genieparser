@@ -56,46 +56,56 @@ class ShowVrf(ShowVrfSchema):
 
         res_dict = {}
 
+        # Name                             Default RD            Protocols   Interfaces
         # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
         # VRF1                             65000:1               ipv4,ipv6   Tu1
-        # vpn4                           100:2          ipv4,ipv6
-        p1 = re.compile(r'^(?P<vrf>\S+)\s+(?P<rd>\<not +set\>|[\d\:]+)\s+'
-                        r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
+        # vpn4                             100:2                 ipv4,ipv6
+        # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+        #                                                                    Te0/0/1
+        # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+        p1 = re.compile(r'^(?P<vrf>[\w\d-]+)?\s+(?P<rd>\<not\s+set\>|[\.\d\:]+)?\s+'
+                        r'(?P<protocols>ipv4|ipv6|ipv4,ipv6)?\s*(?P<intf>[\w\d/.]+)$')
                                                                     
         # Lo300
         # Gi2.390
         # Gi2.410
-        p2 = re.compile(r'^(?P<intf>[\w\.]+)$')
+        # Te0/0/1
+        p2 = re.compile(r'^(?P<intf>[\w\.\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # Name                             Default RD            Protocols   Interfaces
             # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
             # VRF1                             65000:1               ipv4,ipv6   Tu1
-            # vpn2                           100:3          ipv4              Lo23  AT3/0/0.1
+            # vpn4                             100:2                 ipv4,ipv6
+            # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+            #                                                                    Te0/0/1
+            # test                             10.116.83.34:100      ipv4,ipv6   Lo100
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
 
-                vrf = groups['vrf']
-                vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                if groups['vrf']:
+                    vrf_dict = res_dict.setdefault('vrf', {}).setdefault(groups['vrf'], {})
 
-                rd = groups['rd']
-                if 'not set' not in rd:
-                    vrf_dict.update({'route_distinguisher': rd})
+                if groups['rd'] and groups['rd'] != '<not set>':
+                    vrf_dict['route_distinguisher'] = groups['rd']
 
-                protocols = groups['protocols'].split(',')
-                vrf_dict.update({'protocols': protocols})
+                if groups['protocols']:
+                    vrf_dict['protocols'] = groups['protocols'].split(',')
 
                 if groups['intf']:
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
+
                 continue
 
             # Lo300
             # Gi2.390
             # Gi2.410
+            # Te0/0/1
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
