@@ -4,6 +4,7 @@
      *  show lldp entry *
      *  show lldp entry [<WORD>]
      *  show lldp interface [<WORD>]
+     *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
 """
@@ -109,12 +110,34 @@ class ShowLldpEntrySchema(MetaParser):
                                 Optional('auto_negotiation'): str,
                                 Optional('physical_media_capabilities'): list,
                                 Optional('unit_type'): int,
-                                Optional('vlan_id'): int
+                                Optional('vlan_id'): int,
                             }
                         }
                     }
                 }
             }
+        },
+        Optional('med_information'): {
+            'f/w_revision': str,
+            Optional('h/w_revision'): str,
+            Optional('s/w_revision'): str,
+            'manufacturer': str,
+            'model': str,
+            'capabilities': list,
+            'device_type': str,
+            'network_policy': {
+                Any(): { # 'voice'; 'voice_signal'
+                    'vlan': int, # 110
+                    'tagged': bool,
+                    'layer_2_priority': int,
+                    'dscp': int,
+                },
+            },
+            Optional('serial_number'): str,
+            'power_source': str,
+            'power_priority': str,
+            'wattage': float,
+            'location': str,
         }
     }
 
@@ -147,40 +170,107 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         item = ''
         sub_dict = {}
 
-        # initial regexp pattern
-        p1 = re.compile(r'^Local +Intf: +(?P<intf>[\w\/\.\-]+)$')
-        p1_1 = re.compile(r'^Port +id: +(?P<port_id>[\w\/\.\-]+)$')
+        # ==== initial regexp pattern ====
+        # Local Intf: Gi2/0/15
+        p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
 
-        p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
+        # Port id: Gi1/0/4
+        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\S\s]+)$')
 
-        p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-]+)$')
+        # Chassis id:  843d.c6ff.f1b8
+        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
 
-        p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S ]+)$')
+        # Port Description: GigabitEthernet1/0/4
+        p3 = re.compile(r'^Port\s+Description:\s+(?P<desc>[\w\/\.\-\s]+)$')
 
-        p5 = re.compile(r'^System +Description:.*$')
-        p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
-        p5_2 = re.compile(r'^(?P<msg>Technical Support.*)$')
-        p5_3 = re.compile(r'^(?P<msg>Copyright.*)$')
-        p5_4 = re.compile(r'^(?P<msg>Compile.*)$')
+        # System Name: R5
+        # System Name - not advertised
+        p4 = re.compile(r'^System\s+Name(?: +-|:)\s+(?P<name>[\S\s]+)$')
 
-        p6 = re.compile(r'^Time +remaining: +(?P<time_remaining>\w+) +seconds$')
+        # System Description:
+        p5 = re.compile(r'^System\s+Description:.*$')
 
-        p7 = re.compile(r'^System +Capabilities: +(?P<capab>[\w\,\s]+)$')
+        # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+        # Technical Support: http://www.cisco.com/techsupport
+        # Copyright (c) 1986-2011 by Cisco Systems, Inc.
+        # Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S
+        p5_1 = re.compile(r'^(?P<msg>(Cisco +IOS +Software|Technical Support|Copyright|Cisco IP Phone).*)$')
 
-        p8 = re.compile(r'^Enabled +Capabilities: +(?P<capab>[\w\,\s]+)$')
+        # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
+        # Avaya 1220 IP Deskphone, Firmware:06Q
+        # IP Phone, Firmware:90234AP
+        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone).*)$')
 
-        p9 = re.compile(r'^IP: +(?P<ip>[\w\.]+)$')
+        # Time remaining: 112 seconds
+        p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
 
-        p10 = re.compile(r'^Auto +Negotiation +\- +(?P<auto_negotiation>[\w\s\,]+)$')
+        # System Capabilities: B,R
+        p7 = re.compile(r'^System\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
-        p11 = re.compile(r'^Physical +media +capabilities:$')
-        p11_1 = re.compile(r'^(?P<physical_media_capabilities>\d+base[\w\-\(\)]+)$')
+        # Enabled Capabilities: B,R
+        p8 = re.compile(r'^Enabled\s+Capabilities:\s+(?P<capab>[\w\,\s]+)$')
 
-        p12 = re.compile(r'^Media +Attachment +Unit +type: +(?P<unit_type>\d+)$')
+        # Management Addresses:
+        #     IP: 10.9.1.1
+        # Management Addresses - not advertised
+        p9 = re.compile(r'^IP:\s+(?P<ip>[\w\.]+)$')
+        p9_1 = re.compile(r'^Management\s+Addresses\s+-\s+(?P<ip>not\sadvertised)$')
 
-        p13 = re.compile(r'^Vlan +ID: +(?P<vlan_id>\d+)$')
+        # Auto Negotiation - supported, enabled
+        p10 = re.compile(r'^Auto\s+Negotiation\s+\-\s+(?P<auto_negotiation>[\w\s\,]+)$')
 
-        p14 = re.compile(r'^Total +entries +displayed: +(?P<entry>\d+)$')
+        # Physical media capabilities:
+        p11 = re.compile(r'^Physical\s+media\s+capabilities:$')
+
+        # 1000baseT(FD)
+        # 100base-TX(HD)
+        # Symm, Asym Pause(FD)
+        # Symm Pause(FD)
+        p11_1 = re.compile(r'^(?P<physical_media_capabilities>[\S\(\s]+(HD|FD)[\)])$')
+
+        # Media Attachment Unit type: 30
+        p12 = re.compile(r'^Media\s+Attachment\s+Unit\s+type:\s+(?P<unit_type>\d+)$')
+
+        # Vlan ID: 1
+        # Note: not parsing 'not advertised since value type is int
+        p13 = re.compile(r'^^Vlan\s+ID:\s+(?P<vlan_id>\d+)$')
+
+        # Total entries displayed: 4
+        p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
+
+        # ==== MED Information patterns =====
+        # F/W revision: 06Q
+        # S/W revision: SCCP42.9-3-1ES27S
+        # H/W revision: 12
+        med_p1 = re.compile(r'^(?P<head>(H/W|F/W|S/W))\s+revision:\s+(?P<revision>\S+)$')
+
+        # Manufacturer: Avaya-05
+        med_p2 = re.compile(r'^Manufacturer:\s+(?P<manufacturer>[\S\s]+)$')
+
+        # Model: 1220 IP Deskphone
+        med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
+
+        # Capabilities: NP, LI, PD, IN
+        med_p4 = re.compile(r'^Capabilities:\s+(?P<capabilities>[\S\s]+)$')
+
+        # Device type: Endpoint Class III
+        med_p5 = re.compile(r'^Device\s+type:\s+(?P<device_type>[\S\s]+)$')
+
+        # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
+        # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
+        med_p6 = re.compile(r'^Network\s+Policy\(Voice(\s+(?P<voice_signal>Signal))?\):'
+                            r'\s+VLAN\s+(?P<vlan>\d+),\s+(?P<tagged>tagged),\s+'
+                            r'Layer-2 priority:\s+(?P<layer_2_priority>\d+),\s+DSCP:\s+(?P<dscp>\d+)$')
+
+        # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+        med_p7 = re.compile(r'^(?P<device_type>PD device),\s+Power\s+source:\s+(?P<power_source>\S+),\s+'
+                            r'Power\s+Priority:\s+(?P<power_priority>\S+),\s+Wattage:\s+(?P<wattage>\S+)$')
+
+        # Location - not advertised
+        med_p8 = re.compile(r'^Location\s+-\s+(?P<location>[\S\s]+)$')
+
+        # Serial number: FCH1610A5S5
+        med_p9 = re.compile(r'^Serial\s+number:\s+(?P<serial_number>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -194,7 +284,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c6ff.f1b8
+            # Chassis id:  843d.c6ff.f1b8
             m = p2.match(line)
             if m:
                 sub_dict = {}
@@ -205,6 +295,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Port id: Gi1/0/4
             m = p1_1.match(line)
             if m:
+                if 'interfaces' not in ret_dict:
+                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault('N/A', {})
+                    intf_dict['if_name'] = 'N/A'
                 port_id = Common.convert_intf_name(m.groupdict()['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
@@ -235,25 +328,18 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
+            # Technical Support: http://www.cisco.com/techsupport
+            # Copyright (c) 1986-2011 by Cisco Systems, Inc.
+            # Cisco IP Phone 7962G,V12, SCCP42.9-3-1ES27S
             m = p5_1.match(line)
             if m:
                 nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
-            # Technical Support: http://www.cisco.com/techsupport 
-            m = p5_2.match(line)
-            if m:
-                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
-                continue
-
-            # Copyright (c) 1986-2011 by Cisco Systems, Inc.
-            m = p5_3.match(line)
-            if m:
-                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
-                continue
-
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
-            m = p5_4.match(line)
+            # Avaya 1220 IP Deskphone, Firmware:06Q
+            # IP Phone, Firmware:90234AP
+            m = p5_2.match(line)
             if m:
                 nei_dict['system_description'] += m.groupdict()['msg']
                 continue
@@ -288,7 +374,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
             # Management Addresses:
             #     IP: 10.9.1.1
-            m = p9.match(line)
+            # Management Addresses - not advertised
+            m = p9.match(line) or p9_1.match(line)
             if m:
                 nei_dict['management_address'] = m.groupdict()['ip']
                 continue
@@ -305,8 +392,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict['physical_media_capabilities'] = []
                 continue
 
-            #     1000baseT(FD)
-            #     100base-TX(HD)
+            # 1000baseT(FD)
+            # 100base-TX(HD)
+            # Symm, Asym Pause(FD)
+            # Symm Pause(FD)
             m = p11_1.match(line)
             if m:                
                 item = nei_dict.get('physical_media_capabilities', [])
@@ -321,6 +410,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Vlan ID: 1
+            # Note: not parsing 'not advertised since value type is int
             m = p13.match(line)
             if m:
                 nei_dict['vlan_id'] = int(m.groupdict()['vlan_id'])
@@ -330,6 +420,75 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p14.match(line)
             if m:
                 ret_dict['total_entries'] = int(m.groupdict()['entry'])
+                continue
+
+            # ==== Med Information ====
+            # F/W revision: 06Q
+            # S/W revision: SCCP42.9-3-1ES27S
+            # H/W revision: 12
+            m = med_p1.match(line)
+            if m:
+                group = m.groupdict()
+                med_dict = ret_dict.setdefault('med_information', {})
+                med_dict[group['head'].lower()+'_revision'] = m.groupdict()['revision']
+                continue
+
+            # Manufacturer: Avaya-05
+            # Model: 1220 IP Deskphone
+            # Device type: Endpoint Class III
+            m = med_p2.match(line) or med_p3.match(line) or med_p5.match(line)
+            if m:
+                match_key = [*m.groupdict().keys()][0]
+                med_dict[match_key] = m.groupdict()[match_key]
+                continue
+
+            # Capabilities: NP, LI, PD, IN
+            m = med_p4.match(line)
+            if m:
+                list_capabilities = m.groupdict()['capabilities'].split(', ')
+                med_dict['capabilities'] = list_capabilities
+                continue
+
+            # Network Policy(Voice): VLAN 110, tagged, Layer-2 priority: 5, DSCP: 46
+            # Network Policy(Voice Signal): VLAN 110, tagged, Layer-2 priority: 0, DSCP: 0
+            m = med_p6.match(line)
+            if m:
+                group = m.groupdict()
+
+                if group['voice_signal']:
+                    voice = 'voice_signal'
+                else:
+                    voice = 'voice'
+                voice_sub_dict = med_dict.setdefault('network_policy', {}).\
+                                          setdefault(voice, {})
+                if group['tagged'] == 'tagged':
+                    voice_sub_dict['tagged'] = True
+                else:
+                    voice_sub_dict['tagged'] = False
+
+                for k in ['layer_2_priority', 'dscp', 'vlan']:
+                    voice_sub_dict[k] = int(group[k])
+
+                continue
+
+            # PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            m = med_p7.match(line)
+            if m:
+                for k in ['device_type', 'power_source', 'power_priority']:
+                    med_dict[k] = m.groupdict()[k]
+                med_dict['wattage'] = float(m.groupdict()['wattage'])
+                continue
+
+            # Location - not advertised
+            m = med_p8.match(line)
+            if m:
+                med_dict['location'] = m.groupdict()['location']
+                continue
+
+            # Serial number: FCH1610A5S5
+            m = med_p9.match(line)
+            if m:
+                med_dict['serial_number']: m.groupdict()['serial_number']
                 continue
 
         return ret_dict
@@ -471,3 +630,97 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
                 continue
         return ret_dict
 
+
+class ShowLldpNeighborsSchema(MetaParser):
+    """
+    Schema for show lldp neighbors
+    """
+    schema = {
+        'total_entries': int,
+        'interfaces': {
+            Any(): {
+                'port_id': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {
+                                'hold_time': int,
+                                Optional('capabilities'): list,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLldpNeighbors(ShowLldpNeighborsSchema):
+    """
+    Parser for show lldp neighbors
+    """
+    CAPABILITY_CODES = {'R': 'router',
+                        'B': 'mac_bridge',
+                        'T': 'telephone',
+                        'C': 'docsis_cable_device',
+                        'W': 'wlan_access_point',
+                        'P': 'repeater',
+                        'S': 'station_only',
+                        'O': 'other'}
+
+    cli_command = ['show lldp neighbors']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_output = {}
+
+        # Total entries displayed: 4
+        p1 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
+
+        # Device ID           Local Intf     Hold-time  Capability      Port ID
+        # router               Gi1/0/52       117        R               Gi0/0/0
+        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+        # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interfaces>\S+)'
+                        r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
+                        r'\s+(?P<port_id>\S+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total entries displayed: 4
+            m = p1.match(line)
+            if m:
+                parsed_output['total_entries'] = int(m.groupdict()['entry'])
+                continue
+
+            # Device ID           Local Intf     Hold-time  Capability      Port ID
+            # router               Gi1/0/52       117        R               Gi0/0/0
+            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
+            # d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf = Common.convert_intf_name(group['interfaces'])
+                device_dict = parsed_output.setdefault('interfaces', {}). \
+                                          setdefault(intf, {}). \
+                                          setdefault('port_id', {}). \
+                                          setdefault(group['port_id'], {}).\
+                                          setdefault('neighbors', {}). \
+                                          setdefault(group['device_id'], {})
+
+                device_dict['hold_time'] = int(group['hold_time'])
+
+                if group['capabilities']:
+                    capabilities = list(map(lambda x: x.strip(), group['capabilities'].split(',')))
+                    device_dict['capabilities'] = capabilities
+
+
+            continue
+
+        return parsed_output

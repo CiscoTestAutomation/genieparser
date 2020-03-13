@@ -1245,12 +1245,160 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
           Multicast Tagswitching: disabled
     '''}
 
+    golden_output_intf_detail_3 = {'execute.return_value': '''
+    show ip pim interface detail
+    Loopback0 is up, line protocol is up
+      Internet address is 10.4.4.14/32
+      Multicast switching: fast
+      Multicast packets in/out: 0/0
+      Multicast TTL threshold: 0
+      PIM: enabled
+        PIM version: 2, mode: sparse
+        PIM DR: 10.4.4.14 (this system)
+        PIM neighbor count: 0
+        PIM Hello/Query interval: 30 seconds
+        PIM Hello packets in/out: 45876/45876
+        PIM J/P interval: 60 seconds
+        PIM State-Refresh processing: enabled
+        PIM State-Refresh origination: disabled
+        PIM NBMA mode: disabled
+        PIM ATM multipoint signalling: disabled
+        PIM domain border: disabled
+        PIM neighbors rpf proxy capable: FALSE
+        PIM BFD: disabled
+        PIM Non-DR-Join: FALSE
+      Multicast Tagswitching: disabled
+    Loopback8 is up, line protocol is up
+      Internet protocol processing: disabled
+    GigabitEthernet15 is down, line protocol is down
+      Internet protocol processing: disabled
+    GigabitEthernet16 is down, line protocol is down
+      Multicast switching: fast
+      Multicast packets in/out: 0/0
+      Multicast TTL threshold: 0
+      PIM: enabled
+        PIM version: 2, mode: sparse
+        PIM DR: 0.0.0.0 (this system)
+        PIM neighbor count: 0
+        PIM Hello/Query interval: 30 seconds
+        PIM Hello packets in/out: 0/0
+        PIM J/P interval: 60 seconds
+        PIM State-Refresh processing: enabled
+        PIM State-Refresh origination: disabled
+        PIM NBMA mode: disabled
+        PIM ATM multipoint signalling: disabled
+        PIM domain border: disabled
+        PIM neighbors rpf proxy capable: FALSE
+        PIM BFD: disabled
+        PIM Non-DR-Join: FALSE
+      Multicast Tagswitching: disabled
+    C9606-OD#
+    '''}
+    golden_parsed_output_intf_detail_3 = {
+    'vrf': {
+        'VRF1': {
+            'interfaces': {
+                'GigabitEthernet15': {
+                    'address_family': {
+                        'ipv4': {
+                            'enable': False,
+                            'oper_status': 'down',
+                            'internet_protocol_processing': False,
+                        },
+                    },
+                },
+                'GigabitEthernet16': {
+                    'address_family': {
+                        'ipv4': {
+                            'atm_multipoint_signalling': 'disabled',
+                            'bfd': {
+                                'enable': False,
+                            },
+                            'bsr_border': False,
+                            'dr_address': '0.0.0.0',
+                            'enable': False,
+                            'hello_interval': 30,
+                            'hello_packets_in': 0,
+                            'hello_packets_out': 0,
+                            'jp_interval': 60,
+                            'mode': 'sparse',
+                            'multicast': {
+                                'packets_in': 0,
+                                'packets_out': 0,
+                                'switching': 'fast',
+                                'tag_switching': False,
+                                'ttl_threshold': 0,
+                            },
+                            'nbma_mode': 'disabled',
+                            'neighbor_count': 0,
+                            'neighbors_rpf_proxy_capable': False,
+                            'none_dr_join': False,
+                            'oper_status': 'down',
+                            'pim_status': 'enabled',
+                            'sm': {
+                            },
+                            'state_refresh_origination': 'disabled',
+                            'state_refresh_processing': 'enabled',
+                            'version': 2,
+                        },
+                    },
+                },
+                'Loopback0': {
+                    'address_family': {
+                        'ipv4': {
+                            'address': ['10.4.4.14/32'],
+                            'atm_multipoint_signalling': 'disabled',
+                            'bfd': {
+                                'enable': False,
+                            },
+                            'bsr_border': False,
+                            'dr_address': '10.4.4.14',
+                            'enable': True,
+                            'hello_interval': 30,
+                            'hello_packets_in': 45876,
+                            'hello_packets_out': 45876,
+                            'jp_interval': 60,
+                            'mode': 'sparse',
+                            'multicast': {
+                                'packets_in': 0,
+                                'packets_out': 0,
+                                'switching': 'fast',
+                                'tag_switching': False,
+                                'ttl_threshold': 0,
+                            },
+                            'nbma_mode': 'disabled',
+                            'neighbor_count': 0,
+                            'neighbors_rpf_proxy_capable': False,
+                            'none_dr_join': False,
+                            'oper_status': 'up',
+                            'pim_status': 'enabled',
+                            'sm': {
+                            },
+                            'state_refresh_origination': 'disabled',
+                            'state_refresh_processing': 'enabled',
+                            'version': 2,
+                        },
+                    },
+                },
+                'Loopback8': {
+                    'address_family': {
+                        'ipv4': {
+                            'enable': True,
+                            'oper_status': 'up',
+                            'internet_protocol_processing': False,
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
     def test_empty_detail(self):
         self.device = Mock(**self.empty_output_detail)
         obj = ShowIpPimInterfaceDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
-
 
     def test_golden_detail_1(self):
         self.maxDiff = None
@@ -1265,6 +1413,13 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
         obj = ShowIpPimInterfaceDetail(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_intf_detail_2)
+
+    def test_golden_intf_detail_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_intf_detail_3)
+        obj = ShowIpPimInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_intf_detail_3)
 
 
 # ============================================

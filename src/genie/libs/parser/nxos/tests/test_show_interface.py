@@ -20,11 +20,13 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowRunningConfigInterface,
                                                    ShowNveInterface,
                                                    ShowIpInterfaceBriefVrfAll,
-                                                   ShowInterfaceDescription)
+                                                   ShowInterfaceDescription,
+                                                   ShowInterfaceStatus)
 
 #############################################################################
 # unitest For Show Interface
 #############################################################################
+
 
 class TestShowInterface(unittest.TestCase):
     device = Device(name='aDevice')
@@ -91,7 +93,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 3330,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'desc-1',
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
@@ -109,6 +111,7 @@ class TestShowInterface(unittest.TestCase):
                     'route_tag': '10',
                     'secondary': True}},
             'last_link_flapped': '00:00:29',
+            'link_state': 'up',
             'mac_address': 'aaaa.bbff.8888',
             'medium': 'broadcast',
             'mtu': 1600,
@@ -128,13 +131,13 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'down',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': False,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '10'},
             'ethertype': '0x8100',
-            'link_state': 'Administratively down',
+            'link_state': 'down',
             'mac_address': '5254.00ff.8534',
             'medium': 'broadcast',
             'mtu': 1600,
@@ -153,12 +156,13 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'up',
             'bandwidth': 768,
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'enabled': True,
             'encapsulations': 
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '20'},
             'ethertype': '0x8100',
+            'link_state': 'up',
             'mac_address': '5254.00ff.8534',
             'medium': 'p2p',
             'mtu': 1600,
@@ -231,7 +235,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
             'enabled': True,
@@ -242,6 +246,7 @@ class TestShowInterface(unittest.TestCase):
                 {'receive': False, 'send': False},
             'interface_reset': 1,
             'last_link_flapped': '00:07:28',
+            'link_state': 'up',
             'mac_address': '5254.00ff.62da',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -272,13 +277,16 @@ class TestShowInterface(unittest.TestCase):
                     'in_rate_pkts': 0,
                     'load_interval': 1,
                     'out_rate': 24,
-                    'out_rate_pkts': 0}},
+                    'out_rate_pkts': 0},
+                  'rx': True,
+                  'tx': True},
             'delay': 10,
             'duplex_mode': 'full',
             'enabled': True,
             'encapsulations': 
                 {'encapsulation': 'arpa'},
             'ethertype': '0x0000',
+            'link_state': 'up',
             'mac_address': '5254.00ff.9c38',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -346,7 +354,7 @@ class TestShowInterface(unittest.TestCase):
                 'rx': True,
                 'tx': True},
             'delay': 10,
-            'dedicated_intface': True,
+            'dedicated_interface': True,
             'description': 'Connection to pe1',
             'duplex_mode': 'auto',
             'enabled': False,
@@ -357,7 +365,7 @@ class TestShowInterface(unittest.TestCase):
             'ipv4': {'10.229.1.112/16': {'ip': '10.229.1.112',
                                          'prefix_length': '16'}},
             'last_link_flapped': '13:23:37',
-            'link_state': 'DCX-No ACK in 100 PDUs',
+            'link_state': 'down',
             'mac_address': '002a.6aff.4571',
             'medium': 'broadcast',
             'mtu': 1500,
@@ -372,7 +380,8 @@ class TestShowInterface(unittest.TestCase):
             'txload': '1/255',
             'types': '1000/10000 Ethernet'},
         'nve1': 
-            {'enabled': True,
+            {'enabled': False,
+             'link_state': 'up',
             'oper_status': 'up',
             'port_channel': 
                 {'port_channel_member': False}}}
@@ -546,7 +555,7 @@ class TestShowInterface(unittest.TestCase):
 
     golden_parsed_output2 = {
         "Vlan1": {
-          "link_state": "Administratively down",
+          "link_state": "down",
           "autostate": True,
           "rxload": "1/255",
           "line_protocol": "down",
@@ -563,7 +572,7 @@ class TestShowInterface(unittest.TestCase):
           "delay": 10
        },
        "Vlan200": {
-            "link_state": "VLAN/BD is down",
+            "link_state": "down",
             "autostate": True,
             "rxload": "1/255",
             "line_protocol": "down",
@@ -700,16 +709,16 @@ class TestShowInterface(unittest.TestCase):
                                        'out_rate_pps': 0},
                               'rx': True,
                               'tx': True},
-                 'dedicated_intface': True,
+                 'dedicated_interface': True,
                  'delay': 10,
                  'efficient_ethernet': 'n/a',
-                 'enabled': False,
+                 'enabled': True,
                  'encapsulations': {'encapsulation': 'arpa'},
                  'ethertype': '0x8100',
                  'flow_control': {'receive': False, 'send': False},
                  'interface_reset': 0,
                  'last_link_flapped': 'never',
-                 'link_state': 'Link not connected',
+                 'link_state': 'down',
                  'mac_address': '000c.29ff.e5fd',
                  'medium': 'broadcast',
                  'mtu': 1500,
@@ -828,7 +837,7 @@ class TestShowInterface(unittest.TestCase):
                   'rx': True,
                   'tx': True},
              'delay': 3330,
-             'dedicated_intface': True,
+             'dedicated_interface': True,
              'description': 'desc-1',
              'duplex_mode': 'full',
              'efficient_ethernet': 'n/a',
@@ -846,6 +855,7 @@ class TestShowInterface(unittest.TestCase):
                        'route_tag': '10',
                        'secondary': True}},
              'last_link_flapped': '00:00:29',
+             'link_state': 'up',
              'mac_address': 'aaaa.bbff.8888',
              'medium': 'broadcast',
              'mtu': 1600,
@@ -1023,7 +1033,7 @@ class TestShowInterface(unittest.TestCase):
                                               'out_rate_pkts': 477},
                                      'rx': True,
                                      'tx': True},
-                        'dedicated_intface': True,
+                        'dedicated_interface': True,
                         'delay': 10,
                         'description': '<< GENIE GIG 0/0/1 >>',
                         'duplex_mode': 'full',
@@ -1034,6 +1044,7 @@ class TestShowInterface(unittest.TestCase):
                         'flow_control': {'receive': False, 'send': False},
                         'interface_reset': 9,
                         'last_link_flapped': '3d22h',
+                        'link_state': 'up',
                         'mac_address': '80e0.1dff.6bb6',
                         'media_type': '1G',
                         'medium': 'broadcast',
@@ -1104,7 +1115,7 @@ class TestShowInterface(unittest.TestCase):
                                                'out_rate_pps': 0},
                                       'rx': True,
                                       'tx': True},
-                         'dedicated_intface': True,
+                         'dedicated_interface': True,
                          'delay': 10,
                          'description': '<< LINK TO GENIE PACKET CAPTURE >>',
                          'duplex_mode': 'auto',
@@ -1114,7 +1125,7 @@ class TestShowInterface(unittest.TestCase):
                          'ethertype': '0x8100',
                          'flow_control': {'receive': False, 'send': False},
                          'interface_reset': 16,
-                         'link_state': 'Administratively down',
+                         'link_state': 'down',
                          'mac_address': '80e0.1dff.6cc3',
                          'media_type': '10G',
                          'medium': 'broadcast',
@@ -1144,7 +1155,9 @@ class TestShowInterface(unittest.TestCase):
                                         'in_rate_pkts': 16,
                                         'load_interval': 1,
                                         'out_rate': 51208,
-                                        'out_rate_pkts': 17}},
+                                        'out_rate_pkts': 17},
+                    'rx': True,
+                    'tx': True},
                   'delay': 10,
                   'duplex_mode': 'full',
                   'enabled': True,
@@ -1152,6 +1165,7 @@ class TestShowInterface(unittest.TestCase):
                   'ethertype': '0x0000',
                   'ipv4': {'10.154.64.17/23': {'ip': '10.154.64.17',
                                                'prefix_length': '23'}},
+                  'link_state': 'up',
                   'mac_address': '80e0.1dff.6bae',
                   'medium': 'broadcast',
                   'mtu': 1500,
@@ -1164,6 +1178,32 @@ class TestShowInterface(unittest.TestCase):
                   'txload': '1/255',
                   'types': 'GigabitEthernet'
                 }
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+        abc-defg# show int eth1/10
+
+        Ethernet1/10 is down (Link not connected)
+        
+        admin state is up, Dedicated Interface
+        
+          Hardware: 100/1000/10000 Ethernet, address: 1234.12ff.df07 (bia 1234.12ff.df07)
+    '''}
+
+    golden_parsed_output_5 = {
+        'Ethernet1/10': {
+            'admin_state': 'up',
+            'dedicated_interface': True,
+            'enabled': True,
+            'link_state': 'down',
+            'mac_address': '1234.12ff.df07',
+            'oper_status': 'down',
+            'phys_address': '1234.12ff.df07',
+            'port_channel': {
+                'port_channel_member': False,
+            },
+            'types': '100/1000/10000 Ethernet',
+        },
     }
 
     def test_empty(self):
@@ -1207,9 +1247,17 @@ class TestShowInterface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
 # #############################################################################
-# # Unitest For Show Ip Interface Vrf All
+# # Unittest For Show Ip Interface Vrf All
 # #############################################################################
+
 
 class TestShowIpInterfaceVrfAll(unittest.TestCase):
     
@@ -1292,7 +1340,6 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                  'wccp_redirect_exclude': 'disabled',
                  'wccp_redirect_inbound': 'disabled',
                  'wccp_redirect_outbound': 'disabled'}}
-
 
     golden_output = {'execute.return_value': '''
         IP Interface Status for VRF "default"
@@ -1868,7 +1915,6 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           "wccp_redirect_exclude": "disabled"
      }
     }
-
 
     golden_output_2 = {'execute.return_value': '''
       IP Interface Status for VRF "default"
@@ -2629,6 +2675,2362 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                         'wccp_redirect_inbound': 'disabled',
                         'wccp_redirect_outbound': 'disabled'}
     }
+
+    golden_output_3 = {'execute.return_value': '''
+    IP Interface Status for VRF "default"
+    Vlan355, Interface status: protocol-up/link-up/admin-up, iod: 2,
+      IP address: 10.170.153.133, IP subnet: 10.170.153.128/28 
+      IP broadcast address: 255.255.255.255
+      IP multicast groups locally joined: none
+      IP MTU: 9216 bytes (using link MTU)
+      IP primary address route-preference: 0, tag: 0
+      IP proxy ARP : disabled
+      IP Local Proxy ARP : disabled
+      IP multicast routing: disabled
+      IP icmp redirects: enabled
+      IP directed-broadcast: disabled 
+      IP Forwarding: disabled 
+      IP icmp unreachables (except port): disabled
+      IP icmp port-unreachable: enabled
+      IP unicast reverse path forwarding: none
+      IP load sharing: none 
+      ip interface statistics last reset: never
+      IP interface software stats: (sent/received/forwarded/originated/consumed)
+        Unicast packets    : 5498120/5436721/0/5498120/5436721
+        Unicast bytes      : 1012679263/691502626/0/1012679263/691502626
+        Multicast packets  : 0/50702916/0/0/0
+        Multicast bytes    : 0/5070291600/0/0/0
+        Broadcast packets  : 0/0/0/0/0
+        Broadcast bytes    : 0/0/0/0/0
+        Labeled packets    : 0/0/0/0/0
+        Labeled bytes      : 0/0/0/0/0
+      WCCP Redirect outbound: disabled
+      WCCP Redirect inbound: disabled
+      WCCP Redirect exclude: disabled
+
+    '''}
+
+    golden_parsed_output_3 = {
+        'Vlan355': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 2,
+            'ip_forwarding': 'disabled',
+            'ip_mtu': 9216,
+            'ipv4': {
+                '10.170.153.133/28': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': '10.170.153.133',
+                    'ip_subnet': '10.170.153.128',
+                    'prefix_length': '28',
+                    'route_preference': '0',
+                    'route_tag': '0',
+                    'secondary': False,
+                },
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 5070291600,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 50702916,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 691502626,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 1012679263,
+                    'unicast_bytes_received': 691502626,
+                    'unicast_bytes_sent': 1012679263,
+                    'unicast_packets_consumed': 5436721,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 5498120,
+                    'unicast_packets_received': 5436721,
+                    'unicast_packets_sent': 5498120,
+                },
+            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'default',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
+        },
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+        show ip interface vrf all
+        IP Interface Status for VRF "test"
+        Vlan3, Interface status: protocol-up/link-up/admin-up, iod: 6,
+        IP address: none
+        IP broadcast address: 255.255.255.255
+        IP multicast groups locally joined: none
+        IP MTU: 1200 bytes (using link MTU)
+        IP proxy ARP : disabled
+        IP Local Proxy ARP : disabled
+        IP multicast routing: disabled
+        IP icmp redirects: enabled
+        IP directed-broadcast: disabled 
+        IP Forwarding: enabled 
+        IP icmp unreachables (except port): disabled
+        IP icmp port-unreachable: enabled
+        IP unicast reverse path forwarding: none
+        IP load sharing: none 
+        IP interface statistics last reset: never
+        IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        WCCP Redirect outbound: disabled
+        WCCP Redirect inbound: disabled
+        WCCP Redirect exclude: disabled
+
+        IP Interface Status for VRF "test1"
+
+        IP Interface Status for VRF "test100"
+
+        IP Interface Status for VRF "test200"
+
+        IP Interface Status for VRF "test400"
+
+    '''}
+
+    golden_parsed_output_4 = {
+        'Vlan3': {
+            'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 6,
+            'ip_forwarding': 'enabled',
+            'ip_mtu': 1200,
+            'ipv4': {
+                'counters': {
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_bytes_forwarded': 0,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_bytes_received': 0,
+                    'broadcast_bytes_sent': 0,
+                    'broadcast_packets_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'broadcast_packets_originated': 0,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_sent': 0,
+                    'labeled_bytes_consumed': 0,
+                    'labeled_bytes_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'labeled_bytes_received': 0,
+                    'labeled_bytes_sent': 0,
+                    'labeled_packets_consumed': 0,
+                    'labeled_packets_forwarded': 0,
+                    'labeled_packets_originated': 0,
+                    'labeled_packets_received': 0,
+                    'labeled_packets_sent': 0,
+                    'multicast_bytes_consumed': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'multicast_bytes_originated': 0,
+                    'multicast_bytes_received': 0,
+                    'multicast_bytes_sent': 0,
+                    'multicast_packets_consumed': 0,
+                    'multicast_packets_forwarded': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_received': 0,
+                    'multicast_packets_sent': 0,
+                    'unicast_bytes_consumed': 0,
+                    'unicast_bytes_forwarded': 0,
+                    'unicast_bytes_originated': 0,
+                    'unicast_bytes_received': 0,
+                    'unicast_bytes_sent': 0,
+                    'unicast_packets_consumed': 0,
+                    'unicast_packets_forwarded': 0,
+                    'unicast_packets_originated': 0,
+                    'unicast_packets_received': 0,
+                    'unicast_packets_sent': 0,
+                },
+                'none': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip': 'none',
+                },
+            },
+            'load_sharing': 'none',
+            'local_proxy_arp': 'disabled',
+            'multicast_groups_address': 'none',
+            'multicast_routing': 'disabled',
+            'proxy_arp': 'disabled',
+            'unicast_reverse_path': 'none',
+            'vrf': 'test',
+            'wccp_redirect_exclude': 'disabled',
+            'wccp_redirect_inbound': 'disabled',
+            'wccp_redirect_outbound': 'disabled',
+        },
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+        IP Interface Status for VRF "default"
+        loopback0, Interface status: protocol-up/link-up/admin-up, iod: 94,
+          IP address: 91.1.1.0, IP subnet: 91.1.1.0/32 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: enabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        loopback1, Interface status: protocol-down/link-down/admin-up, iod: 95,
+          IP address: 91.1.1.1, IP subnet: 91.1.1.1/32 route-preference: 0, tag: 0 
+          IP address: 91.1.2.1, IP subnet: 91.1.2.1/32 secondary route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/312/0/0/312
+            Multicast bytes    : 0/35184/0/0/35184
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Ethernet1/3, Interface status: protocol-up/link-up/admin-up, iod: 7,
+          IP address: 111.111.111.2, IP subnet: 111.111.111.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.6  224.0.0.5  224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: enabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 6/6/0/6/12
+            Unicast bytes      : 556/620/0/556/1240
+            Multicast packets  : 205/97/0/205/189
+            Multicast bytes    : 15960/6364/0/15960/6294
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "management"
+        mgmt0, Interface status: protocol-up/link-up/admin-up, iod: 2,
+          IP address: 10.1.6.40, IP subnet: 10.1.6.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: none
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: disabled
+          IP icmp redirects: enabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 805/796/0/805/1592
+            Unicast bytes      : 343014/57896/0/343014/115792
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9100"
+        Vlan100, Interface status: protocol-up/link-up/admin-up, iod: 71,
+          IP address: 100.100.11.1, IP subnet: 100.100.11.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan101, Interface status: protocol-up/link-up/admin-up, iod: 72,
+          IP address: 100.100.12.1, IP subnet: 100.100.12.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan102, Interface status: protocol-down/link-down/admin-up, iod: 73,
+          IP address: 100.100.13.1, IP subnet: 100.100.13.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan910, Interface status: protocol-down/link-down/admin-up, iod: 85,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: none
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: disabled
+          IP icmp redirects: enabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1000, Interface status: protocol-up/link-up/admin-up, iod: 86,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 22/0/0/22/0
+            Multicast bytes    : 1496/0/0/1496/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9105"
+        Vlan105, Interface status: protocol-up/link-up/admin-up, iod: 75,
+          IP address: 100.100.16.1, IP subnet: 100.100.16.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan110, Interface status: protocol-up/link-up/admin-up, iod: 80,
+          IP address: 100.100.21.1, IP subnet: 100.100.21.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1005, Interface status: protocol-up/link-up/admin-up, iod: 87,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 22/0/0/22/0
+            Multicast bytes    : 1496/0/0/1496/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9106"
+        Vlan106, Interface status: protocol-up/link-up/admin-up, iod: 76,
+          IP address: 100.100.17.1, IP subnet: 100.100.17.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan111, Interface status: protocol-up/link-up/admin-up, iod: 81,
+          IP address: 100.100.22.1, IP subnet: 100.100.22.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1006, Interface status: protocol-up/link-up/admin-up, iod: 88,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 22/0/0/22/0
+            Multicast bytes    : 1496/0/0/1496/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9107"
+        Vlan107, Interface status: protocol-up/link-up/admin-up, iod: 77,
+          IP address: 100.100.18.1, IP subnet: 100.100.18.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan112, Interface status: protocol-up/link-up/admin-up, iod: 82,
+          IP address: 100.100.23.1, IP subnet: 100.100.23.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1007, Interface status: protocol-up/link-up/admin-up, iod: 89,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 22/0/0/22/0
+            Multicast bytes    : 1496/0/0/1496/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9108"
+        Vlan108, Interface status: protocol-up/link-up/admin-up, iod: 78,
+          IP address: 100.100.19.1, IP subnet: 100.100.19.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan113, Interface status: protocol-up/link-up/admin-up, iod: 83,
+          IP address: 100.100.24.1, IP subnet: 100.100.24.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1008, Interface status: protocol-up/link-up/admin-up, iod: 90,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 22/0/0/22/0
+            Multicast bytes    : 1496/0/0/1496/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        IP Interface Status for VRF "vrf-9109"
+        Vlan109, Interface status: protocol-up/link-up/admin-up, iod: 79,
+          IP address: 100.100.20.1, IP subnet: 100.100.20.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan114, Interface status: protocol-up/link-up/admin-up, iod: 84,
+          IP address: 100.100.25.1, IP subnet: 100.100.25.0/24 route-preference: 0, tag: 0 
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 23/0/0/23/0
+            Multicast bytes    : 2048/0/0/2048/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+        Vlan1009, Interface status: protocol-up/link-up/admin-up, iod: 91,
+          IP address: none
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: 
+              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP MTU: 1500 bytes (using link MTU)
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: enabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: enabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 21/0/0/21/0
+            Multicast bytes    : 1428/0/0/1428/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+
+        N95_1# 
+        '''}
+
+    golden_parsed_output_5 = {
+        'Ethernet1/3': 
+            {'directed_broadcast': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'icmp_redirects': 'enabled',
+            'icmp_unreachable': 'disabled',
+            'int_stat_last_reset': 'never',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 7,
+            'ip_forwarding': 'disabled',
+            'ip_mtu': 1500,
+            'ipv4': 
+                {'111.111.111.2/24': 
+                    {'broadcast_address': '255.255.255.255',
+                    'ip': '111.111.111.2',
+                    'ip_subnet': '111.111.111.0',
+                    'prefix_length': '24',
+                    'route_preference': '0',
+                    'route_tag': '0'},
+                    'counters': 
+                        {'broadcast_bytes_consumed': 0,
+                        'broadcast_bytes_forwarded': 0,
+                        'broadcast_bytes_originated': 0,
+                        'broadcast_bytes_received': 0,
+                        'broadcast_bytes_sent': 0,
+                        'broadcast_packets_consumed': 0,
+                        'broadcast_packets_forwarded': 0,
+                        'broadcast_packets_originated': 0,
+                        'broadcast_packets_received': 0,
+                        'broadcast_packets_sent': 0,
+                        'labeled_bytes_consumed': 0,
+                        'labeled_bytes_forwarded': 0,
+                        'labeled_bytes_originated': 0,
+                        'labeled_bytes_received': 0,
+                        'labeled_bytes_sent': 0,
+                        'labeled_packets_consumed': 0,
+                        'labeled_packets_forwarded': 0,
+                        'labeled_packets_originated': 0,
+                        'labeled_packets_received': 0,
+                        'labeled_packets_sent': 0,
+                        'multicast_bytes_consumed': 6294,
+                        'multicast_bytes_forwarded': 0,
+                        'multicast_bytes_originated': 15960,
+                        'multicast_bytes_received': 6364,
+                        'multicast_bytes_sent': 15960,
+                        'multicast_packets_consumed': 189,
+                        'multicast_packets_forwarded': 0,
+                        'multicast_packets_originated': 205,
+                        'multicast_packets_received': 97,
+                        'multicast_packets_sent': 205,
+                        'unicast_bytes_consumed': 1240,
+                        'unicast_bytes_forwarded': 0,
+                        'unicast_bytes_originated': 556,
+                        'unicast_bytes_received': 620,
+                        'unicast_bytes_sent': 556,
+                        'unicast_packets_consumed': 12,
+                        'unicast_packets_forwarded': 0,
+                        'unicast_packets_originated': 6,
+                        'unicast_packets_received': 6,
+                        'unicast_packets_sent': 6}},
+                    'load_sharing': 'none',
+                    'local_proxy_arp': 'disabled',
+                    'multicast_groups': ['224.0.0.1',
+                                      '224.0.0.13',
+                                      '224.0.0.2',
+                                      '224.0.0.5',
+                                      '224.0.0.6'],
+                    'multicast_routing': 'enabled',
+                    'proxy_arp': 'disabled',
+                    'unicast_reverse_path': 'none',
+                    'vrf': 'default'},
+        'Vlan100': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 71,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.11.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.11.1',
+                                              'ip_subnet': '100.100.11.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9100'},
+        'Vlan1000': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 86,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1496,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1496,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 22,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 22,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9100'},
+        'Vlan1005': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 87,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1496,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1496,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 22,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 22,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9105'},
+        'Vlan1006': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 88,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1496,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1496,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 22,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 22,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9106'},
+        'Vlan1007': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 89,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1496,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1496,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 22,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 22,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9107'},
+        'Vlan1008': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 90,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1496,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1496,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 22,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 22,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9108'},
+        'Vlan1009': {'directed_broadcast': 'disabled',
+                  'icmp_port_unreachable': 'enabled',
+                  'icmp_redirects': 'disabled',
+                  'icmp_unreachable': 'disabled',
+                  'int_stat_last_reset': 'never',
+                  'interface_status': 'protocol-up/link-up/admin-up',
+                  'iod': 91,
+                  'ip_forwarding': 'enabled',
+                  'ip_mtu': 1500,
+                  'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                        'broadcast_bytes_forwarded': 0,
+                                        'broadcast_bytes_originated': 0,
+                                        'broadcast_bytes_received': 0,
+                                        'broadcast_bytes_sent': 0,
+                                        'broadcast_packets_consumed': 0,
+                                        'broadcast_packets_forwarded': 0,
+                                        'broadcast_packets_originated': 0,
+                                        'broadcast_packets_received': 0,
+                                        'broadcast_packets_sent': 0,
+                                        'labeled_bytes_consumed': 0,
+                                        'labeled_bytes_forwarded': 0,
+                                        'labeled_bytes_originated': 0,
+                                        'labeled_bytes_received': 0,
+                                        'labeled_bytes_sent': 0,
+                                        'labeled_packets_consumed': 0,
+                                        'labeled_packets_forwarded': 0,
+                                        'labeled_packets_originated': 0,
+                                        'labeled_packets_received': 0,
+                                        'labeled_packets_sent': 0,
+                                        'multicast_bytes_consumed': 0,
+                                        'multicast_bytes_forwarded': 0,
+                                        'multicast_bytes_originated': 1428,
+                                        'multicast_bytes_received': 0,
+                                        'multicast_bytes_sent': 1428,
+                                        'multicast_packets_consumed': 0,
+                                        'multicast_packets_forwarded': 0,
+                                        'multicast_packets_originated': 21,
+                                        'multicast_packets_received': 0,
+                                        'multicast_packets_sent': 21,
+                                        'unicast_bytes_consumed': 0,
+                                        'unicast_bytes_forwarded': 0,
+                                        'unicast_bytes_originated': 0,
+                                        'unicast_bytes_received': 0,
+                                        'unicast_bytes_sent': 0,
+                                        'unicast_packets_consumed': 0,
+                                        'unicast_packets_forwarded': 0,
+                                        'unicast_packets_originated': 0,
+                                        'unicast_packets_received': 0,
+                                        'unicast_packets_sent': 0},
+                           'none': {'broadcast_address': '255.255.255.255',
+                                    'ip': 'none'}},
+                  'load_sharing': 'none',
+                  'local_proxy_arp': 'disabled',
+                  'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                  'multicast_routing': 'enabled',
+                  'proxy_arp': 'disabled',
+                  'unicast_reverse_path': 'none',
+                  'vrf': 'vrf-9109'},
+        'Vlan101': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 72,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.12.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.12.1',
+                                              'ip_subnet': '100.100.12.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9100'},
+        'Vlan102': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-down/link-down/admin-up',
+                 'iod': 73,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.13.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.13.1',
+                                              'ip_subnet': '100.100.13.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 0,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 0,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 0,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 0,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9100'},
+        'Vlan105': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 75,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.16.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.16.1',
+                                              'ip_subnet': '100.100.16.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9105'},
+        'Vlan106': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 76,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.17.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.17.1',
+                                              'ip_subnet': '100.100.17.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9106'},
+        'Vlan107': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 77,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.18.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.18.1',
+                                              'ip_subnet': '100.100.18.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9107'},
+        'Vlan108': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 78,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.19.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.19.1',
+                                              'ip_subnet': '100.100.19.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9108'},
+        'Vlan109': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 79,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.20.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.20.1',
+                                              'ip_subnet': '100.100.20.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9109'},
+        'Vlan110': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 80,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.21.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.21.1',
+                                              'ip_subnet': '100.100.21.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9105'},
+        'Vlan111': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 81,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.22.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.22.1',
+                                              'ip_subnet': '100.100.22.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9106'},
+        'Vlan112': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 82,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.23.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.23.1',
+                                              'ip_subnet': '100.100.23.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9107'},
+        'Vlan113': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 83,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.24.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.24.1',
+                                              'ip_subnet': '100.100.24.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9108'},
+        'Vlan114': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 84,
+                 'ip_forwarding': 'disabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'100.100.25.1/24': {'broadcast_address': '255.255.255.255',
+                                              'ip': '100.100.25.1',
+                                              'ip_subnet': '100.100.25.0',
+                                              'prefix_length': '24',
+                                              'route_preference': '0',
+                                              'route_tag': '0'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 2048,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 2048,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 23,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 23,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                 'multicast_routing': 'enabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9109'},
+        'Vlan910': {'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'enabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-down/link-down/admin-up',
+                 'iod': 85,
+                 'ip_forwarding': 'enabled',
+                 'ip_mtu': 1500,
+                 'ipv4': {'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 0,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 0,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 0,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 0,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0},
+                          'none': {'broadcast_address': '255.255.255.255',
+                                   'ip': 'none'}},
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'multicast_groups_address': 'none',
+                 'multicast_routing': 'disabled',
+                 'proxy_arp': 'disabled',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'vrf-9100'},
+        'loopback0': {'directed_broadcast': 'disabled',
+                   'icmp_port_unreachable': 'enabled',
+                   'icmp_redirects': 'enabled',
+                   'icmp_unreachable': 'disabled',
+                   'int_stat_last_reset': 'never',
+                   'interface_status': 'protocol-up/link-up/admin-up',
+                   'iod': 94,
+                   'ip_forwarding': 'disabled',
+                   'ip_mtu': 1500,
+                   'ipv4': {'91.1.1.0/32': {'broadcast_address': '255.255.255.255',
+                                            'ip': '91.1.1.0',
+                                            'ip_subnet': '91.1.1.0',
+                                            'prefix_length': '32',
+                                            'route_preference': '0',
+                                            'route_tag': '0'},
+                            'counters': {'broadcast_bytes_consumed': 0,
+                                         'broadcast_bytes_forwarded': 0,
+                                         'broadcast_bytes_originated': 0,
+                                         'broadcast_bytes_received': 0,
+                                         'broadcast_bytes_sent': 0,
+                                         'broadcast_packets_consumed': 0,
+                                         'broadcast_packets_forwarded': 0,
+                                         'broadcast_packets_originated': 0,
+                                         'broadcast_packets_received': 0,
+                                         'broadcast_packets_sent': 0,
+                                         'labeled_bytes_consumed': 0,
+                                         'labeled_bytes_forwarded': 0,
+                                         'labeled_bytes_originated': 0,
+                                         'labeled_bytes_received': 0,
+                                         'labeled_bytes_sent': 0,
+                                         'labeled_packets_consumed': 0,
+                                         'labeled_packets_forwarded': 0,
+                                         'labeled_packets_originated': 0,
+                                         'labeled_packets_received': 0,
+                                         'labeled_packets_sent': 0,
+                                         'multicast_bytes_consumed': 0,
+                                         'multicast_bytes_forwarded': 0,
+                                         'multicast_bytes_originated': 0,
+                                         'multicast_bytes_received': 0,
+                                         'multicast_bytes_sent': 0,
+                                         'multicast_packets_consumed': 0,
+                                         'multicast_packets_forwarded': 0,
+                                         'multicast_packets_originated': 0,
+                                         'multicast_packets_received': 0,
+                                         'multicast_packets_sent': 0,
+                                         'unicast_bytes_consumed': 0,
+                                         'unicast_bytes_forwarded': 0,
+                                         'unicast_bytes_originated': 0,
+                                         'unicast_bytes_received': 0,
+                                         'unicast_bytes_sent': 0,
+                                         'unicast_packets_consumed': 0,
+                                         'unicast_packets_forwarded': 0,
+                                         'unicast_packets_originated': 0,
+                                         'unicast_packets_received': 0,
+                                         'unicast_packets_sent': 0}},
+                   'load_sharing': 'none',
+                   'local_proxy_arp': 'disabled',
+                   'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                   'multicast_routing': 'enabled',
+                   'proxy_arp': 'disabled',
+                   'unicast_reverse_path': 'none',
+                   'vrf': 'default'},
+        'loopback1': {'directed_broadcast': 'disabled',
+                   'icmp_port_unreachable': 'enabled',
+                   'icmp_redirects': 'disabled',
+                   'icmp_unreachable': 'disabled',
+                   'int_stat_last_reset': 'never',
+                   'interface_status': 'protocol-down/link-down/admin-up',
+                   'iod': 95,
+                   'ip_forwarding': 'disabled',
+                   'ip_mtu': 1500,
+                   'ipv4': {'91.1.1.1/32': {'broadcast_address': '255.255.255.255',
+                                            'ip': '91.1.1.1',
+                                            'ip_subnet': '91.1.1.1',
+                                            'prefix_length': '32',
+                                            'route_preference': '0',
+                                            'route_tag': '0'},
+                            'counters': {'broadcast_bytes_consumed': 0,
+                                         'broadcast_bytes_forwarded': 0,
+                                         'broadcast_bytes_originated': 0,
+                                         'broadcast_bytes_received': 0,
+                                         'broadcast_bytes_sent': 0,
+                                         'broadcast_packets_consumed': 0,
+                                         'broadcast_packets_forwarded': 0,
+                                         'broadcast_packets_originated': 0,
+                                         'broadcast_packets_received': 0,
+                                         'broadcast_packets_sent': 0,
+                                         'labeled_bytes_consumed': 0,
+                                         'labeled_bytes_forwarded': 0,
+                                         'labeled_bytes_originated': 0,
+                                         'labeled_bytes_received': 0,
+                                         'labeled_bytes_sent': 0,
+                                         'labeled_packets_consumed': 0,
+                                         'labeled_packets_forwarded': 0,
+                                         'labeled_packets_originated': 0,
+                                         'labeled_packets_received': 0,
+                                         'labeled_packets_sent': 0,
+                                         'multicast_bytes_consumed': 35184,
+                                         'multicast_bytes_forwarded': 0,
+                                         'multicast_bytes_originated': 0,
+                                         'multicast_bytes_received': 35184,
+                                         'multicast_bytes_sent': 0,
+                                         'multicast_packets_consumed': 312,
+                                         'multicast_packets_forwarded': 0,
+                                         'multicast_packets_originated': 0,
+                                         'multicast_packets_received': 312,
+                                         'multicast_packets_sent': 0,
+                                         'unicast_bytes_consumed': 0,
+                                         'unicast_bytes_forwarded': 0,
+                                         'unicast_bytes_originated': 0,
+                                         'unicast_bytes_received': 0,
+                                         'unicast_bytes_sent': 0,
+                                         'unicast_packets_consumed': 0,
+                                         'unicast_packets_forwarded': 0,
+                                         'unicast_packets_originated': 0,
+                                         'unicast_packets_received': 0,
+                                         'unicast_packets_sent': 0}},
+                   'load_sharing': 'none',
+                   'local_proxy_arp': 'disabled',
+                   'multicast_groups': ['224.0.0.1', '224.0.0.13', '224.0.0.2'],
+                   'multicast_routing': 'enabled',
+                   'proxy_arp': 'disabled',
+                   'unicast_reverse_path': 'none',
+                   'vrf': 'default'},
+        'mgmt0': {'directed_broadcast': 'disabled',
+               'icmp_port_unreachable': 'enabled',
+               'icmp_redirects': 'enabled',
+               'icmp_unreachable': 'disabled',
+               'int_stat_last_reset': 'never',
+               'interface_status': 'protocol-up/link-up/admin-up',
+               'iod': 2,
+               'ip_forwarding': 'disabled',
+               'ip_mtu': 1500,
+               'ipv4': {'10.1.6.40/24': {'broadcast_address': '255.255.255.255',
+                                         'ip': '10.1.6.40',
+                                         'ip_subnet': '10.1.6.0',
+                                         'prefix_length': '24',
+                                         'route_preference': '0',
+                                         'route_tag': '0'},
+                        'counters': {'broadcast_bytes_consumed': 0,
+                                     'broadcast_bytes_forwarded': 0,
+                                     'broadcast_bytes_originated': 0,
+                                     'broadcast_bytes_received': 0,
+                                     'broadcast_bytes_sent': 0,
+                                     'broadcast_packets_consumed': 0,
+                                     'broadcast_packets_forwarded': 0,
+                                     'broadcast_packets_originated': 0,
+                                     'broadcast_packets_received': 0,
+                                     'broadcast_packets_sent': 0,
+                                     'labeled_bytes_consumed': 0,
+                                     'labeled_bytes_forwarded': 0,
+                                     'labeled_bytes_originated': 0,
+                                     'labeled_bytes_received': 0,
+                                     'labeled_bytes_sent': 0,
+                                     'labeled_packets_consumed': 0,
+                                     'labeled_packets_forwarded': 0,
+                                     'labeled_packets_originated': 0,
+                                     'labeled_packets_received': 0,
+                                     'labeled_packets_sent': 0,
+                                     'multicast_bytes_consumed': 0,
+                                     'multicast_bytes_forwarded': 0,
+                                     'multicast_bytes_originated': 0,
+                                     'multicast_bytes_received': 0,
+                                     'multicast_bytes_sent': 0,
+                                     'multicast_packets_consumed': 0,
+                                     'multicast_packets_forwarded': 0,
+                                     'multicast_packets_originated': 0,
+                                     'multicast_packets_received': 0,
+                                     'multicast_packets_sent': 0,
+                                     'unicast_bytes_consumed': 115792,
+                                     'unicast_bytes_forwarded': 0,
+                                     'unicast_bytes_originated': 343014,
+                                     'unicast_bytes_received': 57896,
+                                     'unicast_bytes_sent': 343014,
+                                     'unicast_packets_consumed': 1592,
+                                     'unicast_packets_forwarded': 0,
+                                     'unicast_packets_originated': 805,
+                                     'unicast_packets_received': 796,
+                                     'unicast_packets_sent': 805}},
+               'load_sharing': 'none',
+               'local_proxy_arp': 'disabled',
+               'multicast_groups_address': 'none',
+               'multicast_routing': 'disabled',
+               'proxy_arp': 'disabled',
+               'unicast_reverse_path': 'none',
+               'vrf': 'management'}}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
@@ -2663,8 +5065,29 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
 # #############################################################################
-# # Unitest For Show Vrf All Interface
+# # Unittest For Show Vrf All Interface
 # #############################################################################
 
 class TestShowVrfAllInterface(unittest.TestCase):
@@ -3000,7 +5423,7 @@ class TestShowVrfAllInterface(unittest.TestCase):
 
 
 # #############################################################################
-# # unitest For Show Interface Switchport
+# # Unittest For Show Interface Switchport
 # #############################################################################
 
 
@@ -3209,7 +5632,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_disabled)
 
 # #############################################################################
-# # unitest For Show Ipv6 Interface Vrf All
+# # Unittest For Show Ipv6 Interface Vrf All
 # #############################################################################
 
 
@@ -3409,6 +5832,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
+
 class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3517,6 +5941,7 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
+
 class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3550,6 +5975,8 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
 # ====================================
 # Unit test for 'show interface brief'
 # ====================================
+
+
 class TestShowInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3673,6 +6100,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
 
 class TestShowRunInterface(unittest.TestCase):
     device = Device(name='aDevice')
@@ -3864,6 +6292,7 @@ class TestShowRunInterface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
 
+
 class TestShowNveInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -3922,6 +6351,7 @@ class TestShowNveInterface(unittest.TestCase):
         obj = ShowNveInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(interface='nve1')
+
 
 class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
@@ -4028,8 +6458,10 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe)
 
 #############################################################################
-# unitest For show interface description
+# unittest For show interface description
 #############################################################################
+
+
 class test_show_interface_description(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -4216,6 +6648,133 @@ class test_show_interface_description(unittest.TestCase):
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+
+#############################################################################
+# unitest For show interface status
+#############################################################################
+class test_show_interface_status(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10001',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': 'trunk'
+            },
+            'Ethernet1/2': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10004',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': '360'
+            },
+            'Ethernet1/43': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': '10g',
+                'vlan': '1'
+            },
+            'Ethernet1/52.511': {
+                'duplex_code': 'full',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10Gbase-LR',
+                'vlan': 'routed'
+            },
+            'Port-channel147': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10112',
+                'port_speed': '10G',
+                'status': 'connected',
+                'vlan': '360'
+            },
+            'Vlan1': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'down',
+                'vlan': 'routed'
+            },
+            'Vlan366': {
+                'duplex_code': 'auto',
+                'name': 'BigData',
+                'port_speed': 'auto',
+                'status': 'connected',
+                'vlan': 'routed'
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'name': 'ES1SW18AUN6_6/22',
+                'port_speed': '1000',
+                'status': 'connected',
+                'vlan': 'routed'
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        --------------------------------------------------------------------------------
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        mgmt0         ES1SW18AUN6_6/22   connected routed    full    1000    --         
+        
+        --------------------------------------------------------------------------------
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g        
+        Eth1/2        AOTLXPRPBD10004    connected 360       full    10G     10g        
+        Eth1/43       --                 disabled  1         auto    auto    10g
+        Eth1/52.511   --                 connected routed    full    10G     10Gbase-LR
+        Po147         AOTLXPRPBD10112    connected 360       full    10G     --         
+        Vlan1         --                 down      routed    auto    auto    --
+        Vlan366       BigData            connected routed    auto    auto    --        
+    '''}
+
+    golden_parsed_interface_output = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': 'AOTLXPRPBD10001',
+                'port_speed': '10G',
+                'status': 'connected',
+                'type': '10g',
+                'vlan': 'trunk'}
+        }
+    }
+
+
+    golden_interface_output = {'execute.return_value': '''
+        Port          Name               Status    Vlan      Duplex  Speed   Type
+        --------------------------------------------------------------------------------
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g     
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse(interface='Eth1/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
 
 if __name__ == '__main__':

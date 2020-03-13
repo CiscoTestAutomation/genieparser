@@ -11,6 +11,8 @@ NXOS parsers for the following show commands:
     * show interface brief
     * show interface {interface} brief
     * show running-config interface {interface}
+    * show interface status
+    * show interface {interface} status
 '''
 
 # python
@@ -37,7 +39,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('parent_interface'): str,
             'oper_status': str,
             Optional('admin_state'): str,
-            Optional('dedicated_intface'): bool,
+            Optional('dedicated_interface'): bool,
             Optional('line_protocol'): str,
             Optional('autostate'): bool,
             Optional('link_state'): str,
@@ -147,6 +149,8 @@ class ShowInterfaceSchema(MetaParser):
 # ===========================
 # Parser for 'show interface'
 # ===========================
+
+
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
@@ -194,22 +198,20 @@ class ShowInterface(ShowInterfaceSchema):
             out = output
 
         # Ethernet2/1.10 is down (Administratively down)
-        p1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>(down))'
-                            '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
-
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+        # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-        p1_1 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>[\w\s]+)'
-                            '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
-                            'line +protocol +is +(?P<line_protocol>\w+),? *'
-                            '(autostate +(?P<autostate>\w+))?$')
-
         # Ethernet2/2 is up
-        p1_2 =  re.compile(r'^(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                            ' *(?P<enabled>(up))'
-                            '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
+        # Ethernet1/10 is down (Link not connected)
+        # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
+        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
+                        r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
+                        r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
+                        r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
+                        r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
+                        r'(,\s+autostate\s+(?P<autostate>\S+))?'
+                        r'(\(Link\s+not\s+connected\))?'
+                        r'(\(.*ACK.*\))?$')
 
         # admin state is up
         # admin state is up,
@@ -359,7 +361,8 @@ class ShowInterface(ShowInterfaceSchema):
                             ' *(?P<out_rate_pps>[0-9]+) *pps$')
 
         # RX
-        p23_1 = re.compile(r'^(?P<rx>(RX))$')
+        # Rx
+        p23_1 = re.compile(r'^(?P<rx>(RX|Rx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p24 = re.compile(r'^(?P<in_unicast_pkts>[0-9]+) +unicast +packets'
@@ -405,7 +408,7 @@ class ShowInterface(ShowInterfaceSchema):
         p31 = re.compile(r'^(?P<in_mac_pause_frames>[0-9]+) *Rx *pause$')
 
         # TX
-        p31_1 = re.compile(r'^(?P<tx>(TX))$')
+        p31_1 = re.compile(r'^(?P<tx>(TX|Tx))$')
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p32 = re.compile(r'^(?P<out_unicast_pkts>[0-9]+) *unicast *packets'
@@ -452,74 +455,41 @@ class ShowInterface(ShowInterfaceSchema):
             line = line.strip()
 
             # Ethernet2/1.10 is down (Administratively down)
+            # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+            # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
+            # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
+            # Ethernet2/2 is up
+            # Ethernet1/10 is down (Link not connected)
+            # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
             m = p1.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
+                group = m.groupdict()
+                interface = group['interface']
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
                     interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
+                    interface_dict[interface]['port_channel']['port_channel_member'] = False
 
-                interface_dict[interface]['enabled'] = False
-                interface_dict[interface]['oper_status'] = 'down'
-                continue
+                if group['link_state']:
+                    interface_dict[interface]['link_state'] = group['link_state']
+                    if 'oper_status' not in interface_dict[interface]:
+                        interface_dict[interface]['oper_status'] = group['link_state']
 
-            # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
-            # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
-            m = p1_1.match(line)
-            if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
-                line_protocol = m.groupdict()['line_protocol']
-                autostate = m.groupdict()['autostate']
+                if group['admin_1']:
+                    interface_dict[interface]['enabled'] = True if group['admin_1'] == 'up' else False
+                elif group['admin_2']:
+                    interface_dict[interface]['enabled'] = True if group['admin_2'] == 'up' else False
+                else:
+                    interface_dict[interface]['enabled'] = False
 
-                if interface not in interface_dict:
-                    interface_dict[interface] = {}
-                    interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
+                if group['line_protocol']:
+                    interface_dict[interface]['line_protocol'] = group['line_protocol']
+                    if 'oper_status' not in interface_dict[interface]:
+                        interface_dict[interface]['oper_status'] = group['line_protocol']
 
-                if enabled:
-                    enabled = enabled.lower()
-                    interface_dict[interface]['enabled'] = False if 'down' in enabled else True
-                    interface_dict[interface]['oper_status'] = enabled.strip()
-                if line_protocol:
-                    interface_dict[interface]['line_protocol'] = line_protocol.lower()
-                if autostate:
-                    interface_dict[interface]['autostate'] = True if \
-                        autostate.lower() == 'enabled' else False
-
-                continue
-
-            # Ethernet2/2 is up
-            m = p1_2.match(line)
-            if m:
-                interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
-                link_state = m.groupdict()['link_state']
-
-                if interface not in interface_dict:
-                    interface_dict[interface] = {}
-                    interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel']\
-                        ['port_channel_member'] = False
-                if link_state:
-                    interface_dict[interface]\
-                                ['link_state'] = link_state
-
-                interface_dict[interface]['enabled'] = True
-                interface_dict[interface]['oper_status'] = 'up'
+                if group['autostate']:
+                    interface_dict[interface]['autostate'] = True if group['autostate'] == 'enabled' else False
                 continue
 
             # admin state is up
@@ -529,11 +499,13 @@ class ShowInterface(ShowInterfaceSchema):
             m = p2.match(line)
             if m:
                 # admin_state
-                interface_dict[interface]['admin_state'] = \
-                    m.groupdict()['admin_state']
+                admin_state = m.groupdict()['admin_state']
+                interface_dict[interface]['admin_state'] = admin_state
+                if admin_state == 'up':
+                    interface_dict[interface]['enabled'] = True
                 # dedicated_interface
                 if m.groupdict()['dedicated_intf']:
-                    interface_dict[interface]['dedicated_intface'] = True
+                    interface_dict[interface]['dedicated_interface'] = True
                 # parent_interface
                 if m.groupdict()['parent_intf']:
                     interface_dict[interface]['parent_interface'] = \
@@ -543,7 +515,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Dedicated Interface
             m = p2_1.match(line)
             if m:
-                interface_dict[interface]['dedicated_intface'] = True
+                interface_dict[interface]['dedicated_interface'] = True
                 continue
 
             # Belongs to Po1
@@ -895,6 +867,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ['out_rate_pps'] = out_rate_pps
                 continue
             # RX
+            # Rx
             m = p23_1.match(line)
             if m:
                 rx = m.groupdict()['rx']
@@ -1008,6 +981,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['counters']['in_mac_pause_frames'] = in_mac_pause_frames
                 continue
             # TX
+            # Tx
             m = p31_1.match(line)
             if m:
                 rx = False
@@ -1020,7 +994,7 @@ class ShowInterface(ShowInterfaceSchema):
             if tx:
                 #0 unicast packets  0 multicast packets  0 broadcast packets
                 m = p32.match(line)
-                if m:
+                if m :
                     interface_dict[interface]['counters']['out_unicast_pkts'] = int(m.groupdict()['out_unicast_pkts'])
                     interface_dict[interface]['counters']['out_multicast_pkts'] = int(m.groupdict()['out_multicast_pkts'])
                     interface_dict[interface]['counters']['out_broadcast_pkts'] = int(m.groupdict()['out_broadcast_pkts'])
@@ -1155,9 +1129,9 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
          'unicast_reverse_path': str,
          'load_sharing': str,
          'int_stat_last_reset': str,
-         'wccp_redirect_outbound': str,
-         'wccp_redirect_inbound': str,
-         'wccp_redirect_exclude': str
+         Optional('wccp_redirect_outbound'): str,
+         Optional('wccp_redirect_inbound'): str,
+         Optional('wccp_redirect_exclude'): str
         },
     }   
 
@@ -1201,7 +1175,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             'oil_uptime',
             'iod',
             '(tunnel.*)',
+            'wccp_redirect_outbound',
+            'wccp_redirect_inbound',
+            'wccp_redirect_exclude'
             'multicast_groups_address']
+
     def cli(self, interface='', vrf='', output=None):
         if interface and vrf:
             cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
@@ -1221,7 +1199,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
         for line in out.splitlines():
             line = line.rstrip()
-
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>\S+)$')
@@ -1282,7 +1259,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if intf not in ip_interface_vrf_all_dict:
                         ip_interface_vrf_all_dict[intf] = {}
                 continue
-
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
             # IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
@@ -1370,6 +1346,20 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
                 continue
+            
+            # IP address: none
+            p3_2 = re.compile('^\s*IP +address: +(?P<ip>\S+)$')
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                address = group.get('ip')
+                if 'ipv4' not in ip_interface_vrf_all_dict:
+                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
+                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip'] = address
+                continue
 
             #IP broadcast address: 255.255.255.255
             p4 = re.compile(r'^\s*IP *broadcast *address:'
@@ -1392,6 +1382,12 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip_interface_vrf_all_dict[interface]['multicast_groups_address']\
                 = multicast_groups_address
                 continue
+            
+            #     show ip interface vrf all
+            p5_0 = re.compile(r'^\s*show')
+            m = p5_0.match(line)
+            if m:
+                continue
 
             #224.0.0.6  224.0.0.5  224.0.0.2 
             p5_1 = re.compile(r'^\s*(?P<multicast_groups_address>[a-z0-9\.\s]+)$')
@@ -1407,7 +1403,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = sorted(multicast_groups)
+                = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
@@ -1545,8 +1541,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #IP interface statistics last reset: never
-            p18 = re.compile(r'^\s*IP *interface *statistics *last *reset:'
-                              ' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
+            # ip interface statistics last reset: never
+            p18 = re.compile(r'^\s*(IP|ip) *interface *statistics *last *reset:'
+                             r' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
             m = p18.match(line)
             if m:
                 int_stat_last_reset = m.groupdict()['int_stat_last_reset']
@@ -1568,7 +1565,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 interface
             except Exception:
                 continue
-
+            
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:
                 #Unicast packets    : 0/0/0/0/0
                 p20 = re.compile(r'^\s*Unicast *packets *:'
@@ -3294,6 +3291,79 @@ class ShowInterfaceDescription(ShowInterfaceDescriptionSchema):
                     intf_dict['speed'] = str(group['speed'])
                 intf_dict['description'] = str(group['description'])
                 index += 1                
+                continue
+
+        return result_dict
+
+
+#############################################################################
+# Parser For show interface status
+#############################################################################
+
+class ShowInterfaceStatusSchema(MetaParser):
+    """schema for show interface status
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'status': str,
+                'vlan': str,
+                'duplex_code': str,
+                'port_speed': str,
+                Optional('type'): str,
+            }
+        }
+    }
+
+
+class ShowInterfaceStatus(ShowInterfaceStatusSchema):
+    """parser for 
+        * show interface status
+        * show interfaces {interfaces} status
+
+    """
+
+    cli_command = ['show interface status', 'show interface {interface} status']
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port          Name               Status    Vlan      Duplex  Speed   Type
+        # --------------------------------------------------------------------------------
+        # Eth1/1        KeepAlive          connected routed    full    10G     10g
+        # Eth1/2        AOTLXPRISS10004    connected trunk     full    10G     10g
+        # mgmt0         --                 connected routed    full    1000    --
+        # Po1           VPC_PeerLink       connected trunk     full    40G     --
+        # Vlan366       BigData            connected routed    auto    auto    --
+
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? +(?P<status>(\S+))? +(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+)) +(?P<port_speed>(\S+)) +(?P<type>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m and m.groupdict()['name'] != 'Name':
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                keys = ['name','status', 'vlan', 'duplex_code', 'port_speed', 'type']
+
+                for k in keys:
+                    if group[k] != '--':
+                        intf_dict[k] = group[k]
                 continue
 
         return result_dict
