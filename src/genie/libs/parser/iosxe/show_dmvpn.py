@@ -10,26 +10,27 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 class ShowDmvpnSchema(MetaParser):
     """
     Schema for 'show dmvpn'
-    Schema for 'show dmvpn interface <WORD> '
+    Schema for 'show dmvpn interface <WORD>'
     """
 
 # These are the key-value pairs to add to the parsed dictionary
     schema = {
-        'dmvpn':
-            {Any():
-                {'total_peers': str,
-                 'type': str,
-                 'peers': {Any():
-                           {'tunnel_addr': str,
-                            'state': str,
-                            'time': str,
-                            'attrb': str,
-                            'ent': str
-                            },
-                           }
-                 },
-             },
-    }
+        'dmvpn': {
+            Any(): {
+                'total_peers': str,
+                'type': str,
+                'peers': {
+                    Any(): {
+                        'tunnel_addr': str,
+                        'state': str,
+                        'time': str,
+                        'attrb': str,
+                        'ent': str
+                        },
+                    }
+                },
+            },
+        }
 
 
 # Python (this imports the Python re module for RegEx)
@@ -90,7 +91,7 @@ class ShowDmvpn(ShowDmvpnSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Processes the matched patterns for the first line of output
+            # Processes the matched line | Interface: Tunnel84, IPv4 NHRP Details
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -100,7 +101,7 @@ class ShowDmvpn(ShowDmvpnSchema):
                 # parsed_dict['dmvpn'][interface].update
                 continue
 
-            # Processes the matched patterns for the second line of output
+            # Processes the matched line | Type:Spoke, NHRP Peers:1,
             m = p2.match(line)
 
             if m:
@@ -108,7 +109,7 @@ class ShowDmvpn(ShowDmvpnSchema):
                 parsed_dict['dmvpn'][interface].update(group)
                 continue
 
-            # Processes the matched patterns for lists of Peers
+            # Processes the matched lines |     1 172.29.0.1          172.30.90.1   IKE     3w5d     S
             m = p3.match(line)
             if m:
                 group = m.groupdict()

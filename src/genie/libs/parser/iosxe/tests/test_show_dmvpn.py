@@ -15,7 +15,7 @@ from genie.libs.parser.iosxe.show_dmvpn import ShowDmvpn
 # =================================
 # Unit test for 'show dmvpn'
 # =================================
-class test_show_dmvpn(unittest.TestCase):
+class TestShowDmvpn(unittest.TestCase):
 
     '''Unit test for "show dmvpn"'''
 
@@ -23,47 +23,50 @@ class test_show_dmvpn(unittest.TestCase):
 
     # Specify the expected result for the parsed output
     golden_parsed_output1 = {
-        'dmvpn':
-            {'Tunnel84':
-                    {'type' :'Spoke', 
-                    'total_peers': '1',
-                    'peers':
-                        {'172.30.84.1':
-                            {'attrb': 'SC',
-                            'ent': '1',
-                            'state': 'NHRP',
-                            'time': 'never',
-                            'tunnel_addr': '172.29.0.1'}
-                        },
+        'dmvpn': {
+            'Tunnel84': {
+                'peers': {
+                    '172.30.84.1': {
+                        'attrb': 'SC',
+                        'ent': '1',
+                        'state': 'NHRP',
+                        'time': 'never',
+                        'tunnel_addr': '172.29.0.1',
                     },
-            'Tunnel90': {'total_peers': '3',
-                         'type': 'Spoke',
-                         'peers': 
-                            {'172.29.0.1': 
-                                {'attrb': 'S',
-                                'ent': '1',
-                                'state': 'IKE',
-                                'time': '3w5d',
-                                'tunnel_addr': '172.30.90.1'
-                                },
-                            '172.29.0.2': 
-                                {'attrb': 'S',
-                                'ent': '1',
-                                'state': 'UP',
-                                'time': '6d12h',
-                                'tunnel_addr': '172.30.90.2'
-                                },
-                            '172.29.134.1': 
-                                {'attrb': 'DT2',
-                                'ent': '2',
-                                'state': 'UP',
-                                'time': '00:29:40',
-                                'tunnel_addr': '172.30.72.72'
-                                }
-
-                         },}
+                },
+                'total_peers': '1',
+                'type': 'Spoke',
             },
+            'Tunnel90': {
+                'peers': {
+                    '172.29.0.1': {
+                        'attrb': 'S',
+                        'ent': '1',
+                        'state': 'IKE',
+                        'time': '3w5d',
+                        'tunnel_addr': '172.30.90.1',
+                    },
+                    '172.29.0.2': {
+                        'attrb': 'S',
+                        'ent': '1',
+                        'state': 'UP',
+                        'time': '6d12h',
+                        'tunnel_addr': '172.30.90.2',
+                    },
+                    '172.29.134.1': {
+                        'attrb': 'DT2',
+                        'ent': '2',
+                        'state': 'UP',
+                        'time': '00:29:40',
+                        'tunnel_addr': '172.30.72.72',
+                    },
+                },
+                'total_peers': '3',
+                'type': 'Spoke',
+            },
+        },
     }
+
 
     # Specify the expected unparsed output
     golden_output1 = {'execute.return_value': '''
