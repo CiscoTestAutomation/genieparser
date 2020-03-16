@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
+# PyATS
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
