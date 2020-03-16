@@ -1468,6 +1468,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         },
         'power_priority': 'Unknown',
         'power_source': 'Unknown',
+        'serial_number': 'FCH1610A5S5',
         'wattage': 6.3,
     },
     'total_entries': 1,
