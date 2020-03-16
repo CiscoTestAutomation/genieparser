@@ -11,3 +11,10 @@
         * show dmvpn
         * dmvpn interface {interface}
 
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowStandbyAll
+	    * Change regex to fix vlan interface/ sub interface ShowStandbyAll
