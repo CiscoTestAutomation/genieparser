@@ -22,6 +22,13 @@
         * show interface status
         * show interface {interface} status
 
+* ASA
+    * Added ShowVpnSessiondb for:
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
+
 
 --------------------------------------------------------------------------------
                                 Fix
