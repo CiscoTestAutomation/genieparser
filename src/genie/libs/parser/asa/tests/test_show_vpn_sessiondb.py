@@ -13,7 +13,10 @@ from genie.libs.parser.asa.show_vpn_sessiondb import ShowVpnSessiondb
 class TestShowVpnSessiondb(unittest.TestCase):
     """
     Unit test for
-     * show vpn-sessiondb
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
     """
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
