@@ -24,6 +24,8 @@
 * ASA 
     * Added ShowVPNSessionDBSummary for:
         * show vpn-sessiondb summary
+    * Added ShowVPNLoadBalancing for:
+        * show vpn load-balancing
 
 
 --------------------------------------------------------------------------------
@@ -64,6 +66,8 @@
         * Update regex to support various output
     * Update ShowAccessLists
         * Update regex to support various output
+    * Update ShowLldpEntry
+        * Fix typo in the code
 
 * NXOS
     * Updated ShowInterface
