@@ -9,7 +9,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_install import (ShowInstallSummary)
 
 
-class TestShowAccessLists(unittest.TestCase):
+class TestShowInstallSummary(unittest.TestCase):
     dev = Device(name='dev')
     empty_output = {'execute.return_value': '      '}
 
