@@ -83,6 +83,10 @@
         * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
             outgoing_ifname, packets_hash as optional
 
+* IOSXR
+    * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------
