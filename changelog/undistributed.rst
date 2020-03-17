@@ -23,6 +23,9 @@
     * Added ShowInterfaceStatus for:
         * show interface status
         * show interface {interface} status
+* ASA 
+    * Added ShowVPNLoadBalancing for:
+        * show vpn load-balancing
 
 
 --------------------------------------------------------------------------------
@@ -63,6 +66,8 @@
         * Update regex to support various output
     * Update ShowAccessLists
         * Update regex to support various output
+    * Update ShowLldpEntry
+        * Fix typo in the code
 
 * NXOS
     * Updated ShowInterface
