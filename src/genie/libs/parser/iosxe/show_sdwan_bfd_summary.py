@@ -29,7 +29,7 @@ class ShowSdwanBfdSummary(ShowSdwanBfdSummarySchema):
     """ Parser for "show sdwan bfd summary" """
 
     cli_command = "show sdwan bfd summary"
-
+    exclude = []
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -92,4 +92,3 @@ class ShowSdwanBfdSummary(ShowSdwanBfdSummarySchema):
                 continue
 
         return parsed_dict
-

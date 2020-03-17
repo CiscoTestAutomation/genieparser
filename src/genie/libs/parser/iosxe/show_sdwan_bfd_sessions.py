@@ -13,20 +13,21 @@ class ShowSdwanBfdSessionsSchema(MetaParser):
     """ Schema for "show sdwan bfd sessions """
 
     schema = {
-        "bfd_sessions": {
+        "system_ip": {
             Any(): {
-                Any(): {
-                    "destination_public_ip": str,
-                    "destination_public_port": str,
-                    "detect_multiplier": str,
-                    "encapsulation": str,
-                    "remote_tloc_color": str,
-                    "site_id": str,
-                    "source_ip": str,
-                    "state": str,
-                    "transitions": str,
-                    "tx_interval": str,
-                    "uptime": str,
+                'source_tloc_color': {
+                    Any(): {
+                        "destination_public_ip": str,
+                        "destination_public_port": str,
+                        "detect_multiplier": str,
+                        "encapsulation": str,
+                        "site_id": str,
+                        "source_ip": str,
+                        "state": str,
+                        "transitions": str,
+                        "tx_interval": str,
+                        "uptime": str,
+                    },
                 },
             },
         },
@@ -40,7 +41,8 @@ class ShowSdwanBfdSessionsSchema(MetaParser):
 class ShowSdwanBfdSessions(ShowSdwanBfdSessionsSchema):
 
     """ Parser for "show sdwan bfd sessions" """
-
+    exclude = ['uptime']
+    
     cli_command = "show sdwan bfd sessions"
 
     def cli(self, output=None):
@@ -86,5 +88,4 @@ class ShowSdwanBfdSessions(ShowSdwanBfdSessionsSchema):
                 continue
 
         return parsed_dict
-
 
