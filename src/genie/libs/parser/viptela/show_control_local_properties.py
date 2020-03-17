@@ -40,7 +40,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "dns_cache_ttl": str,
         "port_hopped": str,
         "time_since_last_port_hop": str,
-        "pairwise_keying": str,
+        Optional("pairwise_keying"): str,
         "embargo_check": str,
         "number_vbond_peers": str,
         "number_active_wan_interfaces": str,
