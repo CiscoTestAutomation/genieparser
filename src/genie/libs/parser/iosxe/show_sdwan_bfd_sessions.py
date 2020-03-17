@@ -51,13 +51,14 @@ class ShowSdwanBfdSessions(ShowSdwanBfdSessionsSchema):
 
         parsed_dict = {}
 
+
         p1 = re.compile(
-            r"(?P<system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<state>\w+)\s+" \
-            "(?P<source_tloc_color>\S+)\s+(?P<remote_tloc_color>\S+)\s+" \
-            "(?P<source_ip>\S+)\s+(?P<destination_public_ip>\S+)\s+" \
-            "(?P<destination_public_port>\d+)\s+(?P<encapsulation>\w+)\s+" \
-            "(?P<detect_multiplier>\d+)\s+(?P<tx_interval>\d+)\s+" \
-            "(?P<uptime>\S+)\s+(?P<transitions>\d+)"
+            r"(?P<system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<state>\w+)\s+"
+            r"(?P<source_tloc_color>\S+)\s+(?P<remote_tloc_color>\S+)\s+"
+            r"(?P<source_ip>\S+)\s+(?P<destination_public_ip>\S+)\s+"
+            r"(?P<destination_public_port>\d+)\s+(?P<encapsulation>\w+)\s+"
+            r"(?P<detect_multiplier>\d+)\s+(?P<tx_interval>\d+)\s+"
+            r"(?P<uptime>\S+)\s+(?P<transitions>\d+)"
         )
 
         for line in out.splitlines():
@@ -85,6 +86,5 @@ class ShowSdwanBfdSessions(ShowSdwanBfdSessionsSchema):
                 continue
 
         return parsed_dict
-
 
 
