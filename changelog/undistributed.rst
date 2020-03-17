@@ -18,7 +18,7 @@
     * Added ShowSdwanControlLocalProperties for:
         * show sdwan control local-properties
 
-* VIPTEAL
+* VIPTELA
     * Added ShowBfdSessions for:
         * show bfd sessions
     * Added ShowBfdSummary for:
