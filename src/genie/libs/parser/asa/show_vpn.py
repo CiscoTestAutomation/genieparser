@@ -26,7 +26,7 @@ class ShowVPNLoadBalancingSchema(MetaParser):
         'role': str,
         'failover': str,
         'encryption': str,
-        'peers': int,
+        'peers_count': int,
         'cluster_ip': str,
         'peers': {
             'role': str,
@@ -102,7 +102,7 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
                 ret_dict.update({'role': role})
                 ret_dict.update({'failover': failover})
                 ret_dict.update({'encryption': encryption})
-                ret_dict.update({'peers': peers})
+                ret_dict.update({'peers_count': peers})
                 ret_dict.update({'cluster_ip': cluster_ip})
                 continue
 
@@ -120,7 +120,7 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
                 peers_dict.update({'role': role})
                 peers_dict.update({'pri': pri})
                 peers_dict.update({'model': model})
-                peers_dict.update({'version': version})
+                peers_dict.update({'load_balancing_version': version})
                 peers_dict.update({'public_ip': public_ip})
                 continue
             
@@ -131,7 +131,7 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
                 group = m.groupdict()
                 total_license_load = ret_dict.setdefault('total_license_load', {})
                 anyconnect_premium_essential_dict = total_license_load.setdefault(
-                    'anyconnect_premium_essential', {})
+                    'anyconnect_premium_essentials', {})
                 other_vpn_dict = total_license_load.setdefault(
                     'other_vpn', {})
                 limit_1 = int(group['limit_1'])

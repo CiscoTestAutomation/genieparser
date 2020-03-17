@@ -20,6 +20,32 @@ class TestShowVPN(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
  
     golden_parsed_output = {
+        'cluster_ip': 'cluster1',
+        'encryption': 'Enabled',
+        'failover': 'n/a',
+        'peers': {
+            'load_balancing_version': 4,
+            'model': 'ASA-VASA',
+            'pri': 5,
+            'public_ip': '10.246.0.2',
+            'role': 'Backup',
+        },
+        'peers_count': 1,
+        'role': 'Master',
+        'status': 'Enabled',
+        'total_license_load': {
+            'anyconnect_premium_essentials': {
+                'limit': 0,
+                'load': 0,
+                'used': 0,
+            },
+            'other_vpn': {
+                'limit': 0,
+                'load': 0,
+                'used': 0,
+            },
+            'public_ip': '10.246.0.2',
+        },
     }
 
     golden_output = {'execute.return_value': '''
@@ -57,8 +83,6 @@ class TestShowVPN(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         route_obj = ShowVPNLoadBalancing(device=self.device)
         parsed_output = route_obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
