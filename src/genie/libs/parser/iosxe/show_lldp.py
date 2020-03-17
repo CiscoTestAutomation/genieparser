@@ -488,7 +488,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Serial number: FCH1610A5S5
             m = med_p9.match(line)
             if m:
-                med_dict['serial_number']: m.groupdict()['serial_number']
+                med_dict['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return ret_dict
