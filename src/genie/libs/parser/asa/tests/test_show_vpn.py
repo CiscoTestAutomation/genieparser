@@ -12,13 +12,13 @@ from genie.libs.parser.asa.show_vpn import ShowVPNLoadBalancing
 # ============================================
 # unit test for 'show vpn load-balancing'
 # =============================================
-class TestShowVPN(unittest.TestCase):
+class TestShowVPNLoadBalancing(unittest.TestCase):
     '''
        unit test for show vpn load-balancing
     '''
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
- 
+    maxDiff = None
     golden_parsed_output = {
         'cluster_ip': 'cluster1',
         'encryption': 'Enabled',
@@ -103,7 +103,6 @@ class TestShowVPN(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         route_obj = ShowVPNLoadBalancing(device=self.device)
         parsed_output = route_obj.parse()

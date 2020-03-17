@@ -21,6 +21,9 @@
     * Added ShowInterfaceStatus for:
         * show interface status
         * show interface {interface} status
+* ASA 
+    * Added ShowVPNLoadBalancing for:
+        * show vpn load-balancing
 
 
 --------------------------------------------------------------------------------
