@@ -44,7 +44,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "embargo_check": str,
         "number_vbond_peers": str,
         "number_active_wan_interfaces": str,
-        "connection_summary": {
+        "wan_interfaces": {
             Any(): {
                 "public_ipv4": str,
                 "public_port": str,
