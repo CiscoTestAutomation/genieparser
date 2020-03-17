@@ -29,24 +29,28 @@ class ShowVPNLoadBalancingSchema(MetaParser):
         'peers_count': int,
         'cluster_ip': str,
         'peers': {
-            'role': str,
-            'pri': int,
-            'model': str,
-            'load_balancing_version': int,
-            'public_ip': str,
+            Any(): {
+                'role': str,
+                'pri': int,
+                'model': str,
+                'load_balancing_version': int,
+                'public_ip': str,
+            }
         },
         'total_license_load': {
-            'anyconnect_premium_essentials': {
-                'limit': int,
-                'used': int,
-                'load': int,
-            },
-            'other_vpn': {
-                'limit': int,
-                'used': int,
-                'load': int,
-            },
-            'public_ip': str,
+            Any(): {
+                'anyconnect_premium_essentials': {
+                    'limit': int,
+                    'used': int,
+                    'load': int,
+                },
+                'other_vpn': {
+                    'limit': int,
+                    'used': int,
+                    'load': int,
+                },
+                'public_ip': str,
+            }
         }
     }
 
@@ -68,7 +72,8 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
             out = output
 
         ret_dict = {}
-
+        peers_index = 0
+        total_license_load_index = 0
         # Enabled    Master   n/a        Enabled          1     cluster1
         p1 = re.compile(r'^(?P<status>\S+) +(?P<role>\S+) +'
                         r'(?P<failover>\S+) +(?P<encryption>\S+) +'
@@ -110,13 +115,15 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
             # Backup    5  ASA-VASA                               4  10.246.0.2
             m = p2.match(line)
             if m:
+                peers_index += 1
                 group = m.groupdict()
                 role = group['role']
                 pri = int(group['pri'])
                 model = group['model']
                 version = int(group['version'])
                 public_ip = group['public_ip']
-                peers_dict = ret_dict.setdefault('peers', {})
+                peers_dict = ret_dict.setdefault('peers', {}). \
+                    setdefault(peers_index, {})
                 peers_dict.update({'role': role})
                 peers_dict.update({'pri': pri})
                 peers_dict.update({'model': model})
@@ -128,8 +135,10 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
             # 0       0      0%             0       0      0%  10.246.0.2
             m = p3.match(line)
             if m:
+                total_license_load_index += 1
                 group = m.groupdict()
-                total_license_load = ret_dict.setdefault('total_license_load', {})
+                total_license_load = ret_dict.setdefault('total_license_load', {}). \
+                    setdefault(total_license_load_index, {})
                 anyconnect_premium_essential_dict = total_license_load.setdefault(
                     'anyconnect_premium_essentials', {})
                 other_vpn_dict = total_license_load.setdefault(
