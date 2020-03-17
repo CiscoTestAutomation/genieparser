@@ -5854,10 +5854,12 @@ class ShowPlatformIntegritySchema(MetaParser):
             Any(): {
                 'version': str,
                 'hash': str,
-            }
+            },
+            'loader': {
+                'version': str,
+                'hash': str,
+            },
         },
-        'boot_loader_version': str,
-        'boot_loader_hash': str,
         'os_version': str,
         'os_hashes': {
             Any(): str,
@@ -5932,8 +5934,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                boot_loader_dict = ret_dict.setdefault('boot', {}). \
+                    setdefault('loader', {})
                 boot_loader_version = group['boot_loader_version']
-                ret_dict.update({'boot_loader_version': boot_loader_version})
+                boot_loader_dict.update({'version': boot_loader_version})
                 continue
             
             # Boot Loader Hash: 
@@ -5942,9 +5946,11 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 group = m.groupdict()
                 hash_val = group['hash']
                 hash_type = 'boot_loader'
+                boot_loader_dict = ret_dict.setdefault('boot', {}). \
+                    setdefault('loader', {})
                 boot_loader_hash = ret_dict.get('boot_loader_hash', '')
                 boot_loader_hash = '{}{}'.format(boot_loader_hash, hash_val)
-                ret_dict.update({'boot_loader_hash': boot_loader_hash})
+                boot_loader_dict.update({'hash': boot_loader_hash})
                 continue
 
             # OS Version: 2019-07-11_16.25_mzafar
@@ -5990,9 +5996,9 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 group = m.groupdict()
                 hash_val = group['hash']
                 if hash_type == 'boot_loader':
-                    boot_loader_hash = ret_dict.get('boot_loader_hash', '')
+                    boot_loader_hash = boot_loader_dict.get('boot_loader_hash', '')
                     boot_loader_hash = '{}{}'.format(boot_loader_hash, hash_val)
-                    ret_dict.update({'boot_loader_hash': boot_loader_hash})
+                    boot_loader_dict.update({'hash': boot_loader_hash})
                 elif hash_type == 'os_hash':
                     os_hash_val = os_hash_dict.get(os_hash, '')
                     os_hash_val = '{}{}'.format(os_hash_val, hash_val)
@@ -6025,9 +6031,13 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             elif child.tag.endswith('boot-hash'):
                 boot_dict.update({'hash': child.text})
             elif child.tag.endswith('boot-loader-hash'):
-                ret_dict.update({'boot_loader_hash': child.text})
+                boot_loader_dict = ret_dict.setdefault('boot', {}). \
+                    setdefault('loader', {})
+                boot_loader_dict.update({'hash': child.text})
             elif child.tag.endswith('boot-loader-ver'):
-                ret_dict.update({'boot_loader_version': child.text})
+                boot_loader_dict = ret_dict.setdefault('boot', {}). \
+                    setdefault('loader', {})
+                boot_loader_dict.update({'version': child.text})
             elif child.tag.endswith('package-signature'):
                 for sub_child in child:
                     os_hashes = ret_dict.setdefault('os_hashes', {})
