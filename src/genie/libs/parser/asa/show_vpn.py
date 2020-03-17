@@ -66,7 +66,7 @@ class ShowVPNLoadBalancing(ShowVPNLoadBalancingSchema):
 
     def cli(self, output=None):
         if output is None:
-            # excute command to get output
+            # execute command to get output
             out = self.device.execute(self.cli_command)
         else:
             out = output
