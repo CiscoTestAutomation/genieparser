@@ -1,5 +1,5 @@
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 from pprint import pprint
 import re
 
