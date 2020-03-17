@@ -7,7 +7,7 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.asa.show_vpn import ShowVPNLoadBalancing
+from genie.libs.parser.asa.show_vpn import (ShowVPNLoadBalancing)
 
 # ============================================
 # unit test for 'show vpn load-balancing'
