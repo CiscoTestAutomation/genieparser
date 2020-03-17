@@ -32,7 +32,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "system_ip": str,
         "chassis_num_unique_id": str,
         "serial_num": str,
-        "enterprise_serial_num": str,
+        Optional("enterprise_serial_num"): str,
         "token": str,
         "keygen_interval": str,
         "retry_interval": str,
