@@ -41,7 +41,43 @@ class TestShowVpnSessiondb(unittest.TestCase):
     Filter Name :
     '''}
 
-    # golden_parsed_output
+    golden_parsed_output = {
+    'session_type': {
+        'SSL VPN Client': {
+            'username': {
+                'lee': {
+                    'index': {
+                        '1': {
+                            'auth_mode': 'userPassword',
+                            'bytes': {
+                                'rx': 8662,
+                                'tx': 20178,
+                            },
+                            'client_type': 'Internet Explorer',
+                            'client_version': 'Cisco STC 10.4.0.117',
+                            'duration': '0h:00m:04s',
+                            'group': 'DfltGrpPolicy',
+                            'hashing': 'SHA1',
+                            'inactivity': '0h:00m:04s',
+                            'ip_addr': '192.168.16.232',
+                            'login_time': '14:32:03 UTC Wed Mar 20 2007',
+                            'pkts': {
+                                'rx': 19,
+                                'tx': 27,
+                            },
+                            'protocol': 'SSL',
+                            'tcp': {
+                                'dst_port': 443,
+                                'src_port': 54230,
+                            },
+                            'vpn_client_encryption': '3DES',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     # show vpn-sessiondb anyconnect
     golden_output_2 = {'execute.return_value': '''     
@@ -74,7 +110,62 @@ class TestShowVpnSessiondb(unittest.TestCase):
     VLAN Mapping : N/A VLAN : none
     '''}
 
-    # golden_parsed_output_2
+    golden_parsed_output_2 = {
+    'session_type': {
+        'AnyConnect': {
+            'username': {
+                'lee': {
+                    'index': {
+                        '1': {
+                            'assigned_ip': '192.168.246.1',
+                            'bytes': {
+                                'rx': 4942,
+                                'tx': 11079,
+                            },
+                            'duration': '0h:00m:15s',
+                            'encryption': 'RC4 AES128',
+                            'group_policy': 'EngPolicy',
+                            'hashing': 'SHA1',
+                            'inactivity': '0h:00m:00s',
+                            'license': 'AnyConnect Premium',
+                            'login_time': '15:25:13 EST Fri Jan 28 2011',
+                            'nac_result': 'Unknown',
+                            'protocol': 'AnyConnect-Parent SSL-Tunnel DTLS-Tunnel',
+                            'public_ip': '10.139.1.2',
+                            'tunnel_group': 'EngGroup',
+                            'vlan': 'none',
+                            'vlan_mapping': 'N/A',
+                        },
+                    },
+                },
+                'yumi': {
+                    'index': {
+                        '2': {
+                            'assigned_ip': '192.168.246.2',
+                            'bytes': {
+                                'rx': 6942,
+                                'tx': 11055,
+                            },
+                            'duration': '0h:05m:15s',
+                            'encryption': 'RC4 AES128',
+                            'group_policy': 'EngPolicy',
+                            'hashing': 'SHA1',
+                            'inactivity': '0h:00m:00s',
+                            'license': 'AnyConnect Premium',
+                            'login_time': '15:25:13 EST Fri Jan 29 2011',
+                            'nac_result': 'Unknown',
+                            'protocol': 'AnyConnect-Parent SSL-Tunnel DTLS-Tunnel',
+                            'public_ip': '10.139.1.3',
+                            'tunnel_group': 'EngGroup',
+                            'vlan': 'none',
+                            'vlan_mapping': 'N/A',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     # show vpn-sessiondb anyconnect sort inactivity
     golden_output_3 = {'execute.return_value': '''
@@ -113,7 +204,60 @@ class TestShowVpnSessiondb(unittest.TestCase):
     Security Grp : none
     '''}
 
-    # golden_parsed_output_3
+    golden_parsed_output_3 = {
+    'session_type': {
+        'AnyConnect': {
+            'username': {
+                'user1': {
+                    'index': {
+                        '37670': {
+                            'assigned_ip': '10.10.10.80',
+                            'audt_sess_id': '0adc27fd093260005381',
+                            'bytes': {
+                                'rx': 38126521,
+                                'tx': 92531620,
+                            },
+                            'duration': '2d 4h:21m:44s',
+                            'encryption': '(1)none',
+                            'group_policy': 'GroupPolicy_Employee',
+                            'hashing': '(1)none',
+                            'inactivity': '1d 9h:13m:24s',
+                            'license': 'AnyConnect Premium',
+                            'login_time': '15:56:33 CDT Fri Mar 13 2020',
+                            'protocol': 'AnyConnect-Parent',
+                            'public_ip': '2.22.2.2',
+                            'security_group': 'none',
+                            'tunnel_group': 'Employee',
+                            'vlan': 'none',
+                            'vlan_mapping': 'N/A',
+                        },
+                        '56867': {
+                            'assigned_ip': '10.10.10.213',
+                            'audt_sess_id': '0adc27fd0de230005e6f9',
+                            'bytes': {
+                                'rx': 5297986,
+                                'tx': 18318907,
+                            },
+                            'duration': '1d 11h:41m:20s',
+                            'encryption': '(1)none',
+                            'group_policy': 'GroupPolicy_Employee',
+                            'hashing': '(1)none',
+                            'inactivity': '1d 9h:04m:29s',
+                            'license': 'AnyConnect Premium',
+                            'login_time': '08:36:57 CDT Sat Mar 14 2020',
+                            'protocol': 'AnyConnect-Parent',
+                            'public_ip': '1.1.1.1',
+                            'security_group': 'none',
+                            'tunnel_group': 'Employee',
+                            'vlan': 'none',
+                            'vlan_mapping': 'N/A',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     # show vpn-sessiondb webvpn
     golden_output_4 = {'execute.return_value': '''
@@ -134,7 +278,38 @@ class TestShowVpnSessiondb(unittest.TestCase):
     Security Grp : none
     '''}
 
-    # golden_parsed_output_4
+    golden_parsed_output_4 = {
+    'session_type': {
+        'WebVPN': {
+            'username': {
+                'admin': {
+                    'index': {
+                        '3': {
+                            'audt_sess_id': '0a1516010000300055644d84',
+                            'bytes': {
+                                'rx': 270241,
+                                'tx': 72214,
+                            },
+                            'duration': '0h:05m:21s',
+                            'encryption': '(1)AES128',
+                            'group_policy': 'WEBVPN_Group_Policy',
+                            'hashing': '(1)SHA256',
+                            'inactivity': '0h:00m:00s',
+                            'license': 'AnyConnect Premium',
+                            'login_time': '10:40:04 UTC Tue May 26 2015',
+                            'protocol': 'Clientless',
+                            'public_ip': '10.229.20.77',
+                            'security_group': 'none',
+                            'tunnel_group': 'DefaultWEBVPNGroup',
+                            'vlan': 'none',
+                            'vlan_mapping': 'N/A',
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -185,3 +360,7 @@ class TestShowVpnSessiondb(unittest.TestCase):
         route_obj = ShowVpnSessiondb(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+if __name__ == '__main__':
+    unittest.main()
+
