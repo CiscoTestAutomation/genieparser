@@ -1,4 +1,4 @@
-''' show_vpn.py
+''' show_vpn_sessiondb.py
 
 Parser for the following show commands:
     * show vpn load-balancing
