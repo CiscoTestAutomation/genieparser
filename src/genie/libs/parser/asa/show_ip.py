@@ -22,20 +22,18 @@ class ShowIpLocalPoolSchema(MetaParser):
     """
 
     schema = {
-        'begin': {
+        'pool': {
             str: {
-                'end': {
-                    str: {
-                        'mask': str,
-                        'held': int,
-                        'free': int,
-                        'in_use': int,
-                    }
-                }
+                'available_addresses': list,
+                'in_use_addresses': list,
+                'begin': str,
+                'end': str,
+                'free': int,
+                'held': int,
+                'in_use': int,
+                'mask': str,
             }
-        },
-        'available_addresses': list,
-        'in_use_addresses': list,
+        }
     }
 
 # =============================================
@@ -80,14 +78,14 @@ class ShowIpLocalPool(ShowIpLocalPoolSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                end_dict = ret_dict.setdefault('begin', {}). \
-                    setdefault(group['begin'], {}). \
-                    setdefault('end', {}). \
-                    setdefault(group['end'], {})
-                end_dict.update({'mask': group['mask']})
-                end_dict.update({'free': int(group['free'])})
-                end_dict.update({'held': int(group['held'])})
-                end_dict.update({'in_use': int(group['in_use'])})
+                pool_dict = ret_dict.setdefault('pool', {}). \
+                    setdefault(pool, {})
+                pool_dict.update({'begin': group['mask']})
+                pool_dict.update({'end': group['mask']})
+                pool_dict.update({'mask': group['mask']})
+                pool_dict.update({'free': int(group['free'])})
+                pool_dict.update({'held': int(group['held'])})
+                pool_dict.update({'in_use': int(group['in_use'])})
                 continue
             
             # Available Addresses:
@@ -109,9 +107,9 @@ class ShowIpLocalPool(ShowIpLocalPoolSchema):
             if m:
                 group = m.groupdict()
                 if address_type:
-                    address_type_list = ret_dict.get(address_type, [])
+                    address_type_list = pool_dict.get(address_type, [])
                     address_type_list.append(group['ip_address'])
-                    ret_dict.update({address_type: address_type_list})
+                    pool_dict.update({address_type: address_type_list})
                 continue
 
         return ret_dict
