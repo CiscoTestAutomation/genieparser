@@ -26,7 +26,8 @@
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
-
+    * Added ShowIpLocalPool for:
+        * show ip local pool {pool}
 
 --------------------------------------------------------------------------------
                                 Fix
