@@ -36,57 +36,25 @@ class TestShowAspDrop(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'resources': {
-            'ASDM': {
-                'context': 'System',
-                'current': 1,
-                'denied': 0,
-                'limit': 5,
-                'peak': 1,
+        'flow_drop': {
+            'last_clearing': '10:43:33 EDT Mar 27 2019 by genie',
+        },
+        'frame_drop': {
+            'last_clearing': '10:43:33 EDT Mar 27 2019 by genie',
+            'acl-drop': {
+                'counts': 29,
             },
-            'Conns': {
-                'context': 'System',
-                'current': 176981,
-                'denied': 16815496,
-                'limit': 2000000,
-                'peak': 1999939,
+            'l2_acl': {
+                'counts': 35,
             },
-            'Conns [rate]': {
-                'context': 'System',
-                'current': 1227,
-                'denied': 0,
-                'peak': 103095,
+            'no-mcast-intrf': {
+                'counts': 31,
             },
-            'Hosts': {
-                'context': 'System',
-                'current': 56874,
-                'denied': 0,
-                'peak': 1996513,
+            'rpf-violated': {
+                'counts': 23,
             },
-            'Inspects [rate]': {
-                'context': 'System',
-                'current': 435,
-                'denied': 0,
-                'peak': 88557,
-            },
-            'SSH': {
-                'context': 'System',
-                'current': 1,
-                'denied': 0,
-                'limit': 5,
-                'peak': 5,
-            },
-            'Syslogs [rate]': {
-                'context': 'System',
-                'current': 18,
-                'denied': 0,
-                'peak': 861,
-            },
-            'Xlates': {
-                'context': 'System',
-                'current': 9873,
-                'denied': 0,
-                'peak': 70234,
+            'sp-security-failed': {
+                'counts': 11,
             },
         },
     }

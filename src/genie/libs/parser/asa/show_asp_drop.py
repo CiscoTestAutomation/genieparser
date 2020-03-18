@@ -54,18 +54,53 @@ class ShowAspDrop(ShowAspDropSchema):
         # Regular expression patterns
         # -----------------------------------------------
         # Frame drop:
+        p0 = re.compile(r'^Frame drop:$')
         #   Reverse-path verify failed (rpf-violated)                                   23
-        #   Flow is denied by configured rule (acl-drop)                                29
-        #   Slowpath security checks failed (sp-security-failed)                        11
-        #   FP L2 rule drop (l2_acl)                                                    35
-        #   FP no mcast output intrf (no-mcast-intrf)                                   31
-        #
+        p1 = re.compile(r'^.*\((?P<frame_drop>\S+)\)\s+(?P<counts>\d+)$')
+
         # Last clearing: 10:43:33 EDT Mar 27 2019 by genie
-        #
+        p2 = re.compile(r'^Last\s+clearing:\s+(?P<last_clearing>[\s\S]+)$')
+
         # Flow drop:
-        #
-        # Last clearing: 10:43:33 EDT Mar 27 2019 by genie
+        p3 = re.compile(r'^Flow drop:$')
 
         # -----------------------------------------------
         # Parse the output
         # -----------------------------------------------
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Frame drop:
+            m = p0.match(line)
+            if m:
+                frame_drop_dict = parsed_dict.setdefault('frame_drop', {})
+
+            #   Reverse-path verify failed (rpf-violated)                                   23
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                counts_dict = frame_drop_dict.setdefault(group['frame_drop'], {})
+                counts_dict['counts'] = int(group['counts'])
+                continue
+
+            # Flow drop:
+            m = p3.match(line)
+            if m:
+                flow_drop_dict = parsed_dict.setdefault('flow_drop', {})
+                continue
+
+            #  Last clearing: 10:43:33 EDT Mar 27 2019 by genie
+            m = p2.match(line)
+            if m:
+                val = m.groupdict()['last_clearing']
+                if 'flow_drop' in parsed_dict:
+                    flow_drop_dict['last_clearing'] = val
+                else:
+                    frame_drop_dict['last_clearing'] = val
+                continue
+
+        return parsed_dict
+
+
+
+
