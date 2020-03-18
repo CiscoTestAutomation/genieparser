@@ -1,4 +1,4 @@
-""" show_resource_usage.py
+""" show_resource.py
 
 Parser for the following show commands:
     * show resource usage
@@ -19,13 +19,16 @@ class ShowResourceUsageSchema(MetaParser):
         * show resource usage
     """
     schema = {
-        'resources': {
+        'context': {
             Any(): {
-                'current': int,
-                'peak': int,
-                Optional('limit'): int,
-                'denied': int,
-                'context': str,
+                'resource': {
+                    Any(): {
+                        'current': int,
+                        'peak': int,
+                        Optional('limit'): int,
+                        'denied': int,
+                    }
+                }
             }
         }
     }
@@ -69,10 +72,10 @@ class ShowResourceUsage(ShowResourceUsageSchema):
             m = p.match(line)
             if m:
                 group = m.groupdict()
-                resource_dict = parsed_dict.setdefault('resources', {}).\
+                context_dict = parsed_dict.setdefault('context', {}).\
+                                            setdefault(group['context'], {})
+                resource_dict = context_dict.setdefault('resource', {}).\
                                             setdefault(group['resource'].strip(), {})
-
-                resource_dict['context'] = group['context']
 
                 for k in ['current', 'peak', 'limit', 'denied']:
                     if group[k] != 'N/A':

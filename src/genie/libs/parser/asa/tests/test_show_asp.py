@@ -6,7 +6,7 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.asa.show_asp_drop import ShowAspDrop
+from genie.libs.parser.asa.show_asp import ShowAspDrop
 
 
 # ============================================
@@ -31,31 +31,26 @@ class TestShowAspDrop(unittest.TestCase):
     Last clearing: 10:43:33 EDT Mar 27 2019 by genie
     
     Flow drop:
-    
+      NAT failed (nat-failed)                                                    528
+      Inspection failure (inspect-fail)                                        67870
+      SSL received close alert (ssl-received-close-alert)                          9
     Last clearing: 10:43:33 EDT Mar 27 2019 by genie    
     '''}
 
     golden_parsed_output = {
         'flow_drop': {
+            'inspect-fail': 67870,
             'last_clearing': '10:43:33 EDT Mar 27 2019 by genie',
+            'nat-failed': 528,
+            'ssl-received-close-alert': 9,
         },
         'frame_drop': {
+            'acl-drop': 29,
+            'l2_acl': 35,
             'last_clearing': '10:43:33 EDT Mar 27 2019 by genie',
-            'acl-drop': {
-                'counts': 29,
-            },
-            'l2_acl': {
-                'counts': 35,
-            },
-            'no-mcast-intrf': {
-                'counts': 31,
-            },
-            'rpf-violated': {
-                'counts': 23,
-            },
-            'sp-security-failed': {
-                'counts': 11,
-            },
+            'no-mcast-intrf': 31,
+            'rpf-violated': 23,
+            'sp-security-failed': 11,
         },
     }
 

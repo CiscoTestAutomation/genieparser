@@ -6,7 +6,7 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.asa.show_resource_usage import ShowResourceUsage
+from genie.libs.parser.asa.show_resource import ShowResourceUsage
 
 
 # ============================================
@@ -33,57 +33,53 @@ class TestShowResourceUsage(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'resources': {
-            'ASDM': {
-                'context': 'System',
-                'current': 1,
-                'denied': 0,
-                'limit': 5,
-                'peak': 1,
-            },
-            'Conns': {
-                'context': 'System',
-                'current': 176981,
-                'denied': 16815496,
-                'limit': 2000000,
-                'peak': 1999939,
-            },
-            'Conns [rate]': {
-                'context': 'System',
-                'current': 1227,
-                'denied': 0,
-                'peak': 103095,
-            },
-            'Hosts': {
-                'context': 'System',
-                'current': 56874,
-                'denied': 0,
-                'peak': 1996513,
-            },
-            'Inspects [rate]': {
-                'context': 'System',
-                'current': 435,
-                'denied': 0,
-                'peak': 88557,
-            },
-            'SSH': {
-                'context': 'System',
-                'current': 1,
-                'denied': 0,
-                'limit': 5,
-                'peak': 5,
-            },
-            'Syslogs [rate]': {
-                'context': 'System',
-                'current': 18,
-                'denied': 0,
-                'peak': 861,
-            },
-            'Xlates': {
-                'context': 'System',
-                'current': 9873,
-                'denied': 0,
-                'peak': 70234,
+        'context': {
+            'System': {
+                'resource': {
+                    'ASDM': {
+                        'current': 1,
+                        'denied': 0,
+                        'limit': 5,
+                        'peak': 1,
+                    },
+                    'Conns': {
+                        'current': 176981,
+                        'denied': 16815496,
+                        'limit': 2000000,
+                        'peak': 1999939,
+                    },
+                    'Conns [rate]': {
+                        'current': 1227,
+                        'denied': 0,
+                        'peak': 103095,
+                    },
+                    'Hosts': {
+                        'current': 56874,
+                        'denied': 0,
+                        'peak': 1996513,
+                    },
+                    'Inspects [rate]': {
+                        'current': 435,
+                        'denied': 0,
+                        'peak': 88557,
+                    },
+                    'SSH': {
+                        'current': 1,
+                        'denied': 0,
+                        'limit': 5,
+                        'peak': 5,
+                    },
+                    'Syslogs [rate]': {
+                        'current': 18,
+                        'denied': 0,
+                        'peak': 861,
+                    },
+                    'Xlates': {
+                        'current': 9873,
+                        'denied': 0,
+                        'peak': 70234,
+                    },
+                },
             },
         },
     }
