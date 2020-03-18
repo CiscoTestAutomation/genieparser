@@ -26,6 +26,8 @@
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
+    * Added ShowServicePolicy for:
+        * show service-policy
 
 
 --------------------------------------------------------------------------------
