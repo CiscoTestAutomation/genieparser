@@ -28,6 +28,12 @@
         * show vpn load-balancing
     * Added ShowIpLocalPool for:
         * show ip local pool {pool}
+    * Added ShowVpnSessiondb for:
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
+
 
 --------------------------------------------------------------------------------
                                 Fix
