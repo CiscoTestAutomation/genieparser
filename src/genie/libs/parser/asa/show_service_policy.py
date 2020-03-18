@@ -28,8 +28,8 @@ class ShowServicePolicySchema(MetaParser):
                     'class_map': {
                         str: {
                             'inspect': {
-                                int: {
-                                    'name': str,
+                                str: {
+                                    Optional('inspect_map'): str,
                                     'packet': int,
                                     'lock_fail': int,
                                     'drop': int,
@@ -78,12 +78,13 @@ class ShowServicePolicy(ShowServicePolicySchema):
 
         # Inspect: ip-options _default_ip_options_map, packet 0, lock fail 0, drop 0, reset-drop 0, 
         # 5-min-pkt-rate 0 pkts/sec, v6-fail-close 0 sctp-drop-override 0
-        p3 = re.compile(r'^Inspect: +(?P<inspect>\S+([\S ]+)?), +'
-                        r'packet +(?P<packet>\d+), +lock +fail +'
-                        r'(?P<lock_fail>\d+), +drop +(?P<drop>\d+), +'
-                        r'reset-drop +(?P<reset_drop>\d+), +5-min-pkt-rate +'
-                        r'(?P<five_minute_pkt_rate>\d+) +pkts\/sec, +v6-fail-close +(?P<v6_fail_close>\d+) +'
-                        r'sctp-drop-override +(?P<sctp_drop_override>\d+)$')
+        p3 = re.compile(r'^Inspect: +(((?P<inspect_3>\S+ +\S+) +(?P<map_3>\S+))|'
+                        r'((?P<inspect_2>\S+) +(?P<map_2>\S+))|(?P<inspect_1>\S+)) *, +'
+                        r'packet +(?P<packet>\d+), +lock +fail +(?P<lock_fail>\d+), +'
+                        r'drop +(?P<drop>\d+), +reset-drop +(?P<reset_drop>\d+), +'
+                        r'5-min-pkt-rate +(?P<five_minute_pkt_rate>\d+) +pkts\/sec, +'
+                        r'v6-fail-close +(?P<v6_fail_close>\d+) +sctp-drop-override +'
+                        r'(?P<sctp_drop_override>\d+)$')
 
         # tcp-proxy: bytes in buffer 0, bytes dropped 0
         p4 = re.compile(r'^tcp-proxy: +bytes +in +buffer +(?P<bytes_in_buffer>\d+), +'
@@ -113,13 +114,34 @@ class ShowServicePolicy(ShowServicePolicySchema):
 
             # Inspect: ip-options _default_ip_options_map, packet 0, lock fail 0, drop 0, reset-drop 0, 
             # 5-min-pkt-rate 0 pkts/sec, v6-fail-close 0 sctp-drop-override 0
+            p3 = re.compile(r'^Inspect: +(((?P<inspect_3>\S+ +\S+) +(?P<map_3>\S+))|'
+                        r'((?P<inspect_2>\S+) +(?P<map_2>\S+))|(?P<inspect_1>\S+)) *, +'
+                        r'packet +(?P<packet>\d+), +lock +fail +(?P<lock_fail>\d+), +'
+                        r'drop +(?P<drop>\d+), +reset-drop +(?P<reset_drop>\d+), +'
+                        r'5-min-pkt-rate +(?P<five_minute_pkt_rate>\d+) +pkts\/sec, +'
+                        r'v6-fail-close +(?P<v6_fail_close>\d+) +sctp-drop-override +'
+                        r'(?P<sctp_drop_override>\d+)$')
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                inspect_index += 1
-                inspect_dict = class_map_dict.setdefault('inspect', {}). \
-                    setdefault(inspect_index, {})
-                inspect_dict.update({'name': group['inspect']})
+                # inspect_index += 1
+                inspect_3 = group.get('inspect_3', None)
+                map_3 = group.get('map_3', None)
+                inspect_2 = group.get('inspect_2', None)
+                map_2 = group.get('map_2', None)
+                inspect_1 = group.get('inspect_1', None)
+                
+                if inspect_3:
+                    inspect_dict = class_map_dict.setdefault('inspect', {}). \
+                        setdefault(inspect_3, {})
+                    inspect_dict.update({'inspect_map': map_3})
+                elif inspect_2:
+                    inspect_dict = class_map_dict.setdefault('inspect', {}). \
+                        setdefault(inspect_2, {})
+                    inspect_dict.update({'inspect_map': map_2})
+                else:
+                    inspect_dict = class_map_dict.setdefault('inspect', {}). \
+                        setdefault(inspect_1, {})
                 inspect_dict.update({'packet': int(group['packet'])})
                 inspect_dict.update({'lock_fail': int(group['lock_fail'])})
                 inspect_dict.update({'drop': int(group['drop'])})
