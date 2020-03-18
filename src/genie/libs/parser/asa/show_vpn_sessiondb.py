@@ -167,7 +167,7 @@ class ShowVpnSessiondbSchema(MetaParser):
                 'username': {
                     Any(): {
                         'index': {
-                            Any(): {
+                            int: {
                                 Optional('ip_addr'): str,
                                 Optional('assigned_ip'): str,
                                 Optional('public_ip'): str,
@@ -214,7 +214,7 @@ class ShowVpnSessiondbSchema(MetaParser):
     }
 
 # =============================================
-# Parser for
+# Super Parser for
 #         * show vpn-sessiondb
 #         * show vpn-sessiondb anyconnect
 #         * show vpn-sessiondb anyconnect sort inactivity
@@ -222,32 +222,15 @@ class ShowVpnSessiondbSchema(MetaParser):
 # =============================================
 
 
-class ShowVpnSessiondb(ShowVpnSessiondbSchema):
-    """Parser for
+class ShowVpnSessiondbSuper(ShowVpnSessiondbSchema):
+    """Super Parser for
         * show vpn-sessiondb
         * show vpn-sessiondb anyconnect
         * show vpn-sessiondb anyconnect sort inactivity
         * show vpn-sessiondb webvpn
     """
 
-    cli_command = ['show vpn-sessiondb',
-                   'show vpn-sessiondb {anyconnect}',
-                   'show vpn-sessiondb {anyconnect} {sort} inactivity',
-                   'show vpn-sessiondb {webvpn}']
-
-    def cli(self, anyconnect=None, sort=None, webvpn=None, output=None):
-        if output is None:
-            if anyconnect and sort:
-                cmd = self.cli_command[2].format(anyconnect=anyconnect, sort=sort)
-            elif anyconnect:
-                cmd = self.cli_command[1].format(anyconnect=anyconnect)
-            elif webvpn:
-                cmd = self.cli_command[3].format(webvpn=webvpn)
-            else:
-                cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, sort=None, output=None):
 
         parsed_dict = {}
 
@@ -351,7 +334,7 @@ class ShowVpnSessiondb(ShowVpnSessiondbSchema):
         # Public IP    : 10.229.20.77
         p24 = re.compile(r'^Public\s+IP\s+:\s+(?P<public_ip>\S+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Session Type: SSL VPN Client
@@ -371,14 +354,14 @@ class ShowVpnSessiondb(ShowVpnSessiondbSchema):
 
                 if group['index']:
                     index_dict = username_dict.setdefault('index', {}).\
-                                                  setdefault(group['index'], {})
+                                                  setdefault(int(group['index']), {})
                 continue
 
             # Index : 1 IP Addr : 192.168.16.232
             m = p3.match(line)
             if m:
                 index_dict = username_dict.setdefault('index', {}).\
-                                                  setdefault(m.groupdict()['index'], {})
+                                                  setdefault(int(m.groupdict()['index']), {})
                 index_dict['ip_addr'] = m.groupdict()['ip_addr']
                 continue
 
@@ -461,3 +444,67 @@ class ShowVpnSessiondb(ShowVpnSessiondbSchema):
                 continue
 
         return parsed_dict
+
+
+# =============================================
+# Parser for
+#         * show vpn-sessiondb
+# =============================================
+class ShowVpnSessiondb(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
+    """Parser for
+        * show vpn-sessiondb
+    """
+    cli_command = 'show vpn-sessiondb'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+# =============================================
+# Parser for
+#         * show vpn-sessiondb anyconnect
+#         * show vpn-sessiondb anyconnect sort inactivity
+# =============================================
+class ShowVpnSessiondbAnyconnect(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
+    """Parser for
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect {sort} inactivity
+    """
+    cli_command = ['show vpn-sessiondb anyconnect',
+                   'show vpn-sessiondb anyconnect {sort} inactivity']
+
+    def cli(self, sort='', output=None):
+        if output is None:
+            if sort:
+                cmd = self.cli_command[1].format(sort=sort)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out, sort=sort)
+
+
+# =============================================
+# Parser for
+#         * show vpn-sessiondb webvpn
+# =============================================
+class ShowVpnSessiondbWebvpn(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
+    """Parser for
+        * show vpn-sessiondb webvpn
+    """
+    cli_command = 'show vpn-sessiondb webvpn'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
