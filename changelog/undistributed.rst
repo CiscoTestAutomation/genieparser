@@ -28,6 +28,19 @@
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
+    * Added ShowIpLocalPool for:
+        * show ip local pool {pool}
+    * Added ShowServicePolicy for:
+        * show service-policy
+    * Added ShowVpnSessiondb for:
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
+    * Added ShowResourceUsage for:
+        * show resource usage
+    * Added ShowAspDrop for
+        * show asp drop
 
 
 --------------------------------------------------------------------------------
@@ -84,6 +97,10 @@
     * Update ShowPlatformInternalHalPolicyRedirdst:
         * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
             outgoing_ifname, packets_hash as optional
+
+* IOSXR
+    * Update ShowBgpInstanceSummary
+        * Update regex to support various output
 
 --------------------------------------------------------------------------------
                                 common.py
