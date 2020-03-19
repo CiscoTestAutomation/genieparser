@@ -30,7 +30,7 @@ class ShowInstallSummarySchema(MetaParser):
                     }
                 },
                 'auto_abort_timer': str,
-                'time_before_rollback': str,
+                Optional('time_before_rollback'): str,
             },
         },
     }
@@ -62,6 +62,9 @@ class ShowInstallSummary(ShowInstallSummarySchema):
         p3 = re.compile(r'^Auto +abort +timer: +(?P<auto_abort_timer>[\S ]+), +'
                         r'time +before +rollback +\- +(?P<time_before_rollback>\S+)$')
 
+        # Auto abort timer: active on install_activate
+        p4 = re.compile(r'^Auto +abort +timer: +(?P<auto_abort_timer>[\S ]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             
@@ -69,7 +72,7 @@ class ShowInstallSummary(ShowInstallSummarySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                location = group['location']
+                location = group['location'].strip()
                 location_dict = ret_dict.setdefault('location', {}). \
                     setdefault(location, {})
                 continue
@@ -92,7 +95,16 @@ class ShowInstallSummary(ShowInstallSummarySchema):
             if m:
                 group = m.groupdict()
                 location_dict.update({'auto_abort_timer': group['auto_abort_timer']})
-                location_dict.update({'time_before_rollback': group['time_before_rollback']})
+                time_before_rollback = group.get('time_before_rollback', None)
+                if time_before_rollback:
+                    location_dict.update({'time_before_rollback': time_before_rollback})
+                continue
+            
+            # Auto abort timer: active on install_activate
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                location_dict.update({'auto_abort_timer': group['auto_abort_timer']})
                 continue
 
         return ret_dict
