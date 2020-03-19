@@ -3130,114 +3130,114 @@ class TestShowInventory(unittest.TestCase):
             "1":{
                 "lc":{
                     "ISR4451-X/K9":{
-                    "descr":"Cisco ISR4451 Built-In SM controller",
-                    "name":"module 1",
-                    "pid":"ISR4451-X/K9",
-                    "sn":"",
-                    "vid":""
+                        "descr":"Cisco ISR4451 Built-In SM controller",
+                        "name":"module 1",
+                        "pid":"ISR4451-X/K9",
+                        "sn":"",
+                        "vid":""
                     }
                 }
             },
             "2":{
                 "lc":{
                     "ISR4451-X/K9":{
-                    "descr":"Cisco ISR4451 Built-In SM controller",
-                    "name":"module 2",
-                    "pid":"ISR4451-X/K9",
-                    "sn":"",
-                    "vid":""
+                        "descr":"Cisco ISR4451 Built-In SM controller",
+                        "name":"module 2",
+                        "pid":"ISR4451-X/K9",
+                        "sn":"",
+                        "vid":""
                     }
                 }
             },
             "F0":{
                 "lc":{
                     "ISR4451-X/K9":{
-                    "descr":"Cisco ISR4451 Forwarding Processor",
-                    "name":"module F0",
-                    "pid":"ISR4451-X/K9",
-                    "sn":"",
-                    "vid":""
+                        "descr":"Cisco ISR4451 Forwarding Processor",
+                        "name":"module F0",
+                        "pid":"ISR4451-X/K9",
+                        "sn":"",
+                        "vid":""
                     }
                 }
             },
             "Fan_Tray":{
                 "other":{
                     "ACS-4450-FANASSY":{
-                    "descr":"Cisco ISR4450, ISR4350 Fan Assembly",
-                    "name":"Fan Tray",
-                    "pid":"ACS-4450-FANASSY",
-                    "sn":"",
-                    "vid":""
+                        "descr":"Cisco ISR4450, ISR4350 Fan Assembly",
+                        "name":"Fan Tray",
+                        "pid":"ACS-4450-FANASSY",
+                        "sn":"",
+                        "vid":""
                     }
                 }
             },
             "P0":{
                 "other":{
                     "PWR-4450-AC":{
-                    "descr":"450W AC Power Supply for Cisco ISR4450, ISR4350",
-                    "name":"Power Supply Module 0",
-                    "pid":"PWR-4450-AC",
-                    "sn":"DCA1645X0EK",
-                    "vid":"V01"
+                        "descr":"450W AC Power Supply for Cisco ISR4450, ISR4350",
+                        "name":"Power Supply Module 0",
+                        "pid":"PWR-4450-AC",
+                        "sn":"DCA1645X0EK",
+                        "vid":"V01"
                     }
                 }
             },
             "R0":{
                 "rp":{
                     "ISR4451-X/K9":{
-                    "descr":"Cisco ISR4451 Route Processor",
-                    "name":"module R0",
-                    "pid":"ISR4451-X/K9",
-                    "sn":"FOC17042FN5",
-                    "vid":"V01"
+                        "descr":"Cisco ISR4451 Route Processor",
+                        "name":"module R0",
+                        "pid":"ISR4451-X/K9",
+                        "sn":"FOC17042FN5",
+                        "vid":"V01"
                     }
                 }
             }
         }
-        }
+    }
 
     golden_output_1 ={'execute.return_value':'''
     NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
-PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
+    PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
 
-NAME: "Power Supply Module 0", DESCR: "450W AC Power Supply for Cisco ISR4450, ISR4350"
-PID: PWR-4450-AC , VID: V01 , SN: DCA1645X0EK
+    NAME: "Power Supply Module 0", DESCR: "450W AC Power Supply for Cisco ISR4450, ISR4350"
+    PID: PWR-4450-AC , VID: V01 , SN: DCA1645X0EK
 
-NAME: "Fan Tray", DESCR: "Cisco ISR4450, ISR4350 Fan Assembly"
-PID: ACS-4450-FANASSY , VID: , SN:
+    NAME: "Fan Tray", DESCR: "Cisco ISR4450, ISR4350 Fan Assembly"
+    PID: ACS-4450-FANASSY , VID: , SN:
 
-NAME: "module 0", DESCR: "Cisco ISR4451 Built-In NIM controller"
-PID: ISR4451-X/K9 , VID: , SN:
+    NAME: "module 0", DESCR: "Cisco ISR4451 Built-In NIM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
 
-NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
-PID: NIM-ES2-4 , VID: V01 , SN: FOC1831B0TS
+    NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
+    PID: NIM-ES2-4 , VID: V01 , SN: FOC1831B0TS
 
-NAME: "NIM subslot 0/2", DESCR: "24 ports Async Serial NIM"
-PID: NIM-24A , VID: V01 , SN: DNI2047033J
+    NAME: "NIM subslot 0/2", DESCR: "24 ports Async Serial NIM"
+    PID: NIM-24A , VID: V01 , SN: DNI2047033J
 
-NAME: "NIM subslot 0/3", DESCR: "NIM SSD Module"
-PID: NIM-SSD , VID: V01 , SN: FOC17356NWR
+    NAME: "NIM subslot 0/3", DESCR: "NIM SSD Module"
+    PID: NIM-SSD , VID: V01 , SN: FOC17356NWR
 
-NAME: "subslot 0/3 disk1", DESCR: "harddisk"
-PID: Samsung SSD 860 EVO 250GB , VID: RVT03B6Q, SN: S3Y9NX0M604745D
+    NAME: "subslot 0/3 disk1", DESCR: "harddisk"
+    PID: Samsung SSD 860 EVO 250GB , VID: RVT03B6Q, SN: S3Y9NX0M604745D
 
-NAME: "PVDM subslot 0/4", DESCR: "PVDM4-32 Voice DSP Module"
-PID: PVDM4-32 , VID: V01 , SN: FOC17176BKC
+    NAME: "PVDM subslot 0/4", DESCR: "PVDM4-32 Voice DSP Module"
+    PID: PVDM4-32 , VID: V01 , SN: FOC17176BKC
 
-NAME: "NIM subslot 0/0", DESCR: "Front Panel 4 ports Gigabitethernet Module"
-PID: ISR4451-X-4x1GE , VID: V01 , SN:
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 4 ports Gigabitethernet Module"
+    PID: ISR4451-X-4x1GE , VID: V01 , SN:
 
-NAME: "module 1", DESCR: "Cisco ISR4451 Built-In SM controller"
-PID: ISR4451-X/K9 , VID: , SN:
+    NAME: "module 1", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
 
-NAME: "module 2", DESCR: "Cisco ISR4451 Built-In SM controller"
-PID: ISR4451-X/K9 , VID: , SN:
+    NAME: "module 2", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
 
-NAME: "module R0", DESCR: "Cisco ISR4451 Route Processor"
-PID: ISR4451-X/K9 , VID: V01 , SN: FOC17042FN5
+    NAME: "module R0", DESCR: "Cisco ISR4451 Route Processor"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FOC17042FN5
 
-NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
-PID: ISR4451-X/K9 , VID: , SN:
+    NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
+    PID: ISR4451-X/K9 , VID: , SN:
     '''}
 
     def test_show_inventory_empty(self):
