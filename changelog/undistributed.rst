@@ -28,11 +28,17 @@
         * show vpn load-balancing
     * Added ShowIpLocalPool for:
         * show ip local pool {pool}
+    * Added ShowServicePolicy for:
+        * show service-policy
     * Added ShowVpnSessiondb for:
         * show vpn-sessiondb
         * show vpn-sessiondb anyconnect
         * show vpn-sessiondb anyconnect sort inactivity
         * show vpn-sessiondb webvpn
+    * Added ShowResourceUsage for:
+        * show resource usage
+    * Added ShowAspDrop for
+        * show asp drop
 
 
 --------------------------------------------------------------------------------
