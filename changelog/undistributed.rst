@@ -26,13 +26,15 @@
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
-
-* ASA
     * Added ShowVpnSessiondb for:
         * show vpn-sessiondb
         * show vpn-sessiondb anyconnect
         * show vpn-sessiondb anyconnect sort inactivity
         * show vpn-sessiondb webvpn
+    * Added ShowResourceUsage for:
+        * show resource usage
+    * Added ShowAspDrop for
+        * show asp drop
 
 
 --------------------------------------------------------------------------------
