@@ -26,10 +26,6 @@
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
-    * Added ShowIpLocalPool for:
-        * show ip local pool {pool}
-    * Added ShowServicePolicy for:
-        * show service-policy
     * Added ShowVpnSessiondb for:
         * show vpn-sessiondb
         * show vpn-sessiondb anyconnect
@@ -44,6 +40,12 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* ASA
+    * Updated ShowVPNSessionDBSummary:
+        * Added keys to the schema
+    * Updated ShowVpnSessiondbSuper:
+        * Added keys to the schema
+
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
