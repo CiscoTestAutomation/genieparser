@@ -95,6 +95,8 @@
     * Update ShowPlatformInternalHalPolicyRedirdst:
         * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
             outgoing_ifname, packets_hash as optional
+    * Update ShowSystemInternalSysmgrServiceName:
+        * Enhanced 'tag' key to support more output
 
 * IOSXR
     * Update ShowBgpInstanceSummary
