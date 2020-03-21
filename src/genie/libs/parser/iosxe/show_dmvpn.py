@@ -10,7 +10,7 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 class ShowDmvpnSchema(MetaParser):
     """
     Schema for 'show dmvpn'
-    Schema for 'show dmvpn interface <WORD>'
+    Schema for 'show dmvpn interface <interface>'
     """
 
 # These are the key-value pairs to add to the parsed dictionary
@@ -21,16 +21,18 @@ class ShowDmvpnSchema(MetaParser):
                 'type': str,
                 'peers': {
                     Any(): {
-                        'tunnel_addr': str,
-                        'state': str,
-                        'time': str,
-                        'attrb': str,
-                        'ent': str
+                        Any(): {
+                            'tunnel_addr': str,
+                            'state': str,
+                            'time': str,
+                            'attrb': str,
+                            'ent': str
                         },
-                    }
-                },
+                    },
+                }
             },
-        }
+        },
+    }
 
 
 # Python (this imports the Python re module for RegEx)
@@ -43,7 +45,7 @@ class ShowDmvpnSchema(MetaParser):
 class ShowDmvpn(ShowDmvpnSchema):
     """
     Parser for 'show dmvpn'
-    Parser for 'show dmvpn interface <WORD>'
+    Parser for 'show dmvpn interface <interface>'
     """
 
     cli_command = ['show dmvpn interface {interface}', 'show dmvpn']
@@ -69,7 +71,6 @@ class ShowDmvpn(ShowDmvpnSchema):
         p2 = re.compile(r'Type:(?P<type>(\S+)),'
                         ' +NHRP Peers:(?P<total_peers>(\d+)),$')
 
-
         # # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
         # ----- --------------- --------------- ----- -------- -----
         #     1 172.29.0.1          172.30.90.1   IKE     3w5d     S
@@ -79,9 +80,9 @@ class ShowDmvpn(ShowDmvpnSchema):
         #                          172.30.72.72    UP 00:29:40   DT1
 
         p3 = re.compile(r'(?P<ent>(\d))'
-                        ' +(?P<nbma_addr>[a-z0-9\.]+)'
-                        ' +(?P<tunnel_addr>[a-z0-9\.]+)'
-                        ' +(?P<state>(IKE|UP|NHRP))'
+                        ' +(?P<nbma_addr>[a-z0-9\.\:]+)'
+                        ' +(?P<tunnel_addr>[a-z0-9\.\:]+)'
+                        ' +(?P<state>([a-zA-Z]))'
                         ' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
                         ' +(?P<attrb>(\w)+)'
                         )
@@ -114,11 +115,18 @@ class ShowDmvpn(ShowDmvpnSchema):
             if m:
                 group = m.groupdict()
                 nbma_addr = group['nbma_addr']
-                group.pop('nbma_addr')
-                parsed_dict['dmvpn'][interface]['peers'].setdefault(
-                    nbma_addr, {})
-                parsed_dict['dmvpn'][interface]['peers'][nbma_addr].update(
-                    group)
+                if re.match("(\d+\.\d+\.\d+\.\d+)", nbma_addr):  # if ipv4
+                    group.pop('nbma_addr')
+                    parsed_dict['dmvpn'][interface]['ipv4']['peers'].setdefault(
+                        nbma_addr, {})
+                    parsed_dict['dmvpn'][interface]['ipv4']['peers'][nbma_addr].update(
+                        group)
+                else:
+                    group.pop('nbma_addr')
+                    parsed_dict['dmvpn'][interface]['ipv6']['peers'].setdefault(
+                        nbma_addr, {})
+                    parsed_dict['dmvpn'][interface]['ipv6']['peers'][nbma_addr].update(
+                        group)
                 continue
 
         return parsed_dict
