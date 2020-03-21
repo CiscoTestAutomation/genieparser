@@ -10,7 +10,7 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 class ShowDmvpnSchema(MetaParser):
     """
     Schema for 'show dmvpn'
-    Schema for 'show dmvpn interface <WORD>'
+    Schema for 'show dmvpn interface <interface>'
     """
 
 # These are the key-value pairs to add to the parsed dictionary
@@ -26,11 +26,11 @@ class ShowDmvpnSchema(MetaParser):
                         'time': str,
                         'attrb': str,
                         'ent': str
-                        },
-                    }
-                },
+                    },
+                }
             },
-        }
+        },
+    }
 
 
 # Python (this imports the Python re module for RegEx)
@@ -43,7 +43,7 @@ class ShowDmvpnSchema(MetaParser):
 class ShowDmvpn(ShowDmvpnSchema):
     """
     Parser for 'show dmvpn'
-    Parser for 'show dmvpn interface <WORD>'
+    Parser for 'show dmvpn interface <interface>'
     """
 
     cli_command = ['show dmvpn interface {interface}', 'show dmvpn']
@@ -68,7 +68,6 @@ class ShowDmvpn(ShowDmvpnSchema):
         p1 = re.compile(r'Interface: +(?P<interface>(\S+)),')
         p2 = re.compile(r'Type:(?P<type>(\S+)),'
                         ' +NHRP Peers:(?P<total_peers>(\d+)),$')
-
 
         # # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
         # ----- --------------- --------------- ----- -------- -----
