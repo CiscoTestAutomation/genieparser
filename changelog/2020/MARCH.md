@@ -9,7 +9,7 @@
 * IOSXE
     * Added ShowDmvpn for:
         * show dmvpn
-        * dmvpn interface {interface}
+        * show dmvpn interface {interface}
 
 
 --------------------------------------------------------------------------------
