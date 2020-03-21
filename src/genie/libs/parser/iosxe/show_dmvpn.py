@@ -21,11 +21,13 @@ class ShowDmvpnSchema(MetaParser):
                 'type': str,
                 'peers': {
                     Any(): {
-                        'tunnel_addr': str,
-                        'state': str,
-                        'time': str,
-                        'attrb': str,
-                        'ent': str
+                        Any(): {
+                            'tunnel_addr': str,
+                            'state': str,
+                            'time': str,
+                            'attrb': str,
+                            'ent': str
+                        },
                     },
                 }
             },
@@ -78,9 +80,9 @@ class ShowDmvpn(ShowDmvpnSchema):
         #                          172.30.72.72    UP 00:29:40   DT1
 
         p3 = re.compile(r'(?P<ent>(\d))'
-                        ' +(?P<nbma_addr>[a-z0-9\.]+)'
-                        ' +(?P<tunnel_addr>[a-z0-9\.]+)'
-                        ' +(?P<state>(IKE|UP|NHRP))'
+                        ' +(?P<nbma_addr>[a-z0-9\.\:]+)'
+                        ' +(?P<tunnel_addr>[a-z0-9\.\:]+)'
+                        ' +(?P<state>[a-zA-Z]+)'
                         ' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
                         ' +(?P<attrb>(\w)+)'
                         )
@@ -97,7 +99,6 @@ class ShowDmvpn(ShowDmvpnSchema):
                 interface = (group['interface'])
                 parsed_dict.setdefault('dmvpn', {}).setdefault(
                     interface, {}).setdefault('peers', {})
-                # parsed_dict['dmvpn'][interface].update
                 continue
 
             # Processes the matched line | Type:Spoke, NHRP Peers:1,
@@ -114,10 +115,17 @@ class ShowDmvpn(ShowDmvpnSchema):
                 group = m.groupdict()
                 nbma_addr = group['nbma_addr']
                 group.pop('nbma_addr')
-                parsed_dict['dmvpn'][interface]['peers'].setdefault(
-                    nbma_addr, {})
-                parsed_dict['dmvpn'][interface]['peers'][nbma_addr].update(
-                    group)
+                
+                if re.match(r'\d+\.\d+\.\d+\.\d+', nbma_addr):  # ipv4
+                    parsed_dict['dmvpn'][interface]['peers'].setdefault('ipv4', {}).setdefault(
+                        nbma_addr, {})
+                    parsed_dict['dmvpn'][interface]['peers']['ipv4'][nbma_addr].update(
+                        group)
+                else:
+                    parsed_dict['dmvpn'][interface]['peers'].setdefault('ipv6', {}).setdefault(
+                        nbma_addr, {})
+                    parsed_dict['dmvpn'][interface]['peers']['ipv6'][nbma_addr].update(
+                        group)
                 continue
 
         return parsed_dict

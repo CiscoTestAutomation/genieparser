@@ -26,12 +26,14 @@ class TestShowDmvpn(unittest.TestCase):
         'dmvpn': {
             'Tunnel84': {
                 'peers': {
-                    '172.30.84.1': {
-                        'attrb': 'SC',
-                        'ent': '1',
-                        'state': 'NHRP',
-                        'time': 'never',
-                        'tunnel_addr': '172.29.0.1',
+                    'ipv4' : {
+                        '172.30.84.1': {
+                            'attrb': 'SC',
+                            'ent': '1',
+                            'state': 'NHRP',
+                            'time': 'never',
+                            'tunnel_addr': '172.29.0.1',
+                        },
                     },
                 },
                 'total_peers': '1',
@@ -39,26 +41,28 @@ class TestShowDmvpn(unittest.TestCase):
             },
             'Tunnel90': {
                 'peers': {
-                    '172.29.0.1': {
-                        'attrb': 'S',
-                        'ent': '1',
-                        'state': 'IKE',
-                        'time': '3w5d',
-                        'tunnel_addr': '172.30.90.1',
-                    },
-                    '172.29.0.2': {
-                        'attrb': 'S',
-                        'ent': '1',
-                        'state': 'UP',
-                        'time': '6d12h',
-                        'tunnel_addr': '172.30.90.2',
-                    },
-                    '172.29.134.1': {
-                        'attrb': 'DT2',
-                        'ent': '2',
-                        'state': 'UP',
-                        'time': '00:29:40',
-                        'tunnel_addr': '172.30.72.72',
+                    'ipv4' : {
+                        '172.29.0.1': {
+                            'attrb': 'S',
+                            'ent': '1',
+                            'state': 'IKE',
+                            'time': '3w5d',
+                            'tunnel_addr': '172.30.90.1',
+                        },
+                        '172.29.0.2': {
+                            'attrb': 'S',
+                            'ent': '1',
+                            'state': 'UP',
+                            'time': '6d12h',
+                            'tunnel_addr': '172.30.90.2',
+                        },
+                        '172.29.134.1': {
+                            'attrb': 'DT2',
+                            'ent': '2',
+                            'state': 'UP',
+                            'time': '00:29:40',
+                            'tunnel_addr': '172.30.72.72',
+                        },
                     },
                 },
                 'total_peers': '3',
