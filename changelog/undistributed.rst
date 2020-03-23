@@ -47,6 +47,7 @@
 * ASA
     * Updated ShowVPNSessionDBSummary:
         * Added keys to the schema
+        * Moved show command 'show vpn-sessiondb' into this class
     * Updated ShowVpnSessiondbSuper:
         * Added keys to the schema
 
