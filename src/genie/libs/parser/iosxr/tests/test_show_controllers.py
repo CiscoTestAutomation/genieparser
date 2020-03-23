@@ -10,6 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxr.show_controllers import (ShowControllersCoherentDSP,
                                                      ShowControllersOptics,
                                                      ShowControllersFiaDiagshellL2showLocation,
+                                                     ShowControllersNpuInterfaceInstanceLocation,
                                                      )
 
 
@@ -660,6 +661,69 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+
+# =========================================================================================================
+#  Unit test for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =========================================================================================================
+class TestShowControllersNpuInterfaceInstanceLocation(unittest.TestCase):
+    '''Unit test for:
+        * 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+    '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'node_id': {
+            '0/0/CPU0': {
+                'interface': {
+                    'GigabitEthernet0/0/0/0': {
+                        'flow_base': 5384,
+                        'interface_handle_hex': 108,
+                        'npu_core': 0,
+                        'npu_number': 0,
+                        'port_speed': '1G',
+                        'pp_port': 33,
+                        'sys_port': 33,
+                        'voq_base': 1024,
+                        'voq_port_type': 'local',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        show controllers npu voq-usage interface GigabitEthernet0/0/0/0 instance all location all
+        Mon Mar 23 13:11:55.030 UTC
+        
+        -------------------------------------------------------------------
+        Node ID: 0/0/CPU0
+        Intf         Intf     NPU NPU  PP   Sys   VOQ   Flow   VOQ    Port
+        name         handle    #  core Port Port  base  base   port   speed
+                    (hex)                                     type
+        ----------------------------------------------------------------------
+        Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+        Not supported on this location 0/RP0/CPU0 or Data not found
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowControllersNpuInterfaceInstanceLocation(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(npu='voq-usage',
+                interface='GigabitEthernet0/0/0/0',
+                instance='all',
+                location='all')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowControllersNpuInterfaceInstanceLocation(device=self.device)
+        parsed_output = obj.parse(npu='voq-usage',
+                interface='GigabitEthernet0/0/0/0',
+                instance='all',
+                location='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 if __name__ == '__main__':
     unittest.main()
