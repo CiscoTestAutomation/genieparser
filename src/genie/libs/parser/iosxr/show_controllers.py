@@ -5,6 +5,7 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers npu {npu} interface {interface} instance {instance} location {location}
 '''
 
 # Python

@@ -8,6 +8,9 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
