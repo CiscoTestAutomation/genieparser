@@ -41,12 +41,12 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
                     'cumulative': int,
                     'peak_concurrent': int,
                     Optional('inactive'): int,
-                    Optional('ssl_tls_dtls'): {
+                    Any(): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                    }
+                    },
                 },
                 Optional('load_balancing_encryption'): {
                     'active': int,
@@ -66,6 +66,18 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
                     'peak_concurrent': int,
                     Optional('inactive'): int,
                     Optional('browser'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    }
+                },
+                Optional('site_to_site_vpn'): {
+                    'active': int,
+                    'cumulative': int,
+                    'peak_concurrent': int,
+                    Optional('inactive'): int,
+                    Optional('ikev2_ipsec'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
@@ -140,16 +152,12 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
         # Load Balancing(Encryption)   :      0 :          6 :           1
         # AnyConnect Client            :    127 :        432 :         205 :        0
         # Clientless VPN               :   2    :     125    :            6
-        p1 = re.compile(r'^(?P<name>(Load Balancing\(Encryption\))|'
+        # Site-to-Site VPN             :     29 :         59 :          29
+        p1 = re.compile(r'^(?P<name>(Load Balancing\(Encryption\))|(Site-to-Site VPN)|'
                         r'(IKEv1 +IPsec\/L2TP +IPsec)|(AnyConnect Client)|'
                         r'(Clientless VPN)) +: +(?P<active>\d+) *: '
                         r'+(?P<cumulative>\d+) *: +(?P<peak_concurrent>\d+)'
                         r'( *: +(?P<inactive>\d+))?$')
-
-        # Total Active and Inactive    :      2             Total Cumulative :      8
-        p3 = re.compile(r'^Total +Active +and +Inactive +: +'
-                        r'(?P<total_active_and_inactive>\d+) +Total +Cumulative +: +'
-                        r'(?P<total_cumulative>\d+)$')
 
         # Device Total VPN Capacity    :    250
         p4 = re.compile(r'^Device +Total +VPN +Capacity +: +'
@@ -160,7 +168,8 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
 
         # SSL/TLS/DTLS               :    127 :        432 :         205 :        0
         # Browser                    :   2    :     125    :            6
-        p7 = re.compile(r'^(?P<name>(SSL/TLS/DTLS)|(Browser)) +:'
+        # IKEv2 IPsec                :     29 :         59 :          29
+        p7 = re.compile(r'^(?P<name>(SSL/TLS/DTLS)|(Browser)|(IKEv2 IPsec)) +:'
                         r' +(?P<active>\d+) *: +(?P<cumulative>\d+) *:'
                         r' +(?P<peak_concurrent>\d+)( *: +(?P<inactive>\d+))?$')
 
@@ -172,9 +181,6 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
         # Device Total VPN Capacity    :   5000
         p2_6 = re.compile(r'^Device\s+Total\s+VPN\s+Capacity\s+:'
                           r'\s+(?P<device_total_vpn_capacity>\d+)$')
-
-        # Device Load                  :     0%
-        p2_7 = re.compile(r'^Device +Load +: +(?P<device_load>\d+)\%$')
 
         # -------------------------------------------------------------------
         # tunnels
@@ -199,12 +205,14 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             # Load Balancing(Encryption)   :      0 :          6 :           1
             # AnyConnect Client            :    127 :        432 :         205 :        0
             # Clientless VPN               :   2    :     125    :            6
+            # Site-to-Site VPN             :     29 :         59 :          29
             m = p1.match(line)
             if m:
                 names = {'IKEv1 IPsec/L2TP IPsec'       :  'ikev1_ipsec_l2tp_ip_sec',
                          'Load Balancing(Encryption)'   :   'load_balancing_encryption',
                          'AnyConnect Client'            :   'anyconnect_client',
-                         'Clientless VPN'               :   'clientless_vpn'}
+                         'Clientless VPN'               :   'clientless_vpn',
+                         'Site-to-Site VPN'             :   'site_to_site_vpn'}
 
                 group = m.groupdict()
                 name = names[group['name']]
@@ -223,6 +231,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
 
             # SSL/TLS/DTLS               :    127 :        432 :         205 :        0
             # Browser                    :   2    :     125    :            6
+            # IKEv2 IPsec                :     29 :         59 :          29
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -232,6 +241,11 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                     curr_dict = vpn_session_dict['anyconnect_client'].setdefault('ssl_tls_dtls', {})
                 elif name == 'Browser':
                     curr_dict = vpn_session_dict['clientless_vpn'].setdefault('browser', {})
+                elif name == 'IKEv2 IPsec':
+                    if 'site_to_site_vpn' in vpn_session_dict:
+                        curr_dict = vpn_session_dict['site_to_site_vpn'].setdefault('ikev2_ipsec', {})
+                    else:
+                        curr_dict = vpn_session_dict['anyconnect_client'].setdefault('ikev2_ipsec', {})
 
                 for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
                     if group[k]:

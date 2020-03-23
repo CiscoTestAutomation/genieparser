@@ -73,8 +73,11 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
                                  ----------------------------------------------
     AnyConnect Client            :    127 :        432 :         205 :        0
       SSL/TLS/DTLS               :    127 :        432 :         205 :        0
+      IKEv2 IPsec                :      8 :         17 :           8 :        0
     Clientless VPN               :      0 :          1 :           1
       Browser                    :      0 :          1 :           1
+    Site-to-Site VPN             :     29 :         59 :          29
+      IKEv2 IPsec                :     29 :         59 :          29
     ---------------------------------------------------------------------------
     Total Active and Inactive    :    127             Total Cumulative :    432
     Device Total VPN Capacity    :   5000
@@ -135,6 +138,12 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
                         'inactive': 0,
                         'peak_concurrent': 205,
                     },
+                    'ikev2_ipsec': {
+                        'active': 8,
+                        'cumulative': 17,
+                        'inactive': 0,
+                        'peak_concurrent': 8
+                    },
                 },
                 'clientless_vpn': {
                     'active': 0,
@@ -145,6 +154,16 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
                     },
                     'cumulative': 1,
                     'peak_concurrent': 1,
+                },
+                'site_to_site_vpn': {
+                    'active': 29,
+                    'cumulative': 59,
+                    'ikev2_ipsec': {
+                        'active': 29,
+                        'cumulative': 59,
+                        'peak_concurrent': 29
+                    },
+                    'peak_concurrent': 29
                 },
                 'device_load': 0.0,
                 'device_total_vpn_capacity': 5000,
