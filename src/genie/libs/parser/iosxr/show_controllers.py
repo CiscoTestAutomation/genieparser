@@ -977,7 +977,9 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
 # vim: ft=python ts=8 sw=4 et
 
-# show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+# =====================================================================================
+# Schema for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
 class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
     schema = {
         'node_id': {
@@ -998,7 +1000,7 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
     }
 
 # =====================================================================================
-# Schema for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# Parser for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
 # =====================================================================================
 class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema):
     cli_command = 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
@@ -1048,4 +1050,5 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
                 port_dict.update({'core': int(group['core'])})
                 port_dict.update({'tm_port': int(group['tm_port'])})
                 continue
+            
         return ret_dict
