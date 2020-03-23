@@ -14,6 +14,9 @@
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
+* IOSXR 
+    * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
+        * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary

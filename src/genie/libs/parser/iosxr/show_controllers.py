@@ -5,6 +5,7 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
 # Python
@@ -1003,11 +1004,13 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
 # Parser for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
 # =====================================================================================
 class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema):
-    cli_command = 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
-    def cli(self, output=None):
+    cli_command = 'show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}'
+    def cli(self, diagshell_unit=0, location='all', output=None):
         
         if not output:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(diagshell_unit=diagshell_unit,
+                        location=location)
+            out = self.device.execute(cmd)
         else:
             out = output
         
@@ -1050,5 +1053,5 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
                 port_dict.update({'core': int(group['core'])})
                 port_dict.update({'tm_port': int(group['tm_port'])})
                 continue
-            
+
         return ret_dict
