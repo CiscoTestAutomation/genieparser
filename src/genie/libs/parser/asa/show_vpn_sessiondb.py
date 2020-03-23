@@ -486,13 +486,9 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
 
         # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256
         # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
-        p25 = re.compile(r'^Encryption\s+:\s+(?P<protocol>\S+):\s+(?P<encryption>\S+)'
-                         r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
-                         r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
-
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
-        p26 = re.compile(r'^Hashing\s+:\s+(?P<protocol>\S+):\s+(?P<hashing>\S+)'
+        p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<encryption>\S+)'
                          r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
                          r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
 
@@ -579,20 +575,13 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
 
             # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256
             # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
+            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
+            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                for k in ['encryption', 'ssl_tunnel', 'dtls_tunnel']:
-                    if group[k]:
-                        index_dict[k] = group[k]
-                continue
-
-            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
-            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
-            m = p26.match(line)
-            if m:
-                group = m.groupdict()
-                for k in ['hashing', 'ssl_tunnel', 'dtls_tunnel']:
+                name = group['name'].lower()
+                for k in [name, 'ssl_tunnel', 'dtls_tunnel']:
                     if group[k]:
                         index_dict[k] = group[k]
                 continue
