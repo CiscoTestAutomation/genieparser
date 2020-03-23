@@ -976,3 +976,76 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         return result_dict
 
 # vim: ft=python ts=8 sw=4 et
+
+# show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'egq_mapping': {
+                    'port_number': {
+                        Any(): {
+                            'priorities': int,
+                            'base_q_pair': int,
+                            'ps_number': int,
+                            'core': int,
+                            'tm_port': int,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================================================
+# Schema for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema):
+    cli_command = 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+    def cli(self, output=None):
+        
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+
+        # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+        # ---------|--------------|---------------|---------|------|---------|
+        # 0    |       2      |      200      |    25   |   0  |     0   |
+        p2 = re.compile(r'^(?P<port_number>\d+) +\| +(?P<priorities>\d+) +\| +'
+                        r'(?P<base_q_pair>\d+) +\| +(?P<ps_number>\d+) +\| +'
+                        r'(?P<core>\d+) +\| +(?P<tm_port>\d+) +\|$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id = group['node_id']
+                egq_mapping_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(node_id, {}). \
+                    setdefault('egq_mapping', {})
+                continue
+            
+            # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+            # ---------|--------------|---------------|---------|------|---------|
+            # 0    |       2      |      200      |    25   |   0  |     0   |
+            m = p2.match(line)
+            if m:
+                group =  m.groupdict()
+                port_dict = egq_mapping_dict.setdefault('port_number', {}). \
+                    setdefault(int(group['port_number']), {})
+                port_dict.update({'priorities': int(group['priorities'])})
+                port_dict.update({'base_q_pair': int(group['base_q_pair'])})
+                port_dict.update({'ps_number': int(group['ps_number'])})
+                port_dict.update({'core': int(group['core'])})
+                port_dict.update({'tm_port': int(group['tm_port'])})
+                continue
+        return ret_dict
