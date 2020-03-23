@@ -30,85 +30,89 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
     """
 
     schema = {
-        'session': {
+        'summary': {
             'vpn_session': {
                 'total_active_and_inactive': int,
                 'total_cumulative': int,
                 Optional('device_total_vpn_capacity'): int,
                 Optional('device_load'): float,
-                Optional('anyconnect_client'): {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                    Any(): {
+                'session': {
+                    Optional('anyconnect_client'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                        Any(): {
+                            'active': int,
+                            'cumulative': int,
+                            'peak_concurrent': int,
+                            Optional('inactive'): int,
+                        },
+                    },
+                    Optional('load_balancing_encryption'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                },
-                Optional('load_balancing_encryption'): {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                },
-                Optional('ikev1_ipsec_l2tp_ip_sec'): {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                },
-                Optional('clientless_vpn'): {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                    Optional('browser'): {
+                    Optional('ikev1_ipsec_l2tp_ip_sec'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                    }
-                },
-                Optional('site_to_site_vpn'): {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                    Optional('ikev2_ipsec'): {
+                    },
+                    Optional('clientless_vpn'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                    }
+                        Optional('browser'): {
+                            'active': int,
+                            'cumulative': int,
+                            'peak_concurrent': int,
+                            Optional('inactive'): int,
+                        }
+                    },
+                    Optional('site_to_site_vpn'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                        Optional('ikev2_ipsec'): {
+                            'active': int,
+                            'cumulative': int,
+                            'peak_concurrent': int,
+                            Optional('inactive'): int,
+                        }
+                    },
                 },
             },
             Optional('tunnels'): {
-                'clientless': {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                },
-                'anyconnect_parent': {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                },
-                'ssl_tunnel': {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
-                },
-                'dtls_tunnel': {
-                    'active': int,
-                    'cumulative': int,
-                    'peak_concurrent': int,
-                    Optional('inactive'): int,
+                'session': {
+                    'clientless': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'anyconnect_parent': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'ssl_tunnel': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'dtls_tunnel': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
                 },
                 'totals': {
                     'active': int,
@@ -217,15 +221,16 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 group = m.groupdict()
                 name = names[group['name']]
 
-                curr_dict = ret_dict.setdefault('session', {}).\
+                curr_dict = ret_dict.setdefault('summary', {}).\
                                      setdefault('vpn_session', {}).\
+                                     setdefault('session', {}).\
                                      setdefault(name, {})
 
                 for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
                     if group[k]:
                         curr_dict[k] = int(group[k])
                         
-                vpn_session_dict = ret_dict['session']['vpn_session']
+                vpn_session_dict = ret_dict['summary']['vpn_session']['session']
                         
                 continue
 
@@ -259,7 +264,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 group = m.groupdict()
                 for k in ['total_active_and_inactive', 'total_cumulative', 'device_total_vpn_capacity']:
                     if group.get(k):
-                        vpn_session_dict[k] = int(group.get(k))
+                        ret_dict['summary']['vpn_session'][k] = int(group.get(k))
                 continue
 
             # Device Total VPN Capacity    :    250
@@ -267,7 +272,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_total_vpn_capacity = int(group['device_total_vpn_capacity'])
-                vpn_session_dict['device_total_vpn_capacity'] = device_total_vpn_capacity
+                ret_dict['summary']['vpn_session']['device_total_vpn_capacity'] = device_total_vpn_capacity
                 continue
 
             # Device Load                  :     1%
@@ -275,7 +280,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_load = int(group['device_load'])/100
-                vpn_session_dict['device_load'] = device_load
+                ret_dict['summary']['vpn_session']['device_load'] = device_load
                 continue
 
             # -------------------------------------------------------------------
@@ -290,8 +295,13 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 name = group['name'].lower().replace('-', '_')
-                tunnels_dict = ret_dict['session'].setdefault('tunnels', {}).\
-                                                   setdefault(name, {})
+                if name == 'totals':
+                    tunnels_dict = ret_dict['summary'].setdefault('tunnels', {}). \
+                                                       setdefault('totals', {})
+                else:
+                    tunnels_dict = ret_dict['summary'].setdefault('tunnels', {}).\
+                                                       setdefault('session', {}).\
+                                                       setdefault(name, {})
 
                 for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
                     if group[k]:
@@ -488,7 +498,7 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
         # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
-        p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<encryption>\S+)'
+        p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<value>\S+)'
                          r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
                          r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
 
@@ -581,7 +591,8 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
             if m:
                 group = m.groupdict()
                 name = group['name'].lower()
-                for k in [name, 'ssl_tunnel', 'dtls_tunnel']:
+                index_dict[name] = group['value']
+                for k in ['ssl_tunnel', 'dtls_tunnel']:
                     if group[k]:
                         index_dict[k] = group[k]
                 continue
