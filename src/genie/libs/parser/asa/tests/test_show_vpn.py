@@ -110,6 +110,5 @@ class TestShowVPNLoadBalancing(unittest.TestCase):
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
 if __name__ == '__main__':
     unittest.main()

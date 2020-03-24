@@ -249,6 +249,7 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
+<<<<<<< HEAD
         self.device = Mock(**self.golden_output)
         route_obj = ShowVPNSessionDBSummary(device=self.device)
         parsed_output = route_obj.parse()
@@ -266,6 +267,14 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+=======
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        route_obj = ShowVpnSessiondb(device=self.device)
+        parsed_output = route_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+>>>>>>> ae6c68e9a75a2cc18b8e8f5c0842db668d4f6b0a
 
 # ============================================
 # unit test for
@@ -461,6 +470,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         },
     }
 
+<<<<<<< HEAD
     # show vpn-sessiondb anyconnect
     golden_output_4 = {'execute.return_value': '''
     Session Type: AnyConnect
@@ -589,6 +599,8 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
     },
 }
 
+=======
+>>>>>>> ae6c68e9a75a2cc18b8e8f5c0842db668d4f6b0a
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVpnSessiondbAnyconnect(device=self.device)
@@ -609,6 +621,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+<<<<<<< HEAD
     def test_golden_4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
@@ -616,6 +629,8 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
+=======
+>>>>>>> ae6c68e9a75a2cc18b8e8f5c0842db668d4f6b0a
 
 # =============================================
 # Unit test for
@@ -683,14 +698,22 @@ class TestShowVpnSessiondbWebvpn(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
+<<<<<<< HEAD
         obj = ShowVpnSessiondbWebvpn(device=self.device)
+=======
+        obj = ShowVpnSessiondbAnyconnect(device=self.device)
+>>>>>>> ae6c68e9a75a2cc18b8e8f5c0842db668d4f6b0a
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
+<<<<<<< HEAD
         route_obj = ShowVpnSessiondbWebvpn(device=self.device)
+=======
+        route_obj = ShowVpnSessiondb(device=self.device)
+>>>>>>> ae6c68e9a75a2cc18b8e8f5c0842db668d4f6b0a
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
