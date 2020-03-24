@@ -1059,6 +1059,31 @@ class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiag
         return ret_dict
 
 # =====================================================================================================
+# Schema for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =====================================================================================================
+class ShowControllersNpuInterfaceInstanceLocationSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'interface_handle_hex': int,
+                        'npu_number': int,
+                        'npu_core': int,
+                        'pp_port': int,
+                        'sys_port': int,
+                        'voq_base': int,
+                        'flow_base': int,
+                        'voq_port_type': str,
+                        'port_speed': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================================================================
 # Parser for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
 # =====================================================================================================
 class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceInstanceLocationSchema):
@@ -1125,5 +1150,5 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
                 interface_dict.update({'port_speed': port_speed})
                 continue
         return ret_dict
-        
+
 # vim: ft=python ts=8 sw=4 et
