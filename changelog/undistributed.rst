@@ -23,6 +23,8 @@
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
+    * Added ShowPlatformIntegrity for
+        * show platform integrity
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
