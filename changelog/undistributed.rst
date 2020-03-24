@@ -12,15 +12,17 @@
     * Added ShowControllersNpuInterfaceInstanceLocation for:
         * show controllers npu {npu} interface {interface} instance {instance} location {location}
     * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
-        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+    * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
+        * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+    * Added ShowInstallSummary for 
+        * show install summary
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
-    * Added ShowInstallSummary for 
-        * show install summary
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
