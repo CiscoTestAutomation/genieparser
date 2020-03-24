@@ -5,11 +5,12 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
 # Python
 import re
-import logging
+from genie.libs.parser.utils.common import Common
 
 # Genie
 from genie.metaparser import MetaParser
@@ -975,4 +976,270 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
         return result_dict
 
+# ===============================================================================
+# Schema for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+# ===============================================================================
+class ShowControllersFiaDiagshellDiagEgrCalendarsLocationSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'port': {
+                    Any(): {
+                        'priority': str,
+                        'high_calendar': int,
+                        'low_calendar': int,
+                        'egq_if': int,
+                        'e2e_if': int,
+                        'egq_port_rate': int,
+                        'egq_if_rate': int,
+                        'e2e_port_rate': int,
+                        'e2e_if_rate': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ===============================================================================
+# Parser for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+# ===============================================================================
+class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiagshellDiagEgrCalendarsLocationSchema):
+
+    cli_command = 'show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}'
+
+    def cli(self, diagshell, location, output=None):
+        if not output:
+            cmd = self.cli_command.format(diagshell=diagshell,
+                    location=location)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+
+        # 0  |    LOW   |       255     |        4     |   28   |    4   |      336671   |     990000  |      350000   |    1050000
+        p2 = re.compile(r'^(?P<port>\d+) +\| +(?P<priority>\S+) +\| +'
+                r'(?P<high_calendar>\d+) +\| +(?P<low_calendar>\d+) +\| +'
+                r'(?P<egq_if>\d+) +\| +(?P<e2e_if>\d+) +\| +(?P<egq_port_rate>\d+) +\| +'
+                r'(?P<egq_if_rate>\d+) +\| +(?P<e2e_port_rate>\d+) +\| +'
+                r'(?P<e2e_if_rate>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id = group['node_id']
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(node_id, {})
+                continue
+            
+            # 0  |    LOW   |       255     |        4     |   28   |    4   |      336671   |     990000  |      350000   |    1050000
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                priority = group['priority']
+                port_dict = node_id_dict.setdefault('port', {}). \
+                    setdefault(int(group['port']), {})
+                port_dict.update({'priority': group['priority']})
+                port_dict.update({'high_calendar': int(group['high_calendar'])})
+                port_dict.update({'low_calendar': int(group['low_calendar'])})
+                port_dict.update({'egq_if': int(group['egq_if'])})
+                port_dict.update({'e2e_if': int(group['e2e_if'])})
+                port_dict.update({'egq_port_rate': int(group['egq_port_rate'])})
+                port_dict.update({'egq_if_rate': int(group['egq_if_rate'])})
+                port_dict.update({'e2e_port_rate': int(group['e2e_port_rate'])})
+                port_dict.update({'e2e_if_rate': int(group['e2e_if_rate'])})
+                continue
+
+        return ret_dict
+
+# =====================================================================================================
+# Schema for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =====================================================================================================
+class ShowControllersNpuInterfaceInstanceLocationSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'interface_handle_hex': int,
+                        'npu_number': int,
+                        'npu_core': int,
+                        'pp_port': int,
+                        'sys_port': int,
+                        'voq_base': int,
+                        'flow_base': int,
+                        'voq_port_type': str,
+                        'port_speed': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================================================================
+# Parser for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =====================================================================================================
+class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceInstanceLocationSchema):
+    cli_command = 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+
+    def cli(self, npu, interface, instance, location, output=None):
+
+        ret_dict = {}
+
+        if not output:
+            cmd = self.cli_command.format(npu=npu,
+                interface=interface,
+                instance=instance,
+                location=location
+            )
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+        # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>\d+) +'
+                r'(?P<npu_number>\d+) +(?P<npu_core>\d+) +(?P<pp_port>\d+) +'
+                r'(?P<sys_port>\d+) +(?P<voq_base>\d+) +(?P<flow_base>\d+) +'
+                r'(?P<voq_port_type>\S+) +(?P<port_speed>\S+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(group['node_id'], {})
+                continue
+            
+            # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface = Common.convert_intf_name(interface)
+                interface_handle_hex = int(group['interface_handle_hex'])
+                npu_number = int(group['npu_number'])
+                npu_core = int(group['npu_core'])
+                pp_port = int(group['pp_port'])
+                sys_port = int(group['sys_port'])
+                voq_base = int(group['voq_base'])
+                flow_base = int(group['flow_base'])
+                voq_port_type = group['voq_port_type']
+                port_speed = group['port_speed']
+                interface_dict = node_id_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'interface_handle_hex': interface_handle_hex})
+                interface_dict.update({'npu_number': npu_number})
+                interface_dict.update({'npu_core': npu_core})
+                interface_dict.update({'pp_port': pp_port})
+                interface_dict.update({'sys_port': sys_port})
+                interface_dict.update({'voq_base': voq_base})
+                interface_dict.update({'flow_base': flow_base})
+                interface_dict.update({'voq_port_type': voq_port_type})
+                interface_dict.update({'port_speed': port_speed})
+                continue
+        return ret_dict
+
+# =====================================================================================
+# Schema for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'mapping': {
+                    Any(): {
+                        'port_number': {
+                            Any(): {
+                                'priorities': int,
+                                'base_q_pair': int,
+                                'ps_number': int,
+                                'core': int,
+                                'tm_port': int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================================================
+# Parser for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema):
+    cli_command = 'show controllers fia diagshell {unit} "diag cosq qpair egq map" location {location}'
+    def cli(self, unit=0, location='all', output=None):
+        
+        if not output:
+            cmd = self.cli_command.format(unit=unit,
+                        location=location)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+
+        # EGQ MAPPING:
+        p2 = re.compile(r'^(?P<mapping>[\S ]+):$')
+
+        # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+        # ---------|--------------|---------------|---------|------|---------|
+        # 0    |       2      |      200      |    25   |   0  |     0   |
+        p3 = re.compile(r'^(?P<port_number>\d+) +\| +(?P<priorities>\d+) +\| +'
+                        r'(?P<base_q_pair>\d+) +\| +(?P<ps_number>\d+) +\| +'
+                        r'(?P<core>\d+) +\| +(?P<tm_port>\d+) +\|$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id = group['node_id']
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(node_id, {})
+                continue
+            
+            # EGQ MAPPING:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                mapping_dict = node_id_dict.setdefault('mapping', {}). \
+                    setdefault(group['mapping'], {})
+                continue
+            
+            # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+            # ---------|--------------|---------------|---------|------|---------|
+            # 0    |       2      |      200      |    25   |   0  |     0   |
+            m = p3.match(line)
+            if m:
+                group =  m.groupdict()
+                port_dict = mapping_dict.setdefault('port_number', {}). \
+                    setdefault(int(group['port_number']), {})
+                port_dict.update({'priorities': int(group['priorities'])})
+                port_dict.update({'base_q_pair': int(group['base_q_pair'])})
+                port_dict.update({'ps_number': int(group['ps_number'])})
+                port_dict.update({'core': int(group['core'])})
+                port_dict.update({'tm_port': int(group['tm_port'])})
+                continue
+
+        return ret_dict
+        
 # vim: ft=python ts=8 sw=4 et

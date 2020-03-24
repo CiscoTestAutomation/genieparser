@@ -8,6 +8,15 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
+    * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+    * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
+        * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+    * Added ShowInstallSummary for 
+        * show install summary
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
@@ -24,13 +33,35 @@
         * show interface status
         * show interface {interface} status
 * ASA 
+    * Added ShowVPNSessionDBSummary for:
+        * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
         * show vpn load-balancing
+    * Added ShowIpLocalPool for:
+        * show ip local pool {pool}
+    * Added ShowServicePolicy for:
+        * show service-policy
+    * Added ShowVpnSessiondb for:
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
+    * Added ShowResourceUsage for:
+        * show resource usage
+    * Added ShowAspDrop for
+        * show asp drop
 
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* ASA
+    * Updated ShowVPNSessionDBSummary:
+        * Added keys to the schema
+        * Moved show command 'show vpn-sessiondb' into this class
+    * Updated ShowVpnSessiondbSuper:
+        * Added keys to the schema
+
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
@@ -82,6 +113,12 @@
     * Update ShowPlatformInternalHalPolicyRedirdst:
         * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
             outgoing_ifname, packets_hash as optional
+    * Update ShowSystemInternalSysmgrServiceName:
+        * Enhanced 'tag' key to support more output
+
+* IOSXR
+    * Update ShowBgpInstanceSummary
+        * Update regex to support various output
 
 --------------------------------------------------------------------------------
                                 common.py

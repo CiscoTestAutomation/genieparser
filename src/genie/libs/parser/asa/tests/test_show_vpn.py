@@ -9,13 +9,15 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 from genie.libs.parser.asa.show_vpn import ShowVPNLoadBalancing
 
+
 # ============================================
 # unit test for 'show vpn load-balancing'
 # =============================================
 class TestShowVPNLoadBalancing(unittest.TestCase):
-    '''
-       unit test for show vpn load-balancing
-    '''
+    """
+    unit test for show vpn load-balancing
+    """
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     maxDiff = None

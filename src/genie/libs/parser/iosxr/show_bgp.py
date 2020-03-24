@@ -4503,7 +4503,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                         ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
-                        ' *(?P<address_family>[a-zA-Z0-9\s]+)$')
+                        ' *(?P<address_family>[\S\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
                         ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'

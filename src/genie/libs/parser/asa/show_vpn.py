@@ -1,8 +1,8 @@
-''' show_vpn.py
-
+"""
+show_vpn.py
 Parser for the following show commands:
     * show vpn load-balancing
-'''
+"""
 
 # Python
 import re
