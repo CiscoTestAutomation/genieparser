@@ -1090,14 +1090,6 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
     cli_command = 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
 
     def cli(self, npu, interface, instance, location, output=None):
-        
-        # Node ID: 0/0/CPU0
-        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
-        # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
-        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>\d+) +'
-                r'(?P<npu_number>\d+) +(?P<npu_core>\d+) +(?P<pp_port>\d+) +'
-                r'(?P<sys_port>\d+) +(?P<voq_base>\d+) +(?P<flow_base>\d+) +'
-                r'(?P<voq_port_type>\S+) +(?P<port_speed>\S+)$')
 
         ret_dict = {}
 
@@ -1110,6 +1102,14 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
             out = self.device.execute(cmd)
         else:
             out = output
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+        # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>\d+) +'
+                r'(?P<npu_number>\d+) +(?P<npu_core>\d+) +(?P<pp_port>\d+) +'
+                r'(?P<sys_port>\d+) +(?P<voq_base>\d+) +(?P<flow_base>\d+) +'
+                r'(?P<voq_port_type>\S+) +(?P<port_speed>\S+)$')
         
         for line in out.splitlines():
             line = line.strip()
