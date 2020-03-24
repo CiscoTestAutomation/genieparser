@@ -19660,7 +19660,7 @@ class TestShowPlatformIntegrity(unittest.TestCase):
     def test_golden_c9300_xml(self):
         self.maxDiff = None
         version_obj = ShowPlatformIntegrity(device=None)
-        parsed_output = version_obj.xml(output=self.golden_output_c9300_xml)
+        parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
         self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
 
 if __name__ == '__main__':

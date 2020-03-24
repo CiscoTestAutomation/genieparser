@@ -31,10 +31,6 @@ try:
 except (ImportError, OSError):
     pass
 
-# import parser utils
-from genie.libs.parser.utils.common import Common
-
-
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
 
@@ -5868,7 +5864,6 @@ class ShowPlatformIntegritySchema(MetaParser):
 
 class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
     cli_command = 'show platform integrity'
-    xml_command = 'show platform integrity | xml'
     def cli(self, output=None):
         if not output:
             out = self.device.execute(self.cli_command)
@@ -5968,7 +5963,6 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 continue
             
             # PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
-            p9 = re.compile(r'^(?P<hash_key>\S+): +(?P<hash_val>\S+)$')
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -6006,9 +6000,9 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 continue
         return ret_dict
     
-    def xml(self, output=None):
+    def yang(self, output=None):
         if not output:
-            out = self.device.execute(self.xml_command)
+            out = self.device.netconf.get(self.cli_command)
         else:
             out = output
         out = out.replace("]]>]]>", "")
