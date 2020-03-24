@@ -2316,112 +2316,124 @@ class TestShowInventory(unittest.TestCase):
         '''}
 
     golden_parsed_output_isr4k = {
-        'main': 
-            {'chassis': 
-                {'ISR4331/K9': 
-                    {'sn': 'FDO2201A0SR',
-                    'pid': 'ISR4331/K9',
-                    'descr': 'Cisco ISR4331 Chassis',
-                    'name': 'Chassis',
-                    'vid': 'V04',
-                    },
-                },
-            },
-        'slot': 
-            {'0': 
-                {'lc': 
-                    {'ISR4331-3x1GE': 
-                        {'descr': 'Front Panel 3 ports Gigabitethernet Module',
-                        'name': 'NIM subslot 0/0',
-                        'pid': 'ISR4331-3x1GE',
-                        'sn': '',
-                        'subslot': 
-                            {'0 transceiver 2': 
-                                {'SFP-GE-T': 
-                                    {'descr': 'GE T',
-                                    'name': 'subslot 0/0 transceiver 2',
-                                    'pid': 'SFP-GE-T',
-                                    'sn': 'MTC2139029X',
-                                    'vid': 'V02'}}},
-                        'vid': 'V01'},
-                    'ISR4331/K9': 
-                        {'descr': 'Cisco ISR4331 Built-In NIM controller',
-                        'name': 'module 0',
-                        'pid': 'ISR4331/K9',
-                        'sn': '',
-                        'subslot': 
-                            {'1': 
-                                {'NIM-ES2-4': 
-                                    {'descr': 'NIM-ES2-4',
-                                    'name': 'NIM subslot 0/1',
-                                    'pid': 'NIM-ES2-4',
-                                    'sn': 'FOC21486SRL',
-                                    'vid': 'V01'}},
-                            '2': 
-                                {'NIM-ES2-8': 
-                                    {'descr': 'NIM-ES2-8',
-                                    'name': 'NIM subslot 0/2',
-                                    'pid': 'NIM-ES2-8',
-                                    'sn': 'FOC22384AXC',
-                                    'vid': 'V01'}}},
-                        'vid': ''}}},
-            '1': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Built-In SM controller',
-                        'name': 'module 1',
-                        'vid': '',
+        "main":{
+            "chassis":{
+                "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO2201A0SR",
+                    "vid":"V04"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4331-3x1GE":{
+                                "descr":"Front Panel 3 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4331-3x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
                         },
-                    },
-                },
-            'F0': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Forwarding Processor',
-                        'name': 'module F0',
-                        'vid': '',
+                        "0 transceiver 2":{
+                            "SFP-GE-T":{
+                                "descr":"GE T",
+                                "name":"subslot 0/0 transceiver 2",
+                                "pid":"SFP-GE-T",
+                                "sn":"MTC2139029X",
+                                "vid":"V02"
+                            }
                         },
-                    },
-                },
-            'P0': 
-                {'other': 
-                    {'PWR-4330-AC': 
-                        {'sn': 'PST2150N1E2',
-                        'pid': 'PWR-4330-AC',
-                        'descr': '250W AC Power Supply for Cisco ISR 4330',
-                        'name': 'Power Supply Module 0',
-                        'vid': 'V02',
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC21486SRL",
+                                "vid":"V01"
+                            }
                         },
+                        "2":{
+                            "NIM-ES2-8":{
+                                "descr":"NIM-ES2-8",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-ES2-8",
+                                "sn":"FOC22384AXC",
+                                "vid":"V01"
+                            }
+                        }
                     },
-                },
-            'Fan_Tray': {
-                'other': {
-                    'ACS-4330-FANASSY': {
-                        'descr': 'Cisco ISR4330 Fan Assembly',
-                        'name': 'Fan Tray',
-                        'pid': 'ACS-4330-FANASSY',
-                        'sn': '',
-                        'vid': '',
+                    "vid":""
                     }
                 }
             },
-            'R0': 
-                {'rp': 
-                    {'ISR4331/K9': 
-                        {'sn': 'FDO21520TGH',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Route Processor',
-                        'name': 'module R0',
-                        'vid': 'V04',
-                        },
-                    },
-                },
+            "1":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
             },
+            "F0":{
+                "other":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4330-FANASSY":{
+                    "descr":"Cisco ISR4330 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4330-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4330-AC":{
+                    "descr":"250W AC Power Supply for Cisco ISR 4330",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4330-AC",
+                    "sn":"PST2150N1E2",
+                    "vid":"V02"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO21520TGH",
+                    "vid":"V04"
+                    }
+                }
+            }
         }
+    }
 
     golden_output_isr4k = {'execute.return_value': '''
         show inventory
@@ -2709,6 +2721,126 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR1002-X         , VID:    , SN:         
         '''}
 
+    golden_parsed_output_c8300 = {
+        "main":{
+            "chassis":{
+                "C8300-1N1S-6G":{
+                    "descr":"Cisco isr9000 Series Chassis",
+                    "name":"Chassis",
+                    "pid":"C8300-1N1S-6G",
+                    "sn":"FDO2319A1RM",
+                    "vid":"V00"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 series Unknown Module",
+                        "name":"module 0",
+                        "pid":"C8300-1N1S-6G",
+                        "vid":"",
+                        "sn":"",
+                        "subslot":{
+                            "0":{
+                                "4x1G-2xSFP":{
+                                    "descr":"Front Panel 6 ports Gigabitethernet Module",
+                                    "name":"NIM subslot 0/0",
+                                    "pid":"4x1G-2xSFP",
+                                    "sn":"",
+                                    "vid":"V01"
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "C-SM-NIM-ADPT":{
+                        "descr":"Cisco C-SM-NIM-ADPT SM to NIM adapter",
+                        "name":"module 1",
+                        "pid":"C-SM-NIM-ADPT",
+                        "sn":"FDO23370TB8",
+                        "vid":"V01",
+                        "subslot":{
+                            "0":{
+                                "NIM-8MFT-T1/E1":{
+                                    "descr":"NIM-8MFT-T1/E1 - T1/E1 Serial Module",
+                                    "name":"NIM subslot 1/0",
+                                    "pid":"NIM-8MFT-T1/E1",
+                                    "sn":"FOC21032R9L",
+                                    "vid":"V04"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "F0":{
+                "other":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Forwarding Processor",
+                        "name":"module F0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "C8300-FAN-1R":{
+                        "descr":"Cisco C8300 1RU Fan Assembly",
+                        "name":"Fan Tray",
+                        "pid":"C8300-FAN-1R",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Route Processor",
+                        "name":"module R0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"FDO231403QN",
+                        "vid":"V00"
+                    }
+                }
+            }
+        }      
+    }
+
+    golden_output_c8300= {'execute.return_value':'''
+    
+    NAME: "Chassis", DESCR: "Cisco isr9000 Series Chassis"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO2319A1RM
+
+    NAME: "Fan Tray", DESCR: "Cisco C8300 1RU Fan Assembly"
+    PID: C8300-FAN-1R , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco isr9000 series Unknown Module"
+    PID: C8300-1N1S-6G , VID: , SN:
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 6 ports Gigabitethernet Module"
+    PID: 4x1G-2xSFP , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco C-SM-NIM-ADPT SM to NIM adapter"
+    PID: C-SM-NIM-ADPT , VID: V01 , SN: FDO23370TB8
+
+    NAME: "NIM subslot 1/0", DESCR: "NIM-8MFT-T1/E1 - T1/E1 Serial Module"
+    PID: NIM-8MFT-T1/E1 , VID: V04 , SN: FOC21032R9L
+
+    NAME: "module R0", DESCR: "Cisco isr9000 Series Route Processor"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO231403QN
+
+    NAME: "module F0", DESCR: "Cisco isr9000 Series Forwarding Processor"
+    PID: C8300-1N1S-6G , VID: , SN:
+    '''}
+
     golden_parsed_output = {
         'main': {
             'chassis': {
@@ -2924,6 +3056,199 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR1002-HX        , VID:      , SN:
     '''}
 
+    golden_parsed_output_1 = {
+        "main":{
+            "chassis":{
+                "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FGL172511Q5",
+                    "vid":"V01"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4451-X-4x1GE":{
+                                "descr":"Front Panel 4 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4451-X-4x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
+                        },
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC1831B0TS",
+                                "vid":"V01"
+                            }
+                        },
+                        "2":{
+                            "NIM-24A":{
+                                "descr":"24 ports Async Serial NIM",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-24A",
+                                "sn":"DNI2047033J",
+                                "vid":"V01"
+                            }
+                        },
+                        "3":{
+                            "NIM-SSD":{
+                                "descr":"NIM SSD Module",
+                                "name":"NIM subslot 0/3",
+                                "pid":"NIM-SSD",
+                                "sn":"FOC17356NWR",
+                                "vid":"V01"
+                            }
+                        },
+                        "3 disk1":{
+                            "Samsung SSD 860 EVO 250GB":{
+                                "descr":"harddisk",
+                                "name":"subslot 0/3 disk1",
+                                "pid":"Samsung SSD 860 EVO 250GB",
+                                "sn":"S3Y9NX0M604745D",
+                                "vid":"RVT03B6Q"
+                            }
+                        },
+                        "4":{
+                            "PVDM4-32":{
+                                "descr":"PVDM4-32 Voice DSP Module",
+                                "name":"PVDM subslot 0/4",
+                                "pid":"PVDM4-32",
+                                "sn":"FOC17176BKC",
+                                "vid":"V01"
+                            }
+                        }
+                    },
+                    "vid":""
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "2":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 2",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "F0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4450-FANASSY":{
+                    "descr":"Cisco ISR4450, ISR4350 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4450-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4450-AC":{
+                    "descr":"450W AC Power Supply for Cisco ISR4450, ISR4350",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4450-AC",
+                    "sn":"DCA1645X0EK",
+                    "vid":"V01"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FOC17042FN5",
+                    "vid":"V01"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 ={'execute.return_value':'''
+    NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
+
+    NAME: "Power Supply Module 0", DESCR: "450W AC Power Supply for Cisco ISR4450, ISR4350"
+    PID: PWR-4450-AC , VID: V01 , SN: DCA1645X0EK
+
+    NAME: "Fan Tray", DESCR: "Cisco ISR4450, ISR4350 Fan Assembly"
+    PID: ACS-4450-FANASSY , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco ISR4451 Built-In NIM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
+    PID: NIM-ES2-4 , VID: V01 , SN: FOC1831B0TS
+
+    NAME: "NIM subslot 0/2", DESCR: "24 ports Async Serial NIM"
+    PID: NIM-24A , VID: V01 , SN: DNI2047033J
+
+    NAME: "NIM subslot 0/3", DESCR: "NIM SSD Module"
+    PID: NIM-SSD , VID: V01 , SN: FOC17356NWR
+
+    NAME: "subslot 0/3 disk1", DESCR: "harddisk"
+    PID: Samsung SSD 860 EVO 250GB , VID: RVT03B6Q, SN: S3Y9NX0M604745D
+
+    NAME: "PVDM subslot 0/4", DESCR: "PVDM4-32 Voice DSP Module"
+    PID: PVDM4-32 , VID: V01 , SN: FOC17176BKC
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 4 ports Gigabitethernet Module"
+    PID: ISR4451-X-4x1GE , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module 2", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module R0", DESCR: "Cisco ISR4451 Route Processor"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FOC17042FN5
+
+    NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
+    PID: ISR4451-X/K9 , VID: , SN:
+    '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2966,6 +3291,13 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
+    def test_show_inventory_golden_c8300(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_c8300)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c8300)
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -2973,6 +3305,12 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
