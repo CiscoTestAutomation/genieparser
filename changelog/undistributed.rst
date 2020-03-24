@@ -19,6 +19,8 @@
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
+    * Added ShowInstallSummary for 
+        * show install summary
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
