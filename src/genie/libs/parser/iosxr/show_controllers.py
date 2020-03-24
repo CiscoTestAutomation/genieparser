@@ -975,4 +975,87 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
         return result_dict
 
+# ===============================================================================
+# Schema for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+# ===============================================================================
+class ShowControllersFiaDiagshellDiagEgrCalendarsLocationSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'port': {
+                    Any(): {
+                        'priority': str,
+                        'high_calendar': int,
+                        'low_calendar': int,
+                        'egq_if': int,
+                        'e2e_if': int,
+                        'egq_port_rate': int,
+                        'egq_if_rate': int,
+                        'e2e_port_rate': int,
+                        'e2e_if_rate': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ===============================================================================
+# Parser for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+# ===============================================================================
+class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiagshellDiagEgrCalendarsLocationSchema):
+
+    cli_command = 'show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}'
+
+    def cli(self, diagshell, location, output=None):
+        if not output:
+            cmd = self.cli_command.format(diagshell=diagshell,
+                    location=location)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+
+        # 0  |    LOW   |       255     |        4     |   28   |    4   |      336671   |     990000  |      350000   |    1050000
+        p2 = re.compile(r'^(?P<port>\d+) +\| +(?P<priority>\S+) +\| +'
+                r'(?P<high_calendar>\d+) +\| +(?P<low_calendar>\d+) +\| +'
+                r'(?P<egq_if>\d+) +\| +(?P<e2e_if>\d+) +\| +(?P<egq_port_rate>\d+) +\| +'
+                r'(?P<egq_if_rate>\d+) +\| +(?P<e2e_port_rate>\d+) +\| +'
+                r'(?P<e2e_if_rate>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id = group['node_id']
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(node_id, {})
+                continue
+            
+            # 0  |    LOW   |       255     |        4     |   28   |    4   |      336671   |     990000  |      350000   |    1050000
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                priority = group['priority']
+                port_dict = node_id_dict.setdefault('port', {}). \
+                    setdefault(int(group['port']), {})
+                port_dict.update({'priority': group['priority']})
+                port_dict.update({'high_calendar': int(group['high_calendar'])})
+                port_dict.update({'low_calendar': int(group['low_calendar'])})
+                port_dict.update({'egq_if': int(group['egq_if'])})
+                port_dict.update({'e2e_if': int(group['e2e_if'])})
+                port_dict.update({'egq_port_rate': int(group['egq_port_rate'])})
+                port_dict.update({'egq_if_rate': int(group['egq_if_rate'])})
+                port_dict.update({'e2e_port_rate': int(group['e2e_port_rate'])})
+                port_dict.update({'e2e_if_rate': int(group['e2e_if_rate'])})
+                continue
+
+        return ret_dict
+
 # vim: ft=python ts=8 sw=4 et

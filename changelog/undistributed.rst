@@ -8,6 +8,9 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
