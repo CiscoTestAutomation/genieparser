@@ -9,6 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXR
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
     * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
         * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
 * IOSXE
