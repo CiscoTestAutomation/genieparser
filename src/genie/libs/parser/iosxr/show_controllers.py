@@ -9,7 +9,7 @@ IOSXR parsers for the following show commands:
 
 # Python
 import re
-import logging
+from genie.libs.parser.utils.common import Common
 
 # Genie
 from genie.metaparser import MetaParser
@@ -1056,6 +1056,99 @@ class ShowControllersFiaDiagshellDiagEgrCalendarsLocation(ShowControllersFiaDiag
                 port_dict.update({'e2e_if_rate': int(group['e2e_if_rate'])})
                 continue
 
+        return ret_dict
+
+# =====================================================================================================
+# Schema for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =====================================================================================================
+class ShowControllersNpuInterfaceInstanceLocationSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'interface_handle_hex': int,
+                        'npu_number': int,
+                        'npu_core': int,
+                        'pp_port': int,
+                        'sys_port': int,
+                        'voq_base': int,
+                        'flow_base': int,
+                        'voq_port_type': str,
+                        'port_speed': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =====================================================================================================
+# Parser for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+# =====================================================================================================
+class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceInstanceLocationSchema):
+    cli_command = 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
+
+    def cli(self, npu, interface, instance, location, output=None):
+
+        ret_dict = {}
+
+        if not output:
+            cmd = self.cli_command.format(npu=npu,
+                interface=interface,
+                instance=instance,
+                location=location
+            )
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+        # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>\d+) +'
+                r'(?P<npu_number>\d+) +(?P<npu_core>\d+) +(?P<pp_port>\d+) +'
+                r'(?P<sys_port>\d+) +(?P<voq_base>\d+) +(?P<flow_base>\d+) +'
+                r'(?P<voq_port_type>\S+) +(?P<port_speed>\S+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(group['node_id'], {})
+                continue
+            
+            # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                interface = Common.convert_intf_name(interface)
+                interface_handle_hex = int(group['interface_handle_hex'])
+                npu_number = int(group['npu_number'])
+                npu_core = int(group['npu_core'])
+                pp_port = int(group['pp_port'])
+                sys_port = int(group['sys_port'])
+                voq_base = int(group['voq_base'])
+                flow_base = int(group['flow_base'])
+                voq_port_type = group['voq_port_type']
+                port_speed = group['port_speed']
+                interface_dict = node_id_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'interface_handle_hex': interface_handle_hex})
+                interface_dict.update({'npu_number': npu_number})
+                interface_dict.update({'npu_core': npu_core})
+                interface_dict.update({'pp_port': pp_port})
+                interface_dict.update({'sys_port': sys_port})
+                interface_dict.update({'voq_base': voq_base})
+                interface_dict.update({'flow_base': flow_base})
+                interface_dict.update({'voq_port_type': voq_port_type})
+                interface_dict.update({'port_speed': port_speed})
+                continue
         return ret_dict
 
 # vim: ft=python ts=8 sw=4 et
