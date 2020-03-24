@@ -19,8 +19,6 @@
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
-    * Added ShowInstallSummary for 
-        * show install summary
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
@@ -57,6 +55,7 @@
         * Moved show command 'show vpn-sessiondb' into this class
     * Updated ShowVpnSessiondbSuper:
         * Added keys to the schema
+        * Updated regex to support output in show vpn-sessiondb anyconnect
 
 * IOSXE
     * Updated ShowMplsForwardingTable:

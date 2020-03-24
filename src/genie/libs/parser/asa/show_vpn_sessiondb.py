@@ -503,7 +503,7 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
         p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<value>\S+)'
-                         r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
+                         r'(\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+))?'
                          r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
 
         for line in output.splitlines():
