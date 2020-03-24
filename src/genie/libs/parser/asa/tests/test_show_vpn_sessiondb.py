@@ -374,7 +374,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         Session Type: AnyConnect
 
         Username : user1 Index : 37670
-        Assigned IP : 10.10.10.80 Public IP : 2.22.2.2
+        Assigned IP : 10.10.10.80 Public IP : 10.66.2.2
         Protocol : AnyConnect-Parent
         License : AnyConnect Premium
         Encryption : AnyConnect-Parent: (1)none
@@ -390,7 +390,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         Security Grp : none
 
         Username : user1 Index : 56867
-        Assigned IP : 10.10.10.213 Public IP : 1.1.1.1
+        Assigned IP : 10.10.10.213 Public IP : 10.4.1.1
         Protocol : AnyConnect-Parent
         License : AnyConnect Premium
         Encryption : AnyConnect-Parent: (1)none
@@ -427,7 +427,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
                                 'license': 'AnyConnect Premium',
                                 'login_time': '15:56:33 CDT Fri Mar 13 2020',
                                 'protocol': 'AnyConnect-Parent',
-                                'public_ip': '2.22.2.2',
+                                'public_ip': '10.66.2.2',
                                 'security_group': 'none',
                                 'tunnel_group': 'Employee',
                                 'vlan': 'none',
@@ -448,7 +448,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
                                 'license': 'AnyConnect Premium',
                                 'login_time': '08:36:57 CDT Sat Mar 14 2020',
                                 'protocol': 'AnyConnect-Parent',
-                                'public_ip': '1.1.1.1',
+                                'public_ip': '10.4.1.1',
                                 'security_group': 'none',
                                 'tunnel_group': 'Employee',
                                 'vlan': 'none',
