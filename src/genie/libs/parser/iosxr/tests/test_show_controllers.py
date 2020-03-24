@@ -10,8 +10,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxr.show_controllers import (ShowControllersCoherentDSP,
                                                      ShowControllersOptics,
                                                      ShowControllersFiaDiagshellL2showLocation,
-                                                     ShowControllersNpuInterfaceInstanceLocation,
-                                                     )
+                                                     ShowControllersFiaDiagshellDiagEgrCalendarsLocation,
+                                                     ShowControllersNpuInterfaceInstanceLocation)
 
 
 # =====================================================
@@ -661,6 +661,1141 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+# ==============================================================================================
+#  Unit test for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+# ==============================================================================================
+class TestShowControllersFiaDiagshellDiagEgrCalendarsLocation(unittest.TestCase):
+    '''Unit test for:
+        * 'show controllers fia diagshell 0 "diag egr_calendars" location all'
+    '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'node_id': {
+            '0/0/CPU0': {
+                'port': {
+                    0: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 1050000,
+                        'e2e_port_rate': 350000,
+                        'egq_if': 28,
+                        'egq_if_rate': 990000,
+                        'egq_port_rate': 336671,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    1: {
+                        'e2e_if': 36,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 1,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    5: {
+                        'e2e_if': 37,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 2,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    9: {
+                        'e2e_if': 38,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 3,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    13: {
+                        'e2e_if': 35,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 0,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    17: {
+                        'e2e_if': 39,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 4,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    21: {
+                        'e2e_if': 40,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 5,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 101000014,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    25: {
+                        'e2e_if': 50,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 48,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    26: {
+                        'e2e_if': 38,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 36,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    27: {
+                        'e2e_if': 36,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 34,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    28: {
+                        'e2e_if': 51,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 49,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    29: {
+                        'e2e_if': 37,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 35,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    30: {
+                        'e2e_if': 78,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 76,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    31: {
+                        'e2e_if': 41,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 39,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    32: {
+                        'e2e_if': 80,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 78,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    33: {
+                        'e2e_if': 35,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 33,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    34: {
+                        'e2e_if': 40,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 38,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    35: {
+                        'e2e_if': 39,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 37,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 1010003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    36: {
+                        'e2e_if': 49,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 47,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    37: {
+                        'e2e_if': 53,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 51,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    38: {
+                        'e2e_if': 42,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 40,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    39: {
+                        'e2e_if': 81,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 79,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    40: {
+                        'e2e_if': 79,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 77,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    41: {
+                        'e2e_if': 43,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 41,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    42: {
+                        'e2e_if': 52,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 50,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    43: {
+                        'e2e_if': 44,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 42,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    44: {
+                        'e2e_if': 82,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 80,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    45: {
+                        'e2e_if': 45,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 43,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    46: {
+                        'e2e_if': 46,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 44,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    47: {
+                        'e2e_if': 47,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 45,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    48: {
+                        'e2e_if': 48,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 46,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    49: {
+                        'e2e_if': 55,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 53,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    50: {
+                        'e2e_if': 75,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 73,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    51: {
+                        'e2e_if': 73,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 71,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    52: {
+                        'e2e_if': 72,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 70,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    53: {
+                        'e2e_if': 71,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 69,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    54: {
+                        'e2e_if': 69,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 67,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    55: {
+                        'e2e_if': 70,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 68,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    56: {
+                        'e2e_if': 68,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 66,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    57: {
+                        'e2e_if': 76,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 74,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    58: {
+                        'e2e_if': 56,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 54,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    59: {
+                        'e2e_if': 74,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 72,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    60: {
+                        'e2e_if': 77,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 75,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    61: {
+                        'e2e_if': 54,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 52,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    62: {
+                        'e2e_if': 64,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 62,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    63: {
+                        'e2e_if': 66,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 64,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    64: {
+                        'e2e_if': 67,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 65,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    65: {
+                        'e2e_if': 62,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 60,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    66: {
+                        'e2e_if': 61,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 59,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    67: {
+                        'e2e_if': 63,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 61,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    68: {
+                        'e2e_if': 65,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 63,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    69: {
+                        'e2e_if': 57,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 55,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    70: {
+                        'e2e_if': 60,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 58,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    71: {
+                        'e2e_if': 59,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 57,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    72: {
+                        'e2e_if': 58,
+                        'e2e_if_rate': 10500096,
+                        'e2e_port_rate': 10500096,
+                        'egq_if': 56,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 10100011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    128: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 5184078,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 1010113,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    129: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 5180956,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 1010033,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    130: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 5184078,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 1010113,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    131: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 5180956,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 1010033,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    132: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    133: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    134: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 5184078,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 1010113,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    135: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 5180956,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 1010033,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    136: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    137: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    138: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    139: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    140: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 5184078,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 1010113,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    141: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 5180956,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 1010033,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    142: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    143: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    144: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    145: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    146: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    147: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    148: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 10368155,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 10100009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    149: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 10361911,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 10100089,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    208: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 1050000,
+                        'e2e_port_rate': 10500000,
+                        'egq_if': 28,
+                        'egq_if_rate': 990000,
+                        'egq_port_rate': 10100000,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    232: {
+                        'e2e_if': 32,
+                        'e2e_if_rate': 31500416,
+                        'e2e_port_rate': 31500416,
+                        'egq_if': 30,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 30300003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    233: {
+                        'e2e_if': 32,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 30,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 1010011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    235: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 20736310,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 20200017,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    240: {
+                        'e2e_if': 33,
+                        'e2e_if_rate': 105004160,
+                        'e2e_port_rate': 105004160,
+                        'egq_if': 29,
+                        'egq_if_rate': 433417500,
+                        'egq_port_rate': 101000003,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    241: {
+                        'e2e_if': 33,
+                        'e2e_if_rate': 1050112,
+                        'e2e_port_rate': 1050112,
+                        'egq_if': 29,
+                        'egq_if_rate': 609052500,
+                        'egq_port_rate': 1010011,
+                        'high_calendar': 32,
+                        'low_calendar': 32,
+                        'priority': 'LOW',
+                    },
+                    246: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 25920388,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 25250083,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    247: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 25904776,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 25250105,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    248: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 10368155,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 10100009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    249: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 10361911,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 10100089,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    250: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 165890478,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 161600009,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    251: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 339536840,
+                        'e2e_port_rate': 165790561,
+                        'egq_if': 31,
+                        'egq_if_rate': 323190000,
+                        'egq_port_rate': 161600021,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                    252: {
+                        'e2e_if': 5,
+                        'e2e_if_rate': 161280000,
+                        'e2e_port_rate': 10368155,
+                        'egq_if': 31,
+                        'egq_if_rate': 159997500,
+                        'egq_port_rate': 1120,
+                        'high_calendar': 255,
+                        'low_calendar': 5,
+                        'priority': 'LOW',
+                    },
+                    253: {
+                        'e2e_if': 4,
+                        'e2e_if_rate': 1050000,
+                        'e2e_port_rate': 350000,
+                        'egq_if': 28,
+                        'egq_if_rate': 990000,
+                        'egq_port_rate': 101000000,
+                        'high_calendar': 255,
+                        'low_calendar': 4,
+                        'priority': 'LOW',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        show controllers fia diagshell 0 "diag egr_calendars" location all
+        Mon Mar 23 13:12:43.297 UTC
+        
+        Node ID: 0/0/CPU0
+        Port | Priority | High Calendar | Low Calendar | EGQ IF | E2E IF | EGQ Port Rate | EGQ IF Rate | E2E Port Rate | E2E IF Rate
+        ----------------------------------------------------------------------------------------------------------------------------
+        0  |    LOW   |       255     |        4     |   28   |    4   |      336671   |     990000  |      350000   |    1050000
+        1  |    LOW   |        32     |       32     |    1   |   36   |   101000014   |  609052500  |   105004160   |  105004160
+        5  |    LOW   |        32     |       32     |    2   |   37   |   101000014   |  609052500  |   105004160   |  105004160
+        9  |    LOW   |        32     |       32     |    3   |   38   |   101000014   |  609052500  |   105004160   |  105004160
+        13  |    LOW   |        32     |       32     |    0   |   35   |   101000014   |  609052500  |   105004160   |  105004160
+        17  |    LOW   |        32     |       32     |    4   |   39   |   101000014   |  609052500  |   105004160   |  105004160
+        21  |    LOW   |        32     |       32     |    5   |   40   |   101000014   |  609052500  |   105004160   |  105004160
+        25  |    LOW   |        32     |       32     |   48   |   50   |    10100011   |  433417500  |    10500096   |   10500096
+        26  |    LOW   |        32     |       32     |   36   |   38   |     1010003   |  433417500  |     1050112   |    1050112
+        27  |    LOW   |        32     |       32     |   34   |   36   |     1010003   |  433417500  |     1050112   |    1050112
+        28  |    LOW   |        32     |       32     |   49   |   51   |    10100011   |  433417500  |    10500096   |   10500096
+        29  |    LOW   |        32     |       32     |   35   |   37   |     1010003   |  433417500  |     1050112   |    1050112
+        30  |    LOW   |        32     |       32     |   76   |   78   |    10100011   |  433417500  |    10500096   |   10500096
+        31  |    LOW   |        32     |       32     |   39   |   41   |    10100011   |  433417500  |    10500096   |   10500096
+        32  |    LOW   |        32     |       32     |   78   |   80   |    10100011   |  433417500  |    10500096   |   10500096
+        33  |    LOW   |        32     |       32     |   33   |   35   |     1010003   |  433417500  |     1050112   |    1050112
+        34  |    LOW   |        32     |       32     |   38   |   40   |     1010003   |  433417500  |     1050112   |    1050112
+        35  |    LOW   |        32     |       32     |   37   |   39   |     1010003   |  433417500  |     1050112   |    1050112
+        36  |    LOW   |        32     |       32     |   47   |   49   |    10100011   |  433417500  |    10500096   |   10500096
+        37  |    LOW   |        32     |       32     |   51   |   53   |    10100011   |  433417500  |    10500096   |   10500096
+        38  |    LOW   |        32     |       32     |   40   |   42   |    10100011   |  433417500  |    10500096   |   10500096
+        39  |    LOW   |        32     |       32     |   79   |   81   |    10100011   |  433417500  |    10500096   |   10500096
+        40  |    LOW   |        32     |       32     |   77   |   79   |    10100011   |  433417500  |    10500096   |   10500096
+        41  |    LOW   |        32     |       32     |   41   |   43   |    10100011   |  433417500  |    10500096   |   10500096
+        42  |    LOW   |        32     |       32     |   50   |   52   |    10100011   |  433417500  |    10500096   |   10500096
+        43  |    LOW   |        32     |       32     |   42   |   44   |    10100011   |  433417500  |    10500096   |   10500096
+        44  |    LOW   |        32     |       32     |   80   |   82   |    10100011   |  433417500  |    10500096   |   10500096
+        45  |    LOW   |        32     |       32     |   43   |   45   |    10100011   |  433417500  |    10500096   |   10500096
+        46  |    LOW   |        32     |       32     |   44   |   46   |    10100011   |  433417500  |    10500096   |   10500096
+        47  |    LOW   |        32     |       32     |   45   |   47   |    10100011   |  433417500  |    10500096   |   10500096
+        48  |    LOW   |        32     |       32     |   46   |   48   |    10100011   |  433417500  |    10500096   |   10500096
+        49  |    LOW   |        32     |       32     |   53   |   55   |    10100011   |  433417500  |    10500096   |   10500096
+        50  |    LOW   |        32     |       32     |   73   |   75   |    10100011   |  433417500  |    10500096   |   10500096
+        51  |    LOW   |        32     |       32     |   71   |   73   |    10100011   |  433417500  |    10500096   |   10500096
+        52  |    LOW   |        32     |       32     |   70   |   72   |    10100011   |  433417500  |    10500096   |   10500096
+        53  |    LOW   |        32     |       32     |   69   |   71   |    10100011   |  433417500  |    10500096   |   10500096
+        54  |    LOW   |        32     |       32     |   67   |   69   |    10100011   |  433417500  |    10500096   |   10500096
+        55  |    LOW   |        32     |       32     |   68   |   70   |    10100011   |  433417500  |    10500096   |   10500096
+        56  |    LOW   |        32     |       32     |   66   |   68   |    10100011   |  433417500  |    10500096   |   10500096
+        57  |    LOW   |        32     |       32     |   74   |   76   |    10100011   |  433417500  |    10500096   |   10500096
+        58  |    LOW   |        32     |       32     |   54   |   56   |    10100011   |  433417500  |    10500096   |   10500096
+        59  |    LOW   |        32     |       32     |   72   |   74   |    10100011   |  433417500  |    10500096   |   10500096
+        60  |    LOW   |        32     |       32     |   75   |   77   |    10100011   |  433417500  |    10500096   |   10500096
+        61  |    LOW   |        32     |       32     |   52   |   54   |    10100011   |  433417500  |    10500096   |   10500096
+        62  |    LOW   |        32     |       32     |   62   |   64   |    10100011   |  433417500  |    10500096   |   10500096
+        63  |    LOW   |        32     |       32     |   64   |   66   |    10100011   |  433417500  |    10500096   |   10500096
+        64  |    LOW   |        32     |       32     |   65   |   67   |    10100011   |  433417500  |    10500096   |   10500096
+        65  |    LOW   |        32     |       32     |   60   |   62   |    10100011   |  433417500  |    10500096   |   10500096
+        66  |    LOW   |        32     |       32     |   59   |   61   |    10100011   |  433417500  |    10500096   |   10500096
+        67  |    LOW   |        32     |       32     |   61   |   63   |    10100011   |  433417500  |    10500096   |   10500096
+        68  |    LOW   |        32     |       32     |   63   |   65   |    10100011   |  433417500  |    10500096   |   10500096
+        69  |    LOW   |        32     |       32     |   55   |   57   |    10100011   |  433417500  |    10500096   |   10500096
+        70  |    LOW   |        32     |       32     |   58   |   60   |    10100011   |  433417500  |    10500096   |   10500096
+        71  |    LOW   |        32     |       32     |   57   |   59   |    10100011   |  433417500  |    10500096   |   10500096
+        72  |    LOW   |        32     |       32     |   56   |   58   |    10100011   |  433417500  |    10500096   |   10500096
+        128  |    LOW   |       255     |        5     |   31   |    5   |     1010113   |  159997500  |     5184078   |  161280000
+        129  |    LOW   |       255     |        4     |   31   |    4   |     1010033   |  323190000  |     5180956   |  339536840
+        130  |    LOW   |       255     |        5     |   31   |    5   |     1010113   |  159997500  |     5184078   |  161280000
+        131  |    LOW   |       255     |        4     |   31   |    4   |     1010033   |  323190000  |     5180956   |  339536840
+        132  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        133  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        134  |    LOW   |       255     |        5     |   31   |    5   |     1010113   |  159997500  |     5184078   |  161280000
+        135  |    LOW   |       255     |        4     |   31   |    4   |     1010033   |  323190000  |     5180956   |  339536840
+        136  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        137  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        138  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        139  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        140  |    LOW   |       255     |        5     |   31   |    5   |     1010113   |  159997500  |     5184078   |  161280000
+        141  |    LOW   |       255     |        4     |   31   |    4   |     1010033   |  323190000  |     5180956   |  339536840
+        142  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        143  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        144  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        145  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        146  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        147  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        148  |    LOW   |       255     |        5     |   31   |    5   |    10100009   |  159997500  |    10368155   |  161280000
+        149  |    LOW   |       255     |        4     |   31   |    4   |    10100089   |  323190000  |    10361911   |  339536840
+        208  |    LOW   |       255     |        4     |   28   |    4   |    10100000   |     990000  |    10500000   |    1050000
+        232  |    LOW   |        32     |       32     |   30   |   32   |    30300003   |  433417500  |    31500416   |   31500416
+        233  |    LOW   |        32     |       32     |   30   |   32   |     1010011   |  609052500  |     1050112   |    1050112
+        235  |    LOW   |       255     |        5     |   31   |    5   |    20200017   |  159997500  |    20736310   |  161280000
+        240  |    LOW   |        32     |       32     |   29   |   33   |   101000003   |  433417500  |   105004160   |  105004160
+        241  |    LOW   |        32     |       32     |   29   |   33   |     1010011   |  609052500  |     1050112   |    1050112
+        246  |    LOW   |       255     |        5     |   31   |    5   |    25250083   |  159997500  |    25920388   |  161280000
+        247  |    LOW   |       255     |        4     |   31   |    4   |    25250105   |  323190000  |    25904776   |  339536840
+        248  |    LOW   |       255     |        5     |   31   |    5   |    10100009   |  159997500  |    10368155   |  161280000
+        249  |    LOW   |       255     |        4     |   31   |    4   |    10100089   |  323190000  |    10361911   |  339536840
+        250  |    LOW   |       255     |        5     |   31   |    5   |   161600009   |  159997500  |   165890478   |  161280000
+        251  |    LOW   |       255     |        4     |   31   |    4   |   161600021   |  323190000  |   165790561   |  339536840
+        252  |    LOW   |       255     |        5     |   31   |    5   |        1120   |  159997500  |    10368155   |  161280000
+        253  |    LOW   |       255     |        4     |   28   |    4   |   101000000   |     990000  |      350000   |    1050000
+
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowControllersFiaDiagshellDiagEgrCalendarsLocation(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(diagshell=0,
+                location='all')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowControllersFiaDiagshellDiagEgrCalendarsLocation(device=self.device)
+        parsed_output = obj.parse(diagshell=0,
+                location='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # =========================================================================================================
 #  Unit test for 'show controllers npu {npu} interface {interface} instance {instance} location {location}'
@@ -724,6 +1859,6 @@ class TestShowControllersNpuInterfaceInstanceLocation(unittest.TestCase):
                 instance='all',
                 location='all')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
+        
 if __name__ == '__main__':
     unittest.main()
