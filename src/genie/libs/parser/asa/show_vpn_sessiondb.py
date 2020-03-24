@@ -2,7 +2,6 @@
 show_vpn_sessiondb.py
 
 Parser for the following show commands:
-    * show vpn load-balancing
     * show vpn-sessiondb summary
     * show vpn-sessiondb
     * show vpn-sessiondb anyconnect
@@ -20,66 +19,155 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 
 # =============================================
-# Schema for 'show vpn-sessiondb summary'
+# Schema for 
+#       * show vpn-sessiondb summary
+#       * show vpn-sessiondb
 # =============================================
 class ShowVPNSessionDBSummarySchema(MetaParser):
     """Schema for
         * show vpn-sessiondb summary
+        * show vpn-sessiondb
     """
 
     schema = {
-        'ikev1_ipsec_l2tp_ip_sec': {
-            'active': int,
-            'cumulative': int,
-            'peak_concurrent': int,
-            Optional('inactive'): int,
+        'summary': {
+            'VPN Session': {
+                'total_active_and_inactive': int,
+                'total_cumulative': int,
+                Optional('device_total_vpn_capacity'): int,
+                Optional('device_load'): float,
+                'session': {
+                    Optional('AnyConnect Client'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                        Optional('type'): {
+                            Any(): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            },
+                        },
+                    },
+                    Optional('Load Balancing(Encryption)'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    Optional('IKEv1 IPsec/L2TP IPsec'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    Optional('Clientless VPN'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                        Optional('type'): {
+                            Optional('Browser'): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            },
+                        },
+                    },
+                    Optional('Site-to-Site VPN'): {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                        Optional('type'): {
+                            Optional('IKEv2 IPsec'): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            }
+                        }
+                    },
+                },
+            },
+            Optional('Tunnels'): {
+                'session': {
+                    'Clientless': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'AnyConnect-Parent': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'SSL-Tunnel': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                    'DTLS-Tunnel': {
+                        'active': int,
+                        'cumulative': int,
+                        'peak_concurrent': int,
+                        Optional('inactive'): int,
+                    },
+                },
+                'totals': {
+                    'active': int,
+                    'cumulative': int,
+                    Optional('peak_concurrent'): int,
+                    Optional('inactive'): int,
+                }
+            },
         },
-        'load_balancing_encryption': {
-            'active': int,
-            'cumulative': int,
-            'peak_concurrent': int,
-            Optional('inactive'): int,
-        },
-        'total_active_and_inactive': int,
-        'total_cumulative': int,
-        'device_total_vpn_capacity': int,
-        'device_load': int,
     }
 
 
 # =============================================
-# Parser for 'show vpn-sessiondb summary'
+# Parser for
+#       * show vpn-sessiondb summary
+#       * show vpn-sessiondb
 # =============================================
 class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
     """Parser for
-        * show vpn-sessiondb summary
+        * show vpn-sessiondb {summary}
+        * show vpn-sessiondb
     """
 
-    cli_command = 'show vpn-sessiondb summary'
+    cli_command = ['show vpn-sessiondb {summary}', 'show vpn-sessiondb']
 
-    def cli(self, output=None):
+    def cli(self, output=None, summary=None):
         if output is None:
-            # excute command to get output
-            out = self.device.execute(self.cli_command)
+            if summary:
+                out = self.device.execute(self.cli_command[0].format(summary=summary))
+            else:
+                out = self.device.execute(self.cli_command[1])
         else:
             out = output
 
         ret_dict = {}
 
+        # -------------------------------------------------------------------
+        # vpn_session
+        # -------------------------------------------------------------------
         # IKEv1 IPsec/L2TP IPsec       :      2 :          2 :           2
-        p1 = re.compile(r'^IKEv1 +IPsec\/L2TP +IPsec +: +(?P<active>\d+) *'
-                        r': +(?P<cumulative>\d+) *: +(?P<peak_concurrent>\d+)'
-                        r'( *: (?P<inactive>\d+))?$')
-
         # Load Balancing(Encryption)   :      0 :          6 :           1
-        p2 = re.compile(r'^Load +Balancing\(Encryption\) +: +(?P<active>\d+) *'
-                        r': +(?P<cumulative>\d+) *: +(?P<peak_concurrent>\d+)'
-                        r'( *: (?P<inactive>\d+))?$')
-
-        # Total Active and Inactive    :      2             Total Cumulative :      8
-        p3 = re.compile(r'^Total +Active +and +Inactive +: +'
-                        r'(?P<total_active_and_inactive>\d+) +Total +Cumulative +: +'
-                        r'(?P<total_cumulative>\d+)$')
+        # AnyConnect Client            :    127 :        432 :         205 :        0
+        # Clientless VPN               :   2    :     125    :            6
+        # Site-to-Site VPN             :     29 :         59 :          29
+        p1 = re.compile(r'^(?P<name>(Load Balancing\(Encryption\))|(Site-to-Site VPN)|'
+                        r'(IKEv1 +IPsec\/L2TP +IPsec)|(AnyConnect Client)|'
+                        r'(Clientless VPN)) +: +(?P<active>\d+) *: '
+                        r'+(?P<cumulative>\d+) *: +(?P<peak_concurrent>\d+)'
+                        r'( *: +(?P<inactive>\d+))?$')
 
         # Device Total VPN Capacity    :    250
         p4 = re.compile(r'^Device +Total +VPN +Capacity +: +'
@@ -88,49 +176,99 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
         # Device Load                  :     1%
         p5 = re.compile(r'^Device +Load +: +(?P<device_load>\d+)\%$')
 
+        # SSL/TLS/DTLS               :    127 :        432 :         205 :        0
+        # Browser                    :   2    :     125    :            6
+        # IKEv2 IPsec                :     29 :         59 :          29
+        p7 = re.compile(r'^(?P<name>(SSL/TLS/DTLS)|(Browser)|(IKEv2 IPsec)) +:'
+                        r' +(?P<active>\d+) *: +(?P<cumulative>\d+) *:'
+                        r' +(?P<peak_concurrent>\d+)( *: +(?P<inactive>\d+))?$')
+
+        # Total Active and Inactive    :    127             Total Cumulative :    432
+        p2_4 = re.compile(r'^Total +Active +and +Inactive +: +'
+                          r'(?P<total_active_and_inactive>\d+) +Total +Cumulative +: +'
+                          r'(?P<total_cumulative>\d+)$')
+
+        # Device Total VPN Capacity    :   5000
+        p2_6 = re.compile(r'^Device\s+Total\s+VPN\s+Capacity\s+:'
+                          r'\s+(?P<device_total_vpn_capacity>\d+)$')
+
+        # -------------------------------------------------------------------
+        # tunnels
+        # -------------------------------------------------------------------
+        # Clientless                   :      0 :          1 :               1
+        # AnyConnect-Parent            :    127 :        432 :             205
+        # SSL-Tunnel                   :    125 :       1577 :             204
+        # DTLS-Tunnel                  :    124 :       1508 :             202
+        # Totals                       :    376 :       3517
+        p2_5 = re.compile(r'^(?P<name>(Totals|DTLS-Tunnel|SSL-Tunnel|'
+                          r'AnyConnect-Parent|Clientless)) +: +(?P<active>\d+)'
+                          r' *: +(?P<cumulative>\d+)( *: +(?P<peak_concurrent>\d+))?'
+                          r'( *: (?P<inactive>\d+))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
+            # -------------------------------------------------------------------
+            # vpn_session
+            # -------------------------------------------------------------------
             # IKEv1 IPsec/L2TP IPsec       :      2 :          2 :           2
+            # Load Balancing(Encryption)   :      0 :          6 :           1
+            # AnyConnect Client            :    127 :        432 :         205 :        0
+            # Clientless VPN               :   2    :     125    :            6
+            # Site-to-Site VPN             :     29 :         59 :          29
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                active = int(group['active'])
-                cumulative = int(group['cumulative'])
-                peak_concurrent = int(group['peak_concurrent'])
-                inactive = group.get('inactive', None)
-                ikev1_ipsec_l2tp_ip_sec_dict = ret_dict.setdefault('ikev1_ipsec_l2tp_ip_sec', {})
-                ikev1_ipsec_l2tp_ip_sec_dict.update({'active': active})
-                ikev1_ipsec_l2tp_ip_sec_dict.update({'cumulative': cumulative})
-                ikev1_ipsec_l2tp_ip_sec_dict.update({'peak_concurrent': peak_concurrent})
-                if inactive:
-                    ikev1_ipsec_l2tp_ip_sec_dict.update({'inactive': int(inactive)})
+                name = group['name']
+
+                curr_dict = ret_dict.setdefault('summary', {}).\
+                                     setdefault('VPN Session', {}).\
+                                     setdefault('session', {}).\
+                                     setdefault(name, {})
+
+                for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
+                    if group[k]:
+                        curr_dict[k] = int(group[k])
+                        
+                vpn_session_dict = ret_dict['summary']['VPN Session']['session']
+                        
                 continue
 
-            # Load Balancing(Encryption)   :      0 :          6 :           1
-            m = p2.match(line)
+            # SSL/TLS/DTLS               :    127 :        432 :         205 :        0
+            # Browser                    :   2    :     125    :            6
+            # IKEv2 IPsec                :     29 :         59 :          29
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
-                active = int(group['active'])
-                cumulative = int(group['cumulative'])
-                peak_concurrent = int(group['peak_concurrent'])
-                inactive = group.get('inactive', None)
-                load_balancing_encryption_dict = ret_dict.setdefault('load_balancing_encryption', {})
-                load_balancing_encryption_dict.update({'active': active})
-                load_balancing_encryption_dict.update({'cumulative': cumulative})
-                load_balancing_encryption_dict.update({'peak_concurrent': peak_concurrent})
-                if inactive:
-                    load_balancing_encryption_dict.update({'inactive': int(inactive)})
+                name = group['name']
+
+                if name == 'SSL/TLS/DTLS':
+                    curr_dict = vpn_session_dict['AnyConnect Client'].setdefault('type', {}).\
+                                                                      setdefault(name, {})
+                elif name == 'Browser':
+                    curr_dict = vpn_session_dict['Clientless VPN'].setdefault('type', {}).\
+                                                                   setdefault(name, {})
+                elif name == 'IKEv2 IPsec':
+                    if 'Site-to-Site VPN' in vpn_session_dict:
+                        curr_dict = vpn_session_dict['Site-to-Site VPN'].setdefault('type', {}).\
+                                                                         setdefault(name, {})
+                    else:
+                        curr_dict = vpn_session_dict['AnyConnect Client'].setdefault('type', {}).\
+                                                                          setdefault(name, {})
+
+                for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
+                    if group[k]:
+                        curr_dict[k] = int(group[k])
                 continue
 
-            # Total Active and Inactive    :      2             Total Cumulative :      8
-            m = p3.match(line)
+            # Total Active and Inactive    :    127             Total Cumulative :    432
+            # Device Total VPN Capacity    :   5000
+            m = p2_4.match(line) or p2_6.match(line)
             if m:
                 group = m.groupdict()
-                total_active_and_inactive = int(group['total_active_and_inactive'])
-                total_cumulative = int(group['total_cumulative'])
-                ret_dict.update({'total_active_and_inactive': total_active_and_inactive})
-                ret_dict.update({'total_cumulative': total_cumulative})
+                for k in ['total_active_and_inactive', 'total_cumulative', 'device_total_vpn_capacity']:
+                    if group.get(k):
+                        ret_dict['summary']['VPN Session'][k] = int(group.get(k))
                 continue
 
             # Device Total VPN Capacity    :    250
@@ -138,29 +276,54 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_total_vpn_capacity = int(group['device_total_vpn_capacity'])
-                ret_dict.update({'device_total_vpn_capacity': device_total_vpn_capacity})
+                ret_dict['summary']['VPN Session']['device_total_vpn_capacity'] = device_total_vpn_capacity
                 continue
 
             # Device Load                  :     1%
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                device_load = int(group['device_load'])
-                ret_dict.update({'device_load': device_load})
+                device_load = int(group['device_load'])/100
+                ret_dict['summary']['VPN Session']['device_load'] = device_load
+                continue
+
+            # -------------------------------------------------------------------
+            # tunnels
+            # -------------------------------------------------------------------
+            # Clientless                   :      0 :          1 :               1
+            # AnyConnect-Parent            :    127 :        432 :             205
+            # SSL-Tunnel                   :    125 :       1577 :             204
+            # DTLS-Tunnel                  :    124 :       1508 :             202
+            # Totals                       :    376 :       3517
+            m = p2_5.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                if name == 'Totals':
+                    tunnels_dict = ret_dict['summary'].setdefault('Tunnels', {}). \
+                                                       setdefault('totals', {})
+                else:
+                    tunnels_dict = ret_dict['summary'].setdefault('Tunnels', {}).\
+                                                       setdefault('session', {}).\
+                                                       setdefault(name, {})
+
+                for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
+                    if group[k]:
+                        tunnels_dict[k] = int(group[k])
                 continue
 
         return ret_dict
 
+
 # =============================================
 # Schema for
-#     * show vpn-sessiondb
 #     * show vpn-sessiondb anyconnect
 #     * show vpn-sessiondb anyconnect sort inactivity
 #     * show vpn-sessiondb webvpn
 # =============================================
 
 
-class ShowVpnSessiondbSchema(MetaParser):
+class ShowVpnSessiondbSuperSchema(MetaParser):
     schema = {
         'session_type': {
             Any(): {
@@ -176,6 +339,8 @@ class ShowVpnSessiondbSchema(MetaParser):
                                 Optional('license'): str,
                                 Optional('encryption'): str,
                                 'hashing': str,
+                                Optional('ssl_tunnel'): str,
+                                Optional('dtls_tunnel'): str,
                                 Optional('auth_mode'): str,
                                 Optional('group_policy'): str,
                                 Optional('group'): str,
@@ -215,14 +380,13 @@ class ShowVpnSessiondbSchema(MetaParser):
 
 # =============================================
 # Super Parser for
-#         * show vpn-sessiondb
 #         * show vpn-sessiondb anyconnect
 #         * show vpn-sessiondb anyconnect sort inactivity
 #         * show vpn-sessiondb webvpn
 # =============================================
 
 
-class ShowVpnSessiondbSuper(ShowVpnSessiondbSchema):
+class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
     """Super Parser for
         * show vpn-sessiondb
         * show vpn-sessiondb anyconnect
@@ -334,6 +498,14 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSchema):
         # Public IP    : 10.229.20.77
         p24 = re.compile(r'^Public\s+IP\s+:\s+(?P<public_ip>\S+)$')
 
+        # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256
+        # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
+        # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
+        # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
+        p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<value>\S+)'
+                         r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
+                         r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -415,6 +587,20 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSchema):
                 index_dict['hashing'] = m.groupdict()['hashing']
                 continue
 
+            # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256
+            # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
+            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
+            # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name'].lower()
+                index_dict[name] = group['value']
+                for k in ['ssl_tunnel', 'dtls_tunnel']:
+                    if group[k]:
+                        index_dict[k] = group[k]
+                continue
+
             # TCP Dst Port : 443 TCP Src Port : 54230
             m = p6.match(line)
             if m:
@@ -448,29 +634,10 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSchema):
 
 # =============================================
 # Parser for
-#         * show vpn-sessiondb
-# =============================================
-class ShowVpnSessiondb(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
-    """Parser for
-        * show vpn-sessiondb
-    """
-    cli_command = 'show vpn-sessiondb'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        return super().cli(output=out)
-
-
-# =============================================
-# Parser for
 #         * show vpn-sessiondb anyconnect
 #         * show vpn-sessiondb anyconnect sort inactivity
 # =============================================
-class ShowVpnSessiondbAnyconnect(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
+class ShowVpnSessiondbAnyconnect(ShowVpnSessiondbSuper, ShowVpnSessiondbSuperSchema):
     """Parser for
         * show vpn-sessiondb anyconnect
         * show vpn-sessiondb anyconnect {sort} inactivity
@@ -495,7 +662,7 @@ class ShowVpnSessiondbAnyconnect(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
 # Parser for
 #         * show vpn-sessiondb webvpn
 # =============================================
-class ShowVpnSessiondbWebvpn(ShowVpnSessiondbSuper, ShowVpnSessiondbSchema):
+class ShowVpnSessiondbWebvpn(ShowVpnSessiondbSuper, ShowVpnSessiondbSuperSchema):
     """Parser for
         * show vpn-sessiondb webvpn
     """

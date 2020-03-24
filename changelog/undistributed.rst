@@ -8,6 +8,11 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
+    * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
@@ -46,6 +51,13 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* ASA
+    * Updated ShowVPNSessionDBSummary:
+        * Added keys to the schema
+        * Moved show command 'show vpn-sessiondb' into this class
+    * Updated ShowVpnSessiondbSuper:
+        * Added keys to the schema
+
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
@@ -97,6 +109,8 @@
     * Update ShowPlatformInternalHalPolicyRedirdst:
         * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
             outgoing_ifname, packets_hash as optional
+    * Update ShowSystemInternalSysmgrServiceName:
+        * Enhanced 'tag' key to support more output
 
 * IOSXR
     * Update ShowBgpInstanceSummary
