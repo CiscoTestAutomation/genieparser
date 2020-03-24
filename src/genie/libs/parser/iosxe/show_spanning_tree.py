@@ -860,6 +860,7 @@ class ShowSpanningTreeSchema(MetaParser):
                             'type': str,
                             Optional('peer'): str,
                             Optional('bound'): str,
+                            Optional('portfast'): str,
                         }
                     }
                 }
@@ -925,7 +926,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                           '(?P<role>[\w\*]+) +(?P<port_state>[A-Z\*]+) *'
                           '(?P<cost>\d+) +(?P<port_priority>\d+)\.'
                           '(?P<port_num>\d+) +(?P<type>\w+)'
-                          '( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)))?'
+                          '( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)|(?P<portfast>\w+)))?'
                           '( +\*\S+)?$')
 
         for line in out.splitlines():
@@ -995,6 +996,8 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
             # Gi1/0/5             Desg FWD 4         128.5    P2p Peer(STP)
             # Gi1/0/5             Mstr FWD 20000     128.5    P2p Bound(RSTP) 
             # Po14                Desg BKN*6660      128.2390 P2p Bound(PVST) *PVST_Inc
+            # Gi0/2               Desg FWD 4         128.3    P2p Edge
+            # Gi0/2               Desg FWD 4         128.3    P2p Network
             m = p10.match(line)
             if m:
                 group = m.groupdict()
