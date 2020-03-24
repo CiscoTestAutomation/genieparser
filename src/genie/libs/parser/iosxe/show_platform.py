@@ -1833,7 +1833,7 @@ class ShowInventory(ShowInventorySchema):
         # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
         # PID: ISR4331/K9        , VID:      , SN:
         # PID: , VID: 1.0  , SN: 1162722191
-        p2 = re.compile(r'^PID: +(?P<pid>\S+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
+        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         ' +SN:(?: +(?P<sn>(\S+)))?$')
 
         for line in out.splitlines():
@@ -1874,7 +1874,7 @@ class ShowInventory(ShowInventorySchema):
                 # IM subslot 0/1
                 # NIM subslot 0/0
                 p1_3 = re.compile(
-                    r'^(SPA|IM|NIM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
+                    r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
                 m1_3 = p1_3.match(name)
                 if m1_3:
                     group = m1_3.groupdict()
@@ -1929,7 +1929,10 @@ class ShowInventory(ShowInventorySchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                pid = group['pid'] or ''
+                if group.get('pid'):
+                    pid = group['pid'].strip(' ')
+                else:
+                    pid = ''
                 vid = group['vid'] or ''
                 sn = group['sn'] or ''
 
@@ -1981,8 +1984,10 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
                 # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
                 # PID: ASR1002-HX        , VID:      , SN:
-                elif (('SIP' in pid) or ('ISR' in pid) or ('-X' in pid) or 
-                     ('-HX' in pid) or ('module' in name)) and ('subslot' not in name):
+                elif (('SIP' in pid)  or ('-X' in pid) or \
+                     ('-HX' in pid) or ('module' in name and not ('module F' in name))) and \
+                     ('subslot' not in name) and ('ESP' not in pid):
+
                     lc_dict = slot_dict.setdefault('lc', {}).\
                         setdefault(pid, {})
                     lc_dict['name'] = name
