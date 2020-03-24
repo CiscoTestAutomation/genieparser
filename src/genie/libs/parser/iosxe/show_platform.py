@@ -1986,7 +1986,7 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1002-HX        , VID:      , SN:
                 elif (('SIP' in pid)  or ('-X' in pid) or \
                      ('-HX' in pid) or ('module' in name and not ('module F' in name))) and \
-                     ('subslot' not in name) and ('ESP' not in pid):
+                     ('subslot' not in name):
 
                     lc_dict = slot_dict.setdefault('lc', {}).\
                         setdefault(pid, {})
