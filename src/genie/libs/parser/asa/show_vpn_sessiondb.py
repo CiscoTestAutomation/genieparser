@@ -31,7 +31,7 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
 
     schema = {
         'summary': {
-            'Vpn Session': {
+            'VPN Session': {
                 'total_active_and_inactive': int,
                 'total_cumulative': int,
                 Optional('device_total_vpn_capacity'): int,
@@ -222,7 +222,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 name = group['name']
 
                 curr_dict = ret_dict.setdefault('summary', {}).\
-                                     setdefault('Vpn Session', {}).\
+                                     setdefault('VPN Session', {}).\
                                      setdefault('session', {}).\
                                      setdefault(name, {})
 
@@ -230,7 +230,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                     if group[k]:
                         curr_dict[k] = int(group[k])
                         
-                vpn_session_dict = ret_dict['summary']['Vpn Session']['session']
+                vpn_session_dict = ret_dict['summary']['VPN Session']['session']
                         
                 continue
 
@@ -268,7 +268,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 group = m.groupdict()
                 for k in ['total_active_and_inactive', 'total_cumulative', 'device_total_vpn_capacity']:
                     if group.get(k):
-                        ret_dict['summary']['Vpn Session'][k] = int(group.get(k))
+                        ret_dict['summary']['VPN Session'][k] = int(group.get(k))
                 continue
 
             # Device Total VPN Capacity    :    250
@@ -276,7 +276,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_total_vpn_capacity = int(group['device_total_vpn_capacity'])
-                ret_dict['summary']['Vpn Session']['device_total_vpn_capacity'] = device_total_vpn_capacity
+                ret_dict['summary']['VPN Session']['device_total_vpn_capacity'] = device_total_vpn_capacity
                 continue
 
             # Device Load                  :     1%
@@ -284,7 +284,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_load = int(group['device_load'])/100
-                ret_dict['summary']['Vpn Session']['device_load'] = device_load
+                ret_dict['summary']['VPN Session']['device_load'] = device_load
                 continue
 
             # -------------------------------------------------------------------

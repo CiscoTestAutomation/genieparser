@@ -45,7 +45,7 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
 
     golden_parsed_output = {
         'summary': {
-            'Vpn Session': {
+            'VPN Session': {
                 'device_load': 0.01,
                 'device_total_vpn_capacity': 250,
                 'session': {
@@ -130,7 +130,7 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
                     'cumulative': 3518,
                 },
             },
-            'Vpn Session': {
+            'VPN Session': {
                 'session': {
                     'AnyConnect Client': {
                         'active': 127,
@@ -205,7 +205,7 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
 
     golden_parsed_output_3 = {
         'summary': {
-            'Vpn Session': {
+            'VPN Session': {
                 'session': {
                     'AnyConnect Client': {
                         'active': 1672,
