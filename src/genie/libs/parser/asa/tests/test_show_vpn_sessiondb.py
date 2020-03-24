@@ -45,16 +45,16 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
 
     golden_parsed_output = {
         'summary': {
-            'vpn_session': {
+            'Vpn Session': {
                 'device_load': 0.01,
                 'device_total_vpn_capacity': 250,
                 'session': {
-                    'ikev1_ipsec_l2tp_ip_sec': {
+                    'IKEv1 IPsec/L2TP IPsec': {
                         'active': 2,
                         'cumulative': 2,
                         'peak_concurrent': 2,
                     },
-                    'load_balancing_encryption': {
+                    'Load Balancing(Encryption)': {
                         'active': 0,
                         'cumulative': 6,
                         'peak_concurrent': 1,
@@ -102,24 +102,24 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
 
     golden_parsed_output_2 = {
         'summary': {
-            'tunnels': {
+            'Tunnels': {
                 'session': {
-                    'anyconnect_parent': {
+                    'AnyConnect-Parent': {
                         'active': 127,
                         'cumulative': 432,
                         'peak_concurrent': 205,
                     },
-                    'clientless': {
+                    'Clientless': {
                         'active': 0,
                         'cumulative': 1,
                         'peak_concurrent': 1
                     },
-                    'dtls_tunnel': {
+                    'DTLS-Tunnel': {
                         'active': 124,
                         'cumulative': 1508,
                         'peak_concurrent': 202,
                     },
-                    'ssl_tunnel': {
+                    'SSL-Tunnel': {
                         'active': 125,
                         'cumulative': 1577,
                         'peak_concurrent': 204,
@@ -130,43 +130,49 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
                     'cumulative': 3518,
                 },
             },
-            'vpn_session': {
+            'Vpn Session': {
                 'session': {
-                    'anyconnect_client': {
+                    'AnyConnect Client': {
                         'active': 127,
                         'cumulative': 432,
                         'inactive': 0,
                         'peak_concurrent': 205,
-                        'ssl_tls_dtls': {
-                            'active': 127,
-                            'cumulative': 432,
-                            'inactive': 0,
-                            'peak_concurrent': 205,
-                        },
-                        'ikev2_ipsec': {
-                            'active': 8,
-                            'cumulative': 17,
-                            'inactive': 0,
-                            'peak_concurrent': 8
+                        'type': {
+                            'SSL/TLS/DTLS': {
+                                'active': 127,
+                                'cumulative': 432,
+                                'inactive': 0,
+                                'peak_concurrent': 205,
+                            },
+                            'IKEv2 IPsec': {
+                                'active': 8,
+                                'cumulative': 17,
+                                'inactive': 0,
+                                'peak_concurrent': 8
+                            },
                         },
                     },
-                    'clientless_vpn': {
+                    'Clientless VPN': {
                         'active': 0,
-                        'browser': {
-                            'active': 0,
-                            'cumulative': 1,
-                            'peak_concurrent': 1,
+                        'type': {
+                            'Browser': {
+                                'active': 0,
+                                'cumulative': 1,
+                                'peak_concurrent': 1,
+                            },
                         },
                         'cumulative': 1,
                         'peak_concurrent': 1,
                     },
-                    'site_to_site_vpn': {
+                    'Site-to-Site VPN': {
                         'active': 29,
                         'cumulative': 59,
-                        'ikev2_ipsec': {
-                            'active': 29,
-                            'cumulative': 59,
-                            'peak_concurrent': 29
+                        'type': {
+                            'IKEv2 IPsec': {
+                                'active': 29,
+                                'cumulative': 59,
+                                'peak_concurrent': 29
+                            },
                         },
                         'peak_concurrent': 29
                     },
@@ -199,26 +205,30 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
 
     golden_parsed_output_3 = {
         'summary': {
-            'vpn_session': {
+            'Vpn Session': {
                 'session': {
-                    'anyconnect_client': {
+                    'AnyConnect Client': {
                         'active': 1672,
                         'cumulative': 140011,
                         'inactive': 355,
                         'peak_concurrent': 2219,
-                        'ssl_tls_dtls': {
-                            'active': 1672,
-                            'cumulative': 140011,
-                            'inactive': 355,
-                            'peak_concurrent': 2219,
+                        'type': {
+                            'SSL/TLS/DTLS': {
+                                'active': 1672,
+                                'cumulative': 140011,
+                                'inactive': 355,
+                                'peak_concurrent': 2219,
+                            },
                         },
                     },
-                    'clientless_vpn': {
+                    'Clientless VPN': {
                         'active': 2,
-                        'browser': {
-                            'active': 2,
-                            'cumulative': 125,
-                            'peak_concurrent': 6,
+                        'type': {
+                            'Browser': {
+                                'active': 2,
+                                'cumulative': 125,
+                                'peak_concurrent': 6,
+                            },
                         },
                         'cumulative': 125,
                         'peak_concurrent': 6,

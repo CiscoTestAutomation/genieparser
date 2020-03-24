@@ -31,83 +31,89 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
 
     schema = {
         'summary': {
-            'vpn_session': {
+            'Vpn Session': {
                 'total_active_and_inactive': int,
                 'total_cumulative': int,
                 Optional('device_total_vpn_capacity'): int,
                 Optional('device_load'): float,
                 'session': {
-                    Optional('anyconnect_client'): {
+                    Optional('AnyConnect Client'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                        Any(): {
-                            'active': int,
-                            'cumulative': int,
-                            'peak_concurrent': int,
-                            Optional('inactive'): int,
+                        Optional('type'): {
+                            Any(): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            },
                         },
                     },
-                    Optional('load_balancing_encryption'): {
+                    Optional('Load Balancing(Encryption)'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    Optional('ikev1_ipsec_l2tp_ip_sec'): {
+                    Optional('IKEv1 IPsec/L2TP IPsec'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    Optional('clientless_vpn'): {
+                    Optional('Clientless VPN'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                        Optional('browser'): {
-                            'active': int,
-                            'cumulative': int,
-                            'peak_concurrent': int,
-                            Optional('inactive'): int,
-                        }
+                        Optional('type'): {
+                            Optional('Browser'): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            },
+                        },
                     },
-                    Optional('site_to_site_vpn'): {
+                    Optional('Site-to-Site VPN'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
-                        Optional('ikev2_ipsec'): {
-                            'active': int,
-                            'cumulative': int,
-                            'peak_concurrent': int,
-                            Optional('inactive'): int,
+                        Optional('type'): {
+                            Optional('IKEv2 IPsec'): {
+                                'active': int,
+                                'cumulative': int,
+                                'peak_concurrent': int,
+                                Optional('inactive'): int,
+                            }
                         }
                     },
                 },
             },
-            Optional('tunnels'): {
+            Optional('Tunnels'): {
                 'session': {
-                    'clientless': {
+                    'Clientless': {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'anyconnect_parent': {
+                    'AnyConnect-Parent': {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'ssl_tunnel': {
+                    'SSL-Tunnel': {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'dtls_tunnel': {
+                    'DTLS-Tunnel': {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
@@ -212,17 +218,11 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             # Site-to-Site VPN             :     29 :         59 :          29
             m = p1.match(line)
             if m:
-                names = {'IKEv1 IPsec/L2TP IPsec'       :  'ikev1_ipsec_l2tp_ip_sec',
-                         'Load Balancing(Encryption)'   :   'load_balancing_encryption',
-                         'AnyConnect Client'            :   'anyconnect_client',
-                         'Clientless VPN'               :   'clientless_vpn',
-                         'Site-to-Site VPN'             :   'site_to_site_vpn'}
-
                 group = m.groupdict()
-                name = names[group['name']]
+                name = group['name']
 
                 curr_dict = ret_dict.setdefault('summary', {}).\
-                                     setdefault('vpn_session', {}).\
+                                     setdefault('Vpn Session', {}).\
                                      setdefault('session', {}).\
                                      setdefault(name, {})
 
@@ -230,7 +230,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                     if group[k]:
                         curr_dict[k] = int(group[k])
                         
-                vpn_session_dict = ret_dict['summary']['vpn_session']['session']
+                vpn_session_dict = ret_dict['summary']['Vpn Session']['session']
                         
                 continue
 
@@ -243,14 +243,18 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 name = group['name']
 
                 if name == 'SSL/TLS/DTLS':
-                    curr_dict = vpn_session_dict['anyconnect_client'].setdefault('ssl_tls_dtls', {})
+                    curr_dict = vpn_session_dict['AnyConnect Client'].setdefault('type', {}).\
+                                                                      setdefault(name, {})
                 elif name == 'Browser':
-                    curr_dict = vpn_session_dict['clientless_vpn'].setdefault('browser', {})
+                    curr_dict = vpn_session_dict['Clientless VPN'].setdefault('type', {}).\
+                                                                   setdefault(name, {})
                 elif name == 'IKEv2 IPsec':
-                    if 'site_to_site_vpn' in vpn_session_dict:
-                        curr_dict = vpn_session_dict['site_to_site_vpn'].setdefault('ikev2_ipsec', {})
+                    if 'Site-to-Site VPN' in vpn_session_dict:
+                        curr_dict = vpn_session_dict['Site-to-Site VPN'].setdefault('type', {}).\
+                                                                         setdefault(name, {})
                     else:
-                        curr_dict = vpn_session_dict['anyconnect_client'].setdefault('ikev2_ipsec', {})
+                        curr_dict = vpn_session_dict['AnyConnect Client'].setdefault('type', {}).\
+                                                                          setdefault(name, {})
 
                 for k in ['active', 'cumulative', 'peak_concurrent', 'inactive']:
                     if group[k]:
@@ -264,7 +268,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
                 group = m.groupdict()
                 for k in ['total_active_and_inactive', 'total_cumulative', 'device_total_vpn_capacity']:
                     if group.get(k):
-                        ret_dict['summary']['vpn_session'][k] = int(group.get(k))
+                        ret_dict['summary']['Vpn Session'][k] = int(group.get(k))
                 continue
 
             # Device Total VPN Capacity    :    250
@@ -272,7 +276,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_total_vpn_capacity = int(group['device_total_vpn_capacity'])
-                ret_dict['summary']['vpn_session']['device_total_vpn_capacity'] = device_total_vpn_capacity
+                ret_dict['summary']['Vpn Session']['device_total_vpn_capacity'] = device_total_vpn_capacity
                 continue
 
             # Device Load                  :     1%
@@ -280,7 +284,7 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             if m:
                 group = m.groupdict()
                 device_load = int(group['device_load'])/100
-                ret_dict['summary']['vpn_session']['device_load'] = device_load
+                ret_dict['summary']['Vpn Session']['device_load'] = device_load
                 continue
 
             # -------------------------------------------------------------------
@@ -294,12 +298,12 @@ class ShowVPNSessionDBSummary(ShowVPNSessionDBSummarySchema):
             m = p2_5.match(line)
             if m:
                 group = m.groupdict()
-                name = group['name'].lower().replace('-', '_')
-                if name == 'totals':
-                    tunnels_dict = ret_dict['summary'].setdefault('tunnels', {}). \
+                name = group['name']
+                if name == 'Totals':
+                    tunnels_dict = ret_dict['summary'].setdefault('Tunnels', {}). \
                                                        setdefault('totals', {})
                 else:
-                    tunnels_dict = ret_dict['summary'].setdefault('tunnels', {}).\
+                    tunnels_dict = ret_dict['summary'].setdefault('Tunnels', {}).\
                                                        setdefault('session', {}).\
                                                        setdefault(name, {})
 
