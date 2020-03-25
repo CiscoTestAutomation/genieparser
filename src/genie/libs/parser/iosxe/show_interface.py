@@ -242,6 +242,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
+        # MTU 1600 bytes, sub MTU 1600, BW 3584 Kbit/sec, DLY 410 usec,
         p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
                         r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +'
                         r'DLY +(?P<delay>[0-9]+) +usec,$')
