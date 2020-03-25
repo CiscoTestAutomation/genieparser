@@ -5,6 +5,7 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
 # Python
@@ -1151,4 +1152,94 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
                 continue
         return ret_dict
 
+# =====================================================================================
+# Schema for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema(MetaParser):
+    schema = {
+        'node_id': {
+            Any(): {
+                'mapping': {
+                    Any(): {
+                        'port_number': {
+                            Any(): {
+                                'priorities': int,
+                                'base_q_pair': int,
+                                'ps_number': int,
+                                'core': int,
+                                'tm_port': int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================================================
+# Parser for 'show controllers fia diagshell 0 "diag cosq qpair egq map" location all'
+# =====================================================================================
+class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshellDiagCosqQpairEgpMapSchema):
+    cli_command = 'show controllers fia diagshell {unit} "diag cosq qpair egq map" location {location}'
+    def cli(self, unit=0, location='all', output=None):
+        
+        if not output:
+            cmd = self.cli_command.format(unit=unit,
+                        location=location)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Node ID: 0/0/CPU0
+        p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
+
+        # EGQ MAPPING:
+        p2 = re.compile(r'^(?P<mapping>[\S ]+):$')
+
+        # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+        # ---------|--------------|---------------|---------|------|---------|
+        # 0    |       2      |      200      |    25   |   0  |     0   |
+        p3 = re.compile(r'^(?P<port_number>\d+) +\| +(?P<priorities>\d+) +\| +'
+                        r'(?P<base_q_pair>\d+) +\| +(?P<ps_number>\d+) +\| +'
+                        r'(?P<core>\d+) +\| +(?P<tm_port>\d+) +\|$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Node ID: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node_id = group['node_id']
+                node_id_dict = ret_dict.setdefault('node_id', {}). \
+                    setdefault(node_id, {})
+                continue
+            
+            # EGQ MAPPING:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                mapping_dict = node_id_dict.setdefault('mapping', {}). \
+                    setdefault(group['mapping'], {})
+                continue
+            
+            # Port #  |  Priorities  |  Base Q-Pair  |   PS #  | Core | TM Port |
+            # ---------|--------------|---------------|---------|------|---------|
+            # 0    |       2      |      200      |    25   |   0  |     0   |
+            m = p3.match(line)
+            if m:
+                group =  m.groupdict()
+                port_dict = mapping_dict.setdefault('port_number', {}). \
+                    setdefault(int(group['port_number']), {})
+                port_dict.update({'priorities': int(group['priorities'])})
+                port_dict.update({'base_q_pair': int(group['base_q_pair'])})
+                port_dict.update({'ps_number': int(group['ps_number'])})
+                port_dict.update({'core': int(group['core'])})
+                port_dict.update({'tm_port': int(group['tm_port'])})
+                continue
+
+        return ret_dict
+        
 # vim: ft=python ts=8 sw=4 et
