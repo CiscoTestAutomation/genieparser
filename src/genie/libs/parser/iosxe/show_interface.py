@@ -404,7 +404,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                           '(?P<out_deferred>[0-9]+) +deferred$')
 
         # 0 lost carrier, 0 no carrier, 0 pause output
-        p33 = re.compile(r'^(?P<out_lost_carrier>\d+) +lost +carrier, +(?P<out_no_carrier>\d+) +no +carrier(, +(?P<out_pause_output>\d+) +pause +output)?$')
+        # 0 lost carrier, 0 no carrier
+        p33 = re.compile(r'^(?P<out_lost_carrier>\d+) +lost +carrier, +'
+                r'(?P<out_no_carrier>\d+) +no +carrier(, +(?P<out_pause_output>\d+) +'
+                r'pause +output)?$')
 
         # 0 output buffer failures, 0 output buffers swapped out
         p34 = re.compile(r'^(?P<out_buffer_failure>[0-9]+) +output +buffer +failures, +'
