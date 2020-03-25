@@ -68,6 +68,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('link_type'): str,
                 Optional('media_type'): str,
                 'mtu': int,
+                Optional('sub_mtu'): int,
                 Optional('medium'): str,
                 Optional('reliability'): str,
                 Optional('txload'): str,
@@ -241,7 +242,9 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
-        p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY +(?P<delay>[0-9]+) +usec,$')
+        p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
+                        r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +'
+                        r'DLY +(?P<delay>[0-9]+) +usec,$')
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
@@ -529,11 +532,14 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p6.match(line)
             if m:
                 mtu = m.groupdict()['mtu']
+                sub_mtu = m.groupdict().get('sub_mtu', None)
                 bandwidth = m.groupdict()['bandwidth']
                 if m.groupdict()['delay']:
                     interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 if mtu:
                     interface_dict[interface]['mtu'] = int(mtu)
+                if sub_mtu:
+                    interface_dict[interface]['sub_mtu'] = int(sub_mtu)
                 if bandwidth:
                     interface_dict[interface]['bandwidth'] = int(bandwidth)
                 continue

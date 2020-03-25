@@ -545,6 +545,7 @@ class TestShowInterfaces(unittest.TestCase):
             'line_protocol': 'up',
             'mac_address': 'fa16.3eff.a049',
             'mtu': 1600,
+            'sub_mtu': 1600,
             'oper_status': 'up',
             'output_hang': 'never',
             'phys_address': 'fa16.3eff.a049',
