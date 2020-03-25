@@ -242,6 +242,93 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
         },
     }
 
+    # show vpn-sessiondb
+    golden_output_4 = {'execute.return_value': '''
+    show vpn-sessiondb
+
+    ---------------------------------------------------------------------------
+    
+    VPN Session Summary                                                        
+    
+    ---------------------------------------------------------------------------
+    
+                                   Active : Cumulative : Peak Concur : Inactive
+    
+                                 ----------------------------------------------
+    
+    Clientless VPN               :      0 :          1 :           1
+    
+      Browser                    :      0 :          1 :           1
+    
+    ---------------------------------------------------------------------------
+    
+    Total Active and Inactive    :      0             Total Cumulative :      1
+    
+    Device Total VPN Capacity    :    250
+    
+    Device Load                  :     0%
+    
+    ---------------------------------------------------------------------------
+    
+     
+    
+    ---------------------------------------------------------------------------
+    
+    Tunnels Summary
+    
+    ---------------------------------------------------------------------------
+    
+                                   Active : Cumulative : Peak Concurrent   
+    
+                                 ----------------------------------------------
+    
+    Clientless                   :      0 :          1 :               1
+    
+    ---------------------------------------------------------------------------
+    
+    Totals                       :      0 :          1
+    
+    ---------------------------------------------------------------------------
+    '''}
+
+    golden_parsed_output_4 = {
+    'summary': {
+        'Tunnels': {
+            'session': {
+                'Clientless': {
+                    'active': 0,
+                    'cumulative': 1,
+                    'peak_concurrent': 1,
+                },
+            },
+            'totals': {
+                'active': 0,
+                'cumulative': 1,
+            },
+        },
+        'VPN Session': {
+            'device_load': 0.0,
+            'device_total_vpn_capacity': 250,
+            'session': {
+                'Clientless VPN': {
+                    'active': 0,
+                    'cumulative': 1,
+                    'peak_concurrent': 1,
+                    'type': {
+                        'Browser': {
+                            'active': 0,
+                            'cumulative': 1,
+                            'peak_concurrent': 1,
+                        },
+                    },
+                },
+            },
+            'total_active_and_inactive': 0,
+            'total_cumulative': 1,
+        },
+    },
+}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVPNSessionDBSummary(device=self.device)
@@ -265,6 +352,12 @@ class TestShowVpnSessionDBSummary(unittest.TestCase):
         route_obj = ShowVPNSessionDBSummary(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        route_obj = ShowVPNSessionDBSummary(device=self.device)
+        parsed_output = route_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 # ============================================

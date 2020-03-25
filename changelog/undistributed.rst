@@ -62,6 +62,7 @@
     * Updated ShowVPNSessionDBSummary:
         * Added keys to the schema
         * Moved show command 'show vpn-sessiondb' into this class
+        * Updated some mandatory keys's state in schema into Optional
     * Updated ShowVpnSessiondbSuper:
         * Added keys to the schema
         * Updated regex to support output in show vpn-sessiondb anyconnect

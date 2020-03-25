@@ -95,25 +95,25 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
             },
             Optional('Tunnels'): {
                 'session': {
-                    'Clientless': {
+                    Optional('Clientless'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'AnyConnect-Parent': {
+                    Optional('AnyConnect-Parent'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'SSL-Tunnel': {
+                    Optional('SSL-Tunnel'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'DTLS-Tunnel': {
+                    Optional('DTLS-Tunnel'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
