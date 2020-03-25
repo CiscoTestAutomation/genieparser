@@ -241,9 +241,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
-        p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                        r' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
-                        r' +(?P<delay>[0-9]+) +usec,$')
+        p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY +(?P<delay>[0-9]+) +usec,$')
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
@@ -401,9 +399,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                           '(?P<out_deferred>[0-9]+) +deferred$')
 
         # 0 lost carrier, 0 no carrier, 0 pause output
-        p33 = re.compile(r'^(?P<out_lost_carrier>[0-9]+) +lost +carrier, +'
-                          '(?P<out_no_carrier>[0-9]+) +no +carrier, +'
-                          '(?P<out_pause_output>[0-9]+) +pause +output$')
+        p33 = re.compile(r'^(?P<out_lost_carrier>\d+) +lost +carrier, +(?P<out_no_carrier>\d+) +no +carrier(, +(?P<out_pause_output>\d+) +pause +output)?$')
 
         # 0 output buffer failures, 0 output buffers swapped out
         p34 = re.compile(r'^(?P<out_buffer_failure>[0-9]+) +output +buffer +failures, +'
@@ -992,8 +988,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['out_lost_carrier'])
                 interface_dict[interface]['counters']['out_no_carrier'] = \
                     int(m.groupdict()['out_no_carrier'])
-                interface_dict[interface]['counters']['out_mac_pause_frames'] = \
-                    int(m.groupdict()['out_pause_output'])
+                out_pause_output = m.groupdict().get('out_pause_output', None)
+                if out_pause_output:
+                    interface_dict[interface]['counters']['out_mac_pause_frames'] = \
+                        int(m.groupdict()['out_pause_output'])
                 continue
 
             # 0 output buffer failures, 0 output buffers swapped out
