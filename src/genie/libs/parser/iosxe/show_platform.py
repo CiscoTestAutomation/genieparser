@@ -78,8 +78,7 @@ class ShowBootvar(ShowBootvarSchema):
                         r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
 
         # Standby Configuration register is 0x2002
-        p4 = re.compile(
-            r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
 
         # CONFIG_FILE variable =
         p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
