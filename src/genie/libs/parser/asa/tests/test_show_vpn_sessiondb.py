@@ -280,6 +280,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
     """
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     # show vpn-sessiondb anyconnect
     golden_output_2 = {'execute.return_value': '''     
@@ -374,7 +375,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         Session Type: AnyConnect
 
         Username : user1 Index : 37670
-        Assigned IP : 10.10.10.80 Public IP : 10.66.2.2
+        Assigned IP : 10.10.10.80 Public IP : 2.22.2.2
         Protocol : AnyConnect-Parent
         License : AnyConnect Premium
         Encryption : AnyConnect-Parent: (1)none
@@ -390,7 +391,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         Security Grp : none
 
         Username : user1 Index : 56867
-        Assigned IP : 10.10.10.213 Public IP : 10.4.1.1
+        Assigned IP : 10.10.10.213 Public IP : 1.1.1.1
         Protocol : AnyConnect-Parent
         License : AnyConnect Premium
         Encryption : AnyConnect-Parent: (1)none
@@ -427,7 +428,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
                                 'license': 'AnyConnect Premium',
                                 'login_time': '15:56:33 CDT Fri Mar 13 2020',
                                 'protocol': 'AnyConnect-Parent',
-                                'public_ip': '10.66.2.2',
+                                'public_ip': '2.22.2.2',
                                 'security_group': 'none',
                                 'tunnel_group': 'Employee',
                                 'vlan': 'none',
@@ -448,7 +449,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
                                 'license': 'AnyConnect Premium',
                                 'login_time': '08:36:57 CDT Sat Mar 14 2020',
                                 'protocol': 'AnyConnect-Parent',
-                                'public_ip': '10.4.1.1',
+                                'public_ip': '1.1.1.1',
                                 'security_group': 'none',
                                 'tunnel_group': 'Employee',
                                 'vlan': 'none',
@@ -651,28 +652,24 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_golden_3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
         route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_5(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
         route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
         parsed_output = route_obj.parse()
@@ -690,7 +687,7 @@ class TestShowVpnSessiondbWebvpn(unittest.TestCase):
     """
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-
+    maxDiff = None
     # show vpn-sessiondb webvpn
     golden_output_4 = {'execute.return_value': '''
         Session Type: WebVPN
@@ -750,7 +747,6 @@ class TestShowVpnSessiondbWebvpn(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_4)
         route_obj = ShowVpnSessiondbWebvpn(device=self.device)
         parsed_output = route_obj.parse()
