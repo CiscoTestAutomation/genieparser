@@ -139,6 +139,7 @@ class TestShowIpInterfacesBriefPipeIp(unittest.TestCase):
 class TestShowInterfaces(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
     golden_parsed_output = {
         "GigabitEthernet0/2.1": {
             "reliability": "255/255",
@@ -604,14 +605,12 @@ class TestShowInterfaces(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 #############################################################################
