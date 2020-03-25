@@ -254,7 +254,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
-        p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
+        # Encapsulation(s): AAL5
+        p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+),'
                         r' +(?P<rest>.*)$')
             
         # Keepalive set (10 sec)
