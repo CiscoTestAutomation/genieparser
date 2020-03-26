@@ -19,8 +19,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any, 
-        Optional,
-        Path)
+        Optional, Use, SchemaTypeError, Schema)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -354,9 +353,24 @@ Schema for:
     * show ospf neighbor
 '''
 class ShowOspfNeighborSchema(MetaParser):
+
+    def validate_neighbor_list(value):
+        neighbor_schema = Schema({
+            'neighbor-address': str,
+            'interface-name': str,
+            'ospf-neighbor-state': str,
+            'neighbor-id': str,
+            'neighbor-priority': str,
+            'activity-timer': str
+        })
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
     schema = {
         'ospf-neighbor-information': {
-            'ospf-neighbor': list
+            'ospf-neighbor': Use(validate_neighbor_list)
         }
     }
 
