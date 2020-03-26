@@ -738,6 +738,64 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
         },
     }
 
+    # show vpn-sessiondb anyconnect
+    golden_output_6 = {'execute.return_value': '''
+    Session Type: AnyConnect
+
+    Username : XXX
+    Index : 62535
+    Assigned IP : 10.25.112.2 Public IP : 10.69.27.37
+    Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
+    License : AnyConnect Premium
+    Encryption : AnyConnect-Parent: (1)none SSL-Tunnel: (1)AES256 DTLS-Tunnel: (1)AES256
+    Hashing : AnyConnect-Parent: (1)none SSL-Tunnel: (1)SHA1 DTLS-Tunnel: (1)SHA1
+    Bytes Tx : 355483199 Bytes Rx : 187465614
+    Group Policy : GroupPolicy_RSM_Auto_VPN_UserCert
+    Tunnel Group : RSM_Auto_VPN_UserCert
+    Login Time : 13:47:22 UTC Wed Mar 25 2020
+    Duration : 1d 1h:36m:09s
+    Inactivity : 0h:00m:00s
+    VLAN Mapping : N/A VLAN : none
+    Audt Sess ID : 42626e2b0f4470005e7b60ea
+    Security Grp : none
+    '''}
+
+    golden_parsed_output_6 = {
+        'session_type': {
+            'AnyConnect': {
+                'username': {
+                    'XXX': {
+                        'index': {
+                            62535: {
+                                'assigned_ip': '10.25.112.2',
+                                'audt_sess_id': '42626e2b0f4470005e7b60ea',
+                                'bytes': {
+                                    'rx': 187465614,
+                                    'tx': 355483199,
+                                },
+                                'dtls_tunnel': '(1)SHA1',
+                                'duration': '1d 1h:36m:09s',
+                                'encryption': '(1)none',
+                                'group_policy': 'GroupPolicy_RSM_Auto_VPN_UserCert',
+                                'hashing': '(1)none',
+                                'inactivity': '0h:00m:00s',
+                                'license': 'AnyConnect Premium',
+                                'login_time': '13:47:22 UTC Wed Mar 25 2020',
+                                'protocol': 'AnyConnect-Parent SSL-Tunnel DTLS-Tunnel',
+                                'public_ip': '10.69.27.37',
+                                'security_group': 'none',
+                                'ssl_tunnel': '(1)SHA1',
+                                'tunnel_group': 'RSM_Auto_VPN_UserCert',
+                                'vlan': 'none',
+                                'vlan_mapping': 'N/A',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVpnSessiondbAnyconnect(device=self.device)
@@ -764,6 +822,12 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
 
     def test_golden_5(self):
         self.device = Mock(**self.golden_output_5)
+        route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
+        parsed_output = route_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
         route_obj = ShowVpnSessiondbAnyconnect(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
