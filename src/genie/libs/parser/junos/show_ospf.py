@@ -353,8 +353,23 @@ Schema for:
     * show ospf neighbor
 '''
 class ShowOspfNeighborSchema(MetaParser):
-
+    '''
+    schema = {
+        'ospf-neighbor-information': {
+            'ospf-neighbor': [{
+                'neighbor-address': str,
+                'interface-name': str,
+                'ospf-neighbor-state': str,
+                'neighbor-id': str,
+                'neighbor-priority': str,
+                'activity-timer': str
+            }]
+        }
+    }
+    '''
     def validate_neighbor_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             'neighbor-address': str,
             'interface-name': str,
@@ -363,8 +378,6 @@ class ShowOspfNeighborSchema(MetaParser):
             'neighbor-priority': str,
             'activity-timer': str
         })
-        if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
         for item in value:
             neighbor_schema.validate(item)
         return value
@@ -408,7 +421,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 dead = group['dead']
                 neighbor_list = ret_dict.setdefault('ospf-neighbor-information', {}). \
                                 setdefault('ospf-neighbor', [])
-                # neighbor_list = neighbor_dict.get('ospf-neighbor', [])
                 new_neighbor = {
                     'neighbor-address': neighbor,
                     'interface-name': interface,
@@ -418,7 +430,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                     'activity-timer': dead
                 }
                 neighbor_list.append(new_neighbor)
-                # neighbor_dict.update({'ospf-neighbor': new_neighbor})
                 continue
         return ret_dict
 
