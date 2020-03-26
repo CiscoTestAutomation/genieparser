@@ -237,7 +237,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r'\/(?P<prefix_length>[0-9]+))$')
 
         # Internet address is 10.4.4.4/24
-        p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
+        p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.x]+)'
                         r'\/(?P<prefix_length>[0-9]+))$')
 
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
@@ -259,8 +259,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
         # Encapsulation(s): AAL5
-        p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+),'
-                        r' +(?P<rest>.*)$')
+        p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+)'
+                r'(, +(?P<rest>.*))?$')
             
         # Keepalive set (10 sec)
         p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
@@ -577,6 +577,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                     ['encapsulation'] = encapsulation
 
                 rest = m.groupdict()['rest']
+                if not rest:
+                    continue
                 # Vlan ID 20, medium is p2p
                 m1 = re.compile(r'(Vlan +ID +(?P<first_dot1q>[0-9]+),)?'
                                  ' *medium +is +(?P<medium>[a-z0-9]+)$').match(rest)
