@@ -381,7 +381,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         
         ret_dict = {}
 
-        # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    32
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<interface>\S+) +'
                 r'(?P<state>\S+) +(?P<id>\S+) +(?P<pri>\d+) +(?P<dead>\d+)$')
 
@@ -389,7 +389,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    32
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
             m = p1.match(line)
             if m:
                 group = m.groupdict()

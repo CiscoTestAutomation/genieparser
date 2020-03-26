@@ -637,38 +637,38 @@ class TestShowOspfNeighbor(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf neighbor
         Address          Interface              State     ID               Pri  Dead
-        111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    32
-        106.187.14.121   ge-0/0/1.0             Full      106.187.14.240   128    33
-        27.86.198.26     ge-0/0/2.0             Full      27.86.198.239      1    33
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    33
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    33
         '''}
     
     golden_parsed_output = {
         'neighbor': {
-            '106.187.14.121': {
+            '10.169.14.121': {
                 'interface': {
                     'ge-0/0/1.0': {
                         'dead': 33,
-                        'id': '106.187.14.240',
+                        'id': '10.169.14.240',
                         'pri': 128,
                         'state': 'Full',
                     },
                 },
             },
-            '111.87.5.94': {
+            '10.189.5.94': {
                 'interface': {
                     'ge-0/0/0.0': {
                         'dead': 32,
-                        'id': '111.87.5.253',
+                        'id': '10.189.5.253',
                         'pri': 128,
                         'state': 'Full',
                     },
                 },
             },
-            '27.86.198.26': {
+            '10.19.198.26': {
                 'interface': {
                     'ge-0/0/2.0': {
                         'dead': 33,
-                        'id': '27.86.198.239',
+                        'id': '10.19.198.239',
                         'pri': 1,
                         'state': 'Full',
                     },
