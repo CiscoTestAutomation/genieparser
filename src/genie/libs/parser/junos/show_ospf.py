@@ -353,17 +353,8 @@ Schema for:
 '''
 class ShowOspfNeighborSchema(MetaParser):
     schema = {
-        'neighbor': {
-            Any(): {
-                'interface': {
-                    Any(): {
-                        'state': str,
-                        'id': str,
-                        'pri': int,
-                        'dead': int,
-                    }
-                }
-            }
+        'ospf-neighbor-information': {
+            'ospf-neighbor': list,
         }
     }
 
@@ -397,17 +388,21 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 interface = group['interface']
                 state = group['state']
                 _id = group['id']
-                pri = int(group['pri'])
-                dead = int(group['dead'])
-                neighbor_dict = ret_dict.setdefault('neighbor', {}). \
-                    setdefault(neighbor, {})
-                interface_dict = neighbor_dict.setdefault('interface', {}). \
-                    setdefault(interface, {})
-                interface_dict.update({'state': state})
-                interface_dict.update({'id': _id})
-                interface_dict.update({'pri': pri})
-                interface_dict.update({'dead': dead})
+                pri = group['pri']
+                dead = group['dead']
+                neighbor_list = ret_dict.setdefault('ospf-neighbor-information', {}). \
+                                setdefault('ospf-neighbor', [])
+                # neighbor_list = neighbor_dict.get('ospf-neighbor', [])
+                new_neighbor = {
+                    'neighbor-address': neighbor,
+                    'interface-name': interface,
+                    'ospf-neighbor-state': state,
+                    'neighbor-id': _id,
+                    'neighbor-priority': pri,
+                    'activity-timer': dead
+                }
+                neighbor_list.append(new_neighbor)
+                # neighbor_dict.update({'ospf-neighbor': new_neighbor})
                 continue
-        
         return ret_dict
 

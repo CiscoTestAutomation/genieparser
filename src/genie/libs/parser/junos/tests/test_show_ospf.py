@@ -643,37 +643,29 @@ class TestShowOspfNeighbor(unittest.TestCase):
         '''}
     
     golden_parsed_output = {
-        'neighbor': {
-            '10.169.14.121': {
-                'interface': {
-                    'ge-0/0/1.0': {
-                        'dead': 33,
-                        'id': '10.169.14.240',
-                        'pri': 128,
-                        'state': 'Full',
-                    },
-                },
-            },
-            '10.189.5.94': {
-                'interface': {
-                    'ge-0/0/0.0': {
-                        'dead': 32,
-                        'id': '10.189.5.253',
-                        'pri': 128,
-                        'state': 'Full',
-                    },
-                },
-            },
-            '10.19.198.26': {
-                'interface': {
-                    'ge-0/0/2.0': {
-                        'dead': 33,
-                        'id': '10.19.198.239',
-                        'pri': 1,
-                        'state': 'Full',
-                    },
-                },
-            },
+        'ospf-neighbor-information': {
+            'ospf-neighbor': [
+                {
+                    'neighbor-address': '10.189.5.94', 
+                    'interface-name': 'ge-0/0/0.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.189.5.253', 
+                    'neighbor-priority': '128', 
+                    'activity-timer': '32'}, 
+                {
+                    'neighbor-address': '10.169.14.121', 
+                    'interface-name': 'ge-0/0/1.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.169.14.240', 
+                    'neighbor-priority': '128', 
+                    'activity-timer': '33'}, 
+                {
+                    'neighbor-address': '10.19.198.26', 
+                    'interface-name': 'ge-0/0/2.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.19.198.239', 
+                    'neighbor-priority': '1', 'activity-timer': '33'
+                }],
         },
     }
 
