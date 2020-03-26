@@ -37,7 +37,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
                                                   ShowProcessesMemory, \
-                                                  ShowProcessesMemorySorted
+                                                  ShowProcessesMemorySorted, \
+                                                  ShowPlatformIntegrity
 
 # ============================
 # Unit test for 'show bootvar'
@@ -2316,112 +2317,124 @@ class TestShowInventory(unittest.TestCase):
         '''}
 
     golden_parsed_output_isr4k = {
-        'main': 
-            {'chassis': 
-                {'ISR4331/K9': 
-                    {'sn': 'FDO2201A0SR',
-                    'pid': 'ISR4331/K9',
-                    'descr': 'Cisco ISR4331 Chassis',
-                    'name': 'Chassis',
-                    'vid': 'V04',
-                    },
-                },
-            },
-        'slot': 
-            {'0': 
-                {'lc': 
-                    {'ISR4331-3x1GE': 
-                        {'descr': 'Front Panel 3 ports Gigabitethernet Module',
-                        'name': 'NIM subslot 0/0',
-                        'pid': 'ISR4331-3x1GE',
-                        'sn': '',
-                        'subslot': 
-                            {'0 transceiver 2': 
-                                {'SFP-GE-T': 
-                                    {'descr': 'GE T',
-                                    'name': 'subslot 0/0 transceiver 2',
-                                    'pid': 'SFP-GE-T',
-                                    'sn': 'MTC2139029X',
-                                    'vid': 'V02'}}},
-                        'vid': 'V01'},
-                    'ISR4331/K9': 
-                        {'descr': 'Cisco ISR4331 Built-In NIM controller',
-                        'name': 'module 0',
-                        'pid': 'ISR4331/K9',
-                        'sn': '',
-                        'subslot': 
-                            {'1': 
-                                {'NIM-ES2-4': 
-                                    {'descr': 'NIM-ES2-4',
-                                    'name': 'NIM subslot 0/1',
-                                    'pid': 'NIM-ES2-4',
-                                    'sn': 'FOC21486SRL',
-                                    'vid': 'V01'}},
-                            '2': 
-                                {'NIM-ES2-8': 
-                                    {'descr': 'NIM-ES2-8',
-                                    'name': 'NIM subslot 0/2',
-                                    'pid': 'NIM-ES2-8',
-                                    'sn': 'FOC22384AXC',
-                                    'vid': 'V01'}}},
-                        'vid': ''}}},
-            '1': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Built-In SM controller',
-                        'name': 'module 1',
-                        'vid': '',
+        "main":{
+            "chassis":{
+                "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO2201A0SR",
+                    "vid":"V04"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4331-3x1GE":{
+                                "descr":"Front Panel 3 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4331-3x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
                         },
-                    },
-                },
-            'F0': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Forwarding Processor',
-                        'name': 'module F0',
-                        'vid': '',
+                        "0 transceiver 2":{
+                            "SFP-GE-T":{
+                                "descr":"GE T",
+                                "name":"subslot 0/0 transceiver 2",
+                                "pid":"SFP-GE-T",
+                                "sn":"MTC2139029X",
+                                "vid":"V02"
+                            }
                         },
-                    },
-                },
-            'P0': 
-                {'other': 
-                    {'PWR-4330-AC': 
-                        {'sn': 'PST2150N1E2',
-                        'pid': 'PWR-4330-AC',
-                        'descr': '250W AC Power Supply for Cisco ISR 4330',
-                        'name': 'Power Supply Module 0',
-                        'vid': 'V02',
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC21486SRL",
+                                "vid":"V01"
+                            }
                         },
+                        "2":{
+                            "NIM-ES2-8":{
+                                "descr":"NIM-ES2-8",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-ES2-8",
+                                "sn":"FOC22384AXC",
+                                "vid":"V01"
+                            }
+                        }
                     },
-                },
-            'Fan_Tray': {
-                'other': {
-                    'ACS-4330-FANASSY': {
-                        'descr': 'Cisco ISR4330 Fan Assembly',
-                        'name': 'Fan Tray',
-                        'pid': 'ACS-4330-FANASSY',
-                        'sn': '',
-                        'vid': '',
+                    "vid":""
                     }
                 }
             },
-            'R0': 
-                {'rp': 
-                    {'ISR4331/K9': 
-                        {'sn': 'FDO21520TGH',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Route Processor',
-                        'name': 'module R0',
-                        'vid': 'V04',
-                        },
-                    },
-                },
+            "1":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
             },
+            "F0":{
+                "other":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4330-FANASSY":{
+                    "descr":"Cisco ISR4330 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4330-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4330-AC":{
+                    "descr":"250W AC Power Supply for Cisco ISR 4330",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4330-AC",
+                    "sn":"PST2150N1E2",
+                    "vid":"V02"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO21520TGH",
+                    "vid":"V04"
+                    }
+                }
+            }
         }
+    }
 
     golden_output_isr4k = {'execute.return_value': '''
         show inventory
@@ -2709,6 +2722,126 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR1002-X         , VID:    , SN:         
         '''}
 
+    golden_parsed_output_c8300 = {
+        "main":{
+            "chassis":{
+                "C8300-1N1S-6G":{
+                    "descr":"Cisco isr9000 Series Chassis",
+                    "name":"Chassis",
+                    "pid":"C8300-1N1S-6G",
+                    "sn":"FDO2319A1RM",
+                    "vid":"V00"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 series Unknown Module",
+                        "name":"module 0",
+                        "pid":"C8300-1N1S-6G",
+                        "vid":"",
+                        "sn":"",
+                        "subslot":{
+                            "0":{
+                                "4x1G-2xSFP":{
+                                    "descr":"Front Panel 6 ports Gigabitethernet Module",
+                                    "name":"NIM subslot 0/0",
+                                    "pid":"4x1G-2xSFP",
+                                    "sn":"",
+                                    "vid":"V01"
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "C-SM-NIM-ADPT":{
+                        "descr":"Cisco C-SM-NIM-ADPT SM to NIM adapter",
+                        "name":"module 1",
+                        "pid":"C-SM-NIM-ADPT",
+                        "sn":"FDO23370TB8",
+                        "vid":"V01",
+                        "subslot":{
+                            "0":{
+                                "NIM-8MFT-T1/E1":{
+                                    "descr":"NIM-8MFT-T1/E1 - T1/E1 Serial Module",
+                                    "name":"NIM subslot 1/0",
+                                    "pid":"NIM-8MFT-T1/E1",
+                                    "sn":"FOC21032R9L",
+                                    "vid":"V04"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "F0":{
+                "other":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Forwarding Processor",
+                        "name":"module F0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "C8300-FAN-1R":{
+                        "descr":"Cisco C8300 1RU Fan Assembly",
+                        "name":"Fan Tray",
+                        "pid":"C8300-FAN-1R",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Route Processor",
+                        "name":"module R0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"FDO231403QN",
+                        "vid":"V00"
+                    }
+                }
+            }
+        }      
+    }
+
+    golden_output_c8300= {'execute.return_value':'''
+    
+    NAME: "Chassis", DESCR: "Cisco isr9000 Series Chassis"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO2319A1RM
+
+    NAME: "Fan Tray", DESCR: "Cisco C8300 1RU Fan Assembly"
+    PID: C8300-FAN-1R , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco isr9000 series Unknown Module"
+    PID: C8300-1N1S-6G , VID: , SN:
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 6 ports Gigabitethernet Module"
+    PID: 4x1G-2xSFP , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco C-SM-NIM-ADPT SM to NIM adapter"
+    PID: C-SM-NIM-ADPT , VID: V01 , SN: FDO23370TB8
+
+    NAME: "NIM subslot 1/0", DESCR: "NIM-8MFT-T1/E1 - T1/E1 Serial Module"
+    PID: NIM-8MFT-T1/E1 , VID: V04 , SN: FOC21032R9L
+
+    NAME: "module R0", DESCR: "Cisco isr9000 Series Route Processor"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO231403QN
+
+    NAME: "module F0", DESCR: "Cisco isr9000 Series Forwarding Processor"
+    PID: C8300-1N1S-6G , VID: , SN:
+    '''}
+
     golden_parsed_output = {
         'main': {
             'chassis': {
@@ -2924,6 +3057,199 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR1002-HX        , VID:      , SN:
     '''}
 
+    golden_parsed_output_1 = {
+        "main":{
+            "chassis":{
+                "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FGL172511Q5",
+                    "vid":"V01"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4451-X-4x1GE":{
+                                "descr":"Front Panel 4 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4451-X-4x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
+                        },
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC1831B0TS",
+                                "vid":"V01"
+                            }
+                        },
+                        "2":{
+                            "NIM-24A":{
+                                "descr":"24 ports Async Serial NIM",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-24A",
+                                "sn":"DNI2047033J",
+                                "vid":"V01"
+                            }
+                        },
+                        "3":{
+                            "NIM-SSD":{
+                                "descr":"NIM SSD Module",
+                                "name":"NIM subslot 0/3",
+                                "pid":"NIM-SSD",
+                                "sn":"FOC17356NWR",
+                                "vid":"V01"
+                            }
+                        },
+                        "3 disk1":{
+                            "Samsung SSD 860 EVO 250GB":{
+                                "descr":"harddisk",
+                                "name":"subslot 0/3 disk1",
+                                "pid":"Samsung SSD 860 EVO 250GB",
+                                "sn":"S3Y9NX0M604745D",
+                                "vid":"RVT03B6Q"
+                            }
+                        },
+                        "4":{
+                            "PVDM4-32":{
+                                "descr":"PVDM4-32 Voice DSP Module",
+                                "name":"PVDM subslot 0/4",
+                                "pid":"PVDM4-32",
+                                "sn":"FOC17176BKC",
+                                "vid":"V01"
+                            }
+                        }
+                    },
+                    "vid":""
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "2":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 2",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "F0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4450-FANASSY":{
+                    "descr":"Cisco ISR4450, ISR4350 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4450-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4450-AC":{
+                    "descr":"450W AC Power Supply for Cisco ISR4450, ISR4350",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4450-AC",
+                    "sn":"DCA1645X0EK",
+                    "vid":"V01"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FOC17042FN5",
+                    "vid":"V01"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 ={'execute.return_value':'''
+    NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
+
+    NAME: "Power Supply Module 0", DESCR: "450W AC Power Supply for Cisco ISR4450, ISR4350"
+    PID: PWR-4450-AC , VID: V01 , SN: DCA1645X0EK
+
+    NAME: "Fan Tray", DESCR: "Cisco ISR4450, ISR4350 Fan Assembly"
+    PID: ACS-4450-FANASSY , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco ISR4451 Built-In NIM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
+    PID: NIM-ES2-4 , VID: V01 , SN: FOC1831B0TS
+
+    NAME: "NIM subslot 0/2", DESCR: "24 ports Async Serial NIM"
+    PID: NIM-24A , VID: V01 , SN: DNI2047033J
+
+    NAME: "NIM subslot 0/3", DESCR: "NIM SSD Module"
+    PID: NIM-SSD , VID: V01 , SN: FOC17356NWR
+
+    NAME: "subslot 0/3 disk1", DESCR: "harddisk"
+    PID: Samsung SSD 860 EVO 250GB , VID: RVT03B6Q, SN: S3Y9NX0M604745D
+
+    NAME: "PVDM subslot 0/4", DESCR: "PVDM4-32 Voice DSP Module"
+    PID: PVDM4-32 , VID: V01 , SN: FOC17176BKC
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 4 ports Gigabitethernet Module"
+    PID: ISR4451-X-4x1GE , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module 2", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module R0", DESCR: "Cisco ISR4451 Route Processor"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FOC17042FN5
+
+    NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
+    PID: ISR4451-X/K9 , VID: , SN:
+    '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2966,6 +3292,13 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
+    def test_show_inventory_golden_c8300(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_c8300)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c8300)
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -2973,6 +3306,12 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -19490,6 +19829,177 @@ class TestShowProcessMemorySorted(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_sorted)
 
+class TestShowPlatformIntegrity(unittest.TestCase):
+
+    dev1 = Device(name='empty')
+    dev_c9500 = Device(name='c9300')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_c9300 = {
+        'boot': {
+            'loader': {
+                'hash': '51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57',
+                'version': 'System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE',
+            },
+            0: {
+                'hash': '523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF',
+                'version': 'F01144R16.216e68ad62019-02-13',
+            },
+        },
+        'os_hashes': {
+            'PCR0': 'BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E',
+            'PCR8': '1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6',
+            'cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg': '0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48',
+            'cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg': 'FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6',
+            'cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg': '3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295',
+            'cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg': '51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F',
+            'cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg': '5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1',
+            'cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg': 'AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A',
+            'cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg': 'A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB',
+            'cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg': 'D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2',
+            'cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg': '6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448',
+            'cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin': 'F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8',
+        },
+        'os_version': '2019-07-11_16.25_mzafar',
+        'platform': 'C9300-24U',
+    }
+
+    golden_output_c9300 = {'execute.return_value': '''\
+        C9300#show platform integrity
+        Platform: C9300-24U
+        Boot 0 Version: F01144R16.216e68ad62019-02-13
+        Boot 0 Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
+        Boot Loader Version: System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE
+        Boot Loader Hash: 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
+        OS Version: 2019-07-11_16.25_mzafar
+        OS Hashes:
+        cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8
+        cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg: 6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448
+        cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg: 3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295
+        cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg: D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2
+        cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg: 0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48
+        cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg: A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB
+        cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg: 5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1
+        cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg: AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A
+        cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg: FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6
+        cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg: 51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F
+        PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
+        PCR8: 1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6
+
+    '''}
+
+    golden_parsed_output_c9300_xml = {
+        'boot': {
+            'loader': {
+                'hash': '51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57',
+                'version': 'System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE',
+            },
+            0: {
+                'hash': '523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF',
+                'version': 'F01144R16.216e68ad62019-02-13',
+            },
+        }, 
+        'os_hashes': {
+            'PCR0': 'BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E',
+            'PCR8': '1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6',
+            'cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg': '0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48',
+            'cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg': 'FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6',
+            'cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg': '3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295',
+            'cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg': '51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F',
+            'cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg': '5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1',
+            'cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg': 'AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A',
+            'cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg': 'A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB',
+            'cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg': 'D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2',
+            'cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg': '6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448',
+        },
+        'os_version': '2019-07-11_16.25_mzafar',
+        'platform': 'C9300-24U',
+    }
+
+    golden_output_c9300_xml = '''
+        <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:uuid:4679c98c-647b-43fa-8349-de852d77b775">
+            <data>
+                <boot-integrity-oper-data xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-boot-integrity-oper">
+                <boot-integrity>
+                    <platform>C9300-24U</platform>
+                    <boot-ver>F01144R16.216e68ad62019-02-13</boot-ver>
+                    <boot-loader-ver>System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE</boot-loader-ver>
+                    <os-version>2019-07-11_16.25_mzafar</os-version>
+                    <boot-hash>523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF</boot-hash>
+                    <boot-loader-hash>51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57</boot-loader-hash>
+                    <os-hash>F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8</os-hash>
+                    <package-count>9</package-count>
+                    <pcr-register>
+                    <index>0</index>
+                    <pcr-content>BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E</pcr-content>
+                    </pcr-register>
+                    <pcr-register>
+                    <index>8</index>
+                    <pcr-content>1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6</pcr-content>
+                    </pcr-register>
+                    <package-signature>
+                    <name>cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48</hash>
+                    </package-signature>
+                    <signature>138ABFFAC76AFBDB43C533601D29A5DA5163D47741D970F406E43CF7081DB0B3CFCDD4D54A059BF64A55B7FB9BFA363B2EEB43526DC7F01E19622A76349988196A16A40B5874658D125F6BE260823DDC485AD9666C88E1FB23DF22181C2BF19F59DA656C0C3064FFAE0522F3440D1C625D75B8474A265191D25BEA028202206B211DBE634CF6DA81871336F13CF4A4497ED34A35ACBACE9BD56193DB71393C3EB062E2C5DACB40D1B6FC7940B0DA9391AF99F8D645354F5AEBC5684401FE69914DF554C0F3233129E12215ECB8778F3BE7C854640CC60373A006174D8910CCF024196C9E7D7E622552DEFA4D2650128A94C3098B7CAF7097A4D6F3770E401488</signature>
+                    <sig-version>1</sig-version>
+                </boot-integrity>
+                </boot-integrity-oper-data>
+            </data>
+            </rpc-reply>
+
+        '''
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        version_obj = ShowPlatformIntegrity(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = version_obj.parse()
+
+    def test_golden_c9300(self):
+        self.maxDiff = None
+        self.dev_c9300 = Mock(**self.golden_output_c9300)
+        version_obj = ShowPlatformIntegrity(device=self.dev_c9300)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c9300)
+    
+    def test_golden_c9300_xml(self):
+        self.maxDiff = None
+        version_obj = ShowPlatformIntegrity(device=None)
+        parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
 
 if __name__ == '__main__':
     unittest.main()
