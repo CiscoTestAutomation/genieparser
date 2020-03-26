@@ -533,6 +533,7 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
                 continue
 
             # Index : 1 IP Addr : 192.168.16.232
+            # Index : 62535
             m = p3.match(line)
             if m:
                 index_dict = username_dict.setdefault('index', {}).\
