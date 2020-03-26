@@ -18,7 +18,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import (Any, 
+        Optional,
+        Path)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -354,7 +356,7 @@ Schema for:
 class ShowOspfNeighborSchema(MetaParser):
     schema = {
         'ospf-neighbor-information': {
-            'ospf-neighbor': list,
+            'ospf-neighbor': list
         }
     }
 
