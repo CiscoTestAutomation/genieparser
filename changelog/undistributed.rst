@@ -54,6 +54,10 @@
     * Added ShowAspDrop for
         * show asp drop
 
+* JUNOS
+    * Added ShowOspfNeighbor for:
+        * show ospf neighbor
+
 
 --------------------------------------------------------------------------------
                                 Fix
