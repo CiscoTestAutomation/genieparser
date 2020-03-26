@@ -418,6 +418,18 @@ class ShowInterfaces(ShowInterfacesSchema):
         p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
                           '(?P<unnumbered_intf>[\w\/\.]+) +'
                           '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+        
+        # 8 maximum active VCs, 1024 VCs per VP, 1 current VCCs
+        p36 = re.compile(r'^(?P<maximum_active_vcs>\d+) +maximum +active +VCs, +'
+                r'(?P<vcs_per_vp>\d+) +VCs +per +VP, +(?P<current_vccs>\d+) current VCCs$')
+        
+        # VC Auto Creation Disabled.
+        p37 = re.compile(r'^VC +Auto +Creation +(?P<vc_auto_creation>\S+)\.$')
+
+        # VC idle disconnect time: 300 seconds
+        p38 = re.compile(r'^VC +idle +disconnect +time: +(?P<vc_idle_disconnect_time>\d+) +'
+                r'seconds$')
+
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
