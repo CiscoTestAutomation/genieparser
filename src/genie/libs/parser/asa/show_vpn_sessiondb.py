@@ -95,25 +95,25 @@ class ShowVPNSessionDBSummarySchema(MetaParser):
             },
             Optional('Tunnels'): {
                 'session': {
-                    'Clientless': {
+                    Optional('Clientless'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'AnyConnect-Parent': {
+                    Optional('AnyConnect-Parent'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'SSL-Tunnel': {
+                    Optional('SSL-Tunnel'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
                         Optional('inactive'): int,
                     },
-                    'DTLS-Tunnel': {
+                    Optional('DTLS-Tunnel'): {
                         'active': int,
                         'cumulative': int,
                         'peak_concurrent': int,
@@ -411,8 +411,9 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
                         r'(\s+Index\s+:\s+(?P<index>\d+))?$')
 
         # Index : 1 IP Addr : 192.168.16.232
-        p3 = re.compile(r'^Index\s+:\s+(?P<index>\d+)\s+'
-                        r'IP\s+Addr\s+:\s+(?P<ip_addr>\S+)$')
+        # Index : 62535
+        p3 = re.compile(r'^Index\s+:\s+(?P<index>\d+)(\s+'
+                        r'IP\s+Addr\s+:\s+(?P<ip_addr>\S+))?$')
 
         # Protocol : SSL VPN Client Encryption : 3DES
         # Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
@@ -502,8 +503,10 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
         # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
         # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
+        # Encryption   : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)AES256
+        # Hashing      : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)SHA1
         p25 = re.compile(r'^(?P<name>Encryption|Hashing)\s+:\s+(?P<protocol>\S+):\s+(?P<value>\S+)'
-                         r'\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+)'
+                         r'(\s+SSL-Tunnel:\s+(?P<ssl_tunnel>\S+))?'
                          r'(\s+DTLS-Tunnel:\s+(?P<dtls_tunnel>\S+))?$')
 
         for line in output.splitlines():
@@ -530,11 +533,13 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
                 continue
 
             # Index : 1 IP Addr : 192.168.16.232
+            # Index : 62535
             m = p3.match(line)
             if m:
                 index_dict = username_dict.setdefault('index', {}).\
                                                   setdefault(int(m.groupdict()['index']), {})
-                index_dict['ip_addr'] = m.groupdict()['ip_addr']
+                if m.groupdict()['ip_addr']:
+                    index_dict['ip_addr'] = m.groupdict()['ip_addr']
                 continue
 
             # Protocol : SSL VPN Client Encryption : 3DES
@@ -591,6 +596,8 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
             # Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
             # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
             # Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
+            # Encryption   : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)AES256
+            # Hashing      : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)SHA1
             m = p25.match(line)
             if m:
                 group = m.groupdict()

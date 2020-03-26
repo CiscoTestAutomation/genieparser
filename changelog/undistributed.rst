@@ -17,12 +17,15 @@
         * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
     * Added ShowInstallSummary for 
         * show install summary
+
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
+    * Added ShowInstallSummary for
+        * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
 * NXOS
@@ -59,8 +62,10 @@
     * Updated ShowVPNSessionDBSummary:
         * Added keys to the schema
         * Moved show command 'show vpn-sessiondb' into this class
+        * Updated some mandatory keys's state in schema into Optional
     * Updated ShowVpnSessiondbSuper:
         * Added keys to the schema
+        * Updated regex to support output in show vpn-sessiondb anyconnect
 
 * IOSXE
     * Updated ShowMplsForwardingTable:
