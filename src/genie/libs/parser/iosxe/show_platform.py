@@ -115,18 +115,15 @@ class ShowBootvar(ShowBootvarSchema):
             # Configuration register is 0x2002
             m = p3.match(line)
             if m:
-                boot_dict.setdefault('active', {})[
-                    'configuration_register'] = m.groupdict()['var1']
+                boot_dict.setdefault('active', {})['configuration_register'] = m.groupdict()['var1']
                 if m.groupdict()['var2']:
-                    boot_dict.setdefault('active', {})[
-                        'next_reload_configuration_register'] = m.groupdict()['var2']
+                    boot_dict.setdefault('active', {})['next_reload_configuration_register'] = m.groupdict()['var2']
                 continue
 
             # Standby Configuration register is 0x2002
             m = p4.match(line)
             if m:
-                boot_dict.setdefault('standby', {})[
-                    'configuration_register'] = m.groupdict()['var']
+                boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
                 continue
 
             # CONFIG_FILE variable =
@@ -140,8 +137,7 @@ class ShowBootvar(ShowBootvarSchema):
             m = p6.match(line)
             if m:
                 if m.groupdict()['var']:
-                    boot_dict.setdefault('standby', {})[
-                        'bootldr'] = m.groupdict()['var']
+                    boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
                 continue
         return boot_dict
 
@@ -459,8 +455,7 @@ class ShowVersion(ShowVersionSchema):
         p33 = re.compile(r'^[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
 
         # system_sn
-        p34 = re.compile(
-            r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
+        p34 = re.compile(r'^[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
 
         # Compiled Mon 10-Apr-17 04:35 by mcpre
         # Compiled Mon 19-Mar-18 16:39 by prod_rel_team
@@ -491,8 +486,7 @@ class ShowVersion(ShowVersionSchema):
         p40 = re.compile(r'^(?P<processor_board_flash>\S+) +bytes .+$')
 
         # Running default software
-        p41 = re.compile(
-            r'^Running +(?P<running_default_software>\S+) +software$')
+        p41 = re.compile(r'^Running +(?P<running_default_software>\S+) +software$')
 
         # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
         p42 = re.compile(r'^Jawa +Revision +(?P<jawa_revision>\S+)\, '
@@ -517,8 +511,7 @@ class ShowVersion(ShowVersionSchema):
         p46_0 = re.compile(r'^License UDI:$')
 
         #     *0        C3900-SPE150/K9       FOC16050QP6
-        p46 = re.compile(
-            r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
+        p46 = re.compile(r'^(?P<device_num>[*\d]+) +(?P<pid>[\S]+) +(?P<sn>[A-Z\d]+)$')
 
         # Image text-base: 0x40101040, data-base: 0x42D98000
         p47 = re.compile(r'^Image text-base: +(?P<text_base>\S+), '
@@ -588,15 +581,13 @@ class ShowVersion(ShowVersionSchema):
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.
             m = p4.match(line)
             if m:
-                version_dict.setdefault('version', {}).setdefault(
-                    'image_type', 'developer image')
+                version_dict.setdefault('version', {}).setdefault('image_type', 'developer image')
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport
             m = p5.match(line)
             if m:
-                version_dict.setdefault('version', {}).setdefault(
-                    'image_type', 'production image')
+                version_dict.setdefault('version', {}).setdefault('image_type', 'production image')
                 continue
 
             # rom
@@ -821,30 +812,25 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 if 'switch_num' not in version_dict['version']:
                     continue
-                version_dict['version']['switch_num'][switch_number]['uptime'] = m.groupdict()[
-                    'uptime']
+                version_dict['version']['switch_num'][switch_number]['uptime'] = m.groupdict()['uptime']
                 continue
 
             # mac_address
             m = p28.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'mac_address', m.groupdict()['mac_address'])
+                    active_dict.setdefault('mac_address', m.groupdict()['mac_address'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()[
-                    'mac_address']
+                version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()['mac_address']
                 continue
 
             # mb_assembly_num
             m = p29.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'mb_assembly_num', m.groupdict()['mb_assembly_num'])
+                    active_dict.setdefault('mb_assembly_num', m.groupdict()['mb_assembly_num'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['mb_assembly_num'] = m.groupdict()[
-                    'mb_assembly_num']
+                version_dict['version']['switch_num'][switch_number]['mb_assembly_num'] = m.groupdict()['mb_assembly_num']
                 continue
 
             # mb_sn
@@ -853,52 +839,43 @@ class ShowVersion(ShowVersionSchema):
                 if 'switch_num' not in version_dict['version']:
                     active_dict.setdefault('mb_sn', m.groupdict()['mb_sn'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['mb_sn'] = m.groupdict()[
-                    'mb_sn']
+                version_dict['version']['switch_num'][switch_number]['mb_sn'] = m.groupdict()['mb_sn']
                 continue
 
             # model_rev_num
             m = p31.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'model_rev_num', m.groupdict()['model_rev_num'])
+                    active_dict.setdefault('model_rev_num', m.groupdict()['model_rev_num'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()[
-                    'model_rev_num']
+                version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()['model_rev_num']
                 continue
 
             # mb_rev_num
             m = p32.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'mb_rev_num', m.groupdict()['mb_rev_num'])
+                    active_dict.setdefault('mb_rev_num', m.groupdict()['mb_rev_num'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['mb_rev_num'] = m.groupdict()[
-                    'mb_rev_num']
+                version_dict['version']['switch_num'][switch_number]['mb_rev_num'] = m.groupdict()['mb_rev_num']
                 continue
 
             # model_num
             m = p33.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'model_num', m.groupdict()['model_num'])
+                    active_dict.setdefault('model_num', m.groupdict()['model_num'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['model_num'] = m.groupdict()[
-                    'model_num']
+                version_dict['version']['switch_num'][switch_number]['model_num'] = m.groupdict()['model_num']
                 continue
 
             # system_sn
             m = p34.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
-                    active_dict.setdefault(
-                        'system_sn', m.groupdict()['system_sn'])
+                    active_dict.setdefault('system_sn', m.groupdict()['system_sn'])
                     continue
-                version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()[
-                    'system_sn']
+                version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
                 continue
 
             # Compiled Mon 10-Apr-17 04:35 by mcpre
@@ -934,8 +911,7 @@ class ShowVersion(ShowVersionSchema):
             # Last reload type: Normal Reload
             m38 = p38.match(line)
             if m38:
-                version_dict['version']['last_reload_type'] = m38.groupdict()[
-                    'last_reload_type']
+                version_dict['version']['last_reload_type'] = m38.groupdict()['last_reload_type']
 
                 continue
 
@@ -976,10 +952,8 @@ class ShowVersion(ShowVersionSchema):
             # Jawa Revision 7, Snowtrooper Revision 0x0.0x1C
             m42 = p42.match(line)
             if m42:
-                version_dict['version']['jawa_revision'] = m42.groupdict()[
-                    'jawa_revision']
-                version_dict['version']['snowtrooper_revision'] = m42.groupdict()[
-                    'snowtrooper_rev']
+                version_dict['version']['jawa_revision'] = m42.groupdict()['jawa_revision']
+                version_dict['version']['snowtrooper_revision'] = m42.groupdict()['snowtrooper_rev']
 
                 continue
 
@@ -990,38 +964,29 @@ class ShowVersion(ShowVersionSchema):
                 group = m43.groupdict()
 
                 if license_flag:
-                    lic_initial_dict = version_dict['version'].setdefault(
-                        'license_package', {})
-                    license_dict = lic_initial_dict.setdefault(
-                        group['technology'], {})
+                    lic_initial_dict = version_dict['version'].setdefault('license_package', {})
+                    license_dict = lic_initial_dict.setdefault(group['technology'], {})
 
                     if group['license_type']:
-                        license_dict.update(
-                            {'license_type': group['license_type']})
+                        license_dict.update({'license_type': group['license_type']})
 
                     if group['license_level']:
-                        license_dict.update(
-                            {'license_level': group['license_level']})
+                        license_dict.update({'license_level': group['license_level']})
 
                     if group['next_boot']:
-                        license_dict.update(
-                            {'next_reload_license_level': group['next_boot']})
+                        license_dict.update({'next_reload_license_level': group['next_boot']})
 
                 if suite_flag:
-                    suite_lic_dict = suite_dict.setdefault(
-                        group['technology'], {})
+                    suite_lic_dict = suite_dict.setdefault(group['technology'], {})
 
                     if group['license_level']:
-                        suite_lic_dict.update(
-                            {'suite_current': group['license_level']})
+                        suite_lic_dict.update({'suite_current': group['license_level']})
 
                     if group['license_type']:
-                        suite_lic_dict.update(
-                            {'type': group['license_type'].strip()})
+                        suite_lic_dict.update({'type': group['license_type'].strip()})
 
                     if group['next_boot']:
-                        suite_lic_dict.update(
-                            {'suite_next_reboot': group['next_boot']})
+                        suite_lic_dict.update({'suite_next_reboot': group['next_boot']})
 
                 continue
 
@@ -1042,8 +1007,7 @@ class ShowVersion(ShowVersionSchema):
             m45 = p45.match(line)
             if m45:
                 module_dict = version_dict['version'].setdefault('module', {})
-                suite_dict = module_dict.setdefault(
-                    m45.groupdict()['module'], {})
+                suite_dict = module_dict.setdefault(m45.groupdict()['module'], {})
 
                 continue
 
@@ -1051,8 +1015,7 @@ class ShowVersion(ShowVersionSchema):
             m46_0 = p46_0.match(line)
             if m46_0:
                 if 'license_udi' not in version_dict:
-                    license_udi_dict = version_dict['version'].setdefault(
-                        'license_udi', {})
+                    license_udi_dict = version_dict['version'].setdefault('license_udi', {})
                 continue
 
             # *0        C3900-SPE150/K9       FOC16050QP6
@@ -1069,10 +1032,8 @@ class ShowVersion(ShowVersionSchema):
             m = p47.match(line)
             if m:
                 version_dict['version']['image'] = {}
-                version_dict['version']['image']['text_base'] = m.groupdict()[
-                    'text_base']
-                version_dict['version']['image']['data_base'] = m.groupdict()[
-                    'data_base']
+                version_dict['version']['image']['text_base'] = m.groupdict()['text_base']
+                version_dict['version']['image']['data_base'] = m.groupdict()['data_base']
                 continue
 
             # 1 Virtual Ethernet/IEEE 802.3 interface(s)
@@ -1080,8 +1041,7 @@ class ShowVersion(ShowVersionSchema):
             m = p48.match(line)
             if m:
                 group = m.groupdict()
-                ethernet_type = '_'.join(
-                    group['ethernet_type'].lower().split())
+                ethernet_type = '_'.join(group['ethernet_type'].lower().split())
 
                 if 'interfaces' not in version_dict['version']:
                     version_dict['version']['interfaces'] = {}
@@ -1094,10 +1054,8 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 groupdict = m.groupdict()
                 version_dict['version']['revision'] = {}
-                version_dict['version']['revision'][groupdict['group1']] = int(
-                    groupdict['group1_int'])
-                version_dict['version']['revision'][groupdict['group2']] = int(
-                    groupdict['group2_int'])
+                version_dict['version']['revision'][groupdict['group1']] = int(groupdict['group1_int'])
+                version_dict['version']['revision'][groupdict['group2']] = int(groupdict['group2_int'])
                 continue
 
         # table2 for C3850
@@ -1148,8 +1106,7 @@ class ShowVersion(ShowVersionSchema):
                         switch_no = m.groupdict()['new_key']
                         if m:
                             if switch_no not in version_dict['version']['switch_num']:
-                                version_dict['version']['switch_num'][switch_no] = {
-                                }
+                                version_dict['version']['switch_num'][switch_no] = {}
                             for k, v in res2.entries[key].items():
                                 if 'switch_num' != k:
                                     version_dict['version']['switch_num'][switch_no][k] = v
@@ -1245,25 +1202,18 @@ class Dir(DirSchema):
                     dir_dict['dir'][dir1]['files'] = {}
                 if filename not in dir_dict['dir'][dir1]['files']:
                     dir_dict['dir'][dir1]['files'][filename] = {}
-                dir_dict['dir'][dir1]['files'][filename]['index'] = m.groupdict()[
-                    'index']
-                dir_dict['dir'][dir1]['files'][filename]['permissions'] = m.groupdict()[
-                    'permissions']
-                dir_dict['dir'][dir1]['files'][filename]['size'] = m.groupdict()[
-                    'size']
-                dir_dict['dir'][dir1]['files'][filename]['last_modified_date'] = m.groupdict()[
-                    'last_modified_date']
+                dir_dict['dir'][dir1]['files'][filename]['index'] = m.groupdict()['index']
+                dir_dict['dir'][dir1]['files'][filename]['permissions'] = m.groupdict()['permissions']
+                dir_dict['dir'][dir1]['files'][filename]['size'] = m.groupdict()['size']
+                dir_dict['dir'][dir1]['files'][filename]['last_modified_date'] = m.groupdict()['last_modified_date']
                 continue
 
             # bytes_total and bytes_free
-            p3 = re.compile(
-                r'\s*(?P<bytes_total>\d+) +bytes +total +\((?P<bytes_free>\d+) +bytes +free\)')
+            p3 = re.compile(r'\s*(?P<bytes_total>\d+) +bytes +total +\((?P<bytes_free>\d+) +bytes +free\)')
             m = p3.match(line)
             if m:
-                dir_dict['dir'][dir1]['bytes_total'] = m.groupdict()[
-                    'bytes_total']
-                dir_dict['dir'][dir1]['bytes_free'] = m.groupdict()[
-                    'bytes_free']
+                dir_dict['dir'][dir1]['bytes_total'] = m.groupdict()['bytes_total']
+                dir_dict['dir'][dir1]['bytes_free'] = m.groupdict()['bytes_free']
                 continue
 
         return dir_dict
@@ -1329,8 +1279,7 @@ class ShowRedundancy(ShowRedundancySchema):
             line = line.rstrip()
 
             # available_system_uptime
-            p1 = re.compile(
-                r'\s*[Aa]vailable +[Ss]ystem +[Uu]ptime +\= +(?P<available_system_uptime>.+)$')
+            p1 = re.compile(r'\s*[Aa]vailable +[Ss]ystem +[Uu]ptime +\= +(?P<available_system_uptime>.+)$')
             m = p1.match(line)
             if m:
                 redundancy_dict.setdefault('red_sys_info', {})
@@ -1339,8 +1288,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # switchovers_system_experienced
-            p2 = re.compile(
-                r'\s*[Ss]witchovers +system +experienced +\= +(?P<switchovers_system_experienced>\d+)$')
+            p2 = re.compile(r'\s*[Ss]witchovers +system +experienced +\= +(?P<switchovers_system_experienced>\d+)$')
             m = p2.match(line)
             if m:
                 redundancy_dict['red_sys_info']['switchovers_system_experienced'] = \
@@ -1348,8 +1296,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # standby_failures
-            p3 = re.compile(
-                r'\s*[Ss]tandby +failures +\= +(?P<standby_failures>\d+)$')
+            p3 = re.compile(r'\s*[Ss]tandby +failures +\= +(?P<standby_failures>\d+)$')
             m = p3.match(line)
             if m:
                 redundancy_dict['red_sys_info']['standby_failures'] = \
@@ -1357,8 +1304,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # last_switchover_reason
-            p4 = re.compile(
-                r'^\s*[Ll]ast +[Ss]witchover +[Rr]eason +\= +(?P<last_switchover_reason>.+)$')
+            p4 = re.compile(r'^\s*[Ll]ast +[Ss]witchover +[Rr]eason +\= +(?P<last_switchover_reason>.+)$')
             m = p4.match(line)
             if m:
                 redundancy_dict['red_sys_info']['last_switchover_reason'] = \
@@ -1366,8 +1312,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # hw_mode
-            p5 = re.compile(
-                r'\s*[Hh]ardware +[Mm]ode +\= +(?P<hw_mode>\S+)$')
+            p5 = re.compile(r'\s*[Hh]ardware +[Mm]ode +\= +(?P<hw_mode>\S+)$')
             m = p5.match(line)
             if m:
                 redundancy_dict['red_sys_info']['hw_mode'] = \
@@ -1375,8 +1320,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # conf_red_mode
-            p6 = re.compile(
-                r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>\S+)$')
+            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>\S+)$')
             m = p6.match(line)
             if m:
                 redundancy_dict['red_sys_info']['conf_red_mode'] = \
@@ -1384,8 +1328,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # oper_red_mode
-            p7 = re.compile(
-                r'\s*[Oo]perating +[Rr]edundancy +[Mm]ode +\= +(?P<oper_red_mode>.+)$')
+            p7 = re.compile(r'\s*[Oo]perating +[Rr]edundancy +[Mm]ode +\= +(?P<oper_red_mode>.+)$')
             m = p7.match(line)
             if m:
                 redundancy_dict['red_sys_info']['oper_red_mode'] = \
@@ -1393,8 +1336,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # maint_mode
-            p7 = re.compile(
-                r'\s*[Mm]aintenance +[Mm]ode +\= +(?P<maint_mode>\S+)$')
+            p7 = re.compile(r'\s*[Mm]aintenance +[Mm]ode +\= +(?P<maint_mode>\S+)$')
             m = p7.match(line)
             if m:
                 redundancy_dict['red_sys_info']['maint_mode'] = \
@@ -1402,16 +1344,14 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # communications
-            p8 = re.compile(
-                r'^\s*[Cc]ommunications +\= +(?P<communications>\S+)$')
+            p8 = re.compile(r'^\s*[Cc]ommunications +\= +(?P<communications>\S+)$')
             m = p8.match(line)
             if m:
                 redundancy_dict['red_sys_info']['communications'] = \
                     m.groupdict()['communications']
 
             # communications_reason
-            p8 = re.compile(
-                r'^\s*[Cc]ommunications +\= +(?P<communications>\S+)\s+[Rr]eason\: +(?P<communications_reason>.+)$')
+            p8 = re.compile(r'^\s*[Cc]ommunications +\= +(?P<communications>\S+)\s+[Rr]eason\: +(?P<communications_reason>.+)$')
             m = p8.match(line)
             if m:
                 redundancy_dict['red_sys_info']['communications'] = \
@@ -1432,8 +1372,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # curr_sw_state
-            p10 = re.compile(
-                r'^\s*[Cc]urrent +[Ss]oftware +[Ss]tate +\= +(?P<curr_sw_state>.+)$')
+            p10 = re.compile(r'^\s*[Cc]urrent +[Ss]oftware +[Ss]tate +\= +(?P<curr_sw_state>.+)$')
             m = p10.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -1442,8 +1381,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # uptime_in_curr_state
-            p11 = re.compile(
-                r'^\s*[Uu]ptime +[Ii]n +[Cc]urrent +[Ss]tate +\= +(?P<uptime_in_curr_state>.+)$')
+            p11 = re.compile(r'^\s*[Uu]ptime +[Ii]n +[Cc]urrent +[Ss]tate +\= +(?P<uptime_in_curr_state>.+)$')
             m = p11.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -1452,8 +1390,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # image_ver
-            p12 = re.compile(
-                r'^\s*[Ii]mage +[Vv]ersion +\= +(?P<image_ver>.+)$')
+            p12 = re.compile(r'^\s*[Ii]mage +[Vv]ersion +\= +(?P<image_ver>.+)$')
             m = p12.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -1489,8 +1426,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # config_register
-            p16 = re.compile(
-                r'^\s*[Cc]onfiguration +[Rr]egister = (?P<config_register>.+)$')
+            p16 = re.compile(r'^\s*[Cc]onfiguration +[Rr]egister = (?P<config_register>.+)$')
             m = p16.match(line)
             if m:
                 if 'slot' in redundancy_dict:
@@ -1561,8 +1497,7 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
                         '(?P<redundancy_mode_configured>[\S]+)$')
 
         # Redundancy State              = sso
-        p8 = re.compile(
-            r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
+        p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
 
         # Maintenance Mode = Disabled
         p9 = re.compile(r'^Maintenance +Mode += +(?P<maintenance_mode>[\w]+)$')
@@ -1853,8 +1788,7 @@ class ShowInventory(ShowInventorySchema):
                 if m1_1:
                     slot = m1_1.groupdict()['slot']
                     # Creat slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 # Power Supply Module 0
                 # Power Supply Module 1
@@ -1863,46 +1797,39 @@ class ShowInventory(ShowInventorySchema):
                 if m1_2:
                     slot = name.replace('Power Supply Module ', 'P')
                     # Creat slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 # SPA subslot 0/0
                 # IM subslot 0/1
                 # NIM subslot 0/0
-                p1_3 = re.compile(
-                    r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
+                p1_3 = re.compile(r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
                 m1_3 = p1_3.match(name)
                 if m1_3:
                     group = m1_3.groupdict()
                     slot = group['slot']
                     subslot = group['subslot']
                     # Creat slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 # subslot 0/0 transceiver 0
-                p1_4 = re.compile(
-                    r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
+                p1_4 = re.compile(r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
                 m1_4 = p1_4.match(name)
                 if m1_4:
                     group = m1_4.groupdict()
                     slot = group['slot']
                     subslot = group['subslot']
                     # Creat slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 # StackPort1/1
-                p1_5 = re.compile(
-                    r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
+                p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
                 m1_5 = p1_5.match(name)
                 if m1_5:
                     group = m1_5.groupdict()
                     slot = group['slot']
                     subslot = group['subslot']
                     # Create slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
                 # Fan Tray
                 p1_6 = re.compile(r'^Fan +Tray$')
@@ -1910,8 +1837,7 @@ class ShowInventory(ShowInventorySchema):
                 if m1_6:
                     slot = name.replace(' ', '_')
                     # Create slot_dict
-                    slot_dict = ret_dict.setdefault(
-                        'slot', {}).setdefault(slot, {})
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 # go to next line
                 continue
 
@@ -2136,13 +2062,11 @@ class ShowPlatform(ShowPlatformSchema):
         # ----------      C3850    -------------
 
         # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
-        p1 = re.compile(
-            r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
-            '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+        p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
+                        '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
 
         # Mac persistency wait time: Indefinite
-        p2 = re.compile(
-            r'^[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>[\w\.\:]+)$')
+        p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>[\w\.\:]+)$')
 
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
@@ -2187,8 +2111,7 @@ class ShowPlatform(ShowPlatformSchema):
             if m:
                 if 'main' not in platform_dict:
                     platform_dict['main'] = {}
-                platform_dict['main']['switch_mac_address'] = m.groupdict()[
-                    'switch_mac_address']
+                platform_dict['main']['switch_mac_address'] = m.groupdict()['switch_mac_address']
                 platform_dict['main']['swstack'] = True
                 continue
 
@@ -2196,8 +2119,7 @@ class ShowPlatform(ShowPlatformSchema):
             if m:
                 if 'main' not in platform_dict:
                     platform_dict['main'] = {}
-                platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()[
-                    'mac_persistency_wait_time'].lower()
+                platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
             m = p3.match(line)
@@ -2217,18 +2139,13 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'][slot][lc_type] = {}
                 if model not in platform_dict['slot'][slot][lc_type]:
                     platform_dict['slot'][slot][lc_type][model] = {}
-                platform_dict['slot'][slot][lc_type][model]['hw_ver'] = m.groupdict()[
-                    'hw_ver']
-                platform_dict['slot'][slot][lc_type][model]['mac_address'] = m.groupdict()[
-                    'mac_address']
+                platform_dict['slot'][slot][lc_type][model]['hw_ver'] = m.groupdict()['hw_ver']
+                platform_dict['slot'][slot][lc_type][model]['mac_address'] = m.groupdict()['mac_address']
                 platform_dict['slot'][slot][lc_type][model]['name'] = model
-                platform_dict['slot'][slot][lc_type][model]['ports'] = m.groupdict()[
-                    'ports']
+                platform_dict['slot'][slot][lc_type][model]['ports'] = m.groupdict()['ports']
                 platform_dict['slot'][slot][lc_type][model]['slot'] = slot
-                platform_dict['slot'][slot][lc_type][model]['sn'] = m.groupdict()[
-                    'serial_no']
-                platform_dict['slot'][slot][lc_type][model]['sw_ver'] = m.groupdict()[
-                    'sw_ver']
+                platform_dict['slot'][slot][lc_type][model]['sn'] = m.groupdict()['serial_no']
+                platform_dict['slot'][slot][lc_type][model]['sw_ver'] = m.groupdict()['sw_ver']
                 continue
 
             m = p4.match(line)
@@ -2342,10 +2259,8 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'][slot]['other'][''] = {}
                 platform_dict['slot'][slot]['other']['']['slot'] = slot
                 platform_dict['slot'][slot]['other']['']['name'] = ''
-                platform_dict['slot'][slot]['other']['']['state'] = m.groupdict()[
-                    'state']
-                platform_dict['slot'][slot]['other']['']['insert_time'] = m.groupdict()[
-                    'insert_time']
+                platform_dict['slot'][slot]['other']['']['state'] = m.groupdict()['state']
+                platform_dict['slot'][slot]['other']['']['insert_time'] = m.groupdict()['insert_time']
                 continue
 
         return platform_dict
@@ -2483,8 +2398,7 @@ class ShowBoot(ShowBootSchema):
                 if m.groupdict()['var']:
                     if 'standby' not in boot_dict:
                         boot_dict['standby'] = {}
-                        boot_dict['standby']['boot_variable'] = m.groupdict()[
-                            'var']
+                        boot_dict['standby']['boot_variable'] = m.groupdict()['var']
                 continue
 
             # Configuration register is 0x2002
@@ -2493,8 +2407,7 @@ class ShowBoot(ShowBootSchema):
             if m:
                 if 'active' not in boot_dict:
                     boot_dict['active'] = {}
-                boot_dict['active']['configuration_register'] = m.groupdict()[
-                    'var']
+                boot_dict['active']['configuration_register'] = m.groupdict()['var']
                 continue
 
             # Standby Configuration register is 0x2002
@@ -2504,8 +2417,7 @@ class ShowBoot(ShowBootSchema):
             if m:
                 if 'standby' not in boot_dict:
                     boot_dict['standby'] = {}
-                boot_dict['standby']['configuration_register'] = m.groupdict()[
-                    'var']
+                boot_dict['standby']['configuration_register'] = m.groupdict()['var']
                 continue
 
             # Manual Boot = yes
@@ -2553,16 +2465,13 @@ class ShowBoot(ShowBootSchema):
                         switches_dict = sw_dict.setdefault('switches', {})
                         index_dict = switches_dict.setdefault(
                             switch_number, {})
-                        index_dict.update(
-                            {'boot_path_list': m7.groupdict()['value']})
+                        index_dict.update({'boot_path_list': m7.groupdict()['value']})
                     else:
                         index_dict = sw_dict
-                        index_dict.update(
-                            {'boot_path_list': m7.groupdict()['value']})
+                        index_dict.update({'boot_path_list': m7.groupdict()['value']})
 
                 elif 'HELPER' in group['key']:
-                    index_dict.update(
-                        {'helper_path_list': m7.groupdict()['value']})
+                    index_dict.update({'helper_path_list': m7.groupdict()['value']})
 
                 continue
 
@@ -2573,8 +2482,7 @@ class ShowBoot(ShowBootSchema):
             # Allow Dev Key         : yes
             # Auto upgrade        : no
             # Auto upgrade path   :
-            p8 = re.compile(
-                r'^(?P<key>[\w\s]+) +\: +(?P<value>[\w\:\/\-\.]+)$')
+            p8 = re.compile(r'^(?P<key>[\w\s]+) +\: +(?P<value>[\w\:\/\-\.]+)$')
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
@@ -2593,8 +2501,7 @@ class ShowBoot(ShowBootSchema):
             p9 = re.compile(r'buffer +size\: +(?P<value>\d+)$')
             m9 = p9.match(line)
             if m9:
-                index_dict.update(
-                    {'nvram_buffer_size': int(m9.groupdict()['value'])})
+                index_dict.update({'nvram_buffer_size': int(m9.groupdict()['value'])})
 
                 continue
 
@@ -2602,8 +2509,7 @@ class ShowBoot(ShowBootSchema):
             p10 = re.compile(r'Download\: +(?P<value>\d+ +\w+)$')
             m10 = p10.match(line)
             if m10:
-                index_dict.update(
-                    {'timeout_config_download': m10.groupdict()['value']})
+                index_dict.update({'timeout_config_download': m10.groupdict()['value']})
 
                 continue
 
@@ -2718,8 +2624,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             # Mac persistency wait time: Indefinite
             m = p2.match(line)
             if m:
-                ret_dict['mac_persistency_wait_time'] = m.groupdict(
-                )['mac_persistency_wait_time'].lower()
+                ret_dict['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
             #                                              H/W   Current
@@ -2730,12 +2635,9 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             if m:
                 group = m.groupdict()
                 stack = group['switch']
-                match_dict = {k: v.lower()
-                              for k, v in group.items() if k in ['role', 'state']}
-                match_dict.update({k: v for k, v in group.items() if k in [
-                                  'priority', 'mac_address', 'hw_ver']})
-                ret_dict.setdefault('stack', {}).setdefault(
-                    stack, {}).update(match_dict)
+                match_dict = {k: v.lower()for k, v in group.items() if k in ['role', 'state']}
+                match_dict.update({k: v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver']})
+                ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
                 continue
 
             #          Stack Port Status             Neighbors
@@ -2747,15 +2649,12 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             if m:
                 group = m.groupdict()
                 stack = group['switch']
-                stack_ports = ret_dict.setdefault('stack', {}).setdefault(
-                    stack, {}).setdefault('ports', {})
+                stack_ports = ret_dict.setdefault('stack', {}).setdefault(stack, {}).setdefault('ports', {})
                 for port in self.STACK_PORT_RANGE:
                     port_dict = stack_ports.setdefault(port, {})
-                    port_dict['stack_port_status'] = group['status{}'.format(
-                        port)].lower()
+                    port_dict['stack_port_status'] = group['status{}'.format(port)].lower()
                     nbr_num = group['nbr_num_{}'.format(port)]
-                    port_dict['neighbors_num'] = int(
-                        nbr_num) if nbr_num.isdigit() else nbr_num
+                    port_dict['neighbors_num'] = int(nbr_num) if nbr_num.isdigit() else nbr_num
                 continue
 
         return {'switch': ret_dict} if ret_dict else {}
@@ -2848,8 +2747,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(
-            r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+        p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
 
         # Switch 1 FAN 1 direction is Front to Back
         p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
@@ -2857,16 +2755,13 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
-        p3 = re.compile(
-            r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
+        p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
 
-        p4 = re.compile(
-            r'^(?P<type>\w+) +Temperature +Value: +(?P<temperature>\d+) +Degree +Celsius$')
+        p4 = re.compile(r'^(?P<type>\w+) +Temperature +Value: +(?P<temperature>\d+) +Degree +Celsius$')
 
         p5 = re.compile(r'^Temperature +State: +(?P<state>\w+)$')
 
-        p6 = re.compile(
-            r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
+        p6 = re.compile(r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
 
         p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
                         '((?P<pid>[\w\-]+) +'
@@ -2885,10 +2780,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 group = m.groupdict()
                 switch = group['switch']
                 fan = group['fan']
-                root_dict = ret_dict.setdefault(
-                    'switch', {}).setdefault(switch, {})
-                root_dict.setdefault('fan', {}).setdefault(
-                    fan, {}).setdefault('state', group['state'].lower())
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
 
             # Switch 1 FAN 1 direction is Front to Back
@@ -2907,8 +2800,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             if m:
                 group = m.groupdict()
                 ps = group['ps']
-                power_supply_dict = root_dict.setdefault(
-                    'power_supply', {}).setdefault(ps, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
                 power_supply_dict.setdefault('state', group['state'].lower())
                 continue
 
@@ -2917,8 +2809,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             if m:
                 group = m.groupdict()
                 switch = group['switch']
-                root_dict = ret_dict.setdefault(
-                    'switch', {}).setdefault(switch, {})
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 root_dict['system_temperature_state'] = group['state'].lower()
                 continue
 
@@ -2957,14 +2848,10 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 group = m.groupdict()
                 switch = group.pop('sw')
                 ps = self.PS_MAPPING[group.pop('ps')]
-                root_dict = ret_dict.setdefault(
-                    'switch', {}).setdefault(switch, {})
-                power_supply_dict = root_dict.setdefault(
-                    'power_supply', {}).setdefault(ps, {})
-                power_supply_dict.update(
-                    {k: v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
-                power_supply_dict.update(
-                    {k: v.lower() for k, v in group.items()
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
+                power_supply_dict.update({k: v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
+                power_supply_dict.update({k: v.lower() for k, v in group.items()
                      if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
@@ -3019,10 +2906,8 @@ class ShowModule(ShowModuleSchema):
             if m:
                 group = m.groupdict()
                 switch = group.pop('switch')
-                switch_dict = ret_dict.setdefault(
-                    'switch', {}).setdefault(switch, {})
-                switch_dict.update(
-                    {k: v.lower() for k, v in group.items()})
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                switch_dict.update({k: v.lower() for k, v in group.items()})
                 continue
         return ret_dict
 
@@ -3166,8 +3051,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
             if m:
                 group = m.groupdict()
                 slot = group.pop('slot').lower()
-                load_dict = ret_dict.setdefault('slot', {}).setdefault(
-                    slot, {}).setdefault('load_average', {})
+                load_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('load_average', {})
                 load_dict['status'] = group['status'].lower()
                 load_dict['1_min'] = float(group['min1'])
                 load_dict['5_min'] = float(group['min5'])
@@ -3180,8 +3064,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
             if m:
                 group = m.groupdict()
                 slot = group.pop('slot').lower()
-                mem_dict = ret_dict.setdefault('slot', {}).setdefault(
-                    slot, {}).setdefault('memory', {})
+                mem_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('memory', {})
                 mem_dict['status'] = group.pop('status').lower()
                 mem_dict.update({k: int(v) for k, v in group.items()})
                 continue
@@ -3244,8 +3127,7 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
 
     def cli(self, sort_time='', key_word='', output=None):
 
-        assert sort_time in ['1min', '5min', '5sec',
-                             ''], "Not one from 1min 5min 5sec"
+        assert sort_time in ['1min', '5min', '5sec', ''], "Not one from 1min 5min 5sec"
         if output is None:
             if sort_time:
                 self.cli_command += ' ' + sort_time
@@ -3288,8 +3170,7 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
             if m:
                 group = m.groupdict()
                 index += 1
-                sort_dict = ret_dict.setdefault(
-                    'sort', {}).setdefault(index, {})
+                sort_dict = ret_dict.setdefault('sort', {}).setdefault(index, {})
                 sort_dict['process'] = group['process']
                 sort_dict.update({k: int(v) for k, v in group.items()
                                   if k in ['runtime', 'invoked', 'usecs', 'tty', 'pid']})
@@ -3378,8 +3259,7 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
             if m:
                 group = m.groupdict()
                 ret_dict.setdefault('cpu_utilization', {})
-                ret_dict['cpu_utilization'].update(
-                    {k: str(v) for k, v in group.items()})
+                ret_dict['cpu_utilization'].update({k: str(v) for k, v in group.items()})
                 continue
 
             # Core 0: CPU utilization for five seconds:  2%, one minute:  8%, five minutes: 18%
@@ -3389,10 +3269,8 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
                 core = group.pop('core')
                 if 'cpu_utilization' not in ret_dict:
                     ret_dict.setdefault('cpu_utilization', {})
-                ret_dict['cpu_utilization'].setdefault(
-                    'core', {}).setdefault(core, {})
-                ret_dict['cpu_utilization']['core'][core].update(
-                    {k: str(v) for k, v in group.items()})
+                ret_dict['cpu_utilization'].setdefault('core', {}).setdefault(core, {})
+                ret_dict['cpu_utilization']['core'][core].update({k: str(v) for k, v in group.items()})
                 continue
 
             #    Pid    PPid    5Sec    1Min    5Min  Status        Size  Name
@@ -3457,8 +3335,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
         # initial return dictionary
         ret_dict = {}
 
-        p1 = re.compile(
-            r'^Number +of +Critical +alarms: +(?P<critic_larams>\d+)$')
+        p1 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_larams>\d+)$')
 
         p2 = re.compile(r'^Number +of +Major +alarms: +(?P<maj_alarms>\d+)$')
 
@@ -3633,11 +3510,9 @@ class ShowVersionRp(ShowVersionRpSchema):
                 if rp_slot not in ret_dict['rp'][rp]['slot']:
                     ret_dict['rp'][rp]['slot'].setdefault(rp_slot, {})
                 if 'package' not in ret_dict['rp'][rp]['slot'][rp_slot]:
-                    ret_dict['rp'][rp]['slot'][rp_slot].setdefault(
-                        'package', {})
+                    ret_dict['rp'][rp]['slot'][rp_slot].setdefault('package', {})
 
-                ret_dict['rp'][rp]['slot'][rp_slot]['package'].setdefault(
-                    package_name, {})
+                ret_dict['rp'][rp]['slot'][rp_slot]['package'].setdefault(package_name, {})
                 ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]['version'] = version
                 ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]['status'] = status
                 ret_dict['rp'][rp]['slot'][rp_slot]['package'][package_name]['file'] = file
@@ -3817,8 +3692,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
 
         #       queue_depth (bytes): 0
         #       queue_depth (pkts ): 0
-        p15 = re.compile(
-            r'^queue_depth +\((?P<type>bytes|pkts +)\): +(?P<queue_depth>\d+)$')
+        p15 = re.compile(r'^queue_depth +\((?P<type>bytes|pkts +)\): +(?P<queue_depth>\d+)$')
 
         #       licensed throughput oversubscription drops:
         #                   (bytes): 0                   ,          (packets): 0
@@ -3851,8 +3725,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
 
             m = p3_1.match(line)
             if m:
-                ret_dict[interface]['index'][index].setdefault(
-                    'software_control_info', {})
+                ret_dict[interface]['index'][index].setdefault('software_control_info', {})
                 continue
 
             m = p3_2.match(line)
@@ -3861,11 +3734,9 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                 ret_dict[interface]['index'][index]['software_control_info']['cache_queue_id'] = group['cache_queue_id']
                 ret_dict[interface]['index'][index]['software_control_info']['wred'] = group['wred']
                 if group['type'].strip() == 'bytes':
-                    ret_dict[interface]['index'][index]['software_control_info']['qlimit_bytes'] = int(
-                        group['qlimit'])
+                    ret_dict[interface]['index'][index]['software_control_info']['qlimit_bytes'] = int(group['qlimit'])
                 else:
-                    ret_dict[interface]['index'][index]['software_control_info']['qlimit_pkts'] = int(
-                        group['qlimit'])
+                    ret_dict[interface]['index'][index]['software_control_info']['qlimit_pkts'] = int(group['qlimit'])
                 continue
 
             m = p4.match(line)
@@ -3880,8 +3751,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                 group = m.groupdict()
                 ret_dict[interface]['index'][index]['software_control_info']['sw_flags'] = group['sw_flags']
                 ret_dict[interface]['index'][index]['software_control_info']['sw_state'] = group['sw_state']
-                ret_dict[interface]['index'][index]['software_control_info']['port_uidb'] = int(
-                    group['port_uidb'])
+                ret_dict[interface]['index'][index]['software_control_info']['port_uidb'] = int(group['port_uidb'])
                 continue
 
             m = p6.match(line)
@@ -3915,8 +3785,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['software_control_info']['share'] = int(
-                    group['share'])
+                ret_dict[interface]['index'][index]['software_control_info']['share'] = int(group['share'])
                 continue
 
             m = p11.match(line)
@@ -3929,8 +3798,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['software_control_info']['defer_obj_refcnt'] = int(
-                    group['defer_obj_refcnt'])
+                ret_dict[interface]['index'][index]['software_control_info']['defer_obj_refcnt'] = int(group['defer_obj_refcnt'])
 
                 if group['cp_ppe_addr']:
                     ret_dict[interface]['index'][index]['software_control_info']['cp_ppe_addr'] = group['cp_ppe_addr']
@@ -3938,40 +3806,34 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
 
             m = p13_1.match(line)
             if m:
-                ret_dict[interface]['index'][index].setdefault(
-                    'statistics', {})
+                ret_dict[interface]['index'][index].setdefault('statistics', {})
                 continue
 
             m = p13_2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['statistics'].update(
-                    {k: int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update({k: int(v) for k, v in group.items()})
                 continue
 
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['statistics'].update(
-                    {k: int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update({k: int(v) for k, v in group.items()})
                 continue
 
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 if group['type'].strip() == 'bytes':
-                    ret_dict[interface]['index'][index]['statistics']['queue_depth_bytes'] = int(
-                        group['queue_depth'])
+                    ret_dict[interface]['index'][index]['statistics']['queue_depth_bytes'] = int(group['queue_depth'])
                 else:
-                    ret_dict[interface]['index'][index]['statistics']['queue_depth_pkts'] = int(
-                        group['queue_depth'])
+                    ret_dict[interface]['index'][index]['statistics']['queue_depth_pkts'] = int(group['queue_depth'])
                 continue
 
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['statistics'].update(
-                    {k: int(v) for k, v in group.items()})
+                ret_dict[interface]['index'][index]['statistics'].update({k: int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -4102,28 +3964,23 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
         p2 = re.compile(r'^RX +(?P<direction>\w+) +Priority$')
 
         #     RX Pkts      369         Bytes 27789
-        p3 = re.compile(
-            r'^RX +Pkts +(?P<rx_total_pkts>\d+) +Bytes +(?P<rx_total_bytes>\d+)$')
+        p3 = re.compile(r'^RX +Pkts +(?P<rx_total_pkts>\d+) +Bytes +(?P<rx_total_bytes>\d+)$')
 
         #     RX Drop Pkts 0           Bytes 0
-        p4 = re.compile(
-            r'^RX +Drop +Pkts +(?P<rx_dropped_pkts>\d+) +Bytes +(?P<rx_dropped_bytes>\d+)$')
+        p4 = re.compile(r'^RX +Drop +Pkts +(?P<rx_dropped_pkts>\d+) +Bytes +(?P<rx_dropped_bytes>\d+)$')
 
         #     RX Err  Pkts 0           Bytes 0
-        p5 = re.compile(
-            r'^RX +Err +Pkts +(?P<rx_errored_pkts>\d+) +Bytes +(?P<rx_errored_bytes>\d+)$')
+        p5 = re.compile(r'^RX +Err +Pkts +(?P<rx_errored_pkts>\d+) +Bytes +(?P<rx_errored_bytes>\d+)$')
 
         #   TX Low Priority
         #   TX High Priority
         p6 = re.compile(r'^TX +(?P<direction>\w+) +Priority$')
 
         #     TX Pkts      1265574622  Bytes 250735325722
-        p7 = re.compile(
-            r'^TX +Pkts +(?P<tx_total_pkts>\d+) +Bytes +(?P<tx_total_bytes>\d+)$')
+        p7 = re.compile(r'^TX +Pkts +(?P<tx_total_pkts>\d+) +Bytes +(?P<tx_total_bytes>\d+)$')
 
         #     TX Drop Pkts 0           Bytes 0
-        p8 = re.compile(
-            r'^TX +Drop +Pkts +(?P<tx_dropped_pkts>\d+) +Bytes +(?P<tx_dropped_bytes>\d+)$')
+        p8 = re.compile(r'^TX +Drop +Pkts +(?P<tx_dropped_pkts>\d+) +Bytes +(?P<tx_dropped_bytes>\d+)$')
 
         # 0/3, SPA-1XTENGE-XFP-V2, Online
         p9 = re.compile(r'^(?P<slot>\d+)/(?P<subslot>\d+),'
@@ -4131,12 +3988,10 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
                         ' +(?P<status>\w+)$')
 
         #   RX IPC Pkts 0           Bytes 0
-        p10 = re.compile(
-            r'^RX +IPC +Pkts +(?P<rx_ipc_pkts>\d+) +Bytes +(?P<rx_ipc_bytes>\d+)$')
+        p10 = re.compile(r'^RX +IPC +Pkts +(?P<rx_ipc_pkts>\d+) +Bytes +(?P<rx_ipc_bytes>\d+)$')
 
         #   TX IPC Pkts 0           Bytes 0
-        p11 = re.compile(
-            r'^TX +IPC +Pkts +(?P<tx_ipc_pkts>\d+) +Bytes +(?P<tx_ipc_bytes>\d+)$')
+        p11 = re.compile(r'^TX +IPC +Pkts +(?P<tx_ipc_pkts>\d+) +Bytes +(?P<tx_ipc_bytes>\d+)$')
 
         #   RX IPC Err 0
         p12 = re.compile(r'^RX +IPC +Err +(?P<rx_ipc_err>\d+)$')
@@ -4173,8 +4028,7 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
         p22 = re.compile(r'^Packet +Gap +Error +(?P<rx_packet_gap_error>\d+)$')
 
         #     Control Word Error 0
-        p23 = re.compile(
-            r'^Control +Word +Error +(?P<rx_control_word_error>\d+)$')
+        p23 = re.compile(r'^Control +Word +Error +(?P<rx_control_word_error>\d+)$')
 
         #     Frame Error 0
         p24 = re.compile(r'^Frame +Error +(?P<tx_frame_error>\d+)$')
@@ -4212,36 +4066,28 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
             if m:
                 group = m.groupdict()
                 if 'port' in ret_dict:
-                    ret_dict['port'][port]['received'][low_high]['pkts'] = int(
-                        group['rx_total_pkts'])
-                    ret_dict['port'][port]['received'][low_high]['bytes'] = int(
-                        group['rx_total_bytes'])
+                    ret_dict['port'][port]['received'][low_high]['pkts'] = int(group['rx_total_pkts'])
+                    ret_dict['port'][port]['received'][low_high]['bytes'] = int(group['rx_total_bytes'])
                 else:
                     if 'received' not in ret_dict['slot'][slot]['subslot'][subslot]:
                         ret_dict['slot'][slot]['subslot'][subslot].\
                             setdefault('received', {})
-                    ret_dict['slot'][slot]['subslot'][subslot]['received']['pkts'] = int(
-                        group['rx_total_pkts'])
-                    ret_dict['slot'][slot]['subslot'][subslot]['received']['bytes'] = int(
-                        group['rx_total_bytes'])
+                    ret_dict['slot'][slot]['subslot'][subslot]['received']['pkts'] = int(group['rx_total_pkts'])
+                    ret_dict['slot'][slot]['subslot'][subslot]['received']['bytes'] = int(group['rx_total_bytes'])
                 continue
 
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['received'][low_high]['dropped_pkts'] = int(
-                    group['rx_dropped_pkts'])
-                ret_dict['port'][port]['received'][low_high]['dropped_bytes'] = int(
-                    group['rx_dropped_bytes'])
+                ret_dict['port'][port]['received'][low_high]['dropped_pkts'] = int(group['rx_dropped_pkts'])
+                ret_dict['port'][port]['received'][low_high]['dropped_bytes'] = int(group['rx_dropped_bytes'])
                 continue
 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['received'][low_high]['errored_pkts'] = int(
-                    group['rx_errored_pkts'])
-                ret_dict['port'][port]['received'][low_high]['errored_bytes'] = int(
-                    group['rx_errored_bytes'])
+                ret_dict['port'][port]['received'][low_high]['errored_pkts'] = int(group['rx_errored_pkts'])
+                ret_dict['port'][port]['received'][low_high]['errored_bytes'] = int(group['rx_errored_bytes'])
                 continue
 
             m = p6.match(line)
@@ -4261,27 +4107,20 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
             if m:
                 group = m.groupdict()
                 if 'port' in ret_dict:
-                    ret_dict['port'][port]['transmitted'][low_high]['pkts'] = int(
-                        group['tx_total_pkts'])
-                    ret_dict['port'][port]['transmitted'][low_high]['bytes'] = int(
-                        group['tx_total_bytes'])
+                    ret_dict['port'][port]['transmitted'][low_high]['pkts'] = int(group['tx_total_pkts'])
+                    ret_dict['port'][port]['transmitted'][low_high]['bytes'] = int(group['tx_total_bytes'])
                 else:
                     if 'transmitted' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                        ret_dict['slot'][slot]['subslot'][subslot].setdefault(
-                            'transmitted', {})
-                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['pkts'] = int(
-                        group['tx_total_pkts'])
-                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['bytes'] = int(
-                        group['tx_total_bytes'])
+                        ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
+                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['pkts'] = int(group['tx_total_pkts'])
+                    ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['bytes'] = int(group['tx_total_bytes'])
                 continue
 
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['port'][port]['transmitted'][low_high]['dropped_pkts'] = int(
-                    group['tx_dropped_pkts'])
-                ret_dict['port'][port]['transmitted'][low_high]['dropped_bytes'] = int(
-                    group['tx_dropped_bytes'])
+                ret_dict['port'][port]['transmitted'][low_high]['dropped_pkts'] = int(group['tx_dropped_pkts'])
+                ret_dict['port'][port]['transmitted'][low_high]['dropped_bytes'] = int(group['tx_dropped_bytes'])
                 continue
 
             m = p9.match(line)
@@ -4303,42 +4142,32 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
             if m:
                 group = m.groupdict()
                 if 'received' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                    ret_dict['slot'][slot]['subslot'][subslot].setdefault(
-                        'received', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_pkts'] = int(
-                    group['rx_ipc_pkts'])
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_bytes'] = int(
-                    group['rx_ipc_bytes'])
+                    ret_dict['slot'][slot]['subslot'][subslot].setdefault('received', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_pkts'] = int(group['rx_ipc_pkts'])
+                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_bytes'] = int(group['rx_ipc_bytes'])
                 continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 if 'transmitted' not in ret_dict['slot'][slot]['subslot'][subslot]:
-                    ret_dict['slot'][slot]['subslot'][subslot].setdefault(
-                        'transmitted', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_pkts'] = int(
-                    group['tx_ipc_pkts'])
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_bytes'] = int(
-                    group['tx_ipc_bytes'])
+                    ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_pkts'] = int(group['tx_ipc_pkts'])
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_bytes'] = int(group['tx_ipc_bytes'])
                 continue
 
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot].setdefault(
-                    'received', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_err'] = int(
-                    group['rx_ipc_err'])
+                ret_dict['slot'][slot]['subslot'][subslot].setdefault('received', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['received']['ipc_err'] = int(group['rx_ipc_err'])
                 continue
 
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot].setdefault(
-                    'transmitted', {})
-                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_err'] = int(
-                    group['tx_ipc_err'])
+                ret_dict['slot'][slot]['subslot'][subslot].setdefault('transmitted', {})
+                ret_dict['slot'][slot]['subslot'][subslot]['transmitted']['ipc_err'] = int(group['tx_ipc_err'])
                 continue
 
             m = p14.match(line)
@@ -4356,85 +4185,73 @@ class ShowPlatformHardwarePlim(ShowPlatformHardwarePlimSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['out_of_frame'] = int(
-                    group['out_of_frame'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['out_of_frame'] = int(group['out_of_frame'])
                 continue
 
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip4_error'] = int(
-                    group['rx_dip4_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip4_error'] = int(group['rx_dip4_error'])
                 continue
 
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['disabled'] = int(
-                    group['rx_disbaled'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['disabled'] = int(group['rx_disbaled'])
                 continue
 
             m = p18.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['loss_of_sync'] = int(
-                    group['rx_loss_of_sync'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['loss_of_sync'] = int(group['rx_loss_of_sync'])
                 continue
 
             m = p19.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['sequence_error'] = int(
-                    group['rx_sequence_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['sequence_error'] = int(group['rx_sequence_error'])
                 continue
 
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['burst_error'] = int(
-                    group['rx_burst_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['burst_error'] = int(group['rx_burst_error'])
                 continue
 
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['eop_abort'] = int(
-                    group['rx_eop_abort'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['eop_abort'] = int(group['rx_eop_abort'])
                 continue
 
             m = p22.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['packet_gap_error'] = int(
-                    group['rx_packet_gap_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['packet_gap_error'] = int(group['rx_packet_gap_error'])
                 continue
 
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['control_word_error'] = int(
-                    group['rx_control_word_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['control_word_error'] = int(group['rx_control_word_error'])
                 continue
 
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['frame_error'] = int(
-                    group['tx_frame_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['frame_error'] = int(group['tx_frame_error'])
                 continue
 
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['fifo_over_flow'] = int(
-                    group['tx_fifo_over_flow'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['fifo_over_flow'] = int(group['tx_fifo_over_flow'])
                 continue
 
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip2_error'] = int(
-                    group['tx_dip2_error'])
+                ret_dict['slot'][slot]['subslot'][subslot][new_direction]['spi4_interrupt_counters']['dip2_error'] = int(group['tx_dip2_error'])
                 continue
 
         return ret_dict
@@ -4508,8 +4325,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 final_dict = ret_dict['channel'].setdefault(number, {})
                 final_dict.update({'interface': group['interface'].strip()})
                 final_dict.update({'name': group['name'].strip()})
-                final_dict.update(
-                    {'logical_channel': int(group['logical_channel'])})
+                final_dict.update({'logical_channel': int(group['logical_channel'])})
                 final_dict.update({'drain_mode': drained})
                 continue
 
@@ -4520,8 +4336,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 if 'channel' not in ret_dict:
                     ret_dict.setdefault('channel', {})
                 ret_dict['channel'].setdefault(unmapped_number, {})
-                ret_dict['channel'][unmapped_number].update(
-                    {'name': 'unmapped'})
+                ret_dict['channel'][unmapped_number].update({'name': 'unmapped'})
                 continue
 
         return ret_dict
@@ -4579,8 +4394,7 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 if 'channel' not in ret_dict:
                     ret_dict.setdefault('channel', {})
                 ret_dict['channel'].setdefault(unmapped_number, {})
-                ret_dict['channel'][unmapped_number].update(
-                    {'name': 'unmapped'})
+                ret_dict['channel'][unmapped_number].update({'name': 'unmapped'})
                 continue
 
         return ret_dict
@@ -4680,23 +4494,19 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
         p1 = re.compile(r'^From +Slot +(?P<link>[\w\d\-\s]+)$')
 
         #   Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0
-        p2 = re.compile(
-            r'^Pkts +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
+        p2 = re.compile(r'^Pkts +High: +(?P<high>\d+) +Low: +(?P<low>\d+)( +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+))?$')
 
         #   Bytes High: 0          Low: 0          Bad: 0          Dropped: 0
-        p3 = re.compile(
-            r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
+        p3 = re.compile(r'^Bytes +High: +(?P<high>\d+) +Low: +(?P<low>\d+) +Bad: +(?P<bad>\d+) +Dropped: +(?P<dropped>\d+)$')
 
         #   Pkts  Looped: 0          Error: 0
-        p4 = re.compile(
-            r'^Pkts +Looped: +(?P<looped>\d+) +Error: +(?P<errored>\d+)$')
+        p4 = re.compile(r'^Pkts +Looped: +(?P<looped>\d+) +Error: +(?P<errored>\d+)$')
 
         #   Bytes Looped 0
         p5 = re.compile(r'^Bytes +Looped +(?P<looped>\d+)$')
 
         #   Qstat count: 0          Flow ctrl count: 3501
-        p6 = re.compile(
-            r'^Qstat +count: +(?P<qstat_count>\d+) +Flow +ctrl +count: +(?P<flow_ctrl_count>\d+)$')
+        p6 = re.compile(r'^Qstat +count: +(?P<qstat_count>\d+) +Flow +ctrl +count: +(?P<flow_ctrl_count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -4705,29 +4515,25 @@ class ShowPlatformHardwareSerdes(ShowPlatformHardwareSerdesSchema):
             if m:
                 group = m.groupdict()
                 slot = group['link']
-                from_dict = ret_dict.setdefault('link', {}).setdefault(
-                    slot, {}).setdefault('from', {})
+                from_dict = ret_dict.setdefault('link', {}).setdefault(slot, {}).setdefault('from', {})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 if not group['bad']:
-                    to_dict = ret_dict['link'][slot].setdefault(
-                        'to', {}).setdefault('pkts', {})
+                    to_dict = ret_dict['link'][slot].setdefault('to', {}).setdefault('pkts', {})
                     to_dict.update({k: int(v) for k, v in group.items() if v})
                     continue
 
-                pkts_dict = ret_dict['link'][slot]['from'].setdefault(
-                    'pkts', {})
+                pkts_dict = ret_dict['link'][slot]['from'].setdefault('pkts', {})
                 pkts_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                bytes_dict = ret_dict['link'][slot]['from'].setdefault(
-                    'bytes', {})
+                bytes_dict = ret_dict['link'][slot]['from'].setdefault('bytes', {})
                 bytes_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
@@ -4781,32 +4587,26 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         #   To Network-Processor       Packets:    21763844  Bytes:  7343838083
         #   To Encryption Processor   Packets:           0  Bytes:           0
         #   To RP/ESP Packets: 1150522 Bytes: 166031138
-        p4 = re.compile(
-            r'^To +(?P<link_name_1>[\w\-\d\s/]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
+        p4 = re.compile(r'^To +(?P<link_name_1>[\w\-\d\s/]+) +Packets: +(?P<to_packets>\d+) +Bytes: +(?P<to_bytes>\d+)$')
 
         #   From Network-Processor     Packets:    21259012  Bytes:  7397920802
         #   From RP/ESP Packets: 4364008 Bytes: 697982854
-        p5 = re.compile(
-            r'^From +(?P<link_name_2>[\w\-\d\s/]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
+        p5 = re.compile(r'^From +(?P<link_name_2>[\w\-\d\s/]+) +Packets: +(?P<from_packets>\d+) +Bytes: +(?P<from_bytes>\d+)$')
 
         #     Drops                   Packets:           0  Bytes:           0
-        p6 = re.compile(
-            r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
+        p6 = re.compile(r'^Drops +Packets: +(?P<dropped_packets>\d+) +Bytes: +(?P<dropped_bytes>\d+)$')
 
         #     Errors                  Packets:           0  Bytes:           0
-        p7 = re.compile(
-            r'^Errors +Packets: +(?P<errored_packets>\d+) +Bytes: +(?P<errored_bytes>\d+)$')
+        p7 = re.compile(r'^Errors +Packets: +(?P<errored_packets>\d+) +Bytes: +(?P<errored_bytes>\d+)$')
 
         #     Errors:
         p8 = re.compile(r'^Errors:$')
 
         #     RX/TX process: 0/0, RX/TX schedule: 0/0
-        p9 = re.compile(
-            r'^RX/TX +process: +(?P<rx_process>\d+)/(?P<tx_process>\d+), +RX/TX +schedule: +(?P<rx_schedule>\d+)/(?P<tx_schedule>\d+)$')
+        p9 = re.compile(r'^RX/TX +process: +(?P<rx_process>\d+)/(?P<tx_process>\d+), +RX/TX +schedule: +(?P<rx_schedule>\d+)/(?P<tx_schedule>\d+)$')
 
         #     RX/TX statistics: 0/0, RX parity: 0
-        p10 = re.compile(
-            r'^RX/TX +statistics: +(?P<rx_statistics>\d+)/(?P<tx_statistics>\d+), +RX +parity: +(?P<rx_parity>\d+)$')
+        p10 = re.compile(r'^RX/TX +statistics: +(?P<rx_statistics>\d+)/(?P<tx_statistics>\d+), +RX +parity: +(?P<rx_parity>\d+)$')
 
         # Serdes Exception Counts:
         p11 = re.compile(r'^Serdes +Exception +Counts:$')
@@ -4825,8 +4625,7 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
         #     link 2: msgTypeError: 3
         #     link 2: msgEccError: 3
         #     link 2: chicoEvent: 3
-        p13 = re.compile(
-            r'^link +(?P<link_number>\d+): +(?P<error_event>\w+): +(?P<count>\d+)$')
+        p13 = re.compile(r'^link +(?P<link_number>\d+): +(?P<error_event>\w+): +(?P<count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -4874,30 +4673,22 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
             if m:
                 group = m.groupdict()
                 if to_not_from:
-                    new_dict['to']['pkts']['dropped'] = int(
-                        group['dropped_packets'])
-                    new_dict['to']['bytes']['dropped'] = int(
-                        group['dropped_bytes'])
+                    new_dict['to']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['to']['bytes']['dropped'] = int(group['dropped_bytes'])
                 else:
-                    new_dict['from']['pkts']['dropped'] = int(
-                        group['dropped_packets'])
-                    new_dict['from']['bytes']['dropped'] = int(
-                        group['dropped_bytes'])
+                    new_dict['from']['pkts']['dropped'] = int(group['dropped_packets'])
+                    new_dict['from']['bytes']['dropped'] = int(group['dropped_bytes'])
                 continue
 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 if to_not_from:
-                    new_dict['to']['pkts']['errored'] = int(
-                        group['errored_packets'])
-                    new_dict['to']['bytes']['errored'] = int(
-                        group['errored_bytes'])
+                    new_dict['to']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['to']['bytes']['errored'] = int(group['errored_bytes'])
                 else:
-                    new_dict['from']['pkts']['errored'] = int(
-                        group['errored_packets'])
-                    new_dict['from']['bytes']['errored'] = int(
-                        group['errored_bytes'])
+                    new_dict['from']['pkts']['errored'] = int(group['errored_packets'])
+                    new_dict['from']['bytes']['errored'] = int(group['errored_bytes'])
                 continue
 
             m = p8.match(line)
@@ -4938,10 +4729,8 @@ class ShowPlatformHardwareSerdesInternal(ShowPlatformHardwareSerdesSchema):
                 group = m.groupdict()
                 link_number = group['link_number']
                 error_event = group['error_event']
-                ret_dict['serdes_exception_counts'][link].setdefault(
-                    'link', {}).setdefault(link_number, {})
-                ret_dict['serdes_exception_counts'][link]['link'][link_number][error_event] = int(
-                    group['count'])
+                ret_dict['serdes_exception_counts'][link].setdefault('link', {}).setdefault(link_number, {})
+                ret_dict['serdes_exception_counts'][link]['link'][link_number][error_event] = int(group['count'])
                 continue
 
         return ret_dict
@@ -4991,12 +4780,10 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
         p1 = re.compile(r'^\s*Chassis +type\: +(?P<chassis>[\w\-]+)')
 
         # Power Redundancy Mode: nplus1
-        p2 = re.compile(
-            r'^\s*Power +Redundancy +Mode\: +(?P<redundancy_mode>[\w]+)')
+        p2 = re.compile(r'^\s*Power +Redundancy +Mode\: +(?P<redundancy_mode>[\w]+)')
 
         # Power Allocation Status: Sufficient
-        p3 = re.compile(
-            r'^\s*Power +Allocation +Status\: +(?P<allocation_status>[\w]+)')
+        p3 = re.compile(r'^\s*Power +Allocation +Status\: +(?P<allocation_status>[\w]+)')
 
         # Slot      Type                State                 Allocation(W)
         # 0         ASR1000-SIP40       ok                    64
@@ -5018,8 +4805,7 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
         p7 = re.compile(r'^\s*Power +capacity\: +(?P<power_capacity>\d+) +W$')
 
         # Redundant allocation: 0 W
-        p8 = re.compile(
-            r'^\s*Redundant +allocation\: +(?P<redundant_alc>\d+) +W$')
+        p8 = re.compile(r'^\s*Redundant +allocation\: +(?P<redundant_alc>\d+) +W$')
 
         # Fan allocation:       250 W
         p9 = re.compile(r'^\s*Fan +allocation\: +(?P<fan_alc>\d+) +W$')
@@ -5028,12 +4814,10 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
         p10 = re.compile(r'^\s*FRU +allocation\: +(?P<fru_alc>\d+) +W$')
 
         # Excess Power in Reserve:   3201 W
-        p11 = re.compile(
-            r'^\s*Excess +Power +in +Reserve\: +(?P<excess_power>\d+) +W$')
+        p11 = re.compile(r'^\s*Excess +Power +in +Reserve\: +(?P<excess_power>\d+) +W$')
 
         # Excess / (Capacity - Redundant) is 72%
-        p12 = re.compile(
-            r'^\s*Excess +\/ +\(Capacity - Redundant\) +is +(?P<excess_capacity_percent>\d+)\%$')
+        p12 = re.compile(r'^\s*Excess +\/ +\(Capacity - Redundant\) +is +(?P<excess_capacity_percent>\d+)\%$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5050,8 +4834,7 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
 
             m = p3.match(line)
             if m:
-                ret_dict['allocation_status'] = m.groupdict()[
-                    'allocation_status']
+                ret_dict['allocation_status'] = m.groupdict()['allocation_status']
 
             m = p4.match(line)
             if m:
@@ -5059,8 +4842,7 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
                 t = m.groupdict()['type']
                 state = m.groupdict()['state']
                 allocation = float(m.groupdict()['allocation'])
-                slot_dict = ret_dict.setdefault(
-                    'slot', {}).setdefault(slot, {})
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 slot_dict.update({"type": t})
                 slot_dict.update({"state": state})
                 slot_dict.update({"allocation": allocation})
@@ -5073,8 +4855,7 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
                 state = m.groupdict()['state']
                 capacity = int(m.groupdict()['capacity'])
                 load = int(m.groupdict()['load'])
-                slot_dict = ret_dict.setdefault(
-                    'slot', {}).setdefault(slot, {})
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 slot_dict.update({"type": t})
                 slot_dict.update({"state": state})
                 slot_dict.update({"capacity": capacity})
@@ -5084,16 +4865,13 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
             m = p6.match(line)
             if m:
                 ret_dict['total_load'] = int(m.groupdict()['total_load'])
-                ret_dict['total_capacity'] = int(
-                    m.groupdict()['total_capacity'])
-                ret_dict['load_capacity_percent'] = int(
-                    m.groupdict()['load_capacity_percent'])
+                ret_dict['total_capacity'] = int(m.groupdict()['total_capacity'])
+                ret_dict['load_capacity_percent'] = int(m.groupdict()['load_capacity_percent'])
                 continue
 
             m = p7.match(line)
             if m:
-                ret_dict['power_capacity'] = int(
-                    m.groupdict()['power_capacity'])
+                ret_dict['power_capacity'] = int(m.groupdict()['power_capacity'])
                 continue
 
             m = p8.match(line)
@@ -5118,8 +4896,7 @@ class ShowPlatformPower(ShowPlatformPowerSchema):
 
             m = p12.match(line)
             if m:
-                ret_dict['excess_capacity_percent'] = int(
-                    m.groupdict()['excess_capacity_percent'])
+                ret_dict['excess_capacity_percent'] = int(m.groupdict()['excess_capacity_percent'])
                 continue
 
         return ret_dict
@@ -5167,14 +4944,12 @@ class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsS
         # Chan   GoodPkts  GoodBytes    BadPkts   BadBytes
         # 1 - 0000000000 0000000000 0000000000 0000000000
         # 2 - 0000c40f64 016a5004b0 0000000000 0000000000
-        p1 = re.compile(
-            r'^(?P<channel>\d+) +- +(?P<goodpkts>\w+) +(?P<goodbytes>\w+) +(?P<badpkts>\w+) +(?P<badbytes>\w+)$')
+        p1 = re.compile(r'^(?P<channel>\d+) +- +(?P<goodpkts>\w+) +(?P<goodbytes>\w+) +(?P<badpkts>\w+) +(?P<badbytes>\w+)$')
 
         #  0-55: OPM Channels
         # 56-59: Metapacket/Recycle Pools 0-3
         #    60: Reassembled Packets Sent to QED
-        p2 = re.compile(
-            r'^(?P<channel>\d+)-?(?P<end_channel>\d+)?: +(?P<comment>.+)$')
+        p2 = re.compile(r'^(?P<channel>\d+)-?(?P<end_channel>\d+)?: +(?P<comment>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5182,8 +4957,7 @@ class ShowPlatformHardwareQfpBqsStatisticsChannelAll(ShowPlatformHardwareQfpBqsS
             if m:
                 group = m.groupdict()
                 channel = int(group.pop('channel'))
-                chan_dict = ret_dict.setdefault(
-                    'channel', {}).setdefault(channel, {})
+                chan_dict = ret_dict.setdefault('channel', {}).setdefault(channel, {})
                 chan_dict.update({k: v for k, v in group.items()})
                 continue
 
@@ -5272,8 +5046,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 final_dict = ret_dict['channel'].setdefault(number, {})
                 final_dict.update({'interface': group['interface'].strip()})
                 final_dict.update({'name': group['name'].strip()})
-                final_dict.update(
-                    {'logical_channel': int(group['logical_channel'])})
+                final_dict.update({'logical_channel': int(group['logical_channel'])})
                 final_dict.update({'drain_mode': drained})
                 continue
 
@@ -5284,8 +5057,7 @@ class ShowPlatformHardwareQfpBqsOpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 if 'channel' not in ret_dict:
                     ret_dict.setdefault('channel', {})
                 ret_dict['channel'].setdefault(unmapped_number, {})
-                ret_dict['channel'][unmapped_number].update(
-                    {'name': 'unmapped'})
+                ret_dict['channel'][unmapped_number].update({'name': 'unmapped'})
                 continue
 
         return ret_dict
@@ -5328,8 +5100,7 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
             if m:
                 group = m.groupdict()
                 number = group['number']
-                final_dict = ret_dict.setdefault(
-                    'channel', {}).setdefault(number, {})
+                final_dict = ret_dict.setdefault('channel', {}).setdefault(number, {})
                 final_dict.update({'interface': group['interface'].strip()})
                 final_dict.update({'name': group['name'].strip()})
                 final_dict.update({'port': int(group['port'])})
@@ -5343,8 +5114,7 @@ class ShowPlatformHardwareQfpBqsIpmMapping(ShowPlatformHardwareQfpBqsMappingSche
                 if 'channel' not in ret_dict:
                     ret_dict.setdefault('channel', {})
                 ret_dict['channel'].setdefault(unmapped_number, {})
-                ret_dict['channel'][unmapped_number].update(
-                    {'name': 'unmapped'})
+                ret_dict['channel'][unmapped_number].update({'name': 'unmapped'})
                 continue
 
         return ret_dict
@@ -5417,13 +5187,11 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
         # Transmit Stats                            Packets        Octets
         # Input Drop Stats                          Packets        Octets
         # Output Drop Stats                         Packets        Octets
-        p2 = re.compile(
-            r'^(?P<transmit_receive>[\w\s]+) +Stats +Packets +Octets$')
+        p2 = re.compile(r'^(?P<transmit_receive>[\w\s]+) +Stats +Packets +Octets$')
 
         #   FragmentedIpv6                             0               0
         #   Other
-        p3 = re.compile(
-            r'^(?P<stats>[\w\d]+) +(?P<packets>[\w\d]+) +(?P<octets>[\w\d]+)$')
+        p3 = re.compile(r'^(?P<stats>[\w\d]+) +(?P<packets>[\w\d]+) +(?P<octets>[\w\d]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5463,10 +5231,8 @@ class ShowPlatformHardwareQfpInterfaceIfnameStatistics(ShowPlatformHardwareQfpIn
                 group = m.groupdict()
                 stats = group['stats']
                 final_dict[current_stats].setdefault(stats, {})
-                final_dict[current_stats][stats]['packets'] = int(
-                    group['packets'])
-                final_dict[current_stats][stats]['octets'] = int(
-                    group['octets'])
+                final_dict[current_stats][stats]['packets'] = int(group['packets'])
+                final_dict[current_stats][stats]['octets'] = int(group['octets'])
                 continue
 
         return ret_dict
@@ -5507,8 +5273,7 @@ class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDro
         # -------------------------------------------------------------------------
         # Ipv4NoAdj                                       7                     296
         # Ipv4NoRoute                                   181                    7964
-        p1 = re.compile(
-            r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
+        p1 = re.compile(r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5516,8 +5281,7 @@ class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDro
             if m:
                 group = m.groupdict()
                 global_drop_stats = group.pop('global_drop_stats')
-                stats_dict = ret_dict.setdefault(
-                    'global_drop_stats', {}).setdefault(global_drop_stats, {})
+                stats_dict = ret_dict.setdefault('global_drop_stats', {}).setdefault(global_drop_stats, {})
                 stats_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
@@ -5609,20 +5373,17 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
                 if count == 0:
                     sub_dict = ret_dict.setdefault('60s', {})
                     for i in range(60):
-                        sub_dict.setdefault(
-                            i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 elif count == 1:
                     sub_dict = ret_dict.setdefault('60m', {})
                     for i in range(60):
-                        sub_dict.setdefault(
-                            i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
 
                 else:
                     sub_dict = ret_dict.setdefault('72h', {})
                     for i in range(72):
-                        sub_dict.setdefault(
-                            i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
+                        sub_dict.setdefault(i + 1, {}).update({'maximum': int(tmp[i]) if tmp[i] != '' else 0})
                 tmp = [''] * 72
                 count += 1
 
@@ -5739,8 +5500,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('processor_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # reserve P Pool Total:     102404 Used:         88 Free:     102316
@@ -5748,8 +5508,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
@@ -5757,8 +5516,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # 0   0  678985440  347855496  304892096        428    2134314 *Init*
@@ -5773,8 +5531,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
                     setdefault('index', {}). \
                     setdefault(index, {})
                 pid_index.update({pid: index})
-                pid_dict.update(
-                    {k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
+                pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
                 continue
 
         return ret_dict
@@ -5802,8 +5559,7 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
     def cli(self, process, slot, output=None):
 
         if output is None:
-            out = self.device.execute(
-                self.cli_command.format(process=process, slot=slot))
+            out = self.device.execute(self.cli_command.format(process=process, slot=slot))
         else:
             out = output
 
@@ -5813,14 +5569,12 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
             callsite_dict = parsed_dict.setdefault('callsites', {})
 
         # The current tracekey is   : 1#2315ece11e07bc883d89421df58e37b6
-        p1 = re.compile(
-            r'The +current +tracekey +is\s*: +(?P<tracekey>[#\d\w]*)')
+        p1 = re.compile(r'The +current +tracekey +is\s*: +(?P<tracekey>[#\d\w]*)')
 
         # callsite      thread    diff_byte               diff_call
         # ----------------------------------------------------------
         # 1617611779    31884     57424                   2
-        p2 = re.compile(
-            r'(?P<callsite>(\d+))\s+(?P<thread>(\d+))\s+(?P<diffbyte>(\d+))\s+(?P<diffcall>(\d+))')
+        p2 = re.compile(r'(?P<callsite>(\d+))\s+(?P<thread>(\d+))\s+(?P<diffbyte>(\d+))\s+(?P<diffcall>(\d+))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5884,12 +5638,10 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
         p1 = re.compile(r'backtrace: (?P<backtrace>[\w#\d\s:+]+)$')
 
         #   callsite: 2150603778, thread_id: 31884
-        p2 = re.compile(
-            r'callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)')
+        p2 = re.compile(r'callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)')
 
         #   allocs: 1, frees: 0, call_diff: 1
-        p3 = re.compile(
-            r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
+        p3 = re.compile(r'allocs: +(?P<allocs>(\d+)), +frees: +(?P<frees>(\d+)), +call_diff: +(?P<call_diff>(\d+))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5967,8 +5719,7 @@ class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
             out = output
 
         if out:
-            per_process_memory_dict = ret_dict.setdefault(
-                'per_process_memory', OrderedDict())
+            per_process_memory_dict = ret_dict.setdefault('per_process_memory', OrderedDict())
 
         # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
         p1 = re.compile(r'^Processor +Pool +Total: +(?P<total>\d+) +'
@@ -5995,8 +5746,7 @@ class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('processor_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # reserve P Pool Total:     102404 Used:         88 Free:     102316
@@ -6004,8 +5754,7 @@ class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
@@ -6013,8 +5762,7 @@ class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
             if m:
                 group = m.groupdict()
                 processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
-                processor_pool_dict.update(
-                    {k: int(v) for k, v in group.items() if v is not None})
+                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
                 continue
 
             # 0   0  678985440  347855496  304892096        428    2134314 *Init*
@@ -6023,8 +5771,7 @@ class ShowProcessesMemorySorted(ShowProcessesMemorySortedSchema):
             if m:
                 group = m.groupdict()
                 process_name = str(group['process'])
-                one_process_dict = per_process_memory_dict.setdefault(
-                    process_name, {})
+                one_process_dict = per_process_memory_dict.setdefault(process_name, {})
                 one_process_dict['pid'] = int(group['pid'])
                 one_process_dict['tty'] = int(group['tty'])
                 one_process_dict['allocated'] = int(group['allocated'])
