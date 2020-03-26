@@ -1790,13 +1790,13 @@ class test_show_spanning_tree(unittest.TestCase):
                     },
                     "interfaces": {
                          "GigabitEthernet1/0/5": {
-                              "cost": 4,
-                              "port_priority": 128,
-                              "port_num": 5,
-                              "role": "designated",
+                              "peer": "STP",
                               "port_state": "forwarding",
+                              "port_num": 5,
+                              "port_priority": 128,
                               "type": "P2p",
-                              "portfast": "Edge",
+                              "cost": 4,
+                              "role": "designated"
                          },
                          "Port-channel14": {
                               "port_state": "forwarding",
@@ -1897,7 +1897,7 @@ class test_show_spanning_tree(unittest.TestCase):
 
         Interface           Role Sts Cost      Prio.Nbr Type
         ------------------- ---- --- --------- -------- --------------------------------
-        Gi1/0/5             Desg FWD 4         128.5    P2p Edge 
+        Gi1/0/5             Desg FWD 4         128.5    P2p Peer(STP) 
         Po14                Root FWD 3         128.2390 P2p 
     '''
     }
