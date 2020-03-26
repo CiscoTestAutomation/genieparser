@@ -744,7 +744,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
 
     Username : XXX
     Index : 62535
-    Assigned IP : 10.25.112.2 Public IP : 66.207.27.37
+    Assigned IP : 10.25.112.2 Public IP : 10.69.27.37
     Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
     License : AnyConnect Premium
     Encryption : AnyConnect-Parent: (1)none SSL-Tunnel: (1)AES256 DTLS-Tunnel: (1)AES256
@@ -782,7 +782,7 @@ class TestShowVpnSessiondbAnyconnect(unittest.TestCase):
                                 'license': 'AnyConnect Premium',
                                 'login_time': '13:47:22 UTC Wed Mar 25 2020',
                                 'protocol': 'AnyConnect-Parent SSL-Tunnel DTLS-Tunnel',
-                                'public_ip': '66.207.27.37',
+                                'public_ip': '10.69.27.37',
                                 'security_group': 'none',
                                 'ssl_tunnel': '(1)SHA1',
                                 'tunnel_group': 'RSM_Auto_VPN_UserCert',
