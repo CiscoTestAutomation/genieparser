@@ -536,6 +536,7 @@ class TestShowInterfaces(unittest.TestCase):
                     'out_rate_pkts': 2,
                 },
             },
+            'current_vccs': '1',
             'delay': 410,
             'enabled': True,
             'encapsulations': {
@@ -545,6 +546,7 @@ class TestShowInterfaces(unittest.TestCase):
             'last_output': '00:00:00',
             'line_protocol': 'up',
             'mac_address': '10f3.1186.cae8',
+            'maximum_active_vcs': '8',
             'mtu': 1600,
             'oper_status': 'up',
             'output_hang': 'never',
@@ -565,8 +567,14 @@ class TestShowInterfaces(unittest.TestCase):
             'sub_mtu': 1600,
             'txload': '1/255',
             'type': 'MPC ATMSAR',
+            'vc_auto_creation': 'Disabled',
+            'vc_idle_disconnect_time': '300',
+            'vcs_per_vp': '1024',
         },
         'ATM0/0/0.1': {
+            'aal5_crc_errors': 0,
+            'aal5_oversized_sdus': 0,
+            'aal5_sar_timeouts': 0,
             'bandwidth': 3584,
             'counters': {
                 'in_octets': 52273702,
@@ -995,6 +1003,7 @@ class TestShowInterfaces(unittest.TestCase):
         },
         'Virtual-Access1': {
             'bandwidth': 100000,
+            'base_pppoatm': 'vaccess',
             'counters': {
                 'in_abort': 0,
                 'in_broadcast_pkts': 0,
@@ -1029,6 +1038,7 @@ class TestShowInterfaces(unittest.TestCase):
                 },
             },
             'delay': 100000,
+            'dtr_pulsed': '5',
             'enabled': True,
             'encapsulations': {
                 'encapsulation': 'ppp',
@@ -1057,6 +1067,8 @@ class TestShowInterfaces(unittest.TestCase):
             'rxload': '1/255',
             'txload': '1/255',
             'type': 'Virtual Access interface',
+            'vaccess_loopback': 'not set',
+            'vaccess_status': '0x44',
         },
         'Virtual-Access1.1': {
             'bandwidth': 888,
@@ -1128,6 +1140,7 @@ class TestShowInterfaces(unittest.TestCase):
                 },
             },
             'delay': 100000,
+            'dtr_pulsed': '5',
             'enabled': True,
             'encapsulations': {
                 'encapsulation': 'ppp',
@@ -1156,6 +1169,8 @@ class TestShowInterfaces(unittest.TestCase):
             'rxload': '1/255',
             'txload': '1/255',
             'type': 'Virtual Access interface',
+            'vaccess_loopback': 'not set',
+            'vaccess_status': '0x0',
         },
         'Virtual-Template1': {
             'bandwidth': 100000,
@@ -1193,6 +1208,7 @@ class TestShowInterfaces(unittest.TestCase):
                 },
             },
             'delay': 100000,
+            'dtr_pulsed': '5',
             'enabled': True,
             'encapsulations': {
                 'encapsulation': 'ppp',
@@ -1510,6 +1526,11 @@ class TestShowInterfaces(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 #############################################################################

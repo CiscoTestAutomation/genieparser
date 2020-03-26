@@ -68,6 +68,18 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('link_type'): str,
                 Optional('media_type'): str,
                 'mtu': int,
+                Optional('maximum_active_vcs'): str,
+                Optional('vcs_per_vp'): str,
+                Optional('vc_idle_disconnect_time'): str,
+                Optional('vc_auto_creation'): str,
+                Optional('current_vccs'): str,
+                Optional('aal5_crc_errors'): int,
+                Optional('aal5_oversized_sdus'): int,
+                Optional('aal5_sar_timeouts'): int,
+                Optional('vaccess_status'): str,
+                Optional('vaccess_loopback'): str,
+                Optional('base_pppoatm'): str,
+                Optional('dtr_pulsed'): str,
                 Optional('sub_mtu'): int,
                 Optional('medium'): str,
                 Optional('reliability'): str,
@@ -429,12 +441,35 @@ class ShowInterfaces(ShowInterfacesSchema):
         # VC idle disconnect time: 300 seconds
         p38 = re.compile(r'^VC +idle +disconnect +time: +(?P<vc_idle_disconnect_time>\d+) +'
                 r'seconds$')
+        
+        # AAL5 CRC errors : 0
+        p39 = re.compile(r'^(?P<key>\S+ +CRC +errors) +: +(?P<val>\d+)$')
+        
+        # AAL5 SAR Timeouts : 0
+        p40 = re.compile(r'^(?P<key>\S+ +SAR +Timeouts) +: +(?P<val>\d+)$')
+        
+        # AAL5 Oversized SDUs : 0
+        p41 = re.compile(r'^(?P<key>\S+ +Oversized +SDUs) +: +(?P<val>\d+)$')
+
+        # LCP Closed
+        # LCP Closed, loopback not set
+        p42 = re.compile(r'^LCP +(?P<state>\S+)(, +loopback +(?P<loopback>[\S ]+))?$')
+
+        # Base PPPoATM vaccess
+        p43 = re.compile(r'^Base PPPoATM +(?P<base_pppoatm>\S+)$')
+
+        # Vaccess status 0x44, loopback not set
+        p44 = re.compile(r'^Vaccess +status +(?P<status>\S+), +'
+                r'loopback +(?P<loopback>[\S ]+)$')
+
+        # DTR is pulsed for 5 seconds on reset
+        p45 = re.compile(r'^DTR +is +pulsed +for +(?P<dtr_pulsed>\d+) +'
+                r'seconds +on +reset$')
 
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
-            
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
@@ -1035,6 +1070,87 @@ class ShowInterfaces(ShowInterfacesSchema):
                 unnumbered_dict[interface] = {}
                 unnumbered_dict[interface]['unnumbered_intf'] = m.groupdict()['unnumbered_intf']
                 unnumbered_dict[interface]['unnumbered_ip'] = m.groupdict()['unnumbered_ip']
+                continue
+
+            # 8 maximum active VCs, 1024 VCs per VP, 1 current VCCs
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                maximum_active_vcs = group['maximum_active_vcs']
+                vcs_per_vp = group['vcs_per_vp']
+                current_vccs = group['current_vccs']
+                interface_dict[interface].update({'maximum_active_vcs': maximum_active_vcs})
+                interface_dict[interface].update({'vcs_per_vp': vcs_per_vp})
+                interface_dict[interface].update({'current_vccs': current_vccs})
+                continue
+            
+            # VC Auto Creation Disabled.
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                vc_auto_creation = group['vc_auto_creation']
+                interface_dict[interface].update({'vc_auto_creation': vc_auto_creation})
+                continue
+
+            # VC idle disconnect time: 300 seconds
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                vc_idle_disconnect_time = group['vc_idle_disconnect_time']
+                interface_dict[interface].update({'vc_idle_disconnect_time': vc_idle_disconnect_time})
+                continue
+
+            # AAL5 CRC errors : 0
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'aal5_crc_errors': int(group['val'])})
+                continue
+            
+            # AAL5 SAR Timeouts : 0
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'aal5_oversized_sdus': int(group['val'])})
+                continue
+
+            # AAL5 Oversized SDUs : 0
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'aal5_sar_timeouts': int(group['val'])})
+                continue
+
+            # LCP Closed
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'lcp_state': group['state']})
+                loopback = group.get('loopback', None)
+                if loopback:
+                    interface_dict[interface].update({'lcp_loopack': loopback})
+                continue
+
+            # Base PPPoATM vaccess
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'base_pppoatm': group['base_pppoatm']})
+                continue
+
+            # Vaccess status 0x44, loopback not set
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'vaccess_status': group['status']})
+                interface_dict[interface].update({'vaccess_loopback': group['loopback']})
+                continue
+
+            # DTR is pulsed for 5 seconds on reset
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict[interface].update({'dtr_pulsed': group['dtr_pulsed']})
                 continue
 
         # create strucutre for unnumbered interface
