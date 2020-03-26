@@ -18,8 +18,9 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        pip install .
         pip install pyats
+        pip install genie
+        pip install .
     - name: Run tests
       run: | 
         cd tests 
