@@ -1,0 +1,24 @@
+name: Running tests
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install dependencies
+      run: pip install .
+    - name: Run tests
+      run: | 
+        cd tests 
+        python -m unittest
