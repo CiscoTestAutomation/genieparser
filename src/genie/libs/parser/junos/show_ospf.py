@@ -346,3 +346,68 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
                 continue
 
         return ret_dict
+
+'''
+Schema for:
+    * show ospf neighbor
+'''
+class ShowOspfNeighborSchema(MetaParser):
+    schema = {
+        'neighbor': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'state': str,
+                        'id': str,
+                        'pri': int,
+                        'dead': int,
+                    }
+                }
+            }
+        }
+    }
+
+'''
+Parser for:
+    * show ospf neighbor
+'''
+class ShowOspfNeighbor(ShowOspfNeighborSchema):
+    cli_command = 'show ospf neighbor'
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    32
+        p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<interface>\S+) +'
+                r'(?P<state>\S+) +(?P<id>\S+) +(?P<pri>\d+) +(?P<dead>\d+)$')
+
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                interface = group['interface']
+                state = group['state']
+                _id = group['id']
+                pri = int(group['pri'])
+                dead = int(group['dead'])
+                neighbor_dict = ret_dict.setdefault('neighbor', {}). \
+                    setdefault(neighbor, {})
+                interface_dict = neighbor_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'state': state})
+                interface_dict.update({'id': _id})
+                interface_dict.update({'pri': pri})
+                interface_dict.update({'dead': dead})
+                continue
+        
+        return ret_dict
+
