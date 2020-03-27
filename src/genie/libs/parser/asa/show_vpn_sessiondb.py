@@ -411,8 +411,9 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
                         r'(\s+Index\s+:\s+(?P<index>\d+))?$')
 
         # Index : 1 IP Addr : 192.168.16.232
-        p3 = re.compile(r'^Index\s+:\s+(?P<index>\d+)\s+'
-                        r'IP\s+Addr\s+:\s+(?P<ip_addr>\S+)$')
+        # Index : 62535
+        p3 = re.compile(r'^Index\s+:\s+(?P<index>\d+)(\s+'
+                        r'IP\s+Addr\s+:\s+(?P<ip_addr>\S+))?$')
 
         # Protocol : SSL VPN Client Encryption : 3DES
         # Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
@@ -532,11 +533,13 @@ class ShowVpnSessiondbSuper(ShowVpnSessiondbSuperSchema):
                 continue
 
             # Index : 1 IP Addr : 192.168.16.232
+            # Index : 62535
             m = p3.match(line)
             if m:
                 index_dict = username_dict.setdefault('index', {}).\
                                                   setdefault(int(m.groupdict()['index']), {})
-                index_dict['ip_addr'] = m.groupdict()['ip_addr']
+                if m.groupdict()['ip_addr']:
+                    index_dict['ip_addr'] = m.groupdict()['ip_addr']
                 continue
 
             # Protocol : SSL VPN Client Encryption : 3DES
