@@ -8172,7 +8172,6 @@ class TestShowIpBgpSummary(unittest.TestCase):
                                         'total_entries': 102, 
                                         'memory_usage': 3248}}}}}}}}
 
-
     golden_parsed_output3 = {
         'bgp_id': 65109,
         'vrf': {

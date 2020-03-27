@@ -112,6 +112,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
 from genie.libs.parser.iosxe.show_vrf import ShowVrf
@@ -1903,6 +1904,15 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf ='default'
 
+        show_vrf_output=None
+        if ('rd' in cmd and 'summary' in cmd and
+            output != '% RD does not match the default RD of any VRF'):
+            obj = ShowVrf(device=self.device)
+            try:
+                show_vrf_output = obj.parse()
+            except:
+                pass
+
         if address_family.lower() not in ['ipv4 unicast', 'ipv6 unicast']:
            
             if ('all summary' in cmd and 
@@ -2015,7 +2025,6 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         #  2001:DB8:20:4:6::6
         #           4          400      67      73       66    0    0 01:03:11        5
         p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
-
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
                           ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
@@ -2162,7 +2171,13 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                         vrf = 'default'
 
                     if 'rd' in cmd and 'summary' in cmd:
-                        vrf = 'default'
+                        if show_vrf_output:
+                            for vrf_value, vrf_dict in show_vrf_output['vrf'].items():
+                                if vrf_dict.get('route_distinguisher', '') == rd:
+                                    vrf = vrf_value
+                                    break
+                        else:
+                            vrf = 'default'
 
                 nbr_dict = sum_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                            .setdefault('neighbor', {}).setdefault(neighbor, {})
