@@ -112,7 +112,6 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
 from genie.libs.parser.iosxe.show_vrf import ShowVrf
