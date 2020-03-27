@@ -1903,12 +1903,6 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf ='default'
 
-        if ('rd' in cmd and 'summary' in cmd and 
-            output != '% RD does not match the default RD of any VRF'):
-            obj = ShowVrf(device=self.device)
-            show_vrf_output = obj.parse()
-
-
         if address_family.lower() not in ['ipv4 unicast', 'ipv6 unicast']:
            
             if ('all summary' in cmd and 
@@ -2168,20 +2162,13 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                         vrf = 'default'
 
                     if 'rd' in cmd and 'summary' in cmd:
-                        for vrf_value, vrf_dict in show_vrf_output['vrf'].items():
-                            if vrf_dict.get('route_distinguisher', '') == rd:
-                                vrf = vrf_value
-                                break
-                        else:
-                            vrf='default'
+                        vrf = 'default'
 
                 nbr_dict = sum_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                            .setdefault('neighbor', {}).setdefault(neighbor, {})
 
                 nbr_af_dict = nbr_dict.setdefault('address_family', {})\
                                       .setdefault(address_family, {})
-
-                nbr_af_dict = nbr_dict['address_family'][address_family]
 
                 # Add keys for this address_family
                 nbr_af_dict['version'] = int(m.groupdict()['version'])
