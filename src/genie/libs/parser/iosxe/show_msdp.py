@@ -104,7 +104,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
         # MSDP Peer 10.1.100.4 (?), AS 1
         # MSDP Peer 1.1.1.2 (?), AS ?
         r1 = re.compile(r'^MSDP\sPeer\s+(?P<peer>\S+)\s*\(\?\)\,\s*'
-                        'AS\s*(?P<peer_as>\S+)')
+                        'AS\s*(?P<peer_as>(\d+|\?))')
 
         # State: Up, Resets: 0, Connection source: Loopback0 (10.1.100.2)
         r2 = re.compile(r'State:\s*(?P<session_state>(Up|Down))\,\s*Resets:'
