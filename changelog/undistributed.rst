@@ -8,12 +8,26 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
+    * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+    * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
+        * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+    * Added ShowInstallSummary for 
+        * show install summary
+
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
         * show ip bgp {route}
         * show ip bgp {address_family}
     * Added ShowLldpNeighbors for
         * show lldp neighbors
+    * Added ShowInstallSummary for
+        * show install summary
+    * Added ShowPlatformIntegrity for
+        * show platform integrity
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
@@ -21,11 +35,38 @@
     * Added ShowInterfaceStatus for:
         * show interface status
         * show interface {interface} status
+* ASA 
+    * Added ShowVPNSessionDBSummary for:
+        * show vpn-sessiondb summary
+    * Added ShowVPNLoadBalancing for:
+        * show vpn load-balancing
+    * Added ShowIpLocalPool for:
+        * show ip local pool {pool}
+    * Added ShowServicePolicy for:
+        * show service-policy
+    * Added ShowVpnSessiondb for:
+        * show vpn-sessiondb
+        * show vpn-sessiondb anyconnect
+        * show vpn-sessiondb anyconnect sort inactivity
+        * show vpn-sessiondb webvpn
+    * Added ShowResourceUsage for:
+        * show resource usage
+    * Added ShowAspDrop for
+        * show asp drop
 
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+* ASA
+    * Updated ShowVPNSessionDBSummary:
+        * Added keys to the schema
+        * Moved show command 'show vpn-sessiondb' into this class
+        * Updated some mandatory keys's state in schema into Optional
+    * Updated ShowVpnSessiondbSuper:
+        * Added keys to the schema
+        * Updated regex to support output in show vpn-sessiondb anyconnect
+
 * IOSXE
     * Updated ShowMplsForwardingTable:
         * Modified wrong regex
@@ -57,6 +98,12 @@
         * Update regex to support more various output
     * Update ShowCdpNeighborsDetail
         * Change key mandatory 'capabilities' into optional
+    * Update ShowMacAddressTable
+        * Update regex to support various output
+    * Update ShowAccessLists
+        * Update regex to support various output
+    * Update ShowLldpEntry
+        * Fix typo in the code
 
 * NXOS
     * Updated ShowInterface
@@ -68,3 +115,17 @@
         * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
+    * Update ShowPlatformInternalHalPolicyRedirdst:
+        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
+            outgoing_ifname, packets_hash as optional
+    * Update ShowSystemInternalSysmgrServiceName:
+        * Enhanced 'tag' key to support more output
+
+* IOSXR
+    * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+
+--------------------------------------------------------------------------------
+                                common.py
+--------------------------------------------------------------------------------
+* updated _find_command to find command for nxos in aci mode

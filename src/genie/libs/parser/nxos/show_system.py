@@ -171,7 +171,8 @@ class ShowSystemInternalSysmgrServiceName(
 
             # Tag = N/A
             # Tag = 100
-            p10 = re.compile(r'^Tag *= *(?P<tag>(N\/A)|(\d+))$')
+            # Tag = l3vpn
+            p10 = re.compile(r'^Tag *= *(?P<tag>(N\/A)|(\S+))$')
             m = p10.match(line)
             if m:
                 tag = m.groupdict()['tag']

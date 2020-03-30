@@ -96,7 +96,6 @@ def get_parser(command, device):
             # Could not find a match
             raise Exception("Could not find parser for "
                             "'{c}'".format(c=command)) from None
-
         return _find_parser_cls(device, found_data), kwargs
 
 def _find_command(command, data, device):
@@ -129,7 +128,15 @@ def _find_command(command, data, device):
 
         match = re.match(reg, command)
         if match:
-            if device.os not in data[key].keys():
+            
+            try:
+                order_list = device.custom.get('abstraction').get('order', [])
+            except AttributeError:
+                order_list = None
+            if order_list:
+                if getattr(device, order_list[0]) not in data[key].keys():
+                    continue
+            elif device.os not in data[key].keys():
                 continue
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
@@ -145,6 +152,7 @@ def _find_command(command, data, device):
 
     if matches:
         return matches
+    
     raise SyntaxError('Could not find a parser match')
 
 
