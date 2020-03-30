@@ -20,4 +20,4 @@
 	    * Change regex to fix vlan interface/ sub interface ShowStandbyAll
 * NXOS
     * Updated ShowPlatform
-          * Modified regexp to support N3K-C3048TP-1GE-SUP
+      * Modified regexp to support N3K-C3048TP-1GE-SUP
