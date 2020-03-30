@@ -106,6 +106,8 @@
         * Fix typo in the code
     * Update ShowIpMsdpPeer
         * Change key 'peer_as' into Optional to support various outputs
+    * Update ShowBgpAllNeighbors:
+        * Update regex to support various outputs.
 
 * NXOS
     * Updated ShowInterface
