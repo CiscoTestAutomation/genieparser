@@ -1521,12 +1521,13 @@ class TestShowInterfaces(unittest.TestCase):
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
+        
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
 
 #############################################################################
 # unitest For Show ip interface
