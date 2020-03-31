@@ -1,7 +1,10 @@
 """ show_bgp.py
 
 JunOs parsers for the following show commands:
+    * show bgp group brief
     * show bgp group brief | no-more
+    * show bgp group detail
+    * show bgp group detail | no-more
 """
 
 # Python
@@ -14,59 +17,60 @@ from genie.metaparser.util.schemaengine import (Any,
         
 class ShowBgpGroupBriefSchema(MetaParser):
     """ Schema for:
+            * show bgp group brief
             * show bgp group brief | no-more
+            * show bgp group detail
+            * show bgp group detail | no-more
     """
     """
         schema = {
             "bgp-group-information": {
                 "bgp-group": [
                     {
-                        "bgp-option-information": {
-                            "bgp-options": "str",
-                            "bgp-options-extended": "str",
-                            "export-policy": "str",
-                            "gshut-recv-local-preference": "str",
-                            "holdtime": "str"
+                        {
+                            'bgp-option-information': {
+                            'bgp-options': str,
+                            'bgp-options-extended': str,
+                            'export-policy': str,
+                            'gshut-recv-local-preference': str,
+                            'holdtime': str
                         },
-                        "bgp-rib": {
-                            "accepted-prefix-count": "str",
-                            "active-prefix-count": "str",
-                            "advertised-prefix-count": "str",
-                            "name": "str",
-                            "received-prefix-count": "str",
-                            "suppressed-prefix-count": "str"
-                        },
-                        "established-count": "str",
-                        "flap-count": "str",
-                        "group-flags": "str",
-                        "group-index": "str",
-                        "local-as": "str",
-                        "peer-address": "str",
-                        "peer-as": "str",
-                        "peer-count": "str",
-                        "route-queue": {
-                            "state": "str",
-                            "timer": "str"
-                        },
-                        "type": "str"
+                        Optional('bgp-rib'): Use(validate_bgp_rib),
+                        'established-count': str,
+                        'name': str,
+                        Optional('flap-count'): str,
+                        'group-flags': str,
+                        'group-index': str,
+                        'local-as': str,
+                        'peer-address': list,
+                        Optional('peer-as'): str,
+                        'peer-count': str,
+                        'type': str,
+                        Optional('route-queue'): {
+                            'state': str,
+                            'timer': str,
+                        }
                     }
                 ],
                 "bgp-information": {
                     "bgp-rib": [
                         {
-                            "accepted-external-prefix-count": "str",
-                            "accepted-internal-prefix-count": "str",
-                            "active-external-prefix-count": "str",
-                            "active-internal-prefix-count": "str",
-                            "bgp-rib-state": "str",
-                            "damped-prefix-count": "str",
-                            "history-prefix-count": "str",
-                            "pending-prefix-count": "str",
-                            "suppressed-external-prefix-count": "str",
-                            "suppressed-internal-prefix-count": "str",
-                            "total-external-prefix-count": "str",
-                            "total-internal-prefix-count": "str",
-                            "total-prefix-count": "str"
+                            'active-prefix-count': str,
+                            Optional('damped-prefix-count'): str,
+                            Optional('history-prefix-count'): str,
+                            'name': str,
+                            Optional('pending-prefix-count'): str,
+                            'suppressed-prefix-count': str,
+                            Optional('total-prefix-count'): str,
+                            Optional('active-external-prefix-count'): str,
+                            Optional('active-internal-prefix-count'): str,
+                            Optional('suppressed-external-prefix-count'): str,
+                            Optional('accepted-prefix-count'): str,
+                            Optional('total-internal-prefix-count'): str,
+                            Optional('received-prefix-count'): str,
+                            Optional('total-external-prefix-count'): str,
+                            Optional('suppressed-internal-prefix-count'): str,
+                            Optional('bgp-rib-state'): str,
                         }
                     ],
                     "down-peer-count": "str",
@@ -83,37 +87,43 @@ class ShowBgpGroupBriefSchema(MetaParser):
         def validate_bgp_rib(value):
             if not isinstance(value, list):
                 raise SchemaTypeError('bgp-rib is not a list')
-            bgp_rib_schema = Schema({'accepted-prefix-count': str,
-                                                            'active-prefix-count': str,
-                                                            'advertised-prefix-count': str,
-                                                            'name': str,
-                                                            'received-prefix-count': str,
-                                                            Optional('suppressed-prefix-count'): str})
+            bgp_rib_schema = Schema(
+                {
+                    'accepted-prefix-count': str,
+                    'active-prefix-count': str,
+                    'advertised-prefix-count': str,
+                    'name': str,
+                    'received-prefix-count': str,
+                    Optional('suppressed-prefix-count'): str
+                })
             for item in value:
                 bgp_rib_schema.validate(item)
             return value
         bgp_group_list_schema = Schema(
-            {'bgp-option-information': {'bgp-options': str,
-                                            'bgp-options-extended': str,
-                                            'export-policy': str,
-                                            'gshut-recv-local-preference': str,
-                                            'holdtime': str},
-                                            Optional('bgp-rib'): Use(validate_bgp_rib),
-                                            'established-count': str,
-                                            'name': str,
-                                            Optional('flap-count'): str,
-                                            'group-flags': str,
-                                            'group-index': str,
-                                            'local-as': str,
-                                            'peer-address': list,
-                                            Optional('peer-as'): str,
-                                            'peer-count': str,
-                                            'type': str,
-                                            Optional('route-queue'): {
-                                                'state': str,
-                                                'timer': str,
-                                            }}
-        )
+            {
+                'bgp-option-information': {
+                        'bgp-options': str,
+                        'bgp-options-extended': str,
+                        'export-policy': str,
+                        'gshut-recv-local-preference': str,
+                        'holdtime': str
+                    },
+                Optional('bgp-rib'): Use(validate_bgp_rib),
+                'established-count': str,
+                'name': str,
+                Optional('flap-count'): str,
+                'group-flags': str,
+                'group-index': str,
+                'local-as': str,
+                'peer-address': list,
+                Optional('peer-as'): str,
+                'peer-count': str,
+                'type': str,
+                Optional('route-queue'): {
+                    'state': str,
+                    'timer': str,
+                }
+            })
         for item in value:
             bgp_group_list_schema.validate(item)
         return value
@@ -121,39 +131,47 @@ class ShowBgpGroupBriefSchema(MetaParser):
     def validate_bgp_info_bgp_rib_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-information bgp-rib is not a list')
-        bgp_rib_list_schema = Schema({'active-prefix-count': str,
-                                                                Optional('damped-prefix-count'): str,
-                                                                Optional('history-prefix-count'): str,
-                                                                'name': str,
-                                                                Optional('pending-prefix-count'): str,
-                                                                'suppressed-prefix-count': str,
-                                                                Optional('total-prefix-count'): str,
-                                                                Optional('active-external-prefix-count'): str,
-                                                                Optional('active-internal-prefix-count'): str,
-                                                                Optional('suppressed-external-prefix-count'): str,
-                                                                Optional('accepted-prefix-count'): str,
-                                                                Optional('total-internal-prefix-count'): str,
-                                                                Optional('received-prefix-count'): str,
-                                                                Optional('total-external-prefix-count'): str,
-                                                                Optional('suppressed-internal-prefix-count'): str,
-                                                                Optional('bgp-rib-state'): str,
-                                                                })
+        bgp_rib_list_schema = Schema(
+            {
+                'active-prefix-count': str,
+                Optional('damped-prefix-count'): str,
+                Optional('history-prefix-count'): str,
+                'name': str,
+                Optional('pending-prefix-count'): str,
+                'suppressed-prefix-count': str,
+                Optional('total-prefix-count'): str,
+                Optional('active-external-prefix-count'): str,
+                Optional('active-internal-prefix-count'): str,
+                Optional('suppressed-external-prefix-count'): str,
+                Optional('accepted-prefix-count'): str,
+                Optional('total-internal-prefix-count'): str,
+                Optional('received-prefix-count'): str,
+                Optional('total-external-prefix-count'): str,
+                Optional('suppressed-internal-prefix-count'): str,
+                Optional('bgp-rib-state'): str,
+            })
         for item in value:
             bgp_rib_list_schema.validate(item)
         return value
 
-    schema = {'bgp-group-information': {'bgp-group': Use(validate_bgp_group_list),
-                           'bgp-information': {'bgp-rib': Use(validate_bgp_info_bgp_rib_list),
-                                               'down-peer-count': str,
-                                               'external-peer-count': str,
-                                               'group-count': str,
-                                               'internal-peer-count': str,
-                                               'peer-count': str,
-                                               'flap-count': str,
-                                               }}}
+    schema = {
+        'bgp-group-information': {
+            'bgp-group': Use(validate_bgp_group_list),
+            'bgp-information': {
+                'bgp-rib': Use(validate_bgp_info_bgp_rib_list),
+                    'down-peer-count': str,
+                    'external-peer-count': str,
+                    'group-count': str,
+                    'internal-peer-count': str,
+                    'peer-count': str,
+                    'flap-count': str,
+                }}}
 
 class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
-
+    """ Parser for:
+            * show bgp group brief
+            * show bgp group brief | no-more
+    """
     cli_command = ['show bgp group brief',
         'show bgp group brief | no-more']
     
@@ -502,7 +520,10 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
         return ret_dict
 
 class ShowBgpGroupDetail(ShowBgpGroupBrief):
-    
+    """ Parser for:
+            * show bgp group detail
+            * show bgp group detail | no-more
+    """
     cli_command = ['show bgp group detail',
         'show bgp group detail | no-more']
     
