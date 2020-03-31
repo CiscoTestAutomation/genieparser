@@ -272,8 +272,8 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
             },
             429: {
                 'destination': {
-                    'dest-[21.0.0.1]-[vxlan-2293760]': {
-                        'hg_name': 'SP-A-CISCO::FW1',
+                    'dest-[10.186.0.1]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO2001:DB8::FW1',
                     },
                 },
                 'hp': 'dstonly',
@@ -286,8 +286,8 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
             },
             430: {
                 'destination': {
-                    'dest-[21.0.0.3]-[vxlan-2293760]': {
-                        'hg_name': 'SP-A-CISCO::FW3',
+                    'dest-[10.186.0.3]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO2001:DB8::FW3',
                     },
                 },
                 'hp': 'dstonly',
@@ -300,8 +300,8 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
             },
             431: {
                 'destination': {
-                    'dest-[21.0.0.4]-[vxlan-2293760]': {
-                        'hg_name': 'SP-A-CISCO::FW4',
+                    'dest-[10.186.0.4]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO2001:DB8::FW4',
                     },
                 },
                 'hp': 'dstonly',
@@ -314,8 +314,8 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
             },
             439: {
                 'destination': {
-                    'dest-[21.0.0.2]-[vxlan-2293760]': {
-                        'hg_name': 'SP-A-CISCO::FW2',
+                    'dest-[10.186.0.2]-[vxlan-2293760]': {
+                        'hg_name': 'SP-A-CISCO2001:DB8::FW2',
                     },
                 },
                 'hp': 'dstonly',
@@ -489,10 +489,10 @@ class TestShowServiceRedirInfoGroup(unittest.TestCase):
         405   destgrp-405     dest-[172.16.225.1]-[vxlan-2555904]      toka-GiLAN::LB- disabled   tracked-as-down 0    0     srconly    yes     
         406   destgrp-406     dest-[172.16.224.1]-[vxlan-2555904]      toka-GiLAN::GW- disabled   tracked-as-down 0    0     srconly    yes     
         407   destgrp-407     dest-[172.16.226.1]-[vxlan-2555904]      toka-GiLAN::LB- disabled   tracked-as-down 0    0     srconly    yes     
-        429   destgrp-429     dest-[21.0.0.1]-[vxlan-2293760]          SP-A-CISCO::FW1 disabled   tracked-as-down 0    0     dstonly    yes     
-        430   destgrp-430     dest-[21.0.0.3]-[vxlan-2293760]          SP-A-CISCO::FW3 disabled   tracked-as-down 0    0     dstonly    yes     
-        431   destgrp-431     dest-[21.0.0.4]-[vxlan-2293760]          SP-A-CISCO::FW4 disabled   tracked-as-down 0    0     dstonly    yes     
-        439   destgrp-439     dest-[21.0.0.2]-[vxlan-2293760]          SP-A-CISCO::FW2 disabled   tracked-as-down 0    0     dstonly    yes     
+        429   destgrp-429     dest-[10.186.0.1]-[vxlan-2293760]          SP-A-CISCO2001:DB8::FW1 disabled   tracked-as-down 0    0     dstonly    yes     
+        430   destgrp-430     dest-[10.186.0.3]-[vxlan-2293760]          SP-A-CISCO2001:DB8::FW3 disabled   tracked-as-down 0    0     dstonly    yes     
+        431   destgrp-431     dest-[10.186.0.4]-[vxlan-2293760]          SP-A-CISCO2001:DB8::FW4 disabled   tracked-as-down 0    0     dstonly    yes     
+        439   destgrp-439     dest-[10.186.0.2]-[vxlan-2293760]          SP-A-CISCO2001:DB8::FW2 disabled   tracked-as-down 0    0     dstonly    yes     
         512   destgrp-512     dest-[172.16.11.4]-[vxlan-2293760]       SP-A-CISCO::GW4 disabled   tracked-as-down 0    0     srconly    yes     
                             dest-[172.16.11.1]-[vxlan-2293760]       SP-A-CISCO::GW1
                             dest-[172.16.11.2]-[vxlan-2293760]       SP-A-CISCO::GW2

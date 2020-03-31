@@ -210,14 +210,14 @@ class test_show_msdp_peer(unittest.TestCase):
 
     # show ip msdp peer
     device_output_3 = {'execute.return_value': '''
-    MSDP Peer 1.1.1.2 (?), AS ?
+    MSDP Peer 10.4.1.2 (?), AS ?
       Connection status:
-        State: Up, Resets: 1, Connection source: Loopback0 (1.1.1.1)
+        State: Up, Resets: 1, Connection source: Loopback0 (10.4.1.1)
         Uptime(Downtime): 2w2d, Messages sent/received: 23466/23498
         Output messages discarded: 0
         Connection and counters cleared 2w5d     ago
         Elapsed time since last message: 00:00:58
-        Local Address of connection: 1.1.1.1
+        Local Address of connection: 10.4.1.1
         Local Port: 38793, Remote Port: 639
         Peer is member of mesh-group ANYCAST-RP
       SA Filtering:
@@ -244,10 +244,10 @@ class test_show_msdp_peer(unittest.TestCase):
         'vrf': {
             'default': {
                 'peer': {
-                    '1.1.1.2': {
+                    '10.4.1.2': {
                         'conn_count_cleared': '2w5d',
                         'connect_source': 'Loopback0',
-                        'connect_source_address': '1.1.1.1',
+                        'connect_source_address': '10.4.1.1',
                         'elapsed_time': '2w2d',
                         'resets': '1',
                         'sa_filter': {

@@ -249,7 +249,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r'\/(?P<prefix_length>[0-9]+))$')
 
         # Internet address is 10.4.4.4/24
-        # Internet address is xxx.xxx.151.3/24
         p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.x]+)'
                         r'\/(?P<prefix_length>[0-9]+))$')
 

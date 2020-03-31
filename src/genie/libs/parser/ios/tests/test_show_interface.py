@@ -545,12 +545,12 @@ class TestShowInterfaces(unittest.TestCase):
             'last_input': 'never',
             'last_output': '00:00:00',
             'line_protocol': 'up',
-            'mac_address': '10f3.1186.cae8',
+            'mac_address': '10f3.11ff.516f',
             'maximum_active_vcs': '8',
             'mtu': 1600,
             'oper_status': 'up',
             'output_hang': 'never',
-            'phys_address': '10f3.1186.cae8',
+            'phys_address': '10f3.11ff.516f',
             'port_channel': {
                 'port_channel_member': False,
             },
@@ -592,16 +592,16 @@ class TestShowInterfaces(unittest.TestCase):
                 'unnumbered': {
                     'interface_ref': 'Loopback0',
                 },
-                'xx.xx.106.202/32': {
-                    'ip': 'xx.xx.106.202',
+                '192.168.106.202/32': {
+                    'ip': '192.168.106.202',
                     'prefix_length': '32',
                 },
             },
             'line_protocol': 'up',
-            'mac_address': '10f3.1186.cae8',
+            'mac_address': '10f3.11ff.516f',
             'mtu': 1600,
             'oper_status': 'up',
-            'phys_address': '10f3.1186.cae8',
+            'phys_address': '10f3.11ff.516f',
             'port_channel': {
                 'port_channel_member': False,
             },
@@ -735,7 +735,7 @@ class TestShowInterfaces(unittest.TestCase):
             'last_input': 'never',
             'last_output': '00:00:02',
             'line_protocol': 'down',
-            'mac_address': '_ETHERNET, address is 10f3.1186.cae8 (bia 10f3.1186.cae8)',
+            'mac_address': '_ETHERNET, address is 10f3.11ff.516f (bia 10f3.11ff.516f)',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
@@ -813,8 +813,8 @@ class TestShowInterfaces(unittest.TestCase):
                 'send': False,
             },
             'ipv4': {
-                'xxx.xxx.151.3/24': {
-                    'ip': 'xxx.xxx.151.3',
+                '192.168.151.3/24': {
+                    'ip': '192.168.151.3',
                     'prefix_length': '24',
                 },
             },
@@ -822,12 +822,12 @@ class TestShowInterfaces(unittest.TestCase):
             'last_input': '00:00:00',
             'last_output': '00:00:01',
             'line_protocol': 'up',
-            'mac_address': '10f3.1186.cae0',
+            'mac_address': '10f3.11ff.5167',
             'media_type': 'RJ45',
             'mtu': 1500,
             'oper_status': 'up',
             'output_hang': 'never',
-            'phys_address': '10f3.1186.cae0',
+            'phys_address': '10f3.11ff.5167',
             'port_channel': {
                 'port_channel_member': False,
             },
@@ -905,12 +905,12 @@ class TestShowInterfaces(unittest.TestCase):
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'down',
-            'mac_address': '10f3.1186.cae1',
+            'mac_address': '10f3.11ff.5168',
             'media_type': 'RJ45',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
-            'phys_address': '10f3.1186.cae1',
+            'phys_address': '10f3.11ff.5168',
             'port_channel': {
                 'port_channel_member': False,
             },
@@ -971,8 +971,8 @@ class TestShowInterfaces(unittest.TestCase):
                 'encapsulation': 'loopback',
             },
             'ipv4': {
-                'xx.xx.106.202/32': {
-                    'ip': 'xx.xx.106.202',
+                '192.168.106.202/32': {
+                    'ip': '192.168.106.202',
                     'prefix_length': '32',
                 },
             },
@@ -1087,8 +1087,8 @@ class TestShowInterfaces(unittest.TestCase):
                 'unnumbered': {
                     'interface_ref': 'Loopback0',
                 },
-                'xx.xx.106.202/32': {
-                    'ip': 'xx.xx.106.202',
+                '192.168.106.202/32': {
+                    'ip': '192.168.106.202',
                     'prefix_length': '32',
                 },
             },
@@ -1217,8 +1217,8 @@ class TestShowInterfaces(unittest.TestCase):
                 'unnumbered': {
                     'interface_ref': 'Loopback0',
                 },
-                'xx.xx.106.202/32': {
-                    'ip': 'xx.xx.106.202',
+                '192.168.106.202/32': {
+                    'ip': '192.168.106.202',
                     'prefix_length': '32',
                 },
             },
@@ -1278,9 +1278,9 @@ class TestShowInterfaces(unittest.TestCase):
         0 lost carrier, 0 no carrier
         0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0 is up, line protocol is up
-        Hardware is CN Gigabit Ethernet, address is 10f3.1186.cae0 (bia 10f3.1186.cae0)
+        Hardware is CN Gigabit Ethernet, address is 10f3.11ff.5167 (bia 10f3.11ff.5167)
         Description: ************
-        Internet address is xxx.xxx.151.3/24
+        Internet address is 192.168.151.3/24
         MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -1307,7 +1307,7 @@ class TestShowInterfaces(unittest.TestCase):
         0 lost carrier, 0 no carrier, 0 pause output
         0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/1 is administratively down, line protocol is down
-        Hardware is CN Gigabit Ethernet, address is 10f3.1186.cae1 (bia 10f3.1186.cae1)
+        Hardware is CN Gigabit Ethernet, address is 10f3.11ff.5168 (bia 10f3.11ff.5168)
         MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -1334,7 +1334,7 @@ class TestShowInterfaces(unittest.TestCase):
         0 lost carrier, 0 no carrier, 0 pause output
         0 output buffer failures, 0 output buffers swapped out
         ATM0/0/0 is up, line protocol is up
-        Hardware is MPC ATMSAR, address is 10f3.1186.cae8 (bia 10f3.1186.cae8)
+        Hardware is MPC ATMSAR, address is 10f3.11ff.516f (bia 10f3.11ff.516f)
         MTU 1600 bytes, sub MTU 1600, BW 3584 Kbit/sec, DLY 410 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ATM, loopback not set
@@ -1358,9 +1358,9 @@ class TestShowInterfaces(unittest.TestCase):
         0 unknown protocol drops
         0 output buffer failures, 0 output buffers swapped out
         ATM0/0/0.1 is up, line protocol is up
-        Hardware is MPC ATMSAR, address is 10f3.1186.cae8 (bia 10f3.1186.cae8)
+        Hardware is MPC ATMSAR, address is 10f3.11ff.516f (bia 10f3.11ff.516f)
         Description: xxxxxxxxxxxxxxxxxxx
-        Interface is unnumbered. Using address of Loopback0 (xx.xx.106.202)
+        Interface is unnumbered. Using address of Loopback0 (192.168.106.202)
         MTU 1600 bytes, BW 3584 Kbit/sec, DLY 410 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ATM
@@ -1373,7 +1373,7 @@ class TestShowInterfaces(unittest.TestCase):
         AAL5 Oversized SDUs : 0
         Last clearing of "show interface" counters never
         Ethernet0/0/0 is administratively down, line protocol is down
-        Hardware is VDSL_ETHERNET, address is 10f3.1186.cae8 (bia 10f3.1186.cae8)
+        Hardware is VDSL_ETHERNET, address is 10f3.11ff.516f (bia 10f3.11ff.516f)
         MTU 1500 bytes, BW 888 Kbit/sec, DLY 11200 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation ARPA, loopback not set
@@ -1399,7 +1399,7 @@ class TestShowInterfaces(unittest.TestCase):
         0 output buffer failures, 0 output buffers swapped out
         Loopback0 is up, line protocol is up
         Hardware is Loopback
-        Internet address is xx.xx.106.202/32
+        Internet address is 192.168.106.202/32
         MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation LOOPBACK, loopback not set
@@ -1446,7 +1446,7 @@ class TestShowInterfaces(unittest.TestCase):
         0 carrier transitions
         Virtual-Access1.1 is up, line protocol is up
         Hardware is Virtual Access interface
-        Interface is unnumbered. Using address of Loopback0 (xx.xx.106.202)
+        Interface is unnumbered. Using address of Loopback0 (192.168.106.202)
         MTU 1500 bytes, BW 888 Kbit/sec, DLY 100000 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation PPP, LCP Open
@@ -1485,7 +1485,7 @@ class TestShowInterfaces(unittest.TestCase):
         0 carrier transitions
         Virtual-Template1 is down, line protocol is down
         Hardware is Virtual Template interface
-        Interface is unnumbered. Using address of Loopback0 (xx.xx.106.202)
+        Interface is unnumbered. Using address of Loopback0 (192.168.106.202)
         MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100000 usec,
         reliability 255/255, txload 1/255, rxload 1/255
         Encapsulation PPP, LCP Closed, loopback not set

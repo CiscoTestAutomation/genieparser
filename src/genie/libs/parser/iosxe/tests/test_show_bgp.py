@@ -13334,14 +13334,14 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
 
     golden_output5 = {'execute.return_value': '''
             For address family: IPv4 Unicast
-            BGP neighbor is 63.158.199.57,  remote AS 209, external link
+            BGP neighbor is 10.136.199.57,  remote AS 209, external link
               BGP version 4, remote router ID 0.0.0.0
               BGP state = Idle
               Neighbor sessions:
                 0 active, is multisession capable
               Default minimum time between advertisement runs is 30 seconds
 
-              Address tracking is enabled, the RIB does not have a route to 63.158.199.57
+              Address tracking is enabled, the RIB does not have a route to 10.136.199.57
               Connections established 0; dropped 0
               Last reset never
               External BGP neighbor not directly connected.
@@ -13423,7 +13423,7 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
         '''}
 
     golden_parsed_output5 = {
-        'list_of_neighbors': ['63.158.199.57', '172.16.0.2'],
+        'list_of_neighbors': ['10.136.199.57', '172.16.0.2'],
         'vrf': {
             'default': {
                 'neighbor': {
@@ -13593,7 +13593,7 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
                         'session_state': 'Established',
                         'shutdown': False,
                     },
-                    '63.158.199.57': {
+                    '10.136.199.57': {
                         'address_family': {
                             'ipv4 unicast': {
                                 'session_state': 'Idle',
