@@ -15,20 +15,22 @@ class ShowSdwanControlConnectionsSchema(MetaParser):
     """ Schema for "show sdwan control connections" """
 
     schema = {
-        "control_connections": {
+        "local_color": {
             Any(): {
-                Any(): {
-                    "controller_group_id": str,
-                    "domain_id": str,
-                    "peer_private_ip": str,
-                    "peer_private_port": str,
-                    "peer_protocol": str,
-                    "peer_public_ip": str,
-                    "peer_public_port": str,
-                    "peer_type": str,
-                    "proxy_state": str,
-                    "site_id": str,
-                    "uptime": str,
+                "system_peer_ip": {
+                    Any(): {
+                        "controller_group_id": str,
+                        "domain_id": str,
+                        "peer_private_ip": str,
+                        "peer_private_port": str,
+                        "peer_protocol": str,
+                        "peer_public_ip": str,
+                        "peer_public_port": str,
+                        "peer_type": str,
+                        "proxy_state": str,
+                        "site_id": str,
+                        "uptime": str,
+                    },
                 },
             },
         },
@@ -88,4 +90,3 @@ class ShowSdwanControlConnections(ShowSdwanControlConnectionsSchema):
                 continue
 
         return parsed_dict
-
