@@ -57,6 +57,7 @@
     * Added ShowBgpGroupBrief for:
         * show bgp group brief
         * show bgp group brief | no-more
+    * Added ShowBgpGroupDetail for:
         * show bgp group detail
         * show bgp group detail | no-more
 
