@@ -108,6 +108,10 @@
         * Update regex to support various output
     * Update ShowLldpEntry
         * Fix typo in the code
+    * Update ShowIpMsdpPeer
+        * Change key 'peer_as' into Optional to support various outputs
+    * Update ShowBgpAllNeighbors:
+        * Update regex to support various outputs.
 
 * NXOS
     * Updated ShowInterface
@@ -127,6 +131,10 @@
 
 * IOSXR
     * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+
+* IOS 
+    * Update ShowInterfaces
         * Update regex to support various output
 
 --------------------------------------------------------------------------------

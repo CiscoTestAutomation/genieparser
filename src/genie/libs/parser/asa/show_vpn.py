@@ -13,6 +13,7 @@ from genie.metaparser.util.schemaengine import (Schema,
                                                 Any,
                                                 Optional)
 
+
 # =============================================
 # Schema for 'show vpn load-balancing'
 # =============================================
@@ -53,6 +54,7 @@ class ShowVPNLoadBalancingSchema(MetaParser):
             }
         }
     }
+
 
 # =============================================
 # Parser for 'show vpn load-balancing'
